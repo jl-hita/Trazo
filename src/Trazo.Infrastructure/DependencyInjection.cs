@@ -13,13 +13,15 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("Trazo");
 
-        services.AddDbContext<TrazoDbContext>(options =>
+        if (string.IsNullOrWhiteSpace(connectionString))
         {
-            if (!string.IsNullOrWhiteSpace(connectionString))
-            {
-                options.UseNpgsql(connectionString);
-            }
-        });
+            throw new InvalidOperationException(
+                "The PostgreSQL connection string 'ConnectionStrings:Trazo' is required.");
+        }
+
+        services.AddDbContext<TrazoDbContext>(options =>
+            options.UseNpgsql(connectionString, npgsql =>
+                npgsql.EnableRetryOnFailure()));
 
         return services;
     }
