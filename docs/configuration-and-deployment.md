@@ -128,7 +128,7 @@ After=network-online.target postgresql.service
 Wants=network-online.target
 
 [Service]
-Type= простой
+Type=simple
 User=trazo
 Group=trazo
 WorkingDirectory=/opt/trazo
