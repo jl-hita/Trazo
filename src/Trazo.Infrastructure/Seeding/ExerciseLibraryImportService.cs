@@ -75,13 +75,19 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             throw new InvalidDataException("Exercise count does not match the manifest.");
 
         var exercises = exercisesDocument.RootElement.EnumerateArray().ToArray();
+        var exerciseIds = new HashSet<string>(StringComparer.Ordinal);
         foreach (var exercise in exercises)
         {
             var id = RequiredString(exercise, "id");
-            if (!SafeId.IsMatch(id) || !string.Equals(OptionalString(exercise, "reviewStatus"), "approved", StringComparison.OrdinalIgnoreCase) ||
+            var source = OptionalString(exercise, "source");
+            if (!SafeId.IsMatch(id) || !exerciseIds.Add(id) ||
+                source is not ("repdb-free" or "dietoexpress-curated") ||
+                !string.Equals(OptionalString(exercise, "reviewStatus"), "approved", StringComparison.OrdinalIgnoreCase) ||
                 !OptionalBoolean(exercise, "reviewed"))
-                throw new InvalidDataException($"Exercise '{id}' is not an approved global catalog record.");
+                throw new InvalidDataException($"Exercise '{id}' is duplicated, has an unsupported source, or is not an approved global catalog record.");
         }
+        if (manifest.Images.Any(image => !exerciseIds.Contains(image.ExerciseId)))
+            throw new InvalidDataException("An image references an exercise outside the approved export.");
 
         var connection = (NpgsqlConnection)db.Database.GetDbConnection();
         var shouldClose = connection.State != System.Data.ConnectionState.Open;
