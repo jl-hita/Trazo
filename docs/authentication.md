@@ -64,10 +64,10 @@ Email__Smtp__EnableSsl=true
 Email__Smtp__Username=YOUR_SMTP_USER
 Email__Smtp__Password=YOUR_SMTP_PASSWORD
 Email__From=no-reply@example.com
-Email__ActionBaseUrl=https://your-public-app.example.com
+Email__ActionBaseUrl=trazo://account
 ```
 
-The configured action base URL receives `/account/verify-email?token=...` and `/account/reset-password?token=...`. Those pages or app deep links must be provided by the client application. The API accepts the returned token through the corresponding POST endpoints.
+The configured action base URL receives `/account/verify-email?token=...` and `/account/reset-password?token=...`. The Android client registers the `trazo://account` deep links and calls the API to consume the token. A web client must provide equivalent routes if it is also used.
 
 ## Server configuration
 
