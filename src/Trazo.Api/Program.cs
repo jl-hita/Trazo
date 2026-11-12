@@ -138,12 +138,17 @@ app.MapGet("/api/v1/exercises/{id}/images", async (string id, TrazoDbContext db,
     try
     {
         var slots = new List<int>();
+        var hasRepDbImages = false;
         await using var command = new NpgsqlCommand(
-            "SELECT slot FROM exercise_catalog_images WHERE exercise_id = @id ORDER BY slot", connection);
+            "SELECT slot, source FROM exercise_catalog_images WHERE exercise_id = @id ORDER BY slot", connection);
         command.Parameters.AddWithValue("id", id);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        while (await reader.ReadAsync(cancellationToken)) slots.Add(reader.GetInt16(0));
-        return Results.Ok(new { slots, attribution = "Exercise data by RepDB (repdb.co)" });
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            slots.Add(reader.GetInt16(0));
+            hasRepDbImages |= reader.GetString(1) == "repdb-free";
+        }
+        return Results.Ok(new { slots, attribution = hasRepDbImages ? "Exercise data by RepDB (repdb.co)" : null });
     }
     finally
     {
@@ -163,13 +168,14 @@ app.MapGet("/api/v1/exercises/{id}/images/{slot:int}", async (
     try
     {
         await using var command = new NpgsqlCommand(
-            "SELECT content_type, data FROM exercise_catalog_images WHERE exercise_id = @id AND slot = @slot", connection);
+            "SELECT content_type, data, source FROM exercise_catalog_images WHERE exercise_id = @id AND slot = @slot", connection);
         command.Parameters.AddWithValue("id", id);
         command.Parameters.AddWithValue("slot", (short)slot);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         if (!await reader.ReadAsync(cancellationToken)) return Results.NotFound();
         context.Response.Headers.CacheControl = "public, max-age=86400";
-        context.Response.Headers["X-Image-Attribution"] = "Exercise data by RepDB (repdb.co)";
+        if (reader.GetString(2) == "repdb-free")
+            context.Response.Headers["X-Image-Attribution"] = "Exercise data by RepDB (repdb.co)";
         return Results.File((byte[])reader["data"], reader.GetString(0));
     }
     finally
