@@ -74,7 +74,7 @@ public static class AccountEmailEndpoints
   var hash=Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(raw)));
   return await db.EmailActionTokens.SingleOrDefaultAsync(x=>x.TokenHash==hash&&x.Purpose==purpose&&x.ConsumedAt==null&&x.ExpiresAt>DateTimeOffset.UtcNow,ct);
  }
- private static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IConfiguration config,CancellationToken ct)
+ public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IConfiguration config,CancellationToken ct)
  {
   var raw=Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)).TrimEnd('=').Replace('+','-').Replace('/','_');
   var now=DateTimeOffset.UtcNow;
