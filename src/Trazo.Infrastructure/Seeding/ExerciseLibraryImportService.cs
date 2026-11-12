@@ -39,32 +39,29 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         {
             var manifestEntry = archive.GetEntry("manifest.json") ?? throw new InvalidDataException("Archive manifest is missing.");
             var exerciseEntry = archive.GetEntry("exercises.json") ?? throw new InvalidDataException("Exercise data is missing.");
-            manifest = await ReadJsonAsync<Manifest>(manifestEntry, cancellationToken)
+            if (manifestEntry.Length > 1024 * 1024 || exerciseEntry.Length > 64L * 1024L * 1024L)
+                throw new InvalidDataException("Archive metadata or exercise data exceeds the allowed size.");
+            manifest = await ReadEntryJsonAsync<Manifest>(manifestEntry, 1024 * 1024, cancellationToken)
                 ?? throw new InvalidDataException("Archive manifest is invalid.");
-            if (manifest.SchemaVersion != 1 || !string.Equals(manifest.Source, "DietoExpress", StringComparison.Ordinal) ||
+            if (manifest.Images is null || manifest.SchemaVersion != 1 ||
+                !string.Equals(manifest.Source, "DietoExpress", StringComparison.Ordinal) ||
                 manifest.ExerciseCount < 1 || manifest.ExerciseCount > 10000 || manifest.ImageCount < 0 ||
-                manifest.Images.Count != manifest.ImageCount || string.IsNullOrWhiteSpace(manifest.Attribution))
+                manifest.ImageCount > manifest.ExerciseCount * 4 || manifest.Images.Count != manifest.ImageCount ||
+                archive.Entries.Count != manifest.ImageCount + 2 || string.IsNullOrWhiteSpace(manifest.Attribution))
                 throw new InvalidDataException("Archive manifest validation failed.");
 
-            await using (var stream = exerciseEntry.Open())
-            using (var buffer = new MemoryStream())
-            {
-                await stream.CopyToAsync(buffer, cancellationToken);
-                exerciseBytes = buffer.ToArray();
-            }
+            exerciseBytes = await ReadEntryBytesAsync(exerciseEntry, 64 * 1024 * 1024, cancellationToken);
             EnsureHash(exerciseBytes, manifest.ExercisesSha256, "exercises.json");
+            var imagePaths = new HashSet<string>(StringComparer.Ordinal);
 
             foreach (var image in manifest.Images)
             {
                 if (!SafeId.IsMatch(image.ExerciseId) || image.Slot is < 0 or > 3 ||
                     image.Size is <= 0 or > MaxImageBytes || image.Source is not ("repdb-free" or "custom") ||
-                    image.Path != $"images/{image.ExerciseId}/{image.Slot}.{ExtensionFor(image.ContentType)}")
+                    image.Path != $"images/{image.ExerciseId}/{image.Slot}.{ExtensionFor(image.ContentType)}" || !imagePaths.Add(image.Path))
                     throw new InvalidDataException("An image manifest entry contains an invalid path or size.");
                 var entry = archive.GetEntry(image.Path) ?? throw new InvalidDataException($"Image '{image.Path}' is missing.");
-                await using var input = entry.Open();
-                using var output = new MemoryStream(image.Size);
-                await input.CopyToAsync(output, cancellationToken);
-                var bytes = output.ToArray();
+                var bytes = await ReadEntryBytesAsync(entry, MaxImageBytes, cancellationToken);
                 if (bytes.Length != image.Size) throw new InvalidDataException($"Image '{image.Path}' has an unexpected size.");
                 EnsureImageType(bytes, image.ContentType, image.Path);
                 EnsureHash(bytes, image.Sha256, image.Path);
@@ -261,10 +258,26 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         return await command.ExecuteNonQueryAsync(ct) > 0;
     }
 
-    private static async Task<T?> ReadJsonAsync<T>(ZipArchiveEntry entry, CancellationToken ct)
+    private static async Task<T?> ReadEntryJsonAsync<T>(ZipArchiveEntry entry, int maxBytes, CancellationToken ct)
     {
-        await using var stream = entry.Open();
-        return await JsonSerializer.DeserializeAsync<T>(stream, JsonOptions, ct);
+        var bytes = await ReadEntryBytesAsync(entry, maxBytes, ct);
+        return JsonSerializer.Deserialize<T>(bytes, JsonOptions);
+    }
+
+    private static async Task<byte[]> ReadEntryBytesAsync(ZipArchiveEntry entry, int maxBytes, CancellationToken ct)
+    {
+        if (entry.Length > maxBytes) throw new InvalidDataException($"Archive entry '{entry.FullName}' exceeds its size limit.");
+        await using var input = entry.Open();
+        using var output = new MemoryStream((int)Math.Min(entry.Length, maxBytes));
+        var buffer = new byte[64 * 1024];
+        int read;
+        while ((read = await input.ReadAsync(buffer, ct)) > 0)
+        {
+            if (output.Length + read > maxBytes)
+                throw new InvalidDataException($"Archive entry '{entry.FullName}' expands beyond its size limit.");
+            await output.WriteAsync(buffer.AsMemory(0, read), ct);
+        }
+        return output.ToArray();
     }
 
     private static void EnsureHash(byte[] bytes, string expected, string path)
