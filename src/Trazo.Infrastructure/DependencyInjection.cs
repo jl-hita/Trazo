@@ -37,13 +37,6 @@ public static class DependencyInjection
             Directory.CreateDirectory(keysPath);
             dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keysPath));
         }
-        else if (!string.Equals(configuration["ASPNETCORE_ENVIRONMENT"], "Development", StringComparison.OrdinalIgnoreCase))
-        {
-            // In production, persist the key ring outside the release directory. Otherwise
-            // authenticator secrets become unreadable after a restart or deployment.
-            throw new InvalidOperationException("DataProtection:KeysPath must point to a persistent, access-restricted directory.");
-        }
-
         services.AddScoped<ExerciseCatalogSeeder>();
         services.AddScoped<ExerciseLibraryImportService>();
 
