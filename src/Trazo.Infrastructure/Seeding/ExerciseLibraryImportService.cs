@@ -150,6 +150,8 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
     {
         var id = RequiredString(e, "id");
         var source = OptionalString(e, "source") ?? "unknown";
+        if (source is not ("repdb-free" or "dietoexpress-curated"))
+            throw new InvalidDataException($"Exercise '{id}' has an unsupported source '{source}'.");
         var nameEn = OptionalString(e, "nameEn") ?? id;
         var nameEs = OptionalString(e, "nameEs") ?? nameEn;
         var descriptionEs = OptionalString(e, "descriptionEs") ?? OptionalString(e, "descriptionEn") ?? "";
