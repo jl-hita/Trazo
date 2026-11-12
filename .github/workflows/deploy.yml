@@ -1,0 +1,77 @@
+name: Deploy TRAZO API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "Trazo.sln"
+      - "Directory.Build.props"
+      - "global.json"
+      - "deploy/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+# Solo un despliegue de producción a la vez; nunca interrumpir uno en curso.
+concurrency:
+  group: trazo-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify ASP.NET Core 10 runtime on the server
+        run: |
+          set -euo pipefail
+          runtimes="$(/usr/bin/dotnet --list-runtimes)"
+          printf '%s\n' "$runtimes"
+          grep -Fq 'Microsoft.AspNetCore.App 10.' <<< "$runtimes" || {
+            echo "ERROR: falta el runtime ASP.NET Core 10 en weirdfish. No se ha modificado producción."
+            exit 1
+          }
+
+      - uses: actions/setup-dotnet@v4
+        env:
+          # El runner no puede escribir en /usr/share/dotnet.
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/.dotnet
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore Trazo.sln
+
+      - name: Audit .NET dependencies
+        run: |
+          set -o pipefail
+          out="$(dotnet list Trazo.sln package --vulnerable --include-transitive)"
+          printf '%s\n' "$out"
+          if printf '%s\n' "$out" | grep -Eiq '>.*(High|Critical)'; then
+            echo "Vulnerabilidades High/Critical en dependencias .NET."
+            exit 1
+          fi
+
+      - name: Build
+        run: dotnet build Trazo.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test Trazo.sln -c Release --no-build
+
+      - name: Publish
+        run: |
+          rm -rf /tmp/trazo-publish /tmp/trazo-backend
+          dotnet publish src/Trazo.Api/Trazo.Api.csproj -c Release --no-restore --no-build -o /tmp/trazo-publish
+          mkdir -p /tmp/trazo-backend
+          cp -a /tmp/trazo-publish/. /tmp/trazo-backend/
+          test -f /tmp/trazo-backend/Trazo.Api.dll
+
+      - name: Deploy atomically and smoke test
+        env:
+          TRAZO_VERSION: ${{ github.sha }}
+        run: bash deploy/scripts/trazo-deploy-atomic.sh
