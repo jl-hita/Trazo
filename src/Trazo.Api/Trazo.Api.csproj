@@ -9,4 +9,10 @@
     <ProjectReference Include="../Trazo.Infrastructure/Trazo.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="../Trazo.Infrastructure/Seeds/**/*.json"
+             Link="Seeds/%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
