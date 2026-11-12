@@ -20,6 +20,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Email").IsRequired().HasMaxLength(320).HasColumnType("character varying(320)");
             b.Property<string>("NormalizedEmail").IsRequired().HasMaxLength(320).HasColumnType("character varying(320)");
             b.Property<string>("DisplayName").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+            b.Property<DateTimeOffset?>("EmailVerifiedAt").HasColumnType("timestamp with time zone");
             b.Property<string>("PasswordHash").HasMaxLength(512).HasColumnType("character varying(512)");
             b.Property<string>("GoogleSubject").HasMaxLength(255).HasColumnType("character varying(255)");
             b.Property<string>("Role").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
@@ -36,6 +37,21 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("GoogleSubject").IsUnique();
             b.HasIndex("Role");
             b.ToTable("users");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Identity.EmailActionToken", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("TokenHash").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<string>("Purpose").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("ExpiresAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("ConsumedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("TokenHash").IsUnique();
+            b.HasIndex("UserId", "Purpose", "ExpiresAt");
+            b.ToTable("email_action_tokens");
         });
 
         modelBuilder.Entity("Trazo.Domain.Identity.RefreshToken", b =>
@@ -81,6 +97,11 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("auth_recovery_codes");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Identity.EmailActionToken", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
         modelBuilder.Entity("Trazo.Domain.Identity.RefreshToken", b =>
         {
             b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
