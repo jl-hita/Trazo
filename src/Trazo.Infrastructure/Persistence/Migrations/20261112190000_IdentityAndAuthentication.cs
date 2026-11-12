@@ -18,6 +18,7 @@ public sealed class IdentityAndAuthentication : Migration
                 "Email" character varying(320) NOT NULL,
                 "NormalizedEmail" character varying(320) NOT NULL,
                 "DisplayName" character varying(100) NOT NULL,
+                "EmailVerifiedAt" timestamp with time zone,
                 "PasswordHash" character varying(512),
                 "GoogleSubject" character varying(255),
                 "Role" character varying(30) NOT NULL DEFAULT 'user',
@@ -34,6 +35,18 @@ public sealed class IdentityAndAuthentication : Migration
             CREATE UNIQUE INDEX "IX_users_NormalizedEmail" ON users ("NormalizedEmail");
             CREATE UNIQUE INDEX "IX_users_GoogleSubject" ON users ("GoogleSubject") WHERE "GoogleSubject" IS NOT NULL;
             CREATE INDEX "IX_users_Role" ON users ("Role");
+
+            CREATE TABLE email_action_tokens (
+                "Id" uuid PRIMARY KEY,
+                "UserId" uuid NOT NULL REFERENCES users("Id") ON DELETE CASCADE,
+                "TokenHash" character varying(64) NOT NULL,
+                "Purpose" character varying(30) NOT NULL,
+                "CreatedAt" timestamp with time zone NOT NULL,
+                "ExpiresAt" timestamp with time zone NOT NULL,
+                "ConsumedAt" timestamp with time zone
+            );
+            CREATE UNIQUE INDEX "IX_email_action_tokens_TokenHash" ON email_action_tokens ("TokenHash");
+            CREATE INDEX "IX_email_action_tokens_UserId_Purpose_ExpiresAt" ON email_action_tokens ("UserId", "Purpose", "ExpiresAt");
 
             CREATE TABLE refresh_tokens (
                 "Id" uuid PRIMARY KEY,
@@ -74,6 +87,7 @@ public sealed class IdentityAndAuthentication : Migration
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.Sql("""
+            DROP TABLE IF EXISTS email_action_tokens;
             DROP TABLE IF EXISTS auth_recovery_codes;
             DROP TABLE IF EXISTS auth_challenges;
             DROP TABLE IF EXISTS refresh_tokens;
