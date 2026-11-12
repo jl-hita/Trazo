@@ -360,8 +360,20 @@ public static class AuthenticationEndpoints
         var hash = AuthTokenService.HashToken(request.RefreshToken);
         var now = DateTimeOffset.UtcNow;
         var existing = await db.RefreshTokens.SingleOrDefaultAsync(x => x.TokenHash == hash, cancellationToken);
-        if (existing is null || existing.RevokedAt is not null || existing.ExpiresAt <= now)
+        if (existing is null || existing.ExpiresAt <= now)
             return Results.Unauthorized();
+        if (existing.RevokedAt is not null)
+        {
+            // A previously rotated token being presented again indicates possible theft.
+            // Revoke the remaining active sessions in that user's token family.
+            if (existing.ReplacedByTokenHash is not null)
+            {
+                await db.RefreshTokens
+                    .Where(x => x.UserId == existing.UserId && x.RevokedAt == null)
+                    .ExecuteUpdateAsync(s => s.SetProperty(x => x.RevokedAt, now), cancellationToken);
+            }
+            return Results.Unauthorized();
+        }
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == existing.UserId, cancellationToken);
         if (user is null) return Results.Unauthorized();
 
