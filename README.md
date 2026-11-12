@@ -56,6 +56,10 @@ npm start
 
 The initial administration interface is a visual shell. It is not yet connected to live API data and does not implement authentication or administrative actions.
 
+## Configuration and deployment
+
+See [docs/configuration-and-deployment.md](docs/configuration-and-deployment.md) for the complete API environment file, PostgreSQL, JWT/Google/2FA, SMTP, Data Protection, systemd, Nginx/DuckDNS and Angular administration setup.
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md).
