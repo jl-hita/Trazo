@@ -7,6 +7,7 @@ using Npgsql;
 using Trazo.Application;
 using Trazo.Infrastructure;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +64,8 @@ app.MapGet("/api/v1", () => Results.Ok(new
     version = "v1"
 }))
 .WithName("ApiInfo");
+
+app.MapExerciseCatalogEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,
