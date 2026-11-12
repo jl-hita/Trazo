@@ -16,5 +16,4 @@ public sealed class TrazoUser
     public DateTimeOffset? LastLoginAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
-    public byte[] RowVersion { get; set; } = [];
 }
