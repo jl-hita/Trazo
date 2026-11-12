@@ -224,7 +224,9 @@ public static class AuthenticationEndpoints
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         var protector = protection.CreateProtector("TRAZO.Authenticator.v1");
         var secret = protector.Unprotect(user.ProtectedAuthenticatorKey);
-        var valid = TotpService.VerifyCode(secret, request.Code, now);
+        var valid = TotpService.TryGetMatchingStep(secret, request.Code, now, out var matchingStep) &&
+            (user.LastTotpStep is null || matchingStep > user.LastTotpStep.Value);
+        if (valid) user.LastTotpStep = matchingStep;
         if (!valid)
         {
             var recoveryHash = AuthTokenService.HashToken(TotpService.NormalizeRecoveryCode(request.Code));
@@ -267,6 +269,8 @@ public static class AuthenticationEndpoints
     {
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == GetUserId(principal), cancellationToken);
         if (user is null) return Results.Unauthorized();
+        if (user.TwoFactorEnabled)
+            return Results.Conflict(new { error = "Disable two-factor authentication before replacing its authenticator." });
         var secret = TotpService.GenerateSecret();
         user.ProtectedAuthenticatorKey = protection.CreateProtector("TRAZO.Authenticator.v1").Protect(secret);
         user.UpdatedAt = DateTimeOffset.UtcNow;
@@ -291,8 +295,9 @@ public static class AuthenticationEndpoints
         if (string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
             return Results.BadRequest(new { error = "Start two-factor setup first." });
         var secret = protection.CreateProtector("TRAZO.Authenticator.v1").Unprotect(user.ProtectedAuthenticatorKey);
-        if (!TotpService.VerifyCode(secret, request.Code, DateTimeOffset.UtcNow))
-            return Results.BadRequest(new { error = "The authenticator code is invalid." });
+        if (!TotpService.TryGetMatchingStep(secret, request.Code, DateTimeOffset.UtcNow, out var matchingStep) ||
+            (user.LastTotpStep is not null && matchingStep <= user.LastTotpStep.Value))
+            return Results.BadRequest(new { error = "The authenticator code is invalid or has already been used." });
 
         var recoveryCodes = TotpService.GenerateRecoveryCodes();
         var now = DateTimeOffset.UtcNow;
@@ -309,6 +314,7 @@ public static class AuthenticationEndpoints
             });
         }
         user.TwoFactorEnabled = true;
+        user.LastTotpStep = matchingStep;
         user.UpdatedAt = now;
         await db.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -332,8 +338,10 @@ public static class AuthenticationEndpoints
         if (!user.TwoFactorEnabled || string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
             return Results.BadRequest(new { error = "Two-factor authentication is not enabled." });
         var secret = protection.CreateProtector("TRAZO.Authenticator.v1").Unprotect(user.ProtectedAuthenticatorKey);
-        if (!TotpService.VerifyCode(secret, request.Code, DateTimeOffset.UtcNow))
+        if (!TotpService.TryGetMatchingStep(secret, request.Code, DateTimeOffset.UtcNow, out var matchingStep) ||
+            (user.LastTotpStep is not null && matchingStep <= user.LastTotpStep.Value))
             return Results.Unauthorized();
+        user.LastTotpStep = matchingStep;
         user.TwoFactorEnabled = false;
         user.ProtectedAuthenticatorKey = null;
         user.UpdatedAt = DateTimeOffset.UtcNow;
