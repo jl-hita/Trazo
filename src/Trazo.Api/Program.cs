@@ -36,6 +36,7 @@ if (!builder.Environment.IsDevelopment() &&
 }
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 var jwtIssuer = builder.Configuration["Authentication:Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Authentication:Jwt:Audience"];
@@ -136,6 +137,7 @@ app.MapGet("/api/v1", () => Results.Ok(new
 
 app.MapExerciseCatalogEndpoints();
 app.MapAuthenticationEndpoints();
+app.MapAccountEmailEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,

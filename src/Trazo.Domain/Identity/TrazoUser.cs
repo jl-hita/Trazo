@@ -6,6 +6,7 @@ public sealed class TrazoUser
     public required string Email { get; set; }
     public required string NormalizedEmail { get; set; }
     public required string DisplayName { get; set; }
+    public DateTimeOffset? EmailVerifiedAt { get; set; }
     public string? PasswordHash { get; set; }
     public string? GoogleSubject { get; set; }
     public string Role { get; set; } = "user";

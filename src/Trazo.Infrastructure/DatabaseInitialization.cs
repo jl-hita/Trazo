@@ -45,6 +45,7 @@ public static class DatabaseInitialization
                     DisplayName = configuration["BootstrapAdmin:DisplayName"]?.Trim() is { Length: > 1 and <= 100 } name
                         ? name : "TRAZO Administrator",
                     Role = "superadmin",
+                    EmailVerifiedAt = now,
                     CreatedAt = now,
                     UpdatedAt = now
                 };
