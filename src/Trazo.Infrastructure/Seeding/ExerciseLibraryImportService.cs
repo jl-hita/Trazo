@@ -21,7 +21,7 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
     private static readonly Regex SafeId = new("^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$", RegexOptions.Compiled);
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    private sealed record ImageManifest(string ExerciseId, int Slot, string Path, string ContentType, int Size, string Sha256);
+    private sealed record ImageManifest(string ExerciseId, int Slot, string Path, string ContentType, string Source, int Size, string Sha256);
     private sealed record Manifest(int SchemaVersion, string Source, DateTimeOffset ExportedAtUtc,
         int ExerciseCount, int ImageCount, string Attribution, string ExercisesSha256, List<ImageManifest> Images);
 
@@ -57,7 +57,7 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             foreach (var image in manifest.Images)
             {
                 if (!SafeId.IsMatch(image.ExerciseId) || image.Slot is < 0 or > 3 ||
-                    image.Size is <= 0 or > MaxImageBytes ||
+                    image.Size is <= 0 or > MaxImageBytes || image.Source is not ("repdb-free" or "custom") ||
                     image.Path != $"images/{image.ExerciseId}/{image.Slot}.{ExtensionFor(image.ContentType)}")
                     throw new InvalidDataException("An image manifest entry contains an invalid path or size.");
                 var entry = archive.GetEntry(image.Path) ?? throw new InvalidDataException($"Image '{image.Path}' is missing.");
@@ -193,7 +193,7 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             """;
         await using var command = new NpgsqlCommand(sql, connection, transaction);
         command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("source", $"dietoexpress:{source}"[..Math.Min(40, $"dietoexpress:{source}".Length)]);
+        command.Parameters.AddWithValue("source", source[..Math.Min(40, source.Length)]);
         command.Parameters.AddWithValue("name_en", nameEn);
         command.Parameters.AddWithValue("name_es", nameEs);
         command.Parameters.AddWithValue("description", descriptionEs);
@@ -243,11 +243,11 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         ImageManifest image, byte[] bytes, CancellationToken ct)
     {
         const string sql = """
-            INSERT INTO exercise_catalog_images (exercise_id, slot, content_type, data, sha256, source, imported_at)
-            VALUES (@id, @slot, @type, @data, @hash, 'DietoExpress', NOW())
+            INSERT INTO exercise_catalog_images (exercise_id, slot, content_type, data, sha256, source, origin_system, imported_at)
+            VALUES (@id, @slot, @type, @data, @hash, @source, 'DietoExpress', NOW())
             ON CONFLICT (exercise_id, slot) DO UPDATE SET content_type = EXCLUDED.content_type,
                 data = EXCLUDED.data, sha256 = EXCLUDED.sha256, source = EXCLUDED.source, imported_at = NOW()
-            WHERE exercise_catalog_images.source = 'DietoExpress'
+            WHERE exercise_catalog_images.origin_system = 'DietoExpress'
             """;
         await using var command = new NpgsqlCommand(sql, connection, transaction);
         command.Parameters.AddWithValue("id", image.ExerciseId);
@@ -255,6 +255,7 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         command.Parameters.AddWithValue("type", image.ContentType);
         command.Parameters.AddWithValue("data", bytes);
         command.Parameters.AddWithValue("hash", image.Sha256.ToLowerInvariant());
+        command.Parameters.AddWithValue("source", image.Source);
         return await command.ExecuteNonQueryAsync(ct) > 0;
     }
 
