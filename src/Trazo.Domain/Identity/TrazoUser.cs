@@ -11,6 +11,7 @@ public sealed class TrazoUser
     public string Role { get; set; } = "user";
     public bool TwoFactorEnabled { get; set; }
     public string? ProtectedAuthenticatorKey { get; set; }
+    public long? LastTotpStep { get; set; }
     public int FailedLoginAttempts { get; set; }
     public DateTimeOffset? LockoutEnd { get; set; }
     public DateTimeOffset? LastLoginAt { get; set; }
