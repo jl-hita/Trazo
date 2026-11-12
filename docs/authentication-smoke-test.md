@@ -82,7 +82,7 @@ Start the API with the environment above. On startup it applies migrations and s
 Example login request:
 
 ```bash
-curl -i -X POST http://localhost:5000/api/v1/auth/login \
+curl -i -X POST http://localhost:5001/api/v1/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"trazo-test@example.com","password":"REPLACE_WITH_TEST_PASSWORD","deviceName":"Android smoke test"}'
 ```
@@ -91,7 +91,7 @@ Do not paste real passwords, access tokens, refresh tokens, SMTP credentials or 
 
 ## 7. Build and run Android
 
-The Android debug build defaults to `http://10.0.2.2:5000/`, the development computer's localhost as seen from the Android emulator. Start the API on port 5000 on that computer.
+The Android debug build defaults to `http://10.0.2.2:5001/`, the development computer's localhost as seen from the Android emulator. Start the API using its Development launch profile; it listens on HTTP port 5001. Development intentionally does not redirect that local HTTP traffic to HTTPS.
 
 For another test API, pass the URL when building:
 
