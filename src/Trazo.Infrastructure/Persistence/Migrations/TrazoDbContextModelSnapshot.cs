@@ -92,6 +92,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasKey("Id");
             b.HasIndex("TokenHash").IsUnique();
             b.HasIndex("ExpiresAt");
+            b.HasIndex("UserId");
             b.ToTable("auth_challenges");
         });
 
