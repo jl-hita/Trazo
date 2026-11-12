@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace Trazo.UnitTests;
 
 public sealed class FoundationTests
