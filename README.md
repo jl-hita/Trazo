@@ -42,7 +42,7 @@ Configure PostgreSQL with the `ConnectionStrings__Trazo` environment variable. D
 - `/health/ready` checks database connectivity.
 - In Development, OpenAPI is available at `/openapi/v1.json`.
 
-The initial DbContext is empty; application tables will appear as domain migrations are introduced. See [docs/architecture.md](docs/architecture.md) for migration and deployment guidance.
+On the first API start, EF Core applies pending migrations and the backend imports the curated exercise additions from the versioned JSON seed. Later starts are idempotent: existing catalog entries are preserved and are not overwritten by the seed. The PostgreSQL database and login must exist beforehand; the API creates and upgrades its tables automatically. See [docs/architecture.md](docs/architecture.md) and [docs/exercise-catalog-seeding.md](docs/exercise-catalog-seeding.md) for details.
 
 ### Angular administration
 
