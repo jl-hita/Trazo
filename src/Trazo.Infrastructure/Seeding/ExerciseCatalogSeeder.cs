@@ -9,7 +9,7 @@ namespace Trazo.Infrastructure.Seeding;
 /// <summary>
 /// Imports first-party curated exercise additions from the versioned JSON seed.
 /// Existing rows are deliberately not overwritten: admin curation always wins.
-/// Safe to execute on every startup.
+/// Safe to execute on every startup and serialized across concurrent API instances.
 /// </summary>
 public sealed class ExerciseCatalogSeeder(
     TrazoDbContext db,
@@ -48,14 +48,15 @@ public sealed class ExerciseCatalogSeeder(
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Seeds", "exercise-catalog-additions.json");
         if (!File.Exists(path))
-        {
-            logger.LogWarning("Exercise catalog seed not found at {SeedPath}; skipping curated additions.", path);
-            return;
-        }
+            throw new FileNotFoundException("The required exercise catalog seed was not published with the API.", path);
 
         await using var stream = File.OpenRead(path);
         var entries = await JsonSerializer.DeserializeAsync<List<SeedEntry>>(stream, JsonOptions, cancellationToken)
             ?? throw new InvalidDataException("Exercise catalog seed is empty or invalid.");
+
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        // Prevent two API instances from racing through the existence check during first deployment.
+        await db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(731904221)", cancellationToken);
 
         var now = DateTimeOffset.UtcNow;
         var inserted = 0;
@@ -66,6 +67,7 @@ public sealed class ExerciseCatalogSeeder(
                 string.IsNullOrWhiteSpace(entry.NameEs) ||
                 entry.Version < 1 ||
                 entry.InstructionsEs.Length < 3 ||
+                entry.InstructionsEs.Any(string.IsNullOrWhiteSpace) ||
                 entry.PrimaryMuscles.Length == 0 ||
                 entry.SuitableGoals.Length == 0 ||
                 entry.SelectionPriority is < 0 or > 100)
@@ -110,6 +112,8 @@ public sealed class ExerciseCatalogSeeder(
 
         if (inserted > 0)
             await db.SaveChangesAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation(
             "Exercise catalog seed processed: {SeedEntries} entries, {Inserted} inserted; existing entries preserved.",
