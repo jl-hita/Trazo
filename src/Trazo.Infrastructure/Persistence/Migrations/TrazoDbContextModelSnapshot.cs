@@ -25,6 +25,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Role").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
             b.Property<bool>("TwoFactorEnabled").HasColumnType("boolean");
             b.Property<string>("ProtectedAuthenticatorKey").HasMaxLength(1024).HasColumnType("character varying(1024)");
+            b.Property<long?>("LastTotpStep").HasColumnType("bigint");
             b.Property<int>("FailedLoginAttempts").HasColumnType("integer");
             b.Property<DateTimeOffset?>("LockoutEnd").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("LastLoginAt").HasColumnType("timestamp with time zone");
