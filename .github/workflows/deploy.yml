@@ -1,4 +1,4 @@
-name: Deploy TRAZO API
+name: Deploy TRAZO
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
       - "Directory.Build.props"
       - "global.json"
       - "deploy/**"
+      - "admin/Trazo.Admin.Web/**"
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
@@ -70,6 +71,21 @@ jobs:
           mkdir -p /tmp/trazo-backend
           cp -a /tmp/trazo-publish/. /tmp/trazo-backend/
           test -f /tmp/trazo-backend/Trazo.Api.dll
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build admin frontend
+        working-directory: admin/Trazo.Admin.Web
+        run: |
+          npm ci
+          npm audit --omit=dev --audit-level=high
+          npm run build
+          test -f dist/trazo-admin-web/browser/index.html
+          rm -rf /tmp/trazo-frontend
+          mkdir -p /tmp/trazo-frontend
+          cp -a dist/trazo-admin-web/browser/. /tmp/trazo-frontend/
 
       - name: Deploy atomically and smoke test
         env:

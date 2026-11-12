@@ -3,12 +3,12 @@
 Despliegue continuo del backend con el mismo patrón que DietoExpress: un runner self-hosted de GitHub Actions compila, prueba y publica; un helper root con sudoers acotado activa la release de forma atómica y hace rollback automático si falla el smoke test.
 
 ```
-git push main → Actions (runner en weirdfish) → /tmp/trazo-backend
+git push main → Actions (runner en weirdfish) → /tmp/trazo-backend + /tmp/trazo-frontend (Angular)
    → sudo trazo-deploy <sha> → /opt/trazo/releases/<sha> ← /opt/trazo/current
-   → systemd trazo.service (127.0.0.1:5001) ← Nginx :80/:443 ← Internet
+   → systemd trazo.service (127.0.0.1:5001) ← Nginx :80/:443 (sirve /var/www/trazo, proxy /api y /health) ← Internet
 ```
 
-Alcance actual: solo el API. El Angular de administración aún es una maqueta y no se despliega.
+Alcance: el workflow despliega el API y el frontend Angular de administración (incluye el asistente de primer arranque), servido por Nginx desde `/var/www/trazo`.
 
 ## Tareas únicas (las haces tú en weirdfish y en el router)
 
@@ -41,7 +41,7 @@ Es un runner **por repositorio**: el de DietoExpress no sirve para TRAZO. Instal
 
 1. GitHub → `jl-hita/Trazo` → Settings → Actions → Runners → **New self-hosted runner** → Linux x64. GitHub muestra los comandos y el token de registro (caduca en 1 hora).
 2. ```bash
-   mkdir -p ~/actions-runner-trazo && cd ~/actions-runner-trazo
+   sudo install -d -o joso -g joso /opt/actions-runner-trazo && cd /opt/actions-runner-trazo   # en /opt, no en /home: con SELinux Enforcing systemd no ejecuta runsvc.sh desde user_home_t
    # descargar y extraer según las instrucciones de GitHub, luego:
    ./config.sh --url https://github.com/jl-hita/Trazo --token <TOKEN> --name weirdfish-trazo
    sudo ./svc.sh install joso && sudo ./svc.sh start

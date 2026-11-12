@@ -18,6 +18,10 @@ VERSION="${TRAZO_VERSION:-}"
   echo "ERROR: falta el backend publicado en /tmp/trazo-backend." >&2
   exit 1
 }
+[[ -d /tmp/trazo-frontend && -f /tmp/trazo-frontend/index.html ]] || {
+  echo "ERROR: falta el frontend compilado en /tmp/trazo-frontend." >&2
+  exit 1
+}
 
 command -v sudo >/dev/null 2>&1 || {
   echo "ERROR: sudo no está instalado." >&2
