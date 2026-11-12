@@ -15,5 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="../../src/Trazo.Domain/Trazo.Domain.csproj" />
     <ProjectReference Include="../../src/Trazo.Application/Trazo.Application.csproj" />
+    <ProjectReference Include="../../src/Trazo.Api/Trazo.Api.csproj" />
   </ItemGroup>
 </Project>
