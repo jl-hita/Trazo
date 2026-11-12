@@ -25,6 +25,7 @@ public static class DependencyInjection
                 npgsql.EnableRetryOnFailure()));
 
         services.AddScoped<ExerciseCatalogSeeder>();
+        services.AddScoped<ExerciseLibraryImportService>();
 
         return services;
     }
