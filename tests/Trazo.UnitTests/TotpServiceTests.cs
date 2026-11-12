@@ -13,6 +13,8 @@ public sealed class TotpServiceTests
         var timestamp = DateTimeOffset.FromUnixTimeSeconds(59);
 
         Assert.True(TotpService.VerifyCode(secret, "287082", timestamp));
+        Assert.True(TotpService.TryGetMatchingStep(secret, "287082", timestamp, out var step));
+        Assert.Equal(1, step);
     }
 
     [Fact]
