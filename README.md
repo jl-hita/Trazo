@@ -27,7 +27,7 @@ TRAZO is an independent strength-training platform for experienced lifters. This
 
 ### Backend API
 
-Requires the .NET 10 SDK and PostgreSQL (the API can start without a configured database connection while the foundation is being built).
+Requires the .NET 10 SDK and a PostgreSQL database/login. On startup, the API automatically applies pending EF Core migrations before it begins accepting requests.
 
 ```bash
 dotnet restore Trazo.sln
@@ -36,9 +36,13 @@ dotnet test Trazo.sln
 dotnet run --project src/Trazo.Api
 ```
 
-The API listens on the URLs shown by ASP.NET Core. In Development, the OpenAPI document is available at `/openapi/v1.json`. Health check: `/health`.
+Configure PostgreSQL with the `ConnectionStrings__Trazo` environment variable. Do not commit real credentials. The configured role needs permission to create and alter schema objects in the dedicated TRAZO database.
 
-Configure PostgreSQL with the `ConnectionStrings__Trazo` environment variable. Do not commit real credentials.
+- `/health` checks that the API process is alive.
+- `/health/ready` checks database connectivity.
+- In Development, OpenAPI is available at `/openapi/v1.json`.
+
+The initial DbContext is empty; application tables will appear as domain migrations are introduced. See [docs/architecture.md](docs/architecture.md) for migration and deployment guidance.
 
 ### Angular administration
 
