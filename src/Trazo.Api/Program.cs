@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http.Features;
 using Trazo.Infrastructure.Seeding;
+using Npgsql;
 using Trazo.Application;
 using Trazo.Infrastructure;
 using Trazo.Infrastructure.Persistence;
@@ -125,6 +126,58 @@ app.MapPost("/api/internal/exercise-catalog/import", async (
     }
 })
 .WithName("ImportDietoExpressExerciseLibrary");
+
+
+app.MapGet("/api/v1/exercises/{id}/images", async (string id, TrazoDbContext db, CancellationToken cancellationToken) =>
+{
+    if (string.IsNullOrWhiteSpace(id) || id.Length > 100)
+        return Results.BadRequest();
+    var connection = (NpgsqlConnection)db.Database.GetDbConnection();
+    var shouldClose = connection.State != System.Data.ConnectionState.Open;
+    if (shouldClose) await connection.OpenAsync(cancellationToken);
+    try
+    {
+        var slots = new List<int>();
+        await using var command = new NpgsqlCommand(
+            "SELECT slot FROM exercise_catalog_images WHERE exercise_id = @id ORDER BY slot", connection);
+        command.Parameters.AddWithValue("id", id);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        while (await reader.ReadAsync(cancellationToken)) slots.Add(reader.GetInt16(0));
+        return Results.Ok(new { slots, attribution = "Exercise data by RepDB (repdb.co)" });
+    }
+    finally
+    {
+        if (shouldClose) await connection.CloseAsync();
+    }
+})
+.WithName("GetExerciseImageSlots");
+
+app.MapGet("/api/v1/exercises/{id}/images/{slot:int}", async (
+    string id, int slot, TrazoDbContext db, HttpContext context, CancellationToken cancellationToken) =>
+{
+    if (string.IsNullOrWhiteSpace(id) || id.Length > 100 || slot is < 0 or > 3)
+        return Results.BadRequest();
+    var connection = (NpgsqlConnection)db.Database.GetDbConnection();
+    var shouldClose = connection.State != System.Data.ConnectionState.Open;
+    if (shouldClose) await connection.OpenAsync(cancellationToken);
+    try
+    {
+        await using var command = new NpgsqlCommand(
+            "SELECT content_type, data FROM exercise_catalog_images WHERE exercise_id = @id AND slot = @slot", connection);
+        command.Parameters.AddWithValue("id", id);
+        command.Parameters.AddWithValue("slot", (short)slot);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken)) return Results.NotFound();
+        context.Response.Headers.CacheControl = "public, max-age=86400";
+        context.Response.Headers["X-Image-Attribution"] = "Exercise data by RepDB (repdb.co)";
+        return Results.File((byte[])reader["data"], reader.GetString(0));
+    }
+    finally
+    {
+        if (shouldClose) await connection.CloseAsync();
+    }
+})
+.WithName("GetExerciseImage");
 
 app.Run();
 
