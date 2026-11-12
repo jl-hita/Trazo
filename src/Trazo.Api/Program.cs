@@ -28,6 +28,12 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
+if (!builder.Environment.IsDevelopment() &&
+    string.IsNullOrWhiteSpace(builder.Configuration["DataProtection:KeysPath"]))
+{
+    throw new InvalidOperationException(
+        "DataProtection:KeysPath must point to a persistent, access-restricted directory in non-development environments.");
+}
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
 
