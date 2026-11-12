@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Training;
+using Trazo.Domain.Identity;
 
 namespace Trazo.Infrastructure.Persistence;
 
@@ -9,6 +10,10 @@ namespace Trazo.Infrastructure.Persistence;
 public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : DbContext(options)
 {
     public DbSet<ExerciseCatalogItem> ExerciseCatalog => Set<ExerciseCatalogItem>();
+    public DbSet<TrazoUser> Users => Set<TrazoUser>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<AuthChallenge> AuthChallenges => Set<AuthChallenge>();
+    public DbSet<AuthRecoveryCode> AuthRecoveryCodes => Set<AuthRecoveryCode>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

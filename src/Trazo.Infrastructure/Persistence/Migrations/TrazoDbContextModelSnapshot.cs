@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Domain.Identity;
 
 #nullable disable
 
@@ -12,6 +13,90 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
         modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
+
+        modelBuilder.Entity("Trazo.Domain.Identity.TrazoUser", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Email").IsRequired().HasMaxLength(320).HasColumnType("character varying(320)");
+            b.Property<string>("NormalizedEmail").IsRequired().HasMaxLength(320).HasColumnType("character varying(320)");
+            b.Property<string>("DisplayName").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+            b.Property<string>("PasswordHash").HasMaxLength(512).HasColumnType("character varying(512)");
+            b.Property<string>("GoogleSubject").HasMaxLength(255).HasColumnType("character varying(255)");
+            b.Property<string>("Role").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<bool>("TwoFactorEnabled").HasColumnType("boolean");
+            b.Property<string>("ProtectedAuthenticatorKey").HasMaxLength(1024).HasColumnType("character varying(1024)");
+            b.Property<long?>("LastTotpStep").HasColumnType("bigint");
+            b.Property<int>("FailedLoginAttempts").HasColumnType("integer");
+            b.Property<DateTimeOffset?>("LockoutEnd").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("LastLoginAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("NormalizedEmail").IsUnique();
+            b.HasIndex("GoogleSubject").IsUnique();
+            b.HasIndex("Role");
+            b.ToTable("users");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Identity.RefreshToken", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("TokenHash").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("ExpiresAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("RevokedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("ReplacedByTokenHash").HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<string>("DeviceName").HasMaxLength(120).HasColumnType("character varying(120)");
+            b.HasKey("Id");
+            b.HasIndex("TokenHash").IsUnique();
+            b.HasIndex("UserId", "ExpiresAt");
+            b.ToTable("refresh_tokens");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Identity.AuthChallenge", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("TokenHash").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("ExpiresAt").HasColumnType("timestamp with time zone");
+            b.Property<int>("FailedAttempts").HasColumnType("integer");
+            b.Property<DateTimeOffset?>("ConsumedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("TokenHash").IsUnique();
+            b.HasIndex("ExpiresAt");
+            b.ToTable("auth_challenges");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Identity.AuthRecoveryCode", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("CodeHash").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("UsedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("UserId", "CodeHash").IsUnique();
+            b.ToTable("auth_recovery_codes");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Identity.RefreshToken", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+        modelBuilder.Entity("Trazo.Domain.Identity.AuthChallenge", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+        modelBuilder.Entity("Trazo.Domain.Identity.AuthRecoveryCode", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Training.ExerciseCatalogItem", b =>
         {
             b.Property<string>("Id").HasMaxLength(100).HasColumnType("character varying(100)").HasColumnName("exercise_id");

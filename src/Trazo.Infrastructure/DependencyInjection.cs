@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Trazo.Domain.Identity;
+using System.IO;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
 
@@ -24,6 +28,15 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString, npgsql =>
                 npgsql.EnableRetryOnFailure()));
 
+        services.AddScoped<PasswordHasher<TrazoUser>>();
+
+        var dataProtection = services.AddDataProtection().SetApplicationName("TRAZO");
+        var keysPath = configuration["DataProtection:KeysPath"];
+        if (!string.IsNullOrWhiteSpace(keysPath))
+        {
+            Directory.CreateDirectory(keysPath);
+            dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+        }
         services.AddScoped<ExerciseCatalogSeeder>();
         services.AddScoped<ExerciseLibraryImportService>();
 
