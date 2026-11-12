@@ -2,7 +2,8 @@
 
 ## Implemented authentication methods
 
-- Email and password registration/login.
+- Email and password registration/login, with email verification required before password login.
+- One-time email verification and password reset links; token values are stored only as SHA-256 hashes and are single-use.
 - Google Sign-In through a Google OpenID Connect ID token. The API validates the token signature, issuer, audience and verified email with Google's published signing keys.
 - TOTP second factor compatible with Google Authenticator, Aegis, 1Password and other RFC 6238 apps.
 - Ten one-time recovery codes generated when TOTP is enabled.
@@ -20,6 +21,10 @@ Google accounts are not silently attached to an existing password account just b
 | POST | `/api/v1/auth/register` | Public |
 | POST | `/api/v1/auth/login` | Public |
 | POST | `/api/v1/auth/google` | Public |
+| POST | `/api/v1/auth/email/verify` | Public, one-time token |
+| POST | `/api/v1/auth/email/resend` | Public, rate-limited |
+| POST | `/api/v1/auth/password/forgot` | Public, rate-limited |
+| POST | `/api/v1/auth/password/reset` | Public, one-time token |
 | POST | `/api/v1/auth/2fa/verify` | Public, short-lived challenge |
 | POST | `/api/v1/auth/refresh` | Public, refresh token |
 | POST | `/api/v1/auth/logout` | Authenticated |
@@ -47,6 +52,22 @@ Create OAuth 2.0 clients in Google Cloud Console:
 - An **Android** OAuth client registered with the Android package name and signing-certificate SHA-1 fingerprints (debug and Play App Signing as appropriate).
 
 The Android app should use Credential Manager / Google Identity Services to obtain an ID token for the Web application client ID, then send that ID token to `POST /api/v1/auth/google`. Do not send Google access tokens as proof of identity and never embed a Google client secret in Android.
+
+## Transactional email configuration
+
+Configure an SMTP relay and the public account-action URL before allowing registration. Keep credentials in the service environment, never in source control:
+
+```ini
+Email__Smtp__Host=smtp.example.com
+Email__Smtp__Port=587
+Email__Smtp__EnableSsl=true
+Email__Smtp__Username=YOUR_SMTP_USER
+Email__Smtp__Password=YOUR_SMTP_PASSWORD
+Email__From=no-reply@example.com
+Email__ActionBaseUrl=https://your-public-app.example.com
+```
+
+The configured action base URL receives `/account/verify-email?token=...` and `/account/reset-password?token=...`. Those pages or app deep links must be provided by the client application. The API accepts the returned token through the corresponding POST endpoints.
 
 ## Server configuration
 
@@ -91,4 +112,4 @@ If the users table is empty, startup creates this account with the `superadmin` 
 - The initial role is always assigned by the server; clients cannot choose or modify their role.
 - The exercise catalog remains read-only and public. User-specific training endpoints must require authentication and enforce ownership checks.
 
-**Not yet production-complete:** email address verification, password reset/recovery by email, account deletion/export workflows, administrator account management UI, and automated security integration tests still need to be added. Configure a transactional email provider before opening public registration. Do not treat the current authentication slice as a launch-ready identity product until these gaps and the Android end-to-end flows have been tested.
+**Not yet production-complete:** account deletion/export workflows, administrator account management UI, automated security integration tests, and complete Android deep-link / password-recovery screens still need to be added. Verify the SMTP relay and public action URLs before opening public registration. Do not treat the current authentication slice as a launch-ready identity product until these gaps and the Android end-to-end flows have been tested.
