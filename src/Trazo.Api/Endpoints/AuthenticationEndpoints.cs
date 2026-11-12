@@ -41,7 +41,8 @@ public static class AuthenticationEndpoints
         RegisterRequest request,
         TrazoDbContext db,
         PasswordHasher<TrazoUser> hasher,
-        AuthTokenService tokens,
+        IEmailSender emailSender,
+        IConfiguration configuration,
         CancellationToken cancellationToken)
     {
         var email = NormalizeEmail(request.Email);
@@ -67,9 +68,9 @@ public static class AuthenticationEndpoints
         db.Users.Add(user);
         try
         {
-            var pair = await tokens.CreateTokenPairAsync(user, db, request.DeviceName, cancellationToken);
-            return Results.Created("/api/v1/auth/me", new TokenResponse(
-                pair.AccessToken, pair.RefreshToken, "Bearer", AuthTokenService.AccessTokenMinutes * 60, ToSummary(user)));
+            await AccountEmailEndpoints.IssueAsync(user, "verify-email", "Verifica tu correo de TRAZO",
+                "Para activar tu cuenta, abre este enlace:", TimeSpan.FromHours(24), db, emailSender, configuration, cancellationToken);
+            return Results.Accepted(value: new { emailVerificationRequired = true, message = "Te hemos enviado un enlace para verificar tu correo." });
         }
         catch (DbUpdateException)
         {
@@ -107,6 +108,8 @@ public static class AuthenticationEndpoints
 
         if (verification == PasswordVerificationResult.SuccessRehashNeeded)
             user.PasswordHash = hasher.HashPassword(user, request.Password);
+        if (user.EmailVerifiedAt is null)
+            return Results.Conflict(new { code = "email_not_verified", error = "Verifica tu correo antes de iniciar sesión." });
         user.FailedLoginAttempts = 0;
         user.LockoutEnd = null;
         user.UpdatedAt = now;
@@ -154,6 +157,7 @@ public static class AuthenticationEndpoints
                 DisplayName = string.IsNullOrWhiteSpace(payload.Name) ? payload.Email : payload.Name,
                 GoogleSubject = subject,
                 Role = "user",
+                EmailVerifiedAt = now,
                 CreatedAt = now,
                 UpdatedAt = now,
                 LastLoginAt = now
@@ -162,6 +166,7 @@ public static class AuthenticationEndpoints
         }
         else
         {
+            user.EmailVerifiedAt ??= DateTimeOffset.UtcNow;
             user.LastLoginAt = DateTimeOffset.UtcNow;
             user.UpdatedAt = user.LastLoginAt.Value;
         }
@@ -196,6 +201,7 @@ public static class AuthenticationEndpoints
         if (await db.Users.AnyAsync(x => x.GoogleSubject == payload.Subject && x.Id != userId, cancellationToken))
             return Results.Conflict(new { error = "This Google account is already linked to another TRAZO account." });
         user.GoogleSubject = payload.Subject;
+        user.EmailVerifiedAt ??= DateTimeOffset.UtcNow;
         user.UpdatedAt = DateTimeOffset.UtcNow;
         await db.SaveChangesAsync(cancellationToken);
         return Results.NoContent();
