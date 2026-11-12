@@ -28,14 +28,14 @@ if [[ ! -f /etc/trazo/trazo.env ]]; then
   cat > /etc/trazo/trazo.env <<EOF
 ASPNETCORE_ENVIRONMENT=Production
 ASPNETCORE_URLS=http://127.0.0.1:5001
-AllowedHosts=trazo.duckdns.org;localhost
+AllowedHosts=trazostrength.duckdns.org;localhost
 ConnectionStrings__Trazo=Host=127.0.0.1;Port=5432;Database=trazo;Username=trazo_app;Password=CAMBIAR_PASSWORD_BD
 Authentication__Jwt__Issuer=TRAZO
 Authentication__Jwt__Audience=TRAZO-Clients
 Authentication__Jwt__SigningKey=$jwt
 Authentication__Google__ClientId=
 DataProtection__KeysPath=/var/lib/trazo/data-protection-keys
-Cors__AllowedOrigins__0=https://trazo.duckdns.org
+Cors__AllowedOrigins__0=https://trazostrength.duckdns.org
 # SMTP: completar antes de abrir el registro público.
 Email__Smtp__Host=
 Email__Smtp__Port=587

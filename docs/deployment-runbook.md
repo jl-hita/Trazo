@@ -13,7 +13,7 @@ Alcance actual: solo el API. El Angular de administración aún es una maqueta y
 ## Tareas únicas (las haces tú en weirdfish y en el router)
 
 ### 1. DNS
-Crea el subdominio `trazo` en DuckDNS apuntando a la misma IP pública que `jlhitap`. El router ya reenvía 80/443 a weirdfish; **no** abras el 5001. Comprueba: `nslookup trazo.duckdns.org`.
+Crea el subdominio `trazo` en DuckDNS apuntando a la misma IP pública que `jlhitap`. El router ya reenvía 80/443 a weirdfish; **no** abras el 5001. Comprueba: `nslookup trazostrength.duckdns.org`.
 
 Si prefieres otro hostname, cámbialo en `deploy/scripts/trazo-deploy-root.sh` (`PUBLIC_HOST`), `deploy/nginx/trazo.conf` y `AllowedHosts` del env.
 
@@ -55,18 +55,18 @@ Con todo lo anterior, cualquier push a `main` que toque `src/`, `tests/` o `depl
 ### 7. HTTPS
 Con el DNS resuelto y el 80 abierto:
 ```bash
-sudo certbot --nginx -d trazo.duckdns.org
+sudo certbot --nginx -d trazostrength.duckdns.org
 ```
 Verifica desde fuera de tu red (p. ej. datos móviles):
 ```bash
-curl https://trazo.duckdns.org/health
-curl "https://trazo.duckdns.org/api/v1/exercises?pageSize=1"
+curl https://trazostrength.duckdns.org/health
+curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 ```
 
 ### 8. Tras el primer arranque
 - Comprueba que el superadmin inicia sesión y **borra** las tres variables `BootstrapAdmin__*` de `trazo.env`; `sudo systemctl restart trazo`.
 - Haz copia de seguridad de la base `trazo` y de `/var/lib/trazo/data-protection-keys` (sin esas claves se pierden los secretos 2FA).
-- Compila Android con `-PapiScheme=https -PapiHost=trazo.duckdns.org -PapiPort=443`.
+- Compila Android con `-PapiScheme=https -PapiHost=trazostrength.duckdns.org -PapiPort=443`.
 
 ## Operación
 

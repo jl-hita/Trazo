@@ -13,9 +13,9 @@ En el servidor compartido `weirdfish`:
 | Nginx | TCP 80 y 443 | Entrada pública y proxy inverso |
 | PostgreSQL | Local/privado | Bases de datos separadas |
 
-Hostname público previsto: `trazo.duckdns.org`. Es una elección pendiente de reservar y configurar; esta documentación no presupone que el registro DNS exista todavía.
+Hostname público previsto: `trazostrength.duckdns.org`. Es una elección pendiente de reservar y configurar; esta documentación no presupone que el registro DNS exista todavía.
 
-La idea es que Nginx atienda `https://trazo.duckdns.org` y reenvíe al API en `http://127.0.0.1:5001`. El puerto 5001 no se abre en el router. En el NAT solo se reenvían TCP 80 y 443 al servidor. DietoExpress conserva su hostname y upstream actuales.
+La idea es que Nginx atienda `https://trazostrength.duckdns.org` y reenvíe al API en `http://127.0.0.1:5001`. El puerto 5001 no se abre en el router. En el NAT solo se reenvían TCP 80 y 443 al servidor. DietoExpress conserva su hostname y upstream actuales.
 
 ## 2. Requisitos previos
 
@@ -48,11 +48,11 @@ ASPNETCORE_URLS=http://127.0.0.1:5001
 ConnectionStrings__Trazo=Host=127.0.0.1;Port=5432;Database=trazo;Username=trazo_app;Password=REPLACE_WITH_DATABASE_PASSWORD
 
 # Hostnames que acepta ASP.NET Core
-AllowedHosts=trazo.duckdns.org;localhost
+AllowedHosts=trazostrength.duckdns.org;localhost
 
 # CORS: añade el origen real desde el que se servirá Angular.
 # Si Angular se sirve desde el mismo origen que la API, no necesita CORS.
-Cors__AllowedOrigins__0=https://trazo.duckdns.org
+Cors__AllowedOrigins__0=https://trazostrength.duckdns.org
 Cors__AllowedOrigins__1=http://localhost:4200
 
 # JWT: genera una clave independiente de DietoExpress, de al menos 32 bytes UTF-8.
@@ -159,7 +159,7 @@ journalctl -u trazo -f
 Cuando hayas reservado el hostname y apuntado DuckDNS a la IP pública:
 
 1. Reenvía en el router únicamente TCP 80 y TCP 443 hacia el servidor.
-2. Emite un certificado TLS para `trazo.duckdns.org`.
+2. Emite un certificado TLS para `trazostrength.duckdns.org`.
 3. Crea un virtual host Nginx para ese hostname y reenvía al upstream `http://127.0.0.1:5001`.
 4. Conserva los encabezados `Host`, `X-Real-IP`, `X-Forwarded-For` y `X-Forwarded-Proto`.
 5. Comprueba que el API solo escucha en loopback y que el puerto 5001 no está publicado en el router.
@@ -205,7 +205,7 @@ cd admin/Trazo.Admin.Web
 npm run build
 ```
 
-La salida se genera en `dist/trazo-admin-web`. Puede servirse como contenido estático mediante Nginx cuando la interfaz esté lista. Configura fallback de rutas SPA a `index.html`. Si el panel se sirve desde el mismo origen `https://trazo.duckdns.org`, las peticiones futuras a rutas `/api` podrán compartir origen; si se publica en otro hostname o puerto, añade ese origen exacto a `Cors__AllowedOrigins`.
+La salida se genera en `dist/trazo-admin-web`. Puede servirse como contenido estático mediante Nginx cuando la interfaz esté lista. Configura fallback de rutas SPA a `index.html`. Si el panel se sirve desde el mismo origen `https://trazostrength.duckdns.org`, las peticiones futuras a rutas `/api` podrán compartir origen; si se publica en otro hostname o puerto, añade ese origen exacto a `Cors__AllowedOrigins`.
 
 ## 8. Importación privada desde DietoExpress
 
@@ -216,7 +216,7 @@ El endpoint interno de TRAZO es `POST /api/internal/exercise-catalog/import`. Re
 - Valor configurado en TRAZO como `DietoExpressImport__ApiKey`.
 - El mismo secreto configurado en DietoExpress como `TrazoTransfer__ApiKey`.
 
-En DietoExpress, `TrazoTransfer__Endpoint` debe apuntar al endpoint público HTTPS de TRAZO, por ejemplo `https://trazo.duckdns.org/api/internal/exercise-catalog/import`. No ejecutes la transferencia hasta confirmar que la licencia de los datos de RepDB permite este uso entre aplicaciones.
+En DietoExpress, `TrazoTransfer__Endpoint` debe apuntar al endpoint público HTTPS de TRAZO, por ejemplo `https://trazostrength.duckdns.org/api/internal/exercise-catalog/import`. No ejecutes la transferencia hasta confirmar que la licencia de los datos de RepDB permite este uso entre aplicaciones.
 
 ## 9. Configuración de desarrollo
 
@@ -237,7 +237,7 @@ Si pruebas flujos de correo, añade las variables SMTP de la sección 3. En desa
 ## 10. Lista de verificación antes de abrir el servicio
 
 - [ ] Hostname DuckDNS reservado y apuntando a la IP pública correcta.
-- [ ] Certificado TLS válido para `trazo.duckdns.org`.
+- [ ] Certificado TLS válido para `trazostrength.duckdns.org`.
 - [ ] PostgreSQL con base y usuario exclusivos.
 - [ ] Archivo `/etc/trazo/trazo.env` protegido y completo.
 - [ ] JWT signing key aleatoria y distinta de DietoExpress.
