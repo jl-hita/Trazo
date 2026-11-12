@@ -7,6 +7,7 @@ using Trazo.Domain.Identity;
 using System.IO;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
+using Trazo.Infrastructure.Settings;
 
 namespace Trazo.Infrastructure;
 
@@ -37,6 +38,7 @@ public static class DependencyInjection
             Directory.CreateDirectory(keysPath);
             dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keysPath));
         }
+        services.AddRuntimeSettings();
         services.AddScoped<ExerciseCatalogSeeder>();
         services.AddScoped<ExerciseLibraryImportService>();
 

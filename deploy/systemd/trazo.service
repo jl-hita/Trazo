@@ -1,0 +1,25 @@
+[Unit]
+Description=TRAZO API
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=trazo
+Group=trazo
+WorkingDirectory=/opt/trazo/current
+EnvironmentFile=/etc/trazo/trazo.env
+ExecStart=/usr/bin/dotnet /opt/trazo/current/Trazo.Api.dll
+Restart=always
+RestartSec=5
+KillSignal=SIGINT
+TimeoutStopSec=30
+SyslogIdentifier=trazo-api
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/trazo
+
+[Install]
+WantedBy=multi-user.target

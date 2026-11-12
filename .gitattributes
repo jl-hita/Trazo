@@ -1,0 +1,4 @@
+# Los scripts y unidades se ejecutan en Linux: CRLF los rompe.
+*.sh text eol=lf
+deploy/** text eol=lf
+.github/workflows/*.yml text eol=lf
