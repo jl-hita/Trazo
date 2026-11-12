@@ -8,6 +8,8 @@
     <ProjectReference Include="../Trazo.Application/Trazo.Application.csproj" />
     <ProjectReference Include="../Trazo.Infrastructure/Trazo.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.73.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="../Trazo.Infrastructure/Seeds/**/*.json"
