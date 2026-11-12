@@ -32,6 +32,7 @@ public sealed class ExerciseLibraryTransfer : Migration
                 data bytea NOT NULL,
                 sha256 char(64) NOT NULL,
                 source varchar(40) NOT NULL,
+                origin_system varchar(40) NOT NULL,
                 imported_at timestamptz NOT NULL DEFAULT NOW(),
                 PRIMARY KEY (exercise_id, slot)
             );
