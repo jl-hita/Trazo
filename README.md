@@ -41,6 +41,7 @@ Configure PostgreSQL with the `ConnectionStrings__Trazo` environment variable. D
 - `/health` checks that the API process is alive.
 - `/health/ready` checks database connectivity.
 - `GET /api/v1/exercises` searches and filters the exercise catalog; `GET /api/v1/exercises/{id}` returns full exercise details. See [docs/exercise-catalog-api.md](docs/exercise-catalog-api.md).
+- `/api/v1/auth` provides password and Google sign-in, JWT sessions, TOTP two-factor authentication and recovery codes. See [docs/authentication.md](docs/authentication.md).
 - In Development, OpenAPI is available at `/openapi/v1.json`.
 
 On the first API start, EF Core applies pending migrations and the backend imports the curated exercise additions from the versioned JSON seed. Later starts are idempotent: existing catalog entries are preserved and are not overwritten by the seed. The PostgreSQL database and login must exist beforehand; the API creates and upgrades its tables automatically. See [docs/architecture.md](docs/architecture.md) and [docs/exercise-catalog-seeding.md](docs/exercise-catalog-seeding.md) for details.
