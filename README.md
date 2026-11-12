@@ -4,56 +4,60 @@
 
 **ADVANCED STRENGTH TRAINING**
 
-Trazo is an Android application focused on structured strength training, hypertrophy, and purposeful progression.
+TRAZO is an independent strength-training platform for experienced lifters. This repository contains the backend API and the Angular administration frontend. The Android application is maintained separately in [Trazo.Android](https://github.com/jl-hita/Trazo.Android).
 
-Its goal is to help experienced lifters plan, understand, and track their training with tools grounded in sound training principles — without turning the process into guesswork or unnecessary complexity.
+## Repository contents
 
-> Plan with intent. Train with purpose. Measure what matters.
-
-## Project status
-
-🚧 **Early development — product and technical foundations**
-
-This repository is the home of the independent Trazo product. The application is not yet ready for production use.
-
-The initial product direction is:
-
-- **Audience:** intermediate and advanced strength trainees, with an emphasis on advanced users.
-- **Scope:** both structured periodized plans and standalone training routines.
-- **Approach:** evidence-informed programming, transparent training logic, and useful progress tracking.
-- **Platform:** Android first.
-
-Product decisions and implementation details will evolve as the project develops.
+- **ASP.NET Core 10 API** — REST API for the Android app and administration frontend.
+- **Domain / Application / Infrastructure** — modular backend layers.
+- **Angular administration** — operational console for users, subscriptions, training configuration, logs, backups and system settings.
+- **PostgreSQL** — TRAZO-owned database, independent from DietoExpress.
+- **GitHub Actions** — separate backend and admin frontend CI workflows.
 
 ## Technology
 
-The planned Android stack is:
+- .NET 10 / C#
+- ASP.NET Core
+- Entity Framework Core + Npgsql
+- PostgreSQL
+- Angular 21 / TypeScript
+- GitHub Actions
 
-- **Kotlin** — primary programming language.
-- **Jetpack Compose** — declarative UI toolkit.
-- **Material 3** — design system and UI components for a consistent, accessible interface.
-- **Gradle** — build and dependency management.
+## Local development
 
-Specific libraries, architecture choices, backend services, and minimum Android version will be documented once they are selected.
+### Backend API
 
-## Principles
+Requires the .NET 10 SDK and a PostgreSQL database/login. On startup, the API automatically applies pending EF Core migrations before it begins accepting requests.
 
-1. **Training quality over feature count.** Prioritize useful capabilities over superficial complexity.
-2. **Evidence-informed decisions.** Base programming recommendations on credible training research and established principles.
-3. **Progression that makes sense.** Make training structure, workload, and progress understandable.
-4. **Respect the experienced trainee.** Provide meaningful control without hiding important decisions behind opaque automation.
-5. **Clarity in the gym.** The interface should be fast to read and use between sets.
+```bash
+dotnet restore Trazo.sln
+dotnet build Trazo.sln
+dotnet test Trazo.sln
+dotnet run --project src/Trazo.Api
+```
 
-## Development
+Configure PostgreSQL with the `ConnectionStrings__Trazo` environment variable. Do not commit real credentials. The configured role needs permission to create and alter schema objects in the dedicated TRAZO database.
 
-The project is currently in its foundation phase. Setup instructions, contribution guidelines, and development workflows will be added as the codebase takes shape.
+- `/health` checks that the API process is alive.
+- `/health/ready` checks database connectivity.
+- In Development, OpenAPI is available at `/openapi/v1.json`.
 
-## Brand
+On the first API start, EF Core applies pending migrations and the backend imports the curated exercise additions from the versioned JSON seed. Later starts are idempotent: existing catalog entries are preserved and are not overwritten by the seed. The PostgreSQL database and login must exist beforehand; the API creates and upgrades its tables automatically. See [docs/architecture.md](docs/architecture.md) and [docs/exercise-catalog-seeding.md](docs/exercise-catalog-seeding.md) for details.
 
-**TRAZO**  
-*Strength, engineered.*  
-ADVANCED STRENGTH TRAINING
+### Angular administration
 
----
+```bash
+cd admin/Trazo.Admin.Web
+npm install
+npm start
+```
 
-Trazo is an independent project. It is not affiliated with, endorsed by, or connected to any other training application or brand.
+The initial administration interface is a visual shell. It is not yet connected to live API data and does not implement authentication or administrative actions.
+
+## Architecture
+
+See [docs/architecture.md](docs/architecture.md).
+
+## Project status
+
+Early development — backend and administration foundations.

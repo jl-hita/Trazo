@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trazo.Domain", "src\Trazo.Domain\Trazo.Domain.csproj", "{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trazo.Application", "src\Trazo.Application\Trazo.Application.csproj", "{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trazo.Infrastructure", "src\Trazo.Infrastructure\Trazo.Infrastructure.csproj", "{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trazo.Api", "src\Trazo.Api\Trazo.Api.csproj", "{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trazo.UnitTests", "tests\Trazo.UnitTests\Trazo.UnitTests.csproj", "{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0005}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C0A11A-9C4E-4D31-A16A-2F4C6A7A0005}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
