@@ -15,8 +15,12 @@ public static class TotpService
         return $"otpauth://totp/{label}?secret={secret}&issuer={Uri.EscapeDataString(issuer)}&algorithm=SHA1&digits=6&period=30";
     }
 
-    public static bool VerifyCode(string secret, string suppliedCode, DateTimeOffset now)
+    public static bool VerifyCode(string secret, string suppliedCode, DateTimeOffset now) =>
+        TryGetMatchingStep(secret, suppliedCode, now, out _);
+
+    public static bool TryGetMatchingStep(string secret, string suppliedCode, DateTimeOffset now, out long matchingStep)
     {
+        matchingStep = -1;
         var code = new string(suppliedCode.Where(char.IsDigit).ToArray());
         if (code.Length != 6) return false;
         byte[] key;
@@ -26,10 +30,15 @@ public static class TotpService
         var counter = now.ToUnixTimeSeconds() / 30;
         for (var offset = -1; offset <= 1; offset++)
         {
-            var expected = GenerateCode(key, counter + offset);
+            var step = counter + offset;
+            if (step < 0) continue;
+            var expected = GenerateCode(key, step);
             if (CryptographicOperations.FixedTimeEquals(
                 Encoding.ASCII.GetBytes(expected), Encoding.ASCII.GetBytes(code)))
+            {
+                matchingStep = step;
                 return true;
+            }
         }
         return false;
     }
