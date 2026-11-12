@@ -1,0 +1,48 @@
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="TRAZO administration home">
+      <span class="brand-mark">T</span>
+      <span><strong>TRAZO</strong><small>ADMINISTRATION</small></span>
+    </a>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav aria-label="Main navigation">
+      @for (item of navigation; track item.label) {
+        <a class="nav-item" [class.active]="item.active" href="#">
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+    <div class="sidebar-footer">
+      <span class="status-dot"></span><span>System workspace</span><span class="environment">DEV</span>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <span class="breadcrumb">Workspace <span>/</span> Overview</span>
+      <div class="admin-chip"><span class="avatar">A</span> Administrator</div>
+    </header>
+    <section class="content">
+      <div class="page-heading">
+        <div><p class="eyebrow">SYSTEM CONSOLE</p><h1>Overview</h1><p class="subtitle">The operational home for your TRAZO platform.</p></div>
+        <span class="environment-tag">FOUNDATION</span>
+      </div>
+      <div class="notice">
+        <span class="notice-mark">i</span>
+        <div><strong>Administration foundation</strong><p>This is the initial interface shell. Live metrics, authentication and administrative actions will be connected in later stages.</p></div>
+      </div>
+      <div class="section-heading">
+        <div><p class="eyebrow">PLATFORM</p><h2>Core areas</h2></div>
+        <span class="muted">Implementation roadmap</span>
+      </div>
+      <div class="cards">
+        <article class="area-card"><span class="card-icon">◎</span><h3>User management</h3><p>Accounts, access status, roles and support tools.</p><span class="card-state">PLANNED</span></article>
+        <article class="area-card"><span class="card-icon">◇</span><h3>Commercial</h3><p>Products, subscription plans, trials and payments.</p><span class="card-state">PLANNED</span></article>
+        <article class="area-card"><span class="card-icon">▤</span><h3>Training engine</h3><p>Exercise library, programming rules and configuration.</p><span class="card-state">PLANNED</span></article>
+        <article class="area-card"><span class="card-icon">≋</span><h3>Logs & diagnostics</h3><p>Application events, errors and operational visibility.</p><span class="card-state">PLANNED</span></article>
+        <article class="area-card"><span class="card-icon">▣</span><h3>Backups</h3><p>Backup history, verification and controlled restore workflows.</p><span class="card-state">PLANNED</span></article>
+        <article class="area-card"><span class="card-icon">⚙</span><h3>System settings</h3><p>Runtime configuration, feature flags and service health.</p><span class="card-state">PLANNED</span></article>
+      </div>
+    </section>
+  </main>
+</div>
