@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Seeding;
 
 namespace Trazo.Infrastructure;
 
 public static class DatabaseInitialization
 {
     /// <summary>
-    /// Creates the configured database when the PostgreSQL credentials permit it,
-    /// then applies every pending EF Core migration before the API starts serving requests.
+    /// Applies all pending migrations and imports the versioned first-party exercise seed
+    /// before the API starts accepting requests.
     /// </summary>
     public static async Task InitializeDatabaseAsync(this IServiceProvider services)
     {
@@ -16,5 +17,8 @@ public static class DatabaseInitialization
         var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
 
         await db.Database.MigrateAsync();
+
+        var seeder = scope.ServiceProvider.GetRequiredService<ExerciseCatalogSeeder>();
+        await seeder.SeedAsync();
     }
 }
