@@ -42,3 +42,5 @@ h1 { margin: 0; color: #f2f5fa; font-size: clamp(28px, 4vw, 38px); font-weight: 
 .card-state { display: inline-block; margin-top: 15px; color: #8496ac; font-size: 9px; letter-spacing: .14em; }
 @media (max-width: 900px) { .shell { grid-template-columns: 210px 1fr; } .content { padding: 34px 24px; } .topbar { padding: 0 24px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .shell { grid-template-columns: 1fr; } .sidebar { padding: 16px; border-right: 0; border-bottom: 1px solid #252e3b; } .brand { padding: 0 6px 15px; } .workspace-label, .sidebar-footer { display: none; } nav { display: flex; overflow-x: auto; } .nav-item { white-space: nowrap; } .topbar { height: 54px; } .content { padding: 28px 18px; } .cards { grid-template-columns: 1fr; } .page-heading { align-items: start; gap: 12px; flex-direction: column; } }
+.nav-item.disabled { opacity: .45; cursor: default; pointer-events: none; }
+.link { margin-left: 10px; background: none; border: 0; color: #8fb0d6; cursor: pointer; font-size: 12px; text-decoration: underline; }

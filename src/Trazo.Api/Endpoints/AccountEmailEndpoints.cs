@@ -6,6 +6,7 @@ using Trazo.Api.Contracts;
 using Trazo.Api.Security;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Settings;
 namespace Trazo.Api.Endpoints;
 public static class AccountEmailEndpoints
 {
@@ -33,7 +34,7 @@ public static class AccountEmailEndpoints
   await db.SaveChangesAsync(ct);await tx.CommitAsync(ct);
   return Results.Ok(new{verified=true});
  }
- private static async Task<IResult> ResendAsync(ResendVerificationRequest request,TrazoDbContext db,IEmailSender email,IConfiguration config,CancellationToken ct)
+ private static async Task<IResult> ResendAsync(ResendVerificationRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
  {
   var normalized=Normalize(request.Email);
   var user=normalized is null?null:await db.Users.SingleOrDefaultAsync(x=>x.NormalizedEmail==normalized,ct);
@@ -41,7 +42,7 @@ public static class AccountEmailEndpoints
    await IssueAsync(user,"verify-email","Verifica tu correo de TRAZO","Verifica tu cuenta usando este enlace:",TimeSpan.FromHours(24),db,email,config,ct);
   return Results.Accepted(value:new{message="Si existe una cuenta pendiente de verificación, enviaremos un correo."});
  }
- private static async Task<IResult> ForgotAsync(ForgotPasswordRequest request,TrazoDbContext db,IEmailSender email,IConfiguration config,CancellationToken ct)
+ private static async Task<IResult> ForgotAsync(ForgotPasswordRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
  {
   var normalized=Normalize(request.Email);
   var user=normalized is null?null:await db.Users.SingleOrDefaultAsync(x=>x.NormalizedEmail==normalized,ct);
@@ -75,7 +76,7 @@ public static class AccountEmailEndpoints
   var hash=Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(raw)));
   return await db.EmailActionTokens.SingleOrDefaultAsync(x=>x.TokenHash==hash&&x.Purpose==purpose&&x.ConsumedAt==null&&x.ExpiresAt>DateTimeOffset.UtcNow,ct);
  }
- public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IConfiguration config,CancellationToken ct)
+ public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
  {
   var raw=Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)).TrimEnd('=').Replace('+','-').Replace('/','_');
   var now=DateTimeOffset.UtcNow;
@@ -83,7 +84,7 @@ public static class AccountEmailEndpoints
    .ExecuteUpdateAsync(s=>s.SetProperty(x=>x.ConsumedAt,now),ct);
   db.EmailActionTokens.Add(new EmailActionToken{Id=Guid.NewGuid(),UserId=user.Id,TokenHash=Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(raw))),Purpose=purpose,CreatedAt=now,ExpiresAt=now.Add(lifetime)});
   await db.SaveChangesAsync(ct);
-  var baseUrl=config["Email:ActionBaseUrl"]?.TrimEnd('/');
+  var baseUrl=(await config.GetEmailAsync(ct)).ActionBaseUrl.TrimEnd('/');
   if(string.IsNullOrWhiteSpace(baseUrl))throw new InvalidOperationException("Email:ActionBaseUrl is required.");
   var url=$"{baseUrl}/account/{(purpose=="verify-email"?"verify-email":"reset-password")}?token={Uri.EscapeDataString(raw)}";
   await email.SendAsync(user.Email,subject,$"{intro}\n\n{url}\n\nEl enlace caduca en {(int)lifetime.TotalMinutes} minutos. Si no has solicitado esta acción, ignora este mensaje.",ct);

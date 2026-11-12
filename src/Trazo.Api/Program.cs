@@ -6,6 +6,7 @@ using Trazo.Infrastructure.Seeding;
 using Npgsql;
 using Trazo.Application;
 using Trazo.Infrastructure;
+using Trazo.Infrastructure.Settings;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Api.Endpoints;
 using Trazo.Api.Security;
@@ -36,7 +37,9 @@ if (!builder.Environment.IsDevelopment() &&
 }
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
+builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
 
 var jwtIssuer = builder.Configuration["Authentication:Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Authentication:Jwt:Audience"];
@@ -65,10 +68,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             RoleClaimType = ClaimTypes.Role
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy(SetupEndpoints.SuperadminPolicy, p => p.RequireRole("superadmin")));
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy(SetupEndpoints.SetupPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    options.AddPolicy(SetupEndpoints.SetupTestPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -98,7 +110,11 @@ var app = builder.Build();
 
 // Apply all pending EF Core migrations before accepting HTTP traffic.
 // This makes first deployment and subsequent upgrades use the same safe path.
-await app.Services.InitializeDatabaseAsync();
+// Integration tests use the "Testing" environment with their own (non-PostgreSQL) database.
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await app.Services.InitializeDatabaseAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -141,6 +157,7 @@ app.MapGet("/api/v1", () => Results.Ok(new
 .WithName("ApiInfo");
 
 app.MapExerciseCatalogEndpoints();
+app.MapSetupEndpoints();
 app.MapAuthenticationEndpoints();
 app.MapAccountEmailEndpoints();
 

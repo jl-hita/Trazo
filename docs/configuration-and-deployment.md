@@ -60,26 +60,20 @@ Authentication__Jwt__Issuer=TRAZO
 Authentication__Jwt__Audience=TRAZO-Clients
 Authentication__Jwt__SigningKey=REPLACE_WITH_A_RANDOM_SECRET_OF_AT_LEAST_32_BYTES
 
-# Google Sign-In: ID del cliente OAuth de tipo Web (no un client secret).
-Authentication__Google__ClientId=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+# Google Sign-In: se configura desde el asistente de primer arranque (ver 3.1).
 
 # Data Protection: directorio persistente, fuera de la carpeta de despliegue.
 DataProtection__KeysPath=/var/lib/trazo/data-protection-keys
 
-# Correo transaccional (SMTP)
-Email__Smtp__Host=smtp.example.com
-Email__Smtp__Port=587
-Email__Smtp__EnableSsl=true
-Email__Smtp__Username=YOUR_SMTP_USERNAME
-Email__Smtp__Password=YOUR_SMTP_PASSWORD
-Email__From=no-reply@example.com
-Email__ActionBaseUrl=trazo://account
+# Google (Authentication__Google__ClientId) y SMTP (Email__Smtp__*, Email__From, Email__ActionBaseUrl)
+# ya no se definen aqui: se introducen en el asistente de primer arranque (ver 3.1).
+# Si se definen, actuan como valor de respaldo cuando no hay ajuste en la base de datos.
 
-# Bootstrap inicial: solo para crear el primer superadmin.
-# Elimina estas tres variables tras el primer arranque correcto.
-BootstrapAdmin__Email=admin@example.com
-BootstrapAdmin__Password=REPLACE_WITH_A_UNIQUE_LONG_INITIAL_PASSWORD
-BootstrapAdmin__DisplayName=TRAZO Administrator
+# OPCIONAL, alternativa al asistente de primer arranque (ver 3.1): crea el superadmin al arrancar.
+# Elimina estas tres variables tras el primer arranque correcto. Normalmente NO se usan.
+# BootstrapAdmin__Email=admin@example.com
+# BootstrapAdmin__Password=REPLACE_WITH_A_UNIQUE_LONG_INITIAL_PASSWORD
+# BootstrapAdmin__DisplayName=TRAZO Administrator
 
 # Importador privado DietoExpress -> TRAZO.
 # Debe coincidir con TrazoTransfer__ApiKey en el backend de DietoExpress.
@@ -116,6 +110,52 @@ Las claves deben persistir entre reinicios y despliegues y deben incluirse en un
 ### Bootstrap del primer superadmin
 
 La API puede crear el primer superadmin cuando la tabla de usuarios está vacía. Tras confirmar que el usuario puede iniciar sesión, elimina `BootstrapAdmin__Email`, `BootstrapAdmin__Password` y `BootstrapAdmin__DisplayName` del archivo de entorno y reinicia el servicio. No mantengas una contraseña de bootstrap activa indefinidamente.
+
+### 3.1 Asistente de primer arranque
+
+La configuración que no es imprescindible para arrancar **ya no va en `trazo.env`**. El archivo de entorno conserva solo lo que la API necesita antes de poder hablar con la base de datos: `ASPNETCORE_*`, `AllowedHosts`, `ConnectionStrings__Trazo`, JWT, `DataProtection__KeysPath`, CORS y la clave del importador. La API arranca sin Google ni SMTP.
+
+Al abrir el frontend por primera vez (instalación sin usuarios ni setup completado) se muestra un asistente que pide:
+
+| Obligatorio | Clave equivalente en el entorno | Prueba |
+|---|---|---|
+| Google Web Client ID | `Authentication__Google__ClientId` | formato `*.apps.googleusercontent.com` y acceso a las claves de Google |
+| SMTP: host, puerto, SSL, remitente `Email:From`, `Email:ActionBaseUrl` (usuario y contraseña opcionales) | `Email__Smtp__*`, `Email__From`, `Email__ActionBaseUrl` | envío real de un correo de prueba |
+| Cuenta superadmin: email, nombre y contraseña | `BootstrapAdmin__*` | política de contraseña (12+ caracteres, mayúscula, minúscula y número) |
+
+El botón de guardar solo se habilita cuando ambas pruebas han pasado con los valores actuales (el servidor no puede exigirlo sin credenciales, así que es una ayuda de la interfaz). Los ajustes se guardan en la tabla `app_settings` (migración `AppSettings`); la contraseña SMTP se cifra con ASP.NET Core Data Protection (mismo key ring que los secretos TOTP, así que su copia de seguridad es obligatoria) y nunca se devuelve por la API.
+
+**Precedencia:** valor en base de datos y, si no existe, la variable de entorno. Los valores se leen en cada uso (envío de correo, validación de Google), por lo que los cambios surten efecto sin reiniciar. Las instalaciones que ya funcionan con variables de entorno siguen funcionando sin cambios.
+
+**Endpoints:**
+
+- `GET /api/v1/setup/status` — público y siempre disponible: `setupRequired`, `googleConfigured`, `emailConfigured`, `configurationComplete`. No contiene secretos.
+- `POST /api/v1/setup/test/google`, `POST /api/v1/setup/test/smtp`, `POST /api/v1/setup/complete` — públicos **solo mientras el asistente está abierto**; después devuelven `404`.
+- `GET|PUT /api/v1/admin/settings`, `POST /api/v1/admin/settings/test/{google,smtp}` — solo `superadmin` autenticado.
+- Limitación de frecuencia por IP: 30 peticiones/min en los endpoints de setup y 5/min en las pruebas.
+
+**Cuándo está abierto el asistente:** solo si no existe el marcador `Setup:CompletedAt` **y** no existe ningún usuario. Una instalación creada antes del asistente (con `BootstrapAdmin__*` o usuarios ya registrados) nunca lo abre. Mientras está abierto, el registro de usuarios y el login con Google responden `409 setup_required`.
+
+**Atomicidad:** `complete` inserta ajustes, superadmin y marcador en una única transacción. El marcador tiene clave primaria, de modo que si dos peticiones simultáneas llegan a la vez solo una confirma y la otra recibe `404` sin dejar datos (hay un test de concurrencia en `tests/Trazo.UnitTests/SetupTests.cs`).
+
+`BootstrapAdmin__*` sigue siendo una alternativa: si se define, el superadmin se crea en el arranque y el asistente público queda cerrado (Google/SMTP se completan entonces desde `/settings` o con variables de entorno).
+
+#### Riesgo residual y mitigación operativa
+
+Por decisión de diseño **no hay token de un solo uso ni autenticación previa**: quien llegue primero al asistente se convierte en superadmin. Si un tercero alcanza la URL pública antes que el propietario, se queda con la instalación (y con su configuración SMTP/Google). Además, mientras el asistente está abierto, las pruebas de SMTP permiten enviar un correo de prueba a un destinatario arbitrario y sondear el host/puerto indicado desde el servidor (limitado a 5/min por IP).
+
+Mitigaciones:
+
+1. **Completa el asistente inmediatamente** después del primer despliegue (o tras recrear la base de datos). No dejes el servicio público sin completar.
+2. Opcional y recomendado: mientras no esté configurado, bloquea las rutas de setup en Nginx para el exterior y completa el asistente por un túnel SSH (`ssh -L 5001:127.0.0.1:5001 usuario@weirdfish`, luego `npm start` en local):
+
+   ```nginx
+   location /api/v1/setup/ { allow 127.0.0.1; deny all; proxy_pass http://127.0.0.1:5001; }
+   ```
+
+   Retira el bloqueo al terminar (el frontend necesita `GET /api/v1/setup/status`).
+3. Comprueba después con `curl https://trazostrength.duckdns.org/api/v1/setup/status` que `setupRequired` es `false` y que el único usuario es el esperado.
+4. Si sospechas que alguien se adelantó: detén el servicio, vacía las tablas `users` y `app_settings` (o recrea la base de datos) y repite el proceso.
 
 ## 4. Servicio systemd de ejemplo
 
@@ -184,9 +224,17 @@ En Google Cloud Console crea:
 
 No pongas el Google client secret en Android. El backend valida el ID token dirigido al cliente Web.
 
+El Web Client ID se introduce en el asistente de primer arranque (o en `/settings`), no en el archivo de entorno; el botón **Test** valida el formato y que la API alcanza las claves de Google. `Authentication__Google__ClientId` sigue funcionando como valor de respaldo si no hay valor en la base de datos.
+
 ## 7. Administración Angular
 
-La aplicación Angular está en `admin/Trazo.Admin.Web`. En el estado actual es una **estructura visual inicial**: todavía no implementa login administrativo ni consume endpoints reales de la API. Por tanto, no existe aún una variable `apiUrl` ni un archivo de entorno Angular que tengas que rellenar. No añadas una URL ficticia esperando que conecte el frontend.
+La aplicación Angular está en `admin/Trazo.Admin.Web` y consume la API real:
+
+- `/setup`: asistente de primer arranque (ver sección 3.1). Un *guard* redirige a esta pantalla mientras `GET /api/v1/setup/status` indique `setupRequired: true`.
+- `/login`: inicio de sesión (con 2FA si está activado). Solo los usuarios `superadmin` acceden a la consola.
+- `/settings`: edición posterior de Google y SMTP (solo `superadmin`), con las mismas pruebas que el asistente.
+
+La aplicación llama siempre a rutas relativas `/api/v1/...`; no hay variable `apiUrl`. Esto exige que Angular y la API compartan origen (Nginx sirviendo el build estático y haciendo proxy de `/api`) o, en desarrollo, el proxy de `ng serve`.
 
 ### Desarrollo local
 
@@ -196,7 +244,7 @@ npm install
 npm start
 ```
 
-Angular sirve la interfaz en `http://localhost:4200`. La API se ejecuta por separado en `http://localhost:5001`. Cuando se implemente la integración, habrá que definir explícitamente la URL/base de API y el flujo de autenticación; entonces se documentarán las variables frontend correspondientes.
+Angular sirve la interfaz en `http://localhost:4200` y `proxy.conf.json` reenvía `/api` y `/health` a la API en `http://localhost:5001`. Con la API en marcha (`dotnet run --project src/Trazo.Api`) y una base de datos vacía, abrir `http://localhost:4200` redirige al asistente. Para apuntar a otra API cambia `target` en `proxy.conf.json`; por ejemplo, un túnel SSH (`ssh -L 5001:127.0.0.1:5001 weirdfish`) permite completar el asistente del servidor sin exponerlo (ver 3.1).
 
 ### Compilación y publicación
 
@@ -205,7 +253,7 @@ cd admin/Trazo.Admin.Web
 npm run build
 ```
 
-La salida se genera en `dist/trazo-admin-web`. Puede servirse como contenido estático mediante Nginx cuando la interfaz esté lista. Configura fallback de rutas SPA a `index.html`. Si el panel se sirve desde el mismo origen `https://trazostrength.duckdns.org`, las peticiones futuras a rutas `/api` podrán compartir origen; si se publica en otro hostname o puerto, añade ese origen exacto a `Cors__AllowedOrigins`.
+La salida se genera en `dist/trazo-admin-web`. Puede servirse como contenido estático mediante Nginx con fallback de rutas SPA a `index.html` y `location /api` apuntando a la API (mismo origen). Si el panel se publica en otro hostname o puerto, añade ese origen exacto a `Cors__AllowedOrigins` y cambia las rutas relativas por una URL base. **Nota:** la configuración Nginx actual (`deploy/nginx/trazo.conf`) solo hace proxy a la API y no publica el build de Angular; hasta que se añada, usa el túnel SSH descrito arriba.
 
 ## 8. Importación privada desde DietoExpress
 
@@ -242,9 +290,10 @@ Si pruebas flujos de correo, añade las variables SMTP de la sección 3. En desa
 - [ ] Archivo `/etc/trazo/trazo.env` protegido y completo.
 - [ ] JWT signing key aleatoria y distinta de DietoExpress.
 - [ ] Data Protection key ring persistente, protegido y respaldado.
-- [ ] SMTP probado: verificación de correo y recuperación de contraseña.
+- [ ] Asistente de primer arranque completado **inmediatamente** tras el primer despliegue (Google, SMTP y superadmin); `GET /api/v1/setup/status` devuelve `setupRequired: false`.
+- [ ] SMTP probado desde el asistente (correo de prueba) y verificación de correo / recuperación de contraseña comprobadas.
 - [ ] OAuth Web y Android configurados con las huellas correctas.
-- [ ] Bootstrap superadmin eliminado después de la primera creación.
+- [ ] Si se usó `BootstrapAdmin__*` en lugar del asistente, esas variables se eliminaron tras la primera creación.
 - [ ] API escuchando solo en `127.0.0.1:5001`.
 - [ ] Nginx proxy a 5001; NAT limitado a 80/443.
 - [ ] Health y readiness correctos desde localhost y desde HTTPS público.

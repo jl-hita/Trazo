@@ -11,6 +11,7 @@ using Trazo.Api.Contracts;
 using Trazo.Api.Security;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Settings;
 
 namespace Trazo.Api.Endpoints;
 
@@ -42,9 +43,11 @@ public static class AuthenticationEndpoints
         TrazoDbContext db,
         PasswordHasher<TrazoUser> hasher,
         IEmailSender emailSender,
-        IConfiguration configuration,
+        IRuntimeSettings configuration,
+        ISetupService setup,
         CancellationToken cancellationToken)
     {
+        if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
         var email = NormalizeEmail(request.Email);
         if (email is null || request.DisplayName is null || request.DisplayName.Trim().Length is < 2 or > 100)
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["account"] = ["A valid email and display name are required."] });
@@ -129,11 +132,13 @@ public static class AuthenticationEndpoints
 
     private static async Task<IResult> GoogleLoginAsync(
         GoogleLoginRequest request,
-        IConfiguration configuration,
+        IRuntimeSettings configuration,
+        ISetupService setup,
         TrazoDbContext db,
         AuthTokenService tokens,
         CancellationToken cancellationToken)
     {
+        if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
         var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration);
         if (payload is null || !payload.EmailVerified || string.IsNullOrWhiteSpace(payload.Email))
             return Results.Unauthorized();
@@ -186,7 +191,7 @@ public static class AuthenticationEndpoints
     private static async Task<IResult> LinkGoogleAsync(
         GoogleLinkRequest request,
         ClaimsPrincipal principal,
-        IConfiguration configuration,
+        IRuntimeSettings configuration,
         TrazoDbContext db,
         CancellationToken cancellationToken)
     {
@@ -452,9 +457,9 @@ public static class AuthenticationEndpoints
         return raw;
     }
 
-    private static async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenAsync(string idToken, IConfiguration configuration)
+    private static async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenAsync(string idToken, IRuntimeSettings configuration)
     {
-        var clientId = configuration["Authentication:Google:ClientId"];
+        var clientId = (await configuration.GetGoogleAsync()).ClientId;
         if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(idToken)) return null;
         try
         {
@@ -466,6 +471,9 @@ public static class AuthenticationEndpoints
             return null;
         }
     }
+
+    private static IResult SetupRequired() =>
+        Results.Json(new { code = "setup_required", error = "The initial setup has not been completed." }, statusCode: StatusCodes.Status409Conflict);
 
     private static string? NormalizeEmail(string? email)
     {

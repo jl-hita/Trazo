@@ -15,6 +15,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<AuthChallenge> AuthChallenges => Set<AuthChallenge>();
     public DbSet<AuthRecoveryCode> AuthRecoveryCodes => Set<AuthRecoveryCode>();
     public DbSet<EmailActionToken> EmailActionTokens => Set<EmailActionToken>();
+    public DbSet<Trazo.Domain.Settings.AppSetting> AppSettings => Set<Trazo.Domain.Settings.AppSetting>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

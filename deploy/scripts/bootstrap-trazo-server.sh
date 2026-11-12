@@ -33,21 +33,10 @@ ConnectionStrings__Trazo=Host=127.0.0.1;Port=5432;Database=trazo;Username=trazo_
 Authentication__Jwt__Issuer=TRAZO
 Authentication__Jwt__Audience=TRAZO-Clients
 Authentication__Jwt__SigningKey=$jwt
-Authentication__Google__ClientId=
 DataProtection__KeysPath=/var/lib/trazo/data-protection-keys
 Cors__AllowedOrigins__0=https://trazostrength.duckdns.org
-# SMTP: completar antes de abrir el registro público.
-Email__Smtp__Host=
-Email__Smtp__Port=587
-Email__Smtp__EnableSsl=true
-Email__Smtp__Username=
-Email__Smtp__Password=
-Email__From=
-Email__ActionBaseUrl=trazo://account
-# Bootstrap del primer superadmin: rellenar, arrancar una vez y BORRAR estas 3 líneas.
-BootstrapAdmin__Email=
-BootstrapAdmin__Password=
-BootstrapAdmin__DisplayName=TRAZO Administrator
+# Google, SMTP y el superadmin NO van aqui: se configuran desde el asistente de primer
+# arranque del frontend (docs/configuration-and-deployment.md, seccion 3.1).
 DietoExpressImport__ApiKey=$import_key
 Logging__LogLevel__Default=Information
 Logging__LogLevel__Microsoft.AspNetCore=Warning
@@ -55,7 +44,8 @@ EOF
   chown root:trazo /etc/trazo/trazo.env
   chmod 0640 /etc/trazo/trazo.env
   echo ">> Creado /etc/trazo/trazo.env con JWT e import key aleatorias."
-  echo ">> EDÍTALO: contraseña de BD, SMTP, Google y BootstrapAdmin."
+  echo ">> EDITALO: solo la contrasena de BD. Google, SMTP y el superadmin se configuran desde el asistente web."
+  echo ">> IMPORTANTE: completa el asistente de primer arranque INMEDIATAMENTE; quien llegue primero a la URL publica se queda con la instalacion."
 else
   echo ">> /etc/trazo/trazo.env ya existe; no se modifica."
 fi

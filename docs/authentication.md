@@ -55,7 +55,7 @@ The Android app should use Credential Manager / Google Identity Services to obta
 
 ## Transactional email configuration
 
-Configure an SMTP relay and the public account-action URL before allowing registration. Keep credentials in the service environment, never in source control:
+Configure an SMTP relay and the public account-action URL before allowing registration. Both are entered (and tested by sending a real email) in the first-run setup wizard, or later by a superadmin under Settings. The values are stored in the database, the password encrypted with Data Protection. The equivalent environment keys still work as a fallback when no database value exists:
 
 ```ini
 Email__Smtp__Host=smtp.example.com
@@ -71,15 +71,16 @@ The configured action base URL receives `/account/verify-email?token=...` and `/
 
 ## Server configuration
 
-Supply these values through the TRAZO service environment file or secret manager. Do not commit real secrets.
+Only the settings the API needs before it can reach the database come from the service environment file or secret manager. Do not commit real secrets.
 
 ```ini
 Authentication__Jwt__Issuer=TRAZO
 Authentication__Jwt__Audience=TRAZO-Clients
 Authentication__Jwt__SigningKey=GENERATE_A_RANDOM_SECRET_AT_LEAST_32_BYTES
-Authentication__Google__ClientId=YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com
 DataProtection__KeysPath=/var/lib/trazo/data-protection-keys
 ```
+
+The Google Web client ID and the SMTP / account-action URL settings are **not** required in the environment: they are entered in the first-run setup wizard, stored in the `app_settings` table (SMTP password encrypted with Data Protection) and read on every use, so changes apply without restarting. Precedence: database value first, then the environment keys (`Authentication__Google__ClientId`, `Email__*`), which remain supported as a fallback.
 
 Generate a dedicated signing key, separate from DietoExpress:
 
@@ -89,9 +90,24 @@ openssl rand -base64 48
 
 Create the Data Protection directory for the TRAZO service account and restrict access so only that account can read and write the key ring. Do not put this directory inside the application release directory or a temporary directory. Back it up securely; losing it makes existing encrypted authenticator secrets unreadable.
 
-### Initial superadmin
+### Initial superadmin (first-run setup wizard)
 
-For the first startup only, optionally supply:
+The first superadmin is created from the browser, as part of the first-run setup wizard of the admin web app (`/setup`), together with the Google client ID and SMTP settings. There is no setup token by design: **whoever completes the wizard first becomes the superadmin.**
+
+How it is protected:
+
+- The public setup endpoints (`POST /api/v1/setup/complete` and the `/setup/test/*` probes) exist only while there is **no user and no completed-setup marker**. Afterwards they return `404`; `GET /api/v1/setup/status` stays readable and reports `setupRequired: false`.
+- Creation is atomic: settings, the `superadmin` user and the `Setup:CompletedAt` marker are written in a single transaction, and the marker is a primary key. Two simultaneous requests cannot both succeed.
+- Self-registration (`/auth/register`) and Google login answer `409 setup_required` until setup finishes, so a normal user can never be created first.
+- Setup endpoints are rate limited per IP (30/min; 5/min for the SMTP/Google probes).
+- After setup, `GET|PUT /api/v1/admin/settings` and its probes require an authenticated `superadmin`.
+- Installations that already have users (for example created with `BootstrapAdmin__*` before this feature) never expose the wizard.
+
+**Residual risk:** anyone who reaches the public URL before the owner can take over the installation. Complete the wizard immediately after the first deployment (or block `/api/v1/setup/` at the proxy and use an SSH tunnel until then). See `docs/configuration-and-deployment.md`, section 3.1, for the full risk statement and mitigations.
+
+#### Alternative: `BootstrapAdmin__*`
+
+For headless provisioning you can still supply, for the first startup only:
 
 ```ini
 BootstrapAdmin__Email=admin@example.com
@@ -99,7 +115,7 @@ BootstrapAdmin__Password=A_LONG_RANDOM_PASSWORD
 BootstrapAdmin__DisplayName=TRAZO Administrator
 ```
 
-If the users table is empty, startup creates this account with the `superadmin` role. Remove the bootstrap password from the service environment immediately after the first successful startup. The bootstrap values never change an existing user or promote an existing account.
+If the users table is empty, startup creates this account with the `superadmin` role (and the wizard never opens; Google/SMTP are then set from `/settings` or environment variables). Remove the bootstrap password from the service environment immediately after the first successful startup. The bootstrap values never change an existing user or promote an existing account.
 
 ## Security and launch checklist
 

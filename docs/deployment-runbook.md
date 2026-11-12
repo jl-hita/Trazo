@@ -34,7 +34,7 @@ sudo bash deploy/scripts/bootstrap-trazo-server.sh
 ```
 Crea el usuario `trazo`, `/opt/trazo`, `/var/lib/trazo/data-protection-keys`, `/etc/trazo/trazo.env` (con JWT e import key aleatorios), la unidad systemd, el vhost Nginx y el helper `/usr/local/sbin/trazo-deploy` con su regla sudoers. Revisa los scripts antes de ejecutarlos como root.
 
-Después edita `/etc/trazo/trazo.env`: contraseña de BD, SMTP, `Authentication__Google__ClientId` y `BootstrapAdmin__*`.
+Después edita `/etc/trazo/trazo.env` solo para la contraseña de BD. Google, SMTP y la cuenta superadmin se configuran desde el asistente de primer arranque del frontend (ver `docs/configuration-and-deployment.md`, sección 3.1): complétalo **inmediatamente** tras el primer despliegue, porque quien llegue primero a la URL pública se queda con la instalación.
 
 ### 5. Runner de GitHub Actions
 Es un runner **por repositorio**: el de DietoExpress no sirve para TRAZO. Instala otro, en su propio directorio y con su propio servicio, como `joso`:
@@ -64,7 +64,7 @@ curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 ```
 
 ### 8. Tras el primer arranque
-- Comprueba que el superadmin inicia sesión y **borra** las tres variables `BootstrapAdmin__*` de `trazo.env`; `sudo systemctl restart trazo`.
+- Si usaste `BootstrapAdmin__*` en lugar del asistente, comprueba que el superadmin inicia sesión y **borra** esas tres variables de `trazo.env`; `sudo systemctl restart trazo`.
 - Haz copia de seguridad de la base `trazo` y de `/var/lib/trazo/data-protection-keys` (sin esas claves se pierden los secretos 2FA).
 - Compila Android con `-PapiScheme=https -PapiHost=trazostrength.duckdns.org -PapiPort=443`.
 
@@ -75,7 +75,7 @@ curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 | Estado / logs | `systemctl status trazo` · `journalctl -u trazo -f` |
 | Release activa | `readlink -f /opt/trazo/current` |
 | Rollback manual | `sudo ln -sfn /opt/trazo/releases/<sha-anterior> /opt/trazo/current && sudo systemctl restart trazo` |
-| Cambiar configuración | editar `/etc/trazo/trazo.env` y `sudo systemctl restart trazo` |
+| Cambiar configuración | Google/SMTP: pantalla Settings del admin (sin reinicio). Resto: editar `/etc/trazo/trazo.env` y `sudo systemctl restart trazo` |
 
 Se conservan las 5 últimas releases. El rollback revierte el código, **no** el esquema: las migraciones deben ser compatibles hacia atrás con la release anterior, y conviene respaldar la BD antes de desplegar migraciones destructivas.
 
