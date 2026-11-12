@@ -23,6 +23,7 @@ public sealed class IdentityAndAuthentication : Migration
                 "Role" character varying(30) NOT NULL DEFAULT 'user',
                 "TwoFactorEnabled" boolean NOT NULL DEFAULT false,
                 "ProtectedAuthenticatorKey" character varying(1024),
+                "LastTotpStep" bigint,
                 "FailedLoginAttempts" integer NOT NULL DEFAULT 0,
                 "LockoutEnd" timestamp with time zone,
                 "LastLoginAt" timestamp with time zone,
