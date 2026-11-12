@@ -106,7 +106,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseForwardedHeaders();
-app.UseHttpsRedirection();
+// Local Development is intentionally reachable over HTTP from the Android emulator.\n// Non-development environments continue to enforce HTTPS redirection.\nif (!app.Environment.IsDevelopment())\n{\n    app.UseHttpsRedirection();\n}
 app.UseCors("AdminFrontend");
 app.UseRateLimiter();
 app.UseAuthentication();
