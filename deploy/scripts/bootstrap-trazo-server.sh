@@ -39,7 +39,6 @@ Cors__AllowedOrigins__0=https://trazostrength.duckdns.org
 # arranque del frontend (docs/configuration-and-deployment.md, seccion 3.1).
 DietoExpressImport__ApiKey=$import_key
 Logging__LogLevel__Default=Information
-Logging__LogLevel__Microsoft.AspNetCore=Warning
 EOF
   chown root:trazo /etc/trazo/trazo.env
   chmod 0640 /etc/trazo/trazo.env
