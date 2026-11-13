@@ -94,6 +94,29 @@ jobs:
           mkdir -p /tmp/trazo-frontend
           cp -a dist/trazo-admin-web/browser/. /tmp/trazo-frontend/
 
+      # First-deployment diagnosis: inspect the installed root helper and actual release layout.
+      # This intentionally stops before touching the service; remove after fixing the helper.
+      - name: Diagnose installed deployment helper (no changes)
+        run: |
+          set -euo pipefail
+          echo '=== Installed privileged helper ==='
+          sudo -n sed -n '1,280p' /usr/local/sbin/trazo-deploy
+          echo '=== Deployment directories ==='
+          sudo -n ls -la /opt/trazo
+          sudo -n ls -la /opt/trazo/releases 2>/dev/null || true
+          echo '=== Current release ==='
+          sudo -n readlink -f /opt/trazo/current || true
+          sudo -n find /opt/trazo/current -maxdepth 2 -type f \\
+            \( -name 'Trazo.Api.dll' -o -name 'Microsoft.EntityFrameworkCore*.dll' \) -printf '%p\\n' 2>/dev/null | sort || true
+          echo '=== Published staging assemblies ==='
+          find /tmp/trazo-backend -maxdepth 1 -name 'Microsoft.EntityFrameworkCore*.dll' -printf '%f\\n' | sort
+          echo '=== Service status ==='
+          sudo -n systemctl status trazo.service --no-pager || true
+          echo '=== Malformed environment entry (value only) ==='
+          sudo -n grep -n '^Logging__LogLevel__Microsoft.AspNetCore=' /etc/trazo/trazo.env || true
+          echo 'Diagnostic run complete. Deliberately stopping before deployment.'
+          exit 1
+
       - name: Deploy atomically and smoke test
         env:
           TRAZO_VERSION: ${{ github.sha }}
