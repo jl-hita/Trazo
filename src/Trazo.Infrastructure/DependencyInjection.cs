@@ -25,9 +25,11 @@ public static class DependencyInjection
                 "The PostgreSQL connection string 'ConnectionStrings:Trazo' is required.");
         }
 
+        // No EnableRetryOnFailure: the retrying execution strategy rejects the user-initiated
+        // transactions used by the seeder and the authentication/account endpoints. PostgreSQL
+        // runs on the API host, so retries on transient faults are not needed.
         services.AddDbContext<TrazoDbContext>(options =>
-            options.UseNpgsql(connectionString, npgsql =>
-                npgsql.EnableRetryOnFailure()));
+            options.UseNpgsql(connectionString));
 
         services.AddScoped<PasswordHasher<TrazoUser>>();
 
