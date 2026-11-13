@@ -26,6 +26,3 @@ Thumbs.db
 
 # Brand generator output
 brand/generated/
-
-# Contact sheets of the illustration generator
-tools/exercise-illustrations/out/

@@ -1,8 +1,0 @@
-{
-  "name": "trazo-exercise-illustrations",
-  "private": true,
-  "type": "module",
-  "description": "Generates the schematic exercise illustrations (512x512 WebP) shipped as seed images.",
-  "scripts": { "generate": "node generate.mjs", "sheet": "node generate.mjs --sheet" },
-  "dependencies": { "sharp": "0.34.5" }
-}
