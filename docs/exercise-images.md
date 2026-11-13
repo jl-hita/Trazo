@@ -36,11 +36,9 @@ Both return the updated exercise detail and require the `superadmin` role.
 ## Withdrawn generated illustrations
 
 Schematic illustrations that were generated procedurally for 48 exercises were shipped in the seed and then withdrawn:
-the figures were anatomically wrong and not good enough. The seed owns the rows it creates, so removing a file from
-`Seeds/exercise-images` also removes the row it created in the database at the next startup (only rows with source
-`trazo-curated` that the seed no longer ships; uploads and imported images are never touched). The seed directory is
-currently empty.
+the figures were anatomically wrong and not good enough. The generator that produced them was removed from the
+repository. The seed owns the rows it creates, so removing a file from `Seeds/exercise-images` also removes the row it
+created in the database at the next startup (only rows with source `trazo-curated` that the seed no longer ships;
+uploads and imported images are never touched). The seed directory is currently empty.
 
-`tools/exercise-illustrations` is the generator that produced them. It is kept only as a record and should not be
-used to ship images again; real exercise images should come from photographs or illustrations made by a person,
-added through the console or the seed.
+Exercise images should come from photographs or illustrations made by a person, added through the console or the seed.
