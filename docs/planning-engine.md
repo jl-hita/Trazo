@@ -32,8 +32,8 @@ unchanged.
 - Persistence-bound code: `TrainingAutoAdaptationApplier`, `TrainingExerciseProgressionService` and the
   `*Schema` bootstrap classes (they use DietoExpress tables and EF Core). TRAZO will have its own persistence.
 - DietoExpress-only concepts: the RepDB curation list (`RepDbExerciseCuration`) and the tests that read
-  controller source files. Two tests that referenced those were removed; one of them audited that every curated
-  catalog id has an explicit stimulus decision and should be recreated against the TRAZO catalog.
+  controller source files. Two tests that referenced those were removed. The audit that every curated catalog id
+  has an explicit stimulus decision was recreated against the TRAZO seed (`ExerciseSeedAuditTests`).
 
 ## Things to know when integrating
 
@@ -42,9 +42,19 @@ unchanged.
   curated in the catalog; the importer only brings approved and reviewed exercises, and administrators create
   the rest.
 - **Secondary-muscle stimulus is keyed by exercise id** (`TrainingExerciseStimulus`). Exercises created in
-  TRAZO have no entry, so their secondary muscles count as exposures, not as full sets. This is conservative.
-- **The catalog has no Advanced exercises yet** (only Beginner and Intermediate), so programs for advanced
-  lifters will use intermediate exercises until the catalog is extended.
+  TRAZO without an entry keep the conservative behaviour: their secondary muscles count as exposures, not as full
+  sets. Every exercise of the curated seed has an explicit decision (a unit test fails when one is added without
+  it): either the secondary muscles that count as a set, or "reviewed, nothing extra counts".
+- **Selection order is by `selectionPriority`.** The curated additions use 55-70 (advanced 55-60). Against the
+  RepDB exercises (72-96) they are chosen when equipment is restricted (calves with only a barbell, upper back
+  with dumbbells, ...) but not when everything is available. Measured on the real catalog with an advanced
+  4-day profile and all equipment: the plan is identical with or without the 32 additions; raising the advanced
+  ones to 97 makes the plan use them (paused bench, Pendlay row, weighted pull-up, ...). It is a product
+  decision, not a bug.
+- **Weighted pull-ups and dips** require only `pull-up-bar` and `dip-station`; the load is a dumbbell between the
+  feet or a weighted vest, so no `weight-belt` token exists.
+- **Known catalog gaps** found while evaluating: a beginner with only a pull-up bar gets no program (no
+  beginner bodyweight Squat exercise) and the automatic split accepts 2-4 days only.
 - The generator returns a draft for professional or user review. It is not a clinical prescription.
 
 ## Next steps

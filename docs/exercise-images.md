@@ -31,3 +31,22 @@ images change.
 | DELETE | `/api/v1/admin/exercises/{id}/images/{slot}` | Remove a slot |
 
 Both return the updated exercise detail and require the `superadmin` role.
+
+## Illustration generator
+
+The 32 exercises added to the curated seed ship with two schematic illustrations each (start and end position,
+512 x 512 WebP, flat style, side view). They are drawn by `tools/exercise-illustrations`, which renders a figure with
+two-bone inverse kinematics (hands and feet are placed, elbows and knees are solved) plus simple equipment shapes.
+They are deliberately simpler than the RepDB photos and can be replaced from the console at any time.
+
+```bash
+cd tools/exercise-illustrations
+npm install
+node generate.mjs --sheet            # contact sheets in ./out to review the poses
+node generate.mjs                    # writes Seeds/exercise-images/{id}/{0,1}.webp
+node append-catalog.mjs              # adds the metadata of catalog-entries.mjs missing from the seed
+```
+
+To add an exercise: describe its two frames in `exercises.mjs`, its metadata in `catalog-entries.mjs` (instructions in
+Spanish, at least three steps) and its stimulus decision in `TrainingExerciseStimulus`; `ExerciseSeedAuditTests`
+checks that all three agree.

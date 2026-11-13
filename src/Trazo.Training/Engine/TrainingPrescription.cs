@@ -267,7 +267,29 @@ internal static class TrainingExerciseStimulus
             // Hip-extension back extensions and loaded knee raises also train these muscles dynamically.
             ["machine-back-extension"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
             ["hanging-knee-raise"] = [TrainingMuscleGroup.HipFlexors],
-            ["captains-chair-knee-raise"] = [TrainingMuscleGroup.HipFlexors]
+            ["captains-chair-knee-raise"] = [TrainingMuscleGroup.HipFlexors],
+
+            // TRAZO additions. Same criteria as above: a secondary muscle counts only when the exercise loads it
+            // dynamically through a meaningful range of motion.
+            ["wide-grip-seated-cable-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
+            ["chest-supported-t-bar-row"] = [TrainingMuscleGroup.Biceps],
+            ["pendlay-row"] = [TrainingMuscleGroup.Biceps],
+            ["weighted-pull-up"] = [TrainingMuscleGroup.Biceps],
+            ["arnold-press"] = [TrainingMuscleGroup.Triceps],
+            ["seated-barbell-overhead-press"] = [TrainingMuscleGroup.Triceps],
+            ["push-press"] = [TrainingMuscleGroup.Triceps],
+            ["z-press"] = [TrainingMuscleGroup.Triceps],
+            ["pike-push-up"] = [TrainingMuscleGroup.Triceps],
+            ["handstand-push-up"] = [TrainingMuscleGroup.Triceps],
+            ["paused-bench-press"] = [TrainingMuscleGroup.Triceps],
+            ["pause-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
+            ["zercher-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
+            ["barbell-bulgarian-split-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
+            ["pistol-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
+            ["rack-pull"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
+            ["deficit-deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
+            ["good-morning"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
+            ["hanging-leg-raise"] = [TrainingMuscleGroup.HipFlexors]
         };
 
     // Explicitly audited catalog isolates/accessories whose secondary tags do not represent
@@ -285,7 +307,15 @@ internal static class TrainingExerciseStimulus
         "cable-pallof-press", "side-plank", "dumbbell-farmers-walk", "seated-dumbbell-lateral-raise",
         "machine-seated-crunch", "dead-bug", "machine-chest-fly", "machine-bicep-curl",
         "single-arm-plate-loaded-lateral-raise", "machine-calf-raise", "side-lying-hip-abduction",
-        "side-lying-hip-adduction", "glute-bridge", "bodyweight-calf-raise"
+        "side-lying-hip-adduction", "glute-bridge", "bodyweight-calf-raise",
+        // TRAZO additions: the secondary tags do not add a full set to another muscle.
+        "dumbbell-shrug", "band-pull-apart", "incline-bench-y-raise", "leg-press-calf-raise",
+        "dumbbell-single-leg-calf-raise", "seated-dumbbell-calf-raise", "smith-machine-calf-raise",
+        "barbell-standing-calf-raise", "dumbbell-front-raise", "cable-front-raise", "weighted-dip",
+        "dragon-flag", "standing-ab-wheel-rollout",
+        // TRAZO seed exercises that predate the table (decision: no meaningful secondary).
+        "dumbbell-curl", "parallel-bar-dips", "plank", "walking-lunge", "sumo-deadlift",
+        "close-grip-bench-press", "lying-leg-raise"
     ];
 
     public static bool IsReviewed(string exerciseId) =>
