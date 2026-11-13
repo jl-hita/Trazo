@@ -7,6 +7,7 @@ using Npgsql;
 using Trazo.Application;
 using Trazo.Infrastructure;
 using Trazo.Infrastructure.Settings;
+using Trazo.Infrastructure.Logging;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Api.Endpoints;
 using Trazo.Api.Security;
@@ -37,6 +38,9 @@ if (!builder.Environment.IsDevelopment() &&
         "DataProtection:KeysPath must point to a persistent, access-restricted directory in non-development environments.");
 }
 builder.Services.AddInfrastructure(builder.Configuration);
+// Logs shown in the administration console. The test host has no PostgreSQL, so it does not store them.
+if (!builder.Environment.IsEnvironment("Testing"))
+    builder.Services.AddDatabaseLogging(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
@@ -189,6 +193,7 @@ app.MapAdminUsersEndpoints();
 app.MapAdminExercisesEndpoints();
 app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
+app.MapAdminLogsEndpoints();
 app.MapAccountEmailEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
