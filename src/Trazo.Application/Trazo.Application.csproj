@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Trazo.Domain/Trazo.Domain.csproj" />
+    <ProjectReference Include="../Trazo.Training/Trazo.Training.csproj" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.15" />
   </ItemGroup>
 </Project>
