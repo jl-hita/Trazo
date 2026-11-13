@@ -52,6 +52,46 @@ export interface ExerciseFilters {
 
 export type ExerciseAction = 'activate' | 'deactivate' | 'release-curation';
 
+export interface PlanPreviewRequest {
+  goal: string; experience: string; startDate: string; durationWeeks: number; trainingDays: string[];
+  maxSessionMinutes: number; availableEquipment: string[]; excludedExerciseIds: string[]; split: string;
+  macrocycleWeeks?: number; includeDeloadPhases?: boolean; deloadEveryTrainingWeeks?: number;
+}
+
+export interface PlanExercise {
+  exerciseId: string; exerciseNameSnapshot: string; order: number; sets: number; minRepetitions: number;
+  maxRepetitions: number; targetRepetitionsInReserve: number | null; restSeconds: number; progressionRule: string;
+  selectionRationale: string; primaryMuscleGroups: string[]; secondaryMuscleGroups: string[];
+  warmupSets: number | null; warmupNote: string | null;
+}
+
+export interface PlanSession { weekNumber: number; day: string; title: string; estimatedDurationMinutes: number; exercises: PlanExercise[]; }
+
+export interface MuscleVolume {
+  muscleGroup: string; primarySets: number; secondarySets: number; primaryFrequencySessions: number;
+  secondaryFrequencySessions: number; estimatedEffectiveSets: number;
+}
+
+export interface PlanProgram {
+  engineVersion: string; goal: string; startDate: string; durationWeeks: number; sessions: PlanSession[];
+  qualityReport: { methodology: string; warnings: string[]; weeklyMuscleVolumes: { weekNumber: number; muscles: MuscleVolume[] }[] } | null;
+}
+
+export interface MacrocycleDraft {
+  name: string; periodizationModel: string; startDate: string; endDate: string; notes: string;
+  phases: { name: string; sequenceNumber: number; startDate: string; endDate: string; objective: string; phaseType: string }[];
+}
+
+export interface SkippedExercise { exerciseId: string; reason: string; }
+
+export interface PlanPreviewResponse { program: PlanProgram; macrocycle: MacrocycleDraft | null; usableExercises: number; skipped: SkippedExercise[]; }
+
+export interface ReadinessGroup { name: string; count: number; }
+
+export interface CatalogReadiness {
+  usableExercises: number; skipped: SkippedExercise[]; byPattern: ReadinessGroup[]; byExperience: ReadinessGroup[]; byGoal: ReadinessGroup[];
+}
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -108,5 +148,13 @@ export class AdminApi {
 
   exerciseAction(id: string, action: ExerciseAction): Promise<AdminExerciseDetail> {
     return firstValueFrom(this.http.post<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/${action}`, {}));
+  }
+
+  previewPlan(request: PlanPreviewRequest): Promise<PlanPreviewResponse> {
+    return firstValueFrom(this.http.post<PlanPreviewResponse>(`${API}/planning/preview`, request));
+  }
+
+  catalogReadiness(): Promise<CatalogReadiness> {
+    return firstValueFrom(this.http.get<CatalogReadiness>(`${API}/planning/catalog-readiness`));
   }
 }

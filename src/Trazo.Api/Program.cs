@@ -27,6 +27,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Add(IPAddress.IPv6Loopback);
 });
 
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
 if (!builder.Environment.IsDevelopment() &&
@@ -185,6 +186,7 @@ app.MapSetupEndpoints();
 app.MapAuthenticationEndpoints();
 app.MapAdminUsersEndpoints();
 app.MapAdminExercisesEndpoints();
+app.MapAdminPlanningEndpoints();
 app.MapAccountEmailEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
