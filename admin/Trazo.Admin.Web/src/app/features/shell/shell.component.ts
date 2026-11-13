@@ -21,7 +21,7 @@ export class ShellComponent {
     { label: 'Subscriptions', icon: '◇' },
     { label: 'Training library', icon: '▤', link: '/exercises' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },
-    { label: 'Logs', icon: '≋' },
+    { label: 'Logs', icon: '≋', link: '/logs' },
     { label: 'Backups', icon: '▣' },
     { label: 'Settings', icon: '⚙', link: '/settings' }
   ];

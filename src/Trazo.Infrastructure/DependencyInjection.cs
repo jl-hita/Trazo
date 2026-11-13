@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Trazo.Domain.Identity;
 using System.IO;
+using Trazo.Infrastructure.Logging;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
 using Trazo.Infrastructure.Settings;
@@ -45,6 +46,7 @@ public static class DependencyInjection
         services.AddScoped<ExerciseImageSeeder>();
         services.AddScoped<ExerciseLibraryExporter>();
         services.AddScoped<ExerciseLibraryImportService>();
+        services.AddScoped<AppLogReader>();
 
         return services;
     }

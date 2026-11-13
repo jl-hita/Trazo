@@ -97,6 +97,18 @@ export interface CatalogReadiness {
   usableExercises: number; skipped: SkippedExercise[]; byPattern: ReadinessGroup[]; byExperience: ReadinessGroup[]; byGoal: ReadinessGroup[];
 }
 
+export type LogLevelGroup = 'info' | 'warning' | 'error';
+
+export interface LogEntry {
+  id: number; timestamp: string; level: LogLevelGroup; category: string; message: string; exception: string | null; traceId: string | null;
+}
+
+export interface LogPage { items: LogEntry[]; nextCursor: string | null; counts: { info: number; warning: number; error: number }; }
+
+export interface LogFilters {
+  levels: LogLevelGroup[]; from: string | null; to: string | null; q: string; cursor: string | null; pageSize: number;
+}
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -111,6 +123,15 @@ export class AdminApi {
     if (filters.status) params = params.set('status', filters.status);
     if (filters.sort) params = params.set('sort', filters.sort);
     return firstValueFrom(this.http.get<Page<AdminUserSummary>>(`${API}/users`, { params }));
+  }
+
+  listLogs(filters: LogFilters): Promise<LogPage> {
+    let params = new HttpParams().set('pageSize', filters.pageSize).set('levels', filters.levels.join(','));
+    if (filters.from) params = params.set('from', filters.from);
+    if (filters.to) params = params.set('to', filters.to);
+    if (filters.q.trim()) params = params.set('q', filters.q.trim());
+    if (filters.cursor) params = params.set('cursor', filters.cursor);
+    return firstValueFrom(this.http.get<LogPage>(`${API}/logs`, { params }));
   }
 
   getUser(id: string): Promise<AdminUserDetail> {
