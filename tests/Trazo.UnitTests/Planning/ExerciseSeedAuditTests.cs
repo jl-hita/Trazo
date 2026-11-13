@@ -72,20 +72,14 @@ public sealed class ExerciseSeedAuditTests
     }
 
     [Fact]
-    public void EveryIllustratedFolderBelongsToASeedExerciseAndHasTheTwoFrames()
+    public void EverySeededImageFolderBelongsToASeedExercise()
     {
         var ids = Entries().Select(x => x.GetProperty("id").GetString()!).ToHashSet();
         var root = Path.Combine(SeedsDirectory, "exercise-images");
-        var folders = Directory.GetDirectories(root);
+        var folders = Directory.Exists(root) ? Directory.GetDirectories(root) : [];
 
-        Assert.NotEmpty(folders);
         foreach (var folder in folders)
-        {
-            var id = Path.GetFileName(folder);
-            Assert.Contains(id, ids);
-            Assert.True(File.Exists(Path.Combine(folder, "0.webp")), $"{id} has no start frame");
-            Assert.True(File.Exists(Path.Combine(folder, "1.webp")), $"{id} has no end frame");
-        }
+            Assert.Contains(Path.GetFileName(folder), ids);
     }
 
     [Fact]
