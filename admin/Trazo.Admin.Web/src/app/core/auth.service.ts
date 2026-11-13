@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpInterceptorFn } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { catchError, firstValueFrom, from, switchMap, throwError } from 'rxjs';
 
 export interface UserSummary { id: string; email: string; displayName: string; role: string; twoFactorEnabled: boolean; }
 interface TokenResponse { accessToken: string; refreshToken: string; user: UserSummary; }
@@ -20,6 +21,8 @@ export class AuthService {
 
   get accessToken(): string | null { return this.session?.accessToken ?? null; }
   get isSuperadmin(): boolean { return this.user()?.role === 'superadmin'; }
+  get hasSession(): boolean { return this.session !== null; }
+  private refreshing: Promise<string> | null = null;
 
   async login(email: string, password: string): Promise<LoginResult> {
     const r = await firstValueFrom(this.http.post<TokenResponse & { twoFactorRequired?: boolean; challengeToken?: string }>(
@@ -32,6 +35,35 @@ export class AuthService {
   async verifyTwoFactor(challengeToken: string, code: string): Promise<void> {
     this.store(await firstValueFrom(this.http.post<TokenResponse>(
       '/api/v1/auth/2fa/verify', { challengeToken, code, deviceName: 'Admin web' })));
+  }
+
+  /**
+   * True when the stored session can be used: the access token is still valid, or a refresh succeeds.
+   * Called by the route guard so an expired session goes straight to the login page.
+   */
+  async ensureFreshSession(): Promise<boolean> {
+    if (!this.session) return false;
+    if (!this.accessTokenExpired()) return true;
+    try { await this.refresh(); return true; } catch { return false; }
+  }
+
+  private accessTokenExpired(): boolean {
+    try {
+      const payload = this.session!.accessToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const exp = JSON.parse(atob(payload)).exp as number;
+      return exp * 1000 - 30_000 <= Date.now();
+    } catch { return true; }
+  }
+
+  /** Exchanges the refresh token for a new pair. Concurrent callers share one request, because refresh tokens rotate. */
+  refresh(): Promise<string> {
+    const current = this.session;
+    if (!current) return Promise.reject(new Error('No session.'));
+    this.refreshing ??= firstValueFrom(this.http.post<TokenResponse>(
+      '/api/v1/auth/refresh', { refreshToken: current.refreshToken, deviceName: 'Admin web' }))
+      .then(r => { this.store(r); return r.accessToken; })
+      .finally(() => { this.refreshing = null; });
+    return this.refreshing;
   }
 
   async logout(): Promise<void> {
@@ -60,8 +92,25 @@ export class AuthService {
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = inject(AuthService).accessToken;
-  const authed = token && req.url.startsWith('/api/') && !req.url.startsWith('/api/v1/auth/login')
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
-  return next(authed);
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  const isApi = req.url.startsWith('/api/');
+  const isAuthCall = ['/api/v1/auth/login', '/api/v1/auth/refresh', '/api/v1/auth/2fa/verify'].some(u => req.url.startsWith(u));
+  const withToken = (r: HttpRequest<unknown>, token: string | null) =>
+    token && isApi && !isAuthCall ? r.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : r;
+
+  return next(withToken(req, auth.accessToken)).pipe(
+    catchError((error: unknown) => {
+      // Access tokens last 15 minutes: on a 401 renew the session once and retry the request.
+      if (!(error instanceof HttpErrorResponse) || error.status !== 401 || !isApi || isAuthCall || !auth.hasSession) {
+        return throwError(() => error);
+      }
+      return from(auth.refresh().catch(() => null)).pipe(
+        switchMap(token => {
+          if (token) return next(withToken(req, token));
+          auth.clear();
+          void router.navigateByUrl('/login');
+          return throwError(() => error);
+        }));
+    }));
 };

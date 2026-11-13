@@ -7,7 +7,7 @@
 - Google Sign-In through a Google OpenID Connect ID token. The API validates the token signature, issuer, audience and verified email with Google's published signing keys.
 - TOTP second factor compatible with Google Authenticator, Aegis, 1Password and other RFC 6238 apps.
 - Ten one-time recovery codes generated when TOTP is enabled.
-- Short-lived JWT access tokens (15 minutes) and rotating opaque refresh tokens (30 days).
+- Short-lived JWT access tokens (60 minutes) and rotating opaque refresh tokens (30 days).
 - Refresh-token revocation on logout and logout-all.
 - Server-side roles: `user`, `admin`, `superadmin`.
 - Authentication endpoints are rate-limited to 10 requests per minute per client IP.

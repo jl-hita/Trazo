@@ -25,10 +25,10 @@ export const setupPageGuard: CanActivateFn = async () => {
   }
 };
 
-export const adminGuard: CanActivateFn = () => {
+export const adminGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  if (auth.user() && auth.isSuperadmin) return true;
+  if (auth.user() && auth.isSuperadmin && await auth.ensureFreshSession()) return true;
   auth.clear();
   return router.createUrlTree(['/login']);
 };

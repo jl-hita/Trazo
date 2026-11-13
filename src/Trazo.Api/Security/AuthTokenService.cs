@@ -10,7 +10,7 @@ namespace Trazo.Api.Security;
 
 public sealed class AuthTokenService(IConfiguration configuration)
 {
-    public const int AccessTokenMinutes = 15;
+    public const int AccessTokenMinutes = 60;
     public const int RefreshTokenDays = 30;
 
     public string CreateAccessToken(TrazoUser user)
