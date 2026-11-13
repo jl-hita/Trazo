@@ -184,6 +184,7 @@ app.MapExerciseCatalogEndpoints();
 app.MapSetupEndpoints();
 app.MapAuthenticationEndpoints();
 app.MapAdminUsersEndpoints();
+app.MapAdminExercisesEndpoints();
 app.MapAccountEmailEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (

@@ -22,7 +22,7 @@ Query parameters:
 Example:
 
 ```http
-GET /api/v1/exercises?q=press&movementPattern=horizontal_push&page=1&pageSize=30
+GET /api/v1/exercises?q=press&movementPattern=HorizontalPush&page=1&pageSize=30
 ```
 
 The response contains `items`, `page`, `pageSize`, `totalCount` and `totalPages`. Results are ordered by descending selection priority, then Spanish name and stable ID. Invalid pagination or overlong filter values return HTTP 400.

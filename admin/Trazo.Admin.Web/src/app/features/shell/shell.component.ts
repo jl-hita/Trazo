@@ -19,7 +19,7 @@ export class ShellComponent {
     { label: 'Overview', icon: '◫', link: '/' },
     { label: 'Users', icon: '◎', link: '/users' },
     { label: 'Subscriptions', icon: '◇' },
-    { label: 'Training library', icon: '▤' },
+    { label: 'Training library', icon: '▤', link: '/exercises' },
     { label: 'Planning engine', icon: '⌘' },
     { label: 'Logs', icon: '≋' },
     { label: 'Backups', icon: '▣' },
