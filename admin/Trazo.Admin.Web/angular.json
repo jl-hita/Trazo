@@ -15,6 +15,7 @@
             "browser": "src/main.ts",
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
+            "assets": [{ "glob": "**/*", "input": "public" }],
             "styles": ["src/styles.scss"],
             "outputPath": "dist/trazo-admin-web"
           },

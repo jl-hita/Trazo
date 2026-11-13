@@ -1,0 +1,14 @@
+{
+  "name": "trazo-brand-tools",
+  "private": true,
+  "type": "module",
+  "description": "Generates the TRAZO logo, favicon, Android and Google Play assets from the Manrope font (SIL OFL 1.1).",
+  "scripts": {
+    "generate": "node generate.mjs ../generated"
+  },
+  "dependencies": {
+    "@fontsource/manrope": "5.3.0",
+    "opentype.js": "2.0.0",
+    "sharp": "0.35.5"
+  }
+}
