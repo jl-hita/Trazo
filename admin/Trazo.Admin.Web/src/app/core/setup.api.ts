@@ -78,6 +78,8 @@ export function errorMessage(error: unknown): string {
   const e = error as { status?: number; error?: { errors?: Record<string, string[]>; error?: string } };
   if (e?.status === 429) return 'Too many requests. Wait a minute and try again.';
   if (e?.status === 404) return 'The setup has already been completed.';
+  if (e?.status === 401) return 'Your session has expired. Sign in again.';
+  if (e?.status === 403) return 'Your account is not allowed to do this.';
   const errors = e?.error?.errors;
   if (errors) return Object.values(errors).flat().join(' ');
   return e?.error?.error ?? 'Unexpected error. Check that the API is reachable.';
