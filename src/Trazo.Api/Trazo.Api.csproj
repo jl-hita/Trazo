@@ -19,5 +19,9 @@
              Link="Seeds/%(Filename)%(Extension)"
              CopyToOutputDirectory="PreserveNewest"
              CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../Trazo.Infrastructure/Seeds/exercise-images/**/*"
+             Link="Seeds/exercise-images/%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest"
+             CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

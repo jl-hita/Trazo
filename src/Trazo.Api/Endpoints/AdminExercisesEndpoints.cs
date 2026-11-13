@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Training;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Seeding;
 
 namespace Trazo.Api.Endpoints;
 
@@ -29,6 +30,8 @@ public static partial class AdminExercisesEndpoints
         group.MapPost("/{id}/activate", (string id, ClaimsPrincipal p, TrazoDbContext db, ILoggerFactory l, CancellationToken ct) => SetActiveAsync(id, true, p, db, l, ct));
         group.MapPost("/{id}/deactivate", (string id, ClaimsPrincipal p, TrazoDbContext db, ILoggerFactory l, CancellationToken ct) => SetActiveAsync(id, false, p, db, l, ct));
         group.MapPost("/{id}/release-curation", ReleaseCurationAsync);
+        group.MapPut("/{id}/images/{slot:int}", UploadImageAsync);
+        group.MapDelete("/{id}/images/{slot:int}", DeleteImageAsync);
         return endpoints;
     }
 
@@ -198,6 +201,50 @@ public static partial class AdminExercisesEndpoints
             $"UPDATE exercise_catalog_import_metadata SET is_locally_curated = {false} WHERE exercise_id = {id}", cancellationToken);
         if (changed == 0) return Results.Conflict(new { error = "This exercise was not imported, so there is nothing to release." });
         Log(loggerFactory, principal, "released the local curation of", id);
+        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+    }
+
+    // ---- images -------------------------------------------------------------------------------
+
+    /// <summary>Stores the request body as the image of a slot. An upload replaces an imported image and protects it from imports.</summary>
+    private static async Task<IResult> UploadImageAsync(
+        string id, int slot, HttpRequest request, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        if (slot is < 0 or > ExerciseImageRules.MaximumSlot)
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["slot"] = [$"Use a slot from 0 to {ExerciseImageRules.MaximumSlot}."] });
+        if (!await db.ExerciseCatalog.AnyAsync(x => x.Id == id, cancellationToken)) return Results.NotFound();
+        if (request.ContentLength > ExerciseImageRules.MaximumBytes) return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
+
+        using var buffer = new MemoryStream();
+        var chunk = new byte[16 * 1024];
+        int read;
+        while ((read = await request.Body.ReadAsync(chunk, cancellationToken)) > 0)
+        {
+            if (buffer.Length + read > ExerciseImageRules.MaximumBytes) return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
+            buffer.Write(chunk, 0, read);
+        }
+        var data = buffer.ToArray();
+        if (!ExerciseImageRules.TryDetectContentType(data, out var contentType))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["image"] = ["Upload a WebP, PNG or JPEG image."] });
+
+        await db.Database.ExecuteSqlInterpolatedAsync($"""
+            INSERT INTO exercise_catalog_images (exercise_id, slot, content_type, data, sha256, source, origin_system, imported_at)
+            VALUES ({id}, {slot}, {contentType}, {data}, {ExerciseImageRules.Sha256(data)}, {"trazo-upload"}, {ExerciseImageSeeder.OriginSystem}, {DateTimeOffset.UtcNow})
+            ON CONFLICT (exercise_id, slot) DO UPDATE SET content_type = excluded.content_type, data = excluded.data,
+                sha256 = excluded.sha256, source = excluded.source, origin_system = excluded.origin_system, imported_at = excluded.imported_at
+            """, cancellationToken);
+        Log(loggerFactory, principal, $"uploaded image {slot} of", id);
+        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+    }
+
+    private static async Task<IResult> DeleteImageAsync(
+        string id, int slot, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+    {
+        if (!await db.ExerciseCatalog.AnyAsync(x => x.Id == id, cancellationToken)) return Results.NotFound();
+        await db.Database.ExecuteSqlInterpolatedAsync(
+            $"DELETE FROM exercise_catalog_images WHERE exercise_id = {id} AND slot = {slot}", cancellationToken);
+        Log(loggerFactory, principal, $"removed image {slot} of", id);
         return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
     }
 

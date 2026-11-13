@@ -17,6 +17,8 @@ internal static class ExerciseTestSchema
           "SeedVersion" INTEGER NOT NULL, "IsActive" INTEGER NOT NULL DEFAULT 1, "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
         CREATE TABLE exercise_catalog_import_metadata (
           exercise_id TEXT PRIMARY KEY, source_system TEXT NOT NULL, is_locally_curated INTEGER NOT NULL DEFAULT 0);
-        CREATE TABLE exercise_catalog_images (exercise_id TEXT NOT NULL, slot INTEGER NOT NULL, PRIMARY KEY (exercise_id, slot));
+        CREATE TABLE exercise_catalog_images (
+          exercise_id TEXT NOT NULL, slot INTEGER NOT NULL, content_type TEXT NOT NULL, data BLOB NOT NULL, sha256 TEXT NOT NULL,
+          source TEXT NOT NULL, origin_system TEXT NOT NULL, imported_at TEXT NOT NULL, PRIMARY KEY (exercise_id, slot));
         """);
 }
