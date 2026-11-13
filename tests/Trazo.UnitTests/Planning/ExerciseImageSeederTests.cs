@@ -83,4 +83,39 @@ public sealed class ExerciseImageSeederTests : IDisposable
         Put("seeded-press", "2.webp", "definitely not an image"u8.ToArray());
         await Assert.ThrowsAsync<InvalidDataException>(SeedAsync);
     }
+
+    [Fact]
+    public async Task RemovesImagesTheSeedNoLongerShips_ButNeverUploadsOrImports()
+    {
+        Put("seeded-press", "0.webp", Webp(1));
+        Put("seeded-press", "1.webp", Webp(2));
+        Put("seeded-press", "2.webp", Webp(3));
+        await SeedAsync();
+        Assert.Equal(3, await CountAsync());
+
+        await using (var db = _fixture.NewContext())
+        {
+            await db.Database.ExecuteSqlRawAsync("UPDATE exercise_catalog_images SET source = 'trazo-upload' WHERE slot = 0");
+            await db.Database.ExecuteSqlRawAsync("UPDATE exercise_catalog_images SET source = 'DietoExpress', origin_system = 'DietoExpress' WHERE slot = 1");
+        }
+        File.Delete(Path.Combine(_directory, "seeded-press", "2.webp"));
+        await SeedAsync();
+
+        await using var check = _fixture.NewContext();
+        var slots = await check.Database.SqlQuery<int>($"SELECT CAST(slot AS INTEGER) AS \"Value\" FROM exercise_catalog_images ORDER BY slot").ToListAsync();
+        Assert.Equal(new List<int> { 0, 1 }, slots); // the seeded slot 2 is gone, the upload and the import stay
+    }
+
+    [Fact]
+    public async Task WithdrawingTheWholeSeedRemovesItsImages()
+    {
+        Put("seeded-press", "0.webp", Webp(1));
+        await SeedAsync();
+        Assert.Equal(1, await CountAsync());
+
+        Directory.Delete(_directory, true);
+        await SeedAsync();
+
+        Assert.Equal(0, await CountAsync());
+    }
 }

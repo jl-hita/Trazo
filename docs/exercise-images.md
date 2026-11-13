@@ -16,7 +16,8 @@ at most 1 MB each.
 Put files under `src/Trazo.Infrastructure/Seeds/exercise-images/{exerciseId}/{slot}.webp`. They are published with the
 API and loaded at startup after the exercise seed. Folders for exercises that do not exist are ignored (and logged); a
 file that is not an image, is too large or is not named after a slot makes startup fail, so a bad seed never reaches
-production silently. Existing images are never overwritten: an image replaced in the console wins over the seed.
+production silently. Existing images are never overwritten: an image replaced in the console wins over the seed. The reverse also holds: a
+file removed from the seed removes the row the seed created (see below).
 
 ## Console
 
@@ -32,21 +33,14 @@ images change.
 
 Both return the updated exercise detail and require the `superadmin` role.
 
-## Illustration generator
+## Withdrawn generated illustrations
 
-The 32 exercises added to the curated seed ship with two schematic illustrations each (start and end position,
-512 x 512 WebP, flat style, side view). They are drawn by `tools/exercise-illustrations`, which renders a figure with
-two-bone inverse kinematics (hands and feet are placed, elbows and knees are solved) plus simple equipment shapes.
-They are deliberately simpler than the RepDB photos and can be replaced from the console at any time.
+Schematic illustrations that were generated procedurally for 48 exercises were shipped in the seed and then withdrawn:
+the figures were anatomically wrong and not good enough. The seed owns the rows it creates, so removing a file from
+`Seeds/exercise-images` also removes the row it created in the database at the next startup (only rows with source
+`trazo-curated` that the seed no longer ships; uploads and imported images are never touched). The seed directory is
+currently empty.
 
-```bash
-cd tools/exercise-illustrations
-npm install
-node generate.mjs --sheet            # contact sheets in ./out to review the poses
-node generate.mjs                    # writes Seeds/exercise-images/{id}/{0,1}.webp
-node append-catalog.mjs              # adds the metadata of catalog-entries.mjs missing from the seed
-```
-
-To add an exercise: describe its two frames in `exercises.mjs`, its metadata in `catalog-entries.mjs` (instructions in
-Spanish, at least three steps) and its stimulus decision in `TrainingExerciseStimulus`; `ExerciseSeedAuditTests`
-checks that all three agree.
+`tools/exercise-illustrations` is the generator that produced them. It is kept only as a record and should not be
+used to ship images again; real exercise images should come from photographs or illustrations made by a person,
+added through the console or the seed.
