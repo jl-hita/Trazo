@@ -41,6 +41,7 @@ builder.Services.AddSingleton<AuthTokenService>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddHttpClient(AdminLibraryTransferEndpoints.ClientName, c => c.Timeout = TimeSpan.FromMinutes(5));
 
 var jwtIssuer = builder.Configuration["Authentication:Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Authentication:Jwt:Audience"];
@@ -187,6 +188,7 @@ app.MapAuthenticationEndpoints();
 app.MapAdminUsersEndpoints();
 app.MapAdminExercisesEndpoints();
 app.MapAdminPlanningEndpoints();
+app.MapAdminLibraryTransferEndpoints();
 app.MapAccountEmailEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
