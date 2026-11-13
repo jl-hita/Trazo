@@ -136,10 +136,11 @@ public static class AuthenticationEndpoints
         ISetupService setup,
         TrazoDbContext db,
         AuthTokenService tokens,
+        ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
-        var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration);
+        var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration, loggerFactory.CreateLogger("Trazo.Auth"));
         if (payload is null || !payload.EmailVerified || string.IsNullOrWhiteSpace(payload.Email))
             return Results.Unauthorized();
 
@@ -193,9 +194,10 @@ public static class AuthenticationEndpoints
         ClaimsPrincipal principal,
         IRuntimeSettings configuration,
         TrazoDbContext db,
+        ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
-        var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration);
+        var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration, loggerFactory.CreateLogger("Trazo.Auth"));
         if (payload is null || !payload.EmailVerified || string.IsNullOrWhiteSpace(payload.Email))
             return Results.Unauthorized();
         var userId = GetUserId(principal);
@@ -457,17 +459,26 @@ public static class AuthenticationEndpoints
         return raw;
     }
 
-    private static async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenAsync(string idToken, IRuntimeSettings configuration)
+    private static async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenAsync(
+        string idToken, IRuntimeSettings configuration, ILogger logger)
     {
         var clientId = (await configuration.GetGoogleAsync()).ClientId;
-        if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(idToken)) return null;
+        if (string.IsNullOrWhiteSpace(clientId))
+        {
+            logger.LogWarning("Google sign-in rejected: no Google client ID is configured.");
+            return null;
+        }
+        if (string.IsNullOrWhiteSpace(idToken)) return null;
         try
         {
             return await GoogleJsonWebSignature.ValidateAsync(idToken,
                 new GoogleJsonWebSignature.ValidationSettings { Audience = [clientId] });
         }
-        catch (InvalidJwtException)
+        catch (InvalidJwtException ex)
         {
+            // Never log the token itself; the reason (for example an untrusted audience) is enough
+            // to tell a client ID mismatch from an expired or malformed token.
+            logger.LogWarning("Google ID token rejected: {Reason}. Expected audience: {ClientId}", ex.Message, clientId);
             return null;
         }
     }
