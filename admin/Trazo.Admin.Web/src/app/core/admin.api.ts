@@ -50,6 +50,11 @@ export interface ExerciseFilters {
   q: string; movementPattern: string; status: string; source: string; sort: string; page: number; pageSize: number;
 }
 
+export interface TransferResult {
+  sent: boolean; exercises: number; images: number; skipped: { exerciseId: string; reason: string }[];
+  remote: { exercisesInserted?: number; exercisesUpdated?: number; exercisesSkipped?: number; imagesStored?: number } | null;
+}
+
 export type ExerciseAction = 'activate' | 'deactivate' | 'release-curation';
 
 export interface PlanPreviewRequest {
@@ -165,5 +170,9 @@ export class AdminApi {
 
   deleteExerciseImage(id: string, slot: number): Promise<AdminExerciseDetail> {
     return firstValueFrom(this.http.delete<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/images/${slot}`));
+  }
+
+  sendLibraryToDietoExpress(): Promise<TransferResult> {
+    return firstValueFrom(this.http.post<TransferResult>(`${API}/exercise-library-transfer/dietoexpress`, {}));
   }
 }
