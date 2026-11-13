@@ -37,6 +37,24 @@ export class AuthService {
       '/api/v1/auth/2fa/verify', { challengeToken, code, deviceName: 'Admin web' })));
   }
 
+  /**
+   * True when the stored session can be used: the access token is still valid, or a refresh succeeds.
+   * Called by the route guard so an expired session goes straight to the login page.
+   */
+  async ensureFreshSession(): Promise<boolean> {
+    if (!this.session) return false;
+    if (!this.accessTokenExpired()) return true;
+    try { await this.refresh(); return true; } catch { return false; }
+  }
+
+  private accessTokenExpired(): boolean {
+    try {
+      const payload = this.session!.accessToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const exp = JSON.parse(atob(payload)).exp as number;
+      return exp * 1000 - 30_000 <= Date.now();
+    } catch { return true; }
+  }
+
   /** Exchanges the refresh token for a new pair. Concurrent callers share one request, because refresh tokens rotate. */
   refresh(): Promise<string> {
     const current = this.session;
