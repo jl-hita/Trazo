@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, computed, inject, signal } from '@angular
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import {
-  AdminApi, AdminExerciseDetail, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
+  AdminApi, AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
 } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
@@ -80,6 +80,8 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
     .badge.bad { border-color: #7a3b3b; color: #f0a3a3; }
     .badge.warn { border-color: #6b5a2e; color: #e6d39b; }
     .badge.good { border-color: #2f6a4b; color: #7fd3a0; }
+    .ex-note { margin: 0 0 12px; color: #aab6c7; font-size: 12px; }
+    .ex-toolbar button.danger { border-color: #7a3b3b; color: #f0a3a3; background: #2a1616; }
     .ex-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; color: #8291a6; font-size: 12px; }
     .ex-panel { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; padding: 20px; border: 1px solid #293444; border-radius: 8px; background: #131b27; display: grid; gap: 14px; }
     .ex-panel h2 { margin: 0; font-size: 17px; font-weight: 600; color: #f2f5fa; }
@@ -134,7 +136,17 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
             <option value="updated">Sort: recently edited</option>
           </select>
           <button class="primary" type="button" (click)="startNew()">New exercise</button>
+          <button type="button" (click)="sendToDietoExpress()" [disabled]="transferBusy()" [class.danger]="transferConfirm()">
+            {{ transferBusy() ? 'Sending…' : transferConfirm() ? 'Confirm: send to DietoExpress' : 'Send to DietoExpress' }}
+          </button>
         </div>
+
+        @if (transferMessage()) { <p class="ex-note" role="status">{{ transferMessage() }}</p> }
+        @if (transferSkipped().length) {
+          <details class="ex-note"><summary>{{ transferSkipped().length }} not sent</summary>
+            <ul>@for (s of transferSkipped(); track s.exerciseId) { <li><b>{{ s.exerciseId }}</b>: {{ s.reason }}</li> }</ul>
+          </details>
+        }
 
         @if (error()) { <p class="err" style="color:#f0a3a3;font-size:12px" role="alert">{{ error() }}</p> }
 
@@ -258,6 +270,10 @@ export class ExercisesPageComponent {
 
   protected readonly fields = FIELDS;
   protected readonly imageSlots = [0, 1, 2, 3];
+  protected readonly transferBusy = signal(false);
+  protected readonly transferConfirm = signal(false);
+  protected readonly transferMessage = signal('');
+  protected readonly transferSkipped = signal<{ exerciseId: string; reason: string }[]>([]);
   private readonly imageVersion = signal(0);
   protected readonly optionLists = OPTION_LISTS;
   protected readonly options = signal<AdminExerciseOptions | null>(null);
@@ -337,6 +353,25 @@ export class ExercisesPageComponent {
     await this.perform(
       () => current ? this.api.updateExercise(current.id, input) : this.api.createExercise(input),
       current ? 'Changes saved.' : 'Exercise created.');
+  }
+
+  /** Sends the exercises created in TRAZO (with their images) to DietoExpress, after a second click. */
+  protected async sendToDietoExpress(): Promise<void> {
+    if (!this.transferConfirm()) { this.transferConfirm.set(true); this.transferMessage.set(''); return; }
+    this.transferConfirm.set(false);
+    this.transferBusy.set(true);
+    this.transferSkipped.set([]);
+    try {
+      const r: TransferResult = await this.api.sendLibraryToDietoExpress();
+      const remote = r.remote;
+      this.transferMessage.set(`Sent ${r.exercises} exercise(s) and ${r.images} image(s) to DietoExpress.` +
+        (remote ? ` Added: ${remote.exercisesInserted ?? 0}, updated: ${remote.exercisesUpdated ?? 0}, already there: ${remote.exercisesSkipped ?? 0}.` : ''));
+      this.transferSkipped.set(r.skipped);
+    } catch (e) {
+      this.transferMessage.set(errorMessage(e));
+    } finally {
+      this.transferBusy.set(false);
+    }
   }
 
   protected imageUrl(id: string, slot: number): string {

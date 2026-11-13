@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddRuntimeSettings();
         services.AddScoped<ExerciseCatalogSeeder>();
         services.AddScoped<ExerciseImageSeeder>();
+        services.AddScoped<ExerciseLibraryExporter>();
         services.AddScoped<ExerciseLibraryImportService>();
 
         return services;
