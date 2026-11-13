@@ -17,7 +17,7 @@ export class ShellComponent {
   protected readonly initial = computed(() => (this.auth.user()?.displayName ?? 'A').charAt(0).toUpperCase());
   protected readonly navigation: { label: string; icon: string; link?: string }[] = [
     { label: 'Overview', icon: '◫', link: '/' },
-    { label: 'Users', icon: '◎' },
+    { label: 'Users', icon: '◎', link: '/users' },
     { label: 'Subscriptions', icon: '◇' },
     { label: 'Training library', icon: '▤' },
     { label: 'Planning engine', icon: '⌘' },

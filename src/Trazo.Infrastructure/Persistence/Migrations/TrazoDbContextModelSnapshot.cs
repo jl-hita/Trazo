@@ -30,6 +30,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<int>("FailedLoginAttempts").HasColumnType("integer");
             b.Property<DateTimeOffset?>("LockoutEnd").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("LastLoginAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("DisabledAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
