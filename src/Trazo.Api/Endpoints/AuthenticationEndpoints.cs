@@ -92,7 +92,7 @@ public static class AuthenticationEndpoints
         if (email is null || string.IsNullOrEmpty(request.Password)) return Results.Unauthorized();
         var user = await db.Users.SingleOrDefaultAsync(x => x.NormalizedEmail == email, cancellationToken);
         var now = DateTimeOffset.UtcNow;
-        if (user is null || user.LockoutEnd > now || user.PasswordHash is null)
+        if (user is null || user.LockoutEnd > now || user.PasswordHash is null || user.DisabledAt is not null)
             return Results.Unauthorized();
 
         var verification = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
@@ -149,6 +149,7 @@ public static class AuthenticationEndpoints
         if (string.IsNullOrWhiteSpace(subject) || email is null) return Results.Unauthorized();
 
         var user = await db.Users.SingleOrDefaultAsync(x => x.GoogleSubject == subject, cancellationToken);
+        if (user?.DisabledAt is not null) return Results.Unauthorized();
         if (user is null)
         {
             if (await db.Users.AnyAsync(x => x.NormalizedEmail == email, cancellationToken))
@@ -231,7 +232,7 @@ public static class AuthenticationEndpoints
             return Results.Unauthorized();
 
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == challenge.UserId, cancellationToken);
-        if (user is null || !user.TwoFactorEnabled || string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
+        if (user is null || user.DisabledAt is not null || !user.TwoFactorEnabled || string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
             return Results.Unauthorized();
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
@@ -388,7 +389,7 @@ public static class AuthenticationEndpoints
             return Results.Unauthorized();
         }
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == existing.UserId, cancellationToken);
-        if (user is null) return Results.Unauthorized();
+        if (user is null || user.DisabledAt is not null) return Results.Unauthorized();
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         var newRawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));

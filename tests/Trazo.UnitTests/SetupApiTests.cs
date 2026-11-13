@@ -131,8 +131,11 @@ public sealed class SetupApiTests : IDisposable
 
         using var scope = _factory.Services.CreateScope();
         var tokens = scope.ServiceProvider.GetRequiredService<AuthTokenService>();
-        var admin = await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().Users.SingleAsync();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var admin = await db.Users.SingleAsync();
         var regular = new TrazoUser { Id = Guid.NewGuid(), Email = "u@example.com", NormalizedEmail = "U@EXAMPLE.COM", DisplayName = "U", Role = "user" };
+        db.Users.Add(regular); // tokens are only honoured for accounts that exist
+        await db.SaveChangesAsync();
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.CreateAccessToken(regular));
         Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/v1/admin/settings")).StatusCode);

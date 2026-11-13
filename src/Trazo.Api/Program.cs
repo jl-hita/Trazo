@@ -67,6 +67,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             NameClaimType = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name,
             RoleClaimType = ClaimTypes.Role
         };
+        // Access tokens live for an hour, so check the account on every request: disabling a user or
+        // changing a role by an administrator takes effect immediately instead of when the token expires.
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var subject = context.Principal?.FindFirstValue("sub") ?? context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!Guid.TryParse(subject, out var userId)) { context.Fail("Invalid token subject."); return; }
+                var db = context.HttpContext.RequestServices.GetRequiredService<TrazoDbContext>();
+                var current = await db.Users.AsNoTracking().Where(x => x.Id == userId)
+                    .Select(x => new { x.Role, x.DisabledAt })
+                    .SingleOrDefaultAsync(context.HttpContext.RequestAborted);
+                if (current is null || current.DisabledAt is not null) { context.Fail("The account is disabled or no longer exists."); return; }
+                if (context.Principal?.Identity is ClaimsIdentity identity)
+                {
+                    var roles = identity.FindAll(ClaimTypes.Role).ToList();
+                    if (roles.Count != 1 || roles[0].Value != current.Role)
+                    {
+                        foreach (var claim in roles) identity.RemoveClaim(claim);
+                        identity.AddClaim(new Claim(ClaimTypes.Role, current.Role));
+                    }
+                }
+            }
+        };
     });
 builder.Services.AddAuthorization(options =>
     options.AddPolicy(SetupEndpoints.SuperadminPolicy, p => p.RequireRole("superadmin")));
@@ -159,6 +183,7 @@ app.MapGet("/api/v1", () => Results.Ok(new
 app.MapExerciseCatalogEndpoints();
 app.MapSetupEndpoints();
 app.MapAuthenticationEndpoints();
+app.MapAdminUsersEndpoints();
 app.MapAccountEmailEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (

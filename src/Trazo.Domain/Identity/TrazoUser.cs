@@ -16,6 +16,8 @@ public sealed class TrazoUser
     public int FailedLoginAttempts { get; set; }
     public DateTimeOffset? LockoutEnd { get; set; }
     public DateTimeOffset? LastLoginAt { get; set; }
+    /// <summary>Set by an administrator; a disabled account cannot sign in or use existing tokens.</summary>
+    public DateTimeOffset? DisabledAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }
