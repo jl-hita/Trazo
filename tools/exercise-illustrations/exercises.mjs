@@ -270,7 +270,7 @@ const hangingLegRaise = (raised) => {
   return frame({ pose, back: [bar], ground: false, view: { scale: 0.8, from: [256, 52], to: [256, 56] } });
 };
 
-const weightedDip = (down) => {
+const weightedDip = (down, weighted = true) => {
   const wrist = [262, 252];
   const sh = down ? [256, 208] : [258, 134];
   const torso = down ? 82 : 91;
@@ -278,7 +278,7 @@ const weightedDip = (down) => {
   const ankle = [hip[0] - 40, hip[1] + 118];
   const pose = { hip, torso, legs: { near: { ankle, foot: -70, side: 1 } }, arms: { near: { wrist, side: down ? 1 : 1 } } };
   const bars = rod([196, 252], [340, 252], 10) + rect(200, 252, 12, 178, '#9aa4b1', 2) + rect(328, 252, 12, 178, '#9aa4b1', 2);
-  return frame({ pose, back: [bars], front: [dbEnd(add(ankle, [16, 20]), 14)] });
+  return frame({ pose, back: [bars], front: weighted ? [dbEnd(add(ankle, [16, 20]), 14)] : [] });
 };
 
 const lyingBench = ({ barC, pause }) => {
@@ -289,6 +289,7 @@ const lyingBench = ({ barC, pause }) => {
   return frame({ pose, back, front: [dot(barC, 7), ...(pause ? [pauseMark()] : [])] });
 };
 const pausedBench = (lockout) => lyingBench({ barC: lockout ? [102, 176] : [108, 268], pause: !lockout });
+const closeGripBench = (lockout) => lyingBench({ barC: lockout ? [102, 176] : [108, 268], pause: false });
 
 const squatLegs = (hip, ankle) => ({ near: { ankle, foot: 0, side: -1 } });
 
@@ -492,6 +493,61 @@ const elevatedPike = (down) => {
   return frame({ pose, back: [rect(286, 366, 80, FLOOR - 366, '#9aa4b2', 4)], view: { scale: 0.94, from: [256, 430], to: [256, 430] } });
 };
 
+// ---- the original TRAZO seed exercises ---------------------------------------------------------------------------
+const dumbbellCurl = (up) => {
+  const p = standing();
+  const sh = shoulderOf(p.hip, 90);
+  const wrist = up ? [sh[0] + 44, sh[1] + 18] : [sh[0] + 8, sh[1] + 116];
+  p.arms = { near: { wrist, side: up ? -1 : 1 } };
+  return frame({ pose: p, front: [dbEnd(wrist)] });
+};
+
+const walkingLunge = (low) => {
+  const hip = low ? [226, 306] : [256, 227];
+  const frontAnkle = low ? [326, ANKLE_Y] : [250, ANKLE_Y];
+  const sh = shoulderOf(hip, 90);
+  const wrist = [sh[0] + 8, sh[1] + 112];
+  const pose = {
+    hip, torso: 90,
+    legs: low ? { near: { ankle: frontAnkle, foot: 0, side: -1 }, far: { ankle: [128, 404], foot: -62, side: -1 } } : { near: { ankle: frontAnkle, foot: 0 } },
+    arms: { near: { wrist, side: 1 } }, farOffset: low ? [0, 0] : [9, -3]
+  };
+  return frame({ pose, front: [dbEnd(wrist)] });
+};
+
+const sumoDeadlift = (lockout) => {
+  if (lockout) {
+    const p = standing();
+    const wrist = [p.hip[0] + 12, p.hip[1] + 16];
+    p.arms = { near: { wrist, side: 1 } };
+    return frame({ pose: p, back: [plate(wrist, 36)], front: [dot(wrist, 7)] });
+  }
+  const barC = [270, FLOOR - 36];
+  const pose = {
+    hip: [214, 352], torso: 50, headTilt: -8, legs: { near: { ankle: [250, ANKLE_Y], foot: 25, side: -1 } },
+    arms: { near: { wrist: barC, side: 1 } }
+  };
+  return frame({ pose, back: [plate(barC, 36)], front: [dot(barC, 7)] });
+};
+
+const plank = (hold) => {
+  const ankle = [118, ANKLE_Y - 2];
+  const angle = 13;
+  const hip = along(ankle, angle, 188);
+  const pose = { hip, torso: angle, headTilt: 6, legs: { near: { ankle, foot: -65, side: -1 } }, arms: { near: { wrist: [462, 408], side: -1 } } };
+  return frame({ pose, front: hold ? [pauseMark(440, 90)] : [] });
+};
+
+const lyingLegRaise = (up) => {
+  const hip = [236, 392];
+  const ankle = up ? along(hip, 84, 186) : along(hip, 6, 188);
+  const pose = {
+    hip, torso: 180, headDir: 182, legs: { near: { ankle, foot: up ? 175 : 70, side: -1 } },
+    arms: { near: { wrist: [hip[0] - 36, 418], side: 1 } }
+  };
+  return frame({ pose });
+};
+
 export const exercises = [
   { id: 'dumbbell-shrug', frames: [shrug(0), shrug(18)] },
   { id: 'band-pull-apart', frames: [bandPullApart(false), bandPullApart(true)] },
@@ -533,5 +589,12 @@ export const exercises = [
   { id: 'band-lat-pulldown', frames: [bandPulldown(false), bandPulldown(true)] },
   { id: 'band-shoulder-press', frames: [bandPress(false), bandPress(true)] },
   { id: 'elevated-pike-push-up', frames: [elevatedPike(false), elevatedPike(true)] },
-  { id: 'single-leg-glute-bridge', frames: [singleLegBridge(false), singleLegBridge(true)] }
+  { id: 'single-leg-glute-bridge', frames: [singleLegBridge(false), singleLegBridge(true)] },
+  { id: 'dumbbell-curl', frames: [dumbbellCurl(false), dumbbellCurl(true)] },
+  { id: 'walking-lunge', frames: [walkingLunge(false), walkingLunge(true)] },
+  { id: 'sumo-deadlift', frames: [sumoDeadlift(false), sumoDeadlift(true)] },
+  { id: 'plank', frames: [plank(false), plank(true)] },
+  { id: 'lying-leg-raise', frames: [lyingLegRaise(false), lyingLegRaise(true)] },
+  { id: 'parallel-bar-dips', frames: [weightedDip(false, false), weightedDip(true, false)] },
+  { id: 'close-grip-bench-press', frames: [closeGripBench(false), closeGripBench(true)] }
 ];
