@@ -29,6 +29,8 @@ public sealed class ExerciseCatalogItem
     public string[] RequiredEquipment { get; set; } = [];
     public int SelectionPriority { get; set; }
     public int SeedVersion { get; set; }
+    /// <summary>Inactive exercises are hidden from the public catalog and from plan generation.</summary>
+    public bool IsActive { get; set; } = true;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

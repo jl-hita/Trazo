@@ -154,6 +154,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<int>("SeedVersion").HasColumnType("integer");
             b.Property<int>("SelectionPriority").HasColumnType("integer");
             b.Property<string>("Source").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<bool>("IsActive").HasColumnType("boolean");
             b.Property<bool>("IsBodyweight").HasColumnType("boolean");
             b.Property<bool>("IsUnilateral").HasColumnType("boolean");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");

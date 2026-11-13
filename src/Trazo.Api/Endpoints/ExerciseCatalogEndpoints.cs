@@ -48,7 +48,7 @@ public static class ExerciseCatalogEndpoints
             });
         }
 
-        IQueryable<ExerciseCatalogItem> query = db.ExerciseCatalog.AsNoTracking();
+        IQueryable<ExerciseCatalogItem> query = db.ExerciseCatalog.AsNoTracking().Where(x => x.IsActive);
 
         if (!string.IsNullOrWhiteSpace(q))
         {
@@ -126,7 +126,7 @@ public static class ExerciseCatalogEndpoints
 
         var exercise = await db.ExerciseCatalog
             .AsNoTracking()
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == id && x.IsActive)
             .Select(x => new ExerciseCatalogDetail(
                 x.Id,
                 x.Source,

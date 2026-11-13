@@ -20,6 +20,38 @@ export interface UserFilters { q: string; role: string; status: string; sort: st
 
 export type UserAction = 'disable' | 'enable' | 'revoke-sessions' | 'unlock' | 'verify-email';
 
+export interface AdminExerciseSummary {
+  id: string; source: string; nameEs: string; nameEn: string; difficulty: string; equipment: string | null;
+  movementPattern: string; minimumExperience: string; primaryMuscles: string[]; secondaryMuscles: string[];
+  selectionPriority: number; isActive: boolean; locallyCurated: boolean; imageCount: number;
+}
+
+export interface AdminExerciseDetail {
+  id: string; source: string; nameEs: string; nameEn: string; descriptionEs: string; instructionsEs: string[]; tipsEs: string[];
+  forceType: string; mechanic: string; difficulty: string; equipment: string | null; bodyPart: string; met: number;
+  isUnilateral: boolean; isBodyweight: boolean; movementPattern: string; primaryMuscles: string[]; secondaryMuscles: string[];
+  minimumExperience: string; suitableGoals: string[]; requiredEquipment: string[]; selectionPriority: number;
+  isActive: boolean; locallyCurated: boolean; importedFrom: string | null; imageSlots: number[]; createdAt: string; updatedAt: string;
+}
+
+export interface AdminExerciseInput {
+  id?: string; nameEs: string; nameEn: string; descriptionEs: string; instructionsEs: string[]; tipsEs: string[];
+  forceType: string; mechanic: string; difficulty: string; equipment: string; bodyPart: string; met: number;
+  isUnilateral: boolean; isBodyweight: boolean; movementPattern: string; primaryMuscles: string[]; secondaryMuscles: string[];
+  minimumExperience: string; suitableGoals: string[]; requiredEquipment: string[]; selectionPriority: number;
+}
+
+export interface AdminExerciseOptions {
+  movementPatterns: string[]; difficulties: string[]; experiences: string[]; equipment: string[]; forceTypes: string[];
+  mechanics: string[]; bodyParts: string[]; sources: string[]; muscles: string[]; goals: string[];
+}
+
+export interface ExerciseFilters {
+  q: string; movementPattern: string; status: string; source: string; sort: string; page: number; pageSize: number;
+}
+
+export type ExerciseAction = 'activate' | 'deactivate' | 'release-curation';
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -46,5 +78,35 @@ export class AdminApi {
 
   userAction(id: string, action: UserAction): Promise<AdminUserDetail> {
     return firstValueFrom(this.http.post<AdminUserDetail>(`${API}/users/${id}/${action}`, {}));
+  }
+
+  listExercises(filters: ExerciseFilters): Promise<Page<AdminExerciseSummary>> {
+    let params = new HttpParams().set('page', filters.page).set('pageSize', filters.pageSize);
+    if (filters.q.trim()) params = params.set('q', filters.q.trim());
+    if (filters.movementPattern) params = params.set('movementPattern', filters.movementPattern);
+    if (filters.status) params = params.set('status', filters.status);
+    if (filters.source) params = params.set('source', filters.source);
+    if (filters.sort) params = params.set('sort', filters.sort);
+    return firstValueFrom(this.http.get<Page<AdminExerciseSummary>>(`${API}/exercises`, { params }));
+  }
+
+  exerciseOptions(): Promise<AdminExerciseOptions> {
+    return firstValueFrom(this.http.get<AdminExerciseOptions>(`${API}/exercises/options`));
+  }
+
+  getExercise(id: string): Promise<AdminExerciseDetail> {
+    return firstValueFrom(this.http.get<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}`));
+  }
+
+  createExercise(input: AdminExerciseInput): Promise<AdminExerciseDetail> {
+    return firstValueFrom(this.http.post<AdminExerciseDetail>(`${API}/exercises`, input));
+  }
+
+  updateExercise(id: string, input: AdminExerciseInput): Promise<AdminExerciseDetail> {
+    return firstValueFrom(this.http.put<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}`, input));
+  }
+
+  exerciseAction(id: string, action: ExerciseAction): Promise<AdminExerciseDetail> {
+    return firstValueFrom(this.http.post<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/${action}`, {}));
   }
 }
