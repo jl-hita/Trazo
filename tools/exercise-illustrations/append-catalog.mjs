@@ -12,7 +12,7 @@ const existing = new Set(JSON.parse(text).map((x) => x.id));
 
 const illustrated = new Set(exercises.map((x) => x.id));
 const missingImages = entries.filter((x) => !illustrated.has(x.id)).map((x) => x.id);
-const missingEntries = [...illustrated].filter((id) => !entries.some((x) => x.id === id));
+const missingEntries = [...illustrated].filter((id) => !entries.some((x) => x.id === id) && !existing.has(id));
 if (missingImages.length || missingEntries.length) throw new Error(`Mismatch. No image: ${missingImages}. No entry: ${missingEntries}`);
 
 const fresh = entries.filter((x) => !existing.has(x.id));
