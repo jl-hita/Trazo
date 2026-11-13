@@ -2,6 +2,7 @@
 // `node append-catalog.mjs` appends the ones missing from Seeds/exercise-catalog-additions.json.
 const H = ['Hypertrophy', 'GeneralFitness'];
 const HS = ['Hypertrophy', 'Strength'];
+const GI = ['Hypertrophy', 'GeneralFitness'];
 const ALL = ['Hypertrophy', 'Strength', 'GeneralFitness'];
 
 const e = (id, nameEs, nameEn, descriptionEs, instructionsEs, tipsEs, o) => ({
@@ -42,12 +43,12 @@ export const entries = [
     'Remo explosivo con barra que parte del suelo en cada repetición, con el tronco paralelo al suelo.',
     ['Con los pies bajo la barra y el tronco casi paralelo al suelo, agarra la barra con las manos algo más anchas que los hombros y la espalda neutra.', 'Tira de la barra con fuerza hasta tocar la parte baja del pecho, manteniendo el tronco inmóvil.', 'Baja la barra de forma controlada hasta apoyarla en el suelo y detenerla un instante.', 'Reajusta la posición de la espalda y repite desde el suelo.'],
     ['El tronco no sube ni baja: si se mueve, la carga es excesiva.', 'Cada repetición empieza con la barra quieta en el suelo.'],
-    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'barbell', part: 'back', pattern: 'HorizontalPull', p: ['Lats', 'UpperBack'], s: ['Biceps', 'ErectorSpinae', 'Forearms'], exp: 'Advanced', goals: HS, req: ['barbell'], prio: 60, met: 6 }),
+    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'barbell', part: 'back', pattern: 'HorizontalPull', p: ['Lats', 'UpperBack'], s: ['Biceps', 'ErectorSpinae', 'Forearms'], exp: 'Advanced', goals: HS, req: ['barbell'], prio: 97, met: 6 }),
   e('rack-pull', 'Peso Muerto desde Rack', 'Rack Pull',
     'Peso muerto parcial desde la altura de las rodillas, que sobrecarga la espalda alta y la extensión de cadera.',
     ['Coloca la barra en los soportes a la altura de las rodillas o justo por debajo, con los pies a la anchura de las caderas bajo la barra.', 'Agarra la barra, tensa la espalda y el abdomen y empuja el suelo con los pies.', 'Extiende caderas y rodillas a la vez hasta quedar erguido, con los hombros hacia atrás.', 'Baja la barra de forma controlada hasta apoyarla en los soportes.'],
     ['Usa los soportes a una altura que permita mantener la espalda neutra.', 'No hiperextiendas la zona lumbar al terminar.'],
-    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'barbell', part: 'back', pattern: 'Hinge', p: ['UpperBack', 'Glutes', 'ErectorSpinae'], s: ['Hamstrings', 'Forearms', 'Lats'], exp: 'Advanced', goals: HS, req: ['barbell'], prio: 60, met: 6 }),
+    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'barbell', part: 'back', pattern: 'Hinge', p: ['UpperBack', 'Glutes', 'ErectorSpinae'], s: ['Hamstrings', 'Forearms', 'Lats'], exp: 'Advanced', goals: HS, req: ['barbell'], prio: 97, met: 6 }),
 
   // ---- calves ------------------------------------------------------------------------------------------------
   e('leg-press-calf-raise', 'Elevación de Gemelos en Prensa', 'Leg Press Calf Raise',
@@ -123,7 +124,7 @@ export const entries = [
     'Dominada con peso añadido, sujetando una mancuerna entre los pies o con un chaleco lastrado.',
     ['Cuélgate de la barra con agarre algo más ancho que los hombros y sujeta una mancuerna entre los pies o los tobillos.', 'Tira de los codos hacia abajo y atrás hasta que la barbilla supere la barra.', 'Mantén el cuerpo estable, sin balancearte.', 'Baja de forma controlada hasta extender los brazos por completo.'],
     ['Domina antes las dominadas con peso corporal.', 'Si usas chaleco lastrado, ajusta el peso de forma progresiva.'],
-    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'pull_up_bar', part: 'back', pattern: 'VerticalPull', p: ['Lats'], s: ['Biceps', 'Deltoids', 'UpperBack'], exp: 'Advanced', goals: HS, req: ['pull-up-bar'], prio: 60, met: 7 }),
+    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'pull_up_bar', part: 'back', pattern: 'VerticalPull', p: ['Lats'], s: ['Biceps', 'Deltoids', 'UpperBack'], exp: 'Advanced', goals: HS, req: ['pull-up-bar'], prio: 97, met: 7 }),
   e('weighted-dip', 'Fondos con Lastre', 'Weighted Dip',
     'Fondos en paralelas con peso añadido, sujetando una mancuerna entre los pies o con un chaleco lastrado.',
     ['Sujétate en las paralelas con los brazos extendidos y una mancuerna sujeta entre los pies o los tobillos.', 'Inclina ligeramente el torso y flexiona los codos para bajar de forma controlada.', 'Detente cuando los hombros queden a la altura de los codos.', 'Empuja con pecho y tríceps hasta extender los brazos.'],
@@ -178,5 +179,52 @@ export const entries = [
     'Rollout con la rueda abdominal partiendo de pie, con las piernas rectas y mucho recorrido.',
     ['De pie, con las piernas rectas, inclínate hacia delante y apoya la rueda abdominal en el suelo con las dos manos.', 'Rueda hacia delante con los brazos extendidos y el abdomen firme hasta quedar casi paralelo al suelo.', 'Mantén las caderas alineadas, sin dejar caer la zona lumbar.', 'Tira del abdomen para volver rodando a la posición inicial.'],
     ['Empieza con la versión de rodillas hasta controlar el recorrido.', 'Detén el recorrido antes de que la zona lumbar se hunda.'],
-    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'ab_wheel', part: 'core', pattern: 'Core', p: ['Abdominals'], s: ['Deltoids', 'Lats', 'Obliques', 'Serratus'], exp: 'Advanced', goals: ALL, req: ['ab-wheel'], prio: 60, met: 6 })
+    { force: 'pull', mech: 'compound', diff: 'advanced', equip: 'ab_wheel', part: 'core', pattern: 'Core', p: ['Abdominals'], s: ['Deltoids', 'Lats', 'Obliques', 'Serratus'], exp: 'Advanced', goals: ALL, req: ['ab-wheel'], prio: 60, met: 6 }),
+
+  // ---- beginner and minimal equipment (gaps found evaluating the real catalog) -------------------------------
+  e('bodyweight-squat', 'Sentadilla con Peso Corporal', 'Bodyweight Squat',
+    'Sentadilla básica sin material, ideal para aprender el patrón de movimiento y entrenar piernas en cualquier lugar.',
+    ['De pie con los pies a la anchura de los hombros, las puntas ligeramente abiertas y los brazos extendidos al frente.', 'Lleva las caderas atrás y abajo como si te sentaras, con el pecho alto y la espalda neutra.', 'Baja hasta que los muslos queden paralelos al suelo, con las rodillas siguiendo la línea de los pies.', 'Empuja el suelo con todo el pie hasta volver a estar erguido.'],
+    ['Mantén los talones apoyados durante todo el recorrido.', 'Si te cuesta bajar, siéntate en una silla y levántate sin impulso.'],
+    { force: 'push', mech: 'compound', diff: 'beginner', part: 'upper_legs', pattern: 'Squat', p: ['Glutes', 'Quadriceps'], s: ['Hamstrings', 'ErectorSpinae'], exp: 'Beginner', goals: GI, prio: 66, bw: true, met: 5 }),
+  e('bodyweight-reverse-lunge', 'Zancada Atrás con Peso Corporal', 'Bodyweight Reverse Lunge',
+    'Zancada hacia atrás sin material, más estable y amable con las rodillas que la zancada hacia delante.',
+    ['De pie con los pies juntos y las manos en la cintura, con el pecho alto.', 'Da un paso largo hacia atrás y baja flexionando ambas rodillas hasta que la rodilla trasera quede cerca del suelo.', 'Mantén el tronco erguido y el peso sobre el pie delantero.', 'Empuja con la pierna delantera para volver a la posición inicial; completa las repeticiones y cambia de pierna.'],
+    ['Da un paso lo bastante largo para que la rodilla delantera no pase mucho la punta del pie.', 'Agárrate a un soporte si todavía te cuesta el equilibrio.'],
+    { force: 'push', mech: 'compound', diff: 'beginner', part: 'upper_legs', pattern: 'SingleLeg', p: ['Glutes', 'Quadriceps'], s: ['Hamstrings'], exp: 'Beginner', goals: GI, prio: 62, uni: true, bw: true, met: 5 }),
+  e('bent-knee-inverted-row', 'Remo Invertido con Rodillas Flexionadas', 'Bent-Knee Inverted Row',
+    'Versión de principiante del remo invertido: con las rodillas flexionadas y los pies cerca del cuerpo, pesa menos y es más fácil de controlar.',
+    ['Túmbate bajo una barra baja y firme, agárrala con las manos algo más anchas que los hombros y mantén el tronco recto con las rodillas flexionadas y las plantas de los pies apoyadas.', 'Tira del pecho hacia la barra llevando los codos hacia atrás y juntando los omóplatos.', 'Mantén un instante arriba sin dejar caer las caderas.', 'Baja de forma controlada hasta extender los brazos.'],
+    ['Acerca los pies al cuerpo para hacerlo más fácil o aléjalos para progresar.', 'Cuando domines 12 repeticiones, pasa al remo invertido con las piernas rectas.'],
+    { force: 'pull', mech: 'compound', diff: 'beginner', equip: 'pull_up_bar', part: 'back', pattern: 'HorizontalPull', p: ['Lats', 'UpperBack'], s: ['Biceps', 'Deltoids'], exp: 'Beginner', goals: GI, req: ['pull-up-bar'], prio: 66, bw: true, met: 5 }),
+  e('negative-pull-up', 'Dominada Negativa', 'Negative Pull-Up',
+    'Fase de bajada lenta de la dominada, para construir la fuerza necesaria para hacer dominadas completas.',
+    ['Sube a un banco o salta para colocar la barbilla por encima de la barra, con agarre algo más ancho que los hombros.', 'Sin apoyarte, baja el cuerpo de forma muy lenta, en unos tres a cinco segundos.', 'Controla el movimiento hasta extender los brazos por completo.', 'Vuelve a subir con ayuda del banco o del salto y repite.'],
+    ['Mantén los hombros alejados de las orejas durante la bajada.', 'Cuando domines cinco repeticiones lentas, prueba a subir sin ayuda.'],
+    { force: 'pull', mech: 'compound', diff: 'beginner', equip: 'pull_up_bar', part: 'back', pattern: 'VerticalPull', p: ['Lats'], s: ['Biceps', 'Deltoids', 'UpperBack'], exp: 'Beginner', goals: GI, req: ['pull-up-bar'], prio: 62, bw: true, met: 5 }),
+  e('band-row', 'Remo con Banda Elástica', 'Resistance Band Row',
+    'Remo sentado con una banda elástica anclada en los pies, que no requiere más material que la banda.',
+    ['Siéntate en el suelo con las piernas extendidas y la banda rodeando las plantas de los pies, sujetando un extremo con cada mano.', 'Con la espalda recta, tira de las manos hacia el abdomen llevando los codos atrás.', 'Junta los omóplatos al final del movimiento.', 'Estira los brazos con control sin soltar la tensión de la banda.'],
+    ['No te balancees para ayudarte con el tronco.', 'Elige una banda que permita 12 a 15 repeticiones limpias.'],
+    { force: 'pull', mech: 'compound', diff: 'beginner', equip: 'resistance_band', part: 'back', pattern: 'HorizontalPull', p: ['UpperBack', 'Lats'], s: ['Biceps', 'Deltoids'], exp: 'Beginner', goals: GI, req: ['resistance-band'], prio: 60, met: 4 }),
+  e('band-lat-pulldown', 'Jalón con Banda Elástica', 'Resistance Band Lat Pulldown',
+    'Jalón vertical con una banda elástica anclada en un punto alto, como alternativa a la polea.',
+    ['De pie, con la banda anclada a un punto alto (una puerta o una barra) y un extremo en cada mano, brazos extendidos sobre la cabeza.', 'Tira de las manos hacia abajo llevando los codos a los costados, con el pecho alto.', 'Aprieta la espalda cuando las manos lleguen a la altura de los hombros.', 'Sube los brazos con control hasta volver a extenderlos.'],
+    ['No inclines el tronco hacia atrás para tirar.', 'Asegura bien el anclaje antes de empezar.'],
+    { force: 'pull', mech: 'compound', diff: 'beginner', equip: 'resistance_band', part: 'back', pattern: 'VerticalPull', p: ['Lats'], s: ['Biceps', 'UpperBack'], exp: 'Beginner', goals: GI, req: ['resistance-band'], prio: 60, met: 4 }),
+  e('band-shoulder-press', 'Press de Hombros con Banda Elástica', 'Resistance Band Shoulder Press',
+    'Press de hombros de pie sobre una banda elástica, para trabajar el deltoides con muy poco material.',
+    ['De pie sobre el centro de la banda, con los pies a la anchura de las caderas y un extremo en cada mano a la altura de los hombros.', 'Empuja las manos hacia arriba hasta extender los brazos sobre la cabeza.', 'Mantén el abdomen firme y las costillas recogidas.', 'Baja con control hasta los hombros sin perder tensión.'],
+    ['No arquees la espalda al empujar.', 'Sujeta la banda con una vuelta más para aumentar la resistencia.'],
+    { force: 'push', mech: 'compound', diff: 'beginner', equip: 'resistance_band', part: 'shoulders', pattern: 'VerticalPush', p: ['Deltoids'], s: ['Triceps', 'UpperBack'], exp: 'Beginner', goals: GI, req: ['resistance-band'], prio: 60, met: 4 }),
+  e('single-leg-glute-bridge', 'Puente de Glúteo a una Pierna', 'Single-Leg Glute Bridge',
+    'Puente de glúteo con una sola pierna apoyada, que aumenta la exigencia sin añadir material.',
+    ['Túmbate boca arriba con una rodilla flexionada y el pie apoyado en el suelo, y la otra pierna extendida en el aire.', 'Empuja el talón de la pierna de apoyo y eleva la cadera hasta alinear hombro, cadera y rodilla.', 'Aprieta el glúteo arriba durante un instante sin arquear la zona lumbar.', 'Baja con control sin apoyar la cadera; completa las repeticiones y cambia de pierna.'],
+    ['Mantén la pelvis nivelada, sin que una cadera caiga.', 'Empieza con el puente de glúteo con dos piernas si te cuesta.'],
+    { force: 'push', mech: 'compound', diff: 'intermediate', part: 'upper_legs', pattern: 'Hinge', p: ['Glutes'], s: ['Hamstrings'], exp: 'Beginner', goals: GI, prio: 62, uni: true, bw: true, met: 4 }),
+  e('elevated-pike-push-up', 'Flexión en Pica con Manos Elevadas', 'Elevated Pike Push-Up',
+    'Versión de principiante de la flexión en pica, con las manos sobre un escalón o una silla estable para reducir la carga.',
+    ['Apoya las manos en el borde de un escalón, banco o silla firme, a la anchura de los hombros, y camina con los pies hacia atrás hasta elevar las caderas.', 'Flexiona los codos y baja la cabeza hacia el soporte, con las caderas altas.', 'Detente cuando la cabeza quede entre las manos, sin perder la posición.', 'Empuja con los brazos hasta extender los codos.'],
+    ['Acerca los pies al soporte para hacerlo más difícil.', 'Comprueba que el soporte no se mueve antes de empezar.'],
+    { force: 'push', mech: 'compound', diff: 'beginner', part: 'shoulders', pattern: 'VerticalPush', p: ['Deltoids'], s: ['Triceps', 'UpperBack'], exp: 'Beginner', goals: GI, prio: 60, bw: true, met: 5 })
 ];

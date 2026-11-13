@@ -289,7 +289,15 @@ internal static class TrainingExerciseStimulus
             ["rack-pull"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
             ["deficit-deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
             ["good-morning"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["hanging-leg-raise"] = [TrainingMuscleGroup.HipFlexors]
+            ["hanging-leg-raise"] = [TrainingMuscleGroup.HipFlexors],
+            ["bodyweight-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
+            ["bodyweight-reverse-lunge"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
+            ["bent-knee-inverted-row"] = [TrainingMuscleGroup.Biceps],
+            ["negative-pull-up"] = [TrainingMuscleGroup.Biceps],
+            ["band-row"] = [TrainingMuscleGroup.Biceps],
+            ["band-lat-pulldown"] = [TrainingMuscleGroup.Biceps],
+            ["band-shoulder-press"] = [TrainingMuscleGroup.Triceps],
+            ["elevated-pike-push-up"] = [TrainingMuscleGroup.Triceps]
         };
 
     // Explicitly audited catalog isolates/accessories whose secondary tags do not represent
@@ -312,7 +320,7 @@ internal static class TrainingExerciseStimulus
         "dumbbell-shrug", "band-pull-apart", "incline-bench-y-raise", "leg-press-calf-raise",
         "dumbbell-single-leg-calf-raise", "seated-dumbbell-calf-raise", "smith-machine-calf-raise",
         "barbell-standing-calf-raise", "dumbbell-front-raise", "cable-front-raise", "weighted-dip",
-        "dragon-flag", "standing-ab-wheel-rollout",
+        "dragon-flag", "standing-ab-wheel-rollout", "single-leg-glute-bridge",
         // TRAZO seed exercises that predate the table (decision: no meaningful secondary).
         "dumbbell-curl", "parallel-bar-dips", "plank", "walking-lunge", "sumo-deadlift",
         "close-grip-bench-press", "lying-leg-raise"

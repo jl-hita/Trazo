@@ -45,16 +45,25 @@ unchanged.
   TRAZO without an entry keep the conservative behaviour: their secondary muscles count as exposures, not as full
   sets. Every exercise of the curated seed has an explicit decision (a unit test fails when one is added without
   it): either the secondary muscles that count as a set, or "reviewed, nothing extra counts".
-- **Selection order is by `selectionPriority`.** The curated additions use 55-70 (advanced 55-60). Against the
-  RepDB exercises (72-96) they are chosen when equipment is restricted (calves with only a barbell, upper back
-  with dumbbells, ...) but not when everything is available. Measured on the real catalog with an advanced
-  4-day profile and all equipment: the plan is identical with or without the 32 additions; raising the advanced
-  ones to 97 makes the plan use them (paused bench, Pendlay row, weighted pull-up, ...). It is a product
-  decision, not a bug.
+- **Selection order is by `selectionPriority`.** The curated additions use 55-70 so they do not displace the
+  RepDB exercises (72-96); they are chosen when equipment is restricted (calves with only a barbell, upper back
+  with dumbbells, ...). Three advanced exercises are the exception and use 97 because they close real gaps:
+  `pendlay-row`, `rack-pull` and `weighted-pull-up`. Measured on the real catalog (advanced, 4 days, all
+  equipment): effective sets in week 1 went from 123 to 130, upper-back and calves warnings from 2 to 0, and the
+  main lifts (bench press, deadlift) stay in the plan. Raising all 15 advanced exercises, or the 10 loaded ones,
+  gave no further benefit and removed the conventional lifts from advanced plans, so they keep 55-60. Intermediate
+  profiles are unaffected (these exercises require Advanced).
 - **Weighted pull-ups and dips** require only `pull-up-bar` and `dip-station`; the load is a dumbbell between the
   feet or a weighted vest, so no `weight-belt` token exists.
-- **Known catalog gaps** found while evaluating: a beginner with only a pull-up bar gets no program (no
-  beginner bodyweight Squat exercise) and the automatic split accepts 2-4 days only.
+- **Beginner and low-equipment coverage.** Added `bodyweight-squat`, `bodyweight-reverse-lunge`,
+  `bent-knee-inverted-row` (RepDB's `inverted-row` needs a barbell and is intermediate), `negative-pull-up`,
+  `band-row`, `band-lat-pulldown`, `band-shoulder-press`, `elevated-pike-push-up` and
+  `single-leg-glute-bridge`. A beginner with only a pull-up bar, only bands, or both now gets a program. A beginner
+  who lists no equipment at all still gets none: there is no pulling movement that needs nothing.
+- **Seed ids must not collide with the imported catalog.** The seeder skips ids that already exist, and the image
+  seeder fills empty slots of an existing id, so a colliding id would silently attach a TRAZO illustration to someone
+  else's exercise. Check new ids against the catalog before adding them.
+- The automatic split accepts 2-4 training days only (engine rule).
 - The generator returns a draft for professional or user review. It is not a clinical prescription.
 
 ## Next steps

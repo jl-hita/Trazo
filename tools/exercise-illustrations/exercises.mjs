@@ -392,6 +392,106 @@ const abWheel = (extended) => {
   return frame({ pose, back: [wheelSvg] });
 };
 
+// ---- beginner / minimal equipment ----------------------------------------------------------------------------
+const bodyweightSquat = (deep) => {
+  if (!deep) {
+    const p = standing();
+    const sh = shoulderOf(p.hip, 90);
+    p.arms = { near: { wrist: [sh[0] + 90, sh[1] + 20], side: 1 } };
+    return frame({ pose: p });
+  }
+  const hip = [204, 326], torso = 58;
+  const sh = shoulderOf(hip, torso);
+  const pose = { hip, torso, legs: squatLegs(hip, [250, ANKLE_Y]), arms: { near: { wrist: [sh[0] + 100, sh[1] - 6], side: 1 } } };
+  return frame({ pose });
+};
+
+const bodyweightLunge = (low) => {
+  if (!low) {
+    const p = standing();
+    const sh = shoulderOf(p.hip, 90);
+    p.arms = { near: { wrist: [p.hip[0] + 24, p.hip[1] + 4], side: -1 } };
+    return frame({ pose: p });
+  }
+  const hip = [226, 304], torso = 88;
+  const pose = {
+    hip, torso, legs: { near: { ankle: [292, ANKLE_Y], foot: 0, side: -1 }, far: { ankle: [118, 404], foot: -62, side: -1 } },
+    arms: { near: { wrist: [hip[0] + 24, hip[1] + 4], side: -1 } }, farOffset: [0, 0]
+  };
+  return frame({ pose });
+};
+
+const invertedRow = (pulled) => {
+  const bar = [448, 282];
+  const angle = pulled ? 14 : 6;
+  const sh = pulled ? [436, 342] : [438, 398];
+  const hip = along(sh, angle + 180, LEN.torso);
+  const ankle = [hip[0] - 96, ANKLE_Y - 2];
+  const pose = {
+    hip, torso: angle, faceFlip: true, headTilt: 4, legs: { near: { ankle, foot: 0, side: 1 } },
+    arms: { near: { wrist: [bar[0], bar[1]], side: pulled ? -1 : 1 } }
+  };
+  const back = [rod([410, 282], [498, 282], 10), rect(488, 282, 14, FLOOR - 282, '#9aa4b1', 2), rect(410, 282, 14, FLOOR - 282, '#9aa4b1', 2)];
+  return frame({ pose, back });
+};
+
+const negativePullUp = (top) => {
+  const wrist = [262, 52];
+  const sh = top ? [250, 100] : [258, 168];
+  const hip = [sh[0] - 4, sh[1] + 102];
+  const pose = { hip, torso: top ? 95 : 91, legs: { near: { ankle: [hip[0] - 36, hip[1] + 126], foot: -70, side: 1 } }, arms: { near: { wrist, side: 1 } } };
+  const bar = rod([196, 52], [380, 52], 10) + rect(372, 52, 14, 330, '#9aa4b1', 2);
+  return frame({ pose, back: [bar], ground: false, view: { scale: 0.8, from: [256, 52], to: [256, 56] } });
+};
+
+const bandRow = (pulled) => {
+  const hip = [150, 388], torso = pulled ? 95 : 70;
+  const sh = shoulderOf(hip, torso);
+  const wrist = pulled ? [sh[0] + 48, sh[1] + 52] : [sh[0] + 108, sh[1] + 36];
+  const ankle = [336, 392];
+  const pose = { hip, torso, legs: { near: { ankle, foot: 80, side: 1 } }, arms: { near: { wrist, side: -1 } } };
+  const band = `<line x1="${ankle[0] + 8}" y1="${ankle[1] - 8}" x2="${wrist[0]}" y2="${wrist[1]}" stroke="#e8572a" stroke-width="6" stroke-linecap="round"/>`;
+  return frame({ pose, back: [pad([100, 402], [196, 402], 20)], front: [band, handle(wrist)] });
+};
+
+const bandPulldown = (down) => {
+  const p = standing();
+  const sh = shoulderOf(p.hip, 90);
+  const wrist = down ? [sh[0] + 30, sh[1] + 52] : [sh[0] + 16, sh[1] - 112];
+  p.arms = { near: { wrist, side: down ? -1 : 1 } };
+  const anchor = [338, 24];
+  const band = `<line x1="${anchor[0]}" y1="${anchor[1]}" x2="${wrist[0]}" y2="${wrist[1]}" stroke="#e8572a" stroke-width="6" stroke-linecap="round"/>`;
+  return frame({ pose: p, back: [rect(330, 10, 16, 40, '#9aa4b1', 3)], front: [band, handle(wrist)], view: { scale: 0.86, from: [256, 430], to: [256, 430] } });
+};
+
+const bandPress = (up) => {
+  const p = standing();
+  const sh = shoulderOf(p.hip, 90);
+  const wrist = up ? [sh[0] + 8, sh[1] - 112] : [sh[0] + 26, sh[1] + 2];
+  p.arms = { near: { wrist, side: up ? 1 : -1 } };
+  const band = `<line x1="252" y1="414" x2="${wrist[0]}" y2="${wrist[1]}" stroke="#e8572a" stroke-width="6" stroke-linecap="round"/>`;
+  return frame({ pose: p, front: [band, handle(wrist)], view: { scale: 0.86, from: [256, 430], to: [256, 430] } });
+};
+
+const singleLegBridge = (up) => {
+  const hip = up ? [222, 358] : [222, 398], torso = up ? 205 : 180;
+  const far = up ? along(hip, 18, 188) : along(hip, 34, 188);
+  const pose = {
+    hip, torso, headDir: 182, legs: { near: { ankle: [292, ANKLE_Y], foot: 0, side: -1 }, far: { ankle: far, foot: 70, side: -1 } },
+    arms: { near: { wrist: [hip[0] - 70, 414], side: 1 } }, farOffset: [0, 0]
+  };
+  return frame({ pose });
+};
+
+const elevatedPike = (down) => {
+  const hand = [322, 354];
+  const sh = down ? [324, 300] : [318, 248];
+  const torso = down ? -20 : -6;
+  const hip = add(sh, along([0, 0], torso, -LEN.torso));
+  const pose = { hip, torso, legs: { near: { ankle: [160, ANKLE_Y], foot: 0, side: -1 } }, arms: { near: { wrist: hand, side: -1 } } };
+  return frame({ pose, back: [rect(286, 366, 80, FLOOR - 366, '#9aa4b2', 4)], view: { scale: 0.94, from: [256, 430], to: [256, 430] } });
+};
+
 export const exercises = [
   { id: 'dumbbell-shrug', frames: [shrug(0), shrug(18)] },
   { id: 'band-pull-apart', frames: [bandPullApart(false), bandPullApart(true)] },
@@ -424,5 +524,14 @@ export const exercises = [
   { id: 'pistol-squat', frames: [pistol(false), pistol(true)] },
   { id: 'hanging-leg-raise', frames: [hangingLegRaise(false), hangingLegRaise(true)] },
   { id: 'dragon-flag', frames: [dragonFlag(false), dragonFlag(true)] },
-  { id: 'standing-ab-wheel-rollout', frames: [abWheel(false), abWheel(true)] }
+  { id: 'standing-ab-wheel-rollout', frames: [abWheel(false), abWheel(true)] },
+  { id: 'bodyweight-squat', frames: [bodyweightSquat(false), bodyweightSquat(true)] },
+  { id: 'bodyweight-reverse-lunge', frames: [bodyweightLunge(false), bodyweightLunge(true)] },
+  { id: 'bent-knee-inverted-row', frames: [invertedRow(false), invertedRow(true)] },
+  { id: 'negative-pull-up', frames: [negativePullUp(true), negativePullUp(false)] },
+  { id: 'band-row', frames: [bandRow(false), bandRow(true)] },
+  { id: 'band-lat-pulldown', frames: [bandPulldown(false), bandPulldown(true)] },
+  { id: 'band-shoulder-press', frames: [bandPress(false), bandPress(true)] },
+  { id: 'elevated-pike-push-up', frames: [elevatedPike(false), elevatedPike(true)] },
+  { id: 'single-leg-glute-bridge', frames: [singleLegBridge(false), singleLegBridge(true)] }
 ];
