@@ -66,11 +66,18 @@ jobs:
 
       - name: Publish
         run: |
+          set -euo pipefail
           rm -rf /tmp/trazo-publish /tmp/trazo-backend
           dotnet publish src/Trazo.Api/Trazo.Api.csproj -c Release --no-restore --no-build -o /tmp/trazo-publish
           mkdir -p /tmp/trazo-backend
           cp -a /tmp/trazo-publish/. /tmp/trazo-backend/
           test -f /tmp/trazo-backend/Trazo.Api.dll
+          # Fail before touching production if a required EF runtime assembly is absent.
+          test -f /tmp/trazo-backend/Microsoft.EntityFrameworkCore.Relational.dll || {
+            echo "ERROR: EF Core Relational is missing from the API publish output."
+            find /tmp/trazo-backend -maxdepth 1 -name 'Microsoft.EntityFrameworkCore*.dll' -printf '%f\n' | sort
+            exit 1
+          }
 
       - uses: actions/setup-node@v4
         with:
