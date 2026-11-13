@@ -157,4 +157,13 @@ export class AdminApi {
   catalogReadiness(): Promise<CatalogReadiness> {
     return firstValueFrom(this.http.get<CatalogReadiness>(`${API}/planning/catalog-readiness`));
   }
+
+  uploadExerciseImage(id: string, slot: number, file: File): Promise<AdminExerciseDetail> {
+    return firstValueFrom(this.http.put<AdminExerciseDetail>(
+      `${API}/exercises/${encodeURIComponent(id)}/images/${slot}`, file, { headers: { 'Content-Type': file.type } }));
+  }
+
+  deleteExerciseImage(id: string, slot: number): Promise<AdminExerciseDetail> {
+    return firstValueFrom(this.http.delete<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/images/${slot}`));
+  }
 }

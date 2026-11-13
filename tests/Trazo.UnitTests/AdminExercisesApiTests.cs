@@ -184,4 +184,55 @@ public sealed class AdminExercisesApiTests : IDisposable
         await client.PostAsync("/api/v1/admin/exercises/hidden-press/activate", null);
         Assert.Equal(HttpStatusCode.OK, (await anonymous.GetAsync("/api/v1/exercises/hidden-press")).StatusCode);
     }
+
+    private static byte[] Webp(int extra = 24, byte fill = 1)
+    {
+        var bytes = new byte[12 + extra];
+        "RIFF"u8.CopyTo(bytes); "WEBP"u8.CopyTo(bytes.AsSpan(8));
+        Array.Fill(bytes, fill, 12, extra);
+        return bytes;
+    }
+
+    private static List<int> Slots(JsonElement detail) =>
+        detail.GetProperty("imageSlots").EnumerateArray().Select(e => e.GetInt32()).ToList();
+
+    private static ByteArrayContent Body(byte[] bytes, string type = "image/webp")
+    {
+        var content = new ByteArrayContent(bytes);
+        content.Headers.ContentType = new MediaTypeHeaderValue(type);
+        return content;
+    }
+
+    [Fact]
+    public async Task Images_CanBeUploadedReplacedAndRemoved_WithValidation()
+    {
+        var client = await ClientAsync("superadmin");
+        await client.PostAsJsonAsync("/api/v1/admin/exercises", Input("Image Press", "image-press"));
+
+        var first = await client.PutAsync("/api/v1/admin/exercises/image-press/images/0", Body(Webp()));
+        Assert.Equal(HttpStatusCode.OK, first.StatusCode);
+        Assert.Equal(new List<int> { 0 }, Slots(await JsonAsync(first)));
+
+        var png = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 0, 1, 2, 3 };
+        var second = await client.PutAsync("/api/v1/admin/exercises/image-press/images/1", Body(png, "image/png"));
+        Assert.Equal(new List<int> { 0, 1 }, Slots(await JsonAsync(second)));
+
+        var replaced = await client.PutAsync("/api/v1/admin/exercises/image-press/images/0", Body(Webp(40, 9)));
+        Assert.Equal(HttpStatusCode.OK, replaced.StatusCode);
+        using (var db = _fixture.NewContext())
+        {
+            var stored = await db.Database.SqlQuery<int>($"SELECT LENGTH(data) AS \"Value\" FROM exercise_catalog_images WHERE exercise_id = 'image-press' AND slot = 0").SingleAsync();
+            Assert.Equal(52, stored);
+            var origin = await db.Database.SqlQuery<string>($"SELECT origin_system AS \"Value\" FROM exercise_catalog_images WHERE exercise_id = 'image-press' AND slot = 0").SingleAsync();
+            Assert.Equal("TRAZO", origin);
+        }
+
+        var removed = await client.DeleteAsync("/api/v1/admin/exercises/image-press/images/0");
+        Assert.Equal(new List<int> { 1 }, Slots(await JsonAsync(removed)));
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsync("/api/v1/admin/exercises/image-press/images/0", Body("not an image at all"u8.ToArray(), "image/webp"))).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsync("/api/v1/admin/exercises/image-press/images/9", Body(Webp()))).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await client.PutAsync("/api/v1/admin/exercises/missing/images/0", Body(Webp()))).StatusCode);
+        Assert.Equal(HttpStatusCode.RequestEntityTooLarge, (await client.PutAsync("/api/v1/admin/exercises/image-press/images/2", Body(Webp(1024 * 1024)))).StatusCode);
+    }
 }

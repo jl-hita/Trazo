@@ -23,6 +23,7 @@ public static class DatabaseInitialization
 
         var seeder = scope.ServiceProvider.GetRequiredService<ExerciseCatalogSeeder>();
         await seeder.SeedAsync();
+        await scope.ServiceProvider.GetRequiredService<ExerciseImageSeeder>().SeedAsync();
 
         var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
         var bootstrapEmail = configuration["BootstrapAdmin:Email"];

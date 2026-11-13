@@ -91,8 +91,13 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
     .ex-panel .actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .ex-panel button.danger { border-color: #7a3b3b; color: #f0a3a3; background: #2a1616; }
     .ex-panel .meta { display: flex; flex-wrap: wrap; gap: 4px; }
-    .ex-panel .images { display: flex; gap: 8px; }
-    .ex-panel .images img { width: 96px; height: 96px; object-fit: cover; border: 1px solid #293444; border-radius: 6px; background: #0d1119; }
+    .ex-panel .images { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .ex-panel .img-slot { display: grid; gap: 6px; justify-items: stretch; min-width: 0; }
+    .ex-panel .img-empty { box-sizing: border-box; }
+    .ex-panel .images img, .ex-panel .img-empty { width: 100%; aspect-ratio: 1; object-fit: cover; border: 1px solid #293444; border-radius: 6px; background: #0d1119; }
+    .ex-panel .img-empty { display: grid; place-items: center; color: #7f8da0; font-size: 11px; border-style: dashed; }
+    .ex-panel .img-btn, .ex-panel .img-remove { padding: 5px 6px; border: 1px solid #4a6585; border-radius: 6px; background: #1b2a3e; color: #e4edf8; font-size: 11px; text-align: center; cursor: pointer; }
+    .ex-panel .img-remove { border-color: #7a3b3b; color: #f0a3a3; background: #2a1616; }
     .ex-panel .empty { color: #8291a6; font-size: 13px; text-align: center; padding: 18px 0; }
     .ex-panel .notice { margin: 0; padding: 10px 12px; border: 1px solid #6b5a2e; border-radius: 6px; background: #2a2412; color: #e6d39b; font-size: 11px; line-height: 1.5; }
     @media (max-width: 1360px) { .ex-layout { grid-template-columns: 1fr; } .ex-panel { position: static; max-height: none; } }
@@ -177,13 +182,22 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
             @if (d.locallyCurated) {
               <p class="notice">This exercise was edited here, so future imports from DietoExpress will not overwrite it.</p>
             }
-            @if (d.imageSlots.length) {
-              <div class="images">
-                @for (slot of d.imageSlots; track slot) { <img [src]="'/api/v1/exercises/' + d.id + '/images/' + slot" [alt]="d.nameEs + ' ' + (slot + 1)" loading="lazy"> }
-              </div>
-            } @else { <p class="hint">No images.</p> }
+            <div class="images" aria-label="Images">
+              @for (slot of imageSlots; track slot) {
+                <div class="img-slot">
+                  @if (d.imageSlots.includes(slot)) {
+                    <img [src]="imageUrl(d.id, slot)" [alt]="d.nameEs + ' ' + (slot + 1)">
+                  } @else { <div class="img-empty">Image {{ slot + 1 }}</div> }
+                  <label class="img-btn">{{ d.imageSlots.includes(slot) ? 'Replace' : 'Upload' }}
+                    <input type="file" accept="image/webp,image/png,image/jpeg" hidden (change)="upload(slot, $event)" [disabled]="busy()">
+                  </label>
+                  @if (d.imageSlots.includes(slot)) { <button type="button" class="img-remove" (click)="removeImage(slot)" [disabled]="busy()">Remove</button> }
+                </div>
+              }
+            </div>
+            <p class="hint">WebP, PNG or JPEG up to 1 MB. Uploading replaces an imported image and keeps it through future imports.</p>
           } @else {
-            <p class="hint">Images can be added to catalog exercises later; new exercises start without images.</p>
+            <p class="hint">Create the exercise first; images can be added once it exists.</p>
           }
 
           @for (f of fields; track f.key) {
@@ -243,6 +257,8 @@ export class ExercisesPageComponent {
   private requestId = 0;
 
   protected readonly fields = FIELDS;
+  protected readonly imageSlots = [0, 1, 2, 3];
+  private readonly imageVersion = signal(0);
   protected readonly optionLists = OPTION_LISTS;
   protected readonly options = signal<AdminExerciseOptions | null>(null);
   protected readonly exercises = signal<AdminExerciseSummary[]>([]);
@@ -321,6 +337,43 @@ export class ExercisesPageComponent {
     await this.perform(
       () => current ? this.api.updateExercise(current.id, input) : this.api.createExercise(input),
       current ? 'Changes saved.' : 'Exercise created.');
+  }
+
+  protected imageUrl(id: string, slot: number): string {
+    return `/api/v1/exercises/${encodeURIComponent(id)}/images/${slot}?v=${this.imageVersion()}`;
+  }
+
+  protected async upload(slot: number, event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    const current = this.detail();
+    if (!file || !current) return;
+    if (!['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) { this.panelError.set('Use a WebP, PNG or JPEG image.'); return; }
+    if (file.size > 1024 * 1024) { this.panelError.set('The image is larger than 1 MB.'); return; }
+    await this.imageOperation(() => this.api.uploadExerciseImage(current.id, slot, file), 'Image uploaded.');
+  }
+
+  protected async removeImage(slot: number): Promise<void> {
+    const current = this.detail();
+    if (current) await this.imageOperation(() => this.api.deleteExerciseImage(current.id, slot), 'Image removed.');
+  }
+
+  /** Updates only the image state, so unsaved edits in the form are kept. */
+  private async imageOperation(call: () => Promise<AdminExerciseDetail>, success: string): Promise<void> {
+    this.busy.set(true);
+    this.message.set('');
+    this.panelError.set('');
+    try {
+      this.detail.set(await call());
+      this.imageVersion.update(v => v + 1);
+      this.message.set(success);
+      await this.load();
+    } catch (e) {
+      this.panelError.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
   }
 
   protected async run(action: ExerciseAction): Promise<void> {
