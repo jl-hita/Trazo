@@ -16,6 +16,13 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<AuthRecoveryCode> AuthRecoveryCodes => Set<AuthRecoveryCode>();
     public DbSet<EmailActionToken> EmailActionTokens => Set<EmailActionToken>();
     public DbSet<Trazo.Domain.Billing.Subscription> Subscriptions => Set<Trazo.Domain.Billing.Subscription>();
+    public DbSet<Trazo.Domain.Planning.TrainingPlan> TrainingPlans => Set<Trazo.Domain.Planning.TrainingPlan>();
+    public DbSet<Trazo.Domain.Planning.TrainingPlanPhase> TrainingPlanPhases => Set<Trazo.Domain.Planning.TrainingPlanPhase>();
+    public DbSet<Trazo.Domain.Planning.TrainingMesocycle> TrainingMesocycles => Set<Trazo.Domain.Planning.TrainingMesocycle>();
+    public DbSet<Trazo.Domain.Planning.PlannedSession> PlannedSessions => Set<Trazo.Domain.Planning.PlannedSession>();
+    public DbSet<Trazo.Domain.Planning.WorkoutLog> WorkoutLogs => Set<Trazo.Domain.Planning.WorkoutLog>();
+    public DbSet<Trazo.Domain.Planning.WorkoutSetLog> WorkoutSetLogs => Set<Trazo.Domain.Planning.WorkoutSetLog>();
+    public DbSet<Trazo.Domain.Planning.PlanAdaptation> PlanAdaptations => Set<Trazo.Domain.Planning.PlanAdaptation>();
     public DbSet<Trazo.Domain.Settings.AppSetting> AppSettings => Set<Trazo.Domain.Settings.AppSetting>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
