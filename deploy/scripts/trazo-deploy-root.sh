@@ -39,6 +39,7 @@ done
 [[ -f "$STAGE/Trazo.Api.dll" ]] || fail "falta Trazo.Api.dll en la publicación."
 [[ -f "$STAGE/Seeds/exercise-catalog-additions.json" ]] || fail "falta Seeds/exercise-catalog-additions.json en la publicación."
 [[ -f "$WEB_STAGE/index.html" ]] || fail "falta index.html en el frontend compilado."
+[[ -f "$WEB_STAGE/site/index.html" ]] || fail "falta site/index.html (landing) en el frontend compilado."
 command -v flock >/dev/null
 command -v curl >/dev/null
 command -v rsync >/dev/null
@@ -129,7 +130,11 @@ smoke_test() {
   done
   # Frontend servido por Nginx, fallback SPA en rutas profundas y proxy al API.
   web_curl "http://$PUBLIC_HOST/" -o "$SMOKE_DIR/index.html" 2>/dev/null || return 1
-  grep -Fqi "<trazo-root" "$SMOKE_DIR/index.html" || return 1
+  grep -Fq "TRAZO" "$SMOKE_DIR/index.html" || return 1
+  grep -Fq "/site/style.css" "$SMOKE_DIR/index.html" || return 1
+  web_curl "http://$PUBLIC_HOST/en/" -o /dev/null 2>/dev/null || return 1
+  web_curl "http://$PUBLIC_HOST/login" -o "$SMOKE_DIR/login.html" 2>/dev/null || return 1
+  grep -Fqi "<trazo-root" "$SMOKE_DIR/login.html" || return 1
   web_curl "http://$PUBLIC_HOST/setup" -o /dev/null 2>/dev/null || return 1
   web_curl "http://$PUBLIC_HOST/api/v1/setup/status" -o "$SMOKE_DIR/setup.json" 2>/dev/null || return 1
   grep -Fq "setupRequired" "$SMOKE_DIR/setup.json" || return 1

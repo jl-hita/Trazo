@@ -17,7 +17,8 @@ export const routes: Routes = [
     canActivate: [setupGuard, adminGuard],
     loadComponent: () => import('./features/shell/shell.component').then(m => m.ShellComponent),
     children: [
-      { path: '', pathMatch: 'full', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
+      { path: '', pathMatch: 'full', redirectTo: 'overview' },
+      { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
       { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
       { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
       { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
