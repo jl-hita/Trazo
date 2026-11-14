@@ -31,6 +31,9 @@ public interface ITrainingPlanService
 /// </summary>
 public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions) : ITrainingPlanService
 {
+    public const string LockedMessage = "Este plan se generó automáticamente: para usarlo necesitas Premium.";
+    public const string AdaptationLockedMessage = "La adaptación automática es una función Premium.";
+
     public const string Disclaimer =
         "Plan generado automáticamente a partir de tu perfil. No es consejo médico ni sustituye a un profesional: " +
         "si notas dolor, detén el ejercicio y consulta a un especialista.";
@@ -165,7 +168,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             plan.UpdatedAt = clock.GetUtcNow();
             await db.SaveChangesAsync(ct);
             return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
-                PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), nameof(PlanTimeline.Finished), null, []);
+                PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), nameof(PlanTimeline.Finished), null, [],
+                await IsLockedAsync(plan, ct));
         }
         return await BuildWeekAsync(plan, position, ct);
     }
@@ -211,6 +215,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var existing = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
         if (existing is not null)
             return await ReplayOrConflictAsync(session, existing, log, ct);
+        if (await IsLockedAsync(plan, ct)) return PlanResult<LogResult>.Fail(PlanFailure.PremiumRequired, LockedMessage);
         var window = WindowCheck(plan, session);
         if (window is not null) return PlanResult<LogResult>.Fail(PlanFailure.SessionOutOfWindow, window);
         if (session.Status != PlannedSessionStatus.Planned)
@@ -250,7 +255,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         };
         session.UpdatedAt = now;
 
-        var report = await AdaptAsync(plan, session, workout, prescribed, now, ct);
+        // Automatic adaptation is a Premium feature: without access the session is still recorded, but nothing is adapted.
+        var report = await subscriptions.HasPremiumAsync(userId, ct)
+            ? await AdaptAsync(plan, session, workout, prescribed, now, ct)
+            : new AdaptationReport([], "none", AdaptationLockedMessage, [], [], Locked: true);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -456,6 +464,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return new(PlanFailure.NoActivePlan, "No tienes un plan activo.", null, null, null, null, null);
+        if (await IsLockedAsync(plan, ct)) return new(PlanFailure.PremiumRequired, LockedMessage, null, null, null, null, null);
         var session = await db.PlannedSessions.FirstOrDefaultAsync(s => s.Id == sessionId && s.PlanId == plan.Id, ct);
         if (session is null) return new(PlanFailure.SessionNotFound, "La sesión no existe.", null, null, null, null, null);
         var window = WindowCheck(plan, session);
@@ -490,14 +499,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var slots = PlanSchedule.Slots(plan.StartDate, plan.Phases.Select(p => new PhaseSpan(p.SequenceNumber, p.PhaseType, p.StartDate, p.EndDate)));
         var slot = slots.First(s => s.Contains(position.Week));
-        var hasPremiumAccess = await subscriptions.HasAccessAsync(plan.UserId, ct);
+        var locked = await IsLockedAsync(plan, ct);
         var mesocycle = plan.Mesocycles.FirstOrDefault(m => m.Sequence == slot.Sequence);
         if (mesocycle is null)
         {
-            // An expired generated plan remains readable, but a GET must not silently create its next block.
-            if (!hasPremiumAccess)
+            // A generated plan without Premium stays readable, but a GET must not silently create its next block.
+            if (locked)
                 return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
-                    PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), "PremiumRequired", null, []);
+                    PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), position.State.ToString(), null, [], Locked: true);
             mesocycle = await GenerateMesocycleAsync(plan, slot, ct);
             if (mesocycle is null)
                 return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
@@ -510,12 +519,18 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
         var weekStart = PlanSchedule.WeekStart(plan.StartDate, position.Week);
         return new WeekView(
-            plan.Id, position.Week, weekStart, weekStart.AddDays(6),
-            hasPremiumAccess ? position.State.ToString() : "PremiumRequired",
+            plan.Id, position.Week, weekStart, weekStart.AddDays(6), position.State.ToString(),
             new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
                 position.Week - mesocycle.StartWeek + 1),
-            sessions.Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList());
+            sessions.Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList(), locked);
     }
+
+    /// <summary>
+    /// A generated plan is a Premium product: without access it can be read (and archived), but not used. Manual plans are
+    /// free, and administrators always have access.
+    /// </summary>
+    private async Task<bool> IsLockedAsync(TrainingPlan plan, CancellationToken ct) =>
+        plan.Origin == TrainingPlanOrigin.Generated && !await subscriptions.HasPremiumAsync(plan.UserId, ct);
 
     /// <summary>Generates the block of the given slot from the catalog and what the user has done so far.</summary>
     private async Task<TrainingMesocycle?> GenerateMesocycleAsync(TrainingPlan plan, MesocycleSlot slot, CancellationToken ct)

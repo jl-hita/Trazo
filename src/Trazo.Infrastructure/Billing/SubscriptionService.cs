@@ -34,6 +34,9 @@ public interface ISubscriptionService
     Task<SubscriptionStatusView> GetStatusAsync(Guid userId, CancellationToken ct);
 
     Task<bool> HasAccessAsync(Guid userId, CancellationToken ct);
+
+    /// <summary>Like <see cref="HasAccessAsync"/>, but administrators and superadmins always have access.</summary>
+    Task<bool> HasPremiumAsync(Guid userId, CancellationToken ct);
 }
 
 public sealed class SubscriptionService(
@@ -154,6 +157,12 @@ public sealed class SubscriptionService(
         var now = clock.GetUtcNow();
         var rows = await db.Subscriptions.AsNoTracking().Where(x => x.UserId == userId).ToListAsync(ct);
         return rows.Any(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now));
+    }
+
+    public async Task<bool> HasPremiumAsync(Guid userId, CancellationToken ct)
+    {
+        var role = await db.Users.AsNoTracking().Where(u => u.Id == userId).Select(u => u.Role).FirstOrDefaultAsync(ct);
+        return role is "admin" or "superadmin" || await HasAccessAsync(userId, ct);
     }
 
     public static string ToApiName(SubscriptionStatus status) => status switch

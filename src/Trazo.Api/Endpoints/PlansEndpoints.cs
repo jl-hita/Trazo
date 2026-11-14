@@ -50,18 +50,18 @@ public static class PlansEndpoints
             .WithSummary("Closes the active plan so a new one can be created. The history is kept.")
             .Produces(StatusCodes.Status204NoContent).ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/current/sessions/{sessionId:guid}/log", LogAsync).WithName("LogPlanSession")
-            .WithSummary("Records a session (sets, loads, repetitions, RIR, recovery, pain) and adapts the upcoming sessions.")
+            .WithSummary("Records a session (sets, loads, repetitions, RIR, recovery, pain). With Premium it also adapts the upcoming sessions; generated plans need Premium.")
             .Produces<LogResult>().ProducesValidationProblem()
-            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict)
-            .RequireActiveSubscription();
+            .ProducesProblem(StatusCodes.Status402PaymentRequired)
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
         group.MapGet("/current/sessions/{sessionId:guid}/exercises/{exerciseId}/alternatives", AlternativesAsync)
             .WithName("GetExerciseAlternatives")
             .WithSummary("Reviewed exercises that can replace one of the session, respecting level, goal, equipment and limitations.")
-            .Produces<AlternativesResult>().ProducesProblem(StatusCodes.Status404NotFound);
+            .Produces<AlternativesResult>().ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/current/sessions/{sessionId:guid}/exercises/{exerciseId}/swap", SwapAsync).WithName("SwapPlanExercise")
             .WithSummary("Replaces an exercise of a pending session (optionally in the rest of the block) with one of its alternatives.")
-            .Produces<SessionView>().ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status404NotFound)
-            .RequireActiveSubscription();
+            .Produces<SessionView>().ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
         return endpoints;
     }
 
@@ -156,6 +156,7 @@ public static class PlansEndpoints
         {
             PlanFailure.NoActivePlan => Problem(StatusCodes.Status404NotFound, result.Message!, "no_active_plan"),
             PlanFailure.SessionNotFound => Problem(StatusCodes.Status404NotFound, result.Message!, "session_not_found"),
+            PlanFailure.PremiumRequired => Problem(StatusCodes.Status402PaymentRequired, result.Message!, "premium_required"),
             PlanFailure.ActivePlanExists => Problem(StatusCodes.Status409Conflict, result.Message!, "active_plan_exists"),
             PlanFailure.AlreadyLogged => Problem(StatusCodes.Status409Conflict, result.Message!, "session_already_logged"),
             PlanFailure.SessionOutOfWindow => Problem(StatusCodes.Status409Conflict, result.Message!, "session_out_of_window"),

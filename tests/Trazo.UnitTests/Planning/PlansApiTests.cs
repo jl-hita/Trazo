@@ -567,17 +567,19 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
         var currentWeekResponse = await client.GetAsync("/api/v1/plans/current/week");
         Assert.Equal(HttpStatusCode.OK, currentWeekResponse.StatusCode);
         var lockedWeek = await JsonAsync(currentWeekResponse);
-        Assert.Equal("PremiumRequired", lockedWeek.GetProperty("timeline").GetString());
+        Assert.True(lockedWeek.GetProperty("locked").GetBoolean());
+        Assert.Equal("InProgress", lockedWeek.GetProperty("timeline").GetString());
         Assert.Empty(lockedWeek.GetProperty("sessions").EnumerateArray());
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/v1/plans/current/history")).StatusCode);
 
         var log = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{sessionId}/log",
             new { outcome = "Completed", sets = CompleteSets(firstSession) });
-        Assert.Equal(HttpStatusCode.PaymentRequired, log.StatusCode);
-        var swap = await client.PostAsJsonAsync(
+        await AssertPremiumRequiredAsync(log);
+        await AssertPremiumRequiredAsync(await client.PostAsJsonAsync(
             $"/api/v1/plans/current/sessions/{sessionId}/exercises/{exerciseId}/swap",
-            new { replacementExerciseId = "push-up" });
-        Assert.Equal(HttpStatusCode.PaymentRequired, swap.StatusCode);
+            new { replacementExerciseId = "push-up" }));
+        await AssertPremiumRequiredAsync(await client.GetAsync(
+            $"/api/v1/plans/current/sessions/{sessionId}/exercises/{exerciseId}/alternatives"));
 
         using (var scope = _factory.Services.CreateScope())
         {
@@ -590,11 +592,82 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
     }
 
     [Fact]
-    public async Task AdministratorsSkipTheSubscriptionCheck()
+    public async Task ThePlanOfAGeneratedWeekStaysReadable_WithItsSessions_WhenPremiumLapses()
     {
-        var admin = ClientFor(await AddUserAsync("admin@example.com", role: "admin"));
+        var user = await AddUserAsync("lapsed@example.com", subscribed: true);
+        var client = ClientFor(user);
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans", Profile())).StatusCode);
+        await ExpireSubscriptionAsync(user.Id);
 
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        Assert.True(week.GetProperty("locked").GetBoolean());
+        Assert.NotEmpty(week.GetProperty("sessions").EnumerateArray());
+    }
+
+    [Fact]
+    public async Task ManualPlansAreFree_TheySaveTheLogButNeverAdaptWithoutPremium()
+    {
+        var user = await AddUserAsync("manual@example.com", subscribed: true);
+        var client = ClientFor(user);
+        var planId = Guid.Parse((await JsonAsync(await client.PostAsJsonAsync("/api/v1/plans", Profile()))).GetProperty("id").GetString()!);
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            (await db.TrainingPlans.SingleAsync(x => x.Id == planId)).Origin = TrainingPlanOrigin.Manual;
+            await db.SaveChangesAsync();
+        }
+        await ExpireSubscriptionAsync(user.Id);
+
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        Assert.False(week.GetProperty("locked").GetBoolean());
+        var session = week.GetProperty("sessions")[0];
+        var sessionId = session.GetProperty("id").GetString();
+        var logged = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{sessionId}/log",
+            new { outcome = "Completed", sets = CompleteSets(session) });
+
+        Assert.Equal(HttpStatusCode.OK, logged.StatusCode);
+        var adaptation = (await JsonAsync(logged)).GetProperty("adaptation");
+        Assert.True(adaptation.GetProperty("locked").GetBoolean());
+        Assert.Empty(adaptation.GetProperty("applied").EnumerateArray());
+    }
+
+    [Fact]
+    public async Task PremiumLogsAreAdapted_AndAdministratorsHaveEveryPremiumFeature()
+    {
+        var premium = ClientFor(await AddUserAsync("premium@example.com", subscribed: true));
+        await premium.PostAsJsonAsync("/api/v1/plans", Profile());
+        var premiumSession = (await JsonAsync(await premium.GetAsync("/api/v1/plans/current/week"))).GetProperty("sessions")[0];
+        var premiumLog = await JsonAsync(await premium.PostAsJsonAsync(
+            $"/api/v1/plans/current/sessions/{premiumSession.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(premiumSession) }));
+        Assert.False(premiumLog.GetProperty("adaptation").GetProperty("locked").GetBoolean());
+
+        // An administrator has no subscription row at all, yet reads, logs and adapts like a subscriber.
+        var admin = ClientFor(await AddUserAsync("admin@example.com", role: "admin"));
         Assert.Equal(HttpStatusCode.OK, (await admin.GetAsync("/api/v1/plans/options")).StatusCode);
         Assert.Equal(HttpStatusCode.Created, (await admin.PostAsJsonAsync("/api/v1/plans", Profile())).StatusCode);
+        var week = await JsonAsync(await admin.GetAsync("/api/v1/plans/current/week"));
+        Assert.False(week.GetProperty("locked").GetBoolean());
+        var session = week.GetProperty("sessions")[0];
+        var adminLog = await JsonAsync(await admin.PostAsJsonAsync(
+            $"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(session) }));
+        Assert.False(adminLog.GetProperty("adaptation").GetProperty("locked").GetBoolean());
+    }
+
+    private static async Task AssertPremiumRequiredAsync(HttpResponseMessage response)
+    {
+        Assert.Equal(HttpStatusCode.PaymentRequired, response.StatusCode);
+        Assert.Equal("premium_required", (await JsonAsync(response)).GetProperty("title").GetString());
+    }
+
+    private async Task ExpireSubscriptionAsync(Guid userId)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var subscription = await db.Subscriptions.SingleAsync(x => x.UserId == userId);
+        subscription.Status = SubscriptionStatus.Expired;
+        subscription.ExpiresAt = Now.AddSeconds(-1);
+        await db.SaveChangesAsync();
     }
 }

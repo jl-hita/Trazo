@@ -60,7 +60,7 @@ public sealed record SessionView(
 
 public sealed record WeekView(
     Guid PlanId, int WeekNumber, DateOnly WeekStart, DateOnly WeekEnd, string Timeline, MesocycleView? Mesocycle,
-    IReadOnlyList<SessionView> Sessions);
+    IReadOnlyList<SessionView> Sessions, bool Locked = false);
 
 public sealed record AppliedAdaptationView(string Kind, IReadOnlyList<string> ExerciseIds, int SessionsChanged, string Explanation);
 
@@ -68,7 +68,7 @@ public sealed record ExerciseAdviceView(string ExerciseId, string Action, string
 
 public sealed record AdaptationReport(
     IReadOnlyList<ExerciseAdviceView> Exercises, string SessionAction, string SessionExplanation,
-    IReadOnlyList<AppliedAdaptationView> Applied, IReadOnlyList<string> Notes);
+    IReadOnlyList<AppliedAdaptationView> Applied, IReadOnlyList<string> Notes, bool Locked = false);
 
 /// <summary><c>Replayed</c> is true when the session had already been logged with exactly the same data: the saved result is returned again.</summary>
 public sealed record LogResult(SessionView Session, AdaptationReport Adaptation, bool Replayed = false);
