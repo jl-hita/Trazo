@@ -103,3 +103,13 @@ public sealed record LogSessionRequest(
     string? Notes, LogSetRequest[]? Sets);
 
 public sealed record SwapRequest(string? ReplacementExerciseId, bool? ApplyToRemainingBlock);
+
+/// <summary>A plan written by the user: one weekly routine (the training days) repeated for every week of the plan.</summary>
+public sealed record ManualPlanInput(
+    string? Name, string? Notes, DateOnly? StartDate, int? TotalWeeks, string? Goal, string? Experience,
+    ManualDayInput[]? Days, string? TimeZone = null);
+
+public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseInput[]? Exercises);
+
+public sealed record ManualExerciseInput(
+    string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds);

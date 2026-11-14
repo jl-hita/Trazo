@@ -128,7 +128,7 @@ export const LANDING: Record<LandingLang, LandingContent> = {
       'Cada bloque nuevo, generado a partir de tu progreso real'
     ],
     premiumAnnual: 'O 49,99 € al año · equivale a 4,17 €/mes',
-    pricingNote: 'Precios previstos para el lanzamiento. La planificación manual seguirá siendo gratuita; la generación y la adaptación automáticas serán Premium.',
+    pricingNote: 'Precios previstos para el lanzamiento. La planificación manual seguirá siendo gratuita; la generación y la adaptación automáticas serán Premium. Premium incluye 14 días de prueba gratuita.',
     faqTitle: 'Preguntas frecuentes',
     faq: [
       { q: '¿Qué es gratis y qué es Premium?', a: 'Gratis: crear tus propios macrociclos, mesociclos y rutinas, registrar entrenamientos, consultar el historial y usar el catálogo. Premium: la generación automática de tu plan y la adaptación automática de tus entrenamientos según tu feedback.' },
@@ -226,7 +226,7 @@ export const LANDING: Record<LandingLang, LandingContent> = {
       'Every new block generated from your real progress'
     ],
     premiumAnnual: 'Or €49.99 per year · equivalent to €4.17/month',
-    pricingNote: 'Planned launch pricing. Manual planning will remain free; automatic generation and adaptation will be Premium.',
+    pricingNote: 'Planned launch pricing. Manual planning will remain free; automatic generation and adaptation will be Premium. Premium includes a 14-day free trial.',
     faqTitle: 'Frequently asked questions',
     faq: [
       { q: 'What is free and what is Premium?', a: 'Free: build your own macrocycles, mesocycles and routines, log workouts, view your history and use the catalogue. Premium: automatic generation of your plan and automatic adaptation of your workouts from your feedback.' },

@@ -655,6 +655,97 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
         Assert.False(adminLog.GetProperty("adaptation").GetProperty("locked").GetBoolean());
     }
 
+    private static object ManualPlan(object? days = null, string? name = "Mi plan", int? weeks = 6) => new
+    {
+        name, totalWeeks = weeks, days = days ?? new object[]
+        {
+            new { day = "Monday", title = "Empuje", exercises = new object[]
+                { new { exerciseId = "bench-press", sets = 4, minRepetitions = 6, maxRepetitions = 10, targetRir = 2 }, new { exerciseId = "ohp", sets = 3 } } },
+            new { day = "Thursday", title = "Pierna", exercises = new object[] { new { exerciseId = "squat", sets = 4, minRepetitions = 5, maxRepetitions = 8 } } }
+        }
+    };
+
+    [Fact]
+    public async Task FreeUsersCreateAndUseManualPlans_WithoutAdaptation()
+    {
+        var client = ClientFor(await AddUserAsync("free-manual@example.com"));
+
+        var created = await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan());
+
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var plan = await JsonAsync(created);
+        Assert.Equal("Manual", plan.GetProperty("origin").GetString());
+        Assert.Equal("Mi plan", plan.GetProperty("macrocycle").GetProperty("name").GetString());
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        Assert.False(week.GetProperty("locked").GetBoolean());
+        Assert.Equal(2, week.GetProperty("sessions").GetArrayLength());
+        var session = week.GetProperty("sessions")[0];
+        Assert.Equal("Empuje", session.GetProperty("title").GetString());
+        Assert.Equal(new[] { "bench-press", "ohp" }, session.GetProperty("exercises").EnumerateArray().Select(e => e.GetProperty("exerciseId").GetString()));
+
+        var logged = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(session) });
+        Assert.Equal(HttpStatusCode.OK, logged.StatusCode);
+        Assert.True((await JsonAsync(logged)).GetProperty("adaptation").GetProperty("locked").GetBoolean());
+    }
+
+    [Fact]
+    public async Task PremiumAdaptsManualPlans_AndKeepsTheStructureTheUserWrote()
+    {
+        var client = ClientFor(await AddUserAsync("premium-manual@example.com", subscribed: true));
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+        var session = (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("sessions")[0];
+
+        var logged = await JsonAsync(await client.PostAsJsonAsync(
+            $"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(session, kg: 80m, reps: 10) }));
+
+        var adaptation = logged.GetProperty("adaptation");
+        Assert.False(adaptation.GetProperty("locked").GetBoolean());
+        Assert.True(adaptation.GetProperty("exercises").GetArrayLength() > 0);
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        Assert.Equal(2, week.GetProperty("sessions").GetArrayLength());
+        Assert.Equal("Manual", (await JsonAsync(await client.GetAsync("/api/v1/plans/current"))).GetProperty("origin").GetString());
+    }
+
+    [Fact]
+    public async Task ManualPlansStayUsableWhenPremiumLapses_AndTheyHaveNoSubscriptionRequirement()
+    {
+        var user = await AddUserAsync("lapsed-manual@example.com", subscribed: true);
+        var client = ClientFor(user);
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+        await ExpireSubscriptionAsync(user.Id);
+
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        Assert.False(week.GetProperty("locked").GetBoolean());
+        var session = week.GetProperty("sessions")[0];
+        var alternatives = await client.GetAsync(
+            $"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/exercises/bench-press/alternatives");
+        Assert.Equal(HttpStatusCode.OK, alternatives.StatusCode);
+    }
+
+    [Fact]
+    public async Task ManualPlanValidationExplainsEveryProblem_AndOnlyOnePlanCanBeActive()
+    {
+        var client = ClientFor(await AddUserAsync("invalid-manual@example.com"));
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(name: ""))).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(days: Array.Empty<object>()))).StatusCode);
+        var bad = await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(days: new object[]
+        {
+            new { day = "Monday", title = "A", exercises = new object[] { new { exerciseId = "bench-press", sets = 99 } } }
+        }));
+        Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+        var unknown = await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(days: new object[]
+        {
+            new { day = "Monday", title = "A", exercises = new object[] { new { exerciseId = "does-not-exist" } } }
+        }));
+        Assert.Equal(HttpStatusCode.BadRequest, unknown.StatusCode);
+
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+    }
+
     private static async Task AssertPremiumRequiredAsync(HttpResponseMessage response)
     {
         Assert.Equal(HttpStatusCode.PaymentRequired, response.StatusCode);

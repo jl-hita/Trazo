@@ -14,6 +14,8 @@ public interface ITrainingPlanService
     /// <summary>The current date in the time zone of the user (request header, profile or Europe/Madrid).</summary>
     Task<DateOnly> TodayAsync(Guid userId, CancellationToken ct);
     Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct);
+    /// <summary>Creates a plan written by the user (free): their routines repeated every week, no engine involved.</summary>
+    Task<PlanResult<PlanView>> CreateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct);
     Task<PlanView?> GetCurrentAsync(Guid userId, CancellationToken ct);
     Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct);
     Task<PlanResult<LogResult>> LogSessionAsync(Guid userId, Guid sessionId, ParsedLog log, CancellationToken ct);
@@ -37,6 +39,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     public const string Disclaimer =
         "Plan generado automáticamente a partir de tu perfil. No es consejo médico ni sustituye a un profesional: " +
         "si notas dolor, detén el ejercicio y consulta a un especialista.";
+
+    public const string ManualDisclaimer =
+        "Plan creado por ti. Con Premium, TRAZO adapta cargas, series y descansos según cómo te va. " +
+        "No es consejo médico: si notas dolor, detén el ejercicio y consulta a un especialista.";
 
     private const int RecentLogsForHistory = 60;
     private const int LoadReferenceLogs = 40;
@@ -141,6 +147,83 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             db.ChangeTracker.Clear();
             // The partial unique index stopped a concurrent creation; any other failure is a real error.
+            if (!await db.TrainingPlans.AsNoTracking().AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct)) throw;
+            return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
+        }
+        return PlanResult<PlanView>.Ok(ToView(plan));
+    }
+
+    public async Task<PlanResult<PlanView>> CreateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        if (await db.TrainingPlans.AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct))
+            return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
+
+        var catalog = (await LoadCandidatesAsync(ct)).Candidates.ToDictionary(c => c.ExerciseId, StringComparer.OrdinalIgnoreCase);
+        var errors = new Dictionary<string, string[]>();
+        for (var d = 0; d < manual.Days.Count; d++)
+            for (var e = 0; e < manual.Days[d].Exercises.Count; e++)
+                if (!catalog.ContainsKey(manual.Days[d].Exercises[e].ExerciseId))
+                    errors[$"days.{d + 1}.exercises.{e + 1}"] = ["El ejercicio no existe en el catálogo."];
+        if (errors.Count > 0)
+            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Algún ejercicio no existe en el catálogo.", errors);
+
+        var now = clock.GetUtcNow();
+        var end = manual.StartDate.AddDays(manual.TotalWeeks * 7 - 1);
+        var plan = new TrainingPlan
+        {
+            Id = Guid.NewGuid(), UserId = userId, Status = TrainingPlanStatus.Active, Origin = TrainingPlanOrigin.Manual,
+            Goal = manual.Goal.ToString(), Experience = manual.Experience.ToString(), Split = TrainingProgramSplit.Automatic.ToString(),
+            StartDate = manual.StartDate, TotalWeeks = manual.TotalWeeks, TrainingDays = manual.Days.Select(d => d.Day.ToString()).ToArray(),
+            MaxSessionMinutes = 180, IncludeDeloadPhases = false, DeloadEveryTrainingWeeks = 4, Seed = 0, EngineVersion = "manual",
+            MacrocycleName = manual.Name, MacrocycleNotes = manual.Notes, CreatedAt = now, UpdatedAt = now
+        };
+        plan.Phases.Add(new TrainingPlanPhase
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, SequenceNumber = 1, Name = manual.Name, PhaseType = "accumulation",
+            StartDate = manual.StartDate, EndDate = end, Objective = manual.Notes.Length > 0 ? manual.Notes : "Plan manual"
+        });
+
+        var slots = PlanSchedule.Slots(plan.StartDate, plan.Phases.Select(p => new PhaseSpan(p.SequenceNumber, p.PhaseType, p.StartDate, p.EndDate)));
+        foreach (var slot in slots)
+        {
+            var mesocycle = new TrainingMesocycle
+            {
+                Id = Guid.NewGuid(), PlanId = plan.Id, Sequence = slot.Sequence, PhaseSequenceNumber = slot.PhaseSequenceNumber,
+                PhaseType = slot.PhaseType, IsDeload = false, StartWeek = slot.StartWeek, Weeks = slot.Weeks, CreatedAt = now
+            };
+            for (var week = slot.StartWeek; week <= slot.EndWeek; week++)
+                foreach (var day in manual.Days)
+                {
+                    var prescription = day.Exercises.Select((exercise, index) =>
+                    {
+                        var candidate = catalog[exercise.ExerciseId];
+                        return new TrainingExercisePrescription(
+                            candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, index + 1, exercise.Sets,
+                            exercise.MinRepetitions, exercise.MaxRepetitions, exercise.TargetRir, exercise.RestSeconds,
+                            TrainingProgressionRule.DoubleProgression, "Elegido por el usuario.",
+                            candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
+                    }).ToList();
+                    var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45)) / 60.0);
+                    mesocycle.Sessions.Add(new PlannedSession
+                    {
+                        Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycle.Id, WeekNumber = week,
+                        Date = PlanSchedule.DateFor(plan.StartDate, week, day.Day), Title = day.Title,
+                        EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240), PrescriptionJson = PrescriptionJson.Serialize(prescription),
+                        Status = PlannedSessionStatus.Planned, UpdatedAt = now
+                    });
+                }
+            plan.Mesocycles.Add(mesocycle);
+        }
+
+        db.TrainingPlans.Add(plan);
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException)
+        {
+            db.ChangeTracker.Clear();
             if (!await db.TrainingPlans.AsNoTracking().AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct)) throw;
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
         }
@@ -637,7 +720,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             plan.MaxSessionMinutes, plan.AvailableEquipment, plan.ExcludedExerciseIds, plan.Limitations, phase?.SequenceNumber,
             new MacrocycleView(plan.MacrocycleName, plan.MacrocycleNotes, plan.Phases.OrderBy(p => p.SequenceNumber)
                 .Select(p => new PhaseView(p.SequenceNumber, p.Name, p.PhaseType, p.StartDate, p.EndDate, p.Objective)).ToList()),
-            Disclaimer);
+            plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer);
     }
 
     private static SessionView ToSessionView(PlannedSession session, WorkoutLog? log) => new(
