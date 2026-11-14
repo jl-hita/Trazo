@@ -14,6 +14,11 @@ public interface ISettingsWriter
     Task SetSubscriptionsEnforcedAsync(bool enforced, CancellationToken ct);
     /// <summary>Validates and persists the Google Play Billing configuration. Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct);
+    /// <summary>
+    /// Validates and persists the operational settings. Nothing is written when any value is invalid. The result lists
+    /// what changed (without secret values) for the audit log.
+    /// </summary>
+    Task<OperationsUpdateResult> UpdateOperationsAsync(OperationsInput input, CancellationToken ct);
 }
 
 public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector) : ISettingsWriter
@@ -61,6 +66,52 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
         await Upsert(SettingKeys.PlayRtdnServiceAccountEmail, input.RtdnServiceAccountEmail?.Trim() ?? "", false, ct);
         await db.SaveChangesAsync(ct);
         return errors;
+    }
+
+    public async Task<OperationsUpdateResult> UpdateOperationsAsync(OperationsInput input, CancellationToken ct)
+    {
+        var errors = OperationalValidator.Validate(input);
+        if (errors.Count > 0) return new OperationsUpdateResult(errors, []);
+
+        var origins = OperationalValidator.TryParseOrigins(
+            OperationalValidator.JoinOrigins(input.AdditionalCorsOrigins ?? []), out var parsed) ? parsed : [];
+        OperationalValidator.TryParseLogLevel(input.LogLevel ?? "", out var level);
+        OperationalValidator.TryParseEndpoint(input.DietoExpressEndpoint ?? "", out var endpoint);
+
+        var changes = new List<string>();
+        void Track(string key, bool changed, string? from, string? to)
+        {
+            if (changed) changes.Add($"{key}: '{from ?? ""}' -> '{to ?? ""}'");
+        }
+        async Task Plain(string key, string value)
+        {
+            var (changed, previous) = await UpsertTracked(key, value, false, ct);
+            Track(key, changed, previous, value);
+        }
+
+        await Plain(SettingKeys.CorsAdditionalOrigins, OperationalValidator.JoinOrigins(origins));
+        await Plain(SettingKeys.RateLimitSetup, input.SetupPerMinute.ToString(CultureInfo.InvariantCulture));
+        await Plain(SettingKeys.RateLimitSetupTest, input.SetupTestPerMinute.ToString(CultureInfo.InvariantCulture));
+        await Plain(SettingKeys.RateLimitSubscription, input.SubscriptionPerMinute.ToString(CultureInfo.InvariantCulture));
+        await Plain(SettingKeys.LogLevelDefault, level ?? "");
+        await Plain(SettingKeys.LogRetentionDays, input.LogRetentionDays.ToString(CultureInfo.InvariantCulture));
+        await Plain(SettingKeys.DietoExpressEndpoint, endpoint);
+        // Null keeps the stored key, empty clears it. The value itself never reaches the audit entry.
+        if (input.DietoExpressApiKey is not null)
+        {
+            await Upsert(SettingKeys.DietoExpressApiKey, input.DietoExpressApiKey.Trim(), true, ct);
+            changes.Add($"{SettingKeys.DietoExpressApiKey}: {(input.DietoExpressApiKey.Trim().Length > 0 ? "replaced" : "cleared")} (value not logged)");
+        }
+        await db.SaveChangesAsync(ct);
+        return new OperationsUpdateResult(errors, changes);
+    }
+
+    private async Task<(bool Changed, string? Previous)> UpsertTracked(string key, string value, bool secret, CancellationToken ct)
+    {
+        var row = await db.AppSettings.FirstOrDefaultAsync(x => x.Key == key, ct);
+        var previous = row?.Value;
+        await Upsert(key, value, secret, ct);
+        return (!string.Equals(previous ?? "", value, StringComparison.Ordinal), previous);
     }
 
     private async Task Upsert(string key, string value, bool secret, CancellationToken ct)

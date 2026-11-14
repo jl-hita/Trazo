@@ -63,7 +63,7 @@ public sealed class DatabaseLoggerProvider(AppLogQueue queue) : ILoggerProvider
 /// Persists queued log entries in batches and deletes the ones older than the retention period. A failure to write
 /// logs never affects the application: the batch is dropped and a short note goes to the console.
 /// </summary>
-public sealed class DatabaseLogWriter(AppLogQueue queue, string connectionString, int retentionDays) : BackgroundService
+public sealed class DatabaseLogWriter(AppLogQueue queue, string connectionString, Func<int> retentionDays) : BackgroundService
 {
     private const int BatchSize = 200;
     private static readonly TimeSpan FlushInterval = TimeSpan.FromSeconds(1);
@@ -129,14 +129,16 @@ public sealed class DatabaseLogWriter(AppLogQueue queue, string connectionString
 
     private async Task PurgeIfDueAsync()
     {
-        if (retentionDays <= 0 || DateTimeOffset.UtcNow < _nextPurge) return;
+        // Read at every purge, so a change of the retention period in the settings applies without a restart.
+        var days = retentionDays();
+        if (days <= 0 || DateTimeOffset.UtcNow < _nextPurge) return;
         _nextPurge = DateTimeOffset.UtcNow + PurgeInterval;
         try
         {
             await using var connection = new NpgsqlConnection(connectionString);
             await connection.OpenAsync();
             await using var command = new NpgsqlCommand("DELETE FROM app_logs WHERE timestamp_utc < $1", connection);
-            command.Parameters.AddWithValue(DateTimeOffset.UtcNow.AddDays(-retentionDays));
+            command.Parameters.AddWithValue(DateTimeOffset.UtcNow.AddDays(-days));
             await command.ExecuteNonQueryAsync();
         }
         catch (Exception exception)
@@ -158,7 +160,7 @@ public static class DatabaseLoggingExtensions
 {
     /// <summary>
     /// Stores application logs in PostgreSQL for the administration console. Disable with
-    /// <c>Logging:Database:Enabled=false</c>; keep <c>Logging:Database:RetentionDays</c> days (default 30, 0 keeps all).
+    /// <c>Logging:Database:Enabled=false</c>; keep the number of days set in the administration console (or <c>Logging:Database:RetentionDays</c>; default 30, 0 keeps all).
     /// </summary>
     public static IServiceCollection AddDatabaseLogging(this IServiceCollection services, IConfiguration configuration)
     {
@@ -167,10 +169,14 @@ public static class DatabaseLoggingExtensions
             string.Equals(configuration["Logging:Database:Enabled"], "false", StringComparison.OrdinalIgnoreCase))
             return services;
 
-        var retention = int.TryParse(configuration["Logging:Database:RetentionDays"], out var days) && days >= 0 ? days : 30;
         services.AddSingleton<AppLogQueue>();
         services.AddSingleton<ILoggerProvider, DatabaseLoggerProvider>();
-        services.AddHostedService(sp => new DatabaseLogWriter(sp.GetRequiredService<AppLogQueue>(), connectionString, retention));
+        // The retention period comes from the runtime settings (database, then Logging:Database:RetentionDays, then 30 days).
+        services.AddHostedService(sp =>
+        {
+            var options = sp.GetRequiredService<Trazo.Infrastructure.Settings.IRuntimeOptions>();
+            return new DatabaseLogWriter(sp.GetRequiredService<AppLogQueue>(), connectionString, () => options.Current.LogRetentionDays);
+        });
         return services;
     }
 }

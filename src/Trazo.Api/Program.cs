@@ -21,6 +21,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
+// Settings edited in the administration console that framework features watch through IConfiguration (the log level).
+// Added last so a database value wins over the environment; empty until the first read of the database.
+var runtimeOverrides = new Trazo.Infrastructure.Settings.RuntimeOverridesConfigurationSource();
+((Microsoft.Extensions.Configuration.IConfigurationBuilder)builder.Configuration).Add(runtimeOverrides);
+builder.Services.AddSingleton(runtimeOverrides);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -46,6 +51,7 @@ builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddHttpClient(OperationsSettingsEndpoints.TestClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddHttpClient(AdminLibraryTransferEndpoints.ClientName, c => c.Timeout = TimeSpan.FromMinutes(5));
 
 var jwtIssuer = builder.Configuration["Authentication:Jwt:Issuer"];
@@ -101,21 +107,34 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization(options =>
     options.AddPolicy(SetupEndpoints.SuperadminPolicy, p => p.RequireRole("superadmin")));
+// Limits come from the runtime settings (database > environment > default) and are read on every request, so a
+// change applies without a restart. The limit is part of the partition key: a new limit starts a fresh window.
+// The login limiter ("auth") is deliberately fixed: it protects the sign-in itself and is not editable.
+static string LimiterKey(string baseKey, int permitLimit) => $"{baseKey}|{permitLimit}";
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     options.AddPolicy(SetupEndpoints.SetupPolicy, httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    {
+        var limit = httpContext.RequestServices.GetRequiredService<IRuntimeOptions>().Current.SetupPerMinute;
+        return RateLimitPartition.GetFixedWindowLimiter(
+            LimiterKey(httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown", limit),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = limit, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 });
+    });
     options.AddPolicy(SetupEndpoints.SetupTestPolicy, httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-            _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    {
+        var limit = httpContext.RequestServices.GetRequiredService<IRuntimeOptions>().Current.SetupTestPerMinute;
+        return RateLimitPartition.GetFixedWindowLimiter(
+            LimiterKey(httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown", limit),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = limit, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 });
+    });
     options.AddPolicy(SubscriptionEndpoints.RateLimitPolicy, httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    {
+        var limit = httpContext.RequestServices.GetRequiredService<IRuntimeOptions>().Current.SubscriptionPerMinute;
+        return RateLimitPartition.GetFixedWindowLimiter(
+            LimiterKey(httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown", limit),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = limit, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 });
+    });
     options.AddPolicy(PlansEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -132,18 +151,15 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-    ?? ["http://localhost:4200"];
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AdminFrontend", policy =>
-    {
-        policy.WithOrigins(allowedOrigins)
+// Origins from the environment (Cors:AllowedOrigins) are always allowed; the console can only ADD origins on top of
+// them, so a wrong entry there can never lock the administration web out.
+builder.Services.AddOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>()
+    .Configure<IRuntimeOptions>((options, runtime) =>
+        options.AddPolicy("AdminFrontend", policy => policy
+            .SetIsOriginAllowed(runtime.IsCorsOriginAllowed)
             .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
+            .AllowAnyMethod()));
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -207,15 +223,17 @@ app.MapAccountEmailEndpoints();
 app.MapSubscriptionEndpoints();
 app.MapPlansEndpoints();
 app.MapAdminSubscriptionsEndpoints();
+app.MapOperationsSettingsEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,
-    IConfiguration configuration,
+    IRuntimeSettings runtimeSettings,
     ExerciseLibraryImportService importer,
     ILogger<Program> logger) =>
 {
     const long maxArchiveBytes = 512L * 1024L * 1024L;
-    var expectedKey = configuration["DietoExpressImport:ApiKey"];
+    // Database value (set in the console) wins over the DietoExpressImport__ApiKey environment variable.
+    var expectedKey = (await runtimeSettings.GetDietoExpressAsync(context.RequestAborted)).ApiKey;
     var suppliedKey = context.Request.Headers["X-Trazo-Import-Key"].ToString();
     if (string.IsNullOrWhiteSpace(expectedKey))
         return Results.Problem("The private exercise import endpoint is not configured.", statusCode: StatusCodes.Status503ServiceUnavailable);

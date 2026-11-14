@@ -2,6 +2,8 @@
 
 Esta guía describe la configuración que consume el código actual del repositorio. TRAZO es independiente de DietoExpress: debe usar su propia base PostgreSQL, claves JWT, claves de Data Protection, servicio systemd y copias de seguridad.
 
+> **Qué va en el `.env` y qué en Ajustes:** consulta [configuration.md](configuration.md). Solo lo imprescindible para arrancar e iniciar sesión se queda en el `.env`; CORS adicional, límites de peticiones, nivel/retención de logs y la integración con DietoExpress se editan en Ajustes (la base de datos tiene prioridad y el `.env` actual sigue valiendo como respaldo).
+
 ## 1. Arquitectura prevista
 
 En el servidor compartido `weirdfish`:
