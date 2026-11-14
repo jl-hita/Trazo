@@ -122,6 +122,21 @@ export interface Overview {
     exercisesActive: number; exercisesWithoutImages: number; exercisesUnusable: number; exercisesUsable: number;
   };
   alerts: OverviewAlert[];
+  insights: OverviewInsights;
+}
+
+export interface OverviewInsights {
+  activity: {
+    days: { date: string; signups: number; plans: number; workouts: number }[];
+    activeUsers7d: number; activeUsers30d: number; unverifiedOver3Days: number;
+  };
+  funnel: { registered: number; emailVerified: number; withPlan: number; withWorkout: number; recurring: number };
+  subscriptions: { trialsEndingSoon: number; cancelingSoon: number; paymentIssues: number; testPurchases: number };
+  engine: {
+    workouts30d: number; completed30d: number; partial30d: number; notCompleted30d: number; painReportedPercent: number | null;
+    adaptationsTotal30d: number; adaptationsByKind: { name: string; count: number }[];
+    notCompletedReasons: { name: string; count: number }[];
+  };
 }
 
 export interface SystemInfo { version: string; commit: string | null; environment: string; }

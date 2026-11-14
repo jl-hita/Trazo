@@ -17,6 +17,15 @@ const SUBSCRIPTION_LABEL: Record<string, string> = {
   on_hold: 'En espera', canceled: 'Canceladas', expired: 'Caducadas', revoked: 'Revocadas'
 };
 
+const ADAPTATION_LABEL: Record<string, string> = {
+  reduction_sets: 'Series reducidas', raise_reserve: 'Más margen (RIR)', restore_sets: 'Series restauradas',
+  deload: 'Descargas', hold_progression: 'Progresión retenida', load_update: 'Cargas actualizadas'
+};
+
+const REASON_LABEL: Record<string, string> = {
+  Time: 'Tiempo', Fatigue: 'Fatiga', Equipment: 'Material', Motivation: 'Motivación', Illness: 'Enfermedad', Other: 'Otros'
+};
+
 /**
  * Operational overview: system health, alerts that say what to do next, and quick links to the areas that need attention.
  * The API caches the result for a short time and aggregates only (no personal or health data).
@@ -88,6 +97,42 @@ export class OverviewComponent {
   protected readonly subscriptions = computed(() =>
     (this.data()?.summary.subscriptionsByStatus ?? []).filter(x => x.count > 0)
       .map(x => ({ label: SUBSCRIPTION_LABEL[x.name] ?? x.name, count: x.count })));
+
+  /** Daily activity of the last 14 days; heights are relative to the busiest day so small numbers stay readable. */
+  protected readonly chart = computed(() => {
+    const days = this.data()?.insights.activity.days ?? [];
+    const max = Math.max(1, ...days.flatMap(d => [d.signups, d.plans, d.workouts]));
+    const total = (pick: (d: (typeof days)[number]) => number) => days.reduce((sum, d) => sum + pick(d), 0);
+    return {
+      max,
+      empty: days.every(d => d.signups + d.plans + d.workouts === 0),
+      totals: { signups: total(d => d.signups), plans: total(d => d.plans), workouts: total(d => d.workouts) },
+      days: days.map(d => ({
+        ...d,
+        label: new Date(d.date + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+        signupsH: (d.signups / max) * 100, plansH: (d.plans / max) * 100, workoutsH: (d.workouts / max) * 100
+      }))
+    };
+  });
+
+  protected readonly funnel = computed(() => {
+    const f = this.data()?.insights.funnel;
+    if (!f) return [];
+    const base = Math.max(1, f.registered);
+    return [
+      { label: 'Registrados', count: f.registered, hint: 'Cuentas creadas' },
+      { label: 'Correo verificado', count: f.emailVerified, hint: 'Correo verificado o acceso con Google' },
+      { label: 'Con un plan', count: f.withPlan, hint: 'Han generado al menos un plan' },
+      { label: 'Con una sesión registrada', count: f.withWorkout, hint: 'Han registrado al menos un entrenamiento' },
+      { label: 'Constantes', count: f.recurring, hint: 'Con 3 o más sesiones registradas' }
+    ].map(step => ({ ...step, percent: Math.round((100 * step.count) / base) }));
+  });
+
+  protected readonly adaptations = computed(() =>
+    (this.data()?.insights.engine.adaptationsByKind ?? []).map(x => ({ label: ADAPTATION_LABEL[x.name] ?? x.name, count: x.count })));
+
+  protected readonly reasons = computed(() =>
+    (this.data()?.insights.engine.notCompletedReasons ?? []).map(x => ({ label: REASON_LABEL[x.name] ?? x.name, count: x.count })));
 
   protected readonly alertSummary = computed(() => {
     const n = this.alerts().length;

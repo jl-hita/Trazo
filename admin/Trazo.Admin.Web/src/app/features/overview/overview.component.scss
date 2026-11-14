@@ -58,6 +58,23 @@
 .ov-notice { margin: 0 0 12px; padding: 8px 10px; border: 1px solid #34465b; border-radius: 6px; background: #152131; color: #c3d3e6; font-size: 12px; line-height: 1.5; }
 .ov-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; white-space: nowrap; }
 
+.ov-cards-wide { margin-bottom: 28px; }
+.ov-span-2 { grid-column: span 2; }
+.ov-chart { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; margin: 0 0 8px; padding: 0; list-style: none; }
+.ov-chart li { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ov-bars { display: flex; align-items: flex-end; gap: 1px; width: 100%; height: 90px; border-bottom: 1px solid #293444; }
+.ov-bar { flex: 1; min-height: 0; border-radius: 2px 2px 0 0; }
+.ov-day { color: #8291a6; font-size: 9px; white-space: nowrap; }
+.bar-signups { background: #7fb2e5; }
+.bar-plans { background: #8fd3a8; }
+.bar-workouts { background: #ecd28a; }
+.ov-legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 14px; color: #aab6c7; font-size: 11px; }
+.ov-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.ov-funnel { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.ov-funnel-row { display: flex; justify-content: space-between; gap: 8px; color: #dbe5f2; font-size: 12px; font-variant-numeric: tabular-nums; }
+.ov-track { display: block; height: 6px; margin-top: 5px; border-radius: 3px; background: #1d2a3b; }
+.ov-fill { display: block; height: 100%; border-radius: 3px; background: #7fb2e5; }
 .ov-skeleton { border-radius: 8px; background: linear-gradient(90deg, #131b27 25%, #1a2433 50%, #131b27 75%); background-size: 200% 100%; animation: ov-shimmer 1.4s linear infinite; }
 .ov-skeleton-alerts { display: grid; gap: 10px; margin-bottom: 42px; }
 .ov-skeleton-alerts .ov-skeleton { height: 62px; }
@@ -68,5 +85,7 @@
 @media (max-width: 900px) { .ov-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) {
   .ov-cards { grid-template-columns: 1fr; }
+  .ov-span-2 { grid-column: auto; }
+  .ov-day { display: none; }
   .ov-heading-actions { flex-wrap: wrap; }
 }
