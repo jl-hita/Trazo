@@ -56,10 +56,10 @@ Email__Smtp__EnableSsl=true
 Email__Smtp__Username=SMTP_USERNAME
 Email__Smtp__Password=SMTP_PASSWORD
 Email__From=no-reply@example.com
-Email__ActionBaseUrl=trazo://account
+Email__ActionBaseUrl=https://your-domain.example
 ```
 
-The Android app handles the `trazo://account/account/verify-email` and `trazo://account/account/reset-password` links. If SMTP is not configured, use the verified bootstrap account for the first login smoke test; do not treat a failed email send as a successful registration.
+The links open the web pages `/account/verify-email` and `/account/reset-password` (or the Android app, through verified App Links). App schemes such as `trazo://` are not accepted. If SMTP is not configured, use the verified bootstrap account for the first login smoke test; do not treat a failed email send as a successful registration.
 
 ## 5. Optional Google Sign-In
 

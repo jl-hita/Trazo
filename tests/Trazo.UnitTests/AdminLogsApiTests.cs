@@ -154,7 +154,7 @@ public sealed class AdminLogsApiTests : IDisposable
         Assert.Equal(["Upload finished"], Messages(await ReadAsync(await client.GetAsync("/api/v1/admin/logs?q=images"))));
         Assert.Equal(["Disk is at 100% usage"], Messages(await ReadAsync(await client.GetAsync("/api/v1/admin/logs?q=" + Uri.EscapeDataString("100%")))));
         Assert.Equal(["Something broke"], Messages(await ReadAsync(await client.GetAsync("/api/v1/admin/logs?q=ioexception"))));
-        Assert.Empty(Messages(await ReadAsync(await client.GetAsync("/api/v1/admin/logs?q=" + Uri.EscapeDataString("%")))).Where(m => !m.Contains('%')));
+        Assert.DoesNotContain(Messages(await ReadAsync(await client.GetAsync("/api/v1/admin/logs?q=" + Uri.EscapeDataString("%")))), m => !m.Contains('%'));
     }
 
     [Fact]

@@ -34,19 +34,20 @@ public static class AccountEmailEndpoints
   await db.SaveChangesAsync(ct);await tx.CommitAsync(ct);
   return Results.Ok(new{verified=true});
  }
- private static async Task<IResult> ResendAsync(ResendVerificationRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
+ private static async Task<IResult> ResendAsync(ResendVerificationRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,DeletionRequestThrottle throttle,CancellationToken ct)
  {
   var normalized=Normalize(request.Email);
   var user=normalized is null?null:await db.Users.SingleOrDefaultAsync(x=>x.NormalizedEmail==normalized,ct);
-  if(user is not null&&user.EmailVerifiedAt is null&&user.PasswordHash is not null)
+  // At most a few emails per address and hour, whoever asks: the per-IP limit alone lets one address be flooded.
+  if(user is not null&&user.EmailVerifiedAt is null&&user.PasswordHash is not null&&throttle.TryAcquire("verify|"+normalized))
    await IssueAsync(user,"verify-email","Verifica tu correo de TRAZO","Verifica tu cuenta usando este enlace:",TimeSpan.FromHours(24),db,email,config,ct);
   return Results.Accepted(value:new{message="Si existe una cuenta pendiente de verificación, enviaremos un correo."});
  }
- private static async Task<IResult> ForgotAsync(ForgotPasswordRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
+ private static async Task<IResult> ForgotAsync(ForgotPasswordRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,DeletionRequestThrottle throttle,CancellationToken ct)
  {
   var normalized=Normalize(request.Email);
   var user=normalized is null?null:await db.Users.SingleOrDefaultAsync(x=>x.NormalizedEmail==normalized,ct);
-  if(user is not null&&user.PasswordHash is not null)
+  if(user is not null&&user.PasswordHash is not null&&throttle.TryAcquire("reset|"+normalized))
    await IssueAsync(user,"reset-password","Restablece tu contraseña de TRAZO","Usa este enlace para restablecer tu contraseña:",TimeSpan.FromMinutes(30),db,email,config,ct);
   return Results.Accepted(value:new{message="Si existe una cuenta compatible, enviaremos instrucciones."});
  }

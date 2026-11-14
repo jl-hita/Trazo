@@ -398,7 +398,7 @@ public sealed class OperationsSettingsApiTests : IDisposable
         var setup = await client.PostAsJsonAsync("/api/v1/setup/complete", new
         {
             google = new { clientId = "123-abc.apps.googleusercontent.com" },
-            email = new { host = "smtp.example.com", port = 587, enableSsl = true, from = "no-reply@example.com", actionBaseUrl = "trazo://account" },
+            email = new { host = "smtp.example.com", port = 587, enableSsl = true, from = "no-reply@example.com", actionBaseUrl = "https://trazo.example.com" },
             admin = new { email = "owner@example.com", displayName = "Owner", password = "CorrectHorse1Battery" }
         });
         setup.EnsureSuccessStatusCode();

@@ -25,6 +25,8 @@ public static class AuthenticationEndpoints
         group.MapPost("/register", RegisterAsync);
         group.MapPost("/login", LoginAsync);
         group.MapPost("/google", GoogleLoginAsync);
+        group.MapPost("/google/nonce", (GoogleNonceStore nonces) =>
+            Results.Ok(new { nonce = nonces.Issue(), expiresIn = (int)GoogleNonceStore.Lifetime.TotalSeconds }));
         group.MapPost("/2fa/verify", VerifyTwoFactorAsync);
         group.MapPost("/refresh", RefreshAsync);
         group.MapPost("/logout", LogoutAsync).RequireAuthorization();
@@ -45,6 +47,8 @@ public static class AuthenticationEndpoints
         IEmailSender emailSender,
         IRuntimeSettings configuration,
         ISetupService setup,
+        DeletionRequestThrottle emailThrottle,
+        ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
@@ -54,7 +58,27 @@ public static class AuthenticationEndpoints
         if (!IsValidPassword(request.Password))
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["password"] = ["Use at least 12 characters including uppercase, lowercase and a number."] });
         if (await db.Users.AnyAsync(x => x.NormalizedEmail == email, cancellationToken))
-            return Results.Conflict(new { error = "An account with this email already exists." });
+        {
+            // The answer never reveals whether the address already has an account: the owner is told by email instead.
+            hasher.HashPassword(null!, request.Password); // same work as a real registration
+            if (emailThrottle.TryAcquire("register|" + email))
+            {
+                try
+                {
+                    await emailSender.SendAsync(request.Email.Trim(), "Ya tienes una cuenta en TRAZO",
+                        "Alguien ha intentado crear una cuenta de TRAZO con este correo, pero ya existe una.\n\n" +
+                        "Si has sido tú, inicia sesión o usa la opción de contraseña olvidada. Si no has sido tú, ignora este mensaje: no ha cambiado nada.",
+                        cancellationToken);
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    // Never log the exception text: mail errors can quote the recipient address.
+                    loggerFactory.CreateLogger("Trazo.Auth").LogWarning(
+                        "The existing-account notice could not be sent ({Error}).", exception.GetType().Name);
+                }
+            }
+            return RegistrationAccepted();
+        }
 
         var now = DateTimeOffset.UtcNow;
         var user = new TrazoUser
@@ -73,12 +97,30 @@ public static class AuthenticationEndpoints
         {
             await AccountEmailEndpoints.IssueAsync(user, "verify-email", "Verifica tu correo de TRAZO",
                 "Para activar tu cuenta, abre este enlace:", TimeSpan.FromHours(24), db, emailSender, configuration, cancellationToken);
-            return Results.Accepted(value: new { emailVerificationRequired = true, message = "Te hemos enviado un enlace para verificar tu correo." });
+            return RegistrationAccepted();
         }
         catch (DbUpdateException)
         {
-            return Results.Conflict(new { error = "An account with this email already exists." });
+            return RegistrationAccepted(); // lost a race with another registration of the same address
         }
+    }
+
+    private static IResult RegistrationAccepted() =>
+        Results.Accepted(value: new { emailVerificationRequired = true, message = "Te hemos enviado un enlace para verificar tu correo." });
+
+    // Verified when the address has no usable account, so the response time does not reveal whether it exists.
+    private static readonly Lazy<string> DummyPasswordHash =
+        new(() => new PasswordHasher<TrazoUser>().HashPassword(null!, Convert.ToBase64String(RandomNumberGenerator.GetBytes(24))));
+
+    private static void RegisterSecondFactorFailure(TrazoUser user, DateTimeOffset now)
+    {
+        user.FailedLoginAttempts++;
+        if (user.FailedLoginAttempts >= 5)
+        {
+            user.FailedLoginAttempts = 0;
+            user.LockoutEnd = now.AddMinutes(15);
+        }
+        user.UpdatedAt = now;
     }
 
     private static async Task<IResult> LoginAsync(
@@ -86,20 +128,31 @@ public static class AuthenticationEndpoints
         TrazoDbContext db,
         PasswordHasher<TrazoUser> hasher,
         AuthTokenService tokens,
+        LoginAttemptThrottle attempts,
+        HttpContext http,
         CancellationToken cancellationToken)
     {
         var email = NormalizeEmail(request.Email);
         if (email is null || string.IsNullOrEmpty(request.Password)) return Results.Unauthorized();
         var user = await db.Users.SingleOrDefaultAsync(x => x.NormalizedEmail == email, cancellationToken);
         var now = DateTimeOffset.UtcNow;
-        if (user is null || user.LockoutEnd > now || user.PasswordHash is null || user.DisabledAt is not null)
+        if (user is null || user.PasswordHash is null || user.DisabledAt is not null)
+        {
+            hasher.VerifyHashedPassword(null!, DummyPasswordHash.Value, request.Password);
+            return Results.Unauthorized();
+        }
+        var address = http.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        if (user.LockoutEnd > now || attempts.IsBlocked(user.Id, address))
             return Results.Unauthorized();
 
         var verification = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (verification == PasswordVerificationResult.Failed)
         {
+            // This address is blocked for this account after five failures; the whole account only after many more,
+            // so guessing from one place cannot keep the owner out.
+            attempts.RegisterFailure(user.Id, address);
             user.FailedLoginAttempts++;
-            if (user.FailedLoginAttempts >= 5)
+            if (user.FailedLoginAttempts >= LoginAttemptThrottle.AccountLockoutThreshold)
             {
                 user.FailedLoginAttempts = 0;
                 user.LockoutEnd = now.AddMinutes(15);
@@ -113,17 +166,20 @@ public static class AuthenticationEndpoints
             user.PasswordHash = hasher.HashPassword(user, request.Password);
         if (user.EmailVerifiedAt is null)
             return Results.Conflict(new { code = "email_not_verified", error = "Verifica tu correo antes de iniciar sesión." });
-        user.FailedLoginAttempts = 0;
-        user.LockoutEnd = null;
+        attempts.Reset(user.Id, address);
         user.UpdatedAt = now;
 
         if (user.TwoFactorEnabled)
         {
+            // The failure counter is NOT cleared here: wrong second-factor codes add to it, and only a complete
+            // sign-in resets it. Otherwise every new challenge would grant five more guesses.
             var challenge = await CreateChallengeAsync(user.Id, db, cancellationToken);
             await db.SaveChangesAsync(cancellationToken);
             return Results.Ok(new { twoFactorRequired = true, challengeToken = challenge, expiresIn = 300 });
         }
 
+        user.FailedLoginAttempts = 0;
+        user.LockoutEnd = null;
         user.LastLoginAt = now;
         var pair = await tokens.CreateTokenPairAsync(user, db, request.DeviceName, cancellationToken);
         return Results.Ok(new TokenResponse(pair.AccessToken, pair.RefreshToken, "Bearer",
@@ -136,6 +192,8 @@ public static class AuthenticationEndpoints
         ISetupService setup,
         TrazoDbContext db,
         AuthTokenService tokens,
+        GoogleNonceStore nonces,
+        IConfiguration appConfiguration,
         ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
@@ -143,6 +201,7 @@ public static class AuthenticationEndpoints
         var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration, loggerFactory.CreateLogger("Trazo.Auth"));
         if (payload is null || !payload.EmailVerified || string.IsNullOrWhiteSpace(payload.Email))
             return Results.Unauthorized();
+        if (!nonces.Accept(payload.Nonce, GoogleNonceRequired(appConfiguration))) return Results.Unauthorized();
 
         var subject = payload.Subject;
         var email = NormalizeEmail(payload.Email);
@@ -195,12 +254,15 @@ public static class AuthenticationEndpoints
         ClaimsPrincipal principal,
         IRuntimeSettings configuration,
         TrazoDbContext db,
+        GoogleNonceStore nonces,
+        IConfiguration appConfiguration,
         ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
         var payload = await ValidateGoogleTokenAsync(request.IdToken, configuration, loggerFactory.CreateLogger("Trazo.Auth"));
         if (payload is null || !payload.EmailVerified || string.IsNullOrWhiteSpace(payload.Email))
             return Results.Unauthorized();
+        if (!nonces.Accept(payload.Nonce, GoogleNonceRequired(appConfiguration))) return Results.Unauthorized();
         var userId = GetUserId(principal);
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
         if (user is null) return Results.Unauthorized();
@@ -234,6 +296,8 @@ public static class AuthenticationEndpoints
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == challenge.UserId, cancellationToken);
         if (user is null || user.DisabledAt is not null || !user.TwoFactorEnabled || string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
             return Results.Unauthorized();
+        // Wrong codes count towards the account lockout, whichever challenge they were sent with.
+        if (user.LockoutEnd > now) return Results.Unauthorized();
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         var protector = protection.CreateProtector("TRAZO.Authenticator.v1");
@@ -259,6 +323,8 @@ public static class AuthenticationEndpoints
         {
             await db.AuthChallenges.Where(x => x.Id == challenge.Id && x.ConsumedAt == null)
                 .ExecuteUpdateAsync(s => s.SetProperty(x => x.FailedAttempts, x => x.FailedAttempts + 1), cancellationToken);
+            RegisterSecondFactorFailure(user, now);
+            await db.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
             return Results.Unauthorized();
         }
@@ -267,6 +333,8 @@ public static class AuthenticationEndpoints
             .ExecuteUpdateAsync(s => s.SetProperty(x => x.ConsumedAt, now), cancellationToken);
         if (marked != 1) return Results.Unauthorized();
 
+        user.FailedLoginAttempts = 0;
+        user.LockoutEnd = null;
         user.LastLoginAt = now;
         user.UpdatedAt = now;
         var pair = await tokens.CreateTokenPairAsync(user, db, request.DeviceName, cancellationToken);
@@ -351,10 +419,17 @@ public static class AuthenticationEndpoints
         if (user is null) return Results.Unauthorized();
         if (!user.TwoFactorEnabled || string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
             return Results.BadRequest(new { error = "Two-factor authentication is not enabled." });
+        var now = DateTimeOffset.UtcNow;
+        // A stolen access token must not be enough to guess the code and switch the protection off.
+        if (user.LockoutEnd > now) return Results.Unauthorized();
         var secret = protection.CreateProtector("TRAZO.Authenticator.v1").Unprotect(user.ProtectedAuthenticatorKey);
-        if (!TotpService.TryGetMatchingStep(secret, request.Code, DateTimeOffset.UtcNow, out var matchingStep) ||
+        if (!TotpService.TryGetMatchingStep(secret, request.Code, now, out var matchingStep) ||
             (user.LastTotpStep is not null && matchingStep <= user.LastTotpStep.Value))
+        {
+            RegisterSecondFactorFailure(user, now);
+            await db.SaveChangesAsync(cancellationToken);
             return Results.Unauthorized();
+        }
         user.LastTotpStep = matchingStep;
         user.TwoFactorEnabled = false;
         user.ProtectedAuthenticatorKey = null;
@@ -483,6 +558,13 @@ public static class AuthenticationEndpoints
             return null;
         }
     }
+
+    /// <summary>
+    /// Authentication:Google:RequireNonce. Off by default so app versions that predate nonces keep working; a token
+    /// that does carry a nonce is always checked. Turn it on once every installed app sends one.
+    /// </summary>
+    private static bool GoogleNonceRequired(IConfiguration configuration) =>
+        bool.TryParse(configuration["Authentication:Google:RequireNonce"], out var required) && required;
 
     private static IResult SetupRequired() =>
         Results.Json(new { code = "setup_required", error = "The initial setup has not been completed." }, statusCode: StatusCodes.Status409Conflict);

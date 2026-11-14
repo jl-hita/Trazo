@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -59,6 +60,11 @@ export class ResetPasswordPageComponent {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   protected readonly token = this.route.snapshot.queryParamMap.get('token') ?? '';
+
+  constructor() {
+    // The token stays in memory only: out of the address bar, the browser history and anything that reads the URL.
+    if (this.token) inject(Location).replaceState('/account/reset-password');
+  }
   protected readonly password = signal('');
   protected readonly confirmation = signal('');
   protected readonly busy = signal(false);

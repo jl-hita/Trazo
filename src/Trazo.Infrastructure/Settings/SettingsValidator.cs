@@ -35,8 +35,9 @@ public static class SettingsValidator
         if (string.IsNullOrWhiteSpace(email.From) || email.From.Length > 320 || !MailAddress.TryCreate(email.From.Trim(), out _))
             errors["email.from"] = ["A valid sender address is required."];
         if (string.IsNullOrWhiteSpace(email.ActionBaseUrl) || email.ActionBaseUrl.Length > 500 ||
-            !Uri.TryCreate(email.ActionBaseUrl.Trim(), UriKind.Absolute, out var uri) || string.IsNullOrEmpty(uri.Scheme))
-            errors["email.actionBaseUrl"] = ["An absolute URL (https://... or an app scheme such as trazo://account) is required."];
+            !Uri.TryCreate(email.ActionBaseUrl.Trim(), UriKind.Absolute, out var uri) ||
+            !(uri.Scheme == Uri.UriSchemeHttps || (uri.Scheme == Uri.UriSchemeHttp && uri.IsLoopback)))
+            errors["email.actionBaseUrl"] = ["An absolute https:// URL is required (http only for localhost). App schemes such as trazo:// are not accepted: any app can claim them."];
         if (email.Username is { Length: > 320 }) errors["email.username"] = ["Too long."];
         if (email.Password is { Length: > 1000 }) errors["email.password"] = ["Too long."];
         return errors;
@@ -80,6 +81,9 @@ public static class SettingsValidator
         if (input.RtdnServiceAccountEmail is { Length: > 0 } pusher &&
             (pusher.Length > 320 || !new EmailAddressAttribute().IsValid(pusher.Trim())))
             errors["rtdnServiceAccountEmail"] = ["A valid service-account email is required."];
+        // The audience alone proves nothing: any Google service account can get a token for it.
+        if (!string.IsNullOrWhiteSpace(input.RtdnAudience) && string.IsNullOrWhiteSpace(input.RtdnServiceAccountEmail))
+            errors["rtdnServiceAccountEmail"] = ["Required with the audience: the service account that signs the Pub/Sub push."];
         return errors;
     }
 

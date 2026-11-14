@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -35,6 +36,8 @@ export class VerifyEmailPageComponent {
       this.message.set('The link is missing its security token. Request a new verification email.');
       return;
     }
+    // The token stays in memory only: out of the address bar and the browser history.
+    inject(Location).replaceState('/account/verify-email');
     void this.verify(token);
   }
 

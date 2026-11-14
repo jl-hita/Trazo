@@ -49,7 +49,7 @@ public sealed class DatabaseLoggerProvider(AppLogQueue queue) : ILoggerProvider
             catch { message = "(the log message could not be formatted)"; }
             if (string.IsNullOrEmpty(message) && exception is null) return;
             queue.TryWrite(new AppLogEntry(
-                TruncateToMicroseconds(DateTimeOffset.UtcNow), (int)logLevel, Trim(category, 200), Trim(message, 8_000) ?? "",
+                TruncateToMicroseconds(DateTimeOffset.UtcNow), (int)logLevel, Trim(category, 200) ?? "", Trim(message, 8_000) ?? "",
                 exception is null ? null : Trim(exception.ToString(), 16_000), Activity.Current?.TraceId.ToString()));
         }
     }

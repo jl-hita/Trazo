@@ -73,8 +73,8 @@ type Mode = 'setup' | 'settings';
                  [ngModel]="password() ?? ''" (ngModelChange)="password.set($event === '' && passwordSet() ? null : $event)">
         </label>
         <label>Sender (From) <input type="text" name="from" required placeholder="TRAZO &lt;no-reply@example.com&gt;" [ngModel]="from()" (ngModelChange)="from.set($event)"></label>
-        <label>Action base URL <input type="text" name="actionBaseUrl" required placeholder="trazo://account" [ngModel]="actionBaseUrl()" (ngModelChange)="actionBaseUrl.set($event)"></label>
-        <p class="hint">Links in verification and password-reset emails are built from this URL (for example trazo://account for the Android app).</p>
+        <label>Action base URL <input type="text" name="actionBaseUrl" required placeholder="https://your-domain.example" [ngModel]="actionBaseUrl()" (ngModelChange)="actionBaseUrl.set($event)"></label>
+        <p class="hint">Links in verification and password-reset emails are built from this URL (the public https address of this site; app schemes such as trazo:// are not accepted).</p>
         <label>Send test email to <input type="email" name="recipient" [ngModel]="recipient()" (ngModelChange)="recipient.set($event)"></label>
         <div class="actions">
           <button type="button" (click)="testSmtp()" [disabled]="busy() || !recipient().trim()">Send test email</button>
