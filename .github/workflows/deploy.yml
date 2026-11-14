@@ -11,7 +11,6 @@ on:
       - "global.json"
       - "deploy/**"
       - "admin/Trazo.Admin.Web/**"
-      - "landing/**"
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
@@ -94,10 +93,6 @@ jobs:
           rm -rf /tmp/trazo-frontend
           mkdir -p /tmp/trazo-frontend
           cp -a dist/trazo-admin-web/browser/. /tmp/trazo-frontend/
-          # Landing pública: se sirve en / y /en/ (ver deploy/nginx/trazo.conf).
-          mkdir -p /tmp/trazo-frontend/site
-          cp -a "$GITHUB_WORKSPACE/landing/." /tmp/trazo-frontend/site/
-          test -f /tmp/trazo-frontend/site/index.html
 
       - name: Deploy atomically and smoke test
         env:
