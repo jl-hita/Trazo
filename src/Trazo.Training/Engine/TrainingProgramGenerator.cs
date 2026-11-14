@@ -110,6 +110,16 @@ public static class TrainingProgramGenerator
                             .ToArray();
                     }
 
+                    // TRAZO: an exercise never appears twice in one session. When the only exercise that fits this pattern is
+                    // already in the session (typical with little equipment: one row serves both pulling patterns), the
+                    // pattern is covered and is skipped instead of repeating the exercise.
+                    var notYetInSession = compatibleCandidates
+                        .Where(x => !prescriptions.Any(p => string.Equals(p.ExerciseId, x.ExerciseId, StringComparison.OrdinalIgnoreCase)))
+                        .ToArray();
+                    if (compatibleCandidates.Length > 0 && notYetInSession.Length == 0)
+                        continue;
+                    compatibleCandidates = notYetInSession;
+
                     // Prefer a different exercise elsewhere in this week's plan when possible.
                     // Never penalize an exercise for being selected in previous weeks: continuity
                     // across a mesocycle supports progression and performance tracking.
