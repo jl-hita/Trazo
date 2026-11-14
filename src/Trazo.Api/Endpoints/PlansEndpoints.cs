@@ -17,7 +17,7 @@ public static class PlansEndpoints
     public static IEndpointRouteBuilder MapPlansEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/v1/plans").WithTags("Plans")
-            .RequireActiveSubscription()
+            .RequireAuthorization()
             .RequireRateLimiting(RateLimitPolicy)
             .AddEndpointFilter(async (context, next) =>
             {
@@ -35,7 +35,8 @@ public static class PlansEndpoints
             .Produces<PlanView>(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status409Conflict)
-            .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
+            .RequireActiveSubscription();
         group.MapGet("/current", GetCurrentAsync).WithName("GetCurrentPlan")
             .WithSummary("The active plan: profile and macrocycle phases, without any session detail.")
             .Produces<PlanView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -51,14 +52,16 @@ public static class PlansEndpoints
         group.MapPost("/current/sessions/{sessionId:guid}/log", LogAsync).WithName("LogPlanSession")
             .WithSummary("Records a session (sets, loads, repetitions, RIR, recovery, pain) and adapts the upcoming sessions.")
             .Produces<LogResult>().ProducesValidationProblem()
-            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict)
+            .RequireActiveSubscription();
         group.MapGet("/current/sessions/{sessionId:guid}/exercises/{exerciseId}/alternatives", AlternativesAsync)
             .WithName("GetExerciseAlternatives")
             .WithSummary("Reviewed exercises that can replace one of the session, respecting level, goal, equipment and limitations.")
             .Produces<AlternativesResult>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/current/sessions/{sessionId:guid}/exercises/{exerciseId}/swap", SwapAsync).WithName("SwapPlanExercise")
             .WithSummary("Replaces an exercise of a pending session (optionally in the rest of the block) with one of its alternatives.")
-            .Produces<SessionView>().ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status404NotFound);
+            .Produces<SessionView>().ProducesProblem(StatusCodes.Status400BadRequest).ProducesProblem(StatusCodes.Status404NotFound)
+            .RequireActiveSubscription();
         return endpoints;
     }
 
