@@ -213,6 +213,7 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
         var text = await response.Content.ReadAsStringAsync();
         var plan = JsonDocument.Parse(text).RootElement;
         Assert.Equal("Active", plan.GetProperty("status").GetString());
+        Assert.Equal("Generated", plan.GetProperty("origin").GetString());
         Assert.Equal(12, plan.GetProperty("totalWeeks").GetInt32());
         Assert.Equal(1, plan.GetProperty("currentWeek").GetInt32());
         var phases = plan.GetProperty("macrocycle").GetProperty("phases").EnumerateArray().ToList();
@@ -514,20 +515,78 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
 public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
 {
     [Fact]
-    public async Task WithSubscriptionsEnforced_PlanRoutesAnswer402WithoutAccess_AndWorkWithIt()
+    public async Task FreeUsersCanReadOptionsButCannotCreateOrUseGeneratedPlans()
     {
         var free = ClientFor(await AddUserAsync("free@example.com"));
-        foreach (var response in new[] { await free.GetAsync("/api/v1/plans/current"), await free.GetAsync("/api/v1/plans/current/week"),
-                     await free.GetAsync("/api/v1/plans/options"), await free.PostAsJsonAsync("/api/v1/plans", Profile()),
-                     await free.PostAsync("/api/v1/plans/current/archive", null) })
-        {
-            Assert.Equal(HttpStatusCode.PaymentRequired, response.StatusCode);
-            Assert.Equal("subscription_required", (await JsonAsync(response)).GetProperty("error").GetString());
-        }
+
+        Assert.Equal(HttpStatusCode.NotFound, (await free.GetAsync("/api/v1/plans/current")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await free.GetAsync("/api/v1/plans/current/week")).StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await free.GetAsync("/api/v1/plans/options")).StatusCode);
+
+        var create = await free.PostAsJsonAsync("/api/v1/plans", Profile());
+        Assert.Equal(HttpStatusCode.PaymentRequired, create.StatusCode);
+        Assert.Equal("subscription_required", (await JsonAsync(create)).GetProperty("error").GetString());
+        Assert.Equal(HttpStatusCode.NotFound, (await free.PostAsync("/api/v1/plans/current/archive", null)).StatusCode);
 
         var paid = ClientFor(await AddUserAsync("paid@example.com", subscribed: true));
         Assert.Equal(HttpStatusCode.Created, (await paid.PostAsJsonAsync("/api/v1/plans", Profile())).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await paid.GetAsync("/api/v1/plans/current/week")).StatusCode);
+    }
+
+    [Fact]
+    public async Task ExpiredPremiumKeepsGeneratedPlanReadableButBlocksFurtherUseAndGeneration()
+    {
+        var user = await AddUserAsync("expired@example.com", subscribed: true);
+        var client = ClientFor(user);
+        var created = await client.PostAsJsonAsync("/api/v1/plans", Profile());
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var plan = await JsonAsync(created);
+        var planId = Guid.Parse(plan.GetProperty("id").GetString()!);
+        var firstWeek = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var firstSession = firstWeek.GetProperty("sessions")[0];
+        var sessionId = Guid.Parse(firstSession.GetProperty("id").GetString()!);
+        var exerciseId = firstSession.GetProperty("exercises")[0].GetProperty("exerciseId").GetString()!;
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            var subscription = await db.Subscriptions.SingleAsync(x => x.UserId == user.Id);
+            subscription.Status = SubscriptionStatus.Expired;
+            subscription.ExpiresAt = Now.AddSeconds(-1);
+            var storedPlan = await db.TrainingPlans.Include(x => x.Phases).SingleAsync(x => x.Id == planId);
+            storedPlan.StartDate = storedPlan.StartDate.AddDays(-28);
+            foreach (var phase in storedPlan.Phases)
+            {
+                phase.StartDate = phase.StartDate.AddDays(-28);
+                phase.EndDate = phase.EndDate.AddDays(-28);
+            }
+            await db.SaveChangesAsync();
+        }
+
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/v1/plans/current")).StatusCode);
+        var currentWeekResponse = await client.GetAsync("/api/v1/plans/current/week");
+        Assert.Equal(HttpStatusCode.OK, currentWeekResponse.StatusCode);
+        var lockedWeek = await JsonAsync(currentWeekResponse);
+        Assert.Equal("PremiumRequired", lockedWeek.GetProperty("timeline").GetString());
+        Assert.Empty(lockedWeek.GetProperty("sessions").EnumerateArray());
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/v1/plans/current/history")).StatusCode);
+
+        var log = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{sessionId}/log",
+            new { outcome = "Completed", sets = CompleteSets(firstSession) });
+        Assert.Equal(HttpStatusCode.PaymentRequired, log.StatusCode);
+        var swap = await client.PostAsJsonAsync(
+            $"/api/v1/plans/current/sessions/{sessionId}/exercises/{exerciseId}/swap",
+            new { replacementExerciseId = "push-up" });
+        Assert.Equal(HttpStatusCode.PaymentRequired, swap.StatusCode);
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            Assert.Equal(1, await db.TrainingMesocycles.CountAsync(x => x.PlanId == planId));
+            Assert.Empty(await db.WorkoutLogs.Where(x => x.PlanId == planId).ToListAsync());
+        }
+
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PostAsync("/api/v1/plans/current/archive", null)).StatusCode);
     }
 
     [Fact]
@@ -536,5 +595,6 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
         var admin = ClientFor(await AddUserAsync("admin@example.com", role: "admin"));
 
         Assert.Equal(HttpStatusCode.OK, (await admin.GetAsync("/api/v1/plans/options")).StatusCode);
+        Assert.Equal(HttpStatusCode.Created, (await admin.PostAsJsonAsync("/api/v1/plans", Profile())).StatusCode);
     }
 }
