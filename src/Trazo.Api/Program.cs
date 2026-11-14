@@ -142,6 +142,11 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    // Public landing form: a few attempts per minute per IP. Fixed on purpose, like the sign-in limiter.
+    options.AddPolicy(WaitlistEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -228,6 +233,7 @@ app.MapSubscriptionEndpoints();
 app.MapPlansEndpoints();
 app.MapAdminSubscriptionsEndpoints();
 app.MapOperationsSettingsEndpoints();
+app.MapWaitlistEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,

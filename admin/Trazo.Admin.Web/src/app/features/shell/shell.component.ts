@@ -34,6 +34,7 @@ export class ShellComponent {
     { label: 'Training library', icon: '▤', link: '/exercises' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },
     { label: 'Logs', icon: '≋', link: '/logs' },
+    { label: 'Waitlist', icon: '✉', link: '/waitlist' },
     { label: 'Backups', icon: '▣' },
     { label: 'Settings', icon: '⚙', link: '/settings' }
   ];
