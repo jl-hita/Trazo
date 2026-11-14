@@ -297,3 +297,19 @@ public sealed class SettingsEncryptionAndPrecedenceTests
         }
     }
 }
+
+public sealed class EnforcementSettingTests
+{
+    [Fact]
+    public async Task SubscriptionsEnforced_IsOffByDefault_WithoutAnyPlayConfiguration()
+    {
+        using var fx = new SetupFixture();
+        var (db, _, runtime, writer) = fx.NewServices();
+        using var _ = db;
+        Assert.False(await runtime.GetSubscriptionsEnforcedAsync());
+        await writer.SetSubscriptionsEnforcedAsync(true, default);
+        Assert.True(await runtime.GetSubscriptionsEnforcedAsync());
+        await writer.SetSubscriptionsEnforcedAsync(false, default);
+        Assert.False(await runtime.GetSubscriptionsEnforcedAsync());
+    }
+}

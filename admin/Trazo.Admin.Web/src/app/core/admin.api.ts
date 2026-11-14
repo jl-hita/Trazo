@@ -240,6 +240,14 @@ export class AdminApi {
     return firstValueFrom(this.http.post<AdminSubscriptionDetail>(`${API}/subscriptions/${id}/refresh`, {}));
   }
 
+  getAccessSettings(): Promise<{ subscriptionsEnforced: boolean }> {
+    return firstValueFrom(this.http.get<{ subscriptionsEnforced: boolean }>(`${API}/settings/access`));
+  }
+
+  saveAccessSettings(subscriptionsEnforced: boolean): Promise<{ subscriptionsEnforced: boolean }> {
+    return firstValueFrom(this.http.put<{ subscriptionsEnforced: boolean }>(`${API}/settings/access`, { subscriptionsEnforced }));
+  }
+
   getPlayBilling(): Promise<PlayBillingView> {
     return firstValueFrom(this.http.get<PlayBillingView>(`${API}/settings/play-billing`));
   }

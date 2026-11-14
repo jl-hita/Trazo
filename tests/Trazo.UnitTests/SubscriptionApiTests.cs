@@ -93,6 +93,7 @@ public sealed class SubscriptionApiTests : IDisposable
             builder.UseSetting("Authentication:Jwt:Audience", "TRAZO-Clients");
             builder.UseSetting("Authentication:Jwt:SigningKey", new string((char)107, 48));
             builder.UseSetting("DataProtection:KeysPath", _keys);
+            builder.UseSetting("Billing:Enforced", "true");
             builder.UseSetting("Billing:Play:PackageName", "com.trazo.android");
             builder.UseSetting("Billing:Play:ServiceAccountJson", "{\"configured\":true}");
             builder.UseSetting("Billing:Play:RtdnSecret", Secret);
@@ -600,5 +601,45 @@ public sealed class SubscriptionApiTests : IDisposable
         _play.Failure = new PlayBillingException(PlayBillingFailure.Unauthorized, "Google Play rejected the service account.");
         var failed = await JsonAsync(await client.PostAsync("/api/v1/admin/settings/play-billing/test", null));
         Assert.False(failed.GetProperty("ok").GetBoolean());
+    }
+
+    // ---- Enforcement switch ----
+
+    [Fact]
+    public async Task NotEnforced_EveryAuthenticatedUserHasAccess_AndTheStatusSaysSo()
+    {
+        var root = await AddUserAsync("root@example.com", "superadmin");
+        var user = await AddUserAsync("free@example.com");
+        Assert.Equal(HttpStatusCode.PaymentRequired, (await RunFilterAsync(user)).StatusCode);
+        Assert.True((await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"))).GetProperty("enforced").GetBoolean());
+
+        var off = await ClientFor(root).PutAsJsonAsync("/api/v1/admin/settings/access", new { subscriptionsEnforced = false });
+        Assert.Equal(HttpStatusCode.OK, off.StatusCode);
+
+        var body = await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"));
+        Assert.True(body.GetProperty("hasAccess").GetBoolean());
+        Assert.False(body.GetProperty("enforced").GetBoolean());
+        Assert.Equal("none", body.GetProperty("status").GetString());
+        Assert.Equal(HttpStatusCode.OK, (await RunFilterAsync(user)).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await RunFilterAsync(null)).StatusCode);
+
+        await ClientFor(root).PutAsJsonAsync("/api/v1/admin/settings/access", new { subscriptionsEnforced = true });
+        Assert.Equal(HttpStatusCode.PaymentRequired, (await RunFilterAsync(user)).StatusCode);
+    }
+
+    [Fact]
+    public async Task AccessSetting_IsSuperadminOnly_AndStoredInAppSettings()
+    {
+        var root = await AddUserAsync("root@example.com", "superadmin");
+        var user = await AddUserAsync("alice@example.com");
+        Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(user).GetAsync("/api/v1/admin/settings/access")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden,
+            (await ClientFor(user).PutAsJsonAsync("/api/v1/admin/settings/access", new { subscriptionsEnforced = false })).StatusCode);
+        await ClientFor(root).PutAsJsonAsync("/api/v1/admin/settings/access", new { subscriptionsEnforced = false });
+        using var scope = _factory.Services.CreateScope();
+        var row = await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().AppSettings.AsNoTracking()
+            .SingleAsync(x => x.Key == "Billing:Enforced");
+        Assert.Equal("false", row.Value);
+        Assert.False((await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/settings/access"))).GetProperty("subscriptionsEnforced").GetBoolean());
     }
 }

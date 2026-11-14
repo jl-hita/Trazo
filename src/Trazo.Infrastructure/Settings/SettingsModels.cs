@@ -11,6 +11,7 @@ public static class SettingKeys
     public const string EmailFrom = "Email:From";
     public const string EmailActionBaseUrl = "Email:ActionBaseUrl";
 
+    public const string SubscriptionsEnforced = "Billing:Enforced";
     public const string PlayPackageName = "Billing:Play:PackageName";
     public const string PlayServiceAccountJson = "Billing:Play:ServiceAccountJson";
     public const string PlayRtdnSecret = "Billing:Play:RtdnSecret";

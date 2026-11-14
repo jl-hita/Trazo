@@ -25,6 +25,15 @@ public static class AdminSubscriptionsEndpoints
             .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
         settings.MapGet("", async (IRuntimeSettings s, CancellationToken ct) => Results.Ok(await s.GetPlayBillingViewAsync(ct)));
         settings.MapPut("", SaveSettingsAsync);
+        var access = endpoints.MapGroup("/api/v1/admin/settings/access").WithTags("Settings")
+            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+        access.MapGet("", async (IRuntimeSettings s, CancellationToken ct) =>
+            Results.Ok(new { subscriptionsEnforced = await s.GetSubscriptionsEnforcedAsync(ct) }));
+        access.MapPut("", async (AccessSettingsRequest r, ISettingsWriter w, CancellationToken ct) =>
+        {
+            await w.SetSubscriptionsEnforcedAsync(r.SubscriptionsEnforced, ct);
+            return Results.Ok(new { subscriptionsEnforced = r.SubscriptionsEnforced });
+        });
         settings.MapPost("/test", TestConnectionAsync).RequireRateLimiting(SetupEndpoints.SetupTestPolicy);
         return endpoints;
     }
