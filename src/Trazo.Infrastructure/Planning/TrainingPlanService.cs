@@ -490,11 +490,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var slots = PlanSchedule.Slots(plan.StartDate, plan.Phases.Select(p => new PhaseSpan(p.SequenceNumber, p.PhaseType, p.StartDate, p.EndDate)));
         var slot = slots.First(s => s.Contains(position.Week));
+        var hasPremiumAccess = await subscriptions.HasAccessAsync(plan.UserId, ct);
         var mesocycle = plan.Mesocycles.FirstOrDefault(m => m.Sequence == slot.Sequence);
         if (mesocycle is null)
         {
             // An expired generated plan remains readable, but a GET must not silently create its next block.
-            if (!await subscriptions.HasAccessAsync(plan.UserId, ct))
+            if (!hasPremiumAccess)
                 return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
                     PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), "PremiumRequired", null, []);
             mesocycle = await GenerateMesocycleAsync(plan, slot, ct);
@@ -509,7 +510,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
         var weekStart = PlanSchedule.WeekStart(plan.StartDate, position.Week);
         return new WeekView(
-            plan.Id, position.Week, weekStart, weekStart.AddDays(6), position.State.ToString(),
+            plan.Id, position.Week, weekStart, weekStart.AddDays(6),
+            hasPremiumAccess ? position.State.ToString() : "PremiumRequired",
             new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
                 position.Week - mesocycle.StartWeek + 1),
             sessions.Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList());
