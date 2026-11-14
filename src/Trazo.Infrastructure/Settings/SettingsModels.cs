@@ -11,6 +11,12 @@ public static class SettingKeys
     public const string EmailFrom = "Email:From";
     public const string EmailActionBaseUrl = "Email:ActionBaseUrl";
 
+    public const string PlayPackageName = "Billing:Play:PackageName";
+    public const string PlayServiceAccountJson = "Billing:Play:ServiceAccountJson";
+    public const string PlayRtdnSecret = "Billing:Play:RtdnSecret";
+    public const string PlayRtdnAudience = "Billing:Play:RtdnAudience";
+    public const string PlayRtdnServiceAccountEmail = "Billing:Play:RtdnServiceAccountEmail";
+
     /// <summary>Marker row: its primary key makes "complete the setup" a single-winner operation.</summary>
     public const string SetupCompletedAt = "Setup:CompletedAt";
 }
@@ -44,3 +50,24 @@ public sealed record SetupResult(SetupOutcome Outcome, IReadOnlyDictionary<strin
 public sealed record SettingsView(
     string GoogleClientId, string SmtpHost, int SmtpPort, bool SmtpEnableSsl, string? SmtpUsername,
     bool SmtpPasswordSet, string EmailFrom, string EmailActionBaseUrl);
+
+/// <summary>
+/// Google Play Billing configuration. The service-account key and the notification secret are stored
+/// encrypted. Real-time developer notifications (RTDN) are accepted with a Pub/Sub OIDC token
+/// (RtdnAudience, optionally pinned to RtdnServiceAccountEmail) or the shared secret.
+/// </summary>
+public sealed record PlayBillingConfig(
+    string PackageName, string? ServiceAccountJson, string? RtdnSecret, string? RtdnAudience, string? RtdnServiceAccountEmail)
+{
+    public bool IsComplete => !string.IsNullOrWhiteSpace(PackageName) && !string.IsNullOrWhiteSpace(ServiceAccountJson);
+    public bool RtdnAuthConfigured => !string.IsNullOrWhiteSpace(RtdnSecret) || !string.IsNullOrWhiteSpace(RtdnAudience);
+}
+
+/// <summary>Superadmin input: null secrets keep the stored value, empty strings clear it.</summary>
+public sealed record PlayBillingInput(
+    string PackageName, string? ServiceAccountJson, string? RtdnSecret, string? RtdnAudience, string? RtdnServiceAccountEmail);
+
+/// <summary>Shown to a superadmin. Secrets are never included.</summary>
+public sealed record PlayBillingView(
+    string PackageName, bool ServiceAccountSet, string? ServiceAccountEmail, bool RtdnSecretSet,
+    string? RtdnAudience, string? RtdnServiceAccountEmail, bool Configured, bool RtdnConfigured);

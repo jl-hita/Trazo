@@ -50,3 +50,21 @@ public sealed class ModelSnapshotTests
         _ => operation.GetType().Name
     };
 }
+
+public sealed class SubscriptionMigrationTests
+{
+    [Fact]
+    public void SubscriptionsMigration_IsDiscovered_AndGeneratesTheTableAndUniqueTokenIndex()
+    {
+        var options = new DbContextOptionsBuilder<TrazoDbContext>()
+            .UseNpgsql("Host=localhost;Database=model_check;Username=x;Password=x").Options;
+        using var db = new TrazoDbContext(options);
+        var migrator = db.GetService<IMigrator>();
+
+        var script = migrator.GenerateScript("20261113140000_AppLogs", "20261114100000_Subscriptions");
+
+        Assert.Contains("CREATE TABLE subscriptions", script);
+        Assert.Contains("CREATE UNIQUE INDEX \"IX_subscriptions_PurchaseTokenHash\"", script);
+        Assert.Contains("REFERENCES users", script);
+    }
+}

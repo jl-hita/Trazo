@@ -11,6 +11,6 @@ public sealed class AppSettingConfiguration : IEntityTypeConfiguration<AppSettin
         b.ToTable("app_settings");
         b.HasKey(x => x.Key);
         b.Property(x => x.Key).HasMaxLength(100);
-        b.Property(x => x.Value).HasMaxLength(4000).IsRequired();
+        b.Property(x => x.Value).HasMaxLength(16000).IsRequired();
     }
 }

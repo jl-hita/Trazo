@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Trazo.Domain.Identity;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Trazo.Infrastructure.Billing;
 using Trazo.Infrastructure.Logging;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
@@ -42,6 +44,9 @@ public static class DependencyInjection
             dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keysPath));
         }
         services.AddRuntimeSettings();
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddScoped<IPlayBillingClient, GooglePlayBillingClient>();
+        services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<ExerciseCatalogSeeder>();
         services.AddScoped<ExerciseImageSeeder>();
         services.AddScoped<ExerciseLibraryExporter>();

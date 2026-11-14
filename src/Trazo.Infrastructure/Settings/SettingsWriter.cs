@@ -11,6 +11,8 @@ public interface ISettingsWriter
     Task StageAsync(GoogleConfig google, EmailConfig email, bool keepPasswordWhenNull, CancellationToken ct);
     /// <summary>Validates and persists configuration (superadmin edits). Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdateAsync(GoogleConfig google, EmailConfig email, CancellationToken ct);
+    /// <summary>Validates and persists the Google Play Billing configuration. Returns validation errors, if any.</summary>
+    Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct);
 }
 
 public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector) : ISettingsWriter
@@ -35,6 +37,21 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
         if (errors.Count > 0) return errors;
         // Password null = keep the stored one; empty string = clear it.
         await StageAsync(google, email, keepPasswordWhenNull: true, ct);
+        await db.SaveChangesAsync(ct);
+        return errors;
+    }
+
+    public async Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct)
+    {
+        var errors = SettingsValidator.ValidatePlayBilling(input);
+        if (errors.Count > 0) return errors;
+        await Upsert(SettingKeys.PlayPackageName, input.PackageName.Trim(), false, ct);
+        if (input.ServiceAccountJson is not null)
+            await Upsert(SettingKeys.PlayServiceAccountJson, input.ServiceAccountJson.Trim(), true, ct);
+        if (input.RtdnSecret is not null)
+            await Upsert(SettingKeys.PlayRtdnSecret, input.RtdnSecret.Trim(), true, ct);
+        await Upsert(SettingKeys.PlayRtdnAudience, input.RtdnAudience?.Trim() ?? "", false, ct);
+        await Upsert(SettingKeys.PlayRtdnServiceAccountEmail, input.RtdnServiceAccountEmail?.Trim() ?? "", false, ct);
         await db.SaveChangesAsync(ct);
         return errors;
     }

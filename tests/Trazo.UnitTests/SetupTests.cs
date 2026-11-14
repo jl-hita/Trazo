@@ -32,6 +32,12 @@ public sealed class SetupFixture : IDisposable
             CREATE TABLE refresh_tokens (
               "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "TokenHash" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL,
               "ExpiresAt" TEXT NOT NULL, "RevokedAt" TEXT NULL, "ReplacedByTokenHash" TEXT NULL, "DeviceName" TEXT NULL);
+            CREATE TABLE subscriptions (
+              "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Source" TEXT NOT NULL, "ProductId" TEXT NOT NULL,
+              "PurchaseTokenHash" TEXT NOT NULL UNIQUE, "ProtectedPurchaseToken" TEXT NOT NULL, "Status" TEXT NOT NULL,
+              "StoreState" TEXT NULL, "LatestOrderId" TEXT NULL, "StartedAt" TEXT NOT NULL, "ExpiresAt" TEXT NOT NULL,
+              "AutoRenewing" INTEGER NOT NULL, "AcknowledgedAt" TEXT NULL, "IsTestPurchase" INTEGER NOT NULL,
+              "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
             """);
     }
 

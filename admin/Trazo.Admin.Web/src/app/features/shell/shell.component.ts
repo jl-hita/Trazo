@@ -18,7 +18,7 @@ export class ShellComponent {
   protected readonly navigation: { label: string; icon: string; link?: string }[] = [
     { label: 'Overview', icon: '◫', link: '/' },
     { label: 'Users', icon: '◎', link: '/users' },
-    { label: 'Subscriptions', icon: '◇' },
+    { label: 'Subscriptions', icon: '◇', link: '/subscriptions' },
     { label: 'Training library', icon: '▤', link: '/exercises' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },
     { label: 'Logs', icon: '≋', link: '/logs' },

@@ -46,7 +46,7 @@ The initial DbContext is intentionally empty, so there are no application tables
 ## Security principles
 
 - Android and Angular are untrusted clients.
-- Authorization and subscription entitlements must be enforced by the API.
+- Authorization and subscription entitlements must be enforced by the API (see [subscriptions.md](subscriptions.md)).
 - Never put secrets or privileged credentials in Angular assets or the Android APK.
 - Administrative endpoints will require explicit administrator authorization.
 - Logs must redact credentials, access tokens and sensitive personal data.
