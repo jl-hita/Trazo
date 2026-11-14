@@ -14,6 +14,20 @@ export interface LandingContent {
   cta: string;
   featuresTitle: string;
   features: { title: string; text: string }[];
+  pricingTitle: string;
+  pricingLead: string;
+  freeName: string;
+  freePrice: string;
+  freePeriod: string;
+  freeTagline: string;
+  freeFeatures: string[];
+  premiumName: string;
+  premiumPrice: string;
+  premiumPeriod: string;
+  premiumTagline: string;
+  premiumFeatures: string[];
+  premiumAnnual: string;
+  pricingNote: string;
   shotsTitle: string;
   shots: { file: string; caption: string }[];
   shotAlt: string;
@@ -46,29 +60,54 @@ const shots = (lang: LandingLang, captions: string[]) =>
 export const LANDING: Record<LandingLang, LandingContent> = {
   es: {
     title: 'TRAZO · Entrenamiento de fuerza con plan y progresión',
-    description: 'TRAZO genera un plan de fuerza personalizado con progresión semanal y te guía sesión a sesión. Apúntate a la lista de espera.',
+    description: 'Planifica tu entrenamiento manualmente gratis o deja que TRAZO genere tu programación automática con Premium.',
     otherLang: 'en', otherPath: '/en', otherLabel: 'English', otherAria: 'Open the English version',
-    eyebrow: 'Entrenamiento de fuerza',
-    headA: 'Tu plan de fuerza,', headB: 'semana a semana',
-    lead: 'TRAZO crea un plan personalizado con progresión, te dice qué hacer en cada sesión y lo ajusta según entrenas. Sin hojas de cálculo.',
+    eyebrow: 'ADVANCED STRENGTH TRAINING',
+    headA: 'Tu entrenamiento,', headB: 'construido con criterio',
+    lead: 'Diseña tus propios macrociclos, mesociclos y rutinas gratis. O deja que TRAZO estructure tu entrenamiento y su progresión automáticamente con Premium.',
     cta: 'Quiero entrar en la lista de espera',
     featuresTitle: 'Todo lo que necesitas para entrenar con criterio',
     features: [
-      { title: 'Plan con progresión', text: 'Fases, semanas de descarga y cargas objetivo pensadas para que avances sin estancarte.' },
+      { title: 'Planificación a tu manera', text: 'Crea manualmente macrociclos, mesociclos y rutinas, o utiliza la generación automática de TRAZO.' },
       { title: 'Cada sesión, clara', text: 'Series, repeticiones, RIR y descanso de cada ejercicio, con su imagen y la técnica a mano.' },
-      { title: 'Se adapta a ti', text: 'Tu nivel, tus días y tus limitaciones. El plan se genera y se ajusta a medida que registras tus sesiones.' },
+      { title: 'Progresión estructurada', text: 'Organiza fases, semanas de descarga y cargas objetivo para avanzar con una planificación coherente.' },
       { title: 'Registro sin fricción', text: 'Anota cada serie y usa el temporizador de descanso integrado. Funciona aunque pierdas la conexión.' },
       { title: 'Catálogo de ejercicios', text: 'Más de 140 ejercicios con búsqueda, filtros y fichas con imágenes.' },
       { title: 'Tu cuenta, protegida', text: 'Acceso con Google o correo, verificación en dos pasos y datos cifrados en el dispositivo.' }
     ],
+    pricingTitle: 'Empieza gratis. Automatiza cuando quieras.',
+    pricingLead: 'La planificación manual no tiene coste ni límites artificiales. Premium está pensado para quien quiere que TRAZO haga el trabajo de programación.',
+    freeName: 'Gratis',
+    freePrice: '0 €',
+    freePeriod: 'para siempre',
+    freeTagline: 'Tú diseñas y controlas tu entrenamiento.',
+    freeFeatures: [
+      'Crear macrociclos manualmente',
+      'Crear mesociclos y rutinas manualmente',
+      'Registrar entrenamientos y consultar el historial',
+      'Seguimiento y gráficas básicas de progreso'
+    ],
+    premiumName: 'Premium',
+    premiumPrice: '6,99 €',
+    premiumPeriod: '/ mes',
+    premiumTagline: 'TRAZO diseña la planificación contigo.',
+    premiumFeatures: [
+      'Generación automática de rutinas y mesociclos',
+      'Planificación automática de macrociclos',
+      'Selección y distribución de ejercicios según tu perfil',
+      'Progresión planificada de volumen e intensidad',
+      'Análisis avanzado del volumen y del progreso'
+    ],
+    premiumAnnual: 'O 49,99 € al año · equivale a 4,17 €/mes',
+    pricingNote: 'Precios previstos para el lanzamiento. La planificación manual seguirá siendo gratuita; las funciones automáticas y avanzadas serán Premium.',
     shotsTitle: 'Así se ve',
     shots: shots('es', ['Tu semana', 'La sesión, al detalle', 'Registro de series', 'Catálogo']),
     shotAlt: 'Captura de la app TRAZO',
     howTitle: 'Cómo funciona',
     steps: [
       { title: 'Cuéntanos cómo entrenas', text: 'Objetivo, nivel, días disponibles y material.' },
-      { title: 'Recibe tu plan', text: 'Un macrociclo con fases y la semana en curso al detalle.' },
-      { title: 'Entrena y registra', text: 'El plan aprende de tus sesiones y se ajusta.' }
+      { title: 'Diseña o genera tu plan', text: 'Construye tu planificación manualmente o deja que TRAZO te proponga una estructura automática.' },
+      { title: 'Entrena y registra', text: 'Registra tus sesiones y consulta cómo evoluciona tu rendimiento.' }
     ],
     waitTitle: 'Estamos preparando el lanzamiento',
     waitText: 'Déjanos tu correo y te avisaremos cuando TRAZO esté disponible en Google Play. Solo te escribiremos por eso.',
@@ -85,29 +124,54 @@ export const LANDING: Record<LandingLang, LandingContent> = {
   },
   en: {
     title: 'TRAZO · Strength training with a plan and progression',
-    description: 'TRAZO builds a personalised strength plan with weekly progression and guides you session by session. Join the waitlist.',
+    description: 'Plan your training manually for free or let TRAZO build your programme automatically with Premium.',
     otherLang: 'es', otherPath: '/', otherLabel: 'Español', otherAria: 'Abrir la versión en español',
-    eyebrow: 'Strength training',
-    headA: 'Your strength plan,', headB: 'week by week',
-    lead: 'TRAZO builds a personalised plan with progression, tells you what to do each session and adjusts it as you train. No spreadsheets.',
+    eyebrow: 'ADVANCED STRENGTH TRAINING',
+    headA: 'Your training,', headB: 'engineered with purpose',
+    lead: 'Build your own macrocycles, mesocycles and routines for free. Or let TRAZO structure your training and progression automatically with Premium.',
     cta: 'Join the waitlist',
     featuresTitle: 'Everything you need to train with purpose',
     features: [
-      { title: 'Plan with progression', text: 'Phases, deload weeks and target loads designed so you keep progressing.' },
+      { title: 'Plan your way', text: 'Build macrocycles, mesocycles and routines manually, or use TRAZO automatic generation.' },
       { title: 'Every session, clear', text: 'Sets, reps, RIR and rest for each exercise, with its image and technique at hand.' },
-      { title: 'Adapts to you', text: 'Your level, your days and your limitations. The plan is generated and adjusted as you log sessions.' },
+      { title: 'Structured progression', text: 'Organise phases, deload weeks and target loads into a coherent plan.' },
       { title: 'Frictionless logging', text: 'Log each set and use the built-in rest timer. It works even when you lose connection.' },
       { title: 'Exercise catalogue', text: 'Over 140 exercises with search, filters and illustrated detail pages.' },
       { title: 'Your account, protected', text: 'Sign in with Google or email, two-step verification and data encrypted on your device.' }
     ],
+    pricingTitle: 'Start free. Automate when you are ready.',
+    pricingLead: 'Manual planning is free, with no artificial limits. Premium is for people who want TRAZO to do the programming work.',
+    freeName: 'Free',
+    freePrice: '€0',
+    freePeriod: 'forever',
+    freeTagline: 'You design and control your training.',
+    freeFeatures: [
+      'Build macrocycles manually',
+      'Build mesocycles and routines manually',
+      'Log workouts and view your history',
+      'Basic progress tracking and charts'
+    ],
+    premiumName: 'Premium',
+    premiumPrice: '€6.99',
+    premiumPeriod: '/ month',
+    premiumTagline: 'TRAZO helps design your programme.',
+    premiumFeatures: [
+      'Automatic routine and mesocycle generation',
+      'Automatic macrocycle planning',
+      'Exercise selection and distribution for your profile',
+      'Planned progression of volume and intensity',
+      'Advanced volume and progress analysis'
+    ],
+    premiumAnnual: 'Or €49.99 per year · equivalent to €4.17/month',
+    pricingNote: 'Planned launch pricing. Manual planning will remain free; automatic and advanced features will be part of Premium.',
     shotsTitle: 'See it in action',
     shots: shots('en', ['Your week', 'Session in detail', 'Set logging', 'Catalogue']),
     shotAlt: 'TRAZO app screenshot',
     howTitle: 'How it works',
     steps: [
       { title: 'Tell us how you train', text: 'Goal, level, available days and equipment.' },
-      { title: 'Get your plan', text: 'A macrocycle with phases and the current week in detail.' },
-      { title: 'Train and log', text: 'The plan learns from your sessions and adjusts.' }
+      { title: 'Build or generate your plan', text: 'Create your plan manually or let TRAZO suggest an automatic structure.' },
+      { title: 'Train and log', text: 'Log your sessions and track how your performance evolves.' }
     ],
     waitTitle: "We're getting ready to launch",
     waitText: "Leave your email and we'll let you know when TRAZO is available on Google Play. We'll only write to you about that.",
