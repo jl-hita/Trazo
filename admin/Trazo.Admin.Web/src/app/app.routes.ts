@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { adminGuard, loginGuard, setupGuard, setupPageGuard } from './core/guards';
+import { adminGuard, loginGuard, setupGuard, setupPageGuard, superadminGuard } from './core/guards';
 
 export const routes: Routes = [
   {
@@ -23,6 +23,7 @@ export const routes: Routes = [
       { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
       { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },
       { path: 'logs', loadComponent: () => import('./features/logs/logs.page').then(m => m.LogsPageComponent) },
+      { path: 'waitlist', canActivate: [superadminGuard], loadComponent: () => import('./features/waitlist/waitlist.page').then(m => m.WaitlistPageComponent) },
       { path: 'settings', loadComponent: () => import('./features/settings/settings.page').then(m => m.SettingsPageComponent) }
     ]
   },

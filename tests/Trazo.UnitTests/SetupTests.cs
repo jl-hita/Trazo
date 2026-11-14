@@ -38,6 +38,9 @@ public sealed class SetupFixture : IDisposable
               "StoreState" TEXT NULL, "LatestOrderId" TEXT NULL, "StartedAt" TEXT NOT NULL, "ExpiresAt" TEXT NOT NULL,
               "AutoRenewing" INTEGER NOT NULL, "AcknowledgedAt" TEXT NULL, "IsTestPurchase" INTEGER NOT NULL,
               "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
+            CREATE TABLE waitlist_entries (
+              "Id" TEXT PRIMARY KEY, "Email" TEXT NOT NULL UNIQUE, "Language" TEXT NOT NULL,
+              "ConsentAt" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL);
             """);
     }
 

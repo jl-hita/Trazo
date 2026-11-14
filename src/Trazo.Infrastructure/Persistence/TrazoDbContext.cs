@@ -24,6 +24,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Planning.WorkoutSetLog> WorkoutSetLogs => Set<Trazo.Domain.Planning.WorkoutSetLog>();
     public DbSet<Trazo.Domain.Planning.PlanAdaptation> PlanAdaptations => Set<Trazo.Domain.Planning.PlanAdaptation>();
     public DbSet<Trazo.Domain.Settings.AppSetting> AppSettings => Set<Trazo.Domain.Settings.AppSetting>();
+    public DbSet<Trazo.Domain.Waitlist.WaitlistEntry> WaitlistEntries => Set<Trazo.Domain.Waitlist.WaitlistEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

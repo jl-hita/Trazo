@@ -194,6 +194,9 @@ export interface OperationsInput {
   logLevel: string; logRetentionDays: number; dietoExpressEndpoint: string; dietoExpressApiKey: string | null;
 }
 
+export interface WaitlistEntry { id: string; email: string; language: 'es' | 'en'; consentAt: string; createdAt: string; }
+export interface WaitlistPage extends Page<WaitlistEntry> { overall: { total: number; es: number; en: number }; }
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -340,5 +343,20 @@ export class AdminApi {
 
   sendLibraryToDietoExpress(): Promise<TransferResult> {
     return firstValueFrom(this.http.post<TransferResult>(`${API}/exercise-library-transfer/dietoexpress`, {}));
+  }
+
+  listWaitlist(q: string, page: number, pageSize: number): Promise<WaitlistPage> {
+    let params = new HttpParams().set('page', page).set('pageSize', pageSize);
+    if (q.trim()) params = params.set('q', q.trim());
+    return firstValueFrom(this.http.get<WaitlistPage>(`${API}/waitlist`, { params }));
+  }
+
+  deleteWaitlistEntry(id: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${API}/waitlist/${id}`));
+  }
+
+  /** The CSV is fetched through HttpClient so the bearer token is sent (a plain link would not carry it). */
+  exportWaitlist(): Promise<Blob> {
+    return firstValueFrom(this.http.get(`${API}/waitlist/export.csv`, { responseType: 'blob' }));
   }
 }
