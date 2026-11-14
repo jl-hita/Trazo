@@ -18,6 +18,8 @@ public sealed class TrazoUser
     public DateTimeOffset? LastLoginAt { get; set; }
     /// <summary>Set by an administrator; a disabled account cannot sign in or use existing tokens.</summary>
     public DateTimeOffset? DisabledAt { get; set; }
+    /// <summary>IANA time zone of the user (for example Europe/Madrid). Null means the default, Europe/Madrid.</summary>
+    public string? TimeZoneId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }
