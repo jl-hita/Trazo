@@ -69,12 +69,18 @@ public static class SetupEndpoints
         };
     }
 
-    private static async Task<IResult> UpdateAsync(UpdateSettingsRequest request, ISettingsWriter writer, CancellationToken ct)
+    private static async Task<IResult> UpdateAsync(
+        UpdateSettingsRequest request, ISettingsWriter writer, System.Security.Claims.ClaimsPrincipal principal,
+        ILoggerFactory loggerFactory, CancellationToken ct)
     {
         if (request.Google is null || request.Email is null)
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["settings"] = ["google and email are required."] });
         var errors = await writer.UpdateAsync(ToGoogle(request.Google), ToEmail(request.Email), ct);
-        return errors.Count > 0 ? Results.ValidationProblem(errors) : Results.Ok(new { saved = true });
+        if (errors.Count > 0) return Results.ValidationProblem(errors);
+        // Audit trail: who changed which section. Values (the SMTP password in particular) are never written.
+        loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
+            "Superadmin {Actor} updated the Google sign-in and email settings.", OperationsSettingsEndpoints.Actor(principal));
+        return Results.Ok(new { saved = true });
     }
 
     private static async Task<IResult> TestGoogleAsync(string? clientId, IHttpClientFactory factory, CancellationToken ct)

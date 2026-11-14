@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Trazo.Domain.Identity;
 using Trazo.Domain.Settings;
 using Trazo.Infrastructure.Persistence;
@@ -90,6 +91,9 @@ public static class SettingsServiceCollectionExtensions
         services.AddScoped<IRuntimeSettings, RuntimeSettings>();
         services.AddScoped<ISettingsWriter, SettingsWriter>();
         services.AddScoped<ISetupService, SetupService>();
+        // Operational settings kept in memory for code that cannot await the database (CORS, rate limiters, log retention).
+        services.AddSingleton<IRuntimeOptions, RuntimeOptions>();
+        services.AddHostedService<RuntimeOptionsRefresher>();
         return services;
     }
 }

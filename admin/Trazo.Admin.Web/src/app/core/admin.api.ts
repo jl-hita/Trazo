@@ -137,6 +137,19 @@ export interface PlayBillingInput {
   rtdnAudience: string; rtdnServiceAccountEmail: string;
 }
 
+export interface OperationsView {
+  environmentCorsOrigins: string[]; additionalCorsOrigins: string[];
+  setupPerMinute: number; setupTestPerMinute: number; subscriptionPerMinute: number;
+  logLevel: string; logRetentionDays: number;
+  dietoExpressEndpoint: string; dietoExpressApiKeySet: boolean; dietoExpressApiKeySource: 'database' | 'environment' | 'none';
+}
+
+/** A null API key keeps the stored one; an empty string clears it (the environment value, if any, applies again). */
+export interface OperationsInput {
+  additionalCorsOrigins: string[]; setupPerMinute: number; setupTestPerMinute: number; subscriptionPerMinute: number;
+  logLevel: string; logRetentionDays: number; dietoExpressEndpoint: string; dietoExpressApiKey: string | null;
+}
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -258,6 +271,18 @@ export class AdminApi {
 
   testPlayBilling(): Promise<{ ok: boolean; message: string }> {
     return firstValueFrom(this.http.post<{ ok: boolean; message: string }>(`${API}/settings/play-billing/test`, {}));
+  }
+
+  getOperations(): Promise<OperationsView> {
+    return firstValueFrom(this.http.get<OperationsView>(`${API}/settings/operations`));
+  }
+
+  saveOperations(input: OperationsInput): Promise<OperationsView> {
+    return firstValueFrom(this.http.put<OperationsView>(`${API}/settings/operations`, input));
+  }
+
+  testDietoExpress(endpoint: string): Promise<{ ok: boolean; message: string }> {
+    return firstValueFrom(this.http.post<{ ok: boolean; message: string }>(`${API}/settings/operations/test/dietoexpress`, { endpoint }));
   }
 
   sendLibraryToDietoExpress(): Promise<TransferResult> {

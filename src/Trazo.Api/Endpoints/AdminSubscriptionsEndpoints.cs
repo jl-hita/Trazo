@@ -29,9 +29,12 @@ public static class AdminSubscriptionsEndpoints
             .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
         access.MapGet("", async (IRuntimeSettings s, CancellationToken ct) =>
             Results.Ok(new { subscriptionsEnforced = await s.GetSubscriptionsEnforcedAsync(ct) }));
-        access.MapPut("", async (AccessSettingsRequest r, ISettingsWriter w, CancellationToken ct) =>
+        access.MapPut("", async (AccessSettingsRequest r, ISettingsWriter w, System.Security.Claims.ClaimsPrincipal principal,
+            ILoggerFactory loggerFactory, CancellationToken ct) =>
         {
             await w.SetSubscriptionsEnforcedAsync(r.SubscriptionsEnforced, ct);
+            loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
+                "Superadmin {Actor} set subscriptions required to {Enforced}.", OperationsSettingsEndpoints.Actor(principal), r.SubscriptionsEnforced);
             return Results.Ok(new { subscriptionsEnforced = r.SubscriptionsEnforced });
         });
         settings.MapPost("/test", TestConnectionAsync).RequireRateLimiting(SetupEndpoints.SetupTestPolicy);
@@ -111,12 +114,18 @@ public static class AdminSubscriptionsEndpoints
         return Results.Ok(await BuildDetailAsync(db, id, clock.GetUtcNow(), ct));
     }
 
-    private static async Task<IResult> SaveSettingsAsync(PlayBillingSettingsRequest request, ISettingsWriter writer, CancellationToken ct)
+    private static async Task<IResult> SaveSettingsAsync(
+        PlayBillingSettingsRequest request, ISettingsWriter writer, System.Security.Claims.ClaimsPrincipal principal,
+        ILoggerFactory loggerFactory, CancellationToken ct)
     {
         var errors = await writer.UpdatePlayBillingAsync(new PlayBillingInput(
             request.PackageName?.Trim() ?? "", request.ServiceAccountJson, request.RtdnSecret,
             request.RtdnAudience, request.RtdnServiceAccountEmail), ct);
-        return errors.Count > 0 ? Results.ValidationProblem(errors) : Results.Ok(new { saved = true });
+        if (errors.Count > 0) return Results.ValidationProblem(errors);
+        // Audit trail without values: the key and the secret are never written to the log.
+        loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
+            "Superadmin {Actor} updated the Google Play Billing settings.", OperationsSettingsEndpoints.Actor(principal));
+        return Results.Ok(new { saved = true });
     }
 
     private static async Task<IResult> TestConnectionAsync(IPlayBillingClient play, CancellationToken ct)

@@ -26,18 +26,17 @@ public static class AdminLibraryTransferEndpoints
     }
 
     private static async Task<IResult> SendAsync(
-        ExerciseLibraryExporter exporter, IHttpClientFactory httpClientFactory, IConfiguration configuration,
+        ExerciseLibraryExporter exporter, IHttpClientFactory httpClientFactory, Trazo.Infrastructure.Settings.IRuntimeSettings runtimeSettings,
         ClaimsPrincipal principal, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
     {
         var logger = loggerFactory.CreateLogger("Trazo.Admin");
-        var endpoint = configuration["DietoExpressTransfer:Endpoint"];
-        var key = configuration["DietoExpressImport:ApiKey"];
-        if (!Uri.TryCreate(endpoint, UriKind.Absolute, out var target) ||
-            !(target.Scheme == Uri.UriSchemeHttps || (target.Scheme == Uri.UriSchemeHttp && target.IsLoopback)) ||
-            string.IsNullOrWhiteSpace(key))
+        // Database values (Settings page) win over DietoExpressTransfer__Endpoint / DietoExpressImport__ApiKey.
+        var config = await runtimeSettings.GetDietoExpressAsync(cancellationToken);
+        var key = config.ApiKey;
+        if (!Uri.TryCreate(config.Endpoint, UriKind.Absolute, out var target) || string.IsNullOrWhiteSpace(key))
             return Results.Json(new
             {
-                error = "The transfer to DietoExpress is not configured. Set DietoExpressTransfer:Endpoint and DietoExpressImport:ApiKey on the server."
+                error = "The transfer to DietoExpress is not configured. Set the DietoExpress destination and key in Settings (or DietoExpressTransfer__Endpoint and DietoExpressImport__ApiKey on the server)."
             }, statusCode: StatusCodes.Status503ServiceUnavailable);
 
         var path = Path.Combine(Path.GetTempPath(), $"trazo-dietoexpress-{Guid.NewGuid():N}.zip");
@@ -49,7 +48,7 @@ public static class AdminLibraryTransferEndpoints
             if (exported.ExerciseCount == 0)
                 return Results.Conflict(new { error = "There are no exercises created in TRAZO to send.", skipped = exported.Skipped });
 
-            using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(target, ImportPath));
+            using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(target.AbsoluteUri.TrimEnd('/') + "/" + ImportPath));
             request.Headers.Add(KeyHeader, key);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             request.Content = new StreamContent(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 128 * 1024, FileOptions.Asynchronous));

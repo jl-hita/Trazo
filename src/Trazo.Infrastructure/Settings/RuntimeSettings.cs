@@ -1,6 +1,7 @@
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Trazo.Domain.Settings;
 using Trazo.Infrastructure.Persistence;
 
@@ -19,11 +20,61 @@ public interface IRuntimeSettings
     Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default);
     Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default);
     Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default);
+    /// <summary>Operational settings: a valid database value, else the environment, else the default. Invalid values are skipped.</summary>
+    Task<OperationalConfig> GetOperationalAsync(CancellationToken ct = default, Action<string, string>? onInvalid = null);
+    Task<DietoExpressConfig> GetDietoExpressAsync(CancellationToken ct = default);
+    Task<OperationsView> GetOperationsViewAsync(CancellationToken ct = default);
 }
 
-public sealed class RuntimeSettings(TrazoDbContext db, IConfiguration configuration, ISecretProtector protector)
+public sealed class RuntimeSettings(
+    TrazoDbContext db, IConfiguration configuration, ISecretProtector protector, ILogger<RuntimeSettings>? logger = null)
     : IRuntimeSettings
 {
+    public async Task<OperationalConfig> GetOperationalAsync(CancellationToken ct = default, Action<string, string>? onInvalid = null)
+    {
+        var rows = await LoadAsync(ct);
+        return OperationalResolver.Build(key => Stored(rows, key), key => FromEnvironment(key), onInvalid ?? LogInvalid);
+    }
+
+    public async Task<DietoExpressConfig> GetDietoExpressAsync(CancellationToken ct = default)
+    {
+        var rows = await LoadAsync(ct);
+        return BuildDietoExpress(rows);
+    }
+
+    public async Task<OperationsView> GetOperationsViewAsync(CancellationToken ct = default)
+    {
+        var rows = await LoadAsync(ct);
+        var ops = OperationalResolver.Build(key => Stored(rows, key), key => FromEnvironment(key), LogInvalid);
+        var dieto = BuildDietoExpress(rows);
+        var source = !string.IsNullOrWhiteSpace(Stored(rows, SettingKeys.DietoExpressApiKey)) ? "database"
+            : !string.IsNullOrWhiteSpace(FromEnvironment(SettingKeys.DietoExpressApiKey)) ? "environment" : "none";
+        return new OperationsView(
+            OperationalResolver.EnvironmentOrigins(configuration), ops.AdditionalCorsOrigins,
+            ops.SetupPerMinute, ops.SetupTestPerMinute, ops.SubscriptionPerMinute, ops.LogLevel, ops.LogRetentionDays,
+            dieto.Endpoint, !string.IsNullOrWhiteSpace(dieto.ApiKey), source);
+    }
+
+    private DietoExpressConfig BuildDietoExpress(Dictionary<string, AppSetting> rows)
+    {
+        var endpoint = OperationalResolver.Resolve(SettingKeys.DietoExpressEndpoint, key => Stored(rows, key), key => FromEnvironment(key),
+            OperationalValidator.TryParseEndpoint, "", LogInvalid);
+        return new DietoExpressConfig(endpoint, Get(rows, SettingKeys.DietoExpressApiKey));
+    }
+
+    private void LogInvalid(string key, string source) =>
+        logger?.LogWarning("The {Source} value of setting {Key} is invalid and was ignored.", source, key);
+
+    private string? FromEnvironment(string key) =>
+        ConfigurationBaseline.Get(configuration, key) is { Length: > 0 } value ? value : null;
+
+    private string? Stored(Dictionary<string, AppSetting> rows, string key)
+    {
+        if (!rows.TryGetValue(key, out var row)) return null;
+        var value = row.IsSecret ? protector.Unprotect(row.Value) : row.Value;
+        return string.IsNullOrWhiteSpace(value) ? null : value;
+    }
+
     public async Task<GoogleConfig> GetGoogleAsync(CancellationToken ct = default)
     {
         var rows = await LoadAsync(ct);
@@ -74,13 +125,5 @@ public sealed class RuntimeSettings(TrazoDbContext db, IConfiguration configurat
     private async Task<Dictionary<string, AppSetting>> LoadAsync(CancellationToken ct) =>
         await db.AppSettings.AsNoTracking().ToDictionaryAsync(x => x.Key, ct);
 
-    private string? Get(Dictionary<string, AppSetting> rows, string key)
-    {
-        if (rows.TryGetValue(key, out var row))
-        {
-            var value = row.IsSecret ? protector.Unprotect(row.Value) : row.Value;
-            if (!string.IsNullOrWhiteSpace(value)) return value;
-        }
-        return configuration[key] is { Length: > 0 } fallback ? fallback : null;
-    }
+    private string? Get(Dictionary<string, AppSetting> rows, string key) => Stored(rows, key) ?? FromEnvironment(key);
 }
