@@ -109,6 +109,34 @@ export interface LogFilters {
   levels: LogLevelGroup[]; from: string | null; to: string | null; q: string; cursor: string | null; pageSize: number;
 }
 
+export type SubscriptionStatusName =
+  'pending' | 'trial' | 'active' | 'grace_period' | 'on_hold' | 'canceled' | 'expired' | 'revoked';
+
+export interface AdminSubscriptionSummary {
+  id: string; userId: string; email: string; displayName: string; productId: string; status: SubscriptionStatusName;
+  hasAccess: boolean; startedAt: string; expiresAt: string; autoRenewing: boolean; source: string; updatedAt: string;
+}
+
+export interface AdminSubscriptionDetail {
+  subscription: AdminSubscriptionSummary; storeState: string | null; latestOrderId: string | null;
+  acknowledgedAt: string | null; isTestPurchase: boolean; createdAt: string; purchaseTokenFingerprint: string;
+}
+
+export interface SubscriptionFilters {
+  q: string; status: string; source: string; expiresFrom: string; expiresTo: string; sort: string; page: number; pageSize: number;
+}
+
+export interface PlayBillingView {
+  packageName: string; serviceAccountSet: boolean; serviceAccountEmail: string | null; rtdnSecretSet: boolean;
+  rtdnAudience: string | null; rtdnServiceAccountEmail: string | null; configured: boolean; rtdnConfigured: boolean;
+}
+
+/** Null secrets keep the stored value; an empty string clears it. */
+export interface PlayBillingInput {
+  packageName: string; serviceAccountJson: string | null; rtdnSecret: string | null;
+  rtdnAudience: string; rtdnServiceAccountEmail: string;
+}
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -191,6 +219,37 @@ export class AdminApi {
 
   deleteExerciseImage(id: string, slot: number): Promise<AdminExerciseDetail> {
     return firstValueFrom(this.http.delete<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/images/${slot}`));
+  }
+
+  listSubscriptions(filters: SubscriptionFilters): Promise<Page<AdminSubscriptionSummary>> {
+    let params = new HttpParams().set('page', filters.page).set('pageSize', filters.pageSize);
+    if (filters.q.trim()) params = params.set('q', filters.q.trim());
+    if (filters.status) params = params.set('status', filters.status);
+    if (filters.source) params = params.set('source', filters.source);
+    if (filters.expiresFrom) params = params.set('expiresFrom', new Date(filters.expiresFrom + 'T00:00:00').toISOString());
+    if (filters.expiresTo) params = params.set('expiresTo', new Date(filters.expiresTo + 'T23:59:59').toISOString());
+    if (filters.sort) params = params.set('sort', filters.sort);
+    return firstValueFrom(this.http.get<Page<AdminSubscriptionSummary>>(`${API}/subscriptions`, { params }));
+  }
+
+  getSubscription(id: string): Promise<AdminSubscriptionDetail> {
+    return firstValueFrom(this.http.get<AdminSubscriptionDetail>(`${API}/subscriptions/${id}`));
+  }
+
+  refreshSubscription(id: string): Promise<AdminSubscriptionDetail> {
+    return firstValueFrom(this.http.post<AdminSubscriptionDetail>(`${API}/subscriptions/${id}/refresh`, {}));
+  }
+
+  getPlayBilling(): Promise<PlayBillingView> {
+    return firstValueFrom(this.http.get<PlayBillingView>(`${API}/settings/play-billing`));
+  }
+
+  savePlayBilling(input: PlayBillingInput): Promise<{ saved: boolean }> {
+    return firstValueFrom(this.http.put<{ saved: boolean }>(`${API}/settings/play-billing`, input));
+  }
+
+  testPlayBilling(): Promise<{ ok: boolean; message: string }> {
+    return firstValueFrom(this.http.post<{ ok: boolean; message: string }>(`${API}/settings/play-billing/test`, {}));
   }
 
   sendLibraryToDietoExpress(): Promise<TransferResult> {

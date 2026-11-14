@@ -58,7 +58,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
         modelBuilder.Entity("Trazo.Domain.Settings.AppSetting", b =>
         {
             b.Property<string>("Key").HasMaxLength(100).HasColumnType("character varying(100)");
-            b.Property<string>("Value").IsRequired().HasMaxLength(4000).HasColumnType("character varying(4000)");
+            b.Property<string>("Value").IsRequired().HasMaxLength(16000).HasColumnType("character varying(16000)");
             b.Property<bool>("IsSecret").HasColumnType("boolean");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Key");
@@ -125,6 +125,36 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
                 .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
         modelBuilder.Entity("Trazo.Domain.Identity.AuthRecoveryCode", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Billing.Subscription", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("Source").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("ProductId").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("PurchaseTokenHash").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<string>("ProtectedPurchaseToken").IsRequired().HasMaxLength(4000).HasColumnType("character varying(4000)");
+            b.Property<string>("Status").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("StoreState").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<string>("LatestOrderId").HasMaxLength(100).HasColumnType("character varying(100)");
+            b.Property<DateTimeOffset>("StartedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("ExpiresAt").HasColumnType("timestamp with time zone");
+            b.Property<bool>("AutoRenewing").HasColumnType("boolean");
+            b.Property<DateTimeOffset?>("AcknowledgedAt").HasColumnType("timestamp with time zone");
+            b.Property<bool>("IsTestPurchase").HasColumnType("boolean");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("PurchaseTokenHash").IsUnique();
+            b.HasIndex("UserId");
+            b.HasIndex("Status", "ExpiresAt");
+            b.ToTable("subscriptions");
+        });
+        modelBuilder.Entity("Trazo.Domain.Billing.Subscription", b =>
         {
             b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
                 .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();

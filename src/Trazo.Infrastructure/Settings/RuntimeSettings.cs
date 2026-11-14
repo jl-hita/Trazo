@@ -15,6 +15,8 @@ public interface IRuntimeSettings
     Task<GoogleConfig> GetGoogleAsync(CancellationToken ct = default);
     Task<EmailConfig> GetEmailAsync(CancellationToken ct = default);
     Task<SettingsView> GetViewAsync(CancellationToken ct = default);
+    Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default);
+    Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default);
 }
 
 public sealed class RuntimeSettings(TrazoDbContext db, IConfiguration configuration, ISecretProtector protector)
@@ -35,6 +37,23 @@ public sealed class RuntimeSettings(TrazoDbContext db, IConfiguration configurat
         var e = BuildEmail(rows);
         return new SettingsView(Get(rows, SettingKeys.GoogleClientId) ?? "", e.Host, e.Port, e.EnableSsl,
             e.Username, !string.IsNullOrEmpty(e.Password), e.From, e.ActionBaseUrl);
+    }
+
+    public async Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default)
+    {
+        var rows = await LoadAsync(ct);
+        return new PlayBillingConfig(
+            Get(rows, SettingKeys.PlayPackageName) ?? "", Get(rows, SettingKeys.PlayServiceAccountJson),
+            Get(rows, SettingKeys.PlayRtdnSecret), Get(rows, SettingKeys.PlayRtdnAudience),
+            Get(rows, SettingKeys.PlayRtdnServiceAccountEmail));
+    }
+
+    public async Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default)
+    {
+        var c = await GetPlayBillingAsync(ct);
+        return new PlayBillingView(c.PackageName, !string.IsNullOrWhiteSpace(c.ServiceAccountJson),
+            SettingsValidator.ServiceAccountEmail(c.ServiceAccountJson), !string.IsNullOrWhiteSpace(c.RtdnSecret),
+            c.RtdnAudience, c.RtdnServiceAccountEmail, c.IsComplete, c.IsComplete && c.RtdnAuthConfigured);
     }
 
     private EmailConfig BuildEmail(Dictionary<string, AppSetting> rows)

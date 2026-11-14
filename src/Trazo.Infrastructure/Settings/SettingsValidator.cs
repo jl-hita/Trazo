@@ -42,6 +42,47 @@ public static class SettingsValidator
         return errors;
     }
 
+    public const int MaxServiceAccountJsonLength = 8000;
+
+    /// <summary>The client_email of a Google service-account key, or null when the JSON is not one.</summary>
+    public static string? ServiceAccountEmail(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+            if (root.ValueKind != System.Text.Json.JsonValueKind.Object ||
+                !root.TryGetProperty("type", out var type) || type.GetString() != "service_account" ||
+                !root.TryGetProperty("client_email", out var email) || email.ValueKind != System.Text.Json.JsonValueKind.String ||
+                !root.TryGetProperty("private_key", out var key) || string.IsNullOrWhiteSpace(key.GetString()))
+                return null;
+            return email.GetString();
+        }
+        catch (System.Text.Json.JsonException) { return null; }
+    }
+
+    public static Dictionary<string, string[]> ValidatePlayBilling(PlayBillingInput? input)
+    {
+        var errors = new Dictionary<string, string[]>();
+        if (input is null) { errors["playBilling"] = ["Required."]; return errors; }
+        var package = input.PackageName?.Trim();
+        // Android application IDs: dot-separated segments of letters, digits and underscores.
+        if (string.IsNullOrEmpty(package) || package.Length > 200 ||
+            !System.Text.RegularExpressions.Regex.IsMatch(package, @"^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$"))
+            errors["packageName"] = ["Expected an Android package name such as com.trazo.android."];
+        if (input.ServiceAccountJson is { Length: > 0 } json &&
+            (json.Length > MaxServiceAccountJsonLength || ServiceAccountEmail(json) is null))
+            errors["serviceAccountJson"] = ["Paste the full JSON key of a Google service account."];
+        if (input.RtdnSecret is { Length: > 200 }) errors["rtdnSecret"] = ["Too long."];
+        if (input.RtdnSecret is { Length: > 0 and < 16 }) errors["rtdnSecret"] = ["Use at least 16 characters."];
+        if (input.RtdnAudience is { Length: > 500 }) errors["rtdnAudience"] = ["Too long."];
+        if (input.RtdnServiceAccountEmail is { Length: > 0 } pusher &&
+            (pusher.Length > 320 || !new EmailAddressAttribute().IsValid(pusher.Trim())))
+            errors["rtdnServiceAccountEmail"] = ["A valid service-account email is required."];
+        return errors;
+    }
+
     public static Dictionary<string, string[]> ValidateAdmin(AdminAccountInput? admin)
     {
         var errors = new Dictionary<string, string[]>();

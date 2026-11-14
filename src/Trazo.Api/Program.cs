@@ -42,6 +42,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services.AddDatabaseLogging(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
+builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api.Billing.GooglePubSubTokenValidator>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
@@ -111,6 +112,10 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    options.AddPolicy(SubscriptionEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -195,6 +200,8 @@ app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
 app.MapAdminLogsEndpoints();
 app.MapAccountEmailEndpoints();
+app.MapSubscriptionEndpoints();
+app.MapAdminSubscriptionsEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,
