@@ -69,7 +69,8 @@ public sealed record AdaptationReport(
     IReadOnlyList<ExerciseAdviceView> Exercises, string SessionAction, string SessionExplanation,
     IReadOnlyList<AppliedAdaptationView> Applied, IReadOnlyList<string> Notes);
 
-public sealed record LogResult(SessionView Session, AdaptationReport Adaptation);
+/// <summary><c>Replayed</c> is true when the session had already been logged with exactly the same data: the saved result is returned again.</summary>
+public sealed record LogResult(SessionView Session, AdaptationReport Adaptation, bool Replayed = false);
 
 public sealed record AlternativeView(
     string ExerciseId, string Name, string MovementPattern, IReadOnlyList<string> PrimaryMuscles,
@@ -84,7 +85,11 @@ public sealed record PlanOptions(
     IReadOnlyList<string> Goals, IReadOnlyList<string> Experience, IReadOnlyList<string> Splits,
     IReadOnlyList<string> Days, IReadOnlyList<string> Limitations, IReadOnlyList<string> Equipment,
     int MinimumTrainingDays, int MaximumTrainingDays, int MinimumSessionMinutes, int MaximumSessionMinutes,
-    int MinimumTotalWeeks, int MaximumTotalWeeks, int DefaultTotalWeeks);
+    int MinimumTotalWeeks, int MaximumTotalWeeks, int DefaultTotalWeeks,
+    IReadOnlyList<DayOption> DayOptions, string WeekStartsOn, string DefaultTimeZone);
+
+/// <summary>A day of the week with a stable id (the English name used everywhere in the API), ISO number (Monday = 1) and Spanish labels.</summary>
+public sealed record DayOption(string Id, int IsoNumber, string Label, string ShortLabel);
 
 // Requests.
 

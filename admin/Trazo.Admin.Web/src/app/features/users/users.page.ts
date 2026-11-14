@@ -50,6 +50,7 @@ const ROLES = ['user', 'admin', 'superadmin'];
     .user-panel .ok { color: #7fd3a0; font-size: 12px; margin: 0; }
     .user-panel .err, .users-error { color: #f0a3a3; font-size: 12px; margin: 0; }
     .user-panel .hint { color: #7f8da0; font-size: 11px; margin: 0; }
+    .user-panel .danger-zone { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid #5a2a2a; }
     .user-panel .empty { color: #8291a6; font-size: 13px; text-align: center; padding: 18px 0; }
     @media (max-width: 1280px) { .users-layout { grid-template-columns: 1fr; } .user-panel { position: static; } }
   `],
@@ -171,6 +172,14 @@ const ROLES = ['user', 'admin', 'superadmin'];
             }
           </div>
 
+          @if (!isSelf()) {
+            <div class="danger-zone">
+              <p class="hint">Delete account: permanently erases the account and all its data (plans, logs, subscriptions). It cannot be undone. Type the email to confirm.</p>
+              <input type="email" aria-label="Type the account email to confirm deletion" [ngModel]="deleteConfirm()" (ngModelChange)="deleteConfirm.set($event)" placeholder="{{ u.email }}">
+              <button type="button" class="danger" (click)="deleteAccount()" [disabled]="busy() || deleteConfirm().trim().toLowerCase() !== u.email.toLowerCase()">Delete account permanently</button>
+            </div>
+          }
+
           @if (message()) { <p class="ok" role="status">{{ message() }}</p> }
           @if (panelError()) { <p class="err" role="alert">{{ panelError() }}</p> }
         } @else {
@@ -205,6 +214,7 @@ export class UsersPageComponent {
   protected readonly message = signal('');
   protected readonly panelError = signal('');
   protected readonly confirming = signal<UserAction | null>(null);
+  protected readonly deleteConfirm = signal('');
 
   protected readonly isSelf = computed(() => this.selected()?.id === this.auth.user()?.id);
   protected readonly dirty = computed(() => {
@@ -264,6 +274,24 @@ export class UsersPageComponent {
     await this.perform(() => this.api.userAction(u.id, action), messages[action]);
   }
 
+  protected async deleteAccount(): Promise<void> {
+    const u = this.selected();
+    if (!u) return;
+    this.busy.set(true);
+    this.panelError.set('');
+    try {
+      const result = await this.api.deleteUser(u.id, this.deleteConfirm().trim());
+      this.selected.set(null);
+      this.deleteConfirm.set('');
+      this.message.set(result.playSubscriptionNotCancelled ? 'Account deleted. Its Google Play subscription is NOT cancelled.' : 'Account deleted.');
+      await this.load();
+    } catch (e) {
+      this.panelError.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
   protected methods(u: AdminUserDetail): string {
     const m = [u.hasPassword ? 'password' : '', u.hasGoogle ? 'Google' : ''].filter(Boolean);
     return m.length ? m.join(' + ') : 'none';
@@ -290,6 +318,7 @@ export class UsersPageComponent {
 
   private show(detail: AdminUserDetail): void {
     this.selected.set(detail);
+    this.deleteConfirm.set('');
     this.editName.set(detail.displayName);
     this.editRole.set(detail.role);
   }

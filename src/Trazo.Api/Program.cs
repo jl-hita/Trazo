@@ -50,6 +50,9 @@ builder.Services.AddSingleton<AuthTokenService>();
 builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api.Billing.GooglePubSubTokenValidator>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddScoped<IGoogleIdTokenValidator, GoogleIdTokenValidator>();
+builder.Services.AddScoped<Reauthenticator>();
+builder.Services.AddSingleton<DeletionRequestThrottle>();
 builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
 builder.Services.AddHttpClient(OperationsSettingsEndpoints.TestClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddHttpClient(AdminLibraryTransferEndpoints.ClientName, c => c.Timeout = TimeSpan.FromMinutes(5));
@@ -139,6 +142,15 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    options.AddPolicy(AccountEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    // Public deletion-request form: per IP. (The per-email limit lives in DeletionRequestThrottle.)
+    options.AddPolicy(AccountEndpoints.DeletionRequestPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            "del|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -220,6 +232,7 @@ app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
 app.MapAdminLogsEndpoints();
 app.MapAccountEmailEndpoints();
+app.MapAccountEndpoints();
 app.MapSubscriptionEndpoints();
 app.MapPlansEndpoints();
 app.MapAdminSubscriptionsEndpoints();

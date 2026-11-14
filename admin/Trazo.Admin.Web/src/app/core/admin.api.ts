@@ -183,6 +183,10 @@ export class AdminApi {
     return firstValueFrom(this.http.patch<AdminUserDetail>(`${API}/users/${id}`, changes));
   }
 
+  deleteUser(id: string, confirmEmail: string): Promise<{ deleted: boolean; playSubscriptionNotCancelled: boolean }> {
+    return firstValueFrom(this.http.delete<{ deleted: boolean; playSubscriptionNotCancelled: boolean }>(`${API}/users/${id}`, { body: { confirmEmail } }));
+  }
+
   userAction(id: string, action: UserAction): Promise<AdminUserDetail> {
     return firstValueFrom(this.http.post<AdminUserDetail>(`${API}/users/${id}/${action}`, {}));
   }

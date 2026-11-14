@@ -16,7 +16,8 @@ public sealed record PlanProfileInput(
     string[]? Limitations,
     string? Split,
     bool? IncludeDeloadPhases,
-    int? DeloadEveryTrainingWeeks);
+    int? DeloadEveryTrainingWeeks,
+    string? TimeZone = null);
 
 /// <summary>A validated, typed profile the engine can use.</summary>
 public sealed record PlanProfile(
