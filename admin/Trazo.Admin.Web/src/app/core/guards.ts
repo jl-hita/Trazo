@@ -35,7 +35,7 @@ export const adminGuard: CanActivateFn = async () => {
 
 export const loginGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  return auth.user() && auth.isSuperadmin ? inject(Router).createUrlTree(['/']) : true;
+  return auth.user() && auth.isSuperadmin ? inject(Router).createUrlTree(['/overview']) : true;
 };
 
 /** Sections that hold personal data (the waitlist) are for the superadmin role only. */

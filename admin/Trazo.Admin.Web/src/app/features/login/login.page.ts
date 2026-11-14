@@ -59,7 +59,7 @@ export class LoginPageComponent {
         this.error.set('This console is only available to superadmins.');
         return;
       }
-      await this.router.navigateByUrl('/');
+      await this.router.navigateByUrl('/overview');
     } catch (e) {
       const status = (e as { status?: number }).status;
       this.error.set(status === 429 ? 'Too many attempts. Wait a minute.'

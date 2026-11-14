@@ -2,6 +2,18 @@ import { Routes } from '@angular/router';
 import { adminGuard, loginGuard, setupGuard, setupPageGuard, superadminGuard } from './core/guards';
 
 export const routes: Routes = [
+  // Landing pública (lista de espera).
+  {
+    path: '',
+    pathMatch: 'full',
+    data: { lang: 'es' },
+    loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
+  },
+  {
+    path: 'en',
+    data: { lang: 'en' },
+    loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
+  },
   {
     path: 'setup',
     canActivate: [setupPageGuard],
@@ -17,7 +29,7 @@ export const routes: Routes = [
     canActivate: [setupGuard, adminGuard],
     loadComponent: () => import('./features/shell/shell.component').then(m => m.ShellComponent),
     children: [
-      { path: '', pathMatch: 'full', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
+      { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
       { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
       { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
       { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
