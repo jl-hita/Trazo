@@ -9,6 +9,12 @@ public enum TrainingPlanStatus
     Archived
 }
 
+public enum TrainingPlanOrigin
+{
+    Manual,
+    Generated
+}
+
 public enum PlannedSessionStatus
 {
     Planned,
@@ -37,6 +43,8 @@ public sealed class TrainingPlan
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public TrainingPlanStatus Status { get; set; } = TrainingPlanStatus.Active;
+    /// <summary>Immutable provenance: editing a generated plan never turns it into a manual plan.</summary>
+    public TrainingPlanOrigin Origin { get; set; } = TrainingPlanOrigin.Generated;
     public required string Goal { get; set; }
     public required string Experience { get; set; }
     public required string Split { get; set; }

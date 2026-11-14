@@ -152,15 +152,15 @@ errors list the offending fields. All routes are in the OpenAPI document with th
 
 | Method | Route | Purpose | Success | Errors |
 |---|---|---|---|---|
-| GET | `/options` | Allowed goals, levels, splits, days, limitation areas, equipment tokens and numeric limits | 200 | 401, 402 |
-| POST | `/` | Create the plan from a profile (macrocycle + first block) | 201 `PlanView` | 400 fields, 401, 402, 409, 422 |
+| GET | `/options` | Allowed goals, levels, splits, days, limitation areas, equipment tokens and numeric limits | 200 | 401 |
+| POST | `/` | Create the plan from a profile (macrocycle + first block). Generated plans need Premium | 201 `PlanView` | 400 fields, 401, 402, 409, 422 |
 | GET | `/current` | Profile and macrocycle phases, no sessions | 200 `PlanView` | 404 |
-| GET | `/current/week` | Sessions of the current week with prescription (generates the block when first needed) | 200 `WeekView` | 404 |
+| GET | `/current/week` | Sessions of the current week with prescription (generates the block when first needed). `locked` is true for a generated plan without Premium: it is read-only and no block is generated | 200 `WeekView` | 404 |
 | GET | `/current/history?take=30` | Logged sessions, newest first (1-100) | 200 | 404 |
 | POST | `/current/archive` | Close the active plan | 204 | 404 |
-| POST | `/current/sessions/{id}/log` | Record a session and adapt upcoming ones | 200 `LogResult` | 400, 404, 409 |
-| GET | `/current/sessions/{id}/exercises/{exerciseId}/alternatives?limit=5` | Replacement options (1-10) | 200 | 404 |
-| POST | `/current/sessions/{id}/exercises/{exerciseId}/swap` | Replace one exercise (optionally in the rest of the block) | 200 `SessionView` | 400, 404 |
+| POST | `/current/sessions/{id}/log` | Record a session; with Premium it also adapts the upcoming ones (`adaptation.locked` is true otherwise). Generated plans without Premium answer 402 `premium_required` | 200 `LogResult` | 400, 402, 404, 409 |
+| GET | `/current/sessions/{id}/exercises/{exerciseId}/alternatives?limit=5` | Replacement options (1-10) | 200 | 402, 404 |
+| POST | `/current/sessions/{id}/exercises/{exerciseId}/swap` | Replace one exercise (optionally in the rest of the block) | 200 `SessionView` | 400, 402, 404 |
 
 ### Create
 
@@ -265,7 +265,7 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 - `Planning/PlansApiTests` - the API end to end on SQLite: authentication, no plan, creation, only the current week is served
   (and no route returns more), validation, unsatisfiable profile, one active plan, ownership across users, logging,
   load carried into the next session, deload and its audit, pain, invalid logs, alternatives and swaps, and the
-  subscription gate (402 without access, admins exempt).
+  Premium rules (generated plans and adaptation need Premium, manual plans are free, admins exempt).
 - `ModelSnapshotTests` guards the migration against the EF model.
 
 ## 8. Known limits and next steps

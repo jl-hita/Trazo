@@ -65,6 +65,11 @@ token); the API reports the one that grants access.
 var plans = app.MapGroup("/api/v1/plans").RequireActiveSubscription();
 ```
 
+> **Plans are not gated as a group.** Free users can use manual plans; only creating a generated plan carries
+> `RequireActiveSubscription()`. Whether a plan can be used depends on its `origin` (`Manual` | `Generated`): a generated
+> plan without Premium is read-only (`locked` on the week, `402 premium_required` on log, swap and alternatives), and
+> automatic adaptation is only applied with Premium (`adaptation.locked`). Administrators always count as Premium.
+
 It answers `401` without a user, `402 { "error": "subscription_required" }` without access, and lets
 `admin` and `superadmin` through. Administrators therefore reach the planning-preview endpoints under
 `/api/v1/admin/...` as before.

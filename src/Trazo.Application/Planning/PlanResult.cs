@@ -12,7 +12,9 @@ public enum PlanFailure
     InvalidRequest,
     GenerationFailed,
     ExerciseNotInSession,
-    NotAllowed
+    NotAllowed,
+    /// <summary>The plan was generated automatically and the account has no Premium access.</summary>
+    PremiumRequired
 }
 
 public sealed record PlanResult<T>(
