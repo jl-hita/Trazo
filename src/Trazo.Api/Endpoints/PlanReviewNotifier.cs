@@ -1,0 +1,74 @@
+using Microsoft.EntityFrameworkCore;
+using Trazo.Api.Security;
+using Trazo.Domain.Planning;
+using Trazo.Infrastructure.Persistence;
+
+namespace Trazo.Api.Endpoints;
+
+/// <summary>
+/// Email notices for the review conversations. They are sent in the background and never carry the text of a message (email is
+/// not a safe place for health information): they only say that there is something to read. A failure is logged and ignored,
+/// because everything is also in the console and the app.
+/// </summary>
+internal static class PlanReviewNotifier
+{
+    public static Task NotifyStaffAsync(IServiceScopeFactory scopes, ILoggerFactory loggerFactory, Guid requestId, Guid userId, bool isNew)
+    {
+        var logger = loggerFactory.CreateLogger("Trazo.PlanReview");
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                using var scope = scopes.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+                var request = await db.PlanReviewRequests.AsNoTracking().FirstOrDefaultAsync(r => r.Id == requestId);
+                if (request is null) return;
+                var userName = await db.Users.AsNoTracking().Where(u => u.Id == userId).Select(u => u.DisplayName).FirstOrDefaultAsync() ?? "Un usuario";
+                var staff = db.Users.AsNoTracking().Where(u => (u.Role == "admin" || u.Role == "superadmin") && u.DisabledAt == null && u.EmailVerifiedAt != null);
+                // Somebody has it: tell only them. Otherwise it is for whoever wants to take it.
+                var recipients = request.Status == PlanReviewStatus.InProgress && request.AssignedToUserId is { } assigned
+                    ? await staff.Where(u => u.Id == assigned).Select(u => u.Email).ToListAsync()
+                    : await staff.Select(u => u.Email).ToListAsync();
+                var email = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+                var subject = isNew ? "TRAZO: nueva petición de revisión de rutina" : "TRAZO: nuevo mensaje en una revisión de rutina";
+                var text = isNew
+                    ? $"{userName} ha pedido que se revise su rutina a mano.\n\nÁbrela en la consola de administración (Plan reviews) para leer el mensaje y tomarla."
+                    : $"{userName} ha escrito en su petición de revisión.\n\nLéelo en la consola de administración (Plan reviews).";
+                foreach (var to in recipients) await email.SendAsync(to, subject, text, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Could not notify the administrators of a plan review message; it is still in the console.");
+            }
+        });
+        return Task.CompletedTask;
+    }
+
+    public static Task NotifyUserAsync(IServiceScopeFactory scopes, ILoggerFactory loggerFactory, Guid userId, bool closed)
+    {
+        var logger = loggerFactory.CreateLogger("Trazo.PlanReview");
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                using var scope = scopes.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+                var to = await db.Users.AsNoTracking().Where(u => u.Id == userId && u.DisabledAt == null && u.EmailVerifiedAt != null)
+                    .Select(u => u.Email).FirstOrDefaultAsync();
+                if (to is null) return;
+                var email = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+                await email.SendAsync(to,
+                    closed ? "TRAZO: hemos terminado de revisar tu rutina" : "TRAZO: tienes un mensaje del equipo",
+                    closed
+                        ? "El equipo ha terminado la revisión manual de tu rutina. Abre la app (Cuenta → Revisión manual) para leer su respuesta."
+                        : "El equipo ha respondido a tu petición de revisión. Abre la app (Cuenta → Revisión manual) para leerlo.",
+                    CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Could not notify a user of a plan review reply; it is still in the app.");
+            }
+        });
+        return Task.CompletedTask;
+    }
+}

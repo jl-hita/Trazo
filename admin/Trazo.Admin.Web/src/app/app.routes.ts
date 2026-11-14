@@ -29,14 +29,23 @@ export const routes: Routes = [
     canActivate: [setupGuard, adminGuard],
     loadComponent: () => import('./features/shell/shell.component').then(m => m.ShellComponent),
     children: [
-      { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
-      { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
-      { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
-      { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
-      { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },
-      { path: 'logs', loadComponent: () => import('./features/logs/logs.page').then(m => m.LogsPageComponent) },
-      { path: 'waitlist', canActivate: [superadminGuard], loadComponent: () => import('./features/waitlist/waitlist.page').then(m => m.WaitlistPageComponent) },
-      { path: 'settings', loadComponent: () => import('./features/settings/settings.page').then(m => m.SettingsPageComponent) }
+      // Open to every administrator.
+      { path: 'reviews', loadComponent: () => import('./features/reviews/reviews.page').then(m => m.ReviewsPageComponent) },
+      // Superadmin only (the API refuses the rest to administrators as well).
+      {
+        path: '',
+        canActivate: [superadminGuard],
+        children: [
+          { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
+          { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
+          { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
+          { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
+          { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },
+          { path: 'logs', loadComponent: () => import('./features/logs/logs.page').then(m => m.LogsPageComponent) },
+          { path: 'waitlist', loadComponent: () => import('./features/waitlist/waitlist.page').then(m => m.WaitlistPageComponent) },
+          { path: 'settings', loadComponent: () => import('./features/settings/settings.page').then(m => m.SettingsPageComponent) }
+        ]
+      }
     ]
   },
   { path: '**', redirectTo: '' }

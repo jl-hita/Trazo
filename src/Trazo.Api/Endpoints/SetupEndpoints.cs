@@ -14,6 +14,8 @@ public static class SetupEndpoints
     public const string SetupPolicy = "setup";
     public const string SetupTestPolicy = "setup-test";
     public const string SuperadminPolicy = "superadmin";
+    /// <summary>Administrators and superadmins: the work that every administrator may do (plan reviews).</summary>
+    public const string StaffPolicy = "staff";
 
     public static IEndpointRouteBuilder MapSetupEndpoints(this IEndpointRouteBuilder endpoints)
     {

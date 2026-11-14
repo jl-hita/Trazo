@@ -112,7 +112,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddAuthorization(options =>
-    options.AddPolicy(SetupEndpoints.SuperadminPolicy, p => p.RequireRole("superadmin")));
+{
+    options.AddPolicy(SetupEndpoints.SuperadminPolicy, p => p.RequireRole("superadmin"));
+    // Work every administrator can do (plan reviews). Configuration, users, logs and support tickets stay superadmin-only.
+    options.AddPolicy(SetupEndpoints.StaffPolicy, p => p.RequireRole("admin", "superadmin"));
+});
 // Limits come from the runtime settings (database > environment > default) and are read on every request, so a
 // change applies without a restart. The limit is part of the partition key: a new limit starts a fresh window.
 // The login limiter ("auth") is deliberately fixed: it protects the sign-in itself and is not editable.
@@ -244,6 +248,7 @@ app.MapAccountEmailEndpoints();
 app.MapAccountEndpoints();
 app.MapSubscriptionEndpoints();
 app.MapPlansEndpoints();
+app.MapPlanReviewEndpoints();
 app.MapAdminSubscriptionsEndpoints();
 app.MapOperationsSettingsEndpoints();
 app.MapWaitlistEndpoints();

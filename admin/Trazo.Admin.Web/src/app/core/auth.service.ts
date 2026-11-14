@@ -21,6 +21,8 @@ export class AuthService {
 
   get accessToken(): string | null { return this.session?.accessToken ?? null; }
   get isSuperadmin(): boolean { return this.user()?.role === 'superadmin'; }
+  /** Administrators and superadmins may use the console; administrators only see the plan reviews. */
+  get isStaff(): boolean { return this.user()?.role === 'admin' || this.isSuperadmin; }
   get hasSession(): boolean { return this.session !== null; }
   private refreshing: Promise<string> | null = null;
 

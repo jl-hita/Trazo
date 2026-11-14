@@ -17,6 +17,7 @@ using Trazo.Api.Endpoints;
 using Trazo.Api.Security;
 using Trazo.Domain.Billing;
 using Trazo.Domain.Identity;
+using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Accounts;
 using Trazo.Infrastructure.Persistence;
 using Trazo.UnitTests.Planning;
@@ -171,6 +172,53 @@ public sealed class AccountApiTests : IDisposable
         sets = session.GetProperty("exercises").EnumerateArray().SelectMany(e => Enumerable.Range(1, e.GetProperty("sets").GetInt32()).Select(n => new
         { exerciseId = e.GetProperty("exerciseId").GetString(), setNumber = n, weightKg = 60m, repetitions = 8, rir = 2, completed = true })).ToArray()
     };
+
+    [Fact]
+    public async Task DeletingAUserRemovesTheirReviewConversationsAndDeletingAnAdministratorOnlyDropsTheReference()
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        var eve = await AddUserAsync("eve@example.com");
+        var bob = await AddUserAsync("bob@example.com", role: "admin");
+        var anaClient = ClientFor(ana);
+        await StartPlanAndLogAsync(anaClient);
+        await StartPlanAndLogAsync(ClientFor(eve));
+        Guid anaRequest, eveRequest;
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            var anaPlan = await db.TrainingPlans.Where(p => p.UserId == ana.Id).Select(p => p.Id).FirstAsync();
+            var evePlan = await db.TrainingPlans.Where(p => p.UserId == eve.Id).Select(p => p.Id).FirstAsync();
+            anaRequest = Guid.NewGuid();
+            eveRequest = Guid.NewGuid();
+            db.PlanReviewRequests.AddRange(
+                new PlanReviewRequest { Id = anaRequest, UserId = ana.Id, PlanId = anaPlan, Status = PlanReviewStatus.InProgress, AssignedToUserId = bob.Id, CreatedAt = Now, UpdatedAt = Now },
+                new PlanReviewRequest { Id = eveRequest, UserId = eve.Id, PlanId = evePlan, Status = PlanReviewStatus.InProgress, AssignedToUserId = bob.Id, AssignedAt = Now, CreatedAt = Now, UpdatedAt = Now });
+            db.PlanReviewMessages.AddRange(
+                new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = anaRequest, Author = PlanReviewAuthors.User, Body = "my knee hurts", CreatedAt = Now },
+                new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = anaRequest, Author = PlanReviewAuthors.Staff, AuthorUserId = bob.Id, Body = "reply", CreatedAt = Now },
+                new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = eveRequest, Author = PlanReviewAuthors.Staff, AuthorUserId = bob.Id, Body = "hello", CreatedAt = Now });
+            await db.SaveChangesAsync();
+        }
+
+        Assert.Equal(HttpStatusCode.OK, (await DeleteAsync(anaClient, new { password = Password })).StatusCode);
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            Assert.False(await db.PlanReviewRequests.AnyAsync(r => r.UserId == ana.Id));
+            Assert.False(await db.PlanReviewMessages.AnyAsync(m => m.RequestId == anaRequest));
+            Assert.True(await db.PlanReviewRequests.AnyAsync(r => r.Id == eveRequest));
+        }
+
+        Assert.Equal(HttpStatusCode.OK, (await DeleteAsync(ClientFor(bob), new { password = Password })).StatusCode);
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            var request = await db.PlanReviewRequests.SingleAsync(r => r.Id == eveRequest);
+            Assert.Equal(PlanReviewStatus.Pending, request.Status);
+            Assert.Null(request.AssignedToUserId);
+            Assert.Null((await db.PlanReviewMessages.SingleAsync(m => m.RequestId == eveRequest)).AuthorUserId);
+        }
+    }
 
     private async Task<Dictionary<string, int>> RowsOfAsync(Guid userId)
     {

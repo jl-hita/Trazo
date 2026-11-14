@@ -23,7 +23,7 @@ public static class AccountData
     {
         typeof(TrazoUser), typeof(RefreshToken), typeof(AuthChallenge), typeof(AuthRecoveryCode), typeof(EmailActionToken),
         typeof(Subscription), typeof(TrainingPlan), typeof(TrainingPlanPhase), typeof(TrainingMesocycle), typeof(PlannedSession),
-        typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation),
+        typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation), typeof(PlanReviewRequest), typeof(PlanReviewMessage),
         // Not linked to the account: matched by the account's email (the person may have joined the waitlist before registering).
         typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
@@ -130,6 +130,17 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         var plans = db.TrainingPlans.Where(p => p.UserId == userId).Select(p => p.Id);
         var rows = 0;
         // Children first. Every step deletes and then checks that nothing is left.
+        // Manual plan reviews. The user's own conversations (which may hold health information) are deleted. When the account
+        // belongs to an administrator, the conversations of other users stay: only the reference to this administrator goes.
+        var reviews = db.PlanReviewRequests.Where(r => r.UserId == userId).Select(r => r.Id);
+        await db.PlanReviewMessages.Where(m => m.AuthorUserId == userId && !reviews.Contains(m.RequestId))
+            .ExecuteUpdateAsync(u => u.SetProperty(m => m.AuthorUserId, (Guid?)null), ct);
+        await db.PlanReviewRequests.Where(r => r.AssignedToUserId == userId && r.UserId != userId && r.Status == PlanReviewStatus.InProgress)
+            .ExecuteUpdateAsync(u => u.SetProperty(r => r.Status, PlanReviewStatus.Pending), ct);
+        await db.PlanReviewRequests.Where(r => r.AssignedToUserId == userId && r.UserId != userId)
+            .ExecuteUpdateAsync(u => u.SetProperty(r => r.AssignedToUserId, (Guid?)null).SetProperty(r => r.AssignedAt, (DateTimeOffset?)null), ct);
+        rows += await StepAsync(db.PlanReviewMessages.Where(m => reviews.Contains(m.RequestId)), ct);
+        rows += await StepAsync(db.PlanReviewRequests.Where(r => r.UserId == userId), ct);
         rows += await StepAsync(db.WorkoutSetLogs.Where(s => db.WorkoutLogs.Any(l => l.Id == s.WorkoutLogId && l.UserId == userId)), ct);
         rows += await StepAsync(db.WorkoutLogs.Where(l => l.UserId == userId), ct);
         rows += await StepAsync(db.PlanAdaptations.Where(a => plans.Contains(a.PlanId)), ct);

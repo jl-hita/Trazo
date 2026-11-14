@@ -28,18 +28,18 @@ export const setupPageGuard: CanActivateFn = async () => {
 export const adminGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  if (auth.user() && auth.isSuperadmin && await auth.ensureFreshSession()) return true;
+  if (auth.user() && auth.isStaff && await auth.ensureFreshSession()) return true;
   auth.clear();
   return router.createUrlTree(['/login']);
 };
 
-export const loginGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
-  return auth.user() && auth.isSuperadmin ? inject(Router).createUrlTree(['/overview']) : true;
-};
-
-/** Sections that hold personal data (the waitlist) are for the superadmin role only. */
+/** Pages only the superadmin may see; an administrator is sent to the plan reviews. The API enforces the same rule. */
 export const superadminGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  return auth.isSuperadmin ? true : inject(Router).createUrlTree(['/']);
+  return auth.isSuperadmin ? true : inject(Router).createUrlTree(['/reviews']);
+};
+
+export const loginGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.user() && auth.isStaff ? inject(Router).createUrlTree([auth.isSuperadmin ? '/overview' : '/reviews']) : true;
 };

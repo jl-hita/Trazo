@@ -50,6 +50,7 @@ whole transaction is rolled back). All sessions end with it: refresh tokens are 
 | `workout_logs`, `workout_set_logs` | logged sessions: loads, repetitions, RIR, recovery, **pain reported, free notes** |
 | `plan_adaptations` | changes the engine made to the plan |
 | `waitlist_entries` | the landing waitlist row with the same email as the account (not linked by id; matched by the normalised email) |
+| `plan_review_requests`, `plan_review_messages` | manual plan reviews: the user's conversations (may contain health data) are deleted; when an administrator is deleted, their reviews go back to the queue and only the reference to them is cleared |
 
 A test (`EveryTableOfTheModelIsEitherDeletedWithTheAccountOrKnownNotToBePersonal`) walks the EF model and fails if a table exists that is
 neither in `AccountData.UserOwned` (deleted) nor in `AccountData.NotPersonal` (catalog, settings). Add new user tables to `AccountService` too.

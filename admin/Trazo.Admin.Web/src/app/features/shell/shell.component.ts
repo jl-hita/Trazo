@@ -27,11 +27,16 @@ export class ShellComponent {
     return s ? `Entorno ${s.environment}, versión ${s.version}${s.commit ? `, commit ${s.commit}` : ''}` : 'Versión no disponible';
   });
   protected readonly initial = computed(() => (this.auth.user()?.displayName ?? 'A').charAt(0).toUpperCase());
-  protected readonly navigation: { label: string; icon: string; link?: string }[] = [
+  /** Administrators only get the plan reviews; every other section is for the superadmin. */
+  protected get navigation(): { label: string; icon: string; link?: string }[] {
+    return this.auth.isSuperadmin ? this.allNavigation : this.allNavigation.filter(item => item.link === '/reviews');
+  }
+  private readonly allNavigation: { label: string; icon: string; link?: string }[] = [
     { label: 'Overview', icon: '◫', link: '/overview' },
     { label: 'Users', icon: '◎', link: '/users' },
     { label: 'Subscriptions', icon: '◇', link: '/subscriptions' },
     { label: 'Training library', icon: '▤', link: '/exercises' },
+    { label: 'Plan reviews', icon: '✎', link: '/reviews' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },
     { label: 'Logs', icon: '≋', link: '/logs' },
     { label: 'Waitlist', icon: '✉', link: '/waitlist' },
@@ -40,6 +45,7 @@ export class ShellComponent {
   ];
 
   constructor() {
+    if (!this.auth.isSuperadmin) return; // the system info is a superadmin route
     this.api.systemInfo().then(info => this.system.set(info), () => this.system.set(null));
   }
 
