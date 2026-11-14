@@ -1,6 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Trazo.Api.Contracts;
+using Trazo.Api.Security;
+using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Settings;
 
 namespace Trazo.Api.Endpoints;
 
@@ -16,6 +21,7 @@ public static class AdminUsersEndpoints
             .WithTags("Admin users")
             .RequireAuthorization(SetupEndpoints.SuperadminPolicy);
 
+        group.MapPost("", CreateAsync).WithSummary("Creates a user account and emails a secure invitation to set its password.");
         group.MapGet("", ListAsync);
         group.MapGet("/{id:guid}", GetAsync);
         group.MapPatch("/{id:guid}", UpdateAsync);
@@ -26,6 +32,83 @@ public static class AdminUsersEndpoints
         group.MapPost("/{id:guid}/verify-email", VerifyEmailAsync);
         group.MapDelete("/{id:guid}", DeleteAsync).WithSummary("Permanently deletes the account and all its data. The body must repeat the account email.");
         return endpoints;
+    }
+
+    private static async Task<IResult> CreateAsync(
+        CreateAdminUserRequest request,
+        TrazoDbContext db,
+        IEmailSender emailSender,
+        IRuntimeSettings settings,
+        ClaimsPrincipal principal,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var displayName = request.DisplayName?.Trim();
+        var email = request.Email?.Trim();
+        var normalizedEmail = string.IsNullOrWhiteSpace(email) ? null : email.ToUpperInvariant();
+        var errors = new Dictionary<string, string[]>();
+        if (displayName is null || displayName.Length is < 2 or > 100)
+            errors["displayName"] = ["Use between 2 and 100 characters."];
+        if (email is null || email.Length > 320 || !new EmailAddressAttribute().IsValid(email))
+            errors["email"] = ["Enter a valid email address."];
+        if (request.Role is null || !Roles.Contains(request.Role))
+            errors["role"] = ["Unknown role."];
+        if (errors.Count > 0) return Results.ValidationProblem(errors);
+        if (await db.Users.AnyAsync(x => x.NormalizedEmail == normalizedEmail, cancellationToken))
+            return Results.Conflict(new { error = "An account with this email already exists." });
+
+        var now = DateTimeOffset.UtcNow;
+        var user = new TrazoUser
+        {
+            Id = Guid.NewGuid(),
+            Email = email!,
+            NormalizedEmail = normalizedEmail!,
+            DisplayName = displayName!,
+            Role = request.Role!,
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+
+        db.Users.Add(user);
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException)
+        {
+            return Results.Conflict(new { error = "An account with this email already exists." });
+        }
+
+        try
+        {
+            await AccountEmailEndpoints.IssueAsync(
+                user,
+                "reset-password",
+                "Invitación a TRAZO",
+                "Has sido invitado a TRAZO. Abre este enlace para activar tu cuenta y establecer tu contraseña:",
+                TimeSpan.FromHours(24),
+                db,
+                emailSender,
+                settings,
+                cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            // Do not leave an unusable account behind when the invitation could not be delivered.
+            await db.EmailActionTokens.Where(x => x.UserId == user.Id)
+                .ExecuteDeleteAsync(cancellationToken);
+            db.Users.Remove(user);
+            await db.SaveChangesAsync(cancellationToken);
+            loggerFactory.CreateLogger("Trazo.Admin").LogError(exception,
+                "Could not send the account invitation for user {UserId}.", user.Id);
+            return Results.Problem("The invitation email could not be sent. No account was created.",
+                statusCode: StatusCodes.Status503ServiceUnavailable);
+        }
+
+        var actorId = ActorId(principal);
+        Log(loggerFactory, actorId, "created and invited", user.Id);
+        return Results.Created($"/api/v1/admin/users/{user.Id}",
+            await BuildDetailAsync(db, user.Id, cancellationToken));
     }
 
     private static async Task<IResult> ListAsync(
@@ -261,6 +344,8 @@ public sealed record AdminUserDetail(
     bool HasPassword, bool HasGoogle, bool Disabled, bool LockedOut, int FailedLoginAttempts,
     DateTimeOffset CreatedAt, DateTimeOffset? LastLoginAt, DateTimeOffset? DisabledAt,
     int ActiveSessionCount, IReadOnlyList<AdminUserSession> Sessions);
+
+public sealed record CreateAdminUserRequest(string? DisplayName, string? Email, string? Role);
 
 public sealed record DeleteAdminUserRequest(string? ConfirmEmail);
 

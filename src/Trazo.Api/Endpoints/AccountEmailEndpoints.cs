@@ -64,6 +64,8 @@ public static class AccountEmailEndpoints
    .ExecuteUpdateAsync(s=>s.SetProperty(x=>x.ConsumedAt,now),ct);
   if(consumed!=1)return Results.BadRequest(new{error="El enlace no es válido o ha caducado."});
   user.PasswordHash=hasher.HashPassword(user,request.NewPassword);
+  // A valid password-setup/reset link proves control of the mailbox.
+  user.EmailVerifiedAt ??= now;
   user.FailedLoginAttempts=0;user.LockoutEnd=null;user.UpdatedAt=now;
   await db.RefreshTokens.Where(x=>x.UserId==user.Id&&x.RevokedAt==null)
    .ExecuteUpdateAsync(s=>s.SetProperty(x=>x.RevokedAt,now),ct);
