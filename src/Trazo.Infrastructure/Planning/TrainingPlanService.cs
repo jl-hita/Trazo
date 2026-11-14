@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Trazo.Application.Planning;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Billing;
 using Trazo.Training;
 
 namespace Trazo.Infrastructure.Planning;
@@ -28,7 +29,7 @@ public interface ITrainingPlanService
 /// user really did and no stored data (or response) ever contains the whole macrocycle in detail. Every method takes the
 /// user id and only ever touches that user's active plan.
 /// </summary>
-public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones) : ITrainingPlanService
+public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions) : ITrainingPlanService
 {
     public const string Disclaimer =
         "Plan generado automáticamente a partir de tu perfil. No es consejo médico ni sustituye a un profesional: " +
@@ -492,6 +493,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var mesocycle = plan.Mesocycles.FirstOrDefault(m => m.Sequence == slot.Sequence);
         if (mesocycle is null)
         {
+            // An expired generated plan remains readable, but a GET must not silently create its next block.
+            if (!await subscriptions.HasAccessAsync(plan.UserId, ct))
+                return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
+                    PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), "PremiumRequired", null, []);
             mesocycle = await GenerateMesocycleAsync(plan, slot, ct);
             if (mesocycle is null)
                 return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
@@ -610,7 +615,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             .FirstOrDefault(p => today >= p.StartDate && today <= p.EndDate)
             ?? (position.State == PlanTimeline.NotStarted ? plan.Phases.MinBy(p => p.SequenceNumber) : null);
         return new PlanView(
-            plan.Id, plan.Status.ToString(), position.State.ToString(), position.Week, plan.TotalWeeks, plan.StartDate,
+            plan.Id, plan.Status.ToString(), plan.Origin.ToString(), position.State.ToString(), position.Week, plan.TotalWeeks, plan.StartDate,
             plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1), plan.Goal, plan.Experience, plan.Split, plan.TrainingDays,
             plan.MaxSessionMinutes, plan.AvailableEquipment, plan.ExcludedExerciseIds, plan.Limitations, phase?.SequenceNumber,
             new MacrocycleView(plan.MacrocycleName, plan.MacrocycleNotes, plan.Phases.OrderBy(p => p.SequenceNumber)
