@@ -256,6 +256,116 @@ public sealed class AdminOverviewApiTests : IDisposable
         Assert.Equal(2, summary.GetProperty("exercisesWithoutImages").GetInt32()); // no-image and broken; hidden is ignored
     }
 
+    [Fact]
+    public async Task InsightsGiveTheFunnelTheDailyActivityAndTheSubscriptionsToWatch()
+    {
+        var a = await AddUserAsync("a@trazo.test", createdAt: Start.AddDays(-2));
+        var b = await AddUserAsync("b@trazo.test", createdAt: Start.AddDays(-5));
+        await AddUserAsync("c@trazo.test", createdAt: Start.AddDays(-10));
+        await using (var db = Db())
+        {
+            var plan = new TrainingPlan { Id = Guid.NewGuid(), UserId = a.Id, Goal = "Strength", Experience = "Beginner", Split = "Automatic", CreatedAt = Start.AddDays(-1), UpdatedAt = Start };
+            var planB = new TrainingPlan { Id = Guid.NewGuid(), UserId = b.Id, Goal = "Strength", Experience = "Beginner", Split = "Automatic", CreatedAt = Start.AddDays(-1), UpdatedAt = Start };
+            var meso = new TrainingMesocycle { Id = Guid.NewGuid(), PlanId = plan.Id, PhaseType = "Build", CreatedAt = Start };
+            var session = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, Title = "A", PrescriptionJson = "{}", UpdatedAt = Start };
+            db.TrainingPlans.AddRange(plan, planB);
+            db.TrainingMesocycles.Add(meso);
+            PlannedSession Extra() => new() { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, Title = "X", PrescriptionJson = "{}", UpdatedAt = Start };
+            db.PlannedSessions.Add(session);
+            for (var i = 0; i < 3; i++)
+            {
+                var one = i == 0 ? session : Extra();
+                if (i > 0) db.PlannedSessions.Add(one);
+                db.WorkoutLogs.Add(new WorkoutLog { Id = Guid.NewGuid(), UserId = a.Id, PlanId = plan.Id, PlannedSessionId = one.Id, LoggedAt = Start.AddHours(-1 - i) });
+            }
+            var sessionB = Extra();
+            db.PlannedSessions.Add(sessionB);
+            db.WorkoutLogs.Add(new WorkoutLog { Id = Guid.NewGuid(), UserId = b.Id, PlanId = planB.Id, PlannedSessionId = sessionB.Id, LoggedAt = Start.AddDays(-3) });
+            Subscription Sub(SubscriptionStatus status, int expiresInDays, bool test = false) => new()
+            {
+                Id = Guid.NewGuid(), UserId = a.Id, ProductId = "trazo_premium", PurchaseTokenHash = Guid.NewGuid().ToString("N"),
+                ProtectedPurchaseToken = "x", Status = status, StartedAt = Start, ExpiresAt = Start.AddDays(expiresInDays),
+                IsTestPurchase = test, CreatedAt = Start, UpdatedAt = Start
+            };
+            db.Subscriptions.AddRange(Sub(SubscriptionStatus.Trial, 3), Sub(SubscriptionStatus.Trial, 20), Sub(SubscriptionStatus.OnHold, -1),
+                Sub(SubscriptionStatus.Canceled, 5), Sub(SubscriptionStatus.Trial, 2, test: true));
+            await db.SaveChangesAsync();
+        }
+
+        var body = await ReadAsync(await (await SuperadminAsync()).GetAsync("/api/v1/admin/overview"));
+        var insights = body.GetProperty("insights");
+
+        var funnel = insights.GetProperty("funnel");
+        Assert.Equal(4, funnel.GetProperty("registered").GetInt32()); // a, b, c and the superadmin
+        Assert.Equal(4, funnel.GetProperty("emailVerified").GetInt32());
+        Assert.Equal(2, funnel.GetProperty("withPlan").GetInt32());
+        Assert.Equal(2, funnel.GetProperty("withWorkout").GetInt32());
+        Assert.Equal(1, funnel.GetProperty("recurring").GetInt32()); // only a has 3 sessions
+
+        var days = insights.GetProperty("activity").GetProperty("days").EnumerateArray().ToList();
+        Assert.Equal(14, days.Count);
+        Assert.Equal(4, days.Sum(d => d.GetProperty("workouts").GetInt32()));
+        Assert.Equal(2, days.Sum(d => d.GetProperty("plans").GetInt32()));
+
+        var watch = insights.GetProperty("subscriptions");
+        Assert.Equal(1, watch.GetProperty("trialsEndingSoon").GetInt32()); // the 20-day trial and the test one are excluded
+        Assert.Equal(1, watch.GetProperty("cancelingSoon").GetInt32());
+        Assert.Equal(1, watch.GetProperty("paymentIssues").GetInt32());
+        Assert.Equal(1, watch.GetProperty("testPurchases").GetInt32());
+        var ids = AlertIds(body);
+        Assert.Contains("subscriptions-payment-issues", ids);
+        Assert.Contains("trials-ending", ids);
+    }
+
+    [Fact]
+    public async Task HealthRelatedFiguresAreHiddenWhileTheGroupIsTooSmallToBeAnonymous()
+    {
+        var user = await AddUserAsync("h@trazo.test");
+        Guid planId, mesoId;
+        await using (var db = Db())
+        {
+            var plan = new TrainingPlan { Id = Guid.NewGuid(), UserId = user.Id, Goal = "Strength", Experience = "Beginner", Split = "Automatic", CreatedAt = Start, UpdatedAt = Start };
+            var meso = new TrainingMesocycle { Id = Guid.NewGuid(), PlanId = plan.Id, PhaseType = "Build", CreatedAt = Start };
+            db.TrainingPlans.Add(plan);
+            db.TrainingMesocycles.Add(meso);
+            await db.SaveChangesAsync();
+            (planId, mesoId) = (plan.Id, meso.Id);
+        }
+
+        async Task AddLogsAsync(int count, WorkoutOutcome outcome, string reason, bool pain)
+        {
+            await using var db = Db();
+            for (var i = 0; i < count; i++)
+            {
+                var session = new PlannedSession { Id = Guid.NewGuid(), PlanId = planId, MesocycleId = mesoId, Title = "S", PrescriptionJson = "{}", UpdatedAt = Start };
+                db.PlannedSessions.Add(session);
+                db.WorkoutLogs.Add(new WorkoutLog
+                {
+                    Id = Guid.NewGuid(), UserId = user.Id, PlanId = planId, PlannedSessionId = session.Id, LoggedAt = Start.AddHours(-i - 1),
+                    Outcome = outcome, NonCompletionReason = reason, PainReported = pain
+                });
+            }
+            await db.SaveChangesAsync();
+        }
+
+        await AddLogsAsync(2, WorkoutOutcome.Partial, "Illness", pain: true);
+        var admin = await SuperadminAsync();
+        var few = (await ReadAsync(await admin.GetAsync("/api/v1/admin/overview?refresh=true"))).GetProperty("insights").GetProperty("engine");
+        Assert.Equal(2, few.GetProperty("workouts30d").GetInt32());
+        Assert.Equal(JsonValueKind.Null, few.GetProperty("painReportedPercent").ValueKind); // fewer than five sessions
+        Assert.Equal("Other", Assert.Single(few.GetProperty("notCompletedReasons").EnumerateArray()).GetProperty("name").GetString());
+
+        _clock.Now = Start.AddMinutes(5); // let the cache expire
+        await AddLogsAsync(6, WorkoutOutcome.NotCompleted, "Time", pain: false);
+        var many = (await ReadAsync(await admin.GetAsync("/api/v1/admin/overview?refresh=true"))).GetProperty("insights").GetProperty("engine");
+        Assert.Equal(25, many.GetProperty("painReportedPercent").GetInt32()); // 2 of 8
+        var reasons = many.GetProperty("notCompletedReasons").EnumerateArray()
+            .ToDictionary(x => x.GetProperty("name").GetString()!, x => x.GetProperty("count").GetInt32());
+        Assert.Equal(6, reasons["Time"]);
+        Assert.Equal(2, reasons["Other"]); // "Illness" has fewer than five, so it is merged
+        Assert.DoesNotContain("Illness", reasons.Keys);
+    }
+
     // ------------------------------------------------------------------ logs
 
     [Fact]

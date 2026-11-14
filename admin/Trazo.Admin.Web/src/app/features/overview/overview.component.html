@@ -199,4 +199,102 @@
       <span class="ov-arrow" aria-hidden="true">→</span>
     </article>
   </div>
+
+  <!-- Product insights: aggregates only -->
+  <div class="section-heading">
+    <div><p class="eyebrow">PRODUCTO</p><h2>Uso y adopción</h2></div>
+    <span class="muted">Solo datos agregados</span>
+  </div>
+
+  <div class="ov-cards ov-cards-wide">
+    <article class="ov-card ov-span-2" aria-labelledby="ov-activity-title">
+      <header><h3 id="ov-activity-title">Actividad de los últimos 14 días</h3></header>
+      @if (chart().empty) {
+        <p class="ov-empty">Todavía no hay actividad en estos 14 días.</p>
+      } @else {
+        <p class="ov-sr-only">Altas {{ chart().totals.signups }}, planes creados {{ chart().totals.plans }}, sesiones registradas {{ chart().totals.workouts }} en 14 días.</p>
+        <ul class="ov-chart" aria-label="Actividad diaria: altas, planes y sesiones">
+          @for (day of chart().days; track day.date) {
+            <li [attr.aria-label]="day.label + ': ' + day.signups + ' altas, ' + day.plans + ' planes, ' + day.workouts + ' sesiones'">
+              <span class="ov-bars" aria-hidden="true">
+                <span class="ov-bar bar-signups" [style.height.%]="day.signupsH"></span>
+                <span class="ov-bar bar-plans" [style.height.%]="day.plansH"></span>
+                <span class="ov-bar bar-workouts" [style.height.%]="day.workoutsH"></span>
+              </span>
+              <span class="ov-day" aria-hidden="true">{{ day.label }}</span>
+            </li>
+          }
+        </ul>
+        <p class="ov-legend" aria-hidden="true">
+          <span><i class="swatch bar-signups"></i>Altas ({{ chart().totals.signups }})</span>
+          <span><i class="swatch bar-plans"></i>Planes ({{ chart().totals.plans }})</span>
+          <span><i class="swatch bar-workouts"></i>Sesiones ({{ chart().totals.workouts }})</span>
+        </p>
+      }
+      <dl>
+        <dt>Usuarios activos (7 días)</dt><dd>{{ format(d.insights.activity.activeUsers7d) }}</dd>
+        <dt>Usuarios activos (30 días)</dt><dd>{{ format(d.insights.activity.activeUsers30d) }}</dd>
+      </dl>
+    </article>
+
+    <article class="ov-card" aria-labelledby="ov-funnel-title">
+      <header><h3 id="ov-funnel-title">Embudo de activación</h3></header>
+      @if (d.insights.funnel.registered === 0) {
+        <p class="ov-empty">Todavía no hay usuarios registrados.</p>
+      } @else {
+        <ol class="ov-funnel">
+          @for (step of funnel(); track step.label) {
+            <li>
+              <span class="ov-funnel-row"><span>{{ step.label }}</span><span>{{ format(step.count) }} <span class="muted">· {{ step.percent }} %</span></span></span>
+              <span class="ov-track" aria-hidden="true"><span class="ov-fill" [style.width.%]="step.percent"></span></span>
+              <span class="ov-sr-only">{{ step.hint }}</span>
+            </li>
+          }
+        </ol>
+      }
+    </article>
+
+    <article class="ov-card ov-card-link" aria-labelledby="ov-watch-title">
+      <header>
+        <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones a vigilar<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+      </header>
+      <dl>
+        <dt>Pruebas que terminan en 7 días</dt><dd>{{ format(d.insights.subscriptions.trialsEndingSoon) }}</dd>
+        <dt>Cancelaciones que caducan en 7 días</dt><dd>{{ format(d.insights.subscriptions.cancelingSoon) }}</dd>
+        <dt>Con problemas de cobro</dt><dd>{{ format(d.insights.subscriptions.paymentIssues) }}</dd>
+        <dt>Compras de prueba (excluidas)</dt><dd>{{ format(d.insights.subscriptions.testPurchases) }}</dd>
+      </dl>
+      @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">Todavía no hay suscripciones.</p> }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+
+    <article class="ov-card ov-card-link" aria-labelledby="ov-engine-title">
+      <header>
+        <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">Motor y entrenamientos (30 días)<span class="ov-sr-only">: ver el motor de planificación</span></a></h3>
+      </header>
+      @if (d.insights.engine.workouts30d === 0) {
+        <p class="ov-empty">Todavía no hay sesiones registradas en los últimos 30 días.</p>
+      } @else {
+        <dl>
+          <dt>Sesiones registradas</dt><dd>{{ format(d.insights.engine.workouts30d) }}</dd>
+          <dt>Completas</dt><dd>{{ format(d.insights.engine.completed30d) }}</dd>
+          <dt>Parciales</dt><dd>{{ format(d.insights.engine.partial30d) }}</dd>
+          <dt>No realizadas</dt><dd>{{ format(d.insights.engine.notCompleted30d) }}</dd>
+          <dt>Con dolor reportado</dt>
+          <dd>{{ d.insights.engine.painReportedPercent === null ? 'Pocos datos' : d.insights.engine.painReportedPercent + ' %' }}</dd>
+        </dl>
+      }
+      @if (reasons().length > 0) {
+        <p class="ov-subtitle">Motivos de no completar</p>
+        <ul class="ov-list">@for (r of reasons(); track r.label) { <li>{{ r.label }} <span class="muted">{{ r.count }}</span></li> }</ul>
+      }
+      <p class="ov-subtitle">Ajustes automáticos ({{ format(d.insights.engine.adaptationsTotal30d) }})</p>
+      @if (adaptations().length > 0) {
+        <ul class="ov-list">@for (a of adaptations(); track a.label) { <li>{{ a.label }} <span class="muted">{{ a.count }}</span></li> }</ul>
+      } @else {
+        <p class="ov-empty">El motor no ha ajustado ningún plan.</p>
+      }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+  </div>
 }

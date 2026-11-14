@@ -92,3 +92,30 @@ the overview links to a filtered view.
 
 Funnel, trends and planning-engine quality metrics are intentionally left for later. **Backups** stays disabled in the menu
 with a "No disponible" note.
+
+## Product insights (`insights`)
+
+A second block of the same response, below the system cards ("Uso y adopción"). It is built by `OverviewInsightsBuilder`
+with plain counts, uses no new tables or migrations and shares the 90 s cache.
+
+| Card | Field | Source |
+|---|---|---|
+| **Actividad de los últimos 14 días** | `activity.days[]` | Signups (`users.CreatedAt`), plans (`training_plans.CreatedAt`) and logged sessions (`workout_logs.LoggedAt`) per UTC day |
+| | `activeUsers7d` / `activeUsers30d` | Users by `LastLoginAt` |
+| **Embudo de activación** | `funnel` | Registered → email verified (or Google) → with a plan → with a logged session → "constantes" (3 or more sessions). Counts of users, never who |
+| **Suscripciones a vigilar** | `subscriptions` | Trials ending in 7 days, cancelled subscriptions whose access ends in 7 days, on-hold or grace-period payments. Test purchases are excluded and counted apart |
+| **Motor y entrenamientos (30 días)** | `engine` | Outcome of logged sessions, % with pain reported, reasons for not completing, and the automatic adjustments of the engine (`plan_adaptations` by kind) |
+
+Extra alerts: `subscriptions-payment-issues` (warning), `trials-ending` (info) and `users-unverified` (info, accounts with no
+verified email after 3 days).
+
+### Privacy
+
+Everything is aggregated. Health-related figures follow a minimum group size of **5**: the pain percentage is `null` ("Pocos
+datos") until at least 5 sessions exist in the period, and a reason for not completing with fewer than 5 sessions is merged into
+"Otros". No emails, names, notes or per-user lists appear in this block.
+
+### Not measured yet
+
+Revenue (prices are not stored), fine-grained retention by cohort, most-substituted exercises and the quality analyser's warnings
+(neither is persisted today), and backups (the app has no backup status to read).

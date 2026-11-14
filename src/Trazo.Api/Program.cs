@@ -48,6 +48,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services.AddDatabaseLogging(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
 builder.Services.AddSingleton<Trazo.Api.Overview.OverviewCache>();
+builder.Services.AddScoped<Trazo.Api.Overview.OverviewInsightsBuilder>();
 builder.Services.AddScoped<Trazo.Api.Overview.AdminOverviewService>();
 builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api.Billing.GooglePubSubTokenValidator>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();

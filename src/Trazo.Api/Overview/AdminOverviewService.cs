@@ -26,7 +26,7 @@ public sealed class OverviewCache
 /// </summary>
 public sealed class AdminOverviewService(
     TrazoDbContext db, AppLogReader logs, IRuntimeSettings settings, OverviewCache cache, TimeProvider clock,
-    IHostEnvironment environment)
+    IHostEnvironment environment, OverviewInsightsBuilder insightsBuilder)
 {
     public static readonly TimeSpan CacheTtl = TimeSpan.FromSeconds(90);
     public static readonly TimeSpan MinimumRefreshAge = TimeSpan.FromSeconds(10);
@@ -78,8 +78,9 @@ public sealed class AdminOverviewService(
             MissingSettings(email, google, play, enforced));
 
         var summary = await BuildSummaryAsync(now, enforced, ct);
+        var insights = await insightsBuilder.BuildAsync(now, ct);
         return new AdminOverview(now, (int)CacheTtl.TotalSeconds, health, logSummary, configuration, summary,
-            BuildAlerts(health, logSummary, configuration, summary));
+            BuildAlerts(health, logSummary, configuration, summary, insights), insights);
     }
 
     private async Task<OverviewHealth> BuildHealthAsync(CancellationToken ct)
@@ -140,7 +141,8 @@ public sealed class AdminOverviewService(
     }
 
     public static IReadOnlyList<OverviewAlert> BuildAlerts(
-        OverviewHealth health, OverviewLogs logs, OverviewConfiguration config, OverviewSummary summary)
+        OverviewHealth health, OverviewLogs logs, OverviewConfiguration config, OverviewSummary summary,
+        OverviewInsights? insights = null)
     {
         var alerts = new List<OverviewAlert>();
         void Add(string id, string severity, string title, string detail, string link) =>
@@ -187,6 +189,20 @@ public sealed class AdminOverviewService(
         if (summary.ExercisesWithoutImages > 0)
             Add("catalog-no-images", "info", $"{summary.ExercisesWithoutImages} ejercicio(s) activos sin imágenes",
                 "Los usuarios verán estos ejercicios sin ilustración.", "/exercises");
+
+        if (insights is not null)
+        {
+            var watch = insights.Subscriptions;
+            if (watch.PaymentIssues > 0)
+                Add("subscriptions-payment-issues", "warning", $"{watch.PaymentIssues} suscripción(es) con problemas de cobro",
+                    "Están en periodo de gracia o en espera: el cobro de la renovación ha fallado.", "/subscriptions?status=on_hold");
+            if (watch.TrialsEndingSoon > 0)
+                Add("trials-ending", "info", $"{watch.TrialsEndingSoon} prueba(s) gratuitas terminan en 7 días",
+                    "Es el momento de ver si se convierten en suscripciones de pago.", "/subscriptions?status=trial");
+            if (insights.Activity.UnverifiedOver3Days > 0)
+                Add("users-unverified", "info", $"{insights.Activity.UnverifiedOver3Days} cuenta(s) sin verificar el correo desde hace más de 3 días",
+                    "Pueden no haber recibido el correo de verificación.", "/users");
+        }
 
         return alerts.OrderBy(a => a.Severity switch { "critical" => 0, "warning" => 1, _ => 2 }).ToList();
     }
