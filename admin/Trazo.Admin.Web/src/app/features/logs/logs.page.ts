@@ -1,5 +1,6 @@
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AdminApi, LogEntry, LogLevelGroup, LogPage } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
@@ -174,8 +175,26 @@ export class LogsPageComponent {
     this.selectedLevels().length === 0 ? 'Select at least one level.' : 'No log entries match these filters.');
 
   constructor() {
+    this.applyQueryParams();
     void this.load();
     inject(DestroyRef).onDestroy(() => { clearTimeout(this.searchTimer); clearInterval(this.refreshTimer); });
+  }
+
+  /**
+   * Filters passed in the URL (links from the overview): <c>levels</c> (comma separated), <c>range=24h</c> (from yesterday's
+   * date, the closest whole-day filter of this page) and <c>q</c>. Unknown values are ignored.
+   */
+  private applyQueryParams(): void {
+    const query = inject(ActivatedRoute).snapshot.queryParamMap;
+    const levels = (query.get('levels') ?? '').split(',').map(x => x.trim())
+      .filter((x): x is LogLevelGroup => LEVELS.some(l => l.id === x));
+    if (levels.length > 0) this.selectedLevels.set(levels);
+    if (query.get('range') === '24h') {
+      const now = new Date();
+      this.from.set(dateInputValue(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)));
+    }
+    const q = query.get('q');
+    if (q) this.q.set(q.slice(0, 100));
   }
 
   protected isOn(level: LogLevelGroup): boolean { return this.selectedLevels().includes(level); }

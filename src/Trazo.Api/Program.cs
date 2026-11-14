@@ -47,6 +47,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services.AddDatabaseLogging(builder.Configuration);
 builder.Services.AddSingleton<AuthTokenService>();
+builder.Services.AddSingleton<Trazo.Api.Overview.OverviewCache>();
+builder.Services.AddScoped<Trazo.Api.Overview.OverviewInsightsBuilder>();
+builder.Services.AddScoped<Trazo.Api.Overview.AdminOverviewService>();
 builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api.Billing.GooglePubSubTokenValidator>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
@@ -151,6 +154,11 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             "del|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+    // Public landing form: a few attempts per minute per IP. Fixed on purpose, like the sign-in limiter.
+    options.AddPolicy(WaitlistEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -231,12 +239,14 @@ app.MapAdminExercisesEndpoints();
 app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
 app.MapAdminLogsEndpoints();
+app.MapAdminOverviewEndpoints();
 app.MapAccountEmailEndpoints();
 app.MapAccountEndpoints();
 app.MapSubscriptionEndpoints();
 app.MapPlansEndpoints();
 app.MapAdminSubscriptionsEndpoints();
 app.MapOperationsSettingsEndpoints();
+app.MapWaitlistEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,

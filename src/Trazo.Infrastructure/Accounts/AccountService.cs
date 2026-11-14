@@ -23,7 +23,9 @@ public static class AccountData
     {
         typeof(TrazoUser), typeof(RefreshToken), typeof(AuthChallenge), typeof(AuthRecoveryCode), typeof(EmailActionToken),
         typeof(Subscription), typeof(TrainingPlan), typeof(TrainingPlanPhase), typeof(TrainingMesocycle), typeof(PlannedSession),
-        typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation)
+        typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation),
+        // Not linked to the account: matched by the account's email (the person may have joined the waitlist before registering).
+        typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
 
     /// <summary>Tables that hold no personal data (shared catalog and application settings).</summary>
@@ -140,6 +142,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         rows += await StepAsync(db.AuthChallenges.Where(c => c.UserId == userId), ct);
         rows += await StepAsync(db.AuthRecoveryCodes.Where(c => c.UserId == userId), ct);
         rows += await StepAsync(db.EmailActionTokens.Where(t => t.UserId == userId), ct);
+        var waitlistEmail = Trazo.Infrastructure.Waitlist.WaitlistService.Normalize(user.Email);
+        rows += await StepAsync(db.WaitlistEntries.Where(w => w.Email == waitlistEmail), ct);
         rows += await StepAsync(db.Users.Where(u => u.Id == userId), ct);
         await transaction.CommitAsync(ct);
 

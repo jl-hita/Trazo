@@ -49,6 +49,7 @@ whole transaction is rolled back). All sessions end with it: refresh tokens are 
 | `training_plans`, `training_plan_phases`, `training_mesocycles`, `planned_sessions` | profile (limitations, equipment) and the plan |
 | `workout_logs`, `workout_set_logs` | logged sessions: loads, repetitions, RIR, recovery, **pain reported, free notes** |
 | `plan_adaptations` | changes the engine made to the plan |
+| `waitlist_entries` | the landing waitlist row with the same email as the account (not linked by id; matched by the normalised email) |
 
 A test (`EveryTableOfTheModelIsEitherDeletedWithTheAccountOrKnownNotToBePersonal`) walks the EF model and fails if a table exists that is
 neither in `AccountData.UserOwned` (deleted) nor in `AccountData.NotPersonal` (catalog, settings). Add new user tables to `AccountService` too.

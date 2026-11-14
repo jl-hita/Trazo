@@ -39,13 +39,23 @@ public sealed class SystemNetSmtpTransport : ISmtpTransport
 }
 
 /// <summary>Sends transactional email using the effective (database, then environment) SMTP settings, read on every send.</summary>
-public sealed class SmtpEmailSender(IRuntimeSettings settings, ISmtpTransport transport) : IEmailSender
+public sealed class SmtpEmailSender(
+    IRuntimeSettings settings, ISmtpTransport transport, IEmailDeliveryRecorder? recorder = null) : IEmailSender
 {
     public async Task SendAsync(string recipient, string subject, string body, CancellationToken cancellationToken)
     {
         var config = await settings.GetEmailAsync(cancellationToken);
         if (string.IsNullOrWhiteSpace(config.Host) || string.IsNullOrWhiteSpace(config.From))
             throw new InvalidOperationException("Transactional email is not configured.");
-        await transport.SendAsync(config, recipient, subject, body, cancellationToken);
+        try
+        {
+            await transport.SendAsync(config, recipient, subject, body, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            if (recorder is not null) await recorder.RecordAsync(exception, CancellationToken.None);
+            throw;
+        }
+        if (recorder is not null) await recorder.RecordAsync(null, CancellationToken.None);
     }
 }

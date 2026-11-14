@@ -1,0 +1,85 @@
+<a class="skip" href="#main" (click)="$event.preventDefault(); main.focus()">{{ t.skip }}</a>
+<div class="wrap">
+  <header class="top">
+    <img src="/landing/trazo-logo-dark.svg" alt="TRAZO" width="80" height="35">
+    <a class="lang" [routerLink]="t.otherPath" [attr.hreflang]="t.otherLang" [attr.lang]="t.otherLang" [attr.aria-label]="t.otherAria">{{ t.otherLabel }}</a>
+  </header>
+</div>
+<main id="main" tabindex="-1" #main>
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">{{ t.eyebrow }}</p>
+      <h1>{{ t.headA }} <em>{{ t.headB }}</em></h1>
+      <p class="lead">{{ t.lead }}</p>
+      <a class="btn" href="#waitlist" (click)="$event.preventDefault(); waitlist.scrollIntoView({ behavior: 'smooth' })">{{ t.cta }}</a>
+    </div>
+    <div class="phone"><div class="shot"><img [src]="t.shots[0].file" width="1280" height="2856" [alt]="t.shotAlt + ': ' + t.shots[0].caption"></div></div>
+  </div>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>{{ t.featuresTitle }}</h2>
+      <div class="grid">
+        @for (f of t.features; track f.title) {
+          <div class="card"><span class="dot"></span><h3>{{ f.title }}</h3><p>{{ f.text }}</p></div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>{{ t.shotsTitle }}</h2>
+      <div class="shots">
+        @for (s of t.shots; track s.file) {
+          <figure>
+            <div class="phone"><div class="shot"><img [src]="s.file" width="1280" height="2856" loading="lazy" [alt]="t.shotAlt + ': ' + s.caption"></div></div>
+            <figcaption>{{ s.caption }}</figcaption>
+          </figure>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>{{ t.howTitle }}</h2>
+      <ol class="steps">
+        @for (s of t.steps; track s.title) {
+          <li><h3>{{ s.title }}</h3><p>{{ s.text }}</p></li>
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="waitlist" #waitlist>
+    <div class="wrap wait">
+      <h2>{{ t.waitTitle }}</h2>
+      <p class="lead centered">{{ t.waitText }}</p>
+      <form novalidate (submit)="submit($event, email, consent, trap)">
+        <label class="f">{{ t.emailLabel }}
+          <input #email type="email" name="email" autocomplete="email" required maxlength="254" inputmode="email">
+        </label>
+        <input #trap class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="consent">
+          <input #consent type="checkbox" name="consent" required>
+          <span>{{ t.consent }} <a [href]="privacyUrl">{{ t.privacyLabel }}</a>.</span>
+        </label>
+        <button class="btn" type="submit" [disabled]="state() === 'sending'">{{ t.send }}</button>
+        <p id="msg" role="status" aria-live="polite" [class.ok]="state() === 'ok'" [class.err]="state() === 'invalid' || state() === 'later' || state() === 'fail'">{{ message() }}</p>
+      </form>
+      <p class="note">{{ t.note }}</p>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap row">
+    <span>© 2026 TRAZO</span>
+    <span>
+      <a [href]="privacyUrl">{{ t.privacyLabel }}</a> ·
+      <a [href]="termsUrl">{{ t.terms }}</a> ·
+      <a href="mailto:trazostrength@gmail.com">{{ t.contact }}</a> ·
+      <a routerLink="/login">{{ t.admin }}</a>
+    </span>
+  </div>
+</footer>

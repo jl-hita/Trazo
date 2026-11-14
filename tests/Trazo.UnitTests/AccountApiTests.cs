@@ -248,6 +248,14 @@ public sealed class AccountApiTests : IDisposable
         var before = await RowsOfAsync(ana.Id);
         Assert.All(new[] { "users", "refresh", "subs", "plans", "logs", "phases", "sessions" }, k => Assert.True(before[k] > 0, k));
         var eveBefore = await RowsOfAsync(eve.Id);
+        using (var seed = _factory.Services.CreateScope())
+        {
+            var seedDb = seed.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            seedDb.WaitlistEntries.AddRange(
+                new Trazo.Domain.Waitlist.WaitlistEntry { Id = Guid.NewGuid(), Email = "ana@example.com", Language = "es", ConsentAt = Now, CreatedAt = Now },
+                new Trazo.Domain.Waitlist.WaitlistEntry { Id = Guid.NewGuid(), Email = "other@example.com", Language = "es", ConsentAt = Now, CreatedAt = Now });
+            await seedDb.SaveChangesAsync();
+        }
 
         var response = await DeleteAsync(anaClient, new { password = Password });
 
@@ -259,6 +267,8 @@ public sealed class AccountApiTests : IDisposable
         Assert.Equal(eveBefore, await RowsOfAsync(eve.Id));
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        // The waitlist entry with the account's email goes too; someone else's stays.
+        Assert.Equal(["other@example.com"], await db.WaitlistEntries.Select(w => w.Email).ToListAsync());
         Assert.Equal(await db.WorkoutLogs.CountAsync(), await db.WorkoutLogs.CountAsync(l => l.UserId == eve.Id));
         Assert.Equal(await db.WorkoutSetLogs.CountAsync(), await db.WorkoutSetLogs.CountAsync(s => db.WorkoutLogs.Any(l => l.Id == s.WorkoutLogId && l.UserId == eve.Id)));
         // The old token no longer works.

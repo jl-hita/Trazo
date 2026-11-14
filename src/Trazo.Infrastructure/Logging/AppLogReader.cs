@@ -14,6 +14,8 @@ public sealed record AppLogItem(
 
 public sealed record AppLogCounts(int Info, int Warning, int Error);
 
+public sealed record AppLogCategoryCount(string Category, int Count, DateTimeOffset LastAt);
+
 public sealed record AppLogPage(IReadOnlyList<AppLogItem> Items, string? NextCursor, AppLogCounts Counts);
 
 /// <summary>
@@ -101,6 +103,27 @@ public sealed class AppLogReader(TrazoDbContext db)
         return new AppLogPage(items, hasMore && page.Count > 0 ? EncodeCursor(page[^1].Timestamp, page[^1].Id) : null, counts);
     }
 
+    /// <summary>Entries per level group in [from, to). Uses the timestamp index only (no text search).</summary>
+    public Task<AppLogCounts> CountBetweenAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken = default) =>
+        CountAsync("timestamp_utc >= {0} AND timestamp_utc < {1}", [from.ToUniversalTime(), to.ToUniversalTime()], cancellationToken);
+
+    /// <summary>
+    /// The categories (loggers) with most errors since <paramref name="since"/>. Only the category is returned, never the
+    /// message or the exception: messages can carry request details and must not reach a summary page.
+    /// </summary>
+    public async Task<IReadOnlyList<AppLogCategoryCount>> TopErrorCategoriesAsync(
+        DateTimeOffset since, int take, CancellationToken cancellationToken = default)
+    {
+        var rows = await db.Database.SqlQueryRaw<CategoryRow>(
+            """
+            SELECT category AS "Category", CAST(COUNT(*) AS INTEGER) AS "Count", MAX(timestamp_utc) AS "LastAt"
+            FROM app_logs WHERE level >= 4 AND timestamp_utc >= {0}
+            GROUP BY category ORDER BY COUNT(*) DESC, MAX(timestamp_utc) DESC
+            LIMIT 
+            """ + Math.Clamp(take, 1, 20), since.ToUniversalTime()).ToListAsync(cancellationToken);
+        return rows.Select(r => new AppLogCategoryCount(r.Category, r.Count, r.LastAt)).ToList();
+    }
+
     private async Task<AppLogCounts> CountAsync(string where, object[] args, CancellationToken cancellationToken)
     {
         var grouped = await db.Database.SqlQueryRaw<CountRow>(
@@ -117,5 +140,6 @@ public sealed class AppLogReader(TrazoDbContext db)
     private static string EscapeLike(string value) => value.Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_");
 
     private sealed record Row(long Id, DateTimeOffset Timestamp, int Level, string Category, string Message, string? Exception, string? TraceId);
+    private sealed record CategoryRow(string Category, int Count, DateTimeOffset LastAt);
     private sealed record CountRow(int Level, int Count);
 }

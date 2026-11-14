@@ -56,6 +56,19 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("email_action_tokens");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Waitlist.WaitlistEntry", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Email").IsRequired().HasMaxLength(254).HasColumnType("character varying(254)");
+            b.Property<string>("Language").IsRequired().HasMaxLength(2).HasColumnType("character varying(2)");
+            b.Property<DateTimeOffset>("ConsentAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Email").IsUnique();
+            b.HasIndex("CreatedAt");
+            b.ToTable("waitlist_entries");
+        });
+
         modelBuilder.Entity("Trazo.Domain.Settings.AppSetting", b =>
         {
             b.Property<string>("Key").HasMaxLength(100).HasColumnType("character varying(100)");

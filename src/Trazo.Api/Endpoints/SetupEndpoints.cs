@@ -32,8 +32,8 @@ public static class SetupEndpoints
         admin.MapPut("", UpdateAsync);
         admin.MapPost("/test/google", (TestGoogleRequest r, IHttpClientFactory f, CancellationToken ct) =>
             TestGoogleAsync(r.ClientId, f, ct)).RequireRateLimiting(SetupTestPolicy);
-        admin.MapPost("/test/smtp", (TestSmtpRequest r, IRuntimeSettings s, ISmtpTransport t, CancellationToken ct) =>
-            TestSmtpAsync(r, s, t, ct)).RequireRateLimiting(SetupTestPolicy);
+        admin.MapPost("/test/smtp", (TestSmtpRequest r, IRuntimeSettings s, ISmtpTransport t, IEmailDeliveryRecorder rec, CancellationToken ct) =>
+            TestSmtpAsync(r, s, t, ct, rec)).RequireRateLimiting(SetupTestPolicy);
         return endpoints;
     }
 
@@ -105,7 +105,8 @@ public static class SetupEndpoints
     }
 
     private static async Task<IResult> TestSmtpAsync(
-        TestSmtpRequest request, IRuntimeSettings? stored, ISmtpTransport transport, CancellationToken ct)
+        TestSmtpRequest request, IRuntimeSettings? stored, ISmtpTransport transport, CancellationToken ct,
+        IEmailDeliveryRecorder? recorder = null)
     {
         if (request.Email is null) return Results.ValidationProblem(new Dictionary<string, string[]> { ["email"] = ["Required."] });
         var config = ToEmail(request.Email);
@@ -121,10 +122,12 @@ public static class SetupEndpoints
             await transport.SendAsync(config with { Host = config.Host.Trim(), From = config.From.Trim() },
                 request.Recipient!.Trim(), "TRAZO: prueba de correo",
                 "Este es un correo de prueba de TRAZO. Si lo has recibido, la configuración SMTP es correcta.", ct);
+            if (recorder is not null) await recorder.RecordAsync(null, CancellationToken.None);
             return Results.Ok(new { ok = true, message = "Test email sent." });
         }
         catch (Exception ex) when (ex is not OperationCanceledException || !ct.IsCancellationRequested)
         {
+            if (recorder is not null) await recorder.RecordAsync(ex, CancellationToken.None);
             // Return only the exception type and a short message; never echo credentials.
             return Results.Ok(new { ok = false, message = $"{ex.GetType().Name}: {Truncate(ex.InnerException?.Message ?? ex.Message)}" });
         }

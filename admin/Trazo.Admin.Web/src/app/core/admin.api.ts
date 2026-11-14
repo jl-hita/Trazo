@@ -97,6 +97,50 @@ export interface CatalogReadiness {
   usableExercises: number; skipped: SkippedExercise[]; byPattern: ReadinessGroup[]; byExperience: ReadinessGroup[]; byGoal: ReadinessGroup[];
 }
 
+export type AlertSeverity = 'critical' | 'warning' | 'info';
+
+export interface OverviewAlert { id: string; severity: AlertSeverity; title: string; detail: string; link: string; }
+
+export interface Overview {
+  generatedAt: string; cacheSeconds: number;
+  health: {
+    databaseOk: boolean; databaseLatencyMs: number; version: string; commit: string | null; environment: string;
+    migrationsApplied: number; migrationsTotal: number; pendingMigrations: string[];
+  };
+  logs: {
+    errors24h: number; warnings24h: number; errorsPrevious24h: number; errorsLink: string; warningsLink: string;
+    topErrorSources: { category: string; count: number; lastAt: string; link: string }[];
+  };
+  configuration: {
+    smtpConfigured: boolean; lastSmtpSend: { succeeded: boolean; at: string; error: string | null } | null;
+    googleConfigured: boolean; playBillingConfigured: boolean; playRtdnConfigured: boolean; subscriptionsEnforced: boolean;
+    missing: { id: string; label: string; link: string }[];
+  };
+  summary: {
+    usersTotal: number; usersNew7d: number; plansCreated7d: number; workoutsLogged7d: number; subscriptionsTotal: number;
+    subscriptionsByStatus: { name: string; count: number }[]; subscriptionsEnforced: boolean;
+    exercisesActive: number; exercisesWithoutImages: number; exercisesUnusable: number; exercisesUsable: number;
+  };
+  alerts: OverviewAlert[];
+  insights: OverviewInsights;
+}
+
+export interface OverviewInsights {
+  activity: {
+    days: { date: string; signups: number; plans: number; workouts: number }[];
+    activeUsers7d: number; activeUsers30d: number; unverifiedOver3Days: number;
+  };
+  funnel: { registered: number; emailVerified: number; withPlan: number; withWorkout: number; recurring: number };
+  subscriptions: { trialsEndingSoon: number; cancelingSoon: number; paymentIssues: number; testPurchases: number };
+  engine: {
+    workouts30d: number; completed30d: number; partial30d: number; notCompleted30d: number; painReportedPercent: number | null;
+    adaptationsTotal30d: number; adaptationsByKind: { name: string; count: number }[];
+    notCompletedReasons: { name: string; count: number }[];
+  };
+}
+
+export interface SystemInfo { version: string; commit: string | null; environment: string; }
+
 export type LogLevelGroup = 'info' | 'warning' | 'error';
 
 export interface LogEntry {
@@ -150,6 +194,9 @@ export interface OperationsInput {
   logLevel: string; logRetentionDays: number; dietoExpressEndpoint: string; dietoExpressApiKey: string | null;
 }
 
+export interface WaitlistEntry { id: string; email: string; language: 'es' | 'en'; consentAt: string; createdAt: string; }
+export interface WaitlistPage extends Page<WaitlistEntry> { overall: { total: number; es: number; en: number }; }
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -164,6 +211,15 @@ export class AdminApi {
     if (filters.status) params = params.set('status', filters.status);
     if (filters.sort) params = params.set('sort', filters.sort);
     return firstValueFrom(this.http.get<Page<AdminUserSummary>>(`${API}/users`, { params }));
+  }
+
+  overview(refresh = false): Promise<Overview> {
+    const params = refresh ? new HttpParams().set('refresh', true) : new HttpParams();
+    return firstValueFrom(this.http.get<Overview>(`${API}/overview`, { params }));
+  }
+
+  systemInfo(): Promise<SystemInfo> {
+    return firstValueFrom(this.http.get<SystemInfo>(`${API}/overview/system`));
   }
 
   listLogs(filters: LogFilters): Promise<LogPage> {
@@ -291,5 +347,20 @@ export class AdminApi {
 
   sendLibraryToDietoExpress(): Promise<TransferResult> {
     return firstValueFrom(this.http.post<TransferResult>(`${API}/exercise-library-transfer/dietoexpress`, {}));
+  }
+
+  listWaitlist(q: string, page: number, pageSize: number): Promise<WaitlistPage> {
+    let params = new HttpParams().set('page', page).set('pageSize', pageSize);
+    if (q.trim()) params = params.set('q', q.trim());
+    return firstValueFrom(this.http.get<WaitlistPage>(`${API}/waitlist`, { params }));
+  }
+
+  deleteWaitlistEntry(id: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${API}/waitlist/${id}`));
+  }
+
+  /** The CSV is fetched through HttpClient so the bearer token is sent (a plain link would not carry it). */
+  exportWaitlist(): Promise<Blob> {
+    return firstValueFrom(this.http.get(`${API}/waitlist/export.csv`, { responseType: 'blob' }));
   }
 }
