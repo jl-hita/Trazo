@@ -56,7 +56,7 @@ export interface LandingContent {
 }
 
 // Política y condiciones: de momento en el sitio legal público de GitHub Pages.
-export const PRIVACY_URL = 'https://jl-hita.github.io/trazo-legal/privacidad.html';
+export const PRIVACY_URL = '/privacidad';
 export const TERMS_URL = 'https://jl-hita.github.io/trazo-legal/condiciones.html';
 
 const shots = (lang: LandingLang, captions: string[]) =>
