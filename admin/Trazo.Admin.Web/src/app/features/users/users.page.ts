@@ -19,6 +19,7 @@ const ROLES = ['user', 'admin', 'superadmin'];
     .users-toolbar input, .users-toolbar select, .user-panel input, .user-panel select {
       padding: 9px 11px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; font-size: 13px; }
     .users-toolbar input { flex: 1 1 220px; }
+    .users-toolbar button { padding: 9px 14px; border: 1px solid #6d9bd2; border-radius: 6px; background: #3b6ea8; color: #f2f5fa; font-size: 12px; cursor: pointer; }
     .users-toolbar input:focus, .user-panel input:focus, .user-panel select:focus { outline: 2px solid #6d8eb5; outline-offset: 1px; }
     .users-table { width: 100%; border-collapse: collapse; border: 1px solid #293444; border-radius: 8px; background: #131b27; font-size: 13px; }
     .users-table th { padding: 11px 14px; text-align: left; color: #8291a6; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; border-bottom: 1px solid #293444; }
@@ -66,6 +67,7 @@ const ROLES = ['user', 'admin', 'superadmin'];
     <div class="users-layout">
       <section aria-label="User list">
         <div class="users-toolbar">
+          <button type="button" (click)="startCreate()">Create user</button>
           <input type="search" placeholder="Search by name or email" aria-label="Search users"
                  [ngModel]="q()" (ngModelChange)="onSearch($event)">
           <select aria-label="Filter by role" [ngModel]="role()" (ngModelChange)="setFilter('role', $event)">
@@ -119,7 +121,28 @@ const ROLES = ['user', 'admin', 'superadmin'];
       </section>
 
       <aside class="user-panel" aria-label="User details">
-        @if (selected(); as u) {
+        @if (creating()) {
+          <div>
+            <h2>Create user</h2>
+            <p class="hint">We will send a secure link so the user can verify their email and choose a password.</p>
+          </div>
+          <label>Display name
+            <input type="text" maxlength="100" autocomplete="name" [ngModel]="newName()" (ngModelChange)="newName.set($event)">
+          </label>
+          <label>Email
+            <input type="email" maxlength="320" autocomplete="email" [ngModel]="newEmail()" (ngModelChange)="newEmail.set($event)">
+          </label>
+          <label>Role
+            <select [ngModel]="newRole()" (ngModelChange)="newRole.set($event)">
+              @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+            </select>
+          </label>
+          <div class="actions">
+            <button class="primary" type="button" (click)="createUser()" [disabled]="busy() || newName().trim().length < 2 || !newEmail().trim()">Send invitation</button>
+            <button type="button" (click)="cancelCreate()" [disabled]="busy()">Cancel</button>
+          </div>
+          @if (panelError()) { <p class="err" role="alert">{{ panelError() }}</p> }
+        } @else if (selected(); as u) {
           <div>
             <h2>{{ u.displayName }}</h2>
             <p class="email">{{ u.email }}</p>
@@ -208,6 +231,10 @@ export class UsersPageComponent {
   protected readonly error = signal('');
 
   protected readonly selected = signal<AdminUserDetail | null>(null);
+  protected readonly creating = signal(false);
+  protected readonly newName = signal('');
+  protected readonly newEmail = signal('');
+  protected readonly newRole = signal('user');
   protected readonly editName = signal('');
   protected readonly editRole = signal('user');
   protected readonly busy = signal(false);
@@ -242,7 +269,43 @@ export class UsersPageComponent {
     void this.load();
   }
 
+  protected startCreate(): void {
+    this.selected.set(null);
+    this.creating.set(true);
+    this.newName.set('');
+    this.newEmail.set('');
+    this.newRole.set('user');
+    this.message.set('');
+    this.panelError.set('');
+  }
+
+  protected cancelCreate(): void {
+    this.creating.set(false);
+    this.panelError.set('');
+  }
+
+  protected async createUser(): Promise<void> {
+    const displayName = this.newName().trim();
+    const email = this.newEmail().trim();
+    if (displayName.length < 2 || displayName.length > 100 || !email) return;
+    this.busy.set(true);
+    this.panelError.set('');
+    try {
+      const created = await this.api.createUser({ displayName, email, role: this.newRole() });
+      this.creating.set(false);
+      this.show(created);
+      this.message.set('Invitation sent. The account will be activated when the user sets a password.');
+      this.page.set(1);
+      await this.load();
+    } catch (e) {
+      this.panelError.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
   protected async select(summary: AdminUserSummary): Promise<void> {
+    this.creating.set(false);
     this.message.set('');
     this.panelError.set('');
     this.confirming.set(null);
