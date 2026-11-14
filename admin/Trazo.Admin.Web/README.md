@@ -46,6 +46,6 @@ The repository's GitHub Actions workflow also builds the administration frontend
 
 ## Related documentation
 
-- [Main repository and backend setup](../../../README.md)
-- [Backend configuration and deployment](../../../docs/configuration-and-deployment.md)
-- [Backend architecture](../../../docs/architecture.md)
+- [Main repository and backend setup](../../README.md)
+- [Backend configuration and deployment](../../docs/configuration-and-deployment.md)
+- [Backend architecture](../../docs/architecture.md)
