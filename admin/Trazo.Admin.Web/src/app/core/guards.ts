@@ -41,5 +41,5 @@ export const superadminGuard: CanActivateFn = () => {
 
 export const loginGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  return auth.user() && auth.isStaff ? inject(Router).createUrlTree([auth.isSuperadmin ? '/' : '/reviews']) : true;
+  return auth.user() && auth.isStaff ? inject(Router).createUrlTree([auth.isSuperadmin ? '/overview' : '/reviews']) : true;
 };

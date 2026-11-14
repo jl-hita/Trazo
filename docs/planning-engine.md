@@ -277,3 +277,15 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 - The muscle questionnaire (`TrainingMuscleFeedback*`) is available in the library but not exposed.
 - Android screens consume these endpoints (next roadmap item); the admin preview (`docs/admin-planning-preview.md`) keeps
   evaluating the engine against the live catalog and shares the same mapper and generator.
+
+## Week order, time zone and retries (API contract)
+
+- `GET /api/v1/plans/options`: `days` lists the day ids **Monday first** (ISO week, the Spanish convention). The ids are the English names used
+  everywhere else in the API and never change; `dayOptions` adds `{ id, isoNumber (Monday = 1), label, shortLabel }` in Spanish and `weekStartsOn` is `Monday`.
+  `days` used to start on Sunday (the .NET enum order); clients that render it as received now show Monday first, the values are unchanged.
+- A plan week is seven days counted from the plan's start date (not a calendar week).
+- "Today" and the current week use the user's IANA time zone, resolved in this order: the `X-Time-Zone` header of the request (invalid values are ignored),
+  the zone saved in the profile (`PUT /api/v1/account/time-zone`, or the optional `timeZone` field when creating a plan, which is also saved), and `Europe/Madrid`.
+  The app should send `X-Time-Zone: <TimeZone.getDefault().id>` on every plan request.
+- `POST /plans/current/sessions/{id}/log` is idempotent: repeating a request whose log is already saved with exactly the same data answers `200` with the saved
+  session and `"replayed": true`. A different log for an already logged session still answers `409 session_already_logged`.

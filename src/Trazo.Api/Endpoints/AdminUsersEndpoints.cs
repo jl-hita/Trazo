@@ -24,6 +24,7 @@ public static class AdminUsersEndpoints
         group.MapPost("/{id:guid}/revoke-sessions", RevokeSessionsAsync);
         group.MapPost("/{id:guid}/unlock", UnlockAsync);
         group.MapPost("/{id:guid}/verify-email", VerifyEmailAsync);
+        group.MapDelete("/{id:guid}", DeleteAsync).WithSummary("Permanently deletes the account and all its data. The body must repeat the account email.");
         return endpoints;
     }
 
@@ -126,6 +127,22 @@ public static class AdminUsersEndpoints
         user.UpdatedAt = DateTimeOffset.UtcNow;
         await db.SaveChangesAsync(cancellationToken);
         return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+    }
+
+    private static async Task<IResult> DeleteAsync(
+        Guid id, [Microsoft.AspNetCore.Mvc.FromBody] DeleteAdminUserRequest request, ClaimsPrincipal principal, TrazoDbContext db,
+        Trazo.Infrastructure.Accounts.IAccountService accounts, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+    {
+        var email = await db.Users.AsNoTracking().Where(x => x.Id == id).Select(x => x.Email).SingleOrDefaultAsync(cancellationToken);
+        if (email is null) return Results.NotFound();
+        if (id == ActorId(principal)) return Conflict("You cannot delete your own account here; use the account deletion of the app.");
+        // Explicit confirmation: the superadmin has to type the email of the account being erased.
+        if (!string.Equals(request.ConfirmEmail?.Trim(), email, StringComparison.OrdinalIgnoreCase))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["confirmEmail"] = ["Type the exact email of the account to confirm."] });
+        var result = await accounts.DeleteAsync(id, cancellationToken);
+        if (!result.Deleted) return result.Blocked == Trazo.Infrastructure.Accounts.AccountDeletionBlock.NotFound ? Results.NotFound() : Conflict("At least one active superadmin must remain.");
+        AccountEndpoints.Audit(loggerFactory, "superadmin " + ActorId(principal), result);
+        return Results.Ok(new { deleted = true, rowsDeleted = result.RowsDeleted, playSubscriptionNotCancelled = result.PlaySubscriptionNotCancelled });
     }
 
     private static async Task<IResult> DisableAsync(
@@ -244,5 +261,7 @@ public sealed record AdminUserDetail(
     bool HasPassword, bool HasGoogle, bool Disabled, bool LockedOut, int FailedLoginAttempts,
     DateTimeOffset CreatedAt, DateTimeOffset? LastLoginAt, DateTimeOffset? DisabledAt,
     int ActiveSessionCount, IReadOnlyList<AdminUserSession> Sessions);
+
+public sealed record DeleteAdminUserRequest(string? ConfirmEmail);
 
 public sealed record UpdateAdminUserRequest(string? DisplayName, string? Role);

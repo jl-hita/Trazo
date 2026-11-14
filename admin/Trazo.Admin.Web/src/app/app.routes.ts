@@ -2,6 +2,18 @@ import { Routes } from '@angular/router';
 import { adminGuard, loginGuard, setupGuard, setupPageGuard, superadminGuard } from './core/guards';
 
 export const routes: Routes = [
+  // Landing pública (lista de espera).
+  {
+    path: '',
+    pathMatch: 'full',
+    data: { lang: 'es' },
+    loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
+  },
+  {
+    path: 'en',
+    data: { lang: 'en' },
+    loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
+  },
   {
     path: 'setup',
     canActivate: [setupPageGuard],
@@ -24,12 +36,13 @@ export const routes: Routes = [
         path: '',
         canActivate: [superadminGuard],
         children: [
-          { path: '', pathMatch: 'full', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
+          { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
           { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
           { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
           { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
           { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },
           { path: 'logs', loadComponent: () => import('./features/logs/logs.page').then(m => m.LogsPageComponent) },
+          { path: 'waitlist', loadComponent: () => import('./features/waitlist/waitlist.page').then(m => m.WaitlistPageComponent) },
           { path: 'settings', loadComponent: () => import('./features/settings/settings.page').then(m => m.SettingsPageComponent) }
         ]
       }

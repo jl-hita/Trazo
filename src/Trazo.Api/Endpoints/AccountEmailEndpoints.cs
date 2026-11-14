@@ -70,11 +70,22 @@ public static class AccountEmailEndpoints
   await db.SaveChangesAsync(ct);await tx.CommitAsync(ct);
   return Results.Ok(new{passwordReset=true});
  }
- private static async Task<EmailActionToken?> FindToken(string raw,string purpose,TrazoDbContext db,CancellationToken ct)
+ public static async Task<EmailActionToken?> FindToken(string raw,string purpose,TrazoDbContext db,CancellationToken ct)
  {
   if(string.IsNullOrWhiteSpace(raw)||raw.Length>200)return null;
   var hash=Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(raw)));
-  return await db.EmailActionTokens.SingleOrDefaultAsync(x=>x.TokenHash==hash&&x.Purpose==purpose&&x.ConsumedAt==null&&x.ExpiresAt>DateTimeOffset.UtcNow,ct);
+  var now=DateTimeOffset.UtcNow;
+  return await db.EmailActionTokens.SingleOrDefaultAsync(x=>x.TokenHash==hash&&x.Purpose==purpose&&x.ConsumedAt==null&&x.ExpiresAt>now,ct);
+ }
+ public static async Task<string> CreateTokenAsync(TrazoUser user,string purpose,TimeSpan lifetime,TrazoDbContext db,CancellationToken ct)
+ {
+  var raw=Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)).TrimEnd('=').Replace('+','-').Replace('/','_');
+  var now=DateTimeOffset.UtcNow;
+  await db.EmailActionTokens.Where(x=>x.UserId==user.Id&&x.Purpose==purpose&&x.ConsumedAt==null)
+   .ExecuteUpdateAsync(s=>s.SetProperty(x=>x.ConsumedAt,now),ct);
+  db.EmailActionTokens.Add(new EmailActionToken{Id=Guid.NewGuid(),UserId=user.Id,TokenHash=Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(raw))),Purpose=purpose,CreatedAt=now,ExpiresAt=now.Add(lifetime)});
+  await db.SaveChangesAsync(ct);
+  return raw;
  }
  public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
  {

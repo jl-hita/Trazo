@@ -23,3 +23,6 @@ Users page of the administration console.
   disabling a user or changing a role takes effect immediately, not when the token expires.
 - Every administrative action is written to the service log (`Trazo.Admin` category) with the acting
   superadmin and the target user.
+
+`DELETE /{id}` (superadmin) permanently deletes the account and all its data. Body `{ "confirmEmail": "<email of the account>" }`. `409` for your own account or
+the last active superadmin. Audited without personal data. See `account-deletion.md`.

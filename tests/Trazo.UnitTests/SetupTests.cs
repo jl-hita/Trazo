@@ -27,7 +27,7 @@ public sealed class SetupFixture : IDisposable
               "Id" TEXT PRIMARY KEY, "Email" TEXT NOT NULL, "NormalizedEmail" TEXT NOT NULL UNIQUE, "DisplayName" TEXT NOT NULL,
               "EmailVerifiedAt" TEXT NULL, "PasswordHash" TEXT NULL, "GoogleSubject" TEXT NULL, "Role" TEXT NOT NULL,
               "TwoFactorEnabled" INTEGER NOT NULL, "ProtectedAuthenticatorKey" TEXT NULL, "LastTotpStep" INTEGER NULL,
-              "FailedLoginAttempts" INTEGER NOT NULL, "LockoutEnd" TEXT NULL, "LastLoginAt" TEXT NULL, "DisabledAt" TEXT NULL,
+              "FailedLoginAttempts" INTEGER NOT NULL, "LockoutEnd" TEXT NULL, "LastLoginAt" TEXT NULL, "DisabledAt" TEXT NULL, "TimeZoneId" TEXT NULL,
               "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
             CREATE TABLE refresh_tokens (
               "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "TokenHash" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL,
@@ -38,6 +38,9 @@ public sealed class SetupFixture : IDisposable
               "StoreState" TEXT NULL, "LatestOrderId" TEXT NULL, "StartedAt" TEXT NOT NULL, "ExpiresAt" TEXT NOT NULL,
               "AutoRenewing" INTEGER NOT NULL, "AcknowledgedAt" TEXT NULL, "IsTestPurchase" INTEGER NOT NULL,
               "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
+            CREATE TABLE waitlist_entries (
+              "Id" TEXT PRIMARY KEY, "Email" TEXT NOT NULL UNIQUE, "Language" TEXT NOT NULL,
+              "ConsentAt" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL);
             """);
     }
 

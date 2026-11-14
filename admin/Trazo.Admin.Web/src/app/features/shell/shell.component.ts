@@ -32,13 +32,14 @@ export class ShellComponent {
     return this.auth.isSuperadmin ? this.allNavigation : this.allNavigation.filter(item => item.link === '/reviews');
   }
   private readonly allNavigation: { label: string; icon: string; link?: string }[] = [
-    { label: 'Overview', icon: '◫', link: '/' },
+    { label: 'Overview', icon: '◫', link: '/overview' },
     { label: 'Users', icon: '◎', link: '/users' },
     { label: 'Subscriptions', icon: '◇', link: '/subscriptions' },
     { label: 'Training library', icon: '▤', link: '/exercises' },
     { label: 'Plan reviews', icon: '✎', link: '/reviews' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },
     { label: 'Logs', icon: '≋', link: '/logs' },
+    { label: 'Waitlist', icon: '✉', link: '/waitlist' },
     { label: 'Backups', icon: '▣' },
     { label: 'Settings', icon: '⚙', link: '/settings' }
   ];

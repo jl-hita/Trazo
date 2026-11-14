@@ -31,6 +31,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset?>("LockoutEnd").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("LastLoginAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("DisabledAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("TimeZoneId").HasMaxLength(64).HasColumnType("character varying(64)");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
@@ -53,6 +54,19 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("TokenHash").IsUnique();
             b.HasIndex("UserId", "Purpose", "ExpiresAt");
             b.ToTable("email_action_tokens");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Waitlist.WaitlistEntry", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Email").IsRequired().HasMaxLength(254).HasColumnType("character varying(254)");
+            b.Property<string>("Language").IsRequired().HasMaxLength(2).HasColumnType("character varying(2)");
+            b.Property<DateTimeOffset>("ConsentAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Email").IsUnique();
+            b.HasIndex("CreatedAt");
+            b.ToTable("waitlist_entries");
         });
 
         modelBuilder.Entity("Trazo.Domain.Settings.AppSetting", b =>
