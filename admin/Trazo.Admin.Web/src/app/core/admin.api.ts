@@ -246,6 +246,10 @@ export class AdminApi {
     return firstValueFrom(this.http.get<LogPage>(`${API}/logs`, { params }));
   }
 
+  createUser(input: { displayName: string; email: string; role: string }): Promise<AdminUserDetail> {
+    return firstValueFrom(this.http.post<AdminUserDetail>(`${API}/users`, input));
+  }
+
   getUser(id: string): Promise<AdminUserDetail> {
     return firstValueFrom(this.http.get<AdminUserDetail>(`${API}/users/${id}`));
   }
