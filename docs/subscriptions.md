@@ -22,12 +22,24 @@ Android app never decides on its own whether the user has paid.
 | Route | Auth | Purpose |
 |---|---|---|
 | `POST /api/v1/subscription/verify` | user | Validate a purchase and link it to the caller. `200` state, `400` unknown purchase/wrong product, `409` token already linked to another account or bought by another account, `502/503` Google problem. |
-| `GET /api/v1/subscription` | user | `{ hasAccess, status, productId, startedAt, expiresAt, autoRenewing, source }`. `status` is `none` without a subscription. |
+| `GET /api/v1/subscription` | user | `{ hasAccess, enforced, status, productId, startedAt, expiresAt, autoRenewing, source }`. `status` is `none` without a subscription. |
 | `POST /api/v1/subscription/notifications` | Pub/Sub OIDC token or `?secret=` | RTDN webhook. Always `200` for messages that can be ignored (test, unknown token, other package, malformed); `503` when Google cannot be reached so Pub/Sub redelivers; `401` without valid credentials. |
 | `GET /api/v1/admin/subscriptions` | superadmin | Paged list. Filters: `q` (name/email), `status`, `source`, `user`, `expiresFrom`, `expiresTo`; `sort` = `expires`, `started` (default: last change). |
 | `GET /api/v1/admin/subscriptions/{id}` | superadmin | Detail (token fingerprint only, never the token). |
 | `POST /api/v1/admin/subscriptions/{id}/refresh` | superadmin | Re-read the purchase from Google. |
 | `GET/PUT /api/v1/admin/settings/play-billing`, `POST …/test` | superadmin | Configuration and connection test. |
+
+## Enforcement switch ("Require a subscription")
+
+Settings → Access (stored as `Billing:Enforced` in `app_settings`, edited with `GET/PUT /api/v1/admin/settings/access`).
+**Off by default: TRAZO is free.** While off:
+
+- `RequireActiveSubscription()` lets any authenticated user through (still `401` without a user);
+- `GET /api/v1/subscription` returns `hasAccess: true` and `enforced: false` (the real `status` is still reported,
+  `none` without a subscription), so the app shows no plans screen;
+- Play Billing does not need to be configured. `verify` and the webhook still work if it is.
+
+While on, everything below applies. `enforced` is also returned (as `true`) in that case.
 
 ## Statuses and access
 

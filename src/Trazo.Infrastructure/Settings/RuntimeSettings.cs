@@ -15,6 +15,8 @@ public interface IRuntimeSettings
     Task<GoogleConfig> GetGoogleAsync(CancellationToken ct = default);
     Task<EmailConfig> GetEmailAsync(CancellationToken ct = default);
     Task<SettingsView> GetViewAsync(CancellationToken ct = default);
+    /// <summary>True when paid access is required. Off by default: everything is free.</summary>
+    Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default);
     Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default);
     Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default);
 }
@@ -38,6 +40,9 @@ public sealed class RuntimeSettings(TrazoDbContext db, IConfiguration configurat
         return new SettingsView(Get(rows, SettingKeys.GoogleClientId) ?? "", e.Host, e.Port, e.EnableSsl,
             e.Username, !string.IsNullOrEmpty(e.Password), e.From, e.ActionBaseUrl);
     }
+
+    public async Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default) =>
+        bool.TryParse(Get(await LoadAsync(ct), SettingKeys.SubscriptionsEnforced), out var on) && on;
 
     public async Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default)
     {

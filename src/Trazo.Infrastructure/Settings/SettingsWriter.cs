@@ -11,6 +11,7 @@ public interface ISettingsWriter
     Task StageAsync(GoogleConfig google, EmailConfig email, bool keepPasswordWhenNull, CancellationToken ct);
     /// <summary>Validates and persists configuration (superadmin edits). Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdateAsync(GoogleConfig google, EmailConfig email, CancellationToken ct);
+    Task SetSubscriptionsEnforcedAsync(bool enforced, CancellationToken ct);
     /// <summary>Validates and persists the Google Play Billing configuration. Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct);
 }
@@ -39,6 +40,12 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
         await StageAsync(google, email, keepPasswordWhenNull: true, ct);
         await db.SaveChangesAsync(ct);
         return errors;
+    }
+
+    public async Task SetSubscriptionsEnforcedAsync(bool enforced, CancellationToken ct)
+    {
+        await Upsert(SettingKeys.SubscriptionsEnforced, enforced ? "true" : "false", false, ct);
+        await db.SaveChangesAsync(ct);
     }
 
     public async Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct)

@@ -27,6 +27,18 @@ import { errorMessage } from '../../core/setup.api';
     .pb .stored { color: #7fd3a0; }
   `],
   template: `
+    <div class="pb" style="margin-bottom:22px">
+      <fieldset>
+        <legend>Access</legend>
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" name="enforced" [ngModel]="enforced()" (ngModelChange)="setEnforced($event)" [disabled]="busy()">
+          Require a subscription
+        </label>
+        <p class="hint"><strong>Off (default): everything is free</strong> and every signed-in user has full access; the app shows no plans.
+          On: only users with a trial or active subscription (and administrators) get paid content. Play Billing does not need to be configured while this is off.</p>
+        @if (accessMessage()) { <span class="ok" role="status">{{ accessMessage() }}</span> }
+      </fieldset>
+    </div>
     <form class="pb" (ngSubmit)="save()" autocomplete="off">
       <fieldset>
         <legend>Google Play Billing</legend>
@@ -79,11 +91,27 @@ export class PlayBillingFormComponent {
   protected readonly rtdnAudience = signal('');
   protected readonly rtdnEmail = signal('');
   protected readonly rtdnSecret = signal('');
+  protected readonly enforced = signal(false);
+  protected readonly accessMessage = signal('');
   protected readonly busy = signal(false);
   protected readonly message = signal('');
   protected readonly error = signal('');
 
   constructor() { void this.load(); }
+
+  protected async setEnforced(value: boolean): Promise<void> {
+    this.busy.set(true); this.accessMessage.set(''); this.error.set('');
+    try {
+      const saved = await this.api.saveAccessSettings(value);
+      this.enforced.set(saved.subscriptionsEnforced);
+      this.accessMessage.set(saved.subscriptionsEnforced ? 'Subscriptions are now required.' : 'Subscriptions are off: everything is free.');
+    } catch (e) {
+      this.enforced.set(!value);
+      this.error.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
 
   protected async save(): Promise<void> {
     this.busy.set(true); this.message.set(''); this.error.set('');
@@ -120,6 +148,7 @@ export class PlayBillingFormComponent {
 
   private async load(): Promise<void> {
     try {
+      this.enforced.set((await this.api.getAccessSettings()).subscriptionsEnforced);
       const v = await this.api.getPlayBilling();
       this.view.set(v);
       this.packageName.set(v.packageName);

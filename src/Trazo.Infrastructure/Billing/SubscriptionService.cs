@@ -15,7 +15,7 @@ public sealed record VerifyResult(VerifyOutcome Outcome, Subscription? Subscript
 /// <summary>What the API tells a user about their own subscription.</summary>
 public sealed record SubscriptionStatusView(
     bool HasAccess, string Status, string? ProductId, DateTimeOffset? StartedAt, DateTimeOffset? ExpiresAt,
-    bool AutoRenewing, string Source);
+    bool AutoRenewing, string Source, bool Enforced = true);
 
 public interface ISubscriptionService
 {
@@ -37,7 +37,7 @@ public interface ISubscriptionService
 }
 
 public sealed class SubscriptionService(
-    TrazoDbContext db, IPlayBillingClient play, ISecretProtector protector, TimeProvider clock,
+    TrazoDbContext db, IPlayBillingClient play, IRuntimeSettings settings, ISecretProtector protector, TimeProvider clock,
     ILogger<SubscriptionService> logger) : ISubscriptionService
 {
     public static string HashToken(string purchaseToken) =>
@@ -120,6 +120,17 @@ public sealed class SubscriptionService(
 
     public async Task<SubscriptionStatusView> GetStatusAsync(Guid userId, CancellationToken ct)
     {
+        if (!await settings.GetSubscriptionsEnforcedAsync(ct))
+        {
+            // Everything is free: report access, but still show any subscription the user has.
+            var own = await GetOwnStatusAsync(userId, ct);
+            return own with { HasAccess = true, Enforced = false };
+        }
+        return await GetOwnStatusAsync(userId, ct);
+    }
+
+    private async Task<SubscriptionStatusView> GetOwnStatusAsync(Guid userId, CancellationToken ct)
+    {
         var now = clock.GetUtcNow();
         var rows = await db.Subscriptions.AsNoTracking().Where(x => x.UserId == userId).ToListAsync(ct);
         // Prefer a row that grants access (latest expiry first), otherwise the most recent one.
@@ -139,6 +150,7 @@ public sealed class SubscriptionService(
 
     public async Task<bool> HasAccessAsync(Guid userId, CancellationToken ct)
     {
+        if (!await settings.GetSubscriptionsEnforcedAsync(ct)) return true;
         var now = clock.GetUtcNow();
         var rows = await db.Subscriptions.AsNoTracking().Where(x => x.UserId == userId).ToListAsync(ct);
         return rows.Any(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now));
