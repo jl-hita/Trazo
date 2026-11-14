@@ -4,6 +4,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <!-- The deploy workflow runs on GitHub Actions, which exposes the commit as GITHUB_SHA. The SDK appends SourceRevisionId to
+       the InformationalVersion ("1.0.0+<commit>"), which the administration overview shows as the deployed version.
+       Local builds have no commit and show only the version. -->
+  <PropertyGroup Condition="'$(GITHUB_SHA)' != ''">
+    <SourceRevisionId>$(GITHUB_SHA)</SourceRevisionId>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Trazo.Application/Trazo.Application.csproj" />
     <ProjectReference Include="../Trazo.Infrastructure/Trazo.Infrastructure.csproj" />

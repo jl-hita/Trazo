@@ -1,20 +1,300 @@
-      <div class="page-heading">
-        <div><p class="eyebrow">SYSTEM CONSOLE</p><h1>Overview</h1><p class="subtitle">The operational home for your TRAZO platform.</p></div>
-        <span class="environment-tag">FOUNDATION</span>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">ADMINISTRACIÓN</p>
+    <h1>Overview</h1>
+    <p class="subtitle">Estado del sistema y lo que requiere tu atención.</p>
+  </div>
+  <div class="ov-heading-actions">
+    @if (data(); as d) {
+      <span class="muted" data-testid="generated-at">Datos de {{ when(d.generatedAt) }}</span>
+    }
+    <button type="button" class="ov-btn" (click)="refresh()" [disabled]="loading()" [attr.aria-busy]="loading()">
+      {{ loading() && data() ? 'Actualizando…' : 'Actualizar' }}
+    </button>
+  </div>
+</div>
+
+<p class="ov-sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
+
+@if (error() && !data()) {
+  <section class="ov-state" role="alert" aria-labelledby="ov-error-title">
+    <span class="ov-glyph tone-crit" aria-hidden="true">✕</span>
+    <div>
+      <h2 id="ov-error-title">No se ha podido cargar el estado del sistema</h2>
+      <p>{{ error() }}</p>
+      <button type="button" class="ov-btn" (click)="retry()" [disabled]="loading()">Reintentar</button>
+    </div>
+  </section>
+} @else if (loading() && !data()) {
+  <div role="status" aria-live="polite">
+    <span class="ov-sr-only">Cargando el estado del sistema…</span>
+  </div>
+  <div class="ov-skeleton-alerts" aria-hidden="true"><div class="ov-skeleton"></div><div class="ov-skeleton"></div></div>
+  <div class="ov-cards" aria-hidden="true">
+    @for (n of skeletons; track n) { <div class="ov-card ov-skeleton ov-skeleton-card"></div> }
+  </div>
+} @else if (data(); as d) {
+  @if (error()) {
+    <p class="ov-banner" role="alert">No se han podido actualizar los datos ({{ error() }}). Se muestran los últimos recibidos.
+      <button type="button" class="ov-link-button" (click)="refresh()">Reintentar</button></p>
+  }
+
+  <section aria-labelledby="ov-alerts-title">
+    <div class="section-heading">
+      <div><p class="eyebrow">ATENCIÓN</p><h2 id="ov-alerts-title">Alertas <span class="ov-count">{{ alertSummary() }}</span></h2></div>
+    </div>
+    @if (alerts().length === 0) {
+      <div class="ov-state ov-state-ok">
+        <span class="ov-glyph tone-ok" aria-hidden="true">✓</span>
+        <div><h3>Todo en orden</h3><p>No hay alertas: la base de datos, la configuración y los registros están bien.</p></div>
       </div>
-      <div class="notice">
-        <span class="notice-mark">i</span>
-        <div><strong>Administration foundation</strong><p>This is the initial interface shell. Live metrics, authentication and administrative actions will be connected in later stages.</p></div>
-      </div>
-      <div class="section-heading">
-        <div><p class="eyebrow">PLATFORM</p><h2>Core areas</h2></div>
-        <span class="muted">Implementation roadmap</span>
-      </div>
-      <div class="cards">
-        <article class="area-card"><span class="card-icon">◎</span><h3>User management</h3><p>Accounts, access status, roles and support tools.</p><span class="card-state">PLANNED</span></article>
-        <article class="area-card"><span class="card-icon">◇</span><h3>Commercial</h3><p>Products, subscription plans, trials and payments.</p><span class="card-state">PLANNED</span></article>
-        <article class="area-card"><span class="card-icon">▤</span><h3>Training engine</h3><p>Exercise library, programming rules and configuration.</p><span class="card-state">PLANNED</span></article>
-        <article class="area-card"><span class="card-icon">≋</span><h3>Logs & diagnostics</h3><p>Application events, errors and operational visibility.</p><span class="card-state">PLANNED</span></article>
-        <article class="area-card"><span class="card-icon">▣</span><h3>Backups</h3><p>Backup history, verification and controlled restore workflows.</p><span class="card-state">PLANNED</span></article>
-        <article class="area-card"><span class="card-icon">⚙</span><h3>System settings</h3><p>Runtime configuration, feature flags and service health.</p><span class="card-state">PLANNED</span></article>
-      </div>
+    } @else {
+      <ul class="ov-alerts">
+        @for (a of alerts(); track a.id) {
+          <li>
+            <a class="ov-alert" [class]="'ov-alert tone-' + severityTone(a.severity)" [routerLink]="tree(a.link)">
+              <span class="ov-glyph" [class]="'ov-glyph tone-' + severityTone(a.severity)" aria-hidden="true">{{ glyph(severityTone(a.severity)) }}</span>
+              <span class="ov-alert-text">
+                <span class="ov-alert-title"><span class="ov-badge" [class]="'ov-badge tone-' + severityTone(a.severity)">{{ severityLabel(a.severity) }}</span> {{ a.title }}</span>
+                <span class="ov-alert-detail">{{ a.detail }}</span>
+              </span>
+              <span class="ov-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <div class="section-heading">
+    <div><p class="eyebrow">SISTEMA</p><h2>Estado por áreas</h2></div>
+  </div>
+
+  <div class="ov-cards">
+    <!-- Health -->
+    <article class="ov-card">
+      <header>
+        <h3>Salud del sistema</h3>
+        <span class="ov-status" [class]="'ov-status tone-' + health().tone"><span aria-hidden="true">{{ glyph(health().tone) }}</span> {{ health().label }}</span>
+      </header>
+      <dl>
+        <dt>Base de datos</dt><dd>{{ d.health.databaseOk ? 'Disponible' : 'No responde' }} · {{ d.health.databaseLatencyMs }} ms</dd>
+        <dt>Migraciones</dt><dd>{{ d.health.migrationsApplied }} de {{ d.health.migrationsTotal }} aplicadas</dd>
+        <dt>Versión</dt><dd>{{ d.health.version }}@if (d.health.commit) { <span class="muted"> · {{ d.health.commit }}</span> }</dd>
+        <dt>Entorno</dt><dd>{{ d.health.environment }}</dd>
+      </dl>
+    </article>
+
+    <!-- Logs -->
+    <article class="ov-card ov-card-link">
+      <header>
+        <h3><a class="ov-card-anchor" [routerLink]="tree(d.logs.errorsLink)">Registros<span class="ov-sr-only">: {{ logsStatus().label }}. Ver errores de las últimas 24 horas</span></a></h3>
+        <span class="ov-status" [class]="'ov-status tone-' + logsStatus().tone"><span aria-hidden="true">{{ glyph(logsStatus().tone) }}</span> {{ logsStatus().label }}</span>
+      </header>
+      <dl>
+        <dt>Errores (24 h)</dt><dd>{{ format(d.logs.errors24h) }} <span class="muted">· {{ format(d.logs.errorsPrevious24h) }} las 24 h anteriores</span></dd>
+        <dt>Avisos (24 h)</dt><dd>{{ format(d.logs.warnings24h) }}</dd>
+      </dl>
+      @if (d.logs.topErrorSources.length > 0) {
+        <p class="ov-subtitle">Orígenes con más errores</p>
+        <ul class="ov-list">
+          @for (s of d.logs.topErrorSources; track s.category) {
+            <li><a class="ov-inner-link" [routerLink]="tree(s.link)">{{ s.category }}</a> <span class="muted">{{ s.count }} · {{ when(s.lastAt) }}</span></li>
+          }
+        </ul>
+      } @else {
+        <p class="ov-empty">Sin errores en las últimas 24 horas.</p>
+      }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+
+    <!-- Configuration -->
+    <article class="ov-card ov-card-link">
+      <header>
+        <h3><a class="ov-card-anchor" [routerLink]="'/settings'">Configuración<span class="ov-sr-only">: ir a los ajustes</span></a></h3>
+        @if (d.configuration.missing.length === 0 && smtp().tone === 'ok') {
+          <span class="ov-status tone-ok"><span aria-hidden="true">✓</span> Completa</span>
+        } @else {
+          <span class="ov-status tone-warn"><span aria-hidden="true">!</span> Requiere atención</span>
+        }
+      </header>
+      <dl>
+        <dt>Correo SMTP</dt><dd><span class="ov-status" [class]="'ov-status tone-' + smtp().tone"><span aria-hidden="true">{{ glyph(smtp().tone) }}</span> {{ smtp().label }}</span></dd>
+        @if (d.configuration.lastSmtpSend; as send) {
+          <dt>Último envío</dt><dd>{{ send.succeeded ? 'Correcto' : 'Fallido (' + (send.error ?? 'error') + ')' }} <span class="muted">· {{ when(send.at) }}</span></dd>
+        }
+        <dt>Inicio con Google</dt><dd><span class="ov-status" [class]="'ov-status tone-' + google().tone"><span aria-hidden="true">{{ glyph(google().tone) }}</span> {{ google().label }}</span></dd>
+        <dt>Google Play Billing</dt><dd><span class="ov-status" [class]="'ov-status tone-' + play().tone"><span aria-hidden="true">{{ glyph(play().tone) }}</span> {{ play().label }}</span></dd>
+      </dl>
+      @if (d.configuration.missing.length > 0) {
+        <p class="ov-subtitle">Falta por configurar</p>
+        <ul class="ov-list">
+          @for (m of d.configuration.missing; track m.id) { <li>{{ m.label }}</li> }
+        </ul>
+      }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+
+    <!-- Users -->
+    <article class="ov-card ov-card-link">
+      <header>
+        <h3><a class="ov-card-anchor" routerLink="/users">Usuarios<span class="ov-sr-only">: ver la lista de usuarios</span></a></h3>
+      </header>
+      <p class="ov-figure">{{ format(d.summary.usersTotal) }}</p>
+      <p class="ov-caption">usuarios en total</p>
+      <dl>
+        <dt>Altas (7 días)</dt><dd>{{ format(d.summary.usersNew7d) }}</dd>
+      </dl>
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+
+    <!-- Activity -->
+    <article class="ov-card">
+      <header><h3>Actividad (7 días)</h3></header>
+      <dl>
+        <dt>Planes creados</dt><dd>{{ format(d.summary.plansCreated7d) }}</dd>
+        <dt>Sesiones registradas</dt><dd>{{ format(d.summary.workoutsLogged7d) }}</dd>
+      </dl>
+      @if (d.summary.plansCreated7d === 0 && d.summary.workoutsLogged7d === 0) {
+        <p class="ov-empty">Sin actividad en los últimos 7 días.</p>
+      }
+    </article>
+
+    <!-- Subscriptions -->
+    <article class="ov-card ov-card-link">
+      <header>
+        <h3><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+        @if (!d.summary.subscriptionsEnforced) {
+          <span class="ov-status tone-info"><span aria-hidden="true">i</span> No obligatorias</span>
+        }
+      </header>
+      @if (!d.summary.subscriptionsEnforced) {
+        <p class="ov-notice"><strong>Suscripciones no obligatorias:</strong> todos los usuarios tienen acceso sin pagar.</p>
+      }
+      <p class="ov-figure">{{ format(d.summary.subscriptionsTotal) }}</p>
+      <p class="ov-caption">suscripciones registradas</p>
+      @if (subscriptions().length > 0) {
+        <dl>
+          @for (s of subscriptions(); track s.label) { <dt>{{ s.label }}</dt><dd>{{ format(s.count) }}</dd> }
+        </dl>
+      } @else {
+        <p class="ov-empty">Todavía no hay suscripciones.</p>
+      }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+
+    <!-- Catalog -->
+    <article class="ov-card ov-card-link">
+      <header>
+        <h3><a class="ov-card-anchor" routerLink="/exercises">Catálogo de ejercicios<span class="ov-sr-only">: {{ catalog().label }}. Ver la biblioteca</span></a></h3>
+        <span class="ov-status" [class]="'ov-status tone-' + catalog().tone"><span aria-hidden="true">{{ glyph(catalog().tone) }}</span> {{ catalog().label }}</span>
+      </header>
+      <dl>
+        <dt>Activos</dt><dd>{{ format(d.summary.exercisesActive) }}</dd>
+        <dt>Utilizables por el motor</dt><dd>{{ format(d.summary.exercisesUsable) }}</dd>
+        <dt>No utilizables</dt><dd>{{ format(d.summary.exercisesUnusable) }}</dd>
+        <dt>Sin imágenes</dt><dd>{{ format(d.summary.exercisesWithoutImages) }}</dd>
+      </dl>
+      <p class="ov-subtitle"><a class="ov-inner-link" routerLink="/planning">Ver preparación del motor</a></p>
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+  </div>
+
+  <!-- Product insights: aggregates only -->
+  <div class="section-heading">
+    <div><p class="eyebrow">PRODUCTO</p><h2>Uso y adopción</h2></div>
+    <span class="muted">Solo datos agregados</span>
+  </div>
+
+  <div class="ov-cards ov-cards-wide">
+    <article class="ov-card ov-span-2" aria-labelledby="ov-activity-title">
+      <header><h3 id="ov-activity-title">Actividad de los últimos 14 días</h3></header>
+      @if (chart().empty) {
+        <p class="ov-empty">Todavía no hay actividad en estos 14 días.</p>
+      } @else {
+        <p class="ov-sr-only">Altas {{ chart().totals.signups }}, planes creados {{ chart().totals.plans }}, sesiones registradas {{ chart().totals.workouts }} en 14 días.</p>
+        <ul class="ov-chart" aria-label="Actividad diaria: altas, planes y sesiones">
+          @for (day of chart().days; track day.date) {
+            <li [attr.aria-label]="day.label + ': ' + day.signups + ' altas, ' + day.plans + ' planes, ' + day.workouts + ' sesiones'">
+              <span class="ov-bars" aria-hidden="true">
+                <span class="ov-bar bar-signups" [style.height.%]="day.signupsH"></span>
+                <span class="ov-bar bar-plans" [style.height.%]="day.plansH"></span>
+                <span class="ov-bar bar-workouts" [style.height.%]="day.workoutsH"></span>
+              </span>
+              <span class="ov-day" aria-hidden="true">{{ day.label }}</span>
+            </li>
+          }
+        </ul>
+        <p class="ov-legend" aria-hidden="true">
+          <span><i class="swatch bar-signups"></i>Altas ({{ chart().totals.signups }})</span>
+          <span><i class="swatch bar-plans"></i>Planes ({{ chart().totals.plans }})</span>
+          <span><i class="swatch bar-workouts"></i>Sesiones ({{ chart().totals.workouts }})</span>
+        </p>
+      }
+      <dl>
+        <dt>Usuarios activos (7 días)</dt><dd>{{ format(d.insights.activity.activeUsers7d) }}</dd>
+        <dt>Usuarios activos (30 días)</dt><dd>{{ format(d.insights.activity.activeUsers30d) }}</dd>
+      </dl>
+    </article>
+
+    <article class="ov-card" aria-labelledby="ov-funnel-title">
+      <header><h3 id="ov-funnel-title">Embudo de activación</h3></header>
+      @if (d.insights.funnel.registered === 0) {
+        <p class="ov-empty">Todavía no hay usuarios registrados.</p>
+      } @else {
+        <ol class="ov-funnel">
+          @for (step of funnel(); track step.label) {
+            <li>
+              <span class="ov-funnel-row"><span>{{ step.label }}</span><span>{{ format(step.count) }} <span class="muted">· {{ step.percent }} %</span></span></span>
+              <span class="ov-track" aria-hidden="true"><span class="ov-fill" [style.width.%]="step.percent"></span></span>
+              <span class="ov-sr-only">{{ step.hint }}</span>
+            </li>
+          }
+        </ol>
+      }
+    </article>
+
+    <article class="ov-card ov-card-link" aria-labelledby="ov-watch-title">
+      <header>
+        <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones a vigilar<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+      </header>
+      <dl>
+        <dt>Pruebas que terminan en 7 días</dt><dd>{{ format(d.insights.subscriptions.trialsEndingSoon) }}</dd>
+        <dt>Cancelaciones que caducan en 7 días</dt><dd>{{ format(d.insights.subscriptions.cancelingSoon) }}</dd>
+        <dt>Con problemas de cobro</dt><dd>{{ format(d.insights.subscriptions.paymentIssues) }}</dd>
+        <dt>Compras de prueba (excluidas)</dt><dd>{{ format(d.insights.subscriptions.testPurchases) }}</dd>
+      </dl>
+      @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">Todavía no hay suscripciones.</p> }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+
+    <article class="ov-card ov-card-link" aria-labelledby="ov-engine-title">
+      <header>
+        <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">Motor y entrenamientos (30 días)<span class="ov-sr-only">: ver el motor de planificación</span></a></h3>
+      </header>
+      @if (d.insights.engine.workouts30d === 0) {
+        <p class="ov-empty">Todavía no hay sesiones registradas en los últimos 30 días.</p>
+      } @else {
+        <dl>
+          <dt>Sesiones registradas</dt><dd>{{ format(d.insights.engine.workouts30d) }}</dd>
+          <dt>Completas</dt><dd>{{ format(d.insights.engine.completed30d) }}</dd>
+          <dt>Parciales</dt><dd>{{ format(d.insights.engine.partial30d) }}</dd>
+          <dt>No realizadas</dt><dd>{{ format(d.insights.engine.notCompleted30d) }}</dd>
+          <dt>Con dolor reportado</dt>
+          <dd>{{ d.insights.engine.painReportedPercent === null ? 'Pocos datos' : d.insights.engine.painReportedPercent + ' %' }}</dd>
+        </dl>
+      }
+      @if (reasons().length > 0) {
+        <p class="ov-subtitle">Motivos de no completar</p>
+        <ul class="ov-list">@for (r of reasons(); track r.label) { <li>{{ r.label }} <span class="muted">{{ r.count }}</span></li> }</ul>
+      }
+      <p class="ov-subtitle">Ajustes automáticos ({{ format(d.insights.engine.adaptationsTotal30d) }})</p>
+      @if (adaptations().length > 0) {
+        <ul class="ov-list">@for (a of adaptations(); track a.label) { <li>{{ a.label }} <span class="muted">{{ a.count }}</span></li> }</ul>
+      } @else {
+        <p class="ov-empty">El motor no ha ajustado ningún plan.</p>
+      }
+      <span class="ov-arrow" aria-hidden="true">→</span>
+    </article>
+  </div>
+}
