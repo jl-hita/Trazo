@@ -1,0 +1,166 @@
+<div class="page">
+  <header class="top wrap">
+    <a class="brand" routerLink="/" aria-label="TRAZO, inicio">
+      <img src="/landing/trazo-logo-dark.svg" alt="TRAZO" width="80" height="35">
+    </a>
+    <nav aria-label="Language">
+      @if (lang === 'es') {
+        <a class="language" routerLink="/privacy-policy" hreflang="en" lang="en">English</a>
+      } @else {
+        <a class="language" routerLink="/privacidad" hreflang="es" lang="es">Español</a>
+      }
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    <a class="back" routerLink="/">← {{ lang === 'es' ? 'Volver a TRAZO' : 'Back to TRAZO' }}</a>
+    @if (lang === 'es') {
+      <article>
+        <p class="eyebrow">TRANSPARENCIA Y DATOS</p>
+        <h1>Política de privacidad</h1>
+        <p class="intro">Esta política explica qué datos personales puede tratar TRAZO cuando utilizas la aplicación, para qué los utiliza y qué opciones tienes sobre ellos.</p>
+        <p class="updated">Última actualización: 14 de noviembre de 2026</p>
+
+        <aside class="draft-note" role="note">
+          <strong>Documento pendiente de completar antes de su publicación definitiva.</strong>
+          Falta incorporar la identidad legal completa y el domicilio del responsable, así como confirmar la relación actualizada de proveedores y encargados del tratamiento. El contacto indicado abajo no sustituye esos datos identificativos.
+        </aside>
+
+        <nav class="contents" aria-label="Índice de la política">
+          <strong>En esta página</strong>
+          <a href="#responsable">1. Responsable del tratamiento</a>
+          <a href="#datos">2. Datos que podemos tratar</a>
+          <a href="#finalidades">3. Para qué utilizamos los datos</a>
+          <a href="#bases">4. Base jurídica</a>
+          <a href="#destinatarios">5. Destinatarios y proveedores</a>
+          <a href="#transferencias">6. Transferencias internacionales</a>
+          <a href="#conservacion">7. Conservación</a>
+          <a href="#derechos">8. Tus derechos</a>
+          <a href="#seguridad">9. Seguridad</a>
+          <a href="#menores">10. Menores</a>
+          <a href="#cambios">11. Cambios en esta política</a>
+          <a href="#contacto">12. Contacto</a>
+        </nav>
+
+        <section id="responsable">
+          <h2>1. Responsable del tratamiento</h2>
+          <p>El responsable del tratamiento es el titular de TRAZO. La identidad legal completa y el domicilio del responsable deberán figurar aquí antes de que esta política se utilice como documento legal definitivo.</p>
+          <p>Contacto para cuestiones de privacidad: <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a>.</p>
+        </section>
+
+        <section id="datos">
+          <h2>2. Datos que podemos tratar</h2>
+          <p>Según las funciones que utilices, TRAZO puede tratar las siguientes categorías de datos:</p>
+          <ul>
+            <li><strong>Cuenta e identificación:</strong> dirección de correo electrónico, identificador de cuenta, nombre o datos básicos del perfil y proveedor de inicio de sesión.</li>
+            <li><strong>Entrenamiento:</strong> objetivos, planificación, ejercicios, series, repeticiones, cargas, duración y registros del historial de entrenamiento.</li>
+            <li><strong>Feedback y limitaciones:</strong> información que introduzcas sobre esfuerzo percibido, recuperación, molestias, dolor o limitaciones para adaptar o consultar tu planificación. Algunos de estos datos podrían revelar información relativa a la salud.</li>
+            <li><strong>Suscripción:</strong> estado del plan, fechas y referencias técnicas necesarias para verificar y mantener las compras o suscripciones.</li>
+            <li><strong>Datos técnicos y de seguridad:</strong> información de sesión, registros de actividad técnica y datos necesarios para prevenir abusos, diagnosticar errores y proteger el servicio.</li>
+            <li><strong>Comunicaciones:</strong> contenido que nos envíes al contactar con el equipo de TRAZO.</li>
+          </ul>
+          <p>No introduzcas en TRAZO informes médicos, diagnósticos ni información clínica que no sea necesaria para utilizar sus funciones de entrenamiento.</p>
+        </section>
+
+        <section id="finalidades">
+          <h2>3. Para qué utilizamos los datos</h2>
+          <ul>
+            <li>Crear y gestionar tu cuenta, autenticarte y mantener tus sesiones.</li>
+            <li>Guardar y mostrar tus planes, rutinas, entrenamientos e historial.</li>
+            <li>Generar o adaptar la planificación cuando utilices las funciones correspondientes.</li>
+            <li>Gestionar el acceso a funciones gratuitas y Premium y verificar el estado de las suscripciones.</li>
+            <li>Proteger la aplicación, detectar usos indebidos, resolver incidencias y mantener la disponibilidad.</li>
+            <li>Atender consultas y cumplir obligaciones legales.</li>
+          </ul>
+          <p>TRAZO es una herramienta de planificación y registro del entrenamiento. No es un servicio sanitario ni sustituye el asesoramiento de profesionales de la salud o del entrenamiento.</p>
+        </section>
+
+        <section id="bases">
+          <h2>4. Base jurídica</h2>
+          <p>El tratamiento se apoya, según el caso, en la ejecución del contrato necesario para prestarte el servicio, el cumplimiento de obligaciones legales, nuestro interés legítimo en proteger y mantener la aplicación y tu consentimiento cuando sea necesario.</p>
+          <p>Cuando una función implique tratar datos que puedan revelar información de salud, se solicitará el consentimiento explícito u otra condición válida del artículo 9 del RGPD antes de realizar ese tratamiento, cuando resulte exigible.</p>
+        </section>
+
+        <section id="destinatarios">
+          <h2>5. Destinatarios y proveedores</h2>
+          <p>No vendemos tus datos personales. Para prestar TRAZO podemos apoyarnos en proveedores que actúan siguiendo nuestras instrucciones, por ejemplo, servicios de alojamiento e infraestructura, bases de datos, autenticación, correo electrónico y gestión de pagos.</p>
+          <p>Cuando una suscripción se contrate mediante Google Play, Google gestionará el proceso de compra conforme a sus propias condiciones y políticas. TRAZO recibe la información técnica necesaria para comprobar el derecho de acceso a Premium; no necesita recibir los datos completos de tu tarjeta bancaria.</p>
+          <p>La lista concreta de proveedores, sus funciones y las garantías aplicables deberá identificarse en esta política antes de la publicación definitiva.</p>
+        </section>
+
+        <section id="transferencias">
+          <h2>6. Transferencias internacionales</h2>
+          <p>Algunos proveedores tecnológicos podrían tratar datos desde países situados fuera del Espacio Económico Europeo. Si se produce una transferencia internacional, se realizará con arreglo a los mecanismos y garantías previstos por la normativa aplicable, como una decisión de adecuación o cláusulas contractuales tipo cuando corresponda.</p>
+        </section>
+
+        <section id="conservacion">
+          <h2>7. Conservación</h2>
+          <p>Conservamos los datos mientras mantengas tu cuenta y sean necesarios para prestar las funciones que solicites. Cuando solicites la eliminación de la cuenta, eliminaremos o anonimizaremos los datos personales salvo aquellos que debamos conservar durante el plazo exigido por una obligación legal o para atender responsabilidades.</p>
+          <p>Los registros técnicos y de seguridad se conservarán durante el tiempo limitado necesario para sus finalidades. Los plazos concretos deberán definirse y documentarse según cada categoría de datos.</p>
+        </section>
+
+        <section id="derechos">
+          <h2>8. Tus derechos</h2>
+          <p>Puedes solicitar el acceso a tus datos, su rectificación, supresión, oposición, limitación del tratamiento y portabilidad, cuando proceda. También puedes retirar el consentimiento en cualquier momento, sin que ello afecte a la licitud del tratamiento anterior a su retirada.</p>
+          <p>Para ejercer tus derechos, escribe a <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a> indicando qué solicitas y aportando la información necesaria para verificar tu identidad. También tienes derecho a presentar una reclamación ante la <a href="https://www.aepd.es/" target="_blank" rel="noopener noreferrer">Agencia Española de Protección de Datos (AEPD)</a>.</p>
+        </section>
+
+        <section id="seguridad">
+          <h2>9. Seguridad</h2>
+          <p>Aplicamos medidas técnicas y organizativas razonables para proteger la información frente a accesos no autorizados, pérdida, alteración o divulgación. Ningún sistema puede garantizar una seguridad absoluta; si se produce una brecha que implique un riesgo para tus derechos, actuaremos conforme a las obligaciones legales aplicables.</p>
+        </section>
+
+        <section id="menores">
+          <h2>10. Menores</h2>
+          <p>TRAZO no está dirigida a menores de 16 años. Si detectamos que se han recogido datos de una persona menor de esa edad sin la autorización válida que corresponda, adoptaremos medidas para suprimirlos.</p>
+        </section>
+
+        <section id="cambios">
+          <h2>11. Cambios en esta política</h2>
+          <p>Podemos actualizar esta política para reflejar cambios en TRAZO, en los tratamientos de datos o en la normativa. Publicaremos la versión vigente en esta dirección e indicaremos su fecha de actualización. Si un cambio requiere tu consentimiento, te lo solicitaremos antes de aplicar el nuevo tratamiento.</p>
+        </section>
+
+        <section id="contacto">
+          <h2>12. Contacto</h2>
+          <p>Para cualquier consulta sobre privacidad o protección de datos, escribe a <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a>.</p>
+        </section>
+      </article>
+    } @else {
+      <article>
+        <p class="eyebrow">TRANSPARENCY AND DATA</p>
+        <h1>Privacy policy</h1>
+        <p class="intro">This policy explains what personal data TRAZO may process when you use the app, why it is used and what choices you have.</p>
+        <p class="updated">Last updated: 14 November 2026</p>
+        <aside class="draft-note" role="note">
+          <strong>Draft — details must be completed before final publication.</strong>
+          The controller's full legal identity and address, as well as the current list of processors and service providers, still need to be confirmed. The contact email below does not replace those legal identification details.
+        </aside>
+        <nav class="contents" aria-label="Policy contents">
+          <strong>On this page</strong>
+          <a href="#responsable">1. Data controller</a><a href="#datos">2. Data we may process</a>
+          <a href="#finalidades">3. Why we use data</a><a href="#bases">4. Legal basis</a>
+          <a href="#destinatarios">5. Recipients and providers</a><a href="#transferencias">6. International transfers</a>
+          <a href="#conservacion">7. Retention</a><a href="#derechos">8. Your rights</a>
+          <a href="#seguridad">9. Security</a><a href="#menores">10. Children</a>
+          <a href="#cambios">11. Changes</a><a href="#contacto">12. Contact</a>
+        </nav>
+        <section id="responsable"><h2>1. Data controller</h2><p>The controller is the operator of TRAZO. Its full legal identity and address must be added here before this policy is used as a final legal document.</p><p>Privacy contact: <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a>.</p></section>
+        <section id="datos"><h2>2. Data we may process</h2><p>Depending on the features you use, TRAZO may process:</p><ul><li><strong>Account data:</strong> email address, account identifier, name or basic profile details and sign-in provider.</li><li><strong>Training data:</strong> goals, plans, routines, exercises, sets, reps, loads, duration and workout history.</li><li><strong>Feedback and limitations:</strong> perceived effort, recovery, discomfort, pain or limitations you enter. Some of this information may reveal data concerning health.</li><li><strong>Subscription data:</strong> plan status, dates and technical references needed to verify purchases and subscriptions.</li><li><strong>Technical and security data:</strong> session information and technical logs needed to prevent abuse, diagnose errors and protect the service.</li><li><strong>Communications:</strong> information you send when contacting TRAZO.</li></ul><p>Please do not enter medical reports, diagnoses or clinical information that is not necessary to use the training features.</p></section>
+        <section id="finalidades"><h2>3. Why we use data</h2><ul><li>Create and manage your account and authenticate you.</li><li>Store and display your plans, routines, workouts and history.</li><li>Generate or adapt training plans when you use those features.</li><li>Manage free and Premium access and verify subscription status.</li><li>Secure, maintain and troubleshoot the application.</li><li>Respond to requests and comply with legal obligations.</li></ul><p>TRAZO is a training planning and logging tool. It is not a healthcare service and does not replace advice from health or training professionals.</p></section>
+        <section id="bases"><h2>4. Legal basis</h2><p>Depending on the processing, we rely on performance of the contract needed to provide the service, compliance with legal obligations, our legitimate interest in securing and maintaining the app, or your consent.</p><p>Where a feature processes data that may reveal health information, explicit consent or another valid condition under Article 9 GDPR will be obtained before that processing where required.</p></section>
+        <section id="destinatarios"><h2>5. Recipients and providers</h2><p>We do not sell your personal data. We may rely on service providers acting on our instructions, such as hosting and infrastructure, database, authentication, email and payment services.</p><p>If you subscribe through Google Play, Google handles the purchase under its own terms and policies. TRAZO receives the technical information needed to verify Premium access; it does not need your full bank card details.</p><p>The specific providers, their roles and applicable safeguards must be identified before final publication.</p></section>
+        <section id="transferencias"><h2>6. International transfers</h2><p>Some technology providers may process data from countries outside the European Economic Area. Where an international transfer takes place, it will rely on the safeguards required by applicable law, such as an adequacy decision or standard contractual clauses where appropriate.</p></section>
+        <section id="conservacion"><h2>7. Retention</h2><p>We keep data while your account is active and for as long as needed to provide the features you request. When you request account deletion, we will delete or anonymise personal data unless we must retain it to comply with law or establish, exercise or defend legal claims.</p><p>Technical and security logs are retained for a limited period needed for their purposes. Specific periods must be defined for each data category.</p></section>
+        <section id="derechos"><h2>8. Your rights</h2><p>You may request access, rectification, erasure, objection, restriction and portability where applicable. You may also withdraw consent at any time; this does not affect the lawfulness of processing before withdrawal.</p><p>Contact <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a> to exercise your rights. You may also lodge a complaint with the <a href="https://www.aepd.es/" target="_blank" rel="noopener noreferrer">Spanish Data Protection Authority (AEPD)</a>.</p></section>
+        <section id="seguridad"><h2>9. Security</h2><p>We apply reasonable technical and organisational measures to protect information against unauthorised access, loss, alteration or disclosure. No system can guarantee absolute security. We will act in accordance with applicable legal duties if a breach creates a risk to your rights.</p></section>
+        <section id="menores"><h2>10. Children</h2><p>TRAZO is not intended for children under 16. If we become aware that we have collected data from a child under that age without valid authorisation, we will take steps to delete it.</p></section>
+        <section id="cambios"><h2>11. Changes to this policy</h2><p>We may update this policy to reflect changes to TRAZO, its data processing or applicable law. The current version and its update date will be published here. If a change requires your consent, we will ask for it before applying the new processing.</p></section>
+        <section id="contacto"><h2>12. Contact</h2><p>For privacy or data protection questions, email <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a>.</p></section>
+      </article>
+    }
+  </main>
+  <footer class="wrap">
+    <span>© 2026 TRAZO</span>
+    <span><a routerLink="/">TRAZO</a> · <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a></span>
+  </footer>
+</div>
