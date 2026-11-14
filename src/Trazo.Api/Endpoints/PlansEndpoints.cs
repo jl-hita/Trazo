@@ -18,7 +18,14 @@ public static class PlansEndpoints
     {
         var group = endpoints.MapGroup("/api/v1/plans").WithTags("Plans")
             .RequireActiveSubscription()
-            .RequireRateLimiting(RateLimitPolicy);
+            .RequireRateLimiting(RateLimitPolicy)
+            .AddEndpointFilter(async (context, next) =>
+            {
+                // The app sends its IANA zone with each request (X-Time-Zone); an invalid value is ignored.
+                context.HttpContext.RequestServices.GetRequiredService<IUserTimeZone>().RequestOverride =
+                    context.HttpContext.Request.Headers["X-Time-Zone"].ToString();
+                return await next(context);
+            });
 
         group.MapGet("/options", OptionsAsync).WithName("GetPlanOptions")
             .WithSummary("Allowed values for the plan profile: goals, levels, splits, limitations and equipment of the catalog.")
@@ -62,12 +69,17 @@ public static class PlansEndpoints
         Results.Ok(await plans.GetOptionsAsync(ct));
 
     private static async Task<IResult> CreateAsync(
-        PlanProfileInput request, ClaimsPrincipal principal, ITrainingPlanService plans, TimeProvider clock, CancellationToken ct)
+        PlanProfileInput request, ClaimsPrincipal principal, ITrainingPlanService plans, IUserTimeZone zones, Trazo.Infrastructure.Accounts.IAccountService accounts, CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
-        var parsed = PlanProfileParser.Parse(request, DateOnly.FromDateTime(clock.GetUtcNow().UtcDateTime));
+        var sentZone = !string.IsNullOrWhiteSpace(request.TimeZone);
+        if (sentZone && !UserTimeZone.TryParse(request.TimeZone, out _))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["timeZone"] = ["Usa un identificador IANA válido, por ejemplo Europe/Madrid."] });
+        if (sentZone) zones.RequestOverride = request.TimeZone;
+        var parsed = PlanProfileParser.Parse(request, await plans.TodayAsync(userId, ct));
         if (!parsed.Succeeded) return Results.ValidationProblem(parsed.Errors.ToDictionary(p => p.Key, p => p.Value));
         var result = await plans.CreateAsync(userId, parsed.Profile!, null, ct);
+        if (result.Succeeded && sentZone) await accounts.SetTimeZoneAsync(userId, request.TimeZone!, ct);
         return result.Succeeded ? Results.Created("/api/v1/plans/current", result.Value) : Failure(result);
     }
 

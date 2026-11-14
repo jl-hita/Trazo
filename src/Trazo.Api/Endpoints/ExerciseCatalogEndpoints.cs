@@ -15,6 +15,11 @@ public static class ExerciseCatalogEndpoints
             .WithName("SearchExercises")
             .WithSummary("Search and filter the exercise catalog.");
 
+        group.MapGet("/options", OptionsAsync)
+            .WithName("GetExerciseFilterOptions")
+            .WithSummary("Vocabulary of the catalog filters (movement patterns, muscles, equipment, levels) with Spanish labels and counts.")
+            .Produces<ExerciseFilterOptions>();
+
         group.MapGet("/{id}", GetByIdAsync)
             .WithName("GetExerciseById")
             .WithSummary("Get the complete details of one exercise.");
@@ -116,6 +121,33 @@ public static class ExerciseCatalogEndpoints
             (int)Math.Ceiling(totalCount / (double)pageSize)));
     }
 
+    private static async Task<IResult> OptionsAsync(TrazoDbContext db, HttpContext http, CancellationToken cancellationToken)
+    {
+        var rows = await db.ExerciseCatalog.AsNoTracking().Where(x => x.IsActive)
+            .Select(x => new { x.MovementPattern, x.PrimaryMuscles, x.SecondaryMuscles, x.Equipment, x.RequiredEquipment, x.MinimumExperience, x.Difficulty })
+            .ToListAsync(cancellationToken);
+
+        static IReadOnlyList<FilterOption> Build(IEnumerable<string?> values, IReadOnlyDictionary<string, string> labels) =>
+            values.Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v!.Trim()).GroupBy(v => v, StringComparer.Ordinal)
+                .Select(g => new FilterOption(g.Key, ExerciseVocabulary.Label(labels, g.Key), g.Count()))
+                .OrderBy(o => o.Label, StringComparer.CurrentCultureIgnoreCase).ThenBy(o => o.Key, StringComparer.Ordinal).ToList();
+
+        var options = new ExerciseFilterOptions(
+            Build(rows.Select(r => r.MovementPattern), ExerciseVocabulary.Patterns),
+            Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), ExerciseVocabulary.Muscles),
+            Build(rows.SelectMany(r => r.RequiredEquipment.Append(r.Equipment).Distinct()), ExerciseVocabulary.Equipment),
+            Build(rows.Select(r => r.MinimumExperience), ExerciseVocabulary.Levels),
+            Build(rows.Select(r => r.Difficulty), ExerciseVocabulary.Levels),
+            new ExerciseFilterParameters("movementPattern", "muscle", "equipment", "experience", "difficulty"));
+
+        // Cacheable: the answer only changes when the catalog does, so clients revalidate with the ETag.
+        var etag = "\"" + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(options)))[..24] + "\"";
+        http.Response.Headers.CacheControl = "public, max-age=300";
+        http.Response.Headers.ETag = etag;
+        if (http.Request.Headers.IfNoneMatch.ToString() == etag) return Results.StatusCode(StatusCodes.Status304NotModified);
+        return Results.Ok(options);
+    }
+
     private static async Task<IResult> GetByIdAsync(
         string id,
         TrazoDbContext db,
@@ -202,3 +234,54 @@ public sealed record ExerciseCatalogDetail(
     string MinimumExperience,
     string[] SuitableGoals,
     int SelectionPriority);
+
+public sealed record FilterOption(string Key, string Label, int Count);
+
+/// <summary>Query-string names of GET /api/v1/exercises that each list feeds.</summary>
+public sealed record ExerciseFilterParameters(string MovementPattern, string Muscle, string Equipment, string Experience, string Difficulty);
+
+/// <summary>
+/// Keys are the values stored in the catalog (stable, accepted as they are by the list filters); labels are Spanish. A value
+/// without a known label gets a readable fallback, so a new catalog value never breaks the screen.
+/// </summary>
+public sealed record ExerciseFilterOptions(
+    IReadOnlyList<FilterOption> MovementPatterns, IReadOnlyList<FilterOption> Muscles, IReadOnlyList<FilterOption> Equipment,
+    IReadOnlyList<FilterOption> ExperienceLevels, IReadOnlyList<FilterOption> Difficulties, ExerciseFilterParameters Parameters);
+
+public static class ExerciseVocabulary
+{
+    public static string Label(IReadOnlyDictionary<string, string> labels, string key) =>
+        labels.TryGetValue(key, out var label) ? label : Humanize(key);
+
+    private static string Humanize(string key)
+    {
+        var spaced = System.Text.RegularExpressions.Regex.Replace(key.Replace('-', ' ').Replace('_', ' '), "(?<=[a-z])(?=[A-Z])", " ").Trim().ToLowerInvariant();
+        return spaced.Length == 0 ? key : char.ToUpperInvariant(spaced[0]) + spaced[1..];
+    }
+
+    private static IReadOnlyDictionary<string, string> Map(params (string, string)[] pairs) =>
+        pairs.ToDictionary(p => p.Item1, p => p.Item2, StringComparer.OrdinalIgnoreCase);
+
+    public static readonly IReadOnlyDictionary<string, string> Patterns = Map(
+        ("Squat", "Sentadilla"), ("Hinge", "Bisagra de cadera"), ("HorizontalPush", "Empuje horizontal"), ("VerticalPush", "Empuje vertical"),
+        ("HorizontalPull", "Tirón horizontal"), ("VerticalPull", "Tirón vertical"), ("SingleLeg", "Unilateral de pierna"),
+        ("Core", "Core"), ("Accessory", "Accesorio"));
+
+    public static readonly IReadOnlyDictionary<string, string> Muscles = Map(
+        ("Chest", "Pecho"), ("Lats", "Dorsales"), ("UpperBack", "Espalda alta"), ("Deltoids", "Hombros"), ("Biceps", "Bíceps"),
+        ("Triceps", "Tríceps"), ("Forearms", "Antebrazos"), ("Abdominals", "Abdominales"), ("Obliques", "Oblicuos"),
+        ("ErectorSpinae", "Lumbares"), ("Glutes", "Glúteos"), ("Quadriceps", "Cuádriceps"), ("Hamstrings", "Isquiotibiales"),
+        ("Calves", "Gemelos"), ("Adductors", "Aductores"), ("Abductors", "Abductores"), ("HipFlexors", "Flexores de cadera"),
+        ("Serratus", "Serrato"), ("TibialisAnterior", "Tibial anterior"), ("RotatorCuff", "Manguito rotador"));
+
+    public static readonly IReadOnlyDictionary<string, string> Equipment = Map(
+        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"), ("machine", "Máquina"),
+        ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("bodyweight", "Peso corporal"),
+        ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
+        ("smith-machine", "Máquina Smith"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
+        ("dip-bar", "Paralelas"), ("trx", "TRX"), ("other", "Otro"));
+
+    /// <summary>Used for both minimum experience (Beginner…) and difficulty (beginner…); matching ignores case.</summary>
+    public static readonly IReadOnlyDictionary<string, string> Levels = Map(
+        ("Beginner", "Principiante"), ("Intermediate", "Intermedio"), ("Advanced", "Avanzado"));
+}

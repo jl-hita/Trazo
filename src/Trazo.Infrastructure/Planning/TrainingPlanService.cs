@@ -10,6 +10,8 @@ namespace Trazo.Infrastructure.Planning;
 public interface ITrainingPlanService
 {
     Task<PlanOptions> GetOptionsAsync(CancellationToken ct);
+    /// <summary>The current date in the time zone of the user (request header, profile or Europe/Madrid).</summary>
+    Task<DateOnly> TodayAsync(Guid userId, CancellationToken ct);
     Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct);
     Task<PlanView?> GetCurrentAsync(Guid userId, CancellationToken ct);
     Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct);
@@ -26,7 +28,7 @@ public interface ITrainingPlanService
 /// user really did and no stored data (or response) ever contains the whole macrocycle in detail. Every method takes the
 /// user id and only ever touches that user's active plan.
 /// </summary>
-public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) : ITrainingPlanService
+public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones) : ITrainingPlanService
 {
     public const string Disclaimer =
         "Plan generado automáticamente a partir de tu perfil. No es consejo médico ni sustituye a un profesional: " +
@@ -36,9 +38,32 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
     private const int LoadReferenceLogs = 40;
     private const int MaximumFutureSessionsToAdapt = TrainingAutoAdaptationPolicy.MaximumFutureSessions;
 
-    private DateOnly Today => DateOnly.FromDateTime(clock.GetUtcNow().UtcDateTime);
+    // "Today" follows the user's time zone, not the server's. It is resolved once per request by the methods that take a
+    // user id (UseUserClockAsync); a service that has not resolved it yet falls back to UTC.
+    private DateOnly? _today;
+    private DateOnly Today => _today ?? DateOnly.FromDateTime(clock.GetUtcNow().UtcDateTime);
+
+    private async Task UseUserClockAsync(Guid userId, CancellationToken ct)
+    {
+        var zone = await zones.ResolveAsync(userId, ct);
+        _today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(clock.GetUtcNow(), zone).DateTime);
+    }
+
+    public async Task<DateOnly> TodayAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        return Today;
+    }
 
     // ---------------------------------------------------------------- options
+
+    /// <summary>Weeks start on Monday (ISO 8601), the convention for the Spanish audience. The ids never change.</summary>
+    private static readonly IReadOnlyList<DayOption> WeekDays =
+    [
+        new("Monday", 1, "Lunes", "L"), new("Tuesday", 2, "Martes", "M"), new("Wednesday", 3, "Miércoles", "X"),
+        new("Thursday", 4, "Jueves", "J"), new("Friday", 5, "Viernes", "V"), new("Saturday", 6, "Sábado", "S"),
+        new("Sunday", 7, "Domingo", "D")
+    ];
 
     public async Task<PlanOptions> GetOptionsAsync(CancellationToken ct)
     {
@@ -47,8 +72,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
             .Distinct().OrderBy(token => token, StringComparer.Ordinal).ToArray();
         return new PlanOptions(
             Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
-            Enum.GetNames<DayOfWeek>(), LimitationRules.Areas, equipment,
-            2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks);
+            WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
+            2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
+            WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId);
     }
 
     private static string[] Names<T>() where T : struct, Enum => Enum.GetNames<T>();
@@ -57,6 +83,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
 
     public async Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct)
     {
+        await UseUserClockAsync(userId, ct);
         if (await db.TrainingPlans.AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct))
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists,
                 "Ya tienes un plan activo. Archívalo antes de crear otro.");
@@ -120,12 +147,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
 
     public async Task<PlanView?> GetCurrentAsync(Guid userId, CancellationToken ct)
     {
+        await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         return plan is null ? null : ToView(plan);
     }
 
     public async Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct)
     {
+        await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
         var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
@@ -171,13 +200,19 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
 
     public async Task<PlanResult<LogResult>> LogSessionAsync(Guid userId, Guid sessionId, ParsedLog log, CancellationToken ct)
     {
+        await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return PlanResult<LogResult>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
         var session = await db.PlannedSessions.FirstOrDefaultAsync(s => s.Id == sessionId && s.PlanId == plan.Id, ct);
         if (session is null) return PlanResult<LogResult>.Fail(PlanFailure.SessionNotFound, "La sesión no existe.");
+        // A retry of a request that already succeeded (the client lost the answer) must not fail: when the stored log is
+        // the same as the one sent, the saved result is returned again. A different log for the session stays a conflict.
+        var existing = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
+        if (existing is not null)
+            return await ReplayOrConflictAsync(session, existing, log, ct);
         var window = WindowCheck(plan, session);
         if (window is not null) return PlanResult<LogResult>.Fail(PlanFailure.SessionOutOfWindow, window);
-        if (session.Status != PlannedSessionStatus.Planned || await db.WorkoutLogs.AnyAsync(l => l.PlannedSessionId == session.Id, ct))
+        if (session.Status != PlannedSessionStatus.Planned)
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
 
         var prescribed = PrescriptionJson.Read(session.PrescriptionJson);
@@ -222,10 +257,36 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
         catch (DbUpdateException)
         {
             db.ChangeTracker.Clear();
-            if (!await db.WorkoutLogs.AsNoTracking().AnyAsync(l => l.PlannedSessionId == session.Id, ct)) throw;
-            return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
+            var concurrent = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
+            if (concurrent is null) throw;
+            // Two identical requests at once: the second one gets the first one's result.
+            var stored = await db.PlannedSessions.AsNoTracking().FirstAsync(s => s.Id == session.Id, ct);
+            return await ReplayOrConflictAsync(stored, concurrent, log, ct);
         }
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, workout), report));
+    }
+
+    private async Task<PlanResult<LogResult>> ReplayOrConflictAsync(PlannedSession session, WorkoutLog existing, ParsedLog sent, CancellationToken ct)
+    {
+        if (!SameLog(existing, sent))
+            return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
+        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id).OrderBy(a => a.AppliedAt).ToListAsync(ct))
+            .Select(a => new AppliedAdaptationView(a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation)).ToList();
+        var report = new AdaptationReport([], "none", "Este registro ya estaba guardado.", applied, []);
+        return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, existing), report, Replayed: true));
+    }
+
+    /// <summary>True when the stored log holds exactly what the request describes (outcome, notes and every set).</summary>
+    private static bool SameLog(WorkoutLog stored, ParsedLog sent)
+    {
+        if (stored.Outcome != sent.Outcome || stored.NonCompletionReason != sent.NonCompletionReason || stored.Recovery != sent.Recovery
+            || stored.SessionRpe != sent.SessionRpe || stored.PainReported != sent.Pain || (stored.Notes ?? "") != (sent.Notes ?? "")
+            || stored.Sets.Count != sent.Sets.Count)
+            return false;
+        return sent.Sets.All(set => stored.Sets.Any(s =>
+            string.Equals(s.ExerciseId, set.ExerciseId, StringComparison.OrdinalIgnoreCase) && s.SetNumber == set.SetNumber
+            && s.WeightKg == set.WeightKg && s.Repetitions == set.Repetitions && s.Rir == set.Rir && s.Completed == set.Completed
+            && s.SkippedReason == set.SkippedReason && s.PainReported == set.Pain));
     }
 
     /// <summary>Reads the whole history of the plan, asks the planner what to change and applies it to the upcoming sessions.</summary>
@@ -391,6 +452,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock) :
 
     private async Task<SessionContext> SessionContextAsync(Guid userId, Guid sessionId, string exerciseId, CancellationToken ct)
     {
+        await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return new(PlanFailure.NoActivePlan, "No tienes un plan activo.", null, null, null, null, null);
         var session = await db.PlannedSessions.FirstOrDefaultAsync(s => s.Id == sessionId && s.PlanId == plan.Id, ct);

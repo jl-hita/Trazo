@@ -47,3 +47,12 @@ RepDB attribution is returned when an image originates from RepDB.
 ## Access and trust boundary
 
 These read-only catalog endpoints are currently public. They expose catalog data only; they do not expose user information or administrative operations. User-specific training data and all write operations must be protected by authentication and authorization before they are added.
+
+## Filter options
+
+`GET /api/v1/exercises/options` (public, cacheable with `ETag` and `Cache-Control: public, max-age=300`) returns the vocabulary of the filters,
+derived from the active catalog: `movementPatterns`, `muscles`, `equipment`, `experienceLevels` and `difficulties`, each a list of
+`{ key, label, count }`. `key` is the stored value and is what the list filters accept (stable); `label` is Spanish; `count` is the number of exercises.
+`parameters` names the query parameter fed by each list. A value without a known Spanish label gets a readable fallback.
+
+Subscription access: `GET /api/v1/exercises*`, the images and this endpoint are public; only `/api/v1/plans/*` requires an active subscription when "Require a subscription" is on.
