@@ -23,6 +23,8 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Planning.WorkoutLog> WorkoutLogs => Set<Trazo.Domain.Planning.WorkoutLog>();
     public DbSet<Trazo.Domain.Planning.WorkoutSetLog> WorkoutSetLogs => Set<Trazo.Domain.Planning.WorkoutSetLog>();
     public DbSet<Trazo.Domain.Planning.PlanAdaptation> PlanAdaptations => Set<Trazo.Domain.Planning.PlanAdaptation>();
+    public DbSet<Trazo.Domain.Planning.PlanReviewRequest> PlanReviewRequests => Set<Trazo.Domain.Planning.PlanReviewRequest>();
+    public DbSet<Trazo.Domain.Planning.PlanReviewMessage> PlanReviewMessages => Set<Trazo.Domain.Planning.PlanReviewMessage>();
     public DbSet<Trazo.Domain.Settings.AppSetting> AppSettings => Set<Trazo.Domain.Settings.AppSetting>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

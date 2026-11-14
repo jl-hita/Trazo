@@ -160,6 +160,55 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
                 .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
 
+        modelBuilder.Entity("Trazo.Domain.Planning.PlanReviewRequest", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<Guid>("PlanId").HasColumnType("uuid");
+            b.Property<string>("Status").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<Guid?>("AssignedToUserId").HasColumnType("uuid");
+            b.Property<DateTimeOffset?>("AssignedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("ReviewedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("UserLastReadAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Status", "UpdatedAt");
+            b.HasIndex("UserId", "CreatedAt");
+            b.HasIndex("AssignedToUserId");
+            b.HasIndex("PlanId").IsUnique().HasFilter("\"Status\" <> 'Reviewed'");
+            b.ToTable("plan_review_requests");
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.PlanReviewRequest", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Planning.TrainingPlan", null)
+                .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("AssignedToUserId").OnDelete(DeleteBehavior.SetNull);
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.PlanReviewMessage", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("RequestId").HasColumnType("uuid");
+            b.Property<string>("Author").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<Guid?>("AuthorUserId").HasColumnType("uuid");
+            b.Property<string>("Body").IsRequired().HasMaxLength(2000).HasColumnType("character varying(2000)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("RequestId", "CreatedAt");
+            b.HasIndex("AuthorUserId");
+            b.ToTable("plan_review_messages");
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.PlanReviewMessage", b =>
+        {
+            b.HasOne("Trazo.Domain.Planning.PlanReviewRequest", null)
+                .WithMany().HasForeignKey("RequestId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("AuthorUserId").OnDelete(DeleteBehavior.SetNull);
+        });
+
         modelBuilder.Entity("Trazo.Domain.Planning.TrainingPlan", b =>
         {
             b.Property<Guid>("Id").HasColumnType("uuid");

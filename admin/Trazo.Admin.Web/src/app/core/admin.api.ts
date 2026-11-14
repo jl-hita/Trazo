@@ -194,6 +194,21 @@ export interface OperationsInput {
   logLevel: string; logRetentionDays: number; dietoExpressEndpoint: string; dietoExpressApiKey: string | null;
 }
 
+export interface AdminPlanReview {
+  id: string; status: 'pending' | 'in_progress' | 'reviewed'; userId: string; userName: string; userEmail: string;
+  goal: string; experience: string; split: string; totalWeeks: number;
+  assignedToUserId: string | null; assignedToName: string | null; assignedToMe: boolean;
+  preview: string | null; lastAuthor: string | null; messageCount: number; awaitingReply: boolean;
+  createdAt: string; updatedAt: string; reviewedAt: string | null;
+}
+
+export interface AdminPlanReviewMessage { id: string; author: 'user' | 'staff' | 'system'; authorName: string | null; body: string; createdAt: string; }
+
+export interface AdminPlanReviewDetail {
+  review: AdminPlanReview; startDate: string; canTake: boolean; canReply: boolean; canRelease: boolean; canClose: boolean;
+  messages: AdminPlanReviewMessage[];
+}
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -285,6 +300,36 @@ export class AdminApi {
 
   deleteExerciseImage(id: string, slot: number): Promise<AdminExerciseDetail> {
     return firstValueFrom(this.http.delete<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/images/${slot}`));
+  }
+
+  listPlanReviews(status: string, page: number): Promise<Page<AdminPlanReview>> {
+    let params = new HttpParams().set('page', page).set('pageSize', 25);
+    if (status) params = params.set('status', status);
+    return firstValueFrom(this.http.get<Page<AdminPlanReview>>(`${API}/plan-reviews`, { params }));
+  }
+
+  planReviewsCounts(): Promise<{ pending: number; mine: number; mineAwaitingReply: number }> {
+    return firstValueFrom(this.http.get<{ pending: number; mine: number; mineAwaitingReply: number }>(`${API}/plan-reviews/pending-count`));
+  }
+
+  planReview(id: string): Promise<AdminPlanReviewDetail> {
+    return firstValueFrom(this.http.get<AdminPlanReviewDetail>(`${API}/plan-reviews/${id}`));
+  }
+
+  claimPlanReview(id: string): Promise<void> {
+    return firstValueFrom(this.http.post<void>(`${API}/plan-reviews/${id}/claim`, {}));
+  }
+
+  releasePlanReview(id: string, reason: string): Promise<void> {
+    return firstValueFrom(this.http.post<void>(`${API}/plan-reviews/${id}/release`, { reason: reason.trim() || null }));
+  }
+
+  messagePlanReview(id: string, body: string): Promise<void> {
+    return firstValueFrom(this.http.post<void>(`${API}/plan-reviews/${id}/messages`, { body }));
+  }
+
+  closePlanReview(id: string, message: string): Promise<void> {
+    return firstValueFrom(this.http.post<void>(`${API}/plan-reviews/${id}/review`, { message: message.trim() || null }));
   }
 
   listSubscriptions(filters: SubscriptionFilters): Promise<Page<AdminSubscriptionSummary>> {
