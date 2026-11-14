@@ -16,6 +16,29 @@
     <div class="phone"><div class="shot"><img [src]="t.shots[0].file" width="1280" height="2856" [alt]="t.shotAlt + ': ' + t.shots[0].caption"></div></div>
   </div>
 
+  <section class="auto-section">
+    <div class="wrap">
+      <div class="pricing-heading">
+        <h2>{{ t.autoTitle }}</h2>
+        <p class="lead">{{ t.autoLead }}</p>
+      </div>
+      <div class="auto-grid">
+        @for (b of t.autoBlocks; track b.title) {
+          <article class="auto-card">
+            <p class="plan-label">{{ b.badge }}</p>
+            <h3>{{ b.title }}</h3>
+            <p class="auto-text">{{ b.text }}</p>
+            <ul>
+              @for (point of b.points; track point) {
+                <li>{{ point }}</li>
+              }
+            </ul>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
   <section class="alt">
     <div class="wrap">
       <h2>{{ t.featuresTitle }}</h2>
@@ -24,6 +47,39 @@
           <div class="card"><span class="dot"></span><h3>{{ f.title }}</h3><p>{{ f.text }}</p></div>
         }
       </div>
+    </div>
+  </section>
+
+  <section id="pricing" class="pricing-section">
+    <div class="wrap">
+      <div class="pricing-heading">
+        <h2>{{ t.pricingTitle }}</h2>
+        <p class="lead">{{ t.pricingLead }}</p>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-card">
+          <p class="plan-label">{{ t.freeName }}</p>
+          <p class="price"><strong>{{ t.freePrice }}</strong><span>{{ t.freePeriod }}</span></p>
+          <p class="plan-tagline">{{ t.freeTagline }}</p>
+          <ul>
+            @for (feature of t.freeFeatures; track feature) {
+              <li>{{ feature }}</li>
+            }
+          </ul>
+        </article>
+        <article class="price-card premium">
+          <p class="plan-label">{{ t.premiumName }} <span class="plan-badge">PRO</span></p>
+          <p class="price"><strong>{{ t.premiumPrice }}</strong><span>{{ t.premiumPeriod }}</span></p>
+          <p class="plan-tagline">{{ t.premiumTagline }}</p>
+          <ul>
+            @for (feature of t.premiumFeatures; track feature) {
+              <li>{{ feature }}</li>
+            }
+          </ul>
+          <p class="annual">{{ t.premiumAnnual }}</p>
+        </article>
+      </div>
+      <p class="pricing-note">{{ t.pricingNote }}</p>
     </div>
   </section>
 
@@ -49,6 +105,18 @@
           <li><h3>{{ s.title }}</h3><p>{{ s.text }}</p></li>
         }
       </ol>
+    </div>
+  </section>
+
+  <section class="faq-section" id="faq">
+    <div class="wrap faq">
+      <h2>{{ t.faqTitle }}</h2>
+      @for (item of t.faq; track item.q) {
+        <details>
+          <summary>{{ item.q }}</summary>
+          <p>{{ item.a }}</p>
+        </details>
+      }
     </div>
   </section>
 
