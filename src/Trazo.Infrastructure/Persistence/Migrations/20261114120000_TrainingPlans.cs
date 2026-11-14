@@ -39,7 +39,6 @@ public sealed class TrainingPlans : Migration
                 "CreatedAt" timestamp with time zone NOT NULL,
                 "UpdatedAt" timestamp with time zone NOT NULL
             );
-            CREATE INDEX "IX_training_plans_UserId" ON training_plans ("UserId");
             CREATE UNIQUE INDEX ux_training_plans_one_active_per_user ON training_plans ("UserId") WHERE "Status" = 'Active';
 
             CREATE TABLE training_plan_phases (

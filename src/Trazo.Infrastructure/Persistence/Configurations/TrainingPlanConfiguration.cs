@@ -41,7 +41,6 @@ public sealed class TrainingPlanConfiguration : IEntityTypeConfiguration<Trainin
         builder.Property(x => x.EngineVersion).HasMaxLength(40).IsRequired();
         builder.Property(x => x.MacrocycleName).HasMaxLength(160).IsRequired();
         builder.Property(x => x.MacrocycleNotes).HasMaxLength(1000).IsRequired();
-        builder.HasIndex(x => x.UserId);
         // One active plan per user, enforced by the database so two concurrent requests cannot create two.
         builder.HasIndex(x => x.UserId).IsUnique().HasFilter("\"Status\" = 'Active'")
             .HasDatabaseName("ux_training_plans_one_active_per_user");

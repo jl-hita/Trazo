@@ -184,7 +184,6 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
-            b.HasIndex("UserId");
             b.HasIndex("UserId").IsUnique().HasFilter("\"Status\" = 'Active'").HasDatabaseName("ux_training_plans_one_active_per_user");
             b.ToTable("training_plans");
         });
