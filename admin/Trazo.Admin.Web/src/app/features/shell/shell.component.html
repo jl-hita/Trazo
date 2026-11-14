@@ -7,14 +7,22 @@
     <div class="workspace-label">WORKSPACE</div>
     <nav aria-label="Main navigation">
       @for (item of navigation; track item.label) {
-        <a class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="item.link ?? null" [class.disabled]="!item.link">
-          <span class="nav-icon">{{ item.icon }}</span>
-          <span>{{ item.label }}</span>
-        </a>
+        @if (item.link) {
+          <a class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="item.link">
+            <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+          </a>
+        } @else {
+          <span class="nav-item disabled" aria-disabled="true">
+            <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
+            <span>{{ item.label }}<small class="nav-note">No disponible</small></span>
+          </span>
+        }
       }
     </nav>
     <div class="sidebar-footer">
-      <span class="status-dot"></span><span>System workspace</span><span class="environment">DEV</span>
+      <span class="status-dot" aria-hidden="true"></span><span>System workspace</span>
+      <span class="environment" [attr.title]="versionTitle()">{{ environmentLabel() }}@if (system(); as s) { · v{{ s.version }}@if (s.commit) { ({{ s.commit }}) } }</span>
     </div>
   </aside>
   <main class="main">

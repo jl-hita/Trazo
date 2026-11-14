@@ -91,6 +91,7 @@ public static class SettingsServiceCollectionExtensions
         services.AddScoped<IRuntimeSettings, RuntimeSettings>();
         services.AddScoped<ISettingsWriter, SettingsWriter>();
         services.AddScoped<ISetupService, SetupService>();
+        services.AddSingleton<IEmailDeliveryRecorder, EmailDeliveryRecorder>();
         // Operational settings kept in memory for code that cannot await the database (CORS, rate limiters, log retention).
         services.AddSingleton<IRuntimeOptions, RuntimeOptions>();
         services.AddHostedService<RuntimeOptionsRefresher>();
