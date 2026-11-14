@@ -163,6 +163,10 @@
   </main>
   <footer class="wrap">
     <span>© 2026 TRAZO</span>
-    <span><a routerLink="/">TRAZO</a> · <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a></span>
+    <span>
+      <a [routerLink]="lang === 'es' ? '/condiciones' : '/terms'">{{ lang === 'es' ? 'Condiciones de uso' : 'Terms of use' }}</a> ·
+      <a routerLink="/">TRAZO</a> ·
+      <a href="mailto:trazostrength@gmail.com">trazostrength@gmail.com</a>
+    </span>
   </footer>
 </div>
