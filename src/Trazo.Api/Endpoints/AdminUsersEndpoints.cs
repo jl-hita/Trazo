@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Contracts;
+using Trazo.Api.Security;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Settings;
