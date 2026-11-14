@@ -6,7 +6,7 @@ using Trazo.Infrastructure.Planning;
 namespace Trazo.Api.Endpoints;
 
 /// <summary>
-/// The signed-in user's training plan. Every route needs an active subscription (or free trial) and only ever touches the
+/// The signed-in user's training plan. Creating a generated plan needs an active subscription (or free trial); manual plans are free. Every route only ever touches the
 /// caller's own plan; ids of other users' sessions answer 404. The API serves the macrocycle as a summary of phases and the
 /// detail of the CURRENT week only: there is deliberately no route that returns future sessions or the whole plan.
 /// </summary>
@@ -37,6 +37,11 @@ public static class PlansEndpoints
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .RequireActiveSubscription();
+        group.MapPost("/manual", CreateManualAsync).WithName("CreateManualPlan")
+            .WithSummary("Creates a plan written by the user (free): weekly routines repeated for every week. Premium adapts it as it is logged.")
+            .Produces<PlanView>(StatusCodes.Status201Created)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status409Conflict);
         group.MapGet("/current", GetCurrentAsync).WithName("GetCurrentPlan")
             .WithSummary("The active plan: profile and macrocycle phases, without any session detail.")
             .Produces<PlanView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -82,6 +87,21 @@ public static class PlansEndpoints
         var parsed = PlanProfileParser.Parse(request, await plans.TodayAsync(userId, ct));
         if (!parsed.Succeeded) return Results.ValidationProblem(parsed.Errors.ToDictionary(p => p.Key, p => p.Value));
         var result = await plans.CreateAsync(userId, parsed.Profile!, null, ct);
+        if (result.Succeeded && sentZone) await accounts.SetTimeZoneAsync(userId, request.TimeZone!, ct);
+        return result.Succeeded ? Results.Created("/api/v1/plans/current", result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> CreateManualAsync(
+        ManualPlanInput request, ClaimsPrincipal principal, ITrainingPlanService plans, IUserTimeZone zones, Trazo.Infrastructure.Accounts.IAccountService accounts, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var sentZone = !string.IsNullOrWhiteSpace(request.TimeZone);
+        if (sentZone && !UserTimeZone.TryParse(request.TimeZone, out _))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["timeZone"] = ["Usa un identificador IANA válido, por ejemplo Europe/Madrid."] });
+        if (sentZone) zones.RequestOverride = request.TimeZone;
+        var parsed = ManualPlanParser.Parse(request, await plans.TodayAsync(userId, ct));
+        if (!parsed.Succeeded) return Results.ValidationProblem(parsed.Errors.ToDictionary(p => p.Key, p => p.Value));
+        var result = await plans.CreateManualAsync(userId, parsed.Plan!, ct);
         if (result.Succeeded && sentZone) await accounts.SetTimeZoneAsync(userId, request.TimeZone!, ct);
         return result.Succeeded ? Results.Created("/api/v1/plans/current", result.Value) : Failure(result);
     }
