@@ -41,6 +41,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/setup/setup.page').then(m => m.SetupPageComponent)
   },
   {
+    path: 'account/reset-password',
+    loadComponent: () => import('./features/account/reset-password.page').then(m => m.ResetPasswordPageComponent)
+  },
+  {
+    path: 'account/verify-email',
+    loadComponent: () => import('./features/account/verify-email.page').then(m => m.VerifyEmailPageComponent)
+  },
+  {
     path: 'login',
     canActivate: [setupGuard, loginGuard],
     loadComponent: () => import('./features/login/login.page').then(m => m.LoginPageComponent)
