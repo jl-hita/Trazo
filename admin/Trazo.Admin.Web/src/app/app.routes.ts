@@ -2,6 +2,17 @@ import { Routes } from '@angular/router';
 import { adminGuard, loginGuard, setupGuard, setupPageGuard, superadminGuard } from './core/guards';
 
 export const routes: Routes = [
+  // Páginas legales públicas, accesibles sin iniciar sesión.
+  {
+    path: 'privacidad',
+    data: { lang: 'es' },
+    loadComponent: () => import('./features/privacy/privacy.page').then(m => m.PrivacyPageComponent)
+  },
+  {
+    path: 'privacy-policy',
+    data: { lang: 'en' },
+    loadComponent: () => import('./features/privacy/privacy.page').then(m => m.PrivacyPageComponent)
+  },
   // Landing pública (lista de espera).
   {
     path: '',
