@@ -13,6 +13,16 @@ export const routes: Routes = [
     data: { lang: 'en' },
     loadComponent: () => import('./features/privacy/privacy.page').then(m => m.PrivacyPageComponent)
   },
+  {
+    path: 'condiciones',
+    data: { lang: 'es' },
+    loadComponent: () => import('./features/terms/terms.page').then(m => m.TermsPageComponent)
+  },
+  {
+    path: 'terms',
+    data: { lang: 'en' },
+    loadComponent: () => import('./features/terms/terms.page').then(m => m.TermsPageComponent)
+  },
   // Landing pública (lista de espera).
   {
     path: '',
