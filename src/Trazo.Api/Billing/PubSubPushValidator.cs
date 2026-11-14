@@ -36,16 +36,15 @@ public static class RtdnAuthenticator
     public static async Task<bool> IsAuthenticAsync(
         HttpRequest request, PlayBillingConfig config, IPubSubTokenValidator validator, CancellationToken ct)
     {
-        // Preferred: Pub/Sub signs its push with an OIDC token for a service account of ours.
-        if (!string.IsNullOrWhiteSpace(config.RtdnAudience))
+        // Preferred: Pub/Sub signs its push with an OIDC token for a service account of ours. The account is mandatory:
+        // anyone can obtain a Google-signed token for any audience with a service account of their own.
+        if (!string.IsNullOrWhiteSpace(config.RtdnAudience) && !string.IsNullOrWhiteSpace(config.RtdnServiceAccountEmail))
         {
             var header = request.Headers.Authorization.ToString();
             if (header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
             {
                 var email = await validator.ValidateAsync(header["Bearer ".Length..].Trim(), config.RtdnAudience!, ct);
-                if (email is not null &&
-                    (string.IsNullOrWhiteSpace(config.RtdnServiceAccountEmail) ||
-                     string.Equals(email, config.RtdnServiceAccountEmail, StringComparison.OrdinalIgnoreCase)))
+                if (email is not null && string.Equals(email, config.RtdnServiceAccountEmail!.Trim(), StringComparison.OrdinalIgnoreCase))
                     return true;
             }
         }

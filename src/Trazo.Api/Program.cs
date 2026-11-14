@@ -14,7 +14,6 @@ using Trazo.Api.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -56,6 +55,9 @@ builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<IGoogleIdTokenValidator, GoogleIdTokenValidator>();
 builder.Services.AddScoped<Reauthenticator>();
 builder.Services.AddSingleton<DeletionRequestThrottle>();
+builder.Services.AddSingleton<LoginAttemptThrottle>();
+builder.Services.AddSingleton<GoogleNonceStore>();
+builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(180));
 builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
 builder.Services.AddHttpClient(OperationsSettingsEndpoints.TestClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddHttpClient(AdminLibraryTransferEndpoints.ClientName, c => c.Timeout = TimeSpan.FromMinutes(5));
@@ -201,15 +203,26 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseForwardedHeaders();
+// Baseline for every answer of the API. Pages that need more (the account-deletion pages) set their own on top.
+app.Use(async (context, next) =>
+{
+    var headers = context.Response.Headers;
+    headers["X-Content-Type-Options"] = "nosniff";
+    headers["X-Frame-Options"] = "DENY";
+    headers["Referrer-Policy"] = "no-referrer";
+    await next();
+});
 // Local Development is intentionally reachable over HTTP from the Android emulator.
 // Non-development environments continue to enforce HTTPS redirection.
 if (!app.Environment.IsDevelopment())
 {
+    app.UseHsts();
     app.UseHttpsRedirection();
 }
 app.UseCors("AdminFrontend");
-app.UseRateLimiter();
 app.UseAuthentication();
+// After authentication: the per-user limiters partition by the "sub" claim, which does not exist before it.
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapGet("/health", () => Results.Ok(new
@@ -364,6 +377,8 @@ app.MapGet("/api/v1/exercises/{id}/images/{slot:int}", async (
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         if (!await reader.ReadAsync(cancellationToken)) return Results.NotFound();
         context.Response.Headers.CacheControl = "public, max-age=86400";
+        // Images share the origin of the administration console: opened directly, an SVG must not be able to run anything.
+        context.Response.Headers.ContentSecurityPolicy = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
         if (reader.GetString(2) == "repdb-free")
             context.Response.Headers["X-Image-Attribution"] = "Exercise data by RepDB (repdb.co)";
         return Results.File((byte[])reader["data"], reader.GetString(0));

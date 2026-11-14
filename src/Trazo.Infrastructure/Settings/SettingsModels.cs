@@ -66,13 +66,14 @@ public sealed record SettingsView(
 /// <summary>
 /// Google Play Billing configuration. The service-account key and the notification secret are stored
 /// encrypted. Real-time developer notifications (RTDN) are accepted with a Pub/Sub OIDC token
-/// (RtdnAudience, optionally pinned to RtdnServiceAccountEmail) or the shared secret.
+/// (RtdnAudience together with RtdnServiceAccountEmail, the account that signs the push) or the shared secret.
 /// </summary>
 public sealed record PlayBillingConfig(
     string PackageName, string? ServiceAccountJson, string? RtdnSecret, string? RtdnAudience, string? RtdnServiceAccountEmail)
 {
     public bool IsComplete => !string.IsNullOrWhiteSpace(PackageName) && !string.IsNullOrWhiteSpace(ServiceAccountJson);
-    public bool RtdnAuthConfigured => !string.IsNullOrWhiteSpace(RtdnSecret) || !string.IsNullOrWhiteSpace(RtdnAudience);
+    public bool RtdnAuthConfigured => !string.IsNullOrWhiteSpace(RtdnSecret) ||
+        (!string.IsNullOrWhiteSpace(RtdnAudience) && !string.IsNullOrWhiteSpace(RtdnServiceAccountEmail));
 }
 
 /// <summary>

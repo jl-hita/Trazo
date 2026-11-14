@@ -22,6 +22,9 @@ public sealed record AppLogPage(IReadOnlyList<AppLogItem> Items, string? NextCur
 /// Reads <c>app_logs</c>, newest first. Pages are keyset pages over (timestamp, id): the cursor of a page is its last
 /// entry, so paging stays correct while new entries keep arriving and costs the same on the first and the last page.
 /// </summary>
+// EF1002/EF1003: the SQL text assembled here is made only of constants, "{n}" parameter placeholders and integers this
+// class computes (level numbers, clamped limits). Every value that comes from a request travels as a parameter.
+#pragma warning disable EF1002, EF1003
 public sealed class AppLogReader(TrazoDbContext db)
 {
     public const int MaximumPageSize = 200;

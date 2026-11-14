@@ -79,6 +79,7 @@ public sealed class Reauthenticator(
     public async Task<bool> VerifySecondFactorAsync(TrazoUser user, string? code, CancellationToken ct, bool countFailure = false)
     {
         var now = clock.GetUtcNow();
+        if (user.LockoutEnd > now) return false;
         var valid = false;
         if (!string.IsNullOrWhiteSpace(code) && !string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
         {
@@ -126,7 +127,7 @@ public sealed class DeletionRequestThrottle(TimeProvider clock)
     public static readonly TimeSpan Window = TimeSpan.FromHours(1);
     private readonly ConcurrentDictionary<string, (DateTimeOffset Start, int Count)> _counters = new();
 
-    /// <summary>True when this request may send an email.</summary>
+    /// <summary>True when this request may send an email. The other emails anyone can trigger (password reset, verification) use it too, with a prefixed key.</summary>
     public bool TryAcquire(string normalizedEmail)
     {
         var now = clock.GetUtcNow();

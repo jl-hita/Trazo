@@ -51,7 +51,7 @@ internal static class PlanTestSchema
             var text = statement.TrimStart();
             var mine = Tables.Any(table =>
                 text.StartsWith($"CREATE TABLE \"{table}\"", StringComparison.Ordinal) || text.Contains($" ON \"{table}\" ", StringComparison.Ordinal));
-            if (mine && text.StartsWith("CREATE", StringComparison.Ordinal)) db.Database.ExecuteSqlRaw(text + ";");
+            if (mine && text.StartsWith("CREATE", StringComparison.Ordinal)) db.Database.ExecuteSqlRaw(text);
         }
     }
 }

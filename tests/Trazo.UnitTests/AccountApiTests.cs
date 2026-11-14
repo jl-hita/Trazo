@@ -96,7 +96,7 @@ public sealed class AccountApiTests : IDisposable
         foreach (var statement in script.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
             if (tables.Any(t => statement.StartsWith($"CREATE TABLE \"{t}\"", StringComparison.Ordinal) || statement.Contains($" ON \"{t}\" ", StringComparison.Ordinal))
                 && statement.StartsWith("CREATE", StringComparison.Ordinal))
-                db.Database.ExecuteSqlRaw(statement + ";");
+                db.Database.ExecuteSqlRaw(statement);
     }
 
     public void Dispose()
@@ -641,7 +641,7 @@ public sealed class AccountApiTests : IDisposable
         var body = await JsonAsync(await ClientFor(await AddUserAsync("ana@example.com")).GetAsync("/api/v1/plans/options"));
 
         Assert.Equal(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            body.GetProperty("days").EnumerateArray().Select(d => d.GetString()).ToArray());
+            body.GetProperty("days").EnumerateArray().Select(d => d.GetString()!).ToArray());
         Assert.Equal("Monday", body.GetProperty("weekStartsOn").GetString());
         Assert.Equal("Europe/Madrid", body.GetProperty("defaultTimeZone").GetString());
         var options = body.GetProperty("dayOptions").EnumerateArray().ToList();

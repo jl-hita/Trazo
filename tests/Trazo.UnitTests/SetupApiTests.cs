@@ -56,7 +56,7 @@ public sealed class SetupApiTests : IDisposable
     private static object Payload(string email = "owner@example.com") => new
     {
         google = new { clientId = "123-abc.apps.googleusercontent.com" },
-        email = new { host = "smtp.example.com", port = 587, enableSsl = true, username = "u", password = "pw", from = "no-reply@example.com", actionBaseUrl = "trazo://account" },
+        email = new { host = "smtp.example.com", port = 587, enableSsl = true, username = "u", password = "pw", from = "no-reply@example.com", actionBaseUrl = "https://trazo.example.com" },
         admin = new { email, displayName = "Owner", password = "CorrectHorse1Battery" }
     };
 
@@ -103,7 +103,7 @@ public sealed class SetupApiTests : IDisposable
         var client = _factory.CreateClient();
         var response = await client.PostAsJsonAsync("/api/v1/setup/test/smtp", new
         {
-            email = new { host = "smtp.example.com", port = 25, enableSsl = false, from = "no-reply@example.com", actionBaseUrl = "trazo://account" },
+            email = new { host = "smtp.example.com", port = 25, enableSsl = false, from = "no-reply@example.com", actionBaseUrl = "https://trazo.example.com" },
             recipient = "owner@example.com"
         });
         response.EnsureSuccessStatusCode();

@@ -69,7 +69,7 @@ import { errorMessage } from '../../core/setup.api';
                  [placeholder]="view()?.rtdnSecretSet ? 'Stored (leave blank to keep it)' : ''" [ngModel]="rtdnSecret()" (ngModelChange)="rtdnSecret.set($event)">
         </label>
         @if (view(); as v) {
-          <p class="hint">{{ v.rtdnConfigured ? 'Notifications are accepted.' : 'Notifications are rejected until an audience or a secret is saved.' }}</p>
+          <p class="hint">{{ v.rtdnConfigured ? 'Notifications are accepted.' : 'Notifications are rejected until an audience with its service account, or a secret, is saved.' }}</p>
         }
       </fieldset>
 

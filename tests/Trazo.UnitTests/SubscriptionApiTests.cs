@@ -569,9 +569,13 @@ public sealed class SubscriptionApiTests : IDisposable
         var save = await client.PutAsJsonAsync("/api/v1/admin/settings/play-billing", new
         {
             packageName = "com.trazo.android", serviceAccountJson = key, rtdnSecret = "a-long-random-secret-value",
-            rtdnAudience = "https://api.trazo.example/api/v1/subscription/notifications", rtdnServiceAccountEmail = ""
+            rtdnAudience = "https://api.trazo.example/api/v1/subscription/notifications",
+            rtdnServiceAccountEmail = "pusher@project.iam.gserviceaccount.com"
         });
         Assert.Equal(HttpStatusCode.OK, save.StatusCode);
+        // An audience without the pushing service account is refused: a Google-signed token for an audience proves nothing.
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync("/api/v1/admin/settings/play-billing",
+            new { packageName = "com.trazo.android", rtdnAudience = "https://x.example/n", rtdnServiceAccountEmail = "" })).StatusCode);
 
         var raw = await (await client.GetAsync("/api/v1/admin/settings/play-billing")).Content.ReadAsStringAsync();
         Assert.DoesNotContain("SECRETKEYMATERIAL", raw);
@@ -583,7 +587,7 @@ public sealed class SubscriptionApiTests : IDisposable
 
         // Omitting the secrets keeps them; the stored value is encrypted at rest.
         Assert.Equal(HttpStatusCode.OK, (await client.PutAsJsonAsync("/api/v1/admin/settings/play-billing",
-            new { packageName = "com.trazo.android", rtdnAudience = "https://x.example/n" })).StatusCode);
+            new { packageName = "com.trazo.android", rtdnAudience = "https://x.example/n", rtdnServiceAccountEmail = "pusher@project.iam.gserviceaccount.com" })).StatusCode);
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
         var row = await db.AppSettings.AsNoTracking().SingleAsync(x => x.Key == "Billing:Play:ServiceAccountJson");

@@ -218,7 +218,7 @@ public sealed class SettingsEncryptionAndPrecedenceTests
             [SettingKeys.GoogleClientId] = "env-id.apps.googleusercontent.com",
             [SettingKeys.SmtpHost] = "env-smtp.example.com",
             [SettingKeys.EmailFrom] = "env@example.com",
-            [SettingKeys.EmailActionBaseUrl] = "trazo://account"
+            [SettingKeys.EmailActionBaseUrl] = "https://trazo.example.com"
         };
         var (db, _, runtime, writer) = fx.NewServices(env);
         using var _ = db;

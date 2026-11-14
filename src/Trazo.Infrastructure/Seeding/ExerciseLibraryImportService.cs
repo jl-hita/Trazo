@@ -158,8 +158,8 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         var nameEn = OptionalString(e, "nameEn") ?? id;
         var nameEs = OptionalString(e, "nameEs") ?? nameEn;
         var descriptionEs = OptionalString(e, "descriptionEs") ?? OptionalString(e, "descriptionEn") ?? "";
-        var instructions = StringArray(e, "instructionsEs");
-        var tips = StringArray(e, "tipsEs");
+        var instructions = StringArray(e, "instructionsEs") ?? [];
+        var tips = StringArray(e, "tipsEs") ?? [];
         var pattern = OptionalString(e, "movementPattern") ?? "";
         var primary = StringArray(e, "reviewedPrimaryMuscles") ?? StringArray(e, "primaryMuscles") ?? [];
         var secondary = StringArray(e, "reviewedSecondaryMuscles") ?? StringArray(e, "secondaryMuscles") ?? [];
