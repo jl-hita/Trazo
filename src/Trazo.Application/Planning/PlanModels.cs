@@ -12,6 +12,7 @@ public sealed record MesocycleView(int Sequence, string PhaseType, bool IsDeload
 public sealed record PlanView(
     Guid Id,
     string Status,
+    string Origin,
     string Timeline,
     int CurrentWeek,
     int TotalWeeks,
