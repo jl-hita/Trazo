@@ -97,7 +97,10 @@ public sealed class TrainingBlockProgressionTests
         Enum.GetValues<TrainingMovementPattern>().Select(pattern =>
         {
             var (primary, secondary) = Muscles(pattern);
-            return new TrainingExerciseCandidate($"ex-{pattern}", "catalog-test", $"Ejercicio {pattern}", pattern, [],
+            // Compound lifts are barbell lifts: since engine 0.10.0 the low-repetition main lift of a strength
+            // session must be an exercise that accepts high loads.
+            string[] equipment = pattern is TrainingMovementPattern.Accessory or TrainingMovementPattern.Core ? [] : ["barbell"];
+            return new TrainingExerciseCandidate($"ex-{pattern}", "catalog-test", $"Ejercicio {pattern}", pattern, equipment,
                 [TrainingGoal.GeneralFitness, TrainingGoal.Hypertrophy, TrainingGoal.Strength],
                 TrainingExperience.Beginner, 50, true, primary, secondary);
         }).ToArray();

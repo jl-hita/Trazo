@@ -122,17 +122,21 @@ text so the same mapping works on PostgreSQL and on SQLite in tests. A partial u
    `seed % 1000 + block number`, so the same profile, seed and history always give the same plan, and different users with
    the same profile can get different (equivalent) exercises.
 6. **Limitations are an exclusion list, not a diagnosis.** The catalog has no contraindication metadata, so
-   `LimitationRules` maps five areas (`Knee`, `Shoulder`, `LowerBack`, `Wrist`, `Elbow`) to exercise-id tokens
-   (for example `LowerBack`: `deadlift`, `good-morning`, `rack-pull`, `barbell-row`...). They narrow the choice; the plan
-   states it is not medical advice. If the exclusions leave a movement pattern without any exercise, generation fails with
-   the engine's own explanation (`422 plan_generation_failed`) instead of silently dropping the pattern. Users can also
-   exclude exercises by id.
+   `LimitationRules` maps five areas (`Knee`, `Shoulder`, `LowerBack`, `Wrist`, `Elbow`) to exercises to avoid. Each area
+   combines structural rules read from reviewed metadata (pattern, primary muscles, equipment: `Shoulder` excludes every
+   vertical press and every direct deltoid raise whatever the implement, `LowerBack` barbell squats and unsupported
+   barbell rows, `Wrist` bodyweight pressing on the hands) with id tokens for movements the metadata cannot describe
+   (`dip`, `skull-crusher`, `lunge`...). They narrow the choice; the plan states it is not medical advice. Since engine
+   0.10.0 an area never makes a plan impossible by itself: when overhead pressing or single-leg work is left without
+   exercises the session keeps its sibling pattern (horizontal press, hinge) or receives it as a substitute, and a
+   warning says so. Squat, hinge, horizontal press and row are never dropped: a profile left without one of them still
+   fails with the engine's own explanation (`422 plan_generation_failed`). Users can also exclude exercises by id.
 7. **Equipment.** Tokens are normalised (lower case, hyphens). An empty list means *everything is available*; the engine
    treats `machine` as interchangeable with `*-machine`.
 8. **Calendar.** A plan week is the seven days starting at the plan's start date (the day it was created by default).
    Each training day falls once in each week. "Today" is the UTC date. A session can be used during its own week and the
    week after, to log a late workout; anything else answers `409 session_out_of_window`.
-9. **One deliberate change to the engine.** The generator could put the same exercise twice in one session when equipment
+9. **A deliberate change to the engine** (see 12 for the rest). The generator could put the same exercise twice in one session when equipment
    or level left a single candidate for two movement patterns (for example one row serving both the vertical and the
    horizontal pull). Property tests found it; `TrainingProgramGenerator` now skips a pattern whose only candidate is already
    in the session. The 329 ported tests still pass.
@@ -142,6 +146,49 @@ text so the same mapping works on PostgreSQL and on SQLite in tests. A partial u
 11. **Catalog.** The existing seeded catalog already carries everything the engine needs (pattern, primary/secondary muscles,
     level, goals, equipment, priority), so the seeder was not changed. `GET /plans/options` lists the equipment tokens
     actually present in the catalog for the app's equipment picker.
+
+12. **Engine 0.10.0: coaching-quality corrections.** A battery of 22 profiles judged as a personal trainer would
+    (not by the invariants the tests already checked) showed eight serious faults. These are deliberate changes to the
+    ported engine; every figure is an internal product heuristic. `EngineCoachingQualityTests` pins each one.
+    - **Selection is ranked by the engine, not by the raw catalog priority** (`TrainingExerciseSelection`). The curated
+      `SelectionPriority` stays the base and the engine corrects it with reviewed metadata: an entry-level bodyweight
+      exercise or a hand-held squat loses points for a trained user (and in strength), a barbell lift gains them in
+      strength. Ties are broken with a stable hash of the plan seed, never alphabetically. The rotation pool of a
+      pattern takes the best exercise of each implement family first (barbell, machine, cable, free weight,
+      bodyweight), so three near-identical machines cannot keep the barbell squat out. "A different exercise on each
+      day of the week" only chooses among candidates within 20 points of the best: repeating the dumbbell press is
+      better than prescribing knee push-ups to an intermediate. *Why in the engine and not in a catalog migration:*
+      the production catalog is not this repository's seed (the seeder never overwrites rows and administrators edit
+      priorities), and the right order depends on the profile (goal, level), which a single stored number cannot
+      express. One fault is data and stays open: `bench-press` and `db-bench-press` are `Intermediate` in production,
+      so beginners never get them; the engine must not override a minimum level (see section 8).
+    - **The hinge slot trains the hamstrings.** When the profile has a hinge with hamstrings as a primary muscle, glute
+      or upper-back variants (bridge, hip thrust, rack pull) are not candidates for that slot.
+    - **Strength is built around a main lift.** Each session opens with a lift that accepts high loads (barbell, trap
+      bar, Smith or machine; never a pulldown, a goblet or dumbbell squat or a push-up when one exists), and the
+      sessions of the week open with different patterns (squat, press, deadlift). Its dose comes from the lift, not
+      from the muscle accounting: 3 sets for beginners, 4 for intermediates, 5 for advanced, limited by session time,
+      at 3-6 repetitions for non-beginners (5-8 otherwise). The remaining exercises keep the three-set ceiling.
+      Strength selection ignores block rotation: every block of a plan trains the same lifts on the same days.
+    - **Volume balance.** Hamstrings: 75 % of the central target (was 50 %) with the same allocation weight as any
+      muscle, up to two leg-curl exposures a week, the first accessory slot that may train them reserved while they are
+      under target. Calves: half the central target, no reserved slot except one exercise a week in hypertrophy
+      sessions longer than 45 minutes, none in strength or in beginner plans under 180 weekly minutes. Single-leg work
+      and accessories start at two sets. The allocator gives sets to compound lifts before accessories.
+    - **Ceilings.** An exercise is stopped by the weekly ceiling of its primary muscles only; synergists (triceps in a
+      press, glutes in a squat) no longer freeze the lift, and glutes have a wider margin. Nothing takes a muscle past
+      20 weekly effective sets unless the professional set an explicit target. Strength and general fitness, which had
+      no margin above the target, now have one (strength up to twice the target, general fitness up to three times it
+      and at most eight sets more).
+    - **Time.** While a session stays under 70 % of the time offered, its compound lifts (never the accessories) take
+      one more set at a time up to those ceilings. Sessions of advanced six-day plans still end well under 90 minutes:
+      the ceilings, not the clock, are the limit.
+    - **Core.** General-fitness and hypertrophy plans carry one direct core exercise a week (two sets) by default;
+      strength plans none; an explicit professional priority still puts core in every session.
+    - **Ported tests updated on purpose** (10 cases of 329): the targets of hamstrings and calves
+      (`TrainingProgramVolumeAllocatorTests`), default core and leg-curl count and the accessory-distribution scenario
+      (`TrainingProgramGeneratorTests`), the engine version (`TrainingGeneratorEvaluationReportTests`) and the shared
+      catalog of `TrainingBlockProgressionTests`, whose compound lifts now declare a barbell.
 
 ## 5. Endpoints
 
@@ -252,8 +299,15 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 
 `tests/Trazo.UnitTests`:
 
-- `Training/` - the 329 DietoExpress unit tests of the ported classes, unchanged and passing (they are the derived
-  tests; the source repository has no engine tests of its own besides these: its `Tests` folder only covers security).
+- `Training/` - the 329 DietoExpress unit tests of the ported classes, passing (they are the derived tests; the source
+  repository has no engine tests of its own besides these: its `Tests` folder only covers security). Ten cases were
+  updated for the deliberate changes of engine 0.10.0 (decision 12 lists them).
+- `Planning/EngineCoachingQualityTests` - what a trainer would check, as properties over the test catalog: no limitation or
+  pair of limitations breaks a full-gym plan and each one really excludes its exercises; every strength session opens
+  with a heavy compound of 3-5 sets and keeps its lifts from block to block; the barbell basics compete, ties are not
+  alphabetical and nobody is regressed to bodyweight drills when a loadable exercise exists; hamstrings get direct work
+  and never less than the calves; no lone sets; no muscle past 20 weekly sets; one core exercise a week outside strength;
+  sessions use about half or more of the time offered and the shortest session still produces a plan.
 - `Planning/MesocycleGeneratorPropertyTests` - over a grid of goal x level x days x equipment x seed: sets, reps, RIR and rest
   inside limits; session length within the limit; no repeated exercise in a session; no exercise above the user's level
   or needing equipment they do not have; weekly volume per muscle bounded; excluded and limitation exercises never appear;
@@ -275,6 +329,12 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 - Intensification phases are scheduled in the macrocycle summary, but the generator does not yet change its prescription for
   them (the source engine does not either: only the deload is a generator mode).
 - The muscle questionnaire (`TrainingMuscleFeedback*`) is available in the library but not exposed.
+- Catalog data the engine cannot fix: `bench-press` and `db-bench-press` are `Intermediate` in the production catalog, so
+  beginners never receive them. It needs a data migration or an administrator edit (the seeder never overwrites rows);
+  it is a product decision and is not done.
+- Advanced plans of five or six long sessions stay well under the time offered: the weekly ceilings per muscle (20 sets)
+  are reached first. Automatic splits for five and six days, accessory variety between days and rotation between blocks
+  outside strength are unchanged.
 - Android screens consume these endpoints (next roadmap item); the admin preview (`docs/admin-planning-preview.md`) keeps
   evaluating the engine against the live catalog and shares the same mapper and generator.
 

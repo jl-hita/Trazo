@@ -188,7 +188,7 @@ public sealed class TrainingProgramGeneratorTests
     }
 
     [Fact]
-    public void DirectCoreExercisesAreExcludedByDefaultButIndirectCoreWorkRemainsEligible()
+    public void OneCoreExerciseAWeekByDefaultAndNoDirectCoreAccessories()
     {
         var catalog = Catalog()
             .Select(exercise => exercise.MovementPattern == TrainingMovementPattern.Squat
@@ -211,7 +211,9 @@ public sealed class TrainingProgramGeneratorTests
         Assert.True(result.Succeeded, string.Join("; ", result.Errors));
         var exercises = result.Prescription!.Sessions.SelectMany(session => session.Exercises).ToArray();
 
-        Assert.DoesNotContain(exercises, exercise => exercise.ExerciseId == "exercise-core");
+        // Engine 0.10.0: hypertrophy and general-fitness plans carry one core exercise a week by default
+        // (it used to be opt-in). Direct core accessories still need an explicit professional priority.
+        Assert.Single(exercises, exercise => exercise.ExerciseId == "exercise-core");
         Assert.DoesNotContain(exercises, exercise => exercise.ExerciseId == "direct-ab-crunch");
         Assert.Contains(exercises, exercise =>
             exercise.ExerciseId == "squat-basic" &&
@@ -708,7 +710,7 @@ public sealed class TrainingProgramGeneratorTests
     }
 
     [Fact]
-    public void GeneratorAddsOneDirectHamstringAccessoryWhenWeeklyCoverageIsMissingAndTimeAllows()
+    public void GeneratorAddsDirectHamstringAccessoriesWhenWeeklyCoverageIsMissingAndTimeAllows()
     {
         var catalog = Catalog().Append(new TrainingExerciseCandidate(
             "seated-leg-curl", "test", "Curl femoral sentado", TrainingMovementPattern.Accessory,
@@ -725,7 +727,8 @@ public sealed class TrainingProgramGeneratorTests
             .SelectMany(session => session.Exercises)
             .Where(exercise => exercise.ExerciseId == "seated-leg-curl")
             .ToArray();
-        Assert.Single(weekOneHamstringAccessories);
+        // Engine 0.10.0: up to two leg-curl exposures a week (it used to be exactly one).
+        Assert.InRange(weekOneHamstringAccessories.Length, 1, 2);
         Assert.All(generated.Prescription.Sessions, session =>
             Assert.InRange(session.EstimatedDurationMinutes, 1, 90));
     }
@@ -753,7 +756,8 @@ public sealed class TrainingProgramGeneratorTests
             .SelectMany(session => session.Exercises)
             .Where(exercise => exercise.ExerciseId == "banded-standing-curl")
             .ToArray();
-        Assert.Single(weekOneHamstringCurls);
+        // Engine 0.10.0: up to two leg-curl exposures a week (it used to be exactly one).
+        Assert.InRange(weekOneHamstringCurls.Length, 1, 2);
         Assert.All(weekOneHamstringCurls, exercise =>
             Assert.Equal(new[] { TrainingMuscleGroup.Hamstrings }, exercise.PrimaryMuscleGroups));
     }
@@ -870,9 +874,11 @@ public sealed class TrainingProgramGeneratorTests
                 [], [TrainingGoal.Hypertrophy], TrainingExperience.Beginner, 55, true,
                 [TrainingMuscleGroup.Quadriceps], []))
             .ToArray();
+        // Engine 0.10.0: this used a strength plan. Its compound lifts now start with enough sets (three on the
+        // main lift, two on single-leg work) to cover the small strength target of the quadriceps, so no leg
+        // extension is needed there; a hypertrophy plan still needs both accessories.
         var request = Request() with
         {
-            Goal = TrainingGoal.Strength,
             TrainingDays = [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Thursday, DayOfWeek.Saturday],
             MaximumSessionDurationMinutes = 35
         };
