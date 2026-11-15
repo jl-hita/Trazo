@@ -396,3 +396,71 @@ public sealed class AdaptationPlannerTests
         Assert.True(advised >= 10, "most sessions give a reference load");
     }
 }
+
+public sealed class DeloadPlacementTests
+{
+    private static readonly DateOnly Start = new(2026, 11, 16);
+
+    [Theory]
+    [InlineData(4)]
+    [InlineData(6)]
+    public void ShortPlansHaveNoDeload(int weeks) => Assert.Empty(DeloadPlacement.Weeks(weeks));
+
+    [Theory]
+    [InlineData(7, new[] { 4 })]
+    [InlineData(8, new[] { 5 })]
+    [InlineData(9, new[] { 5 })]
+    [InlineData(10, new[] { 4, 8 })]
+    [InlineData(12, new[] { 5, 9 })]
+    [InlineData(16, new[] { 5, 9, 13 })]
+    public void DeloadsAreSpreadSoTheTrainingRunsAreFull(int weeks, int[] expected) =>
+        Assert.Equal(expected, DeloadPlacement.Weeks(weeks));
+
+    [Fact]
+    public void EveryLengthKeepsTrainingRunsOfAtMostFourAndAtLeastTwoWeeksAndNeverEndsOnADeload()
+    {
+        for (var weeks = 7; weeks <= 52; weeks++)
+        {
+            var deloads = DeloadPlacement.Weeks(weeks);
+            Assert.DoesNotContain(weeks, deloads);
+            var edges = new[] { 0 }.Concat(deloads).Concat([weeks + 1]).ToArray();
+            for (var i = 0; i + 1 < edges.Length; i++)
+                Assert.InRange(edges[i + 1] - edges[i] - 1, 2, DeloadPlacement.LongestTrainingRun);
+        }
+    }
+
+    [Fact]
+    public void AutomaticMacrocycleOfTwelveWeeksPlacesDeloadsInWeekFiveAndNine()
+    {
+        var profile = Profile(12, includeDeload: true, interval: PlanProfileParser.AutomaticDeload);
+
+        var draft = MacrocyclePlanner.Build(profile).Draft!;
+        var slots = PlanSchedule.Slots(draft);
+
+        Assert.Equal([5, 9], slots.Where(s => s.IsDeload).Select(s => s.StartWeek));
+        Assert.Equal(Enumerable.Range(1, 12), slots.SelectMany(s => Enumerable.Range(s.StartWeek, s.Weeks)));
+        Assert.Equal([4, 1, 3, 1, 3], slots.Select(s => s.Weeks));
+        Assert.Equal(Start, draft.Phases[0].StartDate);
+        Assert.Equal(Start.AddDays(12 * 7 - 1), draft.Phases[^1].EndDate);
+    }
+
+    [Fact]
+    public void AnExplicitIntervalIsLeftToTheEngine()
+    {
+        var draft = MacrocyclePlanner.Build(Profile(12, true, 4)).Draft!;
+
+        Assert.Equal([5, 10], PlanSchedule.Slots(draft).Where(s => s.IsDeload).Select(s => s.StartWeek));
+    }
+
+    [Fact]
+    public void WithoutDeloadsThereAreNoDeloadPhases()
+    {
+        var draft = MacrocyclePlanner.Build(Profile(12, false, PlanProfileParser.AutomaticDeload)).Draft!;
+
+        Assert.DoesNotContain(draft.Phases, p => p.PhaseType == "deload");
+    }
+
+    private static PlanProfile Profile(int weeks, bool includeDeload, int interval) => new(
+        TrainingGoal.Hypertrophy, TrainingExperience.Intermediate, Start, weeks, [DayOfWeek.Monday, DayOfWeek.Thursday], 60, [], [], [],
+        TrainingProgramSplit.Automatic, includeDeload, interval);
+}

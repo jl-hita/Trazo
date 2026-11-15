@@ -44,6 +44,10 @@ public sealed class SetupFixture : IDisposable
             CREATE TABLE device_tokens (
               "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Token" TEXT NOT NULL UNIQUE, "Platform" TEXT NOT NULL,
               "CreatedAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL);
+            CREATE TABLE error_tickets (
+              "Id" TEXT PRIMARY KEY, "Fingerprint" TEXT NOT NULL UNIQUE, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL,
+              "ErrorType" TEXT NOT NULL, "StackTrace" TEXT NOT NULL, "Occurrences" INTEGER NOT NULL,
+              "FirstSeenAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL, "Status" TEXT NOT NULL);
             """);
     }
 

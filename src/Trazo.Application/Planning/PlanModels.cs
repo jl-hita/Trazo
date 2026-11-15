@@ -82,6 +82,17 @@ public sealed record AlternativesResult(string ExerciseId, IReadOnlyList<Alterna
 public sealed record HistoryItem(
     Guid SessionId, int WeekNumber, DateOnly Date, string Title, string Outcome, DateTimeOffset LoggedAt, int CompletedSets, int PlannedSets);
 
+/// <summary>
+/// Volume of one plan week, in sets. <see cref="PlannedSets"/> is null while the block of that week has not been generated
+/// yet (blocks are generated when reached, so the future is never stored); <see cref="CompletedSets"/> is null for weeks
+/// that have not started.
+/// </summary>
+public sealed record WeekLoadView(
+    int Week, DateOnly WeekStart, string? PhaseType, bool IsDeload, int? PlannedSets, int? CompletedSets, int PlannedSessions, int LoggedSessions);
+
+/// <summary>Weekly volume of the whole plan, one entry per plan week, to draw planned against real load.</summary>
+public sealed record PlanLoadView(Guid PlanId, int TotalWeeks, int CurrentWeek, string Unit, IReadOnlyList<WeekLoadView> Weeks);
+
 public sealed record PlanOptions(
     IReadOnlyList<string> Goals, IReadOnlyList<string> Experience, IReadOnlyList<string> Splits,
     IReadOnlyList<string> Days, IReadOnlyList<string> Limitations, IReadOnlyList<string> Equipment,

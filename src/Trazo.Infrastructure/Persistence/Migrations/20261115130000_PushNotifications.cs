@@ -7,7 +7,7 @@ namespace Trazo.Infrastructure.Persistence.Migrations;
 
 /// <summary>Registration tokens of the phones that receive push notifications. They go away with the account.</summary>
 [DbContext(typeof(TrazoDbContext))]
-[Migration("20261115120000_PushNotifications")]
+[Migration("20261115130000_PushNotifications")]
 public sealed class PushNotifications : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)

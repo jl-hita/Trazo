@@ -117,7 +117,7 @@ public sealed class TrainingGeneratorEvaluationReportTests
         Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
         File.WriteAllText(fullPath, JsonSerializer.Serialize(report, JsonOptions));
 
-        Assert.Equal("0.9.0", report.EngineVersion);
+        Assert.Equal(TrainingProgramGenerator.EngineVersion, report.EngineVersion);
         Assert.Equal(81, report.ScenarioCount);
         Assert.Equal(report.ScenarioCount, report.SuccessfulScenarios);
         Assert.Equal(0, report.HardViolationCount);

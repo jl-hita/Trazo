@@ -11,6 +11,15 @@ public static class TrainingProgramVolumeAllocator
     private const int MinimumSetsPerExercise = 1;
     private const int MaximumSetsPerExercise = 5;
     private const int MaximumSetsPerExerciseForStrength = 3;
+    // The first lift of a strength session is its main lift: it may reach five sets (3-5 is the usual strength dose
+    // for the lift being trained), while the remaining exercises keep the three-set ceiling.
+    private const int MaximumSetsForStrengthPrimaryLift = 5;
+    // A session that uses less than this share of the time the user offered may raise its compound lifts up to the
+    // weekly ceiling of the muscles involved (never beyond it).
+    private const decimal TimeFillUtilisation = 0.70m;
+    // No default allocation takes a muscle beyond this weekly effective volume, whether it is the target of the
+    // exercise or a synergist. Only an explicit professional target can go higher.
+    private const decimal AbsoluteWeeklySetCeiling = 20m;
     // Duration model: reps x 2.5 s + rest between sets + 45 s transition per exercise + 5 min
     // session overhead (warm-up). It decides how many extra sets fit in a session.
     private const decimal SecondsPerRepEstimate = 2.5m;
@@ -34,7 +43,8 @@ public static class TrainingProgramVolumeAllocator
         TrainingGoal goal,
         TrainingExperience experience,
         IReadOnlyList<TrainingMuscleVolumeTarget>? preferences,
-        int maximumSessionDurationMinutes)
+        int maximumSessionDurationMinutes,
+        IReadOnlySet<string>? accessoryExerciseIds = null)
     {
         ArgumentNullException.ThrowIfNull(sessions);
         var errors = ValidatePreferences(preferences);
@@ -49,10 +59,6 @@ public static class TrainingProgramVolumeAllocator
             ? 1m
             : DefaultVolumeTimeFactor(sessionsPerWeek, maximumSessionDurationMinutes);
         var targets = BuildTargets(goal, experience, preferences, sessionsPerWeek, maximumSessionDurationMinutes);
-        // Product ceiling aligned with the ACSM 2026 practical summary of 2–3 sets per exercise
-        // for strength. It is a ceiling, not a mandatory dose; remaining weekly deficits stay
-        // visible as warnings instead of concentrating more sets on one lift.
-        var maximumSetsPerExercise = GetMaximumSetsPerExercise(goal);
         var warnings = new List<string>();
         var explicitTargetMuscles = (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
             .Where(preference => preference.TargetWeeklyPrimarySets is not null)
@@ -69,7 +75,7 @@ public static class TrainingProgramVolumeAllocator
             {
                 Exercises = session.Exercises.Select(exercise => exercise with
                 {
-                    Sets = Math.Clamp(exercise.Sets, MinimumSetsPerExercise, maximumSetsPerExercise)
+                    Sets = Math.Clamp(exercise.Sets, MinimumSetsPerExercise, MaximumSetsFor(exercise, goal, accessoryExerciseIds is not null))
                 }).ToArray()
             });
         foreach (var week in output.Keys.Select(key => key.WeekNumber).Distinct().Order())
@@ -81,8 +87,7 @@ public static class TrainingProgramVolumeAllocator
                     x.ExerciseId, x.PrimaryMuscleGroups, x.SecondaryMuscleGroups))
                 .Distinct()
                 .ToArray();
-            // Calves are a priority group even when the current draft omitted direct work:
-            // absence must be reported rather than silently removing the target from evaluation.
+            // A target muscle that the draft does not train at all is reported, not silently dropped.
             var applicableTargets = targets.ToDictionary(pair => pair.Key, pair => pair.Value);
             var primaryVolume = CalculateEffectiveVolume(weekSessions);
 
@@ -103,7 +108,7 @@ public static class TrainingProgramVolumeAllocator
                     for (var exerciseIndex = 0; exerciseIndex < session.Exercises.Count; exerciseIndex++)
                     {
                         var exercise = session.Exercises[exerciseIndex];
-                        if (exercise.Sets >= maximumSetsPerExercise)
+                        if (exercise.Sets >= MaximumSetsFor(exercise, goal, accessoryExerciseIds is not null))
                             continue;
                         var addedDuration = AdditionalSetSeconds(exercise);
                         if (duration + addedDuration > maximumSessionDurationMinutes * 60m)
@@ -120,9 +125,16 @@ public static class TrainingProgramVolumeAllocator
                                 .Sum(item => (decimal)item.Sets))
                             .DefaultIfEmpty(0m)
                             .Average();
-                        var candidate = new AllocationCandidate(sessionIndex, exerciseIndex, score, localPrimaryVolume);
-                        if (best is null || candidate.Score > best.Score ||
-                            (candidate.Score == best.Score && candidate.LocalPrimaryVolume < best.LocalPrimaryVolume))
+                        // The main lift of a strength session takes the weekly volume first, then the other compound
+                        // lifts; an accessory only receives extra sets when no compound can still take one
+                        // (per-exercise limit, a muscle at its ceiling or session time).
+                        var rank = AllocationRank(exercise, goal, accessoryExerciseIds);
+                        var candidate = new AllocationCandidate(sessionIndex, exerciseIndex, score, localPrimaryVolume, rank);
+                        if (best is null ||
+                            candidate.Rank > best.Rank ||
+                            (candidate.Rank == best.Rank &&
+                             (candidate.Score > best.Score ||
+                              (candidate.Score == best.Score && candidate.LocalPrimaryVolume < best.LocalPrimaryVolume))))
                             best = candidate;
                     }
                 }
@@ -139,6 +151,70 @@ public static class TrainingProgramVolumeAllocator
                 };
                 weekSessions[best.SessionIndex] = selectedSession with { Exercises = exercises };
                 primaryVolume = CalculateEffectiveVolume(weekSessions);
+            }
+
+            // Time fill: the weekly targets are central values, so a user who offers long sessions would otherwise
+            // train for half of that time. While a session stays clearly under the time offered, its compound lifts
+            // take one more set at a time, provided every muscle they train stays inside its weekly ceiling.
+            if (accessoryExerciseIds is not null)
+            {
+                var limit = maximumSessionDurationMinutes * 60m;
+                while (true)
+                {
+                    (int Session, int Exercise)? pick = null;
+                    var pickKey = (Rank: int.MaxValue, Utilisation: decimal.MaxValue, Sets: int.MaxValue);
+                    for (var sessionIndex = 0; sessionIndex < weekSessions.Length; sessionIndex++)
+                    {
+                        var session = weekSessions[sessionIndex];
+                        var duration = EstimateDuration(session);
+                        if (duration >= limit * TimeFillUtilisation)
+                            continue;
+                        for (var exerciseIndex = 0; exerciseIndex < session.Exercises.Count; exerciseIndex++)
+                        {
+                            var exercise = session.Exercises[exerciseIndex];
+                            if (accessoryExerciseIds.Contains(exercise.ExerciseId) ||
+                                exercise.Sets >= MaximumSetsFor(exercise, goal, true) ||
+                                duration + AdditionalSetSeconds(exercise) > limit)
+                                continue;
+                            var tracked = TrainingExerciseStimulus.GetEffectiveMuscles(
+                                    exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+                                .Where(applicableTargets.ContainsKey)
+                                .ToArray();
+                            if (tracked.Length == 0 ||
+                                IsAtCeiling(exercise, primaryVolume, applicableTargets, goal, experience, preferences, addedSets: 1m))
+                                continue;
+                            // This extra volume is optional, so in hypertrophy (where arms carry a full target) it
+                            // also stops at the ceiling of the synergists: more pressing must not push the triceps
+                            // beyond their range just because there is time left.
+                            if (goal == TrainingGoal.Hypertrophy && tracked.Any(muscle =>
+                                    primaryVolume.GetValueOrDefault(muscle) + 1m >
+                                    applicableTargets[muscle] + GetUpperHeadroom(goal, experience, preferences, muscle, applicableTargets[muscle])))
+                                continue;
+                            // The main lifts of a strength plan first; then the least used session and, inside it,
+                            // the exercise with fewer sets, then the session order.
+                            var rank = goal == TrainingGoal.Strength && exercise.Order == 1 ? 0 : 1;
+                            var key = (Rank: rank, Utilisation: duration / limit, Sets: exercise.Sets);
+                            if (key.CompareTo(pickKey) < 0)
+                            {
+                                pickKey = key;
+                                pick = (sessionIndex, exerciseIndex);
+                            }
+                        }
+                    }
+
+                    if (pick is null)
+                        break;
+
+                    var filled = weekSessions[pick.Value.Session];
+                    var filledExercises = filled.Exercises.ToArray();
+                    filledExercises[pick.Value.Exercise] = filledExercises[pick.Value.Exercise] with
+                    {
+                        Sets = filledExercises[pick.Value.Exercise].Sets + 1,
+                        SelectionRationale = AppendAllocationRationale(filledExercises[pick.Value.Exercise].SelectionRationale)
+                    };
+                    weekSessions[pick.Value.Session] = filled with { Exercises = filledExercises };
+                    primaryVolume = CalculateEffectiveVolume(weekSessions);
+                }
             }
 
             foreach (var (muscle, target) in applicableTargets.OrderBy(x => x.Key))
@@ -174,6 +250,15 @@ public static class TrainingProgramVolumeAllocator
     /// </summary>
     public static int GetMaximumSetsPerExercise(TrainingGoal goal) =>
         goal == TrainingGoal.Strength ? MaximumSetsPerExerciseForStrength : MaximumSetsPerExercise;
+
+    /// <summary>
+    /// Ceiling for one exercise. In a generated plan (the generator tells the allocator which exercises are
+    /// accessories) the main lift of a strength session may reach five sets; everything else keeps the shared ceiling.
+    /// </summary>
+    internal static int MaximumSetsFor(TrainingExercisePrescription exercise, TrainingGoal goal, bool generatedPlan) =>
+        generatedPlan && goal == TrainingGoal.Strength && exercise.Order == 1
+            ? MaximumSetsForStrengthPrimaryLift
+            : GetMaximumSetsPerExercise(goal);
 
     public static IReadOnlyDictionary<TrainingMuscleGroup, decimal> CalculateEffectiveVolume(
         IEnumerable<TrainingSessionPrescription> sessions)
@@ -223,23 +308,48 @@ public static class TrainingProgramVolumeAllocator
         // A compound may contribute one additional set when another stimulated muscle is
         // exactly at its target, but must not keep accumulating volume once any target
         // muscle has exceeded its central target.
-        if (primaryMuscles.Any(muscle =>
-                primaryVolume.GetValueOrDefault(muscle) >=
-                targets[muscle] + GetTargetTolerance(goal, experience, preferences, muscle)))
+        if (IsAtCeiling(exercise, primaryVolume, targets, goal, experience, preferences, addedSets: 0m))
             return 0m;
 
+        // Every target muscle weighs the same: hamstrings no longer yield to quadriceps, glutes and calves.
         var normalizedDeficit = primaryMuscles.Average(muscle =>
-        {
-            var deficit = Math.Max(0m, targets[muscle] - primaryVolume.GetValueOrDefault(muscle)) / targets[muscle];
-            // Hamstrings remain in the hypertrophy target range, but yield accessory/compound
-            // allocation priority to quads, glutes and calves when session time is constrained.
-            var hamstringsPrioritized = (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
-                .Any(preference => preference.MuscleGroup == TrainingMuscleGroup.Hamstrings &&
-                    (preference.Priority > 0 || preference.TargetWeeklyPrimarySets is not null));
-            var importance = muscle == TrainingMuscleGroup.Hamstrings && !hamstringsPrioritized ? 0.5m : 1m;
-            return deficit * importance;
-        });
+            Math.Max(0m, targets[muscle] - primaryVolume.GetValueOrDefault(muscle)) / targets[muscle]);
         return normalizedDeficit > 0m ? normalizedDeficit : 0m;
+    }
+
+    /// <summary>
+    /// Whether one more set of the exercise would take a muscle past its weekly ceiling. Only the muscles the exercise
+    /// lists as primary can stop it: triceps in a press or biceps in a row count towards their weekly volume, but as
+    /// synergists they must not freeze the lift that trains the chest or the back (they used to, and the chest
+    /// stayed under its range while the triceps sat at their ceiling). A lift with no primary target muscle is
+    /// judged by every target muscle it trains.
+    /// </summary>
+    private static bool IsAtCeiling(
+        TrainingExercisePrescription exercise,
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal> volume,
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal> targets,
+        TrainingGoal goal,
+        TrainingExperience experience,
+        IReadOnlyList<TrainingMuscleVolumeTarget>? preferences,
+        decimal addedSets)
+    {
+        var limiting = exercise.PrimaryMuscleGroups.Where(targets.ContainsKey).ToArray();
+        if (limiting.Length == 0)
+            limiting = TrainingExerciseStimulus.GetEffectiveMuscles(
+                    exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+                .Where(targets.ContainsKey).ToArray();
+        if (limiting.Any(muscle =>
+            {
+                var ceiling = targets[muscle] + GetUpperHeadroom(goal, experience, preferences, muscle, targets[muscle]);
+                return addedSets > 0m ? volume.GetValueOrDefault(muscle) + addedSets > ceiling : volume.GetValueOrDefault(muscle) >= ceiling;
+            }))
+            return true;
+
+        // Synergists do not stop a lift at their own ceiling, but nothing goes past the absolute weekly ceiling.
+        return TrainingExerciseStimulus.GetEffectiveMuscles(
+                exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+            .Where(muscle => targets.ContainsKey(muscle) && !HasExplicitTarget(preferences, muscle))
+            .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(1m, addedSets) > AbsoluteWeeklySetCeiling);
     }
 
     internal static IReadOnlyDictionary<TrainingMuscleGroup, decimal> GetWeeklyTargets(
@@ -253,7 +363,7 @@ public static class TrainingProgramVolumeAllocator
     /// <summary>Upper bound of the default weekly dose per muscle (target + tolerance); used to stop automatic volume increases.</summary>
     internal static IReadOnlyDictionary<TrainingMuscleGroup, decimal> GetWeeklyCeilings(TrainingGoal goal, TrainingExperience experience) =>
         BuildTargets(goal, experience, null, 3, 60)
-            .ToDictionary(pair => pair.Key, pair => pair.Value + GetTargetTolerance(goal, experience, null, pair.Key));
+            .ToDictionary(pair => pair.Key, pair => pair.Value + GetUpperHeadroom(goal, experience, null, pair.Key, pair.Value));
 
     /// <summary>Upper bound (target + tolerance) of the weekly effective sets for this request, honoring professional targets.</summary>
     internal static IReadOnlyDictionary<TrainingMuscleGroup, decimal> GetWeeklyCeilings(
@@ -263,7 +373,7 @@ public static class TrainingProgramVolumeAllocator
         int sessionsPerWeek,
         int maximumSessionDurationMinutes) =>
         BuildTargets(goal, experience, preferences, sessionsPerWeek, maximumSessionDurationMinutes)
-            .ToDictionary(pair => pair.Key, pair => pair.Value + GetTargetTolerance(goal, experience, preferences, pair.Key));
+            .ToDictionary(pair => pair.Key, pair => pair.Value + GetUpperHeadroom(goal, experience, preferences, pair.Key, pair.Value));
 
     internal static decimal EstimateDurationSeconds(TrainingSessionPrescription session) =>
         EstimateDuration(session);
@@ -310,11 +420,20 @@ public static class TrainingProgramVolumeAllocator
             TrainingMuscleGroup.UpperBack,
             TrainingMuscleGroup.Deltoids,
             TrainingMuscleGroup.Glutes,
-            TrainingMuscleGroup.Quadriceps,
-            TrainingMuscleGroup.Calves
+            TrainingMuscleGroup.Quadriceps
         };
         var targets = primaryTargetMuscles.ToDictionary(muscle => muscle, _ => baseline);
         var supplementalBaseline = Math.Max(1m, Math.Ceiling(baseline / 2m));
+        // Hamstrings: three quarters of the central target. They used to get half of it with half the allocation
+        // weight, which left 2-8 weekly sets against 11-17 for the glutes.
+        var hamstringsTarget = Math.Max(2m, Math.Ceiling(baseline * 0.75m));
+        // Calves are a small group: half the central target, no direct work in strength plans (they do not carry
+        // over to the lifts being trained) and none in short beginner plans, where the time belongs to the
+        // movement patterns. A single-session allocation cannot represent a weekly budget and keeps the target.
+        var shortBeginnerPlan = experience == TrainingExperience.Beginner && sessionsPerWeek >= 2 &&
+            sessionsPerWeek * maximumSessionDurationMinutes < WeeklyMinutesForFullDefaultVolume;
+        if (goal != TrainingGoal.Strength && !shortBeginnerPlan)
+            targets[TrainingMuscleGroup.Calves] = supplementalBaseline;
 
         if (goal == TrainingGoal.Hypertrophy)
         {
@@ -322,9 +441,7 @@ public static class TrainingProgramVolumeAllocator
             // experience range. Abdominals have no default direct-work target; they are opt-in.
             targets[TrainingMuscleGroup.Biceps] = baseline;
             targets[TrainingMuscleGroup.Triceps] = baseline;
-            // Preserve the previously agreed lower hamstring priority: half the central
-            // target, with the same experience-specific tolerance. Professionals can override it.
-            targets[TrainingMuscleGroup.Hamstrings] = Math.Max(2m, Math.Ceiling(baseline * 0.5m));
+            targets[TrainingMuscleGroup.Hamstrings] = hamstringsTarget;
         }
         else
         {
@@ -332,7 +449,7 @@ public static class TrainingProgramVolumeAllocator
             // the new ACSM-informed hypertrophy ranges must not inflate unrelated goals.
             targets[TrainingMuscleGroup.Biceps] = supplementalBaseline;
             targets[TrainingMuscleGroup.Triceps] = supplementalBaseline;
-            targets[TrainingMuscleGroup.Hamstrings] = Math.Max(2m, Math.Ceiling(baseline * 0.5m));
+            targets[TrainingMuscleGroup.Hamstrings] = hamstringsTarget;
         }
 
         foreach (var preference in preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
@@ -370,6 +487,48 @@ public static class TrainingProgramVolumeAllocator
             TrainingExperience.Intermediate => 3m,
             _ => 4m
         };
+    }
+
+    /// <summary>
+    /// Sets a muscle may receive above its central target (the weekly ceiling is target + headroom). In hypertrophy it
+    /// is the tolerance of the agreed range. Strength and general fitness had none, so their plans stopped at the
+    /// minimum dose however much time the user offered; they now have a margin that only the time fill uses.
+    /// Glutes work in every squat, hinge and single-leg lift and reach any ceiling long before quadriceps and
+    /// hamstrings reach their target, which froze those lifts at two sets: their margin is wider.
+    /// </summary>
+    private static bool HasExplicitTarget(IReadOnlyList<TrainingMuscleVolumeTarget>? preferences, TrainingMuscleGroup muscle) =>
+        (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
+            .Any(preference => preference.MuscleGroup == muscle &&
+                (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0));
+
+    private static decimal GetUpperHeadroom(
+        TrainingGoal goal,
+        TrainingExperience experience,
+        IReadOnlyList<TrainingMuscleVolumeTarget>? preferences,
+        TrainingMuscleGroup muscle,
+        decimal target)
+    {
+        var isExplicit = HasExplicitTarget(preferences, muscle);
+        // The glutes' wider margin never goes past the absolute weekly ceiling.
+        var glutesLimit = Math.Max(0m, AbsoluteWeeklySetCeiling - target);
+        if (goal == TrainingGoal.Hypertrophy)
+        {
+            var tolerance = GetTargetTolerance(goal, experience, preferences, muscle);
+            return muscle == TrainingMuscleGroup.Glutes && !isExplicit ? Math.Min(tolerance * 2m, glutesLimit) : tolerance;
+        }
+
+        if (isExplicit)
+            return 0m;
+        // Strength: up to twice the central target (8 -> 16 weekly sets for the muscles of a lift trained three
+        // times a week at 4-5 sets). General fitness: up to three times the target and never more than eight sets
+        // above it (4 -> 12), enough for three sets of each exercise in a full-body week.
+        decimal Headroom(decimal central) => goal == TrainingGoal.Strength ? central : Math.Min(central * 2m, 8m);
+        if (muscle != TrainingMuscleGroup.Glutes)
+            return Headroom(target);
+        // The squat family is bounded by the quadriceps ceiling and the hinge family by the hamstrings ceiling, so
+        // the glutes never need more than both together.
+        var hamstringsTarget = Math.Max(2m, Math.Ceiling(target * 0.75m));
+        return Math.Min(Headroom(target) + hamstringsTarget + Headroom(hamstringsTarget), glutesLimit);
     }
 
     private static decimal DefaultVolumeTimeFactor(int sessionsPerWeek, int maximumSessionDurationMinutes)
@@ -426,11 +585,18 @@ public static class TrainingProgramVolumeAllocator
         const string marker = "volumen semanal individualizado";
         return rationale.Contains(marker, StringComparison.OrdinalIgnoreCase)
             ? rationale
-            : $"{rationale} Ajuste de series por {marker} (motor 0.8.0).";
+            : $"{rationale} Ajuste de series por {marker} (motor 0.10.0).";
+    }
+
+    private static int AllocationRank(
+        TrainingExercisePrescription exercise, TrainingGoal goal, IReadOnlySet<string>? accessoryExerciseIds)
+    {
+        if (accessoryExerciseIds is null || accessoryExerciseIds.Contains(exercise.ExerciseId)) return 0;
+        return goal == TrainingGoal.Strength && exercise.Order == 1 ? 2 : 1;
     }
 
     private sealed record AllocationCandidate(
-        int SessionIndex, int ExerciseIndex, decimal Score, decimal LocalPrimaryVolume);
+        int SessionIndex, int ExerciseIndex, decimal Score, decimal LocalPrimaryVolume, int Rank);
 }
 
 /// <summary>

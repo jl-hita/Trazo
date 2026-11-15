@@ -11,6 +11,7 @@ using Trazo.Infrastructure.Logging;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Api.Endpoints;
 using Trazo.Api.Security;
+using Trazo.Api.Support;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -52,6 +53,7 @@ builder.Services.AddScoped<Trazo.Api.Overview.AdminOverviewService>();
 builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api.Billing.GooglePubSubTokenValidator>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddErrorTickets();
 builder.Services.AddScoped<IGoogleIdTokenValidator, GoogleIdTokenValidator>();
 builder.Services.AddScoped<Reauthenticator>();
 builder.Services.AddSingleton<DeletionRequestThrottle>();
@@ -171,6 +173,11 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    // Crash reports of the app: anonymous, so per IP and fixed.
+    options.AddPolicy(ErrorTicketEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            "diag|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -208,6 +215,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+// First, so it sees every exception of the pipeline: reports it as an anonymous error ticket and answers a plain 500.
+app.UseExceptionHandler();
 app.UseForwardedHeaders();
 // Baseline for every answer of the API. Pages that need more (the account-deletion pages) set their own on top.
 app.Use(async (context, next) =>
@@ -272,6 +281,7 @@ app.MapAdminSubscriptionsEndpoints();
 app.MapOperationsSettingsEndpoints();
 app.MapWaitlistEndpoints();
 app.MapPushEndpoints();
+app.MapErrorTicketEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,

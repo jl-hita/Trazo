@@ -42,7 +42,8 @@ public static class MesocycleGenerator
             RotationIndex: Math.Abs(seed % 1000) + slot.Sequence,
             LoadReferences: loadReferences,
             PreviousBlockExerciseIds: previousBlockExerciseIds,
-            ContinuesPreviousBlock: continuesPreviousBlock), catalog);
+            ContinuesPreviousBlock: continuesPreviousBlock,
+            SelectionSeed: seed), catalog);
         if (!result.Succeeded) return new([], result.Errors, null);
 
         var sessions = result.Prescription!.Sessions

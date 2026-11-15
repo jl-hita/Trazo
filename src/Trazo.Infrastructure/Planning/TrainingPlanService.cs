@@ -22,6 +22,7 @@ public interface ITrainingPlanService
     Task<PlanResult<AlternativesResult>> GetAlternativesAsync(Guid userId, Guid sessionId, string exerciseId, int limit, CancellationToken ct);
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
+    Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
 }
 
@@ -98,9 +99,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists,
                 "Ya tienes un plan activo. Archívalo antes de crear otro.");
 
-        var macrocycle = TrainingMacrocycleDraftBuilder.Build(new TrainingMacrocycleDraftRequest(
-            profile.StartDate, profile.TotalWeeks, profile.Goal, profile.Experience, profile.IncludeDeloadPhases,
-            profile.DeloadEveryTrainingWeeks));
+        var macrocycle = MacrocyclePlanner.Build(profile);
         if (macrocycle.Draft is null)
             return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "No se pudo planificar el macrociclo.",
                 new Dictionary<string, string[]> { ["plan"] = macrocycle.Errors.ToArray() });
@@ -272,6 +271,40 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return new HistoryItem(session.Id, session.WeekNumber, session.Date, session.Title, log.Outcome.ToString(),
                 log.LoggedAt, log.Sets.Count(s => s.Completed), planned);
         }).ToList();
+    }
+
+    public async Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return null;
+        var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
+        var started = position.State != PlanTimeline.NotStarted;
+
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id)
+            .Select(s => new { s.Id, s.WeekNumber, s.PrescriptionJson }).ToListAsync(ct);
+        var logs = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id)
+            .Select(l => new { l.PlannedSessionId, Completed = l.Sets.Count(s => s.Completed) }).ToListAsync(ct);
+        var weekOfSession = sessions.ToDictionary(s => s.Id, s => s.WeekNumber);
+        var plannedByWeek = sessions.GroupBy(s => s.WeekNumber)
+            .ToDictionary(g => g.Key, g => (Sets: g.Sum(s => PrescriptionJson.Read(s.PrescriptionJson).Sum(e => e.Sets)), Sessions: g.Count()));
+        var loggedByWeek = logs.Where(l => weekOfSession.ContainsKey(l.PlannedSessionId))
+            .GroupBy(l => weekOfSession[l.PlannedSessionId])
+            .ToDictionary(g => g.Key, g => (Sets: g.Sum(l => l.Completed), Sessions: g.Count()));
+
+        var weeks = new List<WeekLoadView>(plan.TotalWeeks);
+        for (var week = 1; week <= plan.TotalWeeks; week++)
+        {
+            var start = PlanSchedule.WeekStart(plan.StartDate, week);
+            var phase = plan.Phases.FirstOrDefault(p => start >= p.StartDate && start <= p.EndDate)?.PhaseType;
+            var hasPlanned = plannedByWeek.TryGetValue(week, out var planned);
+            var reached = started && week <= position.Week;
+            loggedByWeek.TryGetValue(week, out var logged);
+            weeks.Add(new WeekLoadView(week, start, phase, phase == "deload",
+                hasPlanned ? planned.Sets : null, reached ? logged.Sets : null,
+                hasPlanned ? planned.Sessions : 0, logged.Sessions));
+        }
+        return new PlanLoadView(plan.Id, plan.TotalWeeks, position.Week, "sets", weeks);
     }
 
     public async Task<bool> ArchiveAsync(Guid userId, CancellationToken ct)

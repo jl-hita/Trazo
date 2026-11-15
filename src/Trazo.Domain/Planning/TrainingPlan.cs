@@ -58,6 +58,7 @@ public sealed class TrainingPlan
     /// <summary>Body areas with a limitation or injury (see the options endpoint). Drives exercise exclusions.</summary>
     public string[] Limitations { get; set; } = [];
     public bool IncludeDeloadPhases { get; set; }
+    /// <summary>Training weeks between deloads (4-8), or 0 when TRAZO places them automatically.</summary>
     public int DeloadEveryTrainingWeeks { get; set; } = 4;
     /// <summary>Makes selection reproducible: the same profile and seed always give the same plan.</summary>
     public int Seed { get; set; }
