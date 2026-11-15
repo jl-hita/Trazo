@@ -99,9 +99,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists,
                 "Ya tienes un plan activo. Archívalo antes de crear otro.");
 
-        var macrocycle = TrainingMacrocycleDraftBuilder.Build(new TrainingMacrocycleDraftRequest(
-            profile.StartDate, profile.TotalWeeks, profile.Goal, profile.Experience, profile.IncludeDeloadPhases,
-            profile.DeloadEveryTrainingWeeks));
+        var macrocycle = MacrocyclePlanner.Build(profile);
         if (macrocycle.Draft is null)
             return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "No se pudo planificar el macrociclo.",
                 new Dictionary<string, string[]> { ["plan"] = macrocycle.Errors.ToArray() });

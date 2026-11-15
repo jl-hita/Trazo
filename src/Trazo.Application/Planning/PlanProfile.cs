@@ -42,6 +42,8 @@ public sealed record PlanProfileResult(PlanProfile? Profile, IReadOnlyDictionary
 public static partial class PlanProfileParser
 {
     public const int DefaultTotalWeeks = 12;
+    /// <summary>Value of the deload interval that means "TRAZO places the deload weeks" (see <see cref="DeloadPlacement"/>).</summary>
+    public const int AutomaticDeload = 0;
     public const int MinimumTotalWeeks = 4;
     public const int MaximumTotalWeeks = 52;
     public const int MaximumEquipmentItems = 30;
@@ -89,8 +91,8 @@ public static partial class PlanProfileParser
             Fail("totalWeeks", $"La duración del plan debe estar entre {MinimumTotalWeeks} y {MaximumTotalWeeks} semanas.");
 
         var includeDeload = input.IncludeDeloadPhases ?? true;
-        var deloadEvery = input.DeloadEveryTrainingWeeks ?? 4;
-        if (includeDeload && deloadEvery is < TrainingMacrocycleDraftBuilder.MinimumDeloadInterval or > TrainingMacrocycleDraftBuilder.MaximumDeloadInterval)
+        var deloadEvery = input.DeloadEveryTrainingWeeks ?? AutomaticDeload;
+        if (includeDeload && input.DeloadEveryTrainingWeeks is not null && deloadEvery is < TrainingMacrocycleDraftBuilder.MinimumDeloadInterval or > TrainingMacrocycleDraftBuilder.MaximumDeloadInterval)
             Fail("deloadEveryTrainingWeeks",
                 $"El intervalo de descarga debe estar entre {TrainingMacrocycleDraftBuilder.MinimumDeloadInterval} y {TrainingMacrocycleDraftBuilder.MaximumDeloadInterval} semanas.");
 
