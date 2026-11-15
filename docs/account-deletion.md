@@ -44,7 +44,7 @@ whole transaction is rolled back). All sessions end with it: refresh tokens are 
 | Table | Content |
 |---|---|
 | `users` | email, name, password hash, Google subject, 2FA key, time zone |
-| `refresh_tokens`, `auth_challenges`, `auth_recovery_codes`, `email_action_tokens` | sessions, 2FA challenges, recovery codes, email links |
+| `device_tokens` (push), `refresh_tokens`, `auth_challenges`, `auth_recovery_codes`, `email_action_tokens` | sessions, 2FA challenges, recovery codes, email links |
 | `subscriptions` | Google Play purchase (including the encrypted purchase token) |
 | `training_plans`, `training_plan_phases`, `training_mesocycles`, `planned_sessions` | profile (limitations, equipment) and the plan |
 | `workout_logs`, `workout_set_logs` | logged sessions: loads, repetitions, RIR, recovery, **pain reported, free notes** |

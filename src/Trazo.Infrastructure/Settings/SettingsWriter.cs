@@ -14,6 +14,8 @@ public interface ISettingsWriter
     Task SetSubscriptionsEnforcedAsync(bool enforced, CancellationToken ct);
     /// <summary>Validates and persists the Google Play Billing configuration. Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct);
+    /// <summary>Validates and persists the push-notification (Firebase) configuration. Returns validation errors, if any.</summary>
+    Task<Dictionary<string, string[]>> UpdatePushAsync(PushInput input, CancellationToken ct);
     /// <summary>
     /// Validates and persists the operational settings. Nothing is written when any value is invalid. The result lists
     /// what changed (without secret values) for the audit log.
@@ -64,6 +66,23 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
             await Upsert(SettingKeys.PlayRtdnSecret, input.RtdnSecret.Trim(), true, ct);
         await Upsert(SettingKeys.PlayRtdnAudience, input.RtdnAudience?.Trim() ?? "", false, ct);
         await Upsert(SettingKeys.PlayRtdnServiceAccountEmail, input.RtdnServiceAccountEmail?.Trim() ?? "", false, ct);
+        await db.SaveChangesAsync(ct);
+        return errors;
+    }
+
+    public async Task<Dictionary<string, string[]>> UpdatePushAsync(PushInput input, CancellationToken ct)
+    {
+        var stored = await db.AppSettings.AsNoTracking().FirstOrDefaultAsync(x => x.Key == SettingKeys.PushServiceAccountJson, ct);
+        var storedJson = stored is null || string.IsNullOrEmpty(stored.Value) ? null
+            : stored.IsSecret ? protector.Unprotect(stored.Value) : stored.Value;
+        var errors = SettingsValidator.ValidatePush(input, storedJson);
+        if (errors.Count > 0) return errors;
+        await Upsert(SettingKeys.PushProjectId, input.ProjectId?.Trim() ?? "", false, ct);
+        await Upsert(SettingKeys.PushApplicationId, input.ApplicationId?.Trim() ?? "", false, ct);
+        await Upsert(SettingKeys.PushApiKey, input.ApiKey?.Trim() ?? "", false, ct);
+        await Upsert(SettingKeys.PushSenderId, input.SenderId?.Trim() ?? "", false, ct);
+        if (input.ServiceAccountJson is not null)
+            await Upsert(SettingKeys.PushServiceAccountJson, input.ServiceAccountJson.Trim(), true, ct);
         await db.SaveChangesAsync(ct);
         return errors;
     }

@@ -20,6 +20,8 @@ public interface IRuntimeSettings
     Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default);
     Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default);
     Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default);
+    Task<PushConfig> GetPushAsync(CancellationToken ct = default);
+    Task<PushView> GetPushViewAsync(CancellationToken ct = default);
     /// <summary>Operational settings: a valid database value, else the environment, else the default. Invalid values are skipped.</summary>
     Task<OperationalConfig> GetOperationalAsync(CancellationToken ct = default, Action<string, string>? onInvalid = null);
     Task<DietoExpressConfig> GetDietoExpressAsync(CancellationToken ct = default);
@@ -110,6 +112,23 @@ public sealed class RuntimeSettings(
         return new PlayBillingView(c.PackageName, !string.IsNullOrWhiteSpace(c.ServiceAccountJson),
             SettingsValidator.ServiceAccountEmail(c.ServiceAccountJson), !string.IsNullOrWhiteSpace(c.RtdnSecret),
             c.RtdnAudience, c.RtdnServiceAccountEmail, c.IsComplete, c.IsComplete && c.RtdnAuthConfigured);
+    }
+
+    public async Task<PushConfig> GetPushAsync(CancellationToken ct = default)
+    {
+        var rows = await LoadAsync(ct);
+        return new PushConfig(
+            Get(rows, SettingKeys.PushProjectId) ?? "", Get(rows, SettingKeys.PushApplicationId) ?? "",
+            Get(rows, SettingKeys.PushApiKey) ?? "", Get(rows, SettingKeys.PushSenderId),
+            Get(rows, SettingKeys.PushServiceAccountJson));
+    }
+
+    public async Task<PushView> GetPushViewAsync(CancellationToken ct = default)
+    {
+        var c = await GetPushAsync(ct);
+        var devices = await db.DeviceTokens.AsNoTracking().CountAsync(ct);
+        return new PushView(c.ProjectId, c.ApplicationId, c.ApiKey, c.SenderId, !string.IsNullOrWhiteSpace(c.ServiceAccountJson),
+            SettingsValidator.ServiceAccountEmail(c.ServiceAccountJson), c.IsComplete, devices);
     }
 
     private EmailConfig BuildEmail(Dictionary<string, AppSetting> rows)

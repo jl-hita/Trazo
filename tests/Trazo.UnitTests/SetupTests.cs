@@ -41,6 +41,9 @@ public sealed class SetupFixture : IDisposable
             CREATE TABLE waitlist_entries (
               "Id" TEXT PRIMARY KEY, "Email" TEXT NOT NULL UNIQUE, "Language" TEXT NOT NULL,
               "ConsentAt" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL);
+            CREATE TABLE device_tokens (
+              "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Token" TEXT NOT NULL UNIQUE, "Platform" TEXT NOT NULL,
+              "CreatedAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL);
             """);
     }
 

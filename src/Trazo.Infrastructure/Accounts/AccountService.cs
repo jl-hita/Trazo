@@ -24,6 +24,7 @@ public static class AccountData
         typeof(TrazoUser), typeof(RefreshToken), typeof(AuthChallenge), typeof(AuthRecoveryCode), typeof(EmailActionToken),
         typeof(Subscription), typeof(TrainingPlan), typeof(TrainingPlanPhase), typeof(TrainingMesocycle), typeof(PlannedSession),
         typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation), typeof(PlanReviewRequest), typeof(PlanReviewMessage),
+        typeof(Trazo.Domain.Push.DeviceToken),
         // Not linked to the account: matched by the account's email (the person may have joined the waitlist before registering).
         typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
@@ -150,6 +151,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         rows += await StepAsync(db.TrainingPlans.Where(p => p.UserId == userId), ct);
         rows += await StepAsync(db.Subscriptions.Where(s => s.UserId == userId), ct);
         rows += await StepAsync(db.RefreshTokens.Where(t => t.UserId == userId), ct);
+        rows += await StepAsync(db.DeviceTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.AuthChallenges.Where(c => c.UserId == userId), ct);
         rows += await StepAsync(db.AuthRecoveryCodes.Where(c => c.UserId == userId), ct);
         rows += await StepAsync(db.EmailActionTokens.Where(t => t.UserId == userId), ct);

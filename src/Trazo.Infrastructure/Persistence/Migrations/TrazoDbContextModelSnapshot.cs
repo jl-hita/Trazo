@@ -56,6 +56,25 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("email_action_tokens");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Push.DeviceToken", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("Token").IsRequired().HasMaxLength(1024).HasColumnType("character varying(1024)");
+            b.Property<string>("Platform").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("LastSeenAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Token").IsUnique();
+            b.HasIndex("UserId");
+            b.ToTable("device_tokens");
+        });
+        modelBuilder.Entity("Trazo.Domain.Push.DeviceToken", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Waitlist.WaitlistEntry", b =>
         {
             b.Property<Guid>("Id").HasColumnType("uuid");
