@@ -66,7 +66,8 @@ public sealed class MesocycleGeneratorPropertyTests
             foreach (var exercise in exercises)
             {
                 var candidate = candidates[exercise.ExerciseId];
-                Assert.InRange(exercise.Sets, 1, goal == TrainingGoal.Strength ? 3 : 5);
+                // Strength: three sets per exercise, except the main lift that opens the session (up to five).
+                Assert.InRange(exercise.Sets, 1, goal == TrainingGoal.Strength && exercise.Order != 1 ? 3 : 5);
                 Assert.InRange(exercise.MinRepetitions, 1, exercise.MaxRepetitions);
                 Assert.InRange(exercise.MaxRepetitions, 1, 30);
                 Assert.InRange(exercise.TargetRepetitionsInReserve ?? 0m, 0m, 5m);
@@ -116,16 +117,33 @@ public sealed class MesocycleGeneratorPropertyTests
     }
 
     [Fact]
-    public void ALimitationThatLeavesAPatternEmptyFailsWithAnExplanation()
+    public void ALimitationThatLeavesOverheadPressingEmptyKeepsThePlanAndExplainsTheOmission()
     {
+        // Engine 0.10.0: this profile used to fail. A shoulder limitation now excludes every vertical press, and the
+        // sessions keep their horizontal press instead of making the whole plan impossible.
         var profile = PlanTestCatalog.Profile(limitations: ["Shoulder"], equipment: ["dumbbell", "bench", "machine"]);
-        // ohp, db-shoulder-press and machine-shoulder-press: only the first is excluded by the rules, so exclude the rest too.
-        var withExclusions = profile with { ExcludedExerciseIds = ["db-shoulder-press", "machine-shoulder-press"] };
 
-        var result = MesocycleGenerator.Generate(withExclusions, 1, new MesocycleSlot(1, 1, "accumulation", 1, 4), PlanTestCatalog.Candidates());
+        var result = MesocycleGenerator.Generate(profile, 1, new MesocycleSlot(1, 1, "accumulation", 1, 4), PlanTestCatalog.Candidates());
+
+        Assert.True(result.Succeeded, string.Join("; ", result.Errors));
+        var used = result.Sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)).Select(e => e.ExerciseId).ToHashSet();
+        Assert.Empty(used.Intersect(["ohp", "db-shoulder-press", "machine-shoulder-press"]));
+        Assert.Contains(result.Quality!.Warnings, w => w.Contains("VerticalPush"));
+    }
+
+    [Fact]
+    public void AnExclusionThatLeavesAnEssentialPatternEmptyFailsWithAnExplanation()
+    {
+        var profile = PlanTestCatalog.Profile(equipment: ["dumbbell", "bench"]) with
+        {
+            ExcludedExerciseIds = ["db-row", "band-row"]
+        };
+
+        var result = MesocycleGenerator.Generate(profile, 1, new MesocycleSlot(1, 1, "accumulation", 1, 4), PlanTestCatalog.Candidates());
 
         Assert.False(result.Succeeded);
-        Assert.Contains(result.Errors, e => e.Contains("VerticalPush"));
+        Assert.Empty(result.Sessions);
+        Assert.Contains(result.Errors, e => e.Contains("HorizontalPull"));
     }
 
     [Theory]

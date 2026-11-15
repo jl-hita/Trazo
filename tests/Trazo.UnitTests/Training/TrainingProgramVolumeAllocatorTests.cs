@@ -69,9 +69,9 @@ public sealed class TrainingProgramVolumeAllocatorTests
     }
 
     [Theory]
-    [InlineData(TrainingExperience.Beginner, 8, 12, 10, 5)]
-    [InlineData(TrainingExperience.Intermediate, 10, 16, 13, 7)]
-    [InlineData(TrainingExperience.Advanced, 12, 20, 16, 8)]
+    [InlineData(TrainingExperience.Beginner, 8, 12, 10, 8)]
+    [InlineData(TrainingExperience.Intermediate, 10, 16, 13, 10)]
+    [InlineData(TrainingExperience.Advanced, 12, 20, 16, 12)]
     public void HypertrophyDefaultsUseAgreedExperienceRanges(
         TrainingExperience experience, decimal minimum, decimal maximum, decimal target, decimal hamstringTarget)
     {
@@ -94,11 +94,15 @@ public sealed class TrainingProgramVolumeAllocatorTests
         Assert.Equal(6m, strength[TrainingMuscleGroup.Chest]);
         Assert.Equal(3m, strength[TrainingMuscleGroup.Biceps]);
         Assert.Equal(3m, strength[TrainingMuscleGroup.Triceps]);
-        Assert.Equal(3m, strength[TrainingMuscleGroup.Hamstrings]);
+        // Engine 0.10.0: hamstrings get three quarters of the central target (they used to get half) and strength
+        // plans carry no calf target.
+        Assert.Equal(5m, strength[TrainingMuscleGroup.Hamstrings]);
+        Assert.DoesNotContain(TrainingMuscleGroup.Calves, strength.Keys);
         Assert.DoesNotContain(TrainingMuscleGroup.Abdominals, strength.Keys);
         Assert.Equal(4m, general[TrainingMuscleGroup.Chest]);
         Assert.Equal(2m, general[TrainingMuscleGroup.Biceps]);
-        Assert.Equal(2m, general[TrainingMuscleGroup.Hamstrings]);
+        Assert.Equal(3m, general[TrainingMuscleGroup.Hamstrings]);
+        Assert.Equal(2m, general[TrainingMuscleGroup.Calves]);
         Assert.DoesNotContain(TrainingMuscleGroup.Abdominals, general.Keys);
     }
 
@@ -185,7 +189,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
     }
 
     [Fact]
-    public void DefaultAllocationPrioritizesQuadricepsGlutesAndCalvesOverHamstrings()
+    public void DefaultAllocationGivesHamstringsThreeQuartersAndCalvesHalfOfTheCentralTarget()
     {
         TrainingExercisePrescription Exercise(string id, TrainingMuscleGroup muscle) =>
             new(id, "v1", id, 1, 1, 8, 12, 2m, 90,
@@ -226,8 +230,10 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var explicitVolume = TrainingProgramVolumeAllocator.CalculatePrimaryVolume(explicitHamstrings.Sessions);
         Assert.Equal(10m, defaultVolume[TrainingMuscleGroup.Quadriceps]);
         Assert.Equal(10m, defaultVolume[TrainingMuscleGroup.Glutes]);
-        Assert.Equal(10m, defaultVolume[TrainingMuscleGroup.Calves]);
-        Assert.Equal(5m, defaultVolume[TrainingMuscleGroup.Hamstrings]);
+        // Engine 0.10.0: calves are a small group (half the central target) and hamstrings no longer yield to
+        // them (three quarters of it, with the same allocation weight as any other muscle).
+        Assert.Equal(5m, defaultVolume[TrainingMuscleGroup.Calves]);
+        Assert.Equal(8m, defaultVolume[TrainingMuscleGroup.Hamstrings]);
         Assert.Equal(8m, explicitVolume[TrainingMuscleGroup.Hamstrings]);
     }
 
