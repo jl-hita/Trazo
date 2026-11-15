@@ -39,6 +39,12 @@ public sealed class PlayBillingException(PlayBillingFailure failure, string mess
     : Exception(message, inner)
 {
     public PlayBillingFailure Failure { get; } = failure;
+
+    /// <summary>
+    /// What Google itself answered (HTTP status and its error text), when the failure came from its API. It never contains our
+    /// credentials, but it is meant for the superadmin console and the log, not for the app's users.
+    /// </summary>
+    public string? GoogleReason { get; init; }
 }
 
 /// <summary>

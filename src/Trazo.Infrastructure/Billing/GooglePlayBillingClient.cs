@@ -104,13 +104,27 @@ public sealed class GooglePlayBillingClient(IRuntimeSettings settings) : IPlayBi
         return (service, config.PackageName);
     }
 
-    private static PlayBillingException Translate(GoogleApiException ex) => ex.HttpStatusCode switch
+    private static PlayBillingException Translate(GoogleApiException ex)
     {
-        HttpStatusCode.NotFound or HttpStatusCode.BadRequest or HttpStatusCode.Gone =>
-            new PlayBillingException(PlayBillingFailure.InvalidPurchase, "Google Play does not recognise this purchase.", ex),
-        HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden =>
-            new PlayBillingException(PlayBillingFailure.Unauthorized,
-                "Google Play rejected the service account. Check it is linked in Play Console with access to subscriptions.", ex),
-        _ => new PlayBillingException(PlayBillingFailure.Unavailable, "Google Play returned an error. Try again later.", ex)
-    };
+        var reason = Describe(ex);
+        return ex.HttpStatusCode switch
+        {
+            HttpStatusCode.NotFound or HttpStatusCode.BadRequest or HttpStatusCode.Gone =>
+                new PlayBillingException(PlayBillingFailure.InvalidPurchase, "Google Play does not recognise this purchase.", ex) { GoogleReason = reason },
+            HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden =>
+                new PlayBillingException(PlayBillingFailure.Unauthorized,
+                    "Google Play rejected the service account. Check it is linked in Play Console with access to subscriptions.", ex) { GoogleReason = reason },
+            _ => new PlayBillingException(PlayBillingFailure.Unavailable, "Google Play returned an error. Try again later.", ex) { GoogleReason = reason }
+        };
+    }
+
+    /// <summary>"403 accessNotConfigured: Google Play Android Developer API has not been used…": HTTP status, Google's reason code and its message.</summary>
+    private static string Describe(GoogleApiException ex)
+    {
+        var text = ex.Error?.Message;
+        if (string.IsNullOrWhiteSpace(text)) text = ex.Message;
+        var code = ex.Error?.Errors?.FirstOrDefault()?.Reason;
+        var reason = $"{(int)ex.HttpStatusCode}{(string.IsNullOrWhiteSpace(code) ? "" : $" {code}")}: {text}".Trim();
+        return reason.Length > 600 ? reason[..600] + "…" : reason;
+    }
 }
