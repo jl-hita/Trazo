@@ -170,6 +170,18 @@ export interface SubscriptionFilters {
   q: string; status: string; source: string; expiresFrom: string; expiresTo: string; sort: string; page: number; pageSize: number;
 }
 
+export interface PushView {
+  projectId: string; applicationId: string; apiKey: string; senderId: string | null;
+  serviceAccountSet: boolean; serviceAccountEmail: string | null; configured: boolean; deviceCount: number;
+}
+
+/** A null service-account key keeps the stored one; an empty string clears it. */
+export interface PushInput {
+  projectId: string; applicationId: string; apiKey: string; senderId: string; serviceAccountJson: string | null;
+}
+
+export interface PushSendResult { ok: boolean; message: string; }
+
 export interface PlayBillingView {
   packageName: string; serviceAccountSet: boolean; serviceAccountEmail: string | null; rtdnSecretSet: boolean;
   rtdnAudience: string | null; rtdnServiceAccountEmail: string | null; configured: boolean; rtdnConfigured: boolean;
@@ -388,6 +400,26 @@ export class AdminApi {
 
   testPlayBilling(): Promise<{ ok: boolean; message: string }> {
     return firstValueFrom(this.http.post<{ ok: boolean; message: string }>(`${API}/settings/play-billing/test`, {}));
+  }
+
+  getPush(): Promise<PushView> {
+    return firstValueFrom(this.http.get<PushView>(`${API}/settings/push`));
+  }
+
+  savePush(input: PushInput): Promise<{ saved: boolean }> {
+    return firstValueFrom(this.http.put<{ saved: boolean }>(`${API}/settings/push`, input));
+  }
+
+  checkPush(): Promise<PushSendResult> {
+    return firstValueFrom(this.http.post<PushSendResult>(`${API}/settings/push/check`, {}));
+  }
+
+  testPush(): Promise<PushSendResult> {
+    return firstValueFrom(this.http.post<PushSendResult>(`${API}/settings/push/test`, {}));
+  }
+
+  broadcastPush(title: string, body: string): Promise<PushSendResult> {
+    return firstValueFrom(this.http.post<PushSendResult>(`${API}/settings/push/broadcast`, { title, body }));
   }
 
   getOperations(): Promise<OperationsView> {

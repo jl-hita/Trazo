@@ -29,6 +29,14 @@ public static class SettingKeys
     public const string DietoExpressEndpoint = "DietoExpressTransfer:Endpoint";
     public const string DietoExpressApiKey = "DietoExpressImport:ApiKey";
 
+    // Push notifications (Firebase Cloud Messaging). The first four are what the Android app needs to start Firebase
+    // (public by design, they ship inside every app); the service-account key signs the server's calls and is encrypted.
+    public const string PushProjectId = "Push:Fcm:ProjectId";
+    public const string PushApplicationId = "Push:Fcm:ApplicationId";
+    public const string PushApiKey = "Push:Fcm:ApiKey";
+    public const string PushSenderId = "Push:Fcm:SenderId";
+    public const string PushServiceAccountJson = "Push:Fcm:ServiceAccountJson";
+
     /// <summary>Marker row: its primary key makes "complete the setup" a single-winner operation.</summary>
     public const string SetupCompletedAt = "Setup:CompletedAt";
 }
@@ -127,3 +135,29 @@ public sealed record PlayBillingInput(
 public sealed record PlayBillingView(
     string PackageName, bool ServiceAccountSet, string? ServiceAccountEmail, bool RtdnSecretSet,
     string? RtdnAudience, string? RtdnServiceAccountEmail, bool Configured, bool RtdnConfigured);
+
+/// <summary>
+/// Firebase Cloud Messaging configuration. <c>ProjectId</c>, <c>ApplicationId</c>, <c>ApiKey</c> and <c>SenderId</c> are the
+/// client options the Android app uses to start Firebase (it asks the API for them, so no google-services.json is built into
+/// the app); <c>ServiceAccountJson</c> is the server key used to send messages and is stored encrypted.
+/// </summary>
+public sealed record PushConfig(
+    string ProjectId, string ApplicationId, string ApiKey, string? SenderId, string? ServiceAccountJson)
+{
+    /// <summary>The app can start Firebase and register its token.</summary>
+    public bool ClientConfigured =>
+        !string.IsNullOrWhiteSpace(ProjectId) && !string.IsNullOrWhiteSpace(ApplicationId) && !string.IsNullOrWhiteSpace(ApiKey);
+    /// <summary>The server can also send.</summary>
+    public bool IsComplete => ClientConfigured && !string.IsNullOrWhiteSpace(ServiceAccountJson);
+}
+
+/// <summary>Superadmin input: a null <c>ServiceAccountJson</c> keeps the stored key, empty clears it.</summary>
+public sealed record PushInput(string ProjectId, string ApplicationId, string ApiKey, string? SenderId, string? ServiceAccountJson);
+
+/// <summary>Shown to a superadmin. The service-account key is never included, only whom it belongs to.</summary>
+public sealed record PushView(
+    string ProjectId, string ApplicationId, string ApiKey, string? SenderId, bool ServiceAccountSet,
+    string? ServiceAccountEmail, bool Configured, int DeviceCount);
+
+/// <summary>What the signed-in app needs to start Firebase. Nothing in it is secret.</summary>
+public sealed record PushClientConfig(bool Enabled, string? ProjectId, string? ApplicationId, string? ApiKey, string? SenderId);

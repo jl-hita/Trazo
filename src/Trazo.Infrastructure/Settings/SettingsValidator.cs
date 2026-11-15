@@ -87,6 +87,53 @@ public static class SettingsValidator
         return errors;
     }
 
+    /// <summary>The project_id of a Google service-account key, or null.</summary>
+    public static string? ServiceAccountProjectId(string? json)
+    {
+        if (ServiceAccountEmail(json) is null) return null;
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(json!);
+            return doc.RootElement.TryGetProperty("project_id", out var id) && id.ValueKind == System.Text.Json.JsonValueKind.String
+                ? id.GetString() : null;
+        }
+        catch (System.Text.Json.JsonException) { return null; }
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex FirebaseProjectId = new("^[a-z][a-z0-9-]{4,28}[a-z0-9]$");
+    private static readonly System.Text.RegularExpressions.Regex FirebaseAppId = new(@"^\d{1,3}:\d{6,20}:android:[0-9a-f]{8,64}$");
+    private static readonly System.Text.RegularExpressions.Regex FirebaseApiKey = new(@"^[A-Za-z0-9_\-]{20,100}$");
+
+    /// <summary>
+    /// All three client values empty (and no key) switches push off; otherwise they are all required. When a key is
+    /// supplied it must belong to the same project. <paramref name="storedServiceAccountJson"/> is checked the same way when no new key is sent.
+    /// </summary>
+    public static Dictionary<string, string[]> ValidatePush(PushInput? input, string? storedServiceAccountJson = null)
+    {
+        var errors = new Dictionary<string, string[]>();
+        if (input is null) { errors["push"] = ["Required."]; return errors; }
+        var project = input.ProjectId?.Trim() ?? "";
+        var app = input.ApplicationId?.Trim() ?? "";
+        var apiKey = input.ApiKey?.Trim() ?? "";
+        var sender = input.SenderId?.Trim() ?? "";
+        var off = project.Length == 0 && app.Length == 0 && apiKey.Length == 0 && input.ServiceAccountJson is not { Length: > 0 };
+        if (off) return errors;
+
+        if (!FirebaseProjectId.IsMatch(project)) errors["projectId"] = ["Expected the Firebase project ID (lower case letters, digits and hyphens)."];
+        if (!FirebaseAppId.IsMatch(app)) errors["applicationId"] = ["Expected the Android app ID, like 1:1234567890:android:abcdef0123456789."];
+        if (!FirebaseApiKey.IsMatch(apiKey)) errors["apiKey"] = ["Expected the Android API key (current_key in google-services.json)."];
+        if (sender.Length > 0 && !System.Text.RegularExpressions.Regex.IsMatch(sender, @"^\d{6,20}$"))
+            errors["senderId"] = ["Expected the numeric sender ID (project number) or leave it empty."];
+
+        var json = input.ServiceAccountJson is { Length: > 0 } sent ? sent : (input.ServiceAccountJson is null ? storedServiceAccountJson : null);
+        if (input.ServiceAccountJson is { Length: > 0 } candidate &&
+            (candidate.Length > MaxServiceAccountJsonLength || ServiceAccountEmail(candidate) is null))
+            errors["serviceAccountJson"] = ["Paste the full JSON key of a Google service account."];
+        else if (!errors.ContainsKey("projectId") && ServiceAccountProjectId(json) is { } keyProject && keyProject != project)
+            errors["serviceAccountJson"] = [$"The key belongs to the project '{keyProject}', not '{project}'."];
+        return errors;
+    }
+
     public static Dictionary<string, string[]> ValidateAdmin(AdminAccountInput? admin)
     {
         var errors = new Dictionary<string, string[]>();

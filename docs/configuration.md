@@ -64,6 +64,7 @@ Leyenda de «Crítica»: **Sí** = sin ella el backend no arranca o nadie puede 
 | `Authentication:Google:ClientId` | Inicio de sesión con Google | No: el acceso con contraseña funciona sin él | Asistente + Ajustes |
 | `Email:Smtp:*`, `Email:From`, `Email:ActionBaseUrl` | Correo (verificación, recuperación) | No para arrancar; sin SMTP no hay correos de cuenta | Asistente + Ajustes (con prueba de envío) |
 | `Billing:Enforced`, `Billing:Play:*` | Suscripciones y Google Play (secretos cifrados) | No | Ajustes (con prueba de conexión) |
+| `Push:Fcm:*` | Notificaciones push (Firebase): ID de proyecto, app, clave de API y remitente para la app; clave de cuenta de servicio cifrada | No | Ajustes (comprobar conexión, prueba y anuncio) |
 
 ### Nuevos en Ajustes (esta versión)
 

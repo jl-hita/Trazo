@@ -60,7 +60,9 @@ builder.Services.AddSingleton<DeletionRequestThrottle>();
 builder.Services.AddSingleton<LoginAttemptThrottle>();
 builder.Services.AddSingleton<GoogleNonceStore>();
 builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(180));
-builder.Services.AddHttpClient("google-test", c => c.Timeout = TimeSpan.FromSeconds(10));
+builder.Services.AddSingleton<Trazo.Infrastructure.Push.IFcmAccessTokenProvider, Trazo.Infrastructure.Push.GoogleFcmAccessTokenProvider>();
+builder.Services.AddHttpClient<Trazo.Infrastructure.Push.IPushSender, Trazo.Infrastructure.Push.FcmPushSender>(c => c.Timeout = TimeSpan.FromSeconds(20));
+builder.Services.AddHttpClient("google-test",c => c.Timeout = TimeSpan.FromSeconds(10));
 builder.Services.AddHttpClient(OperationsSettingsEndpoints.TestClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddHttpClient(AdminLibraryTransferEndpoints.ClientName, c => c.Timeout = TimeSpan.FromMinutes(5));
 
@@ -162,6 +164,10 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             "del|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+    options.AddPolicy(PushEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     // Public landing form: a few attempts per minute per IP. Fixed on purpose, like the sign-in limiter.
     options.AddPolicy(WaitlistEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
@@ -274,6 +280,7 @@ app.MapPlanReviewEndpoints();
 app.MapAdminSubscriptionsEndpoints();
 app.MapOperationsSettingsEndpoints();
 app.MapWaitlistEndpoints();
+app.MapPushEndpoints();
 app.MapErrorTicketEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
