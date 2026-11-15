@@ -44,6 +44,8 @@ public sealed class Subscription
     public bool AutoRenewing { get; set; }
     public DateTimeOffset? AcknowledgedAt { get; set; }
     public bool IsTestPurchase { get; set; }
+    /// <summary>First time the store reported the subscription as paid (not a free trial). Lets the admin measure trial-to-paid conversion.</summary>
+    public DateTimeOffset? PaidAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

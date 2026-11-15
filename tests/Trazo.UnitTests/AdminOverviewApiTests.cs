@@ -318,6 +318,60 @@ public sealed class AdminOverviewApiTests : IDisposable
     }
 
     [Fact]
+    public async Task ConversionGroupsSignupsByWeekAndCountsOnlyRealSubscriptionsAndPayments()
+    {
+        var a = await AddUserAsync("a@trazo.test", createdAt: Start.AddDays(-2)); // Saturday: week of 9 November
+        var b = await AddUserAsync("b@trazo.test", createdAt: Start.AddDays(-5)); // Wednesday: same week
+        await AddUserAsync("old@trazo.test", createdAt: Start.AddDays(-400));     // outside the eight weeks
+        await using (var db = Db())
+        {
+            Subscription Sub(Guid user, SubscriptionStatus status, DateTimeOffset? paidAt, bool test = false) => new()
+            {
+                Id = Guid.NewGuid(), UserId = user, ProductId = "trazo_premium", PurchaseTokenHash = Guid.NewGuid().ToString("N"),
+                ProtectedPurchaseToken = "x", Status = status, StartedAt = Start, ExpiresAt = Start.AddDays(30), PaidAt = paidAt,
+                IsTestPurchase = test, CreatedAt = Start, UpdatedAt = Start
+            };
+            db.Subscriptions.AddRange(
+                Sub(a.Id, SubscriptionStatus.Active, Start.AddDays(-1)),
+                Sub(b.Id, SubscriptionStatus.Active, Start.AddDays(-1), test: true));
+            await db.SaveChangesAsync();
+        }
+
+        var body = await ReadAsync(await (await SuperadminAsync()).GetAsync("/api/v1/admin/overview"));
+        var cohorts = body.GetProperty("insights").GetProperty("conversion").GetProperty("cohorts").EnumerateArray().ToList();
+
+        Assert.Equal(8, cohorts.Count);
+        Assert.Equal("2026-11-16", cohorts[^1].GetProperty("weekStart").GetString());
+        Assert.Equal(1, cohorts[^1].GetProperty("signups").GetInt32()); // the superadmin used to read the overview
+        var previous = cohorts[^2];
+        Assert.Equal("2026-11-09", previous.GetProperty("weekStart").GetString());
+        Assert.Equal(2, previous.GetProperty("signups").GetInt32());
+        Assert.Equal(1, previous.GetProperty("subscribed").GetInt32()); // b only has a test purchase
+        Assert.Equal(1, previous.GetProperty("paid").GetInt32());
+        Assert.Equal(3, cohorts.Sum(c => c.GetProperty("signups").GetInt32()));
+    }
+
+    [Fact]
+    public async Task PaywallViewsAreAnonymousDailyCountersPerPlaceOfTheApp()
+    {
+        Assert.Equal(HttpStatusCode.Unauthorized,
+            (await ClientFor(null).PostAsJsonAsync("/api/v1/analytics/paywall-view", new { source = "account" })).StatusCode);
+
+        var user = ClientFor(await AddUserAsync("u@trazo.test"));
+        foreach (var source in new[] { "account", "account", "plan", "<script>", null })
+            Assert.Equal(HttpStatusCode.NoContent, (await user.PostAsJsonAsync("/api/v1/analytics/paywall-view", new { source })).StatusCode);
+
+        var body = await ReadAsync(await (await SuperadminAsync()).GetAsync("/api/v1/admin/overview"));
+        var paywall = body.GetProperty("insights").GetProperty("conversion").GetProperty("paywall");
+        Assert.Equal(5, paywall.GetProperty("views").GetInt32());
+        var bySource = paywall.GetProperty("bySource").EnumerateArray()
+            .ToDictionary(x => x.GetProperty("name").GetString()!, x => x.GetProperty("count").GetInt32());
+        Assert.Equal(2, bySource["account"]);
+        Assert.Equal(1, bySource["plan"]);
+        Assert.Equal(2, bySource["other"]); // unknown places are never stored as free text
+    }
+
+    [Fact]
     public async Task HealthRelatedFiguresAreHiddenWhileTheGroupIsTooSmallToBeAnonymous()
     {
         var user = await AddUserAsync("h@trazo.test");

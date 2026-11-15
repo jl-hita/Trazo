@@ -15,6 +15,8 @@ public sealed class OverviewInsightsBuilder(TrazoDbContext db)
     public const int MinimumGroup = 5;
     public const int RecurringWorkouts = 3;
     public const int ChartDays = 14;
+    public const int CohortWeeks = 8;
+    public const int PaywallDays = 30;
     private static readonly string[] Reasons = ["Time", "Fatigue", "Equipment", "Motivation", "Illness", "Other"];
 
     public async Task<OverviewInsights> BuildAsync(DateTimeOffset now, CancellationToken ct)
@@ -23,7 +25,41 @@ public sealed class OverviewInsightsBuilder(TrazoDbContext db)
         var funnel = await BuildFunnelAsync(ct);
         var subscriptions = await BuildSubscriptionsAsync(now, ct);
         var engine = await BuildEngineAsync(now, ct);
-        return new OverviewInsights(activity, funnel, subscriptions, engine);
+        var conversion = await BuildConversionAsync(now, ct);
+        return new OverviewInsights(activity, funnel, subscriptions, engine, conversion);
+    }
+
+    private async Task<OverviewConversion> BuildConversionAsync(DateTimeOffset now, CancellationToken ct)
+    {
+        var today = DateOnly.FromDateTime(now.UtcDateTime);
+        var thisMonday = today.AddDays(-(((int)today.DayOfWeek + 6) % 7));
+        var firstMonday = thisMonday.AddDays(-7 * (CohortWeeks - 1));
+        var from = new DateTimeOffset(firstMonday.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+
+        var users = await db.Users.AsNoTracking().Where(x => x.CreatedAt >= from).Select(x => new { x.Id, x.CreatedAt }).ToListAsync(ct);
+        var ids = users.Select(x => x.Id).ToList();
+        var subs = ids.Count == 0
+            ? []
+            : await db.Subscriptions.AsNoTracking().Where(x => !x.IsTestPurchase && ids.Contains(x.UserId))
+                .Select(x => new { x.UserId, x.PaidAt }).ToListAsync(ct);
+        var subscribed = subs.Select(x => x.UserId).ToHashSet();
+        var paid = subs.Where(x => x.PaidAt != null).Select(x => x.UserId).ToHashSet();
+
+        var cohorts = Enumerable.Range(0, CohortWeeks).Select(i => firstMonday.AddDays(7 * i)).Select(monday =>
+        {
+            var members = users.Where(u =>
+            {
+                var d = DateOnly.FromDateTime(u.CreatedAt.UtcDateTime);
+                return d >= monday && d < monday.AddDays(7);
+            }).Select(u => u.Id).ToList();
+            return new OverviewCohort(monday, members.Count, members.Count(subscribed.Contains), members.Count(paid.Contains));
+        }).ToList();
+
+        var firstDay = today.AddDays(-(PaywallDays - 1));
+        var bySource = (await db.PaywallViews.AsNoTracking().Where(x => x.Day >= firstDay)
+                .GroupBy(x => x.Source).Select(g => new { Source = g.Key, Views = g.Sum(x => x.Views) }).ToListAsync(ct))
+            .Select(x => new OverviewCount(x.Source, x.Views)).OrderByDescending(x => x.Count).ToList();
+        return new OverviewConversion(cohorts, new OverviewPaywall(PaywallDays, bySource.Sum(x => x.Count), bySource));
     }
 
     private async Task<OverviewActivity> BuildActivityAsync(DateTimeOffset now, CancellationToken ct)

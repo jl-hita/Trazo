@@ -103,6 +103,8 @@ with plain counts, uses no new tables or migrations and shares the 90 s cache.
 | **Actividad de los últimos 14 días** | `activity.days[]` | Signups (`users.CreatedAt`), plans (`training_plans.CreatedAt`) and logged sessions (`workout_logs.LoggedAt`) per UTC day |
 | | `activeUsers7d` / `activeUsers30d` | Users by `LastLoginAt` |
 | **Embudo de activación** | `funnel` | Registered → email verified (or Google) → with a plan → with a logged session → "constantes" (3 or more sessions). Counts of users, never who |
+| **Conversión por semana de alta** | `conversion.cohorts[]` | Last 8 weeks (Monday, UTC): sign-ups, how many started any real subscription (trial or paid) and how many have ever been charged (`subscriptions.PaidAt`, set the first time the store reports the subscription as active, in grace or on hold). Test purchases excluded |
+| **Oferta Premium abierta** | `conversion.paywall` | Opens of the Premium screen in the last 30 days by place of the app (`account`, `plan`, `session`, `onboarding`, `other`), from the anonymous counter `paywall_views`. The app sends `POST /api/v1/analytics/paywall-view`; no user, device or session is stored |
 | **Suscripciones a vigilar** | `subscriptions` | Trials ending in 7 days, cancelled subscriptions whose access ends in 7 days, on-hold or grace-period payments. Test purchases are excluded and counted apart |
 | **Motor y entrenamientos (30 días)** | `engine` | Outcome of logged sessions, % with pain reported, reasons for not completing, and the automatic adjustments of the engine (`plan_adaptations` by kind) |
 
@@ -117,5 +119,5 @@ datos") until at least 5 sessions exist in the period, and a reason for not comp
 
 ### Not measured yet
 
-Revenue (prices are not stored), fine-grained retention by cohort, most-substituted exercises and the quality analyser's warnings
+Revenue (prices are not stored), retention by cohort (conversion is measured, activity retention is not), per-user paywall funnel (the counter is anonymous on purpose), most-substituted exercises and the quality analyser's warnings
 (neither is persisted today), and backups (the app has no backup status to read).

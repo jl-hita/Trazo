@@ -254,6 +254,42 @@
       }
     </article>
 
+    <article class="ov-card" aria-labelledby="ov-conv-title">
+      <header><h3 id="ov-conv-title">Conversión a Premium por semana de alta</h3></header>
+      @if (cohorts().length === 0) {
+        <p class="ov-empty">Todavía no hay altas.</p>
+      } @else {
+        <table class="ov-table">
+          <caption class="ov-sr-only">Altas de cada semana y cuántas han iniciado una suscripción o han pagado</caption>
+          <thead><tr><th scope="col">Semana del</th><th scope="col">Altas</th><th scope="col">Con suscripción</th><th scope="col">Han pagado</th></tr></thead>
+          <tbody>
+            @for (c of cohorts(); track c.weekStart) {
+              <tr>
+                <th scope="row">{{ c.label }}</th>
+                <td>{{ format(c.signups) }}</td>
+                <td>{{ format(c.subscribed) }} <span class="muted">{{ c.subscribedPercent === null ? '' : '· ' + c.subscribedPercent + ' %' }}</span></td>
+                <td>{{ format(c.paid) }} <span class="muted">{{ c.paidPercent === null ? '' : '· ' + c.paidPercent + ' %' }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <p class="ov-empty">Con suscripción: prueba o pago. Han pagado: se ha cobrado alguna vez. Sin compras de prueba. Las cohortes recientes aún no han tenido tiempo de convertir.</p>
+      }
+    </article>
+
+    <article class="ov-card" aria-labelledby="ov-paywall-title">
+      <header><h3 id="ov-paywall-title">Oferta Premium abierta ({{ paywall().days }} días)</h3></header>
+      @if (paywall().views === 0) {
+        <p class="ov-empty">Nadie ha abierto la oferta todavía.</p>
+      } @else {
+        <dl>
+          <dt>Total</dt><dd>{{ format(paywall().views) }}</dd>
+          @for (s of paywall().sources; track s.label) { <dt>{{ s.label }}</dt><dd>{{ format(s.count) }}</dd> }
+        </dl>
+        <p class="ov-empty">Aperturas anónimas, sin usuario: dicen desde dónde se llega al paywall, no quién.</p>
+      }
+    </article>
+
     <article class="ov-card ov-card-link" aria-labelledby="ov-watch-title">
       <header>
         <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones a vigilar<span class="ov-sr-only">: ver las suscripciones</span></a></h3>

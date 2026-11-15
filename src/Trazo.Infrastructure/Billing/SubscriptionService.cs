@@ -222,6 +222,8 @@ public sealed class SubscriptionService(
         row.ExpiresAt = info.ExpiryTime;
         row.AutoRenewing = info.AutoRenewing;
         row.IsTestPurchase = info.IsTestPurchase;
+        // Active, in grace or on hold only happen once a payment has been taken (a trial is its own status).
+        if (status is SubscriptionStatus.Active or SubscriptionStatus.GracePeriod or SubscriptionStatus.OnHold) row.PaidAt ??= now;
         if (info.Acknowledged) row.AcknowledgedAt ??= now;
         row.UpdatedAt = now;
     }

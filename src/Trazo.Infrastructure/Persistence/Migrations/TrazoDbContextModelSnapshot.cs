@@ -88,6 +88,15 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("waitlist_entries");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Analytics.PaywallView", b =>
+        {
+            b.Property<DateOnly>("Day").HasColumnType("date");
+            b.Property<string>("Source").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.Property<int>("Views").HasColumnType("integer");
+            b.HasKey("Day", "Source");
+            b.ToTable("paywall_views");
+        });
+
         modelBuilder.Entity("Trazo.Domain.Support.ErrorTicket", b =>
         {
             b.Property<Guid>("Id").HasColumnType("uuid");
@@ -197,6 +206,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<bool>("AutoRenewing").HasColumnType("boolean");
             b.Property<DateTimeOffset?>("AcknowledgedAt").HasColumnType("timestamp with time zone");
             b.Property<bool>("IsTestPurchase").HasColumnType("boolean");
+            b.Property<DateTimeOffset?>("PaidAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
