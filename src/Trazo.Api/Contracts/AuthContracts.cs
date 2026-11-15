@@ -8,4 +8,4 @@ public sealed record RefreshRequest(string RefreshToken, string? DeviceName);
 public sealed record TwoFactorVerifyRequest(string ChallengeToken, string Code, string? DeviceName);
 public sealed record TwoFactorCodeRequest(string Code);
 public sealed record TokenResponse(string AccessToken, string RefreshToken, string TokenType, int ExpiresIn, UserSummary User);
-public sealed record UserSummary(Guid Id, string Email, string DisplayName, string Role, bool TwoFactorEnabled);
+public sealed record UserSummary(Guid Id, string Email, string DisplayName, string Role, bool TwoFactorEnabled, bool GoogleLinked = false);

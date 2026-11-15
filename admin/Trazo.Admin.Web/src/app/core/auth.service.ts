@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@
 import { Router } from '@angular/router';
 import { catchError, firstValueFrom, from, switchMap, throwError } from 'rxjs';
 
-export interface UserSummary { id: string; email: string; displayName: string; role: string; twoFactorEnabled: boolean; }
+export interface UserSummary { id: string; email: string; displayName: string; role: string; twoFactorEnabled: boolean; googleLinked?: boolean; }
 interface TokenResponse { accessToken: string; refreshToken: string; user: UserSummary; }
 export type LoginResult = { status: 'ok' } | { status: 'two-factor'; challengeToken: string };
 
