@@ -335,6 +335,43 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
         Assert.Equal(0, await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().WorkoutLogs.CountAsync());
     }
 
+    // ------------------------------------------------------------------ weekly load
+
+    [Fact]
+    public async Task TheLoadListsEveryWeekWithPlannedSetsOnlyForGeneratedBlocksAndCompletedSetsOnlyForReachedWeeks()
+    {
+        var (_, client, week) = await StartPlanAsync();
+        var sessions = week.GetProperty("sessions").EnumerateArray().ToList();
+        var plannedWeek1 = sessions.Sum(s => s.GetProperty("exercises").EnumerateArray().Sum(e => e.GetProperty("sets").GetInt32()));
+        var first = sessions[0];
+        var firstSets = first.GetProperty("exercises").EnumerateArray().Sum(e => e.GetProperty("sets").GetInt32());
+        await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{first.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(first) });
+
+        var response = await client.GetAsync("/api/v1/plans/current/load");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await JsonAsync(response);
+        var weeks = body.GetProperty("weeks").EnumerateArray().ToList();
+        Assert.Equal(12, weeks.Count);
+        Assert.Equal(1, body.GetProperty("currentWeek").GetInt32());
+        Assert.Equal("sets", body.GetProperty("unit").GetString());
+        Assert.Equal(plannedWeek1, weeks[0].GetProperty("plannedSets").GetInt32());
+        Assert.Equal(firstSets, weeks[0].GetProperty("completedSets").GetInt32());
+        Assert.Equal(1, weeks[0].GetProperty("loggedSessions").GetInt32());
+        // Only the first block exists: later weeks have no planned volume and have not been reached.
+        Assert.Equal(JsonValueKind.Null, weeks[^1].GetProperty("plannedSets").ValueKind);
+        Assert.Equal(JsonValueKind.Null, weeks[^1].GetProperty("completedSets").ValueKind);
+        Assert.All(weeks, w => Assert.False(string.IsNullOrEmpty(w.GetProperty("phaseType").GetString())));
+    }
+
+    [Fact]
+    public async Task TheLoadOfAUserWithoutPlanIsNotFoundAndNeedsSignIn()
+    {
+        Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(await AddUserAsync("noload@example.com")).GetAsync("/api/v1/plans/current/load")).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await ClientFor(null).GetAsync("/api/v1/plans/current/load")).StatusCode);
+    }
+
     // ------------------------------------------------------------------ logging and adaptation
 
     [Fact]

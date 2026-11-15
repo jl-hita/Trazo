@@ -204,6 +204,7 @@ errors list the offending fields. All routes are in the OpenAPI document with th
 | GET | `/current` | Profile and macrocycle phases, no sessions | 200 `PlanView` | 404 |
 | GET | `/current/week` | Sessions of the current week with prescription (generates the block when first needed). `locked` is true for a generated plan without Premium: it is read-only and no block is generated | 200 `WeekView` | 404 |
 | GET | `/current/history?take=30` | Logged sessions, newest first (1-100) | 200 | 404 |
+| GET | `/current/load` | Weekly volume in sets for every plan week: `plannedSets` (null while that block is not generated), `completedSets` (null for weeks not reached yet), phase and deload flag. Read-only, also for a plan locked by a lapsed Premium | 200 `PlanLoadView` | 404 |
 | POST | `/current/archive` | Close the active plan | 204 | 404 |
 | POST | `/current/sessions/{id}/log` | Record a session; with Premium it also adapts the upcoming ones (`adaptation.locked` is true otherwise). Generated plans without Premium answer 402 `premium_required` | 200 `LogResult` | 400, 402, 404, 409 |
 | GET | `/current/sessions/{id}/exercises/{exerciseId}/alternatives?limit=5` | Replacement options (1-10) | 200 | 402, 404 |
