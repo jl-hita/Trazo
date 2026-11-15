@@ -164,6 +164,10 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             "del|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
+    options.AddPolicy(AnalyticsEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            "ana|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy(PushEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -281,6 +285,7 @@ app.MapAdminSubscriptionsEndpoints();
 app.MapOperationsSettingsEndpoints();
 app.MapWaitlistEndpoints();
 app.MapPushEndpoints();
+app.MapAnalyticsEndpoints();
 app.MapErrorTicketEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (

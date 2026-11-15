@@ -137,6 +137,10 @@ export interface OverviewInsights {
     adaptationsTotal30d: number; adaptationsByKind: { name: string; count: number }[];
     notCompletedReasons: { name: string; count: number }[];
   };
+  conversion: {
+    cohorts: { weekStart: string; signups: number; subscribed: number; paid: number }[];
+    paywall: { days: number; views: number; bySource: { name: string; count: number }[] };
+  };
 }
 
 export interface SystemInfo { version: string; commit: string | null; environment: string; }

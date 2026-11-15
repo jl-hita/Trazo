@@ -71,6 +71,10 @@
 .ov-legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 14px; color: #aab6c7; font-size: 11px; }
 .ov-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.ov-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; color: #dbe5f2; }
+.ov-table th, .ov-table td { padding: 4px 6px; text-align: right; font-weight: 400; }
+.ov-table th:first-child { text-align: left; }
+.ov-table thead th { color: #9fb0c6; font-size: 11px; }
 .ov-funnel { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
 .ov-funnel-row { display: flex; justify-content: space-between; gap: 8px; color: #dbe5f2; font-size: 12px; font-variant-numeric: tabular-nums; }
 .ov-track { display: block; height: 6px; margin-top: 5px; border-radius: 3px; background: #1d2a3b; }

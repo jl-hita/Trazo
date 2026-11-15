@@ -27,8 +27,20 @@ public sealed record OverviewEngine(
     int Workouts30d, int Completed30d, int Partial30d, int NotCompleted30d, int? PainReportedPercent,
     int AdaptationsTotal30d, IReadOnlyList<OverviewCount> AdaptationsByKind, IReadOnlyList<OverviewCount> NotCompletedReasons);
 
+/// <summary>
+/// Sign-ups of one week (Monday, UTC) and what became of them: <c>Subscribed</c> started any real subscription (trial or paid),
+/// <c>Paid</c> had a payment taken at some point. Test purchases are left out.
+/// </summary>
+public sealed record OverviewCohort(DateOnly WeekStart, int Signups, int Subscribed, int Paid);
+
+/// <summary>Opens of the Premium offer in the last <see cref="OverviewInsightsBuilder.PaywallDays"/> days, by place of the app. No users involved.</summary>
+public sealed record OverviewPaywall(int Days, int Views, IReadOnlyList<OverviewCount> BySource);
+
+public sealed record OverviewConversion(IReadOnlyList<OverviewCohort> Cohorts, OverviewPaywall Paywall);
+
 public sealed record OverviewInsights(
-    OverviewActivity Activity, OverviewFunnel Funnel, OverviewSubscriptionWatch Subscriptions, OverviewEngine Engine);
+    OverviewActivity Activity, OverviewFunnel Funnel, OverviewSubscriptionWatch Subscriptions, OverviewEngine Engine,
+    OverviewConversion Conversion);
 
 public sealed record OverviewSystem(string Version, string? Commit, string Environment);
 

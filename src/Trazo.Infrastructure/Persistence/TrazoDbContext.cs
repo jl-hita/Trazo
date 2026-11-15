@@ -29,6 +29,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Push.DeviceToken> DeviceTokens => Set<Trazo.Domain.Push.DeviceToken>();
     public DbSet<Trazo.Domain.Waitlist.WaitlistEntry> WaitlistEntries => Set<Trazo.Domain.Waitlist.WaitlistEntry>();
     public DbSet<Trazo.Domain.Support.ErrorTicket> ErrorTickets => Set<Trazo.Domain.Support.ErrorTicket>();
+    public DbSet<Trazo.Domain.Analytics.PaywallView> PaywallViews => Set<Trazo.Domain.Analytics.PaywallView>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

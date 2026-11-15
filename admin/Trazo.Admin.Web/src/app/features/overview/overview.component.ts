@@ -17,6 +17,10 @@ const SUBSCRIPTION_LABEL: Record<string, string> = {
   on_hold: 'En espera', canceled: 'Canceladas', expired: 'Caducadas', revoked: 'Revocadas'
 };
 
+const PAYWALL_SOURCE_LABEL: Record<string, string> = {
+  account: 'Cuenta', plan: 'Plan bloqueado', session: 'Sesión', onboarding: 'Crear plan', other: 'Otros'
+};
+
 const ADAPTATION_LABEL: Record<string, string> = {
   reduction_sets: 'Series reducidas', raise_reserve: 'Más margen (RIR)', restore_sets: 'Series restauradas',
   deload: 'Descargas', hold_progression: 'Progresión retenida', load_update: 'Cargas actualizadas'
@@ -126,6 +130,24 @@ export class OverviewComponent {
       { label: 'Con una sesión registrada', count: f.withWorkout, hint: 'Han registrado al menos un entrenamiento' },
       { label: 'Constantes', count: f.recurring, hint: 'Con 3 o más sesiones registradas' }
     ].map(step => ({ ...step, percent: Math.round((100 * step.count) / base) }));
+  });
+
+  /** Sign-up cohorts by week: share that started a subscription (trial or paid) and share that has paid. */
+  protected readonly cohorts = computed(() =>
+    (this.data()?.insights.conversion.cohorts ?? []).map(c => ({
+      ...c,
+      label: new Date(c.weekStart + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+      subscribedPercent: c.signups === 0 ? null : Math.round((100 * c.subscribed) / c.signups),
+      paidPercent: c.signups === 0 ? null : Math.round((100 * c.paid) / c.signups)
+    })).reverse());
+
+  protected readonly paywall = computed(() => {
+    const p = this.data()?.insights.conversion.paywall;
+    return {
+      days: p?.days ?? 30,
+      views: p?.views ?? 0,
+      sources: (p?.bySource ?? []).map(x => ({ label: PAYWALL_SOURCE_LABEL[x.name] ?? x.name, count: x.count }))
+    };
   });
 
   protected readonly adaptations = computed(() =>

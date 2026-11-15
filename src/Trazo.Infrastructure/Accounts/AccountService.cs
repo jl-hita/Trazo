@@ -35,7 +35,8 @@ public static class AccountData
     /// </summary>
     public static readonly IReadOnlySet<Type> NotPersonal = new HashSet<Type>
     {
-        typeof(ExerciseCatalogItem), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket)
+        typeof(ExerciseCatalogItem), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket),
+        typeof(Trazo.Domain.Analytics.PaywallView)
     };
 }
 
