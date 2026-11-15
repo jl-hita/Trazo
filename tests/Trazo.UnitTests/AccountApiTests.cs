@@ -286,6 +286,15 @@ public sealed class AccountApiTests : IDisposable
     // ------------------------------------------------------------------ deletion
 
     [Fact]
+    public async Task TheSessionUserSaysWhetherGoogleIsAlreadyLinked()
+    {
+        var withGoogle = await JsonAsync(await ClientFor(await AddUserAsync("g@example.com", google: true)).GetAsync("/api/v1/auth/me"));
+        var withoutGoogle = await JsonAsync(await ClientFor(await AddUserAsync("p@example.com")).GetAsync("/api/v1/auth/me"));
+        Assert.True(withGoogle.GetProperty("googleLinked").GetBoolean());
+        Assert.False(withoutGoogle.GetProperty("googleLinked").GetBoolean());
+    }
+
+    [Fact]
     public async Task DeletingTheAccountRemovesEverythingOfTheUserAndNothingOfOthers()
     {
         var ana = await AddUserAsync("ana@example.com");
