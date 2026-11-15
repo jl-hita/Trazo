@@ -128,7 +128,7 @@ public static class AdminSubscriptionsEndpoints
         return Results.Ok(new { saved = true });
     }
 
-    private static async Task<IResult> TestConnectionAsync(IPlayBillingClient play, CancellationToken ct)
+    private static async Task<IResult> TestConnectionAsync(IPlayBillingClient play, ILoggerFactory loggerFactory, CancellationToken ct)
     {
         try
         {
@@ -137,8 +137,10 @@ public static class AdminSubscriptionsEndpoints
         }
         catch (PlayBillingException ex)
         {
-            // Messages are written by us and never include credentials.
-            return Results.Ok(new { ok = false, message = ex.Message });
+            // Our message plus what Google answered, so the superadmin can tell "API disabled" from "no permission" from a bad key.
+            // Neither includes credentials.
+            loggerFactory.CreateLogger("Trazo.Billing").LogWarning(ex, "Google Play connection test failed: {GoogleReason}", ex.GoogleReason ?? ex.Message);
+            return Results.Ok(new { ok = false, message = ex.GoogleReason is null ? ex.Message : $"{ex.Message} Google answered: {ex.GoogleReason}" });
         }
     }
 

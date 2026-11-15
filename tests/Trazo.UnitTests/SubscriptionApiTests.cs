@@ -607,6 +607,23 @@ public sealed class SubscriptionApiTests : IDisposable
         Assert.False(failed.GetProperty("ok").GetBoolean());
     }
 
+    [Fact]
+    public async Task PlayBillingConnectionTest_ShowsWhatGoogleAnswered()
+    {
+        var root = await AddUserAsync("root@example.com", "superadmin");
+        _play.Failure = new PlayBillingException(PlayBillingFailure.Unauthorized, "Google Play rejected the service account.")
+        {
+            GoogleReason = "403 PERMISSION_DENIED: Google Play Android Developer API has not been used in project 123 before or it is disabled."
+        };
+
+        var body = await JsonAsync(await ClientFor(root).PostAsync("/api/v1/admin/settings/play-billing/test", null));
+
+        Assert.False(body.GetProperty("ok").GetBoolean());
+        var message = body.GetProperty("message").GetString();
+        Assert.Contains("Google Play rejected the service account.", message);
+        Assert.Contains("has not been used in project 123", message);
+    }
+
     // ---- Enforcement switch ----
 
     [Fact]
