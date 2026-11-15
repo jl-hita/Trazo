@@ -56,5 +56,6 @@ Superadmin:
 | `GET /api/v1/admin/error-tickets/{id}` | The ticket with its `stackTrace` |
 | `PUT /api/v1/admin/error-tickets/{id}/status` | `{ "status": "seen" }` |
 | `DELETE /api/v1/admin/error-tickets/{id}` | |
+| `POST /api/v1/admin/error-tickets/test-exception` | Throws on purpose (HTTP 500) to check the whole chain; the console has a *Trigger test error* button |
 
 Table `error_tickets` (migration `ErrorTickets`).

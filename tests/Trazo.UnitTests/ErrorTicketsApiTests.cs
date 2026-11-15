@@ -308,6 +308,28 @@ public sealed class ErrorTicketsApiTests : IDisposable
     // ---- console routes ----
 
     [Fact]
+    public async Task TestException_ThrowsOnPurposeForTheSuperadminAndLeavesATicket()
+    {
+        foreach (var role in new string?[] { null, "user", "admin" })
+        {
+            var denied = await ClientForRoleAsync(role);
+            var expected = role is null ? HttpStatusCode.Unauthorized : HttpStatusCode.Forbidden;
+            Assert.Equal(expected, (await denied.PostAsync("/api/v1/admin/error-tickets/test-exception", null)).StatusCode);
+        }
+        await DrainAsync();
+        Assert.Empty(await StoredAsync()); // refused callers throw nothing
+
+        var superadmin = await ClientForRoleAsync("superadmin");
+        var response = await superadmin.PostAsync("/api/v1/admin/error-tickets/test-exception", null);
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        await DrainAsync();
+        var ticket = Assert.Single(await StoredAsync());
+        Assert.Equal("backend", ticket.Source);
+        Assert.Equal("System.InvalidOperationException", ticket.ErrorType);
+        Assert.Contains("Test exception triggered on purpose", ticket.StackTrace);
+    }
+
+    [Fact]
     public async Task ConsoleRoutes_RequireSuperadmin()
     {
         foreach (var role in new string?[] { null, "user", "admin" })

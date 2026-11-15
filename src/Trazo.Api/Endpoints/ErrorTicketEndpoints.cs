@@ -37,8 +37,14 @@ public static class ErrorTicketEndpoints
         admin.MapGet("/{id:guid}", GetAsync);
         admin.MapPut("/{id:guid}/status", SetStatusAsync);
         admin.MapDelete("/{id:guid}", DeleteAsync);
+        // Lets the superadmin check the whole chain (handler, ticket, email) on demand.
+        admin.MapPost("/test-exception", TestException);
         return endpoints;
     }
+
+    /// <summary>Throws on purpose. The caller gets the plain 500 of the exception handler and a ticket appears in the console.</summary>
+    private static IResult TestException() =>
+        throw new InvalidOperationException("Test exception triggered on purpose from the administration console.");
 
     private sealed class RequestSizeLimitMetadata(long maxRequestBodySize) : IRequestSizeLimitMetadata
     {

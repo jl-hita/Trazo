@@ -43,6 +43,7 @@ import { errorMessage } from '../../core/setup.api';
     .et-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .et-confirm { color: #f4b0b0; font-size: 12px; }
     .et-pager { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; color: #8291a6; font-size: 12px; }
+    .et-info { color: #a9dbbd; font-size: 13px; margin: 0 0 12px; }
     .et-error { color: #f0a3a3; font-size: 13px; margin: 0 0 12px; }
     .et-empty { text-align: center; padding: 28px 0; color: #8291a6; }
   `],
@@ -70,8 +71,10 @@ import { errorMessage } from '../../core/setup.api';
         <option value="">API and app</option><option value="backend">API</option><option value="android">Android app</option>
       </select>
       <button type="button" class="et-btn" (click)="load()" [disabled]="loading()">Refresh</button>
+      <button type="button" class="et-btn" (click)="triggerTest()" [disabled]="testing()" title="Makes the API throw an exception on purpose to check this system">Trigger test error</button>
     </div>
 
+    @if (info()) { <p class="et-info" role="status">{{ info() }}</p> }
     @if (error()) { <p class="et-error" role="alert">{{ error() }}</p> }
 
     <table class="et-table">
@@ -141,6 +144,8 @@ export class ErrorTicketsPageComponent {
   protected readonly page = signal(1);
   protected readonly loading = signal(false);
   protected readonly error = signal('');
+  protected readonly info = signal('');
+  protected readonly testing = signal(false);
   protected readonly openId = signal<string | null>(null);
   protected readonly detail = signal<ErrorTicketDetail | null>(null);
   protected readonly confirmId = signal<string | null>(null);
@@ -197,6 +202,24 @@ export class ErrorTicketsPageComponent {
       this.detail.set({ ...ticket, status });
       await this.load();
     } catch (e) { this.error.set(errorMessage(e)); }
+  }
+
+  /** Throws an exception in the API on purpose to check the whole chain: ticket, console and email notice. */
+  protected async triggerTest(): Promise<void> {
+    this.testing.set(true);
+    this.info.set('');
+    this.error.set('');
+    try {
+      const status = await this.api.triggerTestException();
+      if (status === 500) {
+        this.info.set('The API threw the test exception (HTTP 500). The ticket appears in a moment.');
+        await new Promise(resolve => setTimeout(resolve, 1500)); // the ticket is stored by a background writer
+        this.page.set(1);
+        await this.load();
+      } else {
+        this.error.set(status === 0 ? 'The API did not answer.' : `Unexpected answer (HTTP ${status}); the test exception was not thrown.`);
+      }
+    } finally { this.testing.set(false); }
   }
 
   protected async copy(ticket: ErrorTicketDetail): Promise<void> {
