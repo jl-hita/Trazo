@@ -69,6 +69,24 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("waitlist_entries");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Support.ErrorTicket", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Fingerprint").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<string>("Source").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.Property<string>("AppVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("ErrorType").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("StackTrace").IsRequired().HasMaxLength(16000).HasColumnType("character varying(16000)");
+            b.Property<int>("Occurrences").HasColumnType("integer");
+            b.Property<DateTimeOffset>("FirstSeenAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("LastSeenAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("Status").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.HasKey("Id");
+            b.HasIndex("Fingerprint").IsUnique();
+            b.HasIndex("LastSeenAt");
+            b.ToTable("error_tickets");
+        });
+
         modelBuilder.Entity("Trazo.Domain.Settings.AppSetting", b =>
         {
             b.Property<string>("Key").HasMaxLength(100).HasColumnType("character varying(100)");

@@ -212,6 +212,14 @@ export interface AdminPlanReviewDetail {
 export interface WaitlistEntry { id: string; email: string; language: 'es' | 'en'; consentAt: string; createdAt: string; }
 export interface WaitlistPage extends Page<WaitlistEntry> { overall: { total: number; es: number; en: number }; }
 
+export type ErrorTicketStatus = 'new' | 'seen' | 'resolved';
+export interface ErrorTicketSummary {
+  id: string; source: 'backend' | 'android'; appVersion: string | null; errorType: string;
+  occurrences: number; firstSeenAt: string; lastSeenAt: string; status: ErrorTicketStatus;
+}
+export interface ErrorTicketDetail extends ErrorTicketSummary { stackTrace: string; }
+export interface ErrorTicketPage extends Page<ErrorTicketSummary> { overall: { total: number; new: number; seen: number; resolved: number }; }
+
 const API = '/api/v1/admin';
 
 /** Calls to the superadmin-only management endpoints. */
@@ -406,6 +414,26 @@ export class AdminApi {
 
   deleteWaitlistEntry(id: string): Promise<void> {
     return firstValueFrom(this.http.delete<void>(`${API}/waitlist/${id}`));
+  }
+
+  listErrorTickets(q: string, status: string, source: string, page: number, pageSize: number): Promise<ErrorTicketPage> {
+    let params = new HttpParams().set('page', page).set('pageSize', pageSize);
+    if (q.trim()) params = params.set('q', q.trim());
+    if (status) params = params.set('status', status);
+    if (source) params = params.set('source', source);
+    return firstValueFrom(this.http.get<ErrorTicketPage>(`${API}/error-tickets`, { params }));
+  }
+
+  getErrorTicket(id: string): Promise<ErrorTicketDetail> {
+    return firstValueFrom(this.http.get<ErrorTicketDetail>(`${API}/error-tickets/${id}`));
+  }
+
+  setErrorTicketStatus(id: string, status: ErrorTicketStatus): Promise<void> {
+    return firstValueFrom(this.http.put<void>(`${API}/error-tickets/${id}/status`, { status }));
+  }
+
+  deleteErrorTicket(id: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${API}/error-tickets/${id}`));
   }
 
   /** The CSV is fetched through HttpClient so the bearer token is sent (a plain link would not carry it). */

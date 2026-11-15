@@ -28,8 +28,14 @@ public static class AccountData
         typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
 
-    /// <summary>Tables that hold no personal data (shared catalog and application settings).</summary>
-    public static readonly IReadOnlySet<Type> NotPersonal = new HashSet<Type> { typeof(ExerciseCatalogItem), typeof(AppSetting) };
+    /// <summary>
+    /// Tables that hold no personal data (shared catalog, application settings and anonymous error tickets: they carry no user
+    /// and their stack traces are scrubbed of emails, ids and tokens before they are stored).
+    /// </summary>
+    public static readonly IReadOnlySet<Type> NotPersonal = new HashSet<Type>
+    {
+        typeof(ExerciseCatalogItem), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket)
+    };
 }
 
 public enum AccountDeletionBlock { NotFound, LastSuperadmin }

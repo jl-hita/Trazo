@@ -41,6 +41,10 @@ public sealed class SetupFixture : IDisposable
             CREATE TABLE waitlist_entries (
               "Id" TEXT PRIMARY KEY, "Email" TEXT NOT NULL UNIQUE, "Language" TEXT NOT NULL,
               "ConsentAt" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL);
+            CREATE TABLE error_tickets (
+              "Id" TEXT PRIMARY KEY, "Fingerprint" TEXT NOT NULL UNIQUE, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL,
+              "ErrorType" TEXT NOT NULL, "StackTrace" TEXT NOT NULL, "Occurrences" INTEGER NOT NULL,
+              "FirstSeenAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL, "Status" TEXT NOT NULL);
             """);
     }
 

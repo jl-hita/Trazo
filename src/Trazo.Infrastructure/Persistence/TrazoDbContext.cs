@@ -27,6 +27,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Planning.PlanReviewMessage> PlanReviewMessages => Set<Trazo.Domain.Planning.PlanReviewMessage>();
     public DbSet<Trazo.Domain.Settings.AppSetting> AppSettings => Set<Trazo.Domain.Settings.AppSetting>();
     public DbSet<Trazo.Domain.Waitlist.WaitlistEntry> WaitlistEntries => Set<Trazo.Domain.Waitlist.WaitlistEntry>();
+    public DbSet<Trazo.Domain.Support.ErrorTicket> ErrorTickets => Set<Trazo.Domain.Support.ErrorTicket>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
