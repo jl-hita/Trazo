@@ -432,6 +432,16 @@ export class AdminApi {
     return firstValueFrom(this.http.put<void>(`${API}/error-tickets/${id}/status`, { status }));
   }
 
+  /** Makes the API throw on purpose; resolves with the HTTP status it answered (500 when the chain works). */
+  async triggerTestException(): Promise<number> {
+    try {
+      await firstValueFrom(this.http.post<void>(`${API}/error-tickets/test-exception`, {}));
+      return 200;
+    } catch (e) {
+      return (e as { status?: number }).status ?? 0;
+    }
+  }
+
   deleteErrorTicket(id: string): Promise<void> {
     return firstValueFrom(this.http.delete<void>(`${API}/error-tickets/${id}`));
   }
