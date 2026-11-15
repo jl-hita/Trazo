@@ -39,6 +39,7 @@ export class ShellComponent {
     { label: 'Plan reviews', icon: '✎', link: '/reviews' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },
     { label: 'Logs', icon: '≋', link: '/logs' },
+    { label: 'Error tickets', icon: '⚠', link: '/error-tickets' },
     { label: 'Waitlist', icon: '✉', link: '/waitlist' },
     { label: 'Backups', icon: '▣' },
     { label: 'Settings', icon: '⚙', link: '/settings' }
