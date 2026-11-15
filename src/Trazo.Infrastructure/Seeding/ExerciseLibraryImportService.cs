@@ -101,7 +101,6 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             var inserted = 0;
             var updated = 0;
             var preserved = 0;
-            var importedIds = new HashSet<string>(StringComparer.Ordinal);
 
             foreach (var exercise in exercises)
             {
@@ -109,7 +108,6 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
                 var id = RequiredString(exercise, "id");
                 var changed = await UpsertExerciseAsync(connection, transaction, exercise, manifest, cancellationToken);
                 if (changed == 0) { preserved++; continue; }
-                importedIds.Add(id);
                 if (changed == 1) inserted++; else updated++;
             }
 
@@ -117,11 +115,9 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             var imagePreserved = 0;
             foreach (var (metadata, bytes) in images)
             {
-                if (!importedIds.Contains(metadata.ExerciseId))
-                {
-                    imagePreserved++;
-                    continue;
-                }
+                // Image import is independent from exercise metadata updates. A locally curated
+                // exercise may still be missing an image; UpsertImageAsync inserts it in that case
+                // and only replaces an existing image whose origin is DietoExpress.
                 var changed = await UpsertImageAsync(connection, transaction, metadata, bytes, cancellationToken);
                 if (changed) imageImported++; else imagePreserved++;
             }
