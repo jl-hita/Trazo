@@ -210,6 +210,14 @@ errors list the offending fields. All routes are in the OpenAPI document with th
 | GET | `/current/sessions/{id}/exercises/{exerciseId}/alternatives?limit=5` | Replacement options (1-10) | 200 | 402, 404 |
 | POST | `/current/sessions/{id}/exercises/{exerciseId}/swap` | Replace one exercise (optionally in the rest of the block) | 200 `SessionView` | 400, 402, 404 |
 
+### Deload weeks
+
+`includeDeloadPhases` (default true) turns deload weeks on. With `deloadEveryTrainingWeeks` omitted or null, TRAZO places
+them (`MacrocyclePlanner` / `DeloadPlacement`, in the Application layer): plans of 6 weeks or less get none; otherwise no run
+of training weeks is longer than four, the training weeks are spread evenly between the deloads (longer runs first) and the
+last week is never a deload. 12 weeks give training 1-4, deload 5, training 6-8, deload 9, training 10-12. An explicit
+interval (4-8) goes to the engine unchanged. The plan stores 0 in `DeloadEveryTrainingWeeks` for "automatic".
+
 ### Create
 
 ```json
@@ -226,7 +234,7 @@ POST /api/v1/plans
   "limitations": ["Knee"],            // Knee | Shoulder | LowerBack | Wrist | Elbow
   "split": "Automatic",               // Automatic (2-4 days) | FullBody | UpperLower | PushPullLegs
   "includeDeloadPhases": true,        // default true
-  "deloadEveryTrainingWeeks": 4       // 4-8
+  "deloadEveryTrainingWeeks": null    // omit/null = TRAZO places the deloads; or 4-8 for a fixed interval
 }
 ```
 

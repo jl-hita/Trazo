@@ -335,6 +335,18 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
         Assert.Equal(0, await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().WorkoutLogs.CountAsync());
     }
 
+    [Fact]
+    public async Task ADefaultPlanOfTwelveWeeksGetsItsDeloadsInWeekFiveAndNine()
+    {
+        var (_, client, _) = await StartPlanAsync();
+
+        var phases = (await JsonAsync(await client.GetAsync("/api/v1/plans/current"))).GetProperty("macrocycle").GetProperty("phases").EnumerateArray().ToList();
+
+        var deloads = phases.Where(p => p.GetProperty("type").GetString() == "deload").ToList();
+        var start = DateOnly.Parse(phases[0].GetProperty("startDate").GetString()!);
+        Assert.Equal([start.AddDays(28), start.AddDays(56)], deloads.Select(p => DateOnly.Parse(p.GetProperty("startDate").GetString()!)));
+    }
+
     // ------------------------------------------------------------------ weekly load
 
     [Fact]
