@@ -392,7 +392,7 @@ Generated plans do not use supersets.
 ## Editing a manual plan (`PUT /api/v1/plans/current/manual`)
 
 Body as in creation (name, notes, days with exercises and optional `supersetGroup`); `totalWeeks` and `startDate` are ignored because the
-plan keeps its length. Only plans with origin `Manual` can be edited (`409 not_allowed` otherwise, `404 no_active_plan` without a plan).
+plan keeps its length. Only plans with origin `Manual` can be edited (`400 not_allowed` otherwise, `404 no_active_plan` without a plan).
 Logged sessions and past days stay as they are; every pending session from today on is replaced by the new routines, so loads
 written by the adaptation into those sessions are lost (the user's edit wins). Days dropped from the routine disappear from the
 future weeks; a new weekday creates sessions from today on. Free for every account.

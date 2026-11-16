@@ -828,8 +828,9 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
         Assert.Contains(sessions, x => x.GetProperty("day").GetString() == "Wednesday" && x.GetProperty("title").GetString() == "Extra");
         Assert.DoesNotContain(sessions, x => x.GetProperty("day").GetString() == "Thursday"); // dropped day
 
-        var (_, generatedClient, _) = await StartPlanAsync("edit-generated@example.com");
-        Assert.Equal(HttpStatusCode.Conflict, (await generatedClient.PutAsJsonAsync("/api/v1/plans/current/manual", ManualPlan())).StatusCode);
+        var generatedClient = ClientFor(await AddUserAsync("edit-generated@example.com", subscribed: true));
+        Assert.Equal(HttpStatusCode.Created, (await generatedClient.PostAsJsonAsync("/api/v1/plans", Profile())).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await generatedClient.PutAsJsonAsync("/api/v1/plans/current/manual", ManualPlan())).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(await AddUserAsync("edit-none@example.com")).PutAsJsonAsync("/api/v1/plans/current/manual", ManualPlan())).StatusCode);
     }
 
