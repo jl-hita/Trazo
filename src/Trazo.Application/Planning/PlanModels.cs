@@ -72,6 +72,15 @@ public sealed record WeekView(
     Guid PlanId, int WeekNumber, DateOnly WeekStart, DateOnly WeekEnd, string Timeline, MesocycleView? Mesocycle,
     IReadOnlyList<SessionView> Sessions, bool Locked = false);
 
+/// <summary>One week of the current block with its sessions (prescription and, once done, the log).</summary>
+public sealed record BlockWeekView(int WeekNumber, DateOnly WeekStart, DateOnly WeekEnd, bool IsCurrent, IReadOnlyList<SessionView> Sessions);
+
+/// <summary>
+/// The whole current block (mesocycle, at most four weeks) so the user sees where the month is going: volume and intensity
+/// per week. Later blocks are never served: they do not exist until their first week arrives.
+/// </summary>
+public sealed record BlockView(Guid PlanId, MesocycleView? Mesocycle, IReadOnlyList<BlockWeekView> Weeks, bool Locked = false);
+
 public sealed record AppliedAdaptationView(string Kind, IReadOnlyList<string> ExerciseIds, int SessionsChanged, string Explanation);
 
 public sealed record ExerciseAdviceView(string ExerciseId, string Action, string Explanation, decimal? NextLoadKg, IReadOnlyList<int>? SuggestedRepetitions);

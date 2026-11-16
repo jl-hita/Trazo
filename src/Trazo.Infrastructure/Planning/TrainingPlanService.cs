@@ -21,6 +21,7 @@ public interface ITrainingPlanService
     Task<PlanResult<LogResult>> LogSessionAsync(Guid userId, Guid sessionId, ParsedLog log, CancellationToken ct);
     Task<PlanResult<AlternativesResult>> GetAlternativesAsync(Guid userId, Guid sessionId, string exerciseId, int limit, CancellationToken ct);
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
+    Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
@@ -255,6 +256,28 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 await IsLockedAsync(plan, ct));
         }
         return await BuildWeekAsync(plan, position, ct);
+    }
+
+    public async Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct)
+    {
+        // The current week generates the block when it is first needed, so the block always exists once this returns.
+        var current = await GetCurrentWeekAsync(userId, ct);
+        if (current is null) return null;
+        if (current.Mesocycle is not { } meso) return new BlockView(current.PlanId, null, [], current.Locked);
+        var plan = (await ActivePlanAsync(userId, ct))!;
+        var last = meso.StartWeek + meso.Weeks - 1;
+        var sessions = await db.PlannedSessions.AsNoTracking()
+            .Where(s => s.PlanId == plan.Id && s.WeekNumber >= meso.StartWeek && s.WeekNumber <= last)
+            .OrderBy(s => s.Date).ToListAsync(ct);
+        var ids = sessions.Select(s => s.Id).ToList();
+        var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
+        var weeks = Enumerable.Range(meso.StartWeek, meso.Weeks).Select(week =>
+        {
+            var start = PlanSchedule.WeekStart(plan.StartDate, week);
+            return new BlockWeekView(week, start, start.AddDays(6), week == current.WeekNumber,
+                sessions.Where(s => s.WeekNumber == week).Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList());
+        }).ToList();
+        return new BlockView(plan.Id, meso, weeks, current.Locked);
     }
 
     public async Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct)

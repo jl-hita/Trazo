@@ -247,6 +247,24 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task TheBlockShowsEveryWeekOfTheCurrentMesocycle_AndNothingLater()
+    {
+        var (_, client, _) = await StartPlanAsync();
+
+        var block = await JsonAsync(await client.GetAsync("/api/v1/plans/current/block"));
+
+        var meso = block.GetProperty("mesocycle");
+        var weeks = block.GetProperty("weeks").EnumerateArray().ToList();
+        Assert.Equal(meso.GetProperty("weeks").GetInt32(), weeks.Count);
+        Assert.True(weeks.Count is >= 1 and <= 4);
+        Assert.True(weeks[0].GetProperty("isCurrent").GetBoolean());
+        Assert.All(weeks, w => Assert.Equal(4, w.GetProperty("sessions").GetArrayLength()));
+        Assert.Equal(1, weeks[0].GetProperty("weekNumber").GetInt32());
+        Assert.Equal(weeks.Count, weeks[^1].GetProperty("weekNumber").GetInt32()); // a 12-week plan: later blocks do not exist yet
+        Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(await AddUserAsync("none@example.com")).GetAsync("/api/v1/plans/current/block")).StatusCode);
+    }
+
+    [Fact]
     public async Task ThereIsNoRouteThatReturnsTheWholePlan()
     {
         var (_, client, _) = await StartPlanAsync();
