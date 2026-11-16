@@ -335,8 +335,7 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 
 - The plan is a generated draft; it is not a clinical prescription. The disclaimer travels in `PlanView`.
 - The week follows UTC. A device-timezone parameter can be added when the Android app needs it.
-- Intensification phases are scheduled in the macrocycle summary, but the generator does not yet change its prescription for
-  them (the source engine does not either: only the deload is a generator mode).
+- Intensification blocks (strength plans for non-beginners, second half) change the prescription of the heavy lifts: see "Intensification blocks" below.
 - The muscle questionnaire (`TrainingMuscleFeedback*`) is available in the library but not exposed.
 - Catalog data the engine cannot fix: `bench-press` and `db-bench-press` are `Intermediate` in the production catalog, so
   beginners never receive them. It needs a data migration or an administrator edit (the seeder never overwrites rows);
@@ -401,3 +400,10 @@ Free accounts (and lapsed Premium) get `lastPerformance` and a proposed load tha
 weekly ceiling and 5 sets per exercise); one set less after repeated high stimulus with fatigue. Each change applies to the next sessions, has a
 14-day cooldown per exercise and is audited as `muscle_add_set` / `muscle_reduce_set`. Discomfort is never automated: mild repeated or strong discomfort
 only adds a note (swap or review suggestion) to the adaptation report.
+
+## Intensification blocks
+
+For a block whose phase is `intensification` (only strength plans of non-beginners get one, in the second half), `IntensificationPhase` (Application layer, not the
+shared engine) rewrites the generated prescription: lifts worked in 6 repetitions or fewer move to a lower range (floor 2; for example 3-6 becomes 2-4), the
+target RIR drops by one (never below 1), rest grows 30 s (max 300 s) and the target load, when there is one, follows the range with the Epley ratio (capped at +8 %,
+rounded to the load increment). Accessories keep their volume and range. Double progression and the adaptation work on the new range unchanged.
