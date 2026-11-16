@@ -680,7 +680,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var ids = sessions.Select(s => s.Id).ToList();
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
         var weekStart = PlanSchedule.WeekStart(plan.StartDate, position.Week);
-        var last = await LastPerformanceAsync(plan.UserId, sessions, ct);
+        var last = await LastPerformanceAsync(plan.UserId, sessions, await subscriptions.HasPremiumAsync(plan.UserId, ct), ct);
         return new WeekView(
             plan.Id, position.Week, weekStart, weekStart.AddDays(6), position.State.ToString(),
             new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
@@ -694,7 +694,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// heaviest load of that day, or adds one increment when every completed set reached the top of the range.
     /// </summary>
     private async Task<Dictionary<string, LastPerformanceView>> LastPerformanceAsync(
-        Guid userId, IReadOnlyList<PlannedSession> sessions, CancellationToken ct)
+        Guid userId, IReadOnlyList<PlannedSession> sessions, bool premium, CancellationToken ct)
     {
         var ranges = new Dictionary<string, int>(StringComparer.Ordinal);
         foreach (var e in sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)))
@@ -716,7 +716,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             string? basis = null;
             if (heaviest is > 0)
             {
-                var atTop = sets.Where(r => r.WeightKg == heaviest).All(r => r.Repetitions >= ranges[byExercise.Key]);
+                // Proposing a heavier load is automatic progression, a Premium feature; everyone gets the last load to start from.
+                var atTop = premium && sets.Where(r => r.WeightKg == heaviest).All(r => r.Repetitions >= ranges[byExercise.Key]);
                 suggested = atTop ? heaviest + (heaviest < 20 ? 1m : 2.5m) : heaviest;
                 basis = atTop ? "increase" : "repeat";
             }
