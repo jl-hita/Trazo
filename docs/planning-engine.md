@@ -358,3 +358,10 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
   The app should send `X-Time-Zone: <TimeZone.getDefault().id>` on every plan request.
 - `POST /plans/current/sessions/{id}/log` is idempotent: repeating a request whose log is already saved with exactly the same data answers `200` with the saved
   session and `"replayed": true`. A different log for an already logged session still answers `409 session_already_logged`.
+
+## Last performance and proposed load
+
+Each exercise of `GET /plans/current/week` carries `lastPerformance` (null when the user never logged it): the date and the completed,
+pain-free sets of the latest session with that exercise in any of the user's plans, plus `suggestedLoadKg` and `suggestionBasis`.
+The load repeats the heaviest weight of that day (`repeat`) or adds one increment, 1 kg below 20 kg and 2.5 kg above, when every
+set at that weight reached the top of the repetition range (`increase`). `targetLoadKg` from the engine, when present, wins on the client.

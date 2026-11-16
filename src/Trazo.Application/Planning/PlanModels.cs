@@ -46,7 +46,17 @@ public sealed record ExerciseView(
     string? WarmupNote,
     IReadOnlyList<string> PrimaryMuscles,
     IReadOnlyList<string> SecondaryMuscles,
-    string? SwappedFromExerciseId);
+    string? SwappedFromExerciseId,
+    LastPerformanceView? LastPerformance = null);
+
+/// <summary>One set of the last time the user did an exercise.</summary>
+public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir);
+
+/// <summary>
+/// What the user did the last time with an exercise (any plan) and a proposed working load for the next time:
+/// <c>SuggestionBasis</c> is <c>repeat</c> (same load) or <c>increase</c> (every set reached the top of the range).
+/// </summary>
+public sealed record LastPerformanceView(DateOnly Date, IReadOnlyList<LastSetView> Sets, decimal? SuggestedLoadKg, string? SuggestionBasis);
 
 public sealed record LoggedSetView(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool Pain);
 

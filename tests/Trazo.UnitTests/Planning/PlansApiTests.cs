@@ -282,6 +282,27 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task TheWeekCarriesWhatTheUserDidLastTime_AndProposesTheNextLoad()
+    {
+        var (_, client, week) = await StartPlanAsync();
+        var session = week.GetProperty("sessions")[0];
+        Assert.All(session.GetProperty("exercises").EnumerateArray(), e => Assert.Equal(JsonValueKind.Null, e.GetProperty("lastPerformance").ValueKind));
+
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsJsonAsync(
+            $"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(session, kg: 60m, reps: 30) })).StatusCode);
+
+        var again = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var exercise = again.GetProperty("sessions")[0].GetProperty("exercises")[0];
+        var last = exercise.GetProperty("lastPerformance");
+        Assert.Equal(60m, last.GetProperty("sets")[0].GetProperty("weightKg").GetDecimal());
+        Assert.Equal(30, last.GetProperty("sets")[0].GetProperty("repetitions").GetInt32());
+        // Every set reached the top of the range: one increment above the heaviest load.
+        Assert.Equal("increase", last.GetProperty("suggestionBasis").GetString());
+        Assert.Equal(62.5m, last.GetProperty("suggestedLoadKg").GetDecimal());
+    }
+
+    [Fact]
     public async Task OnlyOneActivePlan_ArchivingFreesTheSlot_AndHistoryIsKept()
     {
         var (_, client, week) = await StartPlanAsync();
