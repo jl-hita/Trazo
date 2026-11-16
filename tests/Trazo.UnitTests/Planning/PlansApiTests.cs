@@ -303,6 +303,27 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task ProgressIsEmptyForANewUser_AndReflectsALoggedSession()
+    {
+        var (_, client, week) = await StartPlanAsync();
+        var empty = await JsonAsync(await client.GetAsync("/api/v1/plans/progress"));
+        Assert.Equal(0, empty.GetProperty("summary").GetProperty("totalSessions").GetInt32());
+        Assert.Equal(4, empty.GetProperty("summary").GetProperty("weeklyGoal").GetInt32());
+
+        var session = week.GetProperty("sessions")[0];
+        await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(session, kg: 50m, reps: 10) });
+
+        var progress = await JsonAsync(await client.GetAsync("/api/v1/plans/progress"));
+        Assert.Equal(1, progress.GetProperty("summary").GetProperty("totalSessions").GetInt32());
+        Assert.True(progress.GetProperty("exercises").GetArrayLength() > 0);
+        var first = progress.GetProperty("exercises")[0];
+        Assert.Equal(50m, first.GetProperty("bestWeightKg").GetDecimal());
+        Assert.Equal(66.7m, first.GetProperty("bestEstimatedOneRepMaxKg").GetDecimal());
+        Assert.True(progress.GetProperty("muscles").GetArrayLength() > 0);
+    }
+
+    [Fact]
     public async Task OnlyOneActivePlan_ArchivingFreesTheSlot_AndHistoryIsKept()
     {
         var (_, client, week) = await StartPlanAsync();

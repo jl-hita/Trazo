@@ -23,6 +23,7 @@ public interface ITrainingPlanService
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
+    Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
 }
 
@@ -271,6 +272,27 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return new HistoryItem(session.Id, session.WeekNumber, session.Date, session.Title, log.Outcome.ToString(),
                 log.LoggedAt, log.Sets.Count(s => s.Completed), planned);
         }).ToList();
+    }
+
+    /// <summary>
+    /// What the user has lifted over time, across every plan they ever had: per exercise (load, estimated one-repetition
+    /// maximum, records), weekly sets per muscle and the streak. Read-only, so it also works for a lapsed Premium.
+    /// </summary>
+    public async Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var zone = await zones.ResolveAsync(userId, ct);
+        var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
+                          join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
+                          where log.UserId == userId && set.Completed
+                          select new { set.ExerciseId, LogId = log.Id, log.LoggedAt, set.WeightKg, set.Repetitions }).ToListAsync(ct);
+        var ids = rows.Select(r => r.ExerciseId).Distinct().ToList();
+        var catalog = await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id))
+            .Select(e => new { e.Id, e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct);
+        var info = catalog.ToDictionary(e => e.Id, e => new ProgressExerciseInfo(e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles));
+        var goal = (await ActivePlanAsync(userId, ct))?.TrainingDays.Length ?? 0;
+        return ProgressCalculator.Build(
+            rows.Select(r => new ProgressSetRow(r.ExerciseId, r.LogId, r.LoggedAt, r.WeightKg, r.Repetitions)).ToList(), info, zone, Today, goal);
     }
 
     public async Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct)

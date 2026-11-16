@@ -365,3 +365,12 @@ Each exercise of `GET /plans/current/week` carries `lastPerformance` (null when 
 pain-free sets of the latest session with that exercise in any of the user's plans, plus `suggestedLoadKg` and `suggestionBasis`.
 The load repeats the heaviest weight of that day (`repeat`) or adds one increment, 1 kg below 20 kg and 2.5 kg above, when every
 set at that weight reached the top of the repetition range (`increase`). `targetLoadKg` from the engine, when present, wins on the client.
+
+## Progress (`GET /api/v1/plans/progress`)
+
+Read-only, built from every completed set the user ever logged (all plans), so it also works with a lapsed Premium and with no plan.
+Returns `summary` (sessions total, last 30 days and this week, weekly goal = training days of the active plan, streak of consecutive
+weeks with a workout, sets and volume), `exercises` (per exercise up to 30 workouts: heaviest load, reps at it, Epley estimated
+one-repetition maximum up to 12 repetitions, volume; `bestEstimatedOneRepMaxKg`, `recordDate` and `newRecord` when the latest
+workout beat all earlier ones) and `muscles` with `weekStarts` (last 8 Monday-based weeks; a primary muscle counts 1 per set, a secondary one 0.5).
+Weeks and dates use the user's time zone.
