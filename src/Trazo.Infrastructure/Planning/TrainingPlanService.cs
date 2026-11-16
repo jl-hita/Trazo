@@ -634,11 +634,51 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var ids = sessions.Select(s => s.Id).ToList();
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
         var weekStart = PlanSchedule.WeekStart(plan.StartDate, position.Week);
+        var last = await LastPerformanceAsync(plan.UserId, sessions, ct);
         return new WeekView(
             plan.Id, position.Week, weekStart, weekStart.AddDays(6), position.State.ToString(),
             new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
                 position.Week - mesocycle.StartWeek + 1),
-            sessions.Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList(), locked);
+            sessions.Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id), last)).ToList(), locked);
+    }
+
+    /// <summary>
+    /// The latest completed sets of every exercise in this week's sessions, from any session of the user
+    /// (so a plan that starts after another one still shows what the user lifted before). The proposed load repeats the
+    /// heaviest load of that day, or adds one increment when every completed set reached the top of the range.
+    /// </summary>
+    private async Task<Dictionary<string, LastPerformanceView>> LastPerformanceAsync(
+        Guid userId, IReadOnlyList<PlannedSession> sessions, CancellationToken ct)
+    {
+        var ranges = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var e in sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)))
+            ranges.TryAdd(e.ExerciseId, e.MaxRepetitions);
+        var result = new Dictionary<string, LastPerformanceView>(StringComparer.Ordinal);
+        if (ranges.Count == 0) return result;
+        var ids = ranges.Keys.ToList();
+        var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
+                          join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
+                          where log.UserId == userId && ids.Contains(set.ExerciseId) && set.Completed && !set.PainReported
+                          select new { set.ExerciseId, log.Id, log.LoggedAt, set.SetNumber, set.WeightKg, set.Repetitions, set.Rir })
+            .ToListAsync(ct);
+        foreach (var byExercise in rows.GroupBy(r => r.ExerciseId))
+        {
+            var latest = byExercise.GroupBy(r => r.Id).OrderByDescending(g => g.First().LoggedAt).First();
+            var sets = latest.OrderBy(r => r.SetNumber).ToList();
+            var heaviest = sets.Max(r => r.WeightKg);
+            decimal? suggested = null;
+            string? basis = null;
+            if (heaviest is > 0)
+            {
+                var atTop = sets.Where(r => r.WeightKg == heaviest).All(r => r.Repetitions >= ranges[byExercise.Key]);
+                suggested = atTop ? heaviest + (heaviest < 20 ? 1m : 2.5m) : heaviest;
+                basis = atTop ? "increase" : "repeat";
+            }
+            result[byExercise.Key] = new LastPerformanceView(
+                DateOnly.FromDateTime(sets[0].LoggedAt.UtcDateTime),
+                sets.Select(r => new LastSetView(r.SetNumber, r.WeightKg, r.Repetitions, r.Rir)).ToList(), suggested, basis);
+        }
+        return result;
     }
 
     /// <summary>
@@ -756,14 +796,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer);
     }
 
-    private static SessionView ToSessionView(PlannedSession session, WorkoutLog? log) => new(
+    private static SessionView ToSessionView(PlannedSession session, WorkoutLog? log, IReadOnlyDictionary<string, LastPerformanceView>? last = null) => new(
         session.Id, session.WeekNumber, session.Date, session.Date.DayOfWeek, session.Title, session.EstimatedDurationMinutes,
         session.Status.ToString(),
         PrescriptionJson.Read(session.PrescriptionJson).OrderBy(e => e.Order).Select(e => new ExerciseView(
             e.ExerciseId, e.ExerciseNameSnapshot, e.Order, e.Sets, e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve,
             e.RestSeconds, e.ProgressionRule.ToString(), e.TargetLoadKg, e.LoadBasis, e.WarmupSets, e.WarmupNote,
             e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
-            PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId))).ToList(),
+            PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId),
+            last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null)).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
             log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
