@@ -54,6 +54,9 @@ public static class PlansEndpoints
         group.MapGet("/current/load", GetLoadAsync).WithName("GetPlanLoad")
             .WithSummary("Weekly volume (sets) of every week of the plan: planned (only for the blocks already generated) against completed (weeks already reached).")
             .Produces<PlanLoadView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/progress", GetProgressAsync).WithName("GetProgress")
+            .WithSummary("Progress across all the user's plans: per exercise (load, estimated 1RM, records), weekly sets per muscle and streak. Read-only.")
+            .Produces<ProgressView>();
         group.MapPost("/current/archive", ArchiveAsync).WithName("ArchivePlan")
             .WithSummary("Closes the active plan so a new one can be created. The history is kept.")
             .Produces(StatusCodes.Status204NoContent).ProducesProblem(StatusCodes.Status404NotFound);
@@ -133,6 +136,12 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         return await plans.GetLoadAsync(userId, ct) is { } load ? Results.Ok(load) : NoPlan();
+    }
+
+    private static async Task<IResult> GetProgressAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        return Results.Ok(await plans.GetProgressAsync(userId, ct));
     }
 
     private static async Task<IResult> ArchiveAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
