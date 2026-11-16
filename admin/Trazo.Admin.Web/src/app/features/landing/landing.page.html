@@ -126,7 +126,8 @@
       <p class="lead centered">{{ t.waitText }}</p>
       <form novalidate (submit)="submit($event, email, consent, trap)">
         <label class="f">{{ t.emailLabel }}
-          <input #email type="email" name="email" autocomplete="email" required maxlength="254" inputmode="email">
+          <input #email type="email" name="email" autocomplete="email" required maxlength="254" inputmode="email" aria-describedby="email-hint">
+          <small id="email-hint" class="hint">{{ t.emailHint }}</small>
         </label>
         <input #trap class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="consent">

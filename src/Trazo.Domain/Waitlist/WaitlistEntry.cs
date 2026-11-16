@@ -14,4 +14,11 @@ public sealed class WaitlistEntry
     /// <summary>When the person ticked the consent box (the legal basis for contacting them).</summary>
     public DateTimeOffset ConsentAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    /// <summary>When the person confirmed the address from the link we mailed (double opt-in). Null until then: nothing but the confirmation email is sent to an unconfirmed address.</summary>
+    public DateTimeOffset? ConfirmedAt { get; set; }
+    /// <summary>SHA-256 of the pending confirmation token (the token itself is never stored). Cleared once used.</summary>
+    public string? ConfirmTokenHash { get; set; }
+    public DateTimeOffset? ConfirmTokenExpiresAt { get; set; }
+    /// <summary>When the invitation to the closed test was sent, after the superadmin added the address to the Play Console tester list.</summary>
+    public DateTimeOffset? InvitedAt { get; set; }
 }

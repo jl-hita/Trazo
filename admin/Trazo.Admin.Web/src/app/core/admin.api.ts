@@ -225,8 +225,15 @@ export interface AdminPlanReviewDetail {
   messages: AdminPlanReviewMessage[];
 }
 
-export interface WaitlistEntry { id: string; email: string; language: 'es' | 'en'; consentAt: string; createdAt: string; }
-export interface WaitlistPage extends Page<WaitlistEntry> { overall: { total: number; es: number; en: number }; }
+export interface WaitlistEntry {
+  id: string; email: string; language: 'es' | 'en'; consentAt: string; createdAt: string;
+  confirmedAt: string | null; invitedAt: string | null;
+}
+export type WaitlistStatus = '' | 'pending' | 'confirmed' | 'invited';
+export interface WaitlistPage extends Page<WaitlistEntry> {
+  overall: { total: number; es: number; en: number; pending: number; confirmed: number; invited: number };
+}
+export interface WaitlistInviteResult { requested: number; invited: number; failed: number; skipped: number; }
 
 export type ErrorTicketStatus = 'new' | 'seen' | 'resolved';
 export interface ErrorTicketSummary {
@@ -442,10 +449,16 @@ export class AdminApi {
     return firstValueFrom(this.http.post<TransferResult>(`${API}/exercise-library-transfer/dietoexpress`, {}));
   }
 
-  listWaitlist(q: string, page: number, pageSize: number): Promise<WaitlistPage> {
+  listWaitlist(q: string, page: number, pageSize: number, status: WaitlistStatus = ''): Promise<WaitlistPage> {
     let params = new HttpParams().set('page', page).set('pageSize', pageSize);
     if (q.trim()) params = params.set('q', q.trim());
+    if (status) params = params.set('status', status);
     return firstValueFrom(this.http.get<WaitlistPage>(`${API}/waitlist`, { params }));
+  }
+
+  /** Mails the closed-test invitation to up to 50 confirmed addresses (call it once they are in the Play Console tester list). */
+  inviteWaitlist(ids: string[]): Promise<WaitlistInviteResult> {
+    return firstValueFrom(this.http.post<WaitlistInviteResult>(`${API}/waitlist/invite`, { ids }));
   }
 
   deleteWaitlistEntry(id: string): Promise<void> {

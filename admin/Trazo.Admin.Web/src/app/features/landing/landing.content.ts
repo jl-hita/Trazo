@@ -41,6 +41,7 @@ export interface LandingContent {
   waitTitle: string;
   waitText: string;
   emailLabel: string;
+  emailHint: string;
   consent: string;
   privacyLabel: string;
   send: string;
@@ -149,13 +150,14 @@ export const LANDING: Record<LandingLang, LandingContent> = {
       { title: 'Entrena y registra', text: 'Registra tus sesiones. Con Premium, TRAZO adapta las siguientes según cómo te ha ido.' }
     ],
     waitTitle: 'Estamos preparando el lanzamiento',
-    waitText: 'Déjanos tu correo y te avisaremos cuando TRAZO esté disponible en Google Play. Solo te escribiremos por eso.',
-    emailLabel: 'Correo electrónico',
-    consent: 'Acepto que TRAZO use mi correo para avisarme del lanzamiento. Puedo retirarlo cuando quiera. Más información en la',
+    waitText: 'Déjanos tu correo y te avisaremos cuando TRAZO esté disponible en Google Play. También te invitaremos a probarlo antes, en la prueba cerrada. Solo te escribiremos por eso.',
+    emailLabel: 'Correo de tu cuenta de Google',
+    emailHint: 'Usa el correo de la cuenta de Google que tienes en el móvil: Google Play la usará para darte acceso a la prueba. Te enviaremos un mensaje para confirmarlo.',
+    consent: 'Acepto que TRAZO use mi correo para avisarme del lanzamiento e invitarme a probar la app en la prueba cerrada de Google Play. Puedo retirarlo cuando quiera. Más información en la',
     privacyLabel: 'política de privacidad',
     send: 'Apuntarme',
     note: 'TRAZO ofrece planes de entrenamiento orientativos y no sustituye el consejo de un profesional sanitario.',
-    ok: '¡Listo! Te avisaremos cuando TRAZO esté disponible.',
+    ok: 'Casi listo: te hemos enviado un correo. Ábrelo y confirma tu dirección para quedar apuntado.',
     invalid: 'Revisa el correo y acepta el consentimiento.',
     later: 'Demasiados intentos. Inténtalo más tarde.',
     fail: 'No hemos podido guardar tu correo. Inténtalo de nuevo en unos minutos.',
@@ -247,13 +249,14 @@ export const LANDING: Record<LandingLang, LandingContent> = {
       { title: 'Train and log', text: 'Log your sessions. With Premium, TRAZO adapts the next ones to how it went.' }
     ],
     waitTitle: "We're getting ready to launch",
-    waitText: "Leave your email and we'll let you know when TRAZO is available on Google Play. We'll only write to you about that.",
-    emailLabel: 'Email address',
-    consent: 'I agree that TRAZO may use my email to notify me about the launch. I can withdraw this at any time. More in the',
+    waitText: "Leave your email and we'll let you know when TRAZO is available on Google Play. We'll also invite you to try it early, in the closed test. We'll only write to you about that.",
+    emailLabel: 'Email of your Google account',
+    emailHint: 'Use the email of the Google account on your phone: Google Play will use it to give you access to the test. We will send you a message to confirm it.',
+    consent: 'I agree that TRAZO may use my email to notify me about the launch and invite me to try the app in the closed test on Google Play. I can withdraw this at any time. More in the',
     privacyLabel: 'privacy policy (Spanish)',
     send: 'Join waitlist',
     note: 'TRAZO provides general training plans and does not replace the advice of a healthcare professional.',
-    ok: "Done! We'll let you know when TRAZO is available.",
+    ok: "Almost done: we've sent you an email. Open it and confirm your address to complete the sign-up.",
     invalid: 'Check your email and accept the consent.',
     later: 'Too many attempts. Please try again later.',
     fail: "We couldn't save your email. Please try again in a few minutes.",

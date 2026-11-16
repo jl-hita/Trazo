@@ -82,9 +82,14 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Language").IsRequired().HasMaxLength(2).HasColumnType("character varying(2)");
             b.Property<DateTimeOffset>("ConsentAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("ConfirmedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("ConfirmTokenHash").HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<DateTimeOffset?>("ConfirmTokenExpiresAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("InvitedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
             b.HasIndex("Email").IsUnique();
             b.HasIndex("CreatedAt");
+            b.HasIndex("ConfirmTokenHash");
             b.ToTable("waitlist_entries");
         });
 
