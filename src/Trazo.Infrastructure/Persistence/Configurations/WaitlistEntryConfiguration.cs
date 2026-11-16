@@ -12,7 +12,9 @@ public sealed class WaitlistEntryConfiguration : IEntityTypeConfiguration<Waitli
         b.HasKey(x => x.Id);
         b.Property(x => x.Email).HasMaxLength(254).IsRequired();
         b.Property(x => x.Language).HasMaxLength(2).IsRequired();
+        b.Property(x => x.ConfirmTokenHash).HasMaxLength(64);
         b.HasIndex(x => x.Email).IsUnique();
+        b.HasIndex(x => x.ConfirmTokenHash);
         b.HasIndex(x => x.CreatedAt);
     }
 }

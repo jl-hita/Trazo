@@ -1,4 +1,6 @@
 using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Waitlist;
 using Trazo.Infrastructure.Persistence;
@@ -45,6 +47,41 @@ public static class WaitlistService
             """, ct);
         return rows > 0;
     }
+
+    /// <summary>How long a confirmation link works.</summary>
+    public static readonly TimeSpan ConfirmationLifetime = TimeSpan.FromHours(48);
+
+    public static string HashToken(string raw) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(raw)));
+
+    /// <summary>
+    /// Starts (or restarts) the double opt-in of an address that is still unconfirmed: stores the hash of a fresh token and
+    /// returns the token to mail. Returns null when the address is unknown or already confirmed, so nothing is sent to it.
+    /// </summary>
+    public static async Task<string?> IssueConfirmationAsync(TrazoDbContext db, string email, DateTimeOffset now, CancellationToken ct)
+    {
+        var normalized = Normalize(email);
+        var raw = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        var hash = HashToken(raw);
+        var expires = now.Add(ConfirmationLifetime);
+        var rows = await db.Set<WaitlistEntry>().Where(x => x.Email == normalized && x.ConfirmedAt == null)
+            .ExecuteUpdateAsync(s => s.SetProperty(x => x.ConfirmTokenHash, hash).SetProperty(x => x.ConfirmTokenExpiresAt, expires), ct);
+        return rows == 1 ? raw : null;
+    }
+
+    /// <summary>Confirms the address that owns the token. The token works once and only until it expires.</summary>
+    public static async Task<bool> ConfirmAsync(TrazoDbContext db, string? rawToken, DateTimeOffset now, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(rawToken) || rawToken.Length > 200) return false;
+        var hash = HashToken(rawToken);
+        var rows = await db.Set<WaitlistEntry>().Where(x => x.ConfirmTokenHash == hash && x.ConfirmTokenExpiresAt > now && x.ConfirmedAt == null)
+            .ExecuteUpdateAsync(s => s.SetProperty(x => x.ConfirmedAt, now)
+                .SetProperty(x => x.ConfirmTokenHash, (string?)null).SetProperty(x => x.ConfirmTokenExpiresAt, (DateTimeOffset?)null), ct);
+        return rows == 1;
+    }
+
+    /// <summary>Removes one entry by id (the person's own "unsubscribe" link and the console's delete).</summary>
+    public static Task<int> DeleteByIdAsync(TrazoDbContext db, Guid id, CancellationToken ct) =>
+        db.Set<WaitlistEntry>().Where(x => x.Id == id).ExecuteDeleteAsync(ct);
 
     /// <summary>Erasure helper: removes the entry of an address (used when a person asks to be forgotten).</summary>
     public static Task<int> DeleteByEmailAsync(TrazoDbContext db, string email, CancellationToken ct)

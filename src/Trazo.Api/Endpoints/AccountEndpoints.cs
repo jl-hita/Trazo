@@ -24,7 +24,7 @@ public static class AccountEndpoints
     public const string DeletionRequestPolicy = "account-deletion-request";
     public const string DeletePurpose = "delete-account";
     public static readonly TimeSpan LinkLifetime = TimeSpan.FromMinutes(30);
-    private const string DefaultPublicBaseUrl = "https://trazostrength.duckdns.org";
+    internal const string DefaultPublicBaseUrl = "https://trazostrength.duckdns.org";
 
     public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder endpoints)
     {

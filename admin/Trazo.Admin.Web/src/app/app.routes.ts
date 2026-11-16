@@ -35,6 +35,17 @@ export const routes: Routes = [
     data: { lang: 'en' },
     loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
   },
+  // Enlaces de los correos de la lista de espera: confirmar el correo y darse de baja.
+  {
+    path: 'waitlist/confirm',
+    data: { action: 'confirm' },
+    loadComponent: () => import('./features/waitlist/waitlist-action.page').then(m => m.WaitlistActionPageComponent)
+  },
+  {
+    path: 'waitlist/unsubscribe',
+    data: { action: 'unsubscribe' },
+    loadComponent: () => import('./features/waitlist/waitlist-action.page').then(m => m.WaitlistActionPageComponent)
+  },
   {
     path: 'setup',
     canActivate: [setupPageGuard],
