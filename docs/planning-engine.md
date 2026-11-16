@@ -388,3 +388,6 @@ A manual-plan exercise may carry `supersetGroup` (a letter A-F). Two or three co
 the app does one set of each in turn and rests after the last. The group is stored beside the engine's fields in the prescription JSON
 (like `swappedFromExerciseId`), so the adjuster keeps it; it is returned as `supersetGroup` in each exercise of the week and the block.
 Generated plans do not use supersets.
+
+Free accounts (and lapsed Premium) get `lastPerformance` and a proposed load that repeats the last load; the proposed **increase**
+(`suggestionBasis: increase`) is automatic progression and is Premium only.

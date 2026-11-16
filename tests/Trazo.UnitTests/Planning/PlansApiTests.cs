@@ -801,6 +801,23 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
     }
 
     [Fact]
+    public async Task FreeUsersGetTheLastLoadToStartFrom_ButNoProposedIncrease()
+    {
+        var client = ClientFor(await AddUserAsync("free-last@example.com"));
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var session = week.GetProperty("sessions")[0];
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(session, kg: 60m, reps: 30) })).StatusCode);
+
+        var last = (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week")))
+            .GetProperty("sessions")[0].GetProperty("exercises")[0].GetProperty("lastPerformance");
+
+        Assert.Equal("repeat", last.GetProperty("suggestionBasis").GetString());
+        Assert.Equal(60m, last.GetProperty("suggestedLoadKg").GetDecimal());
+    }
+
+    [Fact]
     public async Task FreeUsersCreateAndUseManualPlans_WithoutAdaptation()
     {
         var client = ClientFor(await AddUserAsync("free-manual@example.com"));
