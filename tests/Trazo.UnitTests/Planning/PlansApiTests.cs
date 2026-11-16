@@ -801,6 +801,39 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
     }
 
     [Fact]
+    public async Task ManualPlansCanBeEdited_KeepingWhatWasLogged_AndGeneratedPlansCannot()
+    {
+        var client = ClientFor(await AddUserAsync("edit-manual@example.com"));
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var first = week.GetProperty("sessions")[0];
+        await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{first.GetProperty("id").GetString()}/log",
+            new { outcome = "Completed", sets = CompleteSets(first) });
+
+        var edited = new object[]
+        {
+            new { day = "Monday", title = "Nuevo empuje", exercises = new object[] { new { exerciseId = "ohp", sets = 5 } } },
+            new { day = "Wednesday", title = "Extra", exercises = new object[] { new { exerciseId = "squat", sets = 2 } } }
+        };
+        var response = await client.PutAsJsonAsync("/api/v1/plans/current/manual", ManualPlan(edited, name: "Plan editado"));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("Plan editado", (await JsonAsync(response)).GetProperty("macrocycle").GetProperty("name").GetString());
+        var after = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var sessions = after.GetProperty("sessions").EnumerateArray().ToList();
+        // The logged Monday keeps its original routine; the new Wednesday exists.
+        var monday = sessions.Single(x => x.GetProperty("day").GetString() == "Monday");
+        Assert.Equal("Empuje", monday.GetProperty("title").GetString());
+        Assert.NotNull(monday.GetProperty("log").GetRawText());
+        Assert.Contains(sessions, x => x.GetProperty("day").GetString() == "Wednesday" && x.GetProperty("title").GetString() == "Extra");
+        Assert.DoesNotContain(sessions, x => x.GetProperty("day").GetString() == "Thursday"); // dropped day
+
+        var (_, generatedClient, _) = await StartPlanAsync("edit-generated@example.com");
+        Assert.Equal(HttpStatusCode.Conflict, (await generatedClient.PutAsJsonAsync("/api/v1/plans/current/manual", ManualPlan())).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(await AddUserAsync("edit-none@example.com")).PutAsJsonAsync("/api/v1/plans/current/manual", ManualPlan())).StatusCode);
+    }
+
+    [Fact]
     public async Task FreeUsersCreateAndUseManualPlans_WithoutAdaptation()
     {
         var client = ClientFor(await AddUserAsync("free-manual@example.com"));
