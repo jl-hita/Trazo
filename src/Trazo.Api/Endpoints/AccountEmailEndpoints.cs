@@ -43,12 +43,32 @@ public static class AccountEmailEndpoints
    await IssueAsync(user,"verify-email","Verifica tu correo de TRAZO","Verifica tu cuenta usando este enlace:",TimeSpan.FromHours(24),db,email,config,ct);
   return Results.Accepted(value:new{message="Si existe una cuenta pendiente de verificación, enviaremos un correo."});
  }
- private static async Task<IResult> ForgotAsync(ForgotPasswordRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,DeletionRequestThrottle throttle,CancellationToken ct)
+ private static async Task<IResult> ForgotAsync(ForgotPasswordRequest request,HttpRequest http,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,DeletionRequestThrottle throttle,TimeProvider clock,ILoggerFactory loggers,CancellationToken ct)
  {
   var normalized=Normalize(request.Email);
   var user=normalized is null?null:await db.Users.SingleOrDefaultAsync(x=>x.NormalizedEmail==normalized,ct);
-  if(user is not null&&user.PasswordHash is not null&&throttle.TryAcquire("reset|"+normalized))
-   await IssueAsync(user,"reset-password","Restablece tu contraseña de TRAZO","Usa este enlace para restablecer tu contraseña:",TimeSpan.FromMinutes(30),db,email,config,ct);
+  var origin=RequestOrigin.Classify(http.Headers.UserAgent.ToString());
+  var outcome="no_account";
+  try
+  {
+   if(user is null)outcome="no_account";
+   else if(user.PasswordHash is null)outcome="no_password";
+   else if(!throttle.TryAcquire("reset|"+normalized))outcome="throttled";
+   else
+   {
+    outcome="send_failed";
+    // The email says where and when the request came from, so a person who did not ask for it can tell what happened.
+    await IssueAsync(user,"reset-password","Restablece tu contraseña de TRAZO","Usa este enlace para restablecer tu contraseña:",TimeSpan.FromMinutes(30),db,email,config,ct,
+     new RequestNote(RequestOrigin.Spanish(origin),clock.GetUtcNow()));
+    outcome="sent";
+   }
+  }
+  finally
+  {
+   // Every request leaves a trace, never with the address: where it came from, what was done and for which account (if any).
+   loggers.CreateLogger("Trazo.Audit").LogInformation("Password reset requested: origin {Origin}, outcome {Outcome}, user {UserId}.",
+    RequestOrigin.LogName(origin),outcome,user?.Id);
+  }
   return Results.Accepted(value:new{message="Si existe una cuenta compatible, enviaremos instrucciones."});
  }
  private static async Task<IResult> ResetAsync(ResetPasswordRequest request,TrazoDbContext db,PasswordHasher<TrazoUser> hasher,CancellationToken ct)
@@ -90,7 +110,9 @@ public static class AccountEmailEndpoints
   await db.SaveChangesAsync(ct);
   return raw;
  }
- public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct)
+ /// <summary>Where and when the request that caused an email came from; the email states it.</summary>
+ public sealed record RequestNote(string From,DateTimeOffset At);
+ public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct,RequestNote? requestNote=null)
  {
   var raw=Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)).TrimEnd('=').Replace('+','-').Replace('/','_');
   var now=DateTimeOffset.UtcNow;
@@ -101,7 +123,8 @@ public static class AccountEmailEndpoints
   var baseUrl=(await config.GetEmailAsync(ct)).ActionBaseUrl.TrimEnd('/');
   if(string.IsNullOrWhiteSpace(baseUrl))throw new InvalidOperationException("Email:ActionBaseUrl is required.");
   var url=$"{baseUrl}/account/{(purpose=="verify-email"?"verify-email":"reset-password")}?token={Uri.EscapeDataString(raw)}";
-  await email.SendAsync(user.Email,subject,$"{intro}\n\n{url}\n\nEl enlace caduca en {(int)lifetime.TotalMinutes} minutos. Si no has solicitado esta acción, ignora este mensaje.",ct);
+  var note=requestNote is null?"":$"Esta solicitud se hizo {requestNote.From} el {requestNote.At.UtcDateTime:dd/MM/yyyy} a las {requestNote.At.UtcDateTime:HH:mm} (hora UTC).\n\n";
+  await email.SendAsync(user.Email,subject,$"{intro}\n\n{url}\n\n{note}El enlace caduca en {(int)lifetime.TotalMinutes} minutos. Si no has solicitado esta acción, ignora este mensaje.",ct);
  }
  private static string? Normalize(string? email)=>string.IsNullOrWhiteSpace(email)?null:email.Trim().ToUpperInvariant();
 }

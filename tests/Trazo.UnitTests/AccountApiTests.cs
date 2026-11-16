@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Trazo.Api.Endpoints;
 using Trazo.Api.Security;
 using Trazo.Domain.Billing;
@@ -49,6 +50,7 @@ public sealed class AccountApiTests : IDisposable
     private readonly SetupFixture _fixture = new();
     private readonly string _keys = Path.Combine(Path.GetTempPath(), $"trazo-keys-{Guid.NewGuid():N}");
     private readonly RecordingEmailSender _mail = new();
+    private readonly CapturingLoggerProvider _logs = new();
     private readonly FakeGoogleValidator _google = new();
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -71,6 +73,7 @@ public sealed class AccountApiTests : IDisposable
             builder.UseSetting("Authentication:Jwt:SigningKey", new string((char)107, 48));
             builder.UseSetting("DataProtection:KeysPath", _keys);
             builder.UseSetting("Account:PublicBaseUrl", "https://trazo.example");
+            builder.UseSetting("Email:ActionBaseUrl", "https://trazo.example");
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<DbContextOptions<TrazoDbContext>>();
@@ -78,6 +81,7 @@ public sealed class AccountApiTests : IDisposable
                 services.AddDbContext<TrazoDbContext>(o => o.UseSqlite(_fixture.ConnectionString).ReplaceService<IModelCustomizer, PlanSqliteCustomizer>());
                 services.RemoveAll<TimeProvider>();
                 services.AddSingleton<TimeProvider>(new FixedClock(Now));
+                services.AddLogging(l => l.AddProvider(_logs).SetMinimumLevel(LogLevel.Trace));
                 services.RemoveAll<IEmailSender>();
                 services.AddSingleton<IEmailSender>(_mail);
                 services.RemoveAll<IGoogleIdTokenValidator>();
@@ -703,4 +707,79 @@ public sealed class AccountApiTests : IDisposable
         // The literal route does not clash with /exercises/{id}.
         Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync("/api/v1/exercises/does-not-exist")).StatusCode);
     }
+
+    // ------------------------------------------------------------------ password reset requests
+
+    private sealed class CapturingLoggerProvider : ILoggerProvider
+    {
+        private readonly List<string> _lines = [];
+        public string All { get { lock (_lines) return string.Join("\n", _lines); } }
+        public ILogger CreateLogger(string categoryName) => new Capture(this);
+        public void Dispose() { }
+        private sealed class Capture(CapturingLoggerProvider owner) : ILogger
+        {
+            public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+            public bool IsEnabled(LogLevel logLevel) => true;
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+            {
+                lock (owner._lines) owner._lines.Add(formatter(state, exception) + exception);
+            }
+        }
+    }
+
+    private async Task<HttpResponseMessage> ForgotAsync(string email, string? userAgent)
+    {
+        var client = _factory.CreateClient();
+        client.DefaultRequestHeaders.UserAgent.Clear();
+        if (userAgent is not null) client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", userAgent);
+        return await client.PostAsJsonAsync("/api/v1/auth/password/forgot", new { email });
+    }
+
+    [Theory]
+    [InlineData("okhttp/4.12.0", "desde la app de TRAZO", "app")]
+    [InlineData("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36", "desde la web", "web")]
+    [InlineData("curl/8.5.0", "desde un origen desconocido", "unknown")]
+    [InlineData(null, "desde un origen desconocido", "unknown")]
+    public async Task PasswordResetEmailSaysWhereAndWhenTheRequestCameFromAndTheLogKeepsTheOriginButNotTheAddress(string? userAgent, string phrase, string logged)
+    {
+        var user = await AddUserAsync("who.asked@example.com");
+
+        Assert.Equal(HttpStatusCode.Accepted, (await ForgotAsync("Who.Asked@Example.com", userAgent)).StatusCode);
+
+        var mail = Assert.Single(_mail.Sent);
+        Assert.Equal("who.asked@example.com", mail.To, ignoreCase: true);
+        Assert.Contains($"Esta solicitud se hizo {phrase} el 16/11/2026 a las 08:00 (hora UTC).", mail.Body);
+        Assert.Contains("/account/reset-password?token=", mail.Body);
+        Assert.Contains($"origin {logged}, outcome sent, user {user.Id}", _logs.All);
+        Assert.DoesNotContain("who.asked", _logs.All, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task PasswordResetRequestsThatSendNothingAreLoggedAsWellWithTheSameAnswer()
+    {
+        await AddUserAsync("google.only@example.com", google: true);
+        var withPassword = await AddUserAsync("has.password@example.com");
+
+        var unknown = await ForgotAsync("nobody@example.com", "okhttp/4.12.0");
+        var googleOnly = await ForgotAsync("google.only@example.com", "okhttp/4.12.0");
+        for (var i = 0; i < 4; i++) await ForgotAsync("has.password@example.com", "okhttp/4.12.0"); // the 4th is over the per-address limit
+
+        Assert.Equal(await unknown.Content.ReadAsStringAsync(), await googleOnly.Content.ReadAsStringAsync()); // nothing tells them apart
+        Assert.Equal(DeletionRequestThrottle.MaximumPerWindow, _mail.Sent.Count);
+        Assert.Contains("outcome no_account, user ", _logs.All);
+        Assert.Contains("outcome no_password, user ", _logs.All);
+        Assert.Contains($"outcome throttled, user {withPassword.Id}", _logs.All);
+        Assert.DoesNotContain("nobody@", _logs.All, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("google.only", _logs.All, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Theory]
+    [InlineData("okhttp/4.12.0", RequestOriginKind.App)]
+    [InlineData("OkHttp/5.0.0-alpha.14", RequestOriginKind.App)]
+    [InlineData("Mozilla/5.0 (X11; Linux x86_64) Firefox/131.0", RequestOriginKind.Web)]
+    [InlineData("python-requests/2.32", RequestOriginKind.Unknown)]
+    [InlineData("", RequestOriginKind.Unknown)]
+    [InlineData(null, RequestOriginKind.Unknown)]
+    public void TheOriginIsGuessedFromTheUserAgent(string? userAgent, RequestOriginKind expected) =>
+        Assert.Equal(expected, RequestOrigin.Classify(userAgent));
 }

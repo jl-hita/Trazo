@@ -35,6 +35,15 @@ Google accounts are not silently attached to an existing password account just b
 | POST | `/api/v1/auth/2fa/enable` | Authenticated |
 | POST | `/api/v1/auth/2fa/disable` | Authenticated |
 
+### Password reset requests: origin and audit trail
+
+`POST /api/v1/auth/password/forgot` is public, so anyone can ask for the email of an address. To tell who did, every request is
+written to the `Trazo.Audit` log as `Password reset requested: origin {app|web|unknown}, outcome {sent|no_account|no_password|throttled|send_failed}, user {id}`
+(the address is never logged; the origin is guessed from the User-Agent: OkHttp is the Android app, `Mozilla/` a browser, anything else
+unknown, and it can be forged, so it is only a hint). The email itself says where and when it was requested ("Esta solicitud se hizo desde
+la app de TRAZO el 16/11/2026 a las 08:00 (hora UTC)"), so a person who did not ask for it can see what happened. The answer to the caller is
+identical in every case.
+
 ### TOTP enrollment
 
 1. Call `POST /2fa/setup` with a bearer access token. The API returns a Base32 secret and an `otpauth://` provisioning URI.
