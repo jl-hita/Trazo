@@ -399,7 +399,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, PlannedSessionId = session.Id, LoggedAt = now,
             Outcome = log.Outcome, NonCompletionReason = log.NonCompletionReason, Recovery = log.Recovery,
-            SessionRpe = log.SessionRpe, PainReported = log.Pain, Notes = log.Notes
+            SessionRpe = log.SessionRpe, PainReported = log.Pain, Notes = log.Notes,
+            ExerciseFeedbackJson = log.ExerciseFeedback is { Count: > 0 }
+                ? System.Text.Json.JsonSerializer.Serialize(log.ExerciseFeedback.Select(p => new { exerciseId = p.Key, p.Value.Stimulus, p.Value.Discomfort, p.Value.PreFatigue }), new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web) { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull })
+                : null
         };
         foreach (var set in log.Sets)
             workout.Sets.Add(new WorkoutSetLog
@@ -498,6 +501,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         }
 
         var recent = (await db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id && a.AppliedAt > now.AddDays(-30)).ToListAsync(ct))
+            .Where(a => !a.Kind.StartsWith(MuscleKindPrefix, StringComparison.Ordinal))
             .Select(a => new TrainingAutoAdaptationRecord(KindOf(a.Kind), a.AppliedAt)).ToList();
 
         var outcome = AdaptationPlanner.Evaluate(new AdaptationInput(
@@ -558,11 +562,79 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
         }
 
+        var feedback = await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, ct);
+        applied.AddRange(feedback.Applied);
+
         return new AdaptationReport(
             outcome.Exercises.Select(a => new ExerciseAdviceView(a.ExerciseId, a.Action, a.Explanation, a.NextLoadKg, a.SuggestedRepetitions)).ToList(),
-            outcome.SessionAction, outcome.SessionExplanation, applied, outcome.Notes);
+            outcome.SessionAction, outcome.SessionExplanation, applied, outcome.Notes.Concat(feedback.Notes).ToList());
 
         static bool Set(out string target, string value) { target = value; return true; }
+    }
+
+    private const string MuscleKindPrefix = "muscle_";
+    private const decimal MuscleWeeklyCeiling = 20m;
+    private const int MuscleCooldownDays = 14;
+
+    /// <summary>
+    /// Reads the post-exercise answers (stimulus, discomfort, pre-fatigue) with the engine's muscle-feedback adapter: one set more
+    /// after two sessions with low stimulus and good recovery, one set less after repeated high stimulus with fatigue. Discomfort is
+    /// never automated: it only produces a note. Every change has a 14-day cooldown per exercise and is stored in the audit.
+    /// </summary>
+    private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
+        TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming, DateTimeOffset now, CancellationToken ct)
+    {
+        var applied = new List<AppliedAdaptationView>();
+        var notes = new List<string>();
+        var past = await db.WorkoutLogs.AsNoTracking()
+            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id && l.ExerciseFeedbackJson != null)
+            .OrderByDescending(l => l.LoggedAt).Take(12).ToListAsync(ct);
+        var logs = new[] { workout }.Concat(past).ToList();
+        if (logs.All(l => string.IsNullOrWhiteSpace(l.ExerciseFeedbackJson))) return (applied, notes);
+
+        var ids = logs.Select(l => l.PlannedSessionId).ToList();
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
+        sessions[logged.Id] = logged;
+        var records = logs.Where(l => sessions.ContainsKey(l.PlannedSessionId)).Select(l => new TrainingMuscleFeedbackRecord(
+            sessions[l.PlannedSessionId].Date, l.Outcome.ToString(), l.ExerciseFeedbackJson, sessions[l.PlannedSessionId].PrescriptionJson)).ToList();
+        var week = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == logged.WeekNumber)
+            .Select(s => s.PrescriptionJson).ToListAsync(ct);
+        var planned = TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets(week);
+        var ceilings = planned.Keys.ToDictionary(m => m, _ => (int)MuscleWeeklyCeiling, StringComparer.Ordinal);
+        var decisions = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings);
+
+        var cooling = (await db.PlanAdaptations.AsNoTracking()
+            .Where(a => a.PlanId == plan.Id && a.Kind.StartsWith(MuscleKindPrefix) && a.AppliedAt > now.AddDays(-MuscleCooldownDays)).ToListAsync(ct))
+            .SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
+        foreach (var decision in decisions)
+        {
+            if (decision.Action is TrainingMuscleFeedbackAction.PauseExercise or TrainingMuscleFeedbackAction.SuggestSwap)
+            {
+                notes.Add(decision.Explanation);
+                continue;
+            }
+            if (cooling.Contains(decision.ExerciseId)) continue;
+            var delta = decision.Action == TrainingMuscleFeedbackAction.AddSet ? 1 : -1;
+            var changed = 0;
+            foreach (var future in upcoming.Take(MaximumFutureSessionsToAdapt))
+                if (TrainingAdaptationPrescriptionAdjuster.TryAdjustSets(future.PrescriptionJson, decision.ExerciseId, delta, out var updated, out _))
+                {
+                    future.PrescriptionJson = updated;
+                    future.UpdatedAt = now;
+                    changed++;
+                }
+            if (changed == 0) continue;
+            var kind = MuscleKindPrefix + (delta > 0 ? "add_set" : "reduce_set");
+            db.PlanAdaptations.Add(new PlanAdaptation
+            {
+                Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = kind, ExerciseIds = [decision.ExerciseId],
+                SessionsChanged = changed, Explanation = decision.Explanation, AppliedAt = now
+            });
+            applied.Add(new AppliedAdaptationView(kind, [decision.ExerciseId], changed, decision.Explanation));
+            // One exercise can be proposed for several of its muscles at once: change it only once.
+            cooling.Add(decision.ExerciseId);
+        }
+        return (applied, notes);
     }
 
     private static TrainingAutoAdaptationKind KindOf(string name) =>

@@ -138,6 +138,11 @@ public sealed class WorkoutLog
     public decimal? SessionRpe { get; set; }
     public bool PainReported { get; set; }
     public string? Notes { get; set; }
+    /// <summary>
+    /// Post-exercise answers, one object per exercise (the engine's format): <c>[{"exerciseId":"bench","stimulus":"adequate","discomfort":"none","preFatigue":"recovered"}]</c>.
+    /// Collected for every account; only Premium adapts the plan from them.
+    /// </summary>
+    public string? ExerciseFeedbackJson { get; set; }
 
     public List<WorkoutSetLog> Sets { get; set; } = [];
 }

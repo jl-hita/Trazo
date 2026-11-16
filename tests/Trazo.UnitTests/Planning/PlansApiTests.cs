@@ -818,6 +818,68 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
     }
 
     [Fact]
+    public async Task MuscleFeedbackIsSaved_ValidatedAndNeverAdaptsAFreePlan()
+    {
+        var client = ClientFor(await AddUserAsync("feedback-free@example.com"));
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan())).StatusCode);
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var session = week.GetProperty("sessions")[0];
+        var url = $"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log";
+
+        var invalid = await client.PostAsJsonAsync(url, new
+        {
+            outcome = "Completed", sets = CompleteSets(session),
+            exerciseFeedback = new Dictionary<string, object> { ["bench-press"] = new { stimulus = "enormous" } }
+        });
+        Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+
+        var ok = await client.PostAsJsonAsync(url, new
+        {
+            outcome = "Completed", sets = CompleteSets(session),
+            exerciseFeedback = new Dictionary<string, object> { ["bench-press"] = new { stimulus = "Low", discomfort = "none", preFatigue = "recovered" } }
+        });
+        Assert.Equal(HttpStatusCode.OK, ok.StatusCode);
+        var report = (await JsonAsync(ok)).GetProperty("adaptation");
+        Assert.True(report.GetProperty("locked").GetBoolean());
+        Assert.Empty(report.GetProperty("applied").EnumerateArray());
+
+        using var scope = _factory.Services.CreateScope();
+        var saved = await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().WorkoutLogs.SingleAsync();
+        Assert.Contains("\"stimulus\":\"low\"", saved.ExerciseFeedbackJson);
+    }
+
+    [Fact]
+    public async Task PremiumAddsASetAfterTwoSessionsWithLowStimulus_AndRecovery()
+    {
+        var client = ClientFor(await AddUserAsync("feedback-premium@example.com", subscribed: true));
+        var days = new object[]
+        {
+            new { day = "Monday", title = "A", exercises = new object[] { new { exerciseId = "bench-press", sets = 3 } } },
+            new { day = "Tuesday", title = "B", exercises = new object[] { new { exerciseId = "bench-press", sets = 3 } } }
+        };
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(days))).StatusCode);
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        JsonElement report = default;
+        foreach (var session in week.GetProperty("sessions").EnumerateArray().Take(2))
+        {
+            var response = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log", new
+            {
+                outcome = "Completed", sets = CompleteSets(session),
+                exerciseFeedback = new Dictionary<string, object> { ["bench-press"] = new { stimulus = "low", discomfort = "none", preFatigue = "recovered" } }
+            });
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            report = (await JsonAsync(response)).GetProperty("adaptation");
+        }
+
+        var applied = report.GetProperty("applied").EnumerateArray().ToList();
+        Assert.Contains(applied, x => x.GetProperty("kind").GetString() == "muscle_add_set");
+        var next = await JsonAsync(await client.GetAsync("/api/v1/plans/current/block"));
+        var later = next.GetProperty("weeks").EnumerateArray().SelectMany(w => w.GetProperty("sessions").EnumerateArray())
+            .Where(x => x.GetProperty("log").ValueKind == JsonValueKind.Null).ToList();
+        Assert.Contains(later, x => x.GetProperty("exercises")[0].GetProperty("sets").GetInt32() == 4);
+    }
+
+    [Fact]
     public async Task FreeUsersCreateAndUseManualPlans_WithoutAdaptation()
     {
         var client = ClientFor(await AddUserAsync("free-manual@example.com"));

@@ -131,7 +131,10 @@ public sealed record LogSetRequest(
 
 public sealed record LogSessionRequest(
     string? Outcome, string? NonCompletionReason, string? Recovery, decimal? SessionRpe, bool? PainReported,
-    string? Notes, LogSetRequest[]? Sets);
+    string? Notes, LogSetRequest[]? Sets, Dictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null);
+
+/// <summary>The three post-exercise questions: stimulus low|adequate|high, discomfort none|mild|strong, pre-fatigue recovered|loaded.</summary>
+public sealed record ExerciseFeedbackInput(string? Stimulus, string? Discomfort, string? PreFatigue);
 
 public sealed record SwapRequest(string? ReplacementExerciseId, bool? ApplyToRemainingBlock);
 
