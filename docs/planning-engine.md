@@ -374,3 +374,10 @@ weeks with a workout, sets and volume), `exercises` (per exercise up to 30 worko
 one-repetition maximum up to 12 repetitions, volume; `bestEstimatedOneRepMaxKg`, `recordDate` and `newRecord` when the latest
 workout beat all earlier ones) and `muscles` with `weekStarts` (last 8 Monday-based weeks; a primary muscle counts 1 per set, a secondary one 0.5).
 Weeks and dates use the user's time zone.
+
+## Current block (`GET /api/v1/plans/current/block`)
+
+Returns the whole current mesocycle (at most four weeks, about a month) as `weeks[]` with each week's sessions, prescription and logs,
+and `isCurrent` for today's week. It lets the app show the month ahead (volume and intensity per week). Later blocks are still never
+served: they do not exist until their first week arrives, so the anti-copy rule keeps holding. Showing the full paid period to annual
+subscribers is a product decision still open (it would mean generating blocks ahead, which gives up adaptation between blocks).

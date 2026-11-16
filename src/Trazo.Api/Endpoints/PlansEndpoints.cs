@@ -48,6 +48,9 @@ public static class PlansEndpoints
         group.MapGet("/current/week", GetWeekAsync).WithName("GetCurrentPlanWeek")
             .WithSummary("The sessions of the current week with sets, repetitions, RIR, rest and load targets.")
             .Produces<WeekView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/current/block", GetBlockAsync).WithName("GetPlanBlock")
+            .WithSummary("The whole current block (at most four weeks) with every session's prescription. Later blocks are never served.")
+            .Produces<BlockView>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current/history", GetHistoryAsync).WithName("GetPlanHistory")
             .WithSummary("The sessions the user has logged, newest first.")
             .Produces<IReadOnlyList<HistoryItem>>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -136,6 +139,12 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         return await plans.GetLoadAsync(userId, ct) is { } load ? Results.Ok(load) : NoPlan();
+    }
+
+    private static async Task<IResult> GetBlockAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        return await plans.GetCurrentBlockAsync(userId, ct) is { } block ? Results.Ok(block) : NoPlan();
     }
 
     private static async Task<IResult> GetProgressAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
