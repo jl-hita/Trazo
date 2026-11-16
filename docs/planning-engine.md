@@ -381,3 +381,10 @@ Returns the whole current mesocycle (at most four weeks, about a month) as `week
 and `isCurrent` for today's week. It lets the app show the month ahead (volume and intensity per week). Later blocks are still never
 served: they do not exist until their first week arrives, so the anti-copy rule keeps holding. Showing the full paid period to annual
 subscribers is a product decision still open (it would mean generating blocks ahead, which gives up adaptation between blocks).
+
+## Supersets (manual plans)
+
+A manual-plan exercise may carry `supersetGroup` (a letter A-F). Two or three consecutive exercises with the same letter form a superset:
+the app does one set of each in turn and rests after the last. The group is stored beside the engine's fields in the prescription JSON
+(like `swappedFromExerciseId`), so the adjuster keeps it; it is returned as `supersetGroup` in each exercise of the week and the block.
+Generated plans do not use supersets.

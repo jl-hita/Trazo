@@ -47,7 +47,8 @@ public sealed record ExerciseView(
     IReadOnlyList<string> PrimaryMuscles,
     IReadOnlyList<string> SecondaryMuscles,
     string? SwappedFromExerciseId,
-    LastPerformanceView? LastPerformance = null);
+    LastPerformanceView? LastPerformance = null,
+    string? SupersetGroup = null);
 
 /// <summary>One set of the last time the user did an exercise.</summary>
 public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir);
@@ -142,4 +143,5 @@ public sealed record ManualPlanInput(
 public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseInput[]? Exercises);
 
 public sealed record ManualExerciseInput(
-    string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds);
+    string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds,
+    string? SupersetGroup = null);
