@@ -391,3 +391,13 @@ Generated plans do not use supersets.
 
 Free accounts (and lapsed Premium) get `lastPerformance` and a proposed load that repeats the last load; the proposed **increase**
 (`suggestionBasis: increase`) is automatic progression and is Premium only.
+
+## Post-exercise questionnaire (muscle feedback)
+
+`POST .../log` accepts `exerciseFeedback`: an object by exercise id with `stimulus` (`low|adequate|high`), `discomfort` (`none|mild|strong`) and
+`preFatigue` (`recovered|loaded`); every field is optional and invalid values give `400`. It is saved with the log for every account
+(`workout_logs.ExerciseFeedbackJson`, migration `WorkoutExerciseFeedback`). Only Premium adapts from it, with the engine's
+`TrainingMuscleFeedbackAdapter`: one set more for an exercise after two sessions with low stimulus, recovered and no discomfort (below the 20-set
+weekly ceiling and 5 sets per exercise); one set less after repeated high stimulus with fatigue. Each change applies to the next sessions, has a
+14-day cooldown per exercise and is audited as `muscle_add_set` / `muscle_reduce_set`. Discomfort is never automated: mild repeated or strong discomfort
+only adds a note (swap or review suggestion) to the adaptation report.
