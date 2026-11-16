@@ -210,7 +210,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                     {
                         Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycle.Id, WeekNumber = week,
                         Date = PlanSchedule.DateFor(plan.StartDate, week, day.Day), Title = day.Title,
-                        EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240), PrescriptionJson = PrescriptionJson.Serialize(prescription),
+                        EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240), PrescriptionJson = PrescriptionJson.Serialize(prescription,
+                            day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!)),
                         Status = PlannedSessionStatus.Planned, UpdatedAt = now
                     });
                 }
@@ -849,7 +850,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             e.RestSeconds, e.ProgressionRule.ToString(), e.TargetLoadKg, e.LoadBasis, e.WarmupSets, e.WarmupNote,
             e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
             PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId),
-            last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null)).ToList(),
+            last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null,
+            PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId))).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
             log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)

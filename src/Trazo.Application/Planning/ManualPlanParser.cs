@@ -9,7 +9,7 @@ public sealed record ManualPlan(
 
 public sealed record ManualDay(DayOfWeek Day, string Title, IReadOnlyList<ManualExercise> Exercises);
 
-public sealed record ManualExercise(string ExerciseId, int Sets, int MinRepetitions, int MaxRepetitions, decimal? TargetRir, int RestSeconds);
+public sealed record ManualExercise(string ExerciseId, int Sets, int MinRepetitions, int MaxRepetitions, decimal? TargetRir, int RestSeconds, string? SupersetGroup = null);
 
 public sealed record ManualPlanResult(ManualPlan? Plan, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -86,7 +86,16 @@ public static class ManualPlanParser
                 if (item.TargetRir is < 0 or > 5) Fail(field, "El RIR objetivo debe estar entre 0 y 5.");
                 var rest = item.RestSeconds ?? DefaultRestSeconds;
                 if (rest is < 0 or > 600) Fail(field, "El descanso debe estar entre 0 y 600 segundos.");
-                exercises.Add(new ManualExercise(id, sets, min, max, item.TargetRir, rest));
+                var group = string.IsNullOrWhiteSpace(item.SupersetGroup) ? null : item.SupersetGroup.Trim().ToUpperInvariant();
+                if (group is not null && (group.Length != 1 || group[0] is < 'A' or > 'F')) Fail(field, "El grupo de superserie debe ser una letra de la A a la F.");
+                exercises.Add(new ManualExercise(id, sets, min, max, item.TargetRir, rest, group));
+            }
+            // A superset joins two or three consecutive exercises: they are done one after another with a shared rest.
+            foreach (var g in exercises.Where(e => e.SupersetGroup is not null).GroupBy(e => e.SupersetGroup))
+            {
+                var positions = exercises.Select((e, i) => (e, i)).Where(p => p.e.SupersetGroup == g.Key).Select(p => p.i).ToList();
+                if (positions.Count is < 2 or > 3 || positions[^1] - positions[0] != positions.Count - 1)
+                    Fail($"{key}.exercises", $"La superserie {g.Key} necesita dos o tres ejercicios seguidos.");
             }
             days.Add(new ManualDay(weekday, title, exercises));
         }

@@ -20,6 +20,27 @@ public static class PrescriptionJson
     public static string Serialize(IEnumerable<TrainingExercisePrescription> exercises) =>
         JsonSerializer.Serialize(new { exercises }, Options);
 
+    /// <summary>
+    /// Serializes with superset groups (exercise id to group letter). The group is stored beside the engine's fields, like
+    /// <c>swappedFromExerciseId</c>, so the engine's adjuster keeps it untouched when it edits the prescription.
+    /// </summary>
+    public static string Serialize(IEnumerable<TrainingExercisePrescription> exercises, IReadOnlyDictionary<string, string> supersetGroups)
+    {
+        var root = JsonNode.Parse(Serialize(exercises))!.AsObject();
+        foreach (var item in root["exercises"]!.AsArray().OfType<JsonObject>())
+            if (supersetGroups.TryGetValue((string)item["exerciseId"]!, out var group)) item["supersetGroup"] = group;
+        return root.ToJsonString(Options);
+    }
+
+    /// <summary>The superset group letter of an exercise, if it belongs to one.</summary>
+    public static string? SupersetGroup(string json, string exerciseId)
+    {
+        if (JsonNode.Parse(json) is not JsonObject { } root || root["exercises"] is not JsonArray array) return null;
+        return array.OfType<JsonObject>()
+            .FirstOrDefault(item => string.Equals((string?)item["exerciseId"], exerciseId, StringComparison.OrdinalIgnoreCase))
+            ?["supersetGroup"]?.GetValue<string>();
+    }
+
     public static IReadOnlyList<TrainingExercisePrescription> Read(string json)
     {
         var root = JsonNode.Parse(json) as JsonObject;

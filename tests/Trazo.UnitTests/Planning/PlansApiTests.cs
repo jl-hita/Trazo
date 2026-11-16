@@ -775,6 +775,32 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
     };
 
     [Fact]
+    public async Task ASupersetOfAManualPlanIsServedWithItsGroup_AndMustJoinConsecutiveExercises()
+    {
+        var client = ClientFor(await AddUserAsync("superset@example.com"));
+        var days = new object[]
+        {
+            new { day = "Monday", title = "Empuje", exercises = new object[]
+            {
+                new { exerciseId = "bench-press", sets = 3, supersetGroup = "a" }, new { exerciseId = "ohp", sets = 3, supersetGroup = "A" },
+                new { exerciseId = "squat", sets = 3 }
+            } }
+        };
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(days))).StatusCode);
+
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var exercises = week.GetProperty("sessions")[0].GetProperty("exercises").EnumerateArray().ToList();
+        Assert.Equal("A", exercises[0].GetProperty("supersetGroup").GetString());
+        Assert.Equal("A", exercises[1].GetProperty("supersetGroup").GetString());
+        Assert.Equal(JsonValueKind.Null, exercises[2].GetProperty("supersetGroup").ValueKind);
+
+        var other = ClientFor(await AddUserAsync("superset2@example.com"));
+        var lonely = new object[] { new { day = "Monday", title = "X", exercises = new object[]
+            { new { exerciseId = "bench-press", supersetGroup = "A" }, new { exerciseId = "ohp" }, new { exerciseId = "squat", supersetGroup = "A" } } } };
+        Assert.Equal(HttpStatusCode.BadRequest, (await other.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(lonely))).StatusCode);
+    }
+
+    [Fact]
     public async Task FreeUsersCreateAndUseManualPlans_WithoutAdaptation()
     {
         var client = ClientFor(await AddUserAsync("free-manual@example.com"));
