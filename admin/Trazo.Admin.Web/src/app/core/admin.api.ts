@@ -546,4 +546,31 @@ export class AdminApi {
   exportWaitlist(): Promise<Blob> {
     return firstValueFrom(this.http.get(`${API}/waitlist/export.csv`, { responseType: 'blob' }));
   }
+
+  // ---- Fiscal management (superadmin) ----
+  getFiscalProfile(): Promise<any> { return firstValueFrom(this.http.get<any>(`${API}/fiscal/profile`)); }
+  saveFiscalProfile(profile: unknown): Promise<any> { return firstValueFrom(this.http.put<any>(`${API}/fiscal/profile`, profile)); }
+  getFiscalOptions(): Promise<{ incomeCategories: string[]; expenseCategories: string[]; vatTreatments: string[] }> {
+    return firstValueFrom(this.http.get<{ incomeCategories: string[]; expenseCategories: string[]; vatTreatments: string[] }>(`${API}/fiscal/options`));
+  }
+  getFiscalYear(year: number): Promise<any> { return firstValueFrom(this.http.get<any>(`${API}/fiscal/years/${year}`)); }
+  getFiscalMonth(period: string): Promise<any> { return firstValueFrom(this.http.get<any>(`${API}/fiscal/months/${period}`)); }
+  getFiscalQuarter(year: number, quarter: number): Promise<any> { return firstValueFrom(this.http.get<any>(`${API}/fiscal/quarters/${year}/${quarter}`)); }
+  saveFiscalEntry(id: string | null, entry: unknown): Promise<any> {
+    return firstValueFrom(id ? this.http.put<any>(`${API}/fiscal/entries/${id}`, entry) : this.http.post<any>(`${API}/fiscal/entries`, entry));
+  }
+  deleteFiscalEntry(id: string): Promise<void> { return firstValueFrom(this.http.delete<void>(`${API}/fiscal/entries/${id}`)); }
+  bookGoogleEstimate(period: string): Promise<any> { return firstValueFrom(this.http.post<any>(`${API}/fiscal/months/${period}/book-google-estimate`, {})); }
+  closeFiscalMonth(period: string, acknowledgeWarnings: boolean): Promise<any> {
+    return firstValueFrom(this.http.post<any>(`${API}/fiscal/months/${period}/close`, { acknowledgeWarnings }));
+  }
+  reopenFiscalMonth(period: string, reason: string): Promise<void> {
+    return firstValueFrom(this.http.post<void>(`${API}/fiscal/months/${period}/reopen`, { reason }));
+  }
+  getFiscalAudit(): Promise<{ items: any[] }> { return firstValueFrom(this.http.get<{ items: any[] }>(`${API}/fiscal/audit`)); }
+  /** ZIPs are fetched through HttpClient so the bearer token is sent. */
+  downloadFiscalMonth(period: string): Promise<Blob> { return firstValueFrom(this.http.get(`${API}/fiscal/months/${period}/package`, { responseType: 'blob' })); }
+  downloadFiscalQuarter(year: number, quarter: number): Promise<Blob> {
+    return firstValueFrom(this.http.get(`${API}/fiscal/quarters/${year}/${quarter}/package`, { responseType: 'blob' }));
+  }
 }

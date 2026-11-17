@@ -325,6 +325,7 @@ app.MapWaitlistEndpoints();
 app.MapPushEndpoints();
 app.MapAnalyticsEndpoints();
 app.MapReferralEndpoints();
+app.MapAdminFiscalEndpoints();
 app.MapErrorTicketEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
