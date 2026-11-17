@@ -70,6 +70,17 @@ public sealed class SetupFixture : IDisposable
               "Id" TEXT PRIMARY KEY, "Name" TEXT NOT NULL, "OccurredAt" TEXT NOT NULL, "UserId" TEXT NULL, "Channel" TEXT NULL,
               "Reference" TEXT NULL, "Plan" TEXT NULL, "AppVersion" TEXT NULL, "Variant" TEXT NULL, "DedupeKey" TEXT NULL);
             CREATE UNIQUE INDEX "IX_growth_events_DedupeKey" ON growth_events ("DedupeKey");
+            CREATE TABLE marketing_campaigns (
+              "Id" TEXT PRIMARY KEY, "Slug" TEXT NOT NULL, "Name" TEXT NOT NULL, "Channel" TEXT NOT NULL, "Status" TEXT NOT NULL,
+              "StartsOn" TEXT NULL, "EndsOn" TEXT NULL, "Notes" TEXT NULL, "CreatedBy" TEXT NULL, "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
+            CREATE UNIQUE INDEX "IX_marketing_campaigns_Slug" ON marketing_campaigns ("Slug");
+            CREATE TABLE campaign_attributions (
+              "UserId" TEXT PRIMARY KEY, "CampaignId" TEXT NOT NULL, "Source" TEXT NOT NULL, "AttributedAt" TEXT NOT NULL);
+            CREATE TABLE campaign_daily_stats (
+              "CampaignId" TEXT NOT NULL, "Day" TEXT NOT NULL, "Clicks" INTEGER NOT NULL, "Installs" INTEGER NOT NULL, PRIMARY KEY ("CampaignId", "Day"));
+            CREATE TABLE campaign_spend (
+              "Id" TEXT PRIMARY KEY, "CampaignId" TEXT NOT NULL, "Day" TEXT NOT NULL, "Amount" TEXT NOT NULL, "Note" TEXT NULL,
+              "CreatedBy" TEXT NULL, "CreatedAt" TEXT NOT NULL);
             """);
     }
 

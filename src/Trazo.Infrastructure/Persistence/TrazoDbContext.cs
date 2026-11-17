@@ -36,6 +36,11 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Growth.ReferralRelationship> ReferralRelationships => Set<Trazo.Domain.Growth.ReferralRelationship>();
     public DbSet<Trazo.Domain.Growth.GrowthEvent> GrowthEvents => Set<Trazo.Domain.Growth.GrowthEvent>();
 
+    public DbSet<Trazo.Domain.Marketing.MarketingCampaign> MarketingCampaigns => Set<Trazo.Domain.Marketing.MarketingCampaign>();
+    public DbSet<Trazo.Domain.Marketing.CampaignAttribution> CampaignAttributions => Set<Trazo.Domain.Marketing.CampaignAttribution>();
+    public DbSet<Trazo.Domain.Marketing.CampaignDailyStat> CampaignDailyStats => Set<Trazo.Domain.Marketing.CampaignDailyStat>();
+    public DbSet<Trazo.Domain.Marketing.CampaignSpend> CampaignSpends => Set<Trazo.Domain.Marketing.CampaignSpend>();
+
     public DbSet<Trazo.Domain.Fiscal.FiscalEntry> FiscalEntries => Set<Trazo.Domain.Fiscal.FiscalEntry>();
     public DbSet<Trazo.Domain.Fiscal.FiscalClosure> FiscalClosures => Set<Trazo.Domain.Fiscal.FiscalClosure>();
     public DbSet<Trazo.Domain.Fiscal.FiscalAuditEntry> FiscalAudit => Set<Trazo.Domain.Fiscal.FiscalAuditEntry>();

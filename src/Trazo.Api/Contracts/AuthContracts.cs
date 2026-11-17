@@ -1,8 +1,8 @@
 namespace Trazo.Api.Contracts;
 
-public sealed record RegisterRequest(string Email, string Password, string DisplayName, string? DeviceName, string? ReferralCode = null, string? ReferralSource = null);
+public sealed record RegisterRequest(string Email, string Password, string DisplayName, string? DeviceName, string? ReferralCode = null, string? ReferralSource = null, string? CampaignCode = null);
 public sealed record LoginRequest(string Email, string Password, string? DeviceName);
-public sealed record GoogleLoginRequest(string IdToken, string? DeviceName, string? ReferralCode = null, string? ReferralSource = null);
+public sealed record GoogleLoginRequest(string IdToken, string? DeviceName, string? ReferralCode = null, string? ReferralSource = null, string? CampaignCode = null);
 public sealed record GoogleLinkRequest(string IdToken);
 public sealed record RefreshRequest(string RefreshToken, string? DeviceName);
 public sealed record TwoFactorVerifyRequest(string ChallengeToken, string Code, string? DeviceName);

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { adminGuard, fiscalGuard, loginGuard, setupGuard, setupPageGuard, staffGuard, superadminGuard } from './core/guards';
+import { adminGuard, fiscalGuard, loginGuard, marketingGuard, setupGuard, setupPageGuard, staffGuard, superadminGuard } from './core/guards';
 
 export const routes: Routes = [
   // Páginas legales públicas, accesibles sin iniciar sesión.
@@ -73,6 +73,8 @@ export const routes: Routes = [
       { path: 'reviews', canActivate: [staffGuard], loadComponent: () => import('./features/reviews/reviews.page').then(m => m.ReviewsPageComponent) },
       // Tax management: the superadmin and the accountant (gestor).
       { path: 'fiscal', canActivate: [fiscalGuard], loadComponent: () => import('./features/fiscal/fiscal.page').then(m => m.FiscalPageComponent) },
+      // Marketing panel: the superadmin and the commercial role (aggregates only).
+      { path: 'marketing', canActivate: [marketingGuard], loadComponent: () => import('./features/marketing/marketing.page').then(m => m.MarketingPageComponent) },
       // Superadmin only (the API refuses the rest to administrators as well).
       {
         path: '',

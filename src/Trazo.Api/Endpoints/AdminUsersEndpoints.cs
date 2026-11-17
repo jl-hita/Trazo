@@ -12,7 +12,7 @@ namespace Trazo.Api.Endpoints;
 /// <summary>User management for the administration console. Every route requires the superadmin role.</summary>
 public static class AdminUsersEndpoints
 {
-    private static readonly string[] Roles = ["user", "admin", "accountant", "superadmin"];
+    private static readonly string[] Roles = ["user", "admin", "accountant", "commercial", "superadmin"];
     private const string SuperadminRole = "superadmin";
 
     public static IEndpointRouteBuilder MapAdminUsersEndpoints(this IEndpointRouteBuilder endpoints)

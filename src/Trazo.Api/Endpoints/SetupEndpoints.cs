@@ -18,6 +18,8 @@ public static class SetupEndpoints
     public const string StaffPolicy = "staff";
     /// <summary>Tax management: the superadmin and the accountant (gestor), who sees nothing else of the console.</summary>
     public const string FiscalPolicy = "fiscal";
+    /// <summary>Marketing panel: the superadmin and the commercial role, who sees aggregates only (never users, tickets, settings or money).</summary>
+    public const string MarketingPolicy = "marketing";
 
     public static IEndpointRouteBuilder MapSetupEndpoints(this IEndpointRouteBuilder endpoints)
     {

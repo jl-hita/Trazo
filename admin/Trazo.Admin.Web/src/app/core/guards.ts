@@ -55,3 +55,9 @@ export const fiscalGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   return auth.canSeeFiscal ? true : inject(Router).createUrlTree([auth.home]);
 };
+
+/** Marketing panel: the superadmin and the commercial role. */
+export const marketingGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.canSeeMarketing ? true : inject(Router).createUrlTree([auth.home]);
+};

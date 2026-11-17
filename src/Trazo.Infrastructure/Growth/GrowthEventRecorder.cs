@@ -31,6 +31,13 @@ public sealed class GrowthEventRecorder(TrazoDbContext db, TimeProvider clock, I
                 // Referral attribution travels with the user, so every later event of a referred user carries it.
                 var attribution = await ReferralAttribution.LookupAsync(db, userId.Value, ct);
                 if (attribution is not null) (channel, reference) = ("referral", attribution);
+                else
+                {
+                    // A referral code wins over a campaign; otherwise the campaign the account came from travels with the user.
+                    var campaign = await db.CampaignAttributions.AsNoTracking().Where(a => a.UserId == userId.Value)
+                        .Join(db.MarketingCampaigns, a => a.CampaignId, c => c.Id, (a, c) => c.Slug).FirstOrDefaultAsync(ct);
+                    if (campaign is not null) (channel, reference) = ("campaign", campaign);
+                }
             }
             db.GrowthEvents.Add(new GrowthEvent
             {

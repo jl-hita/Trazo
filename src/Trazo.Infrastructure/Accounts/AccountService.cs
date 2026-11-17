@@ -28,6 +28,8 @@ public static class AccountData
         // The Premium-time ledger is deleted; funnel events are anonymised (their user id is cleared, the rest holds no personal data).
         typeof(Trazo.Domain.Growth.PremiumGrant), typeof(Trazo.Domain.Growth.GrowthEvent),
         typeof(Trazo.Domain.Growth.ReferralCode), typeof(Trazo.Domain.Growth.ReferralRelationship),
+        // The campaign a person came from is deleted with them.
+        typeof(Trazo.Domain.Marketing.CampaignAttribution),
         // Not linked to the account: matched by the account's email (the person may have joined the waitlist before registering).
         typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
@@ -40,6 +42,8 @@ public static class AccountData
     {
         typeof(ExerciseCatalogItem), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket),
         typeof(Trazo.Domain.Analytics.PaywallView),
+        // Marketing campaigns, their anonymous daily counters and the owner-entered spend: no user in any of them.
+        typeof(Trazo.Domain.Marketing.MarketingCampaign), typeof(Trazo.Domain.Marketing.CampaignDailyStat), typeof(Trazo.Domain.Marketing.CampaignSpend),
         // Business books of the owner: they refer to suppliers and customers, never to app users.
         typeof(Trazo.Domain.Fiscal.FiscalEntry), typeof(Trazo.Domain.Fiscal.FiscalClosure), typeof(Trazo.Domain.Fiscal.FiscalAuditEntry)
     };
@@ -181,6 +185,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         rows += await StepAsync(db.PremiumGrants.Where(g => g.UserId == userId), ct);
         rows += await StepAsync(db.ReferralRelationships.Where(r => r.ReferrerUserId == userId || r.ReferredUserId == userId), ct);
         rows += await StepAsync(db.ReferralCodes.Where(c => c.UserId == userId), ct);
+        // Which campaign the person came from is theirs; the campaign itself and its anonymous counters stay.
+        rows += await StepAsync(db.CampaignAttributions.Where(a => a.UserId == userId), ct);
         rows += await StepAsync(db.RefreshTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.DeviceTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.AuthChallenges.Where(c => c.UserId == userId), ct);
