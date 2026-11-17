@@ -2,7 +2,7 @@
 
 Component of the administration console for the **owner (autónomo)**: books of income and expenses, VAT and income-tax
 figures per quarter, and a **"close month"** button that freezes the month and produces the package the accountant needs.
-**Superadmin only**: administrators, the app and any other role get `403`.
+**Superadmin and accountant** (role `accountant`, shown as "gestor"): administrators, the app and any other role get `403`. The accountant is created by the superadmin in Users, signs in to the admin console and sees **only** this page (no overview, users, plan reviews, logs or settings; the API refuses every other admin route). It can enter entries and close or reopen months like the superadmin.
 
 > The figures are **orientative**. They prepare the work of the accountant; they file nothing and are not tax advice.
 > Have the gestor review the VAT treatments, the 303/130/349 numbers and the Google Play income before any filing.

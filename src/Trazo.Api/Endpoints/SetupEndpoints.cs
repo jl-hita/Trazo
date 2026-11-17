@@ -16,6 +16,8 @@ public static class SetupEndpoints
     public const string SuperadminPolicy = "superadmin";
     /// <summary>Administrators and superadmins: the work that every administrator may do (plan reviews).</summary>
     public const string StaffPolicy = "staff";
+    /// <summary>Tax management: the superadmin and the accountant (gestor), who sees nothing else of the console.</summary>
+    public const string FiscalPolicy = "fiscal";
 
     public static IEndpointRouteBuilder MapSetupEndpoints(this IEndpointRouteBuilder endpoints)
     {

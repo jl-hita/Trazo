@@ -122,6 +122,22 @@ public sealed class FiscalApiTests : IDisposable
         Assert.Equal(HttpStatusCode.Unauthorized, (await _factory.CreateClient().GetAsync("/api/v1/admin/fiscal/profile")).StatusCode);
     }
 
+
+    [Fact]
+    public async Task TheAccountantSeesTheFiscalApiAndNothingElseOfTheConsole()
+    {
+        var accountant = await ClientAsync("accountant");
+        Assert.Equal(HttpStatusCode.OK, (await accountant.GetAsync("/api/v1/admin/fiscal/years/2026")).StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await accountant.PostAsJsonAsync("/api/v1/admin/fiscal/entries", Entry("expense", "2026-10-01", 10, "no_vat", "other"))).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await accountant.GetAsync("/api/v1/admin/users")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await accountant.GetAsync("/api/v1/admin/subscriptions")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await accountant.GetAsync("/api/v1/admin/referrals")).StatusCode);
+
+        // The superadmin can give the role.
+        var root = await ClientAsync("superadmin");
+        var users = await Json(await root.GetAsync("/api/v1/admin/users?role=accountant"));
+        Assert.Equal(1, users.GetProperty("totalCount").GetInt32());
+    }
     // ------------------------------------------------------------------ profile
 
     [Fact]
