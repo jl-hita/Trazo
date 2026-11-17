@@ -111,6 +111,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("AppVersion").HasMaxLength(40).HasColumnType("character varying(40)");
             b.Property<string>("ErrorType").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
             b.Property<string>("StackTrace").IsRequired().HasMaxLength(16000).HasColumnType("character varying(16000)");
+            b.Property<string>("OriginalStackTrace").HasMaxLength(16000).HasColumnType("character varying(16000)");
             b.Property<int>("Occurrences").HasColumnType("integer");
             b.Property<DateTimeOffset>("FirstSeenAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("LastSeenAt").HasColumnType("timestamp with time zone");
