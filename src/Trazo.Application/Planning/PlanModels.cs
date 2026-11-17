@@ -115,6 +115,28 @@ public sealed record WeekLoadView(
 /// <summary>Weekly volume of the whole plan, one entry per plan week, to draw planned against real load.</summary>
 public sealed record PlanLoadView(Guid PlanId, int TotalWeeks, int CurrentWeek, string Unit, IReadOnlyList<WeekLoadView> Weeks);
 
+/// <summary>A pending session whose planned date has passed. It can still be registered, or skipped, whenever the user wants.</summary>
+public sealed record OverdueSessionView(Guid Id, int SequenceIndex, string Title, DateOnly Date);
+
+public sealed record RecoveryAlternativeView(Guid SessionId, int SequenceIndex, string Title);
+
+/// <summary>
+/// Whether the muscles of the session are recovered: <c>State</c> is Ready, Caution or Wait, <c>AvailableAt</c> the estimate (null when
+/// ready), <c>Reasons</c> why it is better to wait, and <c>Alternatives</c> later pending sessions that are ready now. Advice only.
+/// </summary>
+public sealed record AvailabilityView(string State, DateTimeOffset? AvailableAt, IReadOnlyList<string> Reasons, IReadOnlyList<RecoveryAlternativeView> Alternatives);
+
+/// <summary>Where the session is in the program: its period (week of the plan), place inside it and block.</summary>
+public sealed record NextPositionView(int Period, int SessionInPeriod, int SessionsInPeriod, MesocycleView? Mesocycle);
+
+/// <summary>
+/// The session the user should do next, decided by the backend so no client has to work it out. <c>Session</c> is null when nothing
+/// is pending (plan finished or locked). <c>Availability</c> is Premium: without it <c>AvailabilityLocked</c> is true.
+/// </summary>
+public sealed record NextSessionView(
+    Guid PlanId, string SchedulingMode, string Timeline, SessionView? Session, NextPositionView? Position,
+    AvailabilityView? Availability, bool AvailabilityLocked, IReadOnlyList<OverdueSessionView> Overdue, bool Locked = false);
+
 public sealed record PlanOptions(
     IReadOnlyList<string> Goals, IReadOnlyList<string> Experience, IReadOnlyList<string> Splits,
     IReadOnlyList<string> Days, IReadOnlyList<string> Limitations, IReadOnlyList<string> Equipment,

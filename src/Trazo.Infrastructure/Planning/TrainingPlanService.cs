@@ -22,6 +22,8 @@ public interface ITrainingPlanService
     Task<PlanResult<AlternativesResult>> GetAlternativesAsync(Guid userId, Guid sessionId, string exerciseId, int limit, CancellationToken ct);
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
     Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct);
+    /// <summary>The session to do next (by program order, whatever the date), with where it sits and whether the muscles are recovered.</summary>
+    Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
@@ -282,6 +284,100 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 sessions.Where(s => s.WeekNumber == week).Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList());
         }).ToList();
         return new BlockView(plan.Id, meso, weeks, current.Locked);
+    }
+
+    private const int RecoveryLookbackDays = 6;
+    private readonly IPlanTimeline _timeline = new CalendarTimeline();
+
+    public async Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct)
+    {
+        // Reading the current week generates the block when it is first needed, so the next session always exists once this returns.
+        var current = await GetCurrentWeekAsync(userId, ct);
+        if (current is null) return null;
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null || current.Locked)
+            return new NextSessionView(current.PlanId, _timeline.Mode, current.Timeline, null, null, null, false, [], current.Locked);
+
+        var pending = await db.PlannedSessions.AsNoTracking()
+            .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned).OrderBy(s => s.SequenceIndex).ToListAsync(ct);
+        var next = _timeline.Next(
+            pending.Select(s => new TimelineSession(s.Id, s.SequenceIndex, s.WeekNumber, s.Date, s.Title)).ToList(), Today,
+            RecoveryAdvisor.AlternativeCandidates + 1);
+        var overdue = next.Overdue.Select(s => new OverdueSessionView(s.Id, s.SequenceIndex, s.Title, s.Date!.Value)).ToList();
+        if (next.Next is null)
+            return new NextSessionView(plan.Id, _timeline.Mode, current.Timeline, null, null, null, false, overdue);
+
+        var session = pending.First(s => s.Id == next.Next.Id);
+        var premium = await subscriptions.HasPremiumAsync(userId, ct);
+        var logs = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id && l.PlannedSessionId == session.Id).ToListAsync(ct);
+        var last = await LastPerformanceAsync(userId, [session], premium, ct);
+        var inPeriod = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == session.WeekNumber).Select(s => s.SequenceIndex).ToListAsync(ct);
+        var totalInPeriod = inPeriod.Count;
+        var mesocycle = plan.Mesocycles.FirstOrDefault(m => m.Id == session.MesocycleId);
+        var position = new NextPositionView(session.WeekNumber, inPeriod.Count(i => i <= session.SequenceIndex), totalInPeriod,
+            mesocycle is null ? null : new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
+                Math.Max(1, session.WeekNumber - mesocycle.StartWeek + 1)));
+
+        AvailabilityView? availability = null;
+        if (premium)
+        {
+            var candidates = next.Candidates.Select(c => pending.First(s => s.Id == c.Id)).Select(s => new RecoveryCandidate(
+                s.Id, s.SequenceIndex, s.Title,
+                PrescriptionJson.Read(s.PrescriptionJson).Select(e => new RecoveryPlannedExercise(
+                    e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList())).ToList();
+            var recommendation = RecoveryAdvisor.Recommend(
+                candidates, await RecoveryHistoryAsync(userId, clock.GetUtcNow(), ct), clock.GetUtcNow(), Enum.Parse<TrainingExperience>(plan.Experience));
+            availability = new AvailabilityView(
+                recommendation.Next.State.ToString(), recommendation.Next.AvailableAt, recommendation.Next.Reasons,
+                recommendation.Alternatives.Select(a => new RecoveryAlternativeView(a.SessionId, a.SequenceIndex, a.Title)).ToList());
+        }
+
+        return new NextSessionView(plan.Id, _timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
+            availability, AvailabilityLocked: !premium, overdue);
+    }
+
+    /// <summary>The user's recent workouts (any plan) as the recovery advisor needs them: sets done per exercise and how it felt.</summary>
+    private async Task<IReadOnlyList<RecoveryExposure>> RecoveryHistoryAsync(Guid userId, DateTimeOffset now, CancellationToken ct)
+    {
+        var since = now.AddDays(-RecoveryLookbackDays);
+        var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets)
+            .Where(l => l.UserId == userId && l.PerformedAt >= since).OrderBy(l => l.PerformedAt).ToListAsync(ct);
+        var ids = logs.Select(l => l.PlannedSessionId).ToList();
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
+        var exposures = new List<RecoveryExposure>();
+        foreach (var log in logs)
+        {
+            if (!sessions.TryGetValue(log.PlannedSessionId, out var session)) continue;
+            var loaded = LoadedExercises(log.ExerciseFeedbackJson);
+            var prescribed = PrescriptionJson.Read(session.PrescriptionJson);
+            var exercises = new List<RecoveryExercise>();
+            foreach (var group in log.Sets.Where(s => s.Completed).GroupBy(s => s.ExerciseId, StringComparer.OrdinalIgnoreCase))
+            {
+                var exercise = prescribed.FirstOrDefault(e => string.Equals(e.ExerciseId, group.Key, StringComparison.OrdinalIgnoreCase));
+                if (exercise is null) continue;
+                var rirs = group.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
+                exercises.Add(new RecoveryExercise(
+                    exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), exercise.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
+                    group.Count(), rirs.Count == group.Count() ? rirs.Average() : null, loaded.Contains(group.Key)));
+            }
+            exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
+        }
+        return exposures;
+    }
+
+    private static HashSet<string> LoadedExercises(string? json)
+    {
+        var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(json)) return result;
+        try
+        {
+            foreach (var item in System.Text.Json.JsonDocument.Parse(json).RootElement.EnumerateArray())
+                if (item.TryGetProperty("exerciseId", out var id) && item.TryGetProperty("preFatigue", out var fatigue)
+                    && string.Equals(fatigue.GetString(), "loaded", StringComparison.OrdinalIgnoreCase) && id.GetString() is { } name)
+                    result.Add(name);
+        }
+        catch (System.Text.Json.JsonException) { }
+        return result;
     }
 
     public async Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct)
