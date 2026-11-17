@@ -8,14 +8,14 @@ public sealed record ReopenMonthRequest(string? Reason);
 
 /// <summary>
 /// Tax books of the owner for the administration console: ledgers, monthly closing and the package for the accountant.
-/// Superadmin only: administrators and other roles are refused.
+/// Superadmin and accountant (gestor) only: administrators and other roles are refused.
 /// </summary>
 public static class AdminFiscalEndpoints
 {
     public static IEndpointRouteBuilder MapAdminFiscalEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var g = endpoints.MapGroup("/api/v1/admin/fiscal").WithTags("Admin fiscal")
-            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+            .RequireAuthorization(SetupEndpoints.FiscalPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
 
         g.MapGet("/profile", (IFiscalService s, CancellationToken ct) => Run(async () => Results.Ok(await s.GetProfileAsync(ct))));
         g.MapPut("/profile", (FiscalProfile body, IFiscalService s, CancellationToken ct) => Run(async () => Results.Ok(await s.SaveProfileAsync(body, ct))));

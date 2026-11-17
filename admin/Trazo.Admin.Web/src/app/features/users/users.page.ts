@@ -4,7 +4,7 @@ import { AdminApi, AdminUserDetail, AdminUserSummary, UserAction } from '../../c
 import { AuthService } from '../../core/auth.service';
 import { errorMessage } from '../../core/setup.api';
 
-const ROLES = ['user', 'admin', 'superadmin'];
+const ROLES = ['user', 'admin', 'accountant', 'superadmin'];
 
 /** Users of the platform: search, filter and manage accounts. */
 @Component({
@@ -31,6 +31,7 @@ const ROLES = ['user', 'admin', 'superadmin'];
     .users-table .sub { color: #8291a6; font-size: 11px; }
     .badge { display: inline-block; margin: 0 4px 3px 0; padding: 2px 7px; border: 1px solid #34465b; border-radius: 999px; color: #aab6c7; font-size: 10px; letter-spacing: .04em; }
     .badge.role-superadmin { border-color: #6d9bd2; color: #b9d3f2; }
+    .badge.role-accountant { border-color: #5a8f74; color: #a8d9bd; }
     .badge.role-admin { border-color: #4a6585; color: #a9c2df; }
     .badge.bad { border-color: #7a3b3b; color: #f0a3a3; }
     .badge.warn { border-color: #6b5a2e; color: #e6d39b; }

@@ -23,6 +23,12 @@ export class AuthService {
   get isSuperadmin(): boolean { return this.user()?.role === 'superadmin'; }
   /** Administrators and superadmins may use the console; administrators only see the plan reviews. */
   get isStaff(): boolean { return this.user()?.role === 'admin' || this.isSuperadmin; }
+  /** The accountant (gestor) only sees the tax management. */
+  get isAccountant(): boolean { return this.user()?.role === 'accountant'; }
+  get canUseConsole(): boolean { return this.isStaff || this.isAccountant; }
+  get canSeeFiscal(): boolean { return this.isSuperadmin || this.isAccountant; }
+  /** Landing page of each role. */
+  get home(): string { return this.isSuperadmin ? '/overview' : this.isAccountant ? '/fiscal' : '/reviews'; }
   get hasSession(): boolean { return this.session !== null; }
   private refreshing: Promise<string> | null = null;
 
