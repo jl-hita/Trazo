@@ -759,6 +759,23 @@ public sealed class AccountApiTests : IDisposable
     }
 
     [Fact]
+    public async Task AnEmailToAUserGoesOutInTheLanguageTheyChose_WhateverTheRequestAsked()
+    {
+        var user = await AddUserAsync("chose.english@example.com");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            (await db.Users.SingleAsync(u => u.Id == user.Id)).Language = "en";
+            await db.SaveChangesAsync();
+        }
+        var spanishRequest = ClientIn("es-ES,es;q=0.9");
+        Assert.Equal(HttpStatusCode.Accepted, (await spanishRequest.PostAsJsonAsync("/api/v1/auth/password/forgot", new { email = "chose.english@example.com" })).StatusCode);
+        var body = await WaitForMailAsync(_mail, 1);
+        Assert.Equal("Reset your TRAZO password", _mail.Sent.ToArray()[0].Subject);
+        Assert.Contains("Use this link to reset your password:", body);
+    }
+
+    [Fact]
     public async Task TheErrorsOfTheAuthenticationAreInTheLanguageOfTheRequest_WhateverLanguageTheCodeWasWrittenIn()
     {
         await AddUserAsync("setup.done@example.com", role: "superadmin"); // with no administrator the API is still in its initial setup

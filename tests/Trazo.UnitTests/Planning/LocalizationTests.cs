@@ -363,3 +363,69 @@ public sealed class LocalizedReviewApiTests() : PlansApiBase(enforced: false)
         Assert.Equal("You have not requested any review.", none.GetProperty("detail").GetString());
     }
 }
+
+/// <summary>The user chooses the language: it is stored, it wins over the header on their own requests, and it is reported back.</summary>
+public sealed class UserLanguageApiTests() : PlansApiBase(enforced: false)
+{
+    private static HttpClient WithHeader(HttpClient client, string language)
+    {
+        client.DefaultRequestHeaders.Add("Accept-Language", language);
+        return client;
+    }
+
+    private static async Task<HttpResponseMessage> ChooseAsync(HttpClient client, string? language) =>
+        await client.PutAsJsonAsync("/api/v1/account/language", new { language });
+
+    [Fact]
+    public async Task TheChoiceIsValidated_Stored_AndReportedBack()
+    {
+        var client = ClientFor(await AddUserAsync("lang-store@example.com"));
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, "en")).StatusCode);
+        Assert.Equal("en", (await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("language").GetString());
+        Assert.Equal("en", (await JsonAsync(await client.GetAsync("/api/v1/auth/me"))).GetProperty("language").GetString());
+
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, "ES")).StatusCode); // case does not matter
+        Assert.Equal("es", (await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("language").GetString());
+
+        var invalid = await ChooseAsync(client, "fr");
+        Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+        Assert.Equal("es", (await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("language").GetString()); // unchanged
+
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, "auto")).StatusCode);
+        Assert.Equal(JsonValueKind.Null, (await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("language").ValueKind);
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await ChooseAsync(ClientFor(null), "en")).StatusCode);
+    }
+
+    [Fact]
+    public async Task TheChosenLanguageWinsOverTheHeader_AndWithoutAChoiceTheHeaderDecides()
+    {
+        var client = WithHeader(ClientFor(await AddUserAsync("lang-wins@example.com")), "es");
+        Assert.Equal("No tienes un plan activo.", (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString());
+
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, "en")).StatusCode);
+        Assert.Equal("You do not have an active plan.", (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString()); // header says es
+
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, "auto")).StatusCode);
+        Assert.Equal("No tienes un plan activo.", (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString());
+    }
+
+    [Fact]
+    public async Task TheChoiceOfOneUserNeverAffectsAnother()
+    {
+        var english = ClientFor(await AddUserAsync("lang-a@example.com"));
+        var other = WithHeader(ClientFor(await AddUserAsync("lang-b@example.com")), "es");
+        await ChooseAsync(english, "en");
+        Assert.Equal("No tienes un plan activo.", (await JsonAsync(await other.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString());
+    }
+
+    [Fact]
+    public async Task TheAccountFactsAreInTheChosenLanguage()
+    {
+        var admin = await AddUserAsync("lang-admin@example.com", role: "superadmin");
+        var client = ClientFor(admin);
+        Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, "en")).StatusCode);
+        var info = await JsonAsync(await client.GetAsync("/api/v1/account"));
+        Assert.Equal("You are the last superadministrator: appoint another one before deleting the account.", info.GetProperty("cannotDeleteReason").GetString());
+    }
+}

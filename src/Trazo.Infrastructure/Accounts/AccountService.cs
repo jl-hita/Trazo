@@ -50,7 +50,7 @@ public sealed record PlaySubscriptionNotice(string Status, DateTimeOffset Expire
 /// <summary>What the app needs before it offers account deletion.</summary>
 public sealed record AccountInfo(
     Guid Id, string Email, string DisplayName, string Role, string TimeZone, bool HasPassword, bool GoogleLinked, bool TwoFactorEnabled,
-    bool CanDelete, string? CannotDeleteReason, DeletionRequirements Deletion, PlaySubscriptionNotice? PlaySubscription);
+    bool CanDelete, string? CannotDeleteReason, DeletionRequirements Deletion, PlaySubscriptionNotice? PlaySubscription, string? Language = null);
 
 /// <summary>
 /// What a deletion request must prove. <c>RequiresPassword</c> and <c>RequiresGoogleIdToken</c> are alternatives (one is enough);
@@ -66,6 +66,8 @@ public interface IAccountService
     Task<AccountDeletionResult> DeleteAsync(Guid userId, CancellationToken ct);
     /// <summary>Saves the IANA time zone. Returns false when it is not a valid zone or the user does not exist.</summary>
     Task<bool> SetTimeZoneAsync(Guid userId, string timeZone, CancellationToken ct);
+    /// <summary>Saves the language the user chose ("es", "en", or null for automatic).</summary>
+    Task<bool> SetLanguageAsync(Guid userId, string? language, CancellationToken ct);
 }
 
 /// <summary>
@@ -96,7 +98,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
             lastSuperadmin ? "Eres el último superadministrador: nombra a otro antes de eliminar la cuenta." : null,
             new DeletionRequirements(user.PasswordHash is not null, user.GoogleSubject is not null && user.PasswordHash is null,
                 user.TwoFactorEnabled, notice is not null, warning, notice is null ? null : ManageSubscriptionsUrl),
-            notice);
+            notice, user.Language);
     }
 
     private async Task<PlaySubscriptionNotice?> PlaySubscriptionAsync(Guid userId, CancellationToken ct)
@@ -119,6 +121,14 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         if (!UserTimeZone.TryParse(timeZone, out _)) return false;
         var changed = await db.Users.Where(u => u.Id == userId)
             .ExecuteUpdateAsync(s => s.SetProperty(u => u.TimeZoneId, timeZone.Trim()).SetProperty(u => u.UpdatedAt, clock.GetUtcNow()), ct);
+        return changed == 1;
+    }
+
+    public async Task<bool> SetLanguageAsync(Guid userId, string? language, CancellationToken ct)
+    {
+        if (!Trazo.Application.Localization.LanguageNegotiation.TryNormalizeChoice(language, out var stored)) return false;
+        var changed = await db.Users.Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.Language, stored).SetProperty(u => u.UpdatedAt, clock.GetUtcNow()), ct);
         return changed == 1;
     }
 

@@ -20,6 +20,8 @@ public sealed class TrazoUser
     public DateTimeOffset? DisabledAt { get; set; }
     /// <summary>IANA time zone of the user (for example Europe/Madrid). Null means the default, Europe/Madrid.</summary>
     public string? TimeZoneId { get; set; }
+    /// <summary>Language the user chose for the texts of the API, e-mails and notifications: "es" or "en". Null means automatic (the language of the request).</summary>
+    public string? Language { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

@@ -73,6 +73,16 @@ internal static class AccountCatalog
         ("El enlace no es válido, ha caducado o ya se ha usado.", "The link is invalid, expired or already used."),
         ("El enlace no es válido.", "The link is invalid."),
         ("Error inesperado.", "Unexpected error."),
+        // notifications to the user
+        ("Hemos terminado de revisar tu rutina.", "We have finished reviewing your routine."),
+        ("Tienes un mensaje del equipo.", "You have a message from the team."),
+        ("TRAZO: hemos terminado de revisar tu rutina", "TRAZO: we have finished reviewing your routine"),
+        ("TRAZO: tienes un mensaje del equipo", "TRAZO: you have a message from the team"),
+        ("El equipo ha terminado la revisión manual de tu rutina.", "The team has finished the manual review of your routine."),
+        ("Abre la app (Cuenta → Revisión manual) para leer su respuesta.", "Open the app (Account → Manual review) to read their answer."),
+        ("El equipo ha respondido a tu petición de revisión.", "The team has answered your review request."),
+        ("Abre la app (Cuenta → Revisión manual) para leerlo.", "Open the app (Account → Manual review) to read it."),
+        ("Usa es, en o auto.", "Use es, en or auto."),
     ];
 
     /// <summary>Texts written in Spanish, to English.</summary>

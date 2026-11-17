@@ -15,6 +15,24 @@ public sealed class RequestLanguage
 
 public static class LanguageNegotiation
 {
+    /// <summary>The stored choice ("es", "en") as a language; null for automatic or anything else.</summary>
+    public static AppLanguage? FromChoice(string? choice) => choice?.Trim().ToLowerInvariant() switch
+    {
+        "es" => AppLanguage.Es,
+        "en" => AppLanguage.En,
+        _ => null
+    };
+
+    /// <summary>The value to store for a choice: "es", "en", or null (automatic) for an empty or "auto" choice; false when it is none of them.</summary>
+    public static bool TryNormalizeChoice(string? choice, out string? stored)
+    {
+        stored = null;
+        var value = choice?.Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(value) || value == "auto") return true;
+        if (value is "es" or "en") { stored = value; return true; }
+        return false;
+    }
+
     /// <summary>
     /// The first supported language of an <c>Accept-Language</c> value, by quality: <c>en-GB,en;q=0.9,es;q=0.8</c> is English.
     /// Anything missing, malformed or unsupported is Spanish, the default.
