@@ -660,5 +660,75 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("At");
             b.ToTable("fiscal_audit");
         });
+
+        modelBuilder.Entity("Trazo.Domain.Marketing.MarketingCampaign", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Slug").IsRequired().HasMaxLength(32).HasColumnType("character varying(32)");
+            b.Property<string>("Name").IsRequired().HasMaxLength(80).HasColumnType("character varying(80)");
+            b.Property<string>("Channel").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("Status").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<DateOnly?>("StartsOn").HasColumnType("date");
+            b.Property<DateOnly?>("EndsOn").HasColumnType("date");
+            b.Property<string>("Notes").HasMaxLength(500).HasColumnType("character varying(500)");
+            b.Property<string>("CreatedBy").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Slug").IsUnique();
+            b.ToTable("marketing_campaigns");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Marketing.CampaignAttribution", b =>
+        {
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<Guid>("CampaignId").HasColumnType("uuid");
+            b.Property<string>("Source").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<DateTimeOffset>("AttributedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("UserId");
+            b.HasIndex("CampaignId");
+            b.ToTable("campaign_attributions");
+        });
+        modelBuilder.Entity("Trazo.Domain.Marketing.CampaignAttribution", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Marketing.MarketingCampaign", null)
+                .WithMany().HasForeignKey("CampaignId").OnDelete(DeleteBehavior.Restrict).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Marketing.CampaignDailyStat", b =>
+        {
+            b.Property<Guid>("CampaignId").HasColumnType("uuid");
+            b.Property<DateOnly>("Day").HasColumnType("date");
+            b.Property<int>("Clicks").HasColumnType("integer");
+            b.Property<int>("Installs").HasColumnType("integer");
+            b.HasKey("CampaignId", "Day");
+            b.ToTable("campaign_daily_stats");
+        });
+        modelBuilder.Entity("Trazo.Domain.Marketing.CampaignDailyStat", b =>
+        {
+            b.HasOne("Trazo.Domain.Marketing.MarketingCampaign", null)
+                .WithMany().HasForeignKey("CampaignId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Marketing.CampaignSpend", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("CampaignId").HasColumnType("uuid");
+            b.Property<DateOnly>("Day").HasColumnType("date");
+            b.Property<decimal>("Amount").HasPrecision(12, 2).HasColumnType("numeric(12,2)");
+            b.Property<string>("Note").HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("CreatedBy").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("CampaignId", "Day");
+            b.ToTable("campaign_spend");
+        });
+        modelBuilder.Entity("Trazo.Domain.Marketing.CampaignSpend", b =>
+        {
+            b.HasOne("Trazo.Domain.Marketing.MarketingCampaign", null)
+                .WithMany().HasForeignKey("CampaignId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
     }
 }

@@ -20,6 +20,9 @@ public static class GrowthEventNames
     public const string Refunded = "refunded";
     public const string SignupTrialGranted = "signup_trial_granted";
 
+    /// <summary>The account arrived through a marketing campaign link (see Trazo.Domain.Marketing). Reference is the campaign slug.</summary>
+    public const string CampaignAttributed = "campaign_attributed";
+
     public const string ReferralCodeCreated = "referral_code_created";
     public const string ReferralShared = "referral_shared";
     public const string ReferralLinkOpened = "referral_link_opened";

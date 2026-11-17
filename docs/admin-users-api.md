@@ -7,7 +7,7 @@ Users page of the administration console.
 |---|---|---|
 | GET | `/` | List users. Query: `q` (name or email), `role`, `status` (`active`, `disabled`, `unverified`), `sort` (`created`; default is email), `page`, `pageSize` (max 100) |
 | GET | `/{id}` | Detail with sign-in methods, failed attempts and active sessions |
-| PATCH | `/{id}` | Change `displayName` and/or `role` (`user`, `admin`, `superadmin`) |
+| PATCH | `/{id}` | Change `displayName` and/or `role` (`user`, `admin`, `accountant`, `commercial`, `superadmin`) |
 | POST | `/{id}/disable` | Disable the account and revoke all its sessions |
 | POST | `/{id}/enable` | Enable a disabled account |
 | POST | `/{id}/revoke-sessions` | Revoke every refresh token of the user |
