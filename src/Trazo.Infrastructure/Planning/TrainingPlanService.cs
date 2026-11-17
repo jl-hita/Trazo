@@ -22,6 +22,8 @@ public interface ITrainingPlanService
     Task<PlanResult<AlternativesResult>> GetAlternativesAsync(Guid userId, Guid sessionId, string exerciseId, int limit, CancellationToken ct);
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
     Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct);
+    /// <summary>The session to do next (by program order, whatever the date), with where it sits and whether the muscles are recovered.</summary>
+    Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
@@ -88,7 +90,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
             WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
             2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
-            WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId);
+            WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
+            PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod);
     }
 
     private static string[] Names<T>() where T : struct, Enum => Enum.GetNames<T>();
@@ -114,24 +117,31 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Id = Guid.NewGuid(), UserId = userId, Status = TrainingPlanStatus.Active,
             Goal = profile.Goal.ToString(), Experience = profile.Experience.ToString(), Split = profile.Split.ToString(),
             StartDate = profile.StartDate, TotalWeeks = profile.TotalWeeks,
-            TrainingDays = profile.TrainingDays.Select(d => d.ToString()).ToArray(),
+            SchedulingMode = profile.SchedulingMode, SessionsPerPeriod = profile.SessionsPerPeriod,
+            // A sequence plan has no days of the week: the synthetic days the engine lays a rotation out with are never stored.
+            TrainingDays = profile.SchedulingMode == PlanSchedulingMode.Sequence ? [] : profile.TrainingDays.Select(d => d.ToString()).ToArray(),
             MaxSessionMinutes = profile.MaxSessionMinutes, AvailableEquipment = profile.AvailableEquipment.ToArray(),
             ExcludedExerciseIds = profile.ExcludedExerciseIds.ToArray(), Limitations = profile.Limitations.ToArray(),
             IncludeDeloadPhases = profile.IncludeDeloadPhases, DeloadEveryTrainingWeeks = profile.DeloadEveryTrainingWeeks,
             Seed = planSeed, EngineVersion = string.Empty, MacrocycleName = macrocycle.Draft.Name,
             MacrocycleNotes = macrocycle.Draft.Notes, CreatedAt = now, UpdatedAt = now
         };
+        var calendar = profile.SchedulingMode == PlanSchedulingMode.Calendar;
         foreach (var phase in macrocycle.Draft.Phases)
             plan.Phases.Add(new TrainingPlanPhase
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, SequenceNumber = phase.SequenceNumber, Name = phase.Name,
-                PhaseType = phase.PhaseType, StartDate = phase.StartDate, EndDate = phase.EndDate, Objective = phase.Objective
+                PhaseType = phase.PhaseType, Objective = phase.Objective,
+                StartPeriod = (phase.StartDate.DayNumber - profile.StartDate.DayNumber) / 7 + 1,
+                EndPeriod = (phase.EndDate.DayNumber - profile.StartDate.DayNumber) / 7 + 1,
+                // The structure is the same in both modes (periods); the dates only make sense on a calendar.
+                StartDate = calendar ? phase.StartDate : null, EndDate = calendar ? phase.EndDate : null
             });
 
         // Generate the first block now: if the profile cannot be satisfied (no exercise for a movement pattern, for
         // example) the user hears it immediately and nothing is stored.
         var candidates = await LoadCandidatesAsync(ct);
-        var firstSlot = PlanSchedule.Slots(macrocycle.Draft).First(slot => slot.Contains(1));
+        var firstSlot = SlotsOf(plan).First(slot => slot.Contains(1));
         var loads = await LoadReferencesAsync(userId, ct);
         var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
         if (!generation.Succeeded)
@@ -152,7 +162,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             if (!await db.TrainingPlans.AsNoTracking().AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct)) throw;
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
         }
-        return PlanResult<PlanView>.Ok(ToView(plan));
+        return PlanResult<PlanView>.Ok(ToView(plan, calendar ? PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today) : new PlanPosition(PlanTimeline.InProgress, 1)));
     }
 
     public async Task<PlanResult<PlanView>> CreateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct)
@@ -171,22 +181,26 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Algún ejercicio no existe en el catálogo.", errors);
 
         var now = clock.GetUtcNow();
+        var calendar = manual.SchedulingMode == PlanSchedulingMode.Calendar;
         var end = manual.StartDate.AddDays(manual.TotalWeeks * 7 - 1);
         var plan = new TrainingPlan
         {
             Id = Guid.NewGuid(), UserId = userId, Status = TrainingPlanStatus.Active, Origin = TrainingPlanOrigin.Manual,
             Goal = manual.Goal.ToString(), Experience = manual.Experience.ToString(), Split = TrainingProgramSplit.Automatic.ToString(),
-            StartDate = manual.StartDate, TotalWeeks = manual.TotalWeeks, TrainingDays = manual.Days.Select(d => d.Day.ToString()).ToArray(),
+            StartDate = manual.StartDate, TotalWeeks = manual.TotalWeeks, SchedulingMode = manual.SchedulingMode,
+            SessionsPerPeriod = manual.Days.Count,
+            TrainingDays = calendar ? manual.Days.Select(d => d.Day.ToString()).ToArray() : [],
             MaxSessionMinutes = 180, IncludeDeloadPhases = false, DeloadEveryTrainingWeeks = 4, Seed = 0, EngineVersion = "manual",
             MacrocycleName = manual.Name, MacrocycleNotes = manual.Notes, CreatedAt = now, UpdatedAt = now
         };
         plan.Phases.Add(new TrainingPlanPhase
         {
             Id = Guid.NewGuid(), PlanId = plan.Id, SequenceNumber = 1, Name = manual.Name, PhaseType = "accumulation",
-            StartDate = manual.StartDate, EndDate = end, Objective = manual.Notes.Length > 0 ? manual.Notes : "Plan manual"
+            StartPeriod = 1, EndPeriod = manual.TotalWeeks, StartDate = calendar ? manual.StartDate : null, EndDate = calendar ? end : null,
+            Objective = manual.Notes.Length > 0 ? manual.Notes : "Plan manual"
         });
 
-        var slots = PlanSchedule.Slots(plan.StartDate, plan.Phases.Select(p => new PhaseSpan(p.SequenceNumber, p.PhaseType, p.StartDate, p.EndDate)));
+        var slots = SlotsOf(plan);
         var nextIndex = 1;
         foreach (var slot in slots)
         {
@@ -211,7 +225,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                     mesocycle.Sessions.Add(new PlannedSession
                     {
                         Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycle.Id, WeekNumber = week,
-                        Date = PlanSchedule.DateFor(plan.StartDate, week, day.Day), Title = day.Title,
+                        Date = calendar ? PlanSchedule.DateFor(plan.StartDate, week, day.Day!.Value) : null, Title = day.Title,
                         EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240), PrescriptionJson = PrescriptionJson.Serialize(prescription,
                             day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!)),
                         Status = PlannedSessionStatus.Planned, UpdatedAt = now
@@ -232,7 +246,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             if (!await db.TrainingPlans.AsNoTracking().AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct)) throw;
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
         }
-        return PlanResult<PlanView>.Ok(ToView(plan));
+        return PlanResult<PlanView>.Ok(ToView(plan, calendar ? PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today) : new PlanPosition(PlanTimeline.InProgress, 1)));
     }
 
     // ---------------------------------------------------------------- read
@@ -241,7 +255,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
-        return plan is null ? null : ToView(plan);
+        return plan is null ? null : ToView(plan, await PositionAsync(plan, ct));
     }
 
     public async Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct)
@@ -249,17 +263,47 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
-        var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
+        var position = await PositionAsync(plan, ct);
         if (position.State == PlanTimeline.Finished)
         {
             plan.Status = TrainingPlanStatus.Completed;
             plan.UpdatedAt = clock.GetUtcNow();
             await db.SaveChangesAsync(ct);
-            return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
-                PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), nameof(PlanTimeline.Finished), null, [],
-                await IsLockedAsync(plan, ct));
+            return new WeekView(plan.Id, position.Week, WeekStartOf(plan, position.Week), WeekEndOf(plan, position.Week),
+                nameof(PlanTimeline.Finished), null, [], await IsLockedAsync(plan, ct));
         }
         return await BuildWeekAsync(plan, position, ct);
+    }
+
+    // ---------------------------------------------------------------- where the plan is, in either mode
+
+    private static bool IsSequence(TrainingPlan plan) => plan.SchedulingMode == PlanSchedulingMode.Sequence;
+
+    private static IPlanTimeline TimelineOf(TrainingPlan plan) => IsSequence(plan) ? new SequenceTimeline() : new CalendarTimeline();
+
+    private static DateOnly? WeekStartOf(TrainingPlan plan, int week) => IsSequence(plan) ? null : PlanSchedule.WeekStart(plan.StartDate, week);
+
+    private static DateOnly? WeekEndOf(TrainingPlan plan, int week) => WeekStartOf(plan, week)?.AddDays(6);
+
+    private static IReadOnlyList<MesocycleSlot> SlotsOf(TrainingPlan plan) =>
+        PlanSchedule.Slots(plan.Phases.Select(p => new PeriodSpan(p.SequenceNumber, p.PhaseType, p.StartPeriod, p.EndPeriod)));
+
+    /// <summary>
+    /// Where the plan is. A calendar plan follows the clock. A sequence plan follows its sessions: the current period is the one of
+    /// the first pending session, and the plan is finished only when every period has been generated and resolved. No amount of
+    /// elapsed time moves it.
+    /// </summary>
+    private async Task<PlanPosition> PositionAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        if (!IsSequence(plan)) return PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
+        var firstPending = await db.PlannedSessions.AsNoTracking()
+            .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned).OrderBy(s => s.SequenceIndex)
+            .Select(s => (int?)s.WeekNumber).FirstOrDefaultAsync(ct);
+        if (firstPending is { } week) return new PlanPosition(PlanTimeline.InProgress, week);
+        var generated = plan.Mesocycles.Count == 0 ? 0 : plan.Mesocycles.Max(m => m.StartWeek + m.Weeks - 1);
+        return generated >= plan.TotalWeeks
+            ? new PlanPosition(PlanTimeline.Finished, plan.TotalWeeks)
+            : new PlanPosition(PlanTimeline.InProgress, generated + 1);
     }
 
     public async Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct)
@@ -272,16 +316,128 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var last = meso.StartWeek + meso.Weeks - 1;
         var sessions = await db.PlannedSessions.AsNoTracking()
             .Where(s => s.PlanId == plan.Id && s.WeekNumber >= meso.StartWeek && s.WeekNumber <= last)
-            .OrderBy(s => s.Date).ToListAsync(ct);
+            .OrderBy(s => s.SequenceIndex).ToListAsync(ct);
         var ids = sessions.Select(s => s.Id).ToList();
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
         var weeks = Enumerable.Range(meso.StartWeek, meso.Weeks).Select(week =>
         {
-            var start = PlanSchedule.WeekStart(plan.StartDate, week);
-            return new BlockWeekView(week, start, start.AddDays(6), week == current.WeekNumber,
+            var start = WeekStartOf(plan, week);
+            return new BlockWeekView(week, start, start?.AddDays(6), week == current.WeekNumber,
                 sessions.Where(s => s.WeekNumber == week).Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id))).ToList());
         }).ToList();
         return new BlockView(plan.Id, meso, weeks, current.Locked);
+    }
+
+    private const int RecoveryLookbackDays = 6;
+
+
+    public async Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct)
+    {
+        // Reading the current week generates the block when it is first needed, so the next session always exists once this returns.
+        var current = await GetCurrentWeekAsync(userId, ct);
+        if (current is null) return null;
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null || current.Locked)
+        {
+            var mode = await db.TrainingPlans.AsNoTracking().Where(p => p.Id == current.PlanId).Select(p => p.SchedulingMode).FirstAsync(ct);
+            return new NextSessionView(current.PlanId, mode.ToString(), current.Timeline, null, null, null, false, [], current.Locked);
+        }
+        var timeline = TimelineOf(plan);
+
+        var pending = await db.PlannedSessions.AsNoTracking()
+            .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned).OrderBy(s => s.SequenceIndex).ToListAsync(ct);
+        var next = timeline.Next(
+            pending.Select(s => new TimelineSession(s.Id, s.SequenceIndex, s.WeekNumber, s.Date, s.Title)).ToList(), Today,
+            RecoveryAdvisor.AlternativeCandidates + 1);
+        var overdue = next.Overdue.Select(s => new OverdueSessionView(s.Id, s.SequenceIndex, s.Title, s.Date!.Value)).ToList();
+        if (next.Next is null)
+            return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, null, null, null, false, overdue);
+
+        var session = pending.First(s => s.Id == next.Next.Id);
+        var premium = await subscriptions.HasPremiumAsync(userId, ct);
+        var logs = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id && l.PlannedSessionId == session.Id).ToListAsync(ct);
+        var last = await LastPerformanceAsync(userId, [session], premium, ct);
+        var inPeriod = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == session.WeekNumber).Select(s => s.SequenceIndex).ToListAsync(ct);
+        var totalInPeriod = inPeriod.Count;
+        var mesocycle = plan.Mesocycles.FirstOrDefault(m => m.Id == session.MesocycleId);
+        var position = new NextPositionView(session.WeekNumber, inPeriod.Count(i => i <= session.SequenceIndex), totalInPeriod,
+            mesocycle is null ? null : new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
+                Math.Max(1, session.WeekNumber - mesocycle.StartWeek + 1)));
+
+        AvailabilityView? availability = null;
+        if (premium)
+        {
+            var candidates = next.Candidates.Select(c => pending.First(s => s.Id == c.Id)).Select(s => new RecoveryCandidate(
+                s.Id, s.SequenceIndex, s.Title,
+                PrescriptionJson.Read(s.PrescriptionJson).Select(e => new RecoveryPlannedExercise(
+                    e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList())).ToList();
+            var recommendation = RecoveryAdvisor.Recommend(
+                candidates, await RecoveryHistoryAsync(userId, clock.GetUtcNow(), ct), clock.GetUtcNow(), Enum.Parse<TrainingExperience>(plan.Experience));
+            availability = new AvailabilityView(
+                recommendation.Next.State.ToString(), recommendation.Next.AvailableAt, recommendation.Next.Reasons,
+                recommendation.Alternatives.Select(a => new RecoveryAlternativeView(a.SessionId, a.SequenceIndex, a.Title)).ToList());
+        }
+
+        return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
+            availability, AvailabilityLocked: !premium, overdue, Reentry: await ReentryAsync(plan, ct));
+    }
+
+    /// <summary>Days without training after which a sequence plan suggests easing back in. The plan itself never moves while the user is away.</summary>
+    public const int ReentryAfterDays = 21;
+
+    private async Task<ReentryView?> ReentryAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        if (!IsSequence(plan)) return null;
+        var lastWorkout = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id)
+            .OrderByDescending(l => l.PerformedAt).Select(l => (DateTimeOffset?)l.PerformedAt).FirstOrDefaultAsync(ct);
+        if (lastWorkout is not { } at) return null;
+        var days = (int)Math.Floor((clock.GetUtcNow() - at).TotalDays);
+        return days < ReentryAfterDays ? null : new ReentryView(days,
+            $"Llevas {days} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión.");
+    }
+
+    /// <summary>The user's recent workouts (any plan) as the recovery advisor needs them: sets done per exercise and how it felt.</summary>
+    private async Task<IReadOnlyList<RecoveryExposure>> RecoveryHistoryAsync(Guid userId, DateTimeOffset now, CancellationToken ct)
+    {
+        var since = now.AddDays(-RecoveryLookbackDays);
+        var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets)
+            .Where(l => l.UserId == userId && l.PerformedAt >= since).OrderBy(l => l.PerformedAt).ToListAsync(ct);
+        var ids = logs.Select(l => l.PlannedSessionId).ToList();
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
+        var exposures = new List<RecoveryExposure>();
+        foreach (var log in logs)
+        {
+            if (!sessions.TryGetValue(log.PlannedSessionId, out var session)) continue;
+            var loaded = LoadedExercises(log.ExerciseFeedbackJson);
+            var prescribed = PrescriptionJson.Read(session.PrescriptionJson);
+            var exercises = new List<RecoveryExercise>();
+            foreach (var group in log.Sets.Where(s => s.Completed).GroupBy(s => s.ExerciseId, StringComparer.OrdinalIgnoreCase))
+            {
+                var exercise = prescribed.FirstOrDefault(e => string.Equals(e.ExerciseId, group.Key, StringComparison.OrdinalIgnoreCase));
+                if (exercise is null) continue;
+                var rirs = group.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
+                exercises.Add(new RecoveryExercise(
+                    exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), exercise.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
+                    group.Count(), rirs.Count == group.Count() ? rirs.Average() : null, loaded.Contains(group.Key)));
+            }
+            exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
+        }
+        return exposures;
+    }
+
+    private static HashSet<string> LoadedExercises(string? json)
+    {
+        var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(json)) return result;
+        try
+        {
+            foreach (var item in System.Text.Json.JsonDocument.Parse(json).RootElement.EnumerateArray())
+                if (item.TryGetProperty("exerciseId", out var id) && item.TryGetProperty("preFatigue", out var fatigue)
+                    && string.Equals(fatigue.GetString(), "loaded", StringComparison.OrdinalIgnoreCase) && id.GetString() is { } name)
+                    result.Add(name);
+        }
+        catch (System.Text.Json.JsonException) { }
+        return result;
     }
 
     public async Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct)
@@ -317,7 +473,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var catalog = await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id))
             .Select(e => new { e.Id, e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct);
         var info = catalog.ToDictionary(e => e.Id, e => new ProgressExerciseInfo(e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles));
-        var goal = (await ActivePlanAsync(userId, ct))?.TrainingDays.Length ?? 0;
+        var goal = (await ActivePlanAsync(userId, ct))?.SessionsPerPeriod ?? 0;
         return ProgressCalculator.Build(
             rows.Select(r => new ProgressSetRow(r.ExerciseId, r.LogId, r.LoggedAt, r.WeightKg, r.Repetitions)).ToList(), info, zone, Today, goal);
     }
@@ -327,7 +483,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
-        var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
+        var position = await PositionAsync(plan, ct);
         var started = position.State != PlanTimeline.NotStarted;
 
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id)
@@ -344,8 +500,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var weeks = new List<WeekLoadView>(plan.TotalWeeks);
         for (var week = 1; week <= plan.TotalWeeks; week++)
         {
-            var start = PlanSchedule.WeekStart(plan.StartDate, week);
-            var phase = plan.Phases.FirstOrDefault(p => start >= p.StartDate && start <= p.EndDate)?.PhaseType;
+            var start = WeekStartOf(plan, week);
+            var phase = plan.Phases.FirstOrDefault(p => week >= p.StartPeriod && week <= p.EndPeriod)?.PhaseType;
             var hasPlanned = plannedByWeek.TryGetValue(week, out var planned);
             var reached = started && week <= position.Week;
             loggedByWeek.TryGetValue(week, out var logged);
@@ -560,7 +716,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var changed = 0;
             IEnumerable<PlannedSession> window = upcoming;
             if (action.Kind == TrainingAutoAdaptationKind.Deload)
-                window = upcoming.Where(s => s.Date <= Today.AddDays(TrainingAutoAdaptationPolicy.DeloadWindowDays));
+                window = IsSequence(plan)
+                    ? upcoming.Take(Math.Max(1, plan.SessionsPerPeriod)) // no calendar: the next rotation of sessions
+                    : upcoming.Where(s => s.Date <= Today.AddDays(TrainingAutoAdaptationPolicy.DeloadWindowDays));
             else if (action.Kind != TrainingAutoAdaptationKind.HoldProgression)
                 window = upcoming.Take(MaximumFutureSessionsToAdapt);
             foreach (var future in window)
@@ -720,7 +878,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var targets = new List<PlannedSession> { context.Session };
         if (applyToRemainingBlock)
             targets.AddRange(await db.PlannedSessions.Where(s => s.PlanId == context.Plan!.Id && s.MesocycleId == context.Session.MesocycleId
-                && s.Status == PlannedSessionStatus.Planned && s.Date > context.Session.Date).ToListAsync(ct));
+                && s.Status == PlannedSessionStatus.Planned && s.SequenceIndex > context.Session.SequenceIndex).ToListAsync(ct));
         var primarySwapped = false;
         foreach (var target in targets)
         {
@@ -777,7 +935,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     private async Task<WeekView> BuildWeekAsync(TrainingPlan plan, PlanPosition position, CancellationToken ct)
     {
-        var slots = PlanSchedule.Slots(plan.StartDate, plan.Phases.Select(p => new PhaseSpan(p.SequenceNumber, p.PhaseType, p.StartDate, p.EndDate)));
+        var slots = SlotsOf(plan);
         var slot = slots.First(s => s.Contains(position.Week));
         var locked = await IsLockedAsync(plan, ct);
         var mesocycle = plan.Mesocycles.FirstOrDefault(m => m.Sequence == slot.Sequence);
@@ -785,22 +943,22 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             // A generated plan without Premium stays readable, but a GET must not silently create its next block.
             if (locked)
-                return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
-                    PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), position.State.ToString(), null, [], Locked: true);
+                return new WeekView(plan.Id, position.Week, WeekStartOf(plan, position.Week), WeekEndOf(plan, position.Week),
+                    position.State.ToString(), null, [], Locked: true);
             mesocycle = await GenerateMesocycleAsync(plan, slot, ct);
             if (mesocycle is null)
-                return new WeekView(plan.Id, position.Week, PlanSchedule.WeekStart(plan.StartDate, position.Week),
-                    PlanSchedule.WeekStart(plan.StartDate, position.Week).AddDays(6), "GenerationFailed", null, []);
+                return new WeekView(plan.Id, position.Week, WeekStartOf(plan, position.Week), WeekEndOf(plan, position.Week),
+                    "GenerationFailed", null, []);
         }
 
         var sessions = await db.PlannedSessions.AsNoTracking()
-            .Where(s => s.PlanId == plan.Id && s.WeekNumber == position.Week).OrderBy(s => s.Date).ToListAsync(ct);
+            .Where(s => s.PlanId == plan.Id && s.WeekNumber == position.Week).OrderBy(s => s.SequenceIndex).ToListAsync(ct);
         var ids = sessions.Select(s => s.Id).ToList();
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => ids.Contains(l.PlannedSessionId)).ToListAsync(ct);
-        var weekStart = PlanSchedule.WeekStart(plan.StartDate, position.Week);
+        var weekStart = WeekStartOf(plan, position.Week);
         var last = await LastPerformanceAsync(plan.UserId, sessions, await subscriptions.HasPremiumAsync(plan.UserId, ct), ct);
         return new WeekView(
-            plan.Id, position.Week, weekStart, weekStart.AddDays(6), position.State.ToString(),
+            plan.Id, position.Week, weekStart, weekStart?.AddDays(6), position.State.ToString(),
             new MesocycleView(mesocycle.Sequence, mesocycle.PhaseType, mesocycle.IsDeload, mesocycle.StartWeek, mesocycle.Weeks,
                 position.Week - mesocycle.StartWeek + 1),
             sessions.Select(s => ToSessionView(s, logs.FirstOrDefault(l => l.PlannedSessionId == s.Id), last)).ToList(), locked);
@@ -877,6 +1035,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         var firstIndex = (await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0) + 1;
         var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
+        // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
+        // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
+        db.TrainingMesocycles.Add(mesocycle);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -893,7 +1054,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// <summary>Numbers the sessions of a block in program order (planned date, then title), continuing from <paramref name="firstIndex"/>.</summary>
     private static int NumberSessions(TrainingMesocycle mesocycle, int firstIndex)
     {
-        foreach (var session in mesocycle.Sessions.OrderBy(s => s.Date).ThenBy(s => s.Title, StringComparer.Ordinal))
+        // A sequence plan has no dates: its sessions keep the order they were generated in (a stable sort leaves them alone).
+        foreach (var session in mesocycle.Sessions.OrderBy(s => s.WeekNumber).ThenBy(s => s.Date).ThenBy(s => s.Date is null ? string.Empty : s.Title, StringComparer.Ordinal))
             session.SequenceIndex = firstIndex++;
         return firstIndex;
     }
@@ -920,9 +1082,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     private static PlanProfile ProfileOf(TrainingPlan plan) => new(
         Enum.Parse<TrainingGoal>(plan.Goal), Enum.Parse<TrainingExperience>(plan.Experience), plan.StartDate, plan.TotalWeeks,
-        plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(), plan.MaxSessionMinutes, plan.AvailableEquipment,
+        IsSequence(plan) ? PlanProfileParser.SyntheticDays(plan.SessionsPerPeriod).ToList() : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
+        plan.MaxSessionMinutes, plan.AvailableEquipment,
         plan.ExcludedExerciseIds, plan.Limitations, Enum.Parse<TrainingProgramSplit>(plan.Split), plan.IncludeDeloadPhases,
-        plan.DeloadEveryTrainingWeeks);
+        plan.DeloadEveryTrainingWeeks, plan.SchedulingMode, plan.SessionsPerPeriod);
 
     /// <summary>The most recent completed performance of each exercise, so a new block starts from real loads.</summary>
     private async Task<IReadOnlyList<TrainingLoadReference>> LoadReferencesAsync(Guid userId, CancellationToken ct)
@@ -947,6 +1110,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// <summary>Sessions can be used in the current week and the one before (to log a late workout).</summary>
     private string? WindowCheck(TrainingPlan plan, PlannedSession session)
     {
+        if (IsSequence(plan)) return null; // no clock to measure against: any session of the plan can be used
         var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
         if (position.State == PlanTimeline.Finished) return "El plan ha terminado.";
         return session.WeekNumber == position.Week || session.WeekNumber == position.Week - 1
@@ -956,24 +1120,23 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     // ---------------------------------------------------------------- views
 
-    private PlanView ToView(TrainingPlan plan)
+    private PlanView ToView(TrainingPlan plan, PlanPosition position)
     {
-        var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
-        var today = Today;
-        var phase = plan.Phases.OrderBy(p => p.SequenceNumber)
-            .FirstOrDefault(p => today >= p.StartDate && today <= p.EndDate)
-            ?? (position.State == PlanTimeline.NotStarted ? plan.Phases.MinBy(p => p.SequenceNumber) : null);
+        // The phase is read from the periods in both modes (the week of a calendar plan, the cycle of a sequence plan).
+        var phase = position.State == PlanTimeline.Finished ? null
+            : plan.Phases.OrderBy(p => p.SequenceNumber).FirstOrDefault(p => position.Week >= p.StartPeriod && position.Week <= p.EndPeriod);
         return new PlanView(
             plan.Id, plan.Status.ToString(), plan.Origin.ToString(), position.State.ToString(), position.Week, plan.TotalWeeks, plan.StartDate,
-            plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1), plan.Goal, plan.Experience, plan.Split, plan.TrainingDays,
+            IsSequence(plan) ? null : plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1), plan.Goal, plan.Experience, plan.Split, plan.TrainingDays,
             plan.MaxSessionMinutes, plan.AvailableEquipment, plan.ExcludedExerciseIds, plan.Limitations, phase?.SequenceNumber,
             new MacrocycleView(plan.MacrocycleName, plan.MacrocycleNotes, plan.Phases.OrderBy(p => p.SequenceNumber)
-                .Select(p => new PhaseView(p.SequenceNumber, p.Name, p.PhaseType, p.StartDate, p.EndDate, p.Objective)).ToList()),
-            plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer);
+                .Select(p => new PhaseView(p.SequenceNumber, p.Name, p.PhaseType, p.StartDate, p.EndDate, p.Objective, p.StartPeriod, p.EndPeriod)).ToList()),
+            plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer,
+            plan.SchedulingMode.ToString(), plan.SessionsPerPeriod);
     }
 
     private static SessionView ToSessionView(PlannedSession session, WorkoutLog? log, IReadOnlyDictionary<string, LastPerformanceView>? last = null) => new(
-        session.Id, session.WeekNumber, session.Date, session.Date.DayOfWeek, session.Title, session.EstimatedDurationMinutes,
+        session.Id, session.WeekNumber, session.Date, session.Date?.DayOfWeek, session.Title, session.EstimatedDurationMinutes,
         session.Status.ToString(),
         PrescriptionJson.Read(session.PrescriptionJson).OrderBy(e => e.Order).Select(e => new ExerciseView(
             e.ExerciseId, e.ExerciseNameSnapshot, e.Order, e.Sets, e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve,

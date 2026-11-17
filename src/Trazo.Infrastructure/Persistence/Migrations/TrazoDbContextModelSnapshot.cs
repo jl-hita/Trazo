@@ -286,6 +286,8 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Split").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
             b.Property<DateOnly>("StartDate").HasColumnType("date");
             b.Property<int>("TotalWeeks").HasColumnType("integer");
+            b.Property<string>("SchedulingMode").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<int>("SessionsPerPeriod").HasColumnType("integer");
             b.Property<string[]>("TrainingDays").IsRequired().HasColumnType("text");
             b.Property<int>("MaxSessionMinutes").HasColumnType("integer");
             b.Property<string[]>("AvailableEquipment").IsRequired().HasColumnType("text");
@@ -316,8 +318,10 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<int>("SequenceNumber").HasColumnType("integer");
             b.Property<string>("Name").IsRequired().HasMaxLength(120).HasColumnType("character varying(120)");
             b.Property<string>("PhaseType").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
-            b.Property<DateOnly>("StartDate").HasColumnType("date");
-            b.Property<DateOnly>("EndDate").HasColumnType("date");
+            b.Property<int>("StartPeriod").HasColumnType("integer");
+            b.Property<int>("EndPeriod").HasColumnType("integer");
+            b.Property<DateOnly?>("StartDate").HasColumnType("date");
+            b.Property<DateOnly?>("EndDate").HasColumnType("date");
             b.Property<string>("Objective").IsRequired().HasMaxLength(400).HasColumnType("character varying(400)");
             b.HasKey("Id");
             b.HasIndex("PlanId", "SequenceNumber").IsUnique();
@@ -356,7 +360,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<Guid>("PlanId").HasColumnType("uuid");
             b.Property<Guid>("MesocycleId").HasColumnType("uuid");
             b.Property<int>("WeekNumber").HasColumnType("integer");
-            b.Property<DateOnly>("Date").HasColumnType("date");
+            b.Property<DateOnly?>("Date").HasColumnType("date");
             b.Property<int>("SequenceIndex").HasColumnType("integer");
             b.Property<string>("Title").IsRequired().HasMaxLength(160).HasColumnType("character varying(160)");
             b.Property<int>("EstimatedDurationMinutes").HasColumnType("integer");

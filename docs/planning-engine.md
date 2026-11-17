@@ -433,3 +433,31 @@ For a block whose phase is `intensification` (only strength plans of non-beginne
 shared engine) rewrites the generated prescription: lifts worked in 6 repetitions or fewer move to a lower range (floor 2; for example 3-6 becomes 2-4), the
 target RIR drops by one (never below 1), rest grows 30 s (max 300 s) and the target load, when there is one, follows the range with the Epley ratio (capped at +8 %,
 rounded to the load increment). Accessories keep their volume and range. Double progression and the adaptation work on the new range unchanged.
+
+## Next session and recovery (`GET /api/v1/plans/current/next`)
+
+The backend decides which session the user should do next; clients only show it.
+
+- `session`: the first **pending** session in program order (`sequenceIndex`), whatever its planned date. A session logged out of order does not move the program. `null` when nothing is pending (plan finished) or the plan is locked (`locked: true`).
+- `position`: `period` (plan week; in the asynchronous mode it will be the cycle), `sessionInPeriod`/`sessionsInPeriod` and the block (`mesocycle`).
+- `overdue`: pending sessions whose planned date has passed. They can still be registered (there is no window) and are never skipped automatically.
+- `schedulingMode`: `Calendar` today. `IPlanTimeline` (`CalendarTimeline`) answers "which is next / what is late"; the engine itself (generation, prescription, progression, adaptation) is shared by every mode.
+- `availability` (**Premium**; without it `availabilityLocked: true` and `availability: null`): `state` `Ready | Caution | Wait`, `availableAt`, `reasons` (Spanish, naming the muscles) and `alternatives` (later pending sessions that are ready now). It is advice: it never blocks logging.
+
+`RecoveryAdvisor` (application layer, not the shared engine) works per muscle, not with a fixed rest: effective sets (primary 1, secondary 0.5) over the last 6 days of the user's workouts, weighted by proximity to failure (RIR), scaled by experience, and lengthened by insufficient/partial recovery, session RPE >= 9, pain and "loaded" pre-fatigue answers. Window = `24 h + 5.5 h x weighted sets`, capped at 120 h; a muscle with fewer than 2 effective sets is not counted, and a pending session only counts muscles it trains with at least 3 effective sets. `Caution` = at most 12 h short. The coefficients are product values (constants in `RecoveryAdvisor`) to be tuned with real data.
+
+## Asynchronous split (`schedulingMode: "Sequence"`)
+
+A plan advances either by calendar weeks (`Calendar`, the default and every existing plan) or by the order of its sessions (`Sequence`): the user trains on whatever days suit them and the program continues from the session that follows the last one resolved. It is not a calendar plan without days: the **same engine** (generation, selection, prescription, progression, adaptation, recovery) runs for both, and only the answer to "where am I / what is next" changes (`IPlanTimeline`: `CalendarTimeline`, `SequenceTimeline`).
+
+- **Creation**: `POST /plans` with `schedulingMode: "Sequence"` and `sessionsPerPeriod` (2-6, the sessions of one rotation); `trainingDays` must not be sent. Manual plans (`POST /plans/manual`, free) accept `schedulingMode: "Sequence"` too: the routines are a rotation in the order given and `day` is not needed. `GET /plans/options` announces `schedulingModes` and the allowed `sessionsPerPeriod`. The mode is chosen at creation and does not change afterwards (archive and create another).
+- **Period**: the plan's unit of progress is the *period* (`weekNumber` in the responses): a week in a calendar plan, a **cycle** (one pass through the rotation) in a sequence plan. `totalWeeks` is the number of periods. Phases and blocks (mesocycles of at most 4 periods) are ranges of periods (`startPeriod`/`endPeriod` in `phases`), so the macrocycle structure is identical in both modes; the dates exist only in calendar plans.
+- **No dates**: in a sequence plan `date`, `day`, `weekStart`, `weekEnd`, `endDate` and the phase dates are `null`; `sequenceIndex` is the identity and order of every session. Clients must treat those fields as optional.
+- **Position**: the current period is the one of the first pending session; the plan is finished only when every period has been generated and every session resolved (done, partial or skipped). The clock never moves it. A block is generated when the previous one is resolved.
+- **Deloads and blocks follow progress**: a deload cycle is reached by resolving the cycles before it, never because weeks passed. The reactive deload (fatigue) still exists; its window is the next rotation of sessions (`sessionsPerPeriod`) instead of 7 days.
+- **Registration**: identical to the calendar mode (see "Planned vs performed vs registered"): any pending session can be logged at any time and in any order; a log older than newer ones already saved never changes the plan.
+- **Next session and recovery**: `GET /plans/current/next` returns the first pending session of the rotation, never any `overdue`, and (Premium) the recovery advice with ready alternatives, exactly as in the calendar mode. `reentry` appears after 21 days without training: the plan stays where it was and suggests easing back in (informational; it does not rewrite the plan).
+- **Compatibility**: migration `20261117150000_AsynchronousSplit` (existing plans become `Calendar`; `sessionsPerPeriod` from their training days; phase `startPeriod`/`endPeriod` back-filled from the dates; dates become nullable). `PlanView`, `SessionView`, `WeekView` and friends only gain fields or turn some dates nullable (always present in calendar plans). Android must read the new fields before offering the mode.
+- Fixed on the way: a block generated for an already tracked plan was saved as an UPDATE of an existing row and failed, so the second block of any plan could not be generated; it is now added explicitly.
+
+Not yet: the calendar plan's "recolocar plan desde hoy" after a week without logs, and an automatic lighter first session on re-entry.

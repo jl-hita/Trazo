@@ -5,9 +5,9 @@ namespace Trazo.Application.Planning;
 /// <summary>A validated manual plan; exercises are still ids that the service resolves against the catalog.</summary>
 public sealed record ManualPlan(
     string Name, string Notes, DateOnly StartDate, int TotalWeeks, TrainingGoal Goal, TrainingExperience Experience,
-    IReadOnlyList<ManualDay> Days);
+    IReadOnlyList<ManualDay> Days, Trazo.Domain.Planning.PlanSchedulingMode SchedulingMode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar);
 
-public sealed record ManualDay(DayOfWeek Day, string Title, IReadOnlyList<ManualExercise> Exercises);
+public sealed record ManualDay(DayOfWeek? Day, string Title, IReadOnlyList<ManualExercise> Exercises);
 
 public sealed record ManualExercise(string ExerciseId, int Sets, int MinRepetitions, int MaxRepetitions, decimal? TargetRir, int RestSeconds, string? SupersetGroup = null);
 
@@ -53,16 +53,28 @@ public static class ManualPlanParser
         var experience = TrainingExperience.Intermediate;
         if (!string.IsNullOrWhiteSpace(input.Experience) && !TryEnum(input.Experience, out experience)) Fail("experience", "El nivel de experiencia no es válido.");
 
+        var mode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar;
+        if (!string.IsNullOrWhiteSpace(input.SchedulingMode) && !TryEnum(input.SchedulingMode, out mode))
+            Fail("schedulingMode", $"El modo debe ser uno de: {string.Join(", ", Enum.GetNames<Trazo.Domain.Planning.PlanSchedulingMode>())}.");
+        var sequence = mode == Trazo.Domain.Planning.PlanSchedulingMode.Sequence;
+
         var days = new List<ManualDay>();
-        if ((input.Days?.Length ?? 0) is 0 or > 7) Fail("days", "Indica entre 1 y 7 días de entrenamiento por semana.");
+        if ((input.Days?.Length ?? 0) is 0 or > 7)
+            Fail("days", sequence ? "Indica entre 1 y 7 rutinas." : "Indica entre 1 y 7 días de entrenamiento por semana.");
         var seen = new HashSet<DayOfWeek>();
         var index = 0;
         foreach (var day in (input.Days ?? []).Take(7))
         {
             index++;
             var key = $"days.{index}";
-            if (day is null || !TryEnum<DayOfWeek>(day.Day, out var weekday)) { Fail(key, "El día no es válido."); continue; }
-            if (!seen.Add(weekday)) Fail(key, "No se puede repetir un día de la semana.");
+            DayOfWeek weekday = default;
+            if (day is null) { Fail(key, "La rutina no es válida."); continue; }
+            // In a sequence plan the routines are a rotation in the order given: there are no days of the week.
+            if (!sequence)
+            {
+                if (!TryEnum(day.Day, out weekday)) { Fail(key, "El día no es válido."); continue; }
+                if (!seen.Add(weekday)) Fail(key, "No se puede repetir un día de la semana.");
+            }
             var title = (day.Title ?? string.Empty).Trim();
             if (title.Length is 0 or > 60) Fail($"{key}.title", "El título de la rutina es obligatorio (máximo 60 caracteres).");
             var exercises = new List<ManualExercise>();
@@ -97,11 +109,12 @@ public static class ManualPlanParser
                 if (positions.Count is < 2 or > 3 || positions[^1] - positions[0] != positions.Count - 1)
                     Fail($"{key}.exercises", $"La superserie {g.Key} necesita dos o tres ejercicios seguidos.");
             }
-            days.Add(new ManualDay(weekday, title, exercises));
+            days.Add(new ManualDay(sequence ? null : weekday, title, exercises));
         }
 
         if (errors.Count > 0) return new(null, errors.ToDictionary(p => p.Key, p => p.Value.ToArray()));
-        return new(new ManualPlan(name, notes, start, weeks, goal, experience, days.OrderBy(d => ((int)d.Day + 6) % 7).ToList()),
+        return new(new ManualPlan(name, notes, start, weeks, goal, experience,
+                sequence ? days : days.OrderBy(d => ((int)d.Day!.Value + 6) % 7).ToList(), mode),
             new Dictionary<string, string[]>());
     }
 
