@@ -34,8 +34,9 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
                 if (output.Length is 0 or > MaxMappingBytes)
                     throw new InvalidDataException("The R8 mapping file is empty or exceeds the size limit.");
             }
-            await using var mappingFile = File.OpenRead(temporary);
-            var hash = Convert.ToHexString(await SHA256.HashDataAsync(mappingFile, ct)).ToLowerInvariant();
+            string hash;
+            await using (var mappingFile = File.OpenRead(temporary))
+                hash = Convert.ToHexString(await SHA256.HashDataAsync(mappingFile, ct)).ToLowerInvariant();
             File.Move(temporary, destination, overwrite: true);
             return hash;
         }
