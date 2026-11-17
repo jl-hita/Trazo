@@ -6,7 +6,8 @@ public sealed record ParsedSet(string ExerciseId, int SetNumber, decimal? Weight
 
 public sealed record ParsedLog(
     WorkoutOutcome Outcome, string NonCompletionReason, string Recovery, decimal? SessionRpe, bool Pain, string? Notes,
-    IReadOnlyList<ParsedSet> Sets, IReadOnlyDictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null);
+    IReadOnlyList<ParsedSet> Sets, IReadOnlyDictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null,
+    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null);
 
 public sealed record ParsedLogResult(ParsedLog? Log, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -81,8 +82,12 @@ public static class LogSessionValidator
             feedback[id] = new ExerciseFeedbackInput(stimulus, discomfort, preFatigue);
         }
 
+        if (request.PerformedAt is { } performed && performed.Year < 2000) Fail("performedAt", "La fecha del entrenamiento no es válida.");
+        if (request.ClientRequestId == Guid.Empty) Fail("clientRequestId", "El identificador de la petición no es válido.");
+
         if (errors.Count > 0) return new(null, errors.ToDictionary(p => p.Key, p => p.Value.ToArray()));
-        return new(new ParsedLog(outcome, reason!, recovery!, request.SessionRpe, request.PainReported ?? false, notes, sets, feedback),
+        return new(new ParsedLog(outcome, reason!, recovery!, request.SessionRpe, request.PainReported ?? false, notes, sets, feedback,
+                request.PerformedAt, request.ClientRequestId),
             new Dictionary<string, string[]>());
     }
 

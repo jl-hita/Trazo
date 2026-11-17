@@ -47,6 +47,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         "Plan creado por ti. Con Premium, TRAZO adapta cargas, series y descansos según cómo te va. " +
         "No es consejo médico: si notas dolor, detén el ejercicio y consulta a un especialista.";
 
+    private const int FutureToleranceMinutes = 5;
     private const int RecentLogsForHistory = 60;
     private const int LoadReferenceLogs = 40;
     private const int MaximumFutureSessionsToAdapt = TrainingAutoAdaptationPolicy.MaximumFutureSessions;
@@ -137,7 +138,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
                 "No se pudo generar un plan con ese perfil.", new Dictionary<string, string[]> { ["plan"] = generation.Errors.ToArray() });
         plan.EngineVersion = generation.EngineVersion;
-        AddMesocycle(plan, firstSlot, generation, now);
+        AddMesocycle(plan, firstSlot, generation, now, 1);
 
         db.TrainingPlans.Add(plan);
         try
@@ -186,6 +187,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         });
 
         var slots = PlanSchedule.Slots(plan.StartDate, plan.Phases.Select(p => new PhaseSpan(p.SequenceNumber, p.PhaseType, p.StartDate, p.EndDate)));
+        var nextIndex = 1;
         foreach (var slot in slots)
         {
             var mesocycle = new TrainingMesocycle
@@ -215,6 +217,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                         Status = PlannedSessionStatus.Planned, UpdatedAt = now
                     });
                 }
+            nextIndex = NumberSessions(mesocycle, nextIndex);
             plan.Mesocycles.Add(mesocycle);
         }
 
@@ -286,7 +289,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.PlanId == plan.Id)
-            .OrderByDescending(l => l.LoggedAt).Take(Math.Clamp(take, 1, 100)).ToListAsync(ct);
+            .OrderByDescending(l => l.PerformedAt).Take(Math.Clamp(take, 1, 100)).ToListAsync(ct);
         var ids = logs.Select(l => l.PlannedSessionId).ToList();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
         return logs.Select(log =>
@@ -294,7 +297,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var session = sessions[log.PlannedSessionId];
             var planned = PrescriptionJson.Read(session.PrescriptionJson).Sum(e => e.Sets);
             return new HistoryItem(session.Id, session.WeekNumber, session.Date, session.Title, log.Outcome.ToString(),
-                log.LoggedAt, log.Sets.Count(s => s.Completed), planned);
+                log.LoggedAt, log.Sets.Count(s => s.Completed), planned, log.PerformedAt);
         }).ToList();
     }
 
@@ -309,7 +312,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
                           join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
                           where log.UserId == userId && set.Completed
-                          select new { set.ExerciseId, LogId = log.Id, log.LoggedAt, set.WeightKg, set.Repetitions }).ToListAsync(ct);
+                          select new { set.ExerciseId, LogId = log.Id, LoggedAt = log.PerformedAt, set.WeightKg, set.Repetitions }).ToListAsync(ct);
         var ids = rows.Select(r => r.ExerciseId).Distinct().ToList();
         var catalog = await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id))
             .Select(e => new { e.Id, e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct);
@@ -375,13 +378,34 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // A retry of a request that already succeeded (the client lost the answer) must not fail: when the stored log is
         // the same as the one sent, the saved result is returned again. A different log for the session stays a conflict.
         var existing = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
+        if (log.ClientRequestId is { } requestKey)
+        {
+            var byKey = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets)
+                .FirstOrDefaultAsync(l => l.UserId == userId && l.ClientRequestId == requestKey, ct);
+            if (byKey is not null && byKey.PlannedSessionId != session.Id)
+                return PlanResult<LogResult>.Fail(PlanFailure.InvalidRequest, "Ese identificador de petición ya se usó para otra sesión.",
+                    new Dictionary<string, string[]> { ["clientRequestId"] = ["Ya se usó para otra sesión."] });
+            existing ??= byKey;
+        }
         if (existing is not null)
             return await ReplayOrConflictAsync(session, existing, log, ct);
         if (await IsLockedAsync(plan, ct)) return PlanResult<LogResult>.Fail(PlanFailure.PremiumRequired, LockedMessage);
-        var window = WindowCheck(plan, session);
-        if (window is not null) return PlanResult<LogResult>.Fail(PlanFailure.SessionOutOfWindow, window);
+        // There is no window: a session can be registered whenever the plan is active, however late, because the program
+        // order (SequenceIndex) and the real time of the workout (PerformedAt) are what the engine reads, not the planned date.
         if (session.Status != PlannedSessionStatus.Planned)
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
+
+        var now = clock.GetUtcNow();
+        var zone = await zones.ResolveAsync(userId, ct);
+        var performedAt = log.PerformedAt ?? now;
+        if (performedAt > now.AddMinutes(FutureToleranceMinutes))
+            return PlanResult<LogResult>.Fail(PlanFailure.InvalidRequest, "La fecha del entrenamiento no puede estar en el futuro.",
+                new Dictionary<string, string[]> { ["performedAt"] = ["No puede estar en el futuro."] });
+        if (performedAt > now) performedAt = now;
+        var performedOn = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(performedAt, zone).DateTime);
+        if (performedOn < plan.StartDate)
+            return PlanResult<LogResult>.Fail(PlanFailure.InvalidRequest, "El entrenamiento no puede ser anterior al inicio del plan.",
+                new Dictionary<string, string[]> { ["performedAt"] = ["Es anterior al inicio del plan."] });
 
         var prescribed = PrescriptionJson.Read(session.PrescriptionJson);
         var errors = new Dictionary<string, string[]>();
@@ -394,10 +418,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         if (errors.Count > 0)
             return PlanResult<LogResult>.Fail(PlanFailure.ExerciseNotInSession, "El registro contiene series que no corresponden a la sesión.", errors);
 
-        var now = clock.GetUtcNow();
         var workout = new WorkoutLog
         {
             Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, PlannedSessionId = session.Id, LoggedAt = now,
+            PerformedAt = performedAt, PerformedOn = performedOn, TimeZoneId = zone.Id, ClientRequestId = log.ClientRequestId,
             Outcome = log.Outcome, NonCompletionReason = log.NonCompletionReason, Recovery = log.Recovery,
             SessionRpe = log.SessionRpe, PainReported = log.Pain, Notes = log.Notes,
             ExerciseFeedbackJson = log.ExerciseFeedback is { Count: > 0 }
@@ -442,7 +466,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     private async Task<PlanResult<LogResult>> ReplayOrConflictAsync(PlannedSession session, WorkoutLog existing, ParsedLog sent, CancellationToken ct)
     {
-        if (!SameLog(existing, sent))
+        var sameRequest = sent.ClientRequestId is { } key && existing.ClientRequestId == key;
+        if (!sameRequest && !SameLog(existing, sent))
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
         var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id).OrderBy(a => a.AppliedAt).ToListAsync(ct))
             .Select(a => new AppliedAdaptationView(a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation)).ToList();
@@ -470,9 +495,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(m => m.PlanId == plan.Id).ToDictionaryAsync(m => m.Id, ct);
         var pastLogs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets)
-            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id).OrderByDescending(l => l.LoggedAt).Take(RecentLogsForHistory)
-            .ToListAsync(ct);
-        var logs = pastLogs.OrderBy(l => l.LoggedAt).Append(workout).ToList();
+            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id).OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt)
+            .Take(RecentLogsForHistory).ToListAsync(ct);
+        // The chronology of the evidence is when the workouts HAPPENED, not when they were registered.
+        var logs = pastLogs.Append(workout).OrderBy(l => l.PerformedAt).ThenBy(l => l.LoggedAt).ToList();
+        var evidenceNow = logs[^1].PerformedAt;
+        // A late log (older than a workout already saved) enters the history but must not change the plan: the plan was
+        // already adapted with newer data, and applying an older reading on top would contradict it.
+        var isHead = workout.PerformedAt >= evidenceNow;
         var sessionIds = logs.Select(l => l.PlannedSessionId).ToList();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => sessionIds.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
         sessions[logged.Id] = logged;
@@ -491,29 +521,40 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 var sets = log.Sets.Where(s => s.ExerciseId == exercise.ExerciseId).OrderBy(s => s.SetNumber)
                     .Select(s => new SetRecord(s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported)).ToArray();
                 exposures.Add(new ExerciseExposureRecord(
-                    log.LoggedAt, exercise.ExerciseId, exercise.Sets, exercise.MinRepetitions, exercise.MaxRepetitions,
+                    log.PerformedAt, exercise.ExerciseId, exercise.Sets, exercise.MinRepetitions, exercise.MaxRepetitions,
                     exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome, log.Recovery,
                     original.TryGetValue(exercise.ExerciseId, out var dose) ? dose : null));
             }
             var plannedSets = exercises.Sum(e => e.Sets);
-            sessionRecords.Add(new SessionRecord(log.LoggedAt, log.Outcome, log.NonCompletionReason, log.Recovery, log.PainReported,
+            sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason, log.Recovery, log.PainReported,
                 log.SessionRpe, plannedSets > 0 ? Math.Min(1m, (decimal)log.Sets.Count(s => s.Completed) / plannedSets) : null));
         }
 
-        var recent = (await db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id && a.AppliedAt > now.AddDays(-30)).ToListAsync(ct))
+        // Cooldowns run on the timeline of the evidence (EvidenceAt), so a late registration cannot start or skip one.
+        var recent = (await db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id).ToListAsync(ct))
+            .Where(a => (a.EvidenceAt ?? a.AppliedAt) > evidenceNow.AddDays(-30))
             .Where(a => !a.Kind.StartsWith(MuscleKindPrefix, StringComparison.Ordinal))
-            .Select(a => new TrainingAutoAdaptationRecord(KindOf(a.Kind), a.AppliedAt)).ToList();
+            .Select(a => new TrainingAutoAdaptationRecord(KindOf(a.Kind), a.EvidenceAt ?? a.AppliedAt)).ToList();
 
         var outcome = AdaptationPlanner.Evaluate(new AdaptationInput(
-            exposures, sessionRecords, prescribed.Select(e => e.ExerciseId).ToArray(), recent, now));
+            exposures, sessionRecords, prescribed.Select(e => e.ExerciseId).ToArray(), recent, evidenceNow));
 
-        // Upcoming sessions that can still change: planned, not logged, after this one.
-        var upcoming = await db.PlannedSessions
-            .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned && s.Date > logged.Date)
-            .OrderBy(s => s.Date).Take(40).ToListAsync(ct);
+        // Sessions that can still change: pending ones AFTER the furthest point of the program already resolved. This is the
+        // program order (SequenceIndex), not the planned date: forgotten sessions of the past never use up an adaptation, and
+        // a session logged out of order cannot touch the ones before it.
+        var resolvedUpTo = Math.Max(logged.SequenceIndex, await db.PlannedSessions.Where(s => s.PlanId == plan.Id && s.Status != PlannedSessionStatus.Planned)
+            .Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0);
+        var upcoming = isHead
+            ? await db.PlannedSessions
+                .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned && s.SequenceIndex > resolvedUpTo)
+                .OrderBy(s => s.SequenceIndex).Take(40).ToListAsync(ct)
+            : [];
         var applied = new List<AppliedAdaptationView>();
+        var lateNotes = new List<string>();
+        if (!isHead)
+            lateNotes.Add("Este entrenamiento es anterior a otros ya registrados: se guarda en el historial sin cambiar el plan.");
 
-        foreach (var action in outcome.Actions)
+        foreach (var action in isHead ? outcome.Actions : [])
         {
             var targets = action.ExerciseIds.ToHashSet(StringComparer.Ordinal);
             var changed = 0;
@@ -543,7 +584,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id,
                 Kind = TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), ExerciseIds = action.ExerciseIds.ToArray(),
-                SessionsChanged = changed, Explanation = action.Explanation, AppliedAt = now
+                SessionsChanged = changed, Explanation = action.Explanation, AppliedAt = now, EvidenceAt = evidenceNow
             });
             applied.Add(new AppliedAdaptationView(TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), action.ExerciseIds, changed, action.Explanation));
         }
@@ -562,12 +603,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
         }
 
-        var feedback = await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, ct);
+        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, ct) : ([], []);
         applied.AddRange(feedback.Applied);
 
         return new AdaptationReport(
             outcome.Exercises.Select(a => new ExerciseAdviceView(a.ExerciseId, a.Action, a.Explanation, a.NextLoadKg, a.SuggestedRepetitions)).ToList(),
-            outcome.SessionAction, outcome.SessionExplanation, applied, outcome.Notes.Concat(feedback.Notes).ToList());
+            outcome.SessionAction, outcome.SessionExplanation, applied, outcome.Notes.Concat(feedback.Notes).Concat(lateNotes).ToList());
 
         static bool Set(out string target, string value) { target = value; return true; }
     }
@@ -582,21 +623,25 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// never automated: it only produces a note. Every change has a 14-day cooldown per exercise and is stored in the audit.
     /// </summary>
     private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
-        TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming, DateTimeOffset now, CancellationToken ct)
+        TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming, DateTimeOffset now,
+        DateTimeOffset evidenceNow, CancellationToken ct)
     {
         var applied = new List<AppliedAdaptationView>();
         var notes = new List<string>();
         var past = await db.WorkoutLogs.AsNoTracking()
             .Where(l => l.PlanId == plan.Id && l.Id != workout.Id && l.ExerciseFeedbackJson != null)
-            .OrderByDescending(l => l.LoggedAt).Take(12).ToListAsync(ct);
+            .OrderByDescending(l => l.PerformedAt).Take(12).ToListAsync(ct);
         var logs = new[] { workout }.Concat(past).ToList();
         if (logs.All(l => string.IsNullOrWhiteSpace(l.ExerciseFeedbackJson))) return (applied, notes);
 
         var ids = logs.Select(l => l.PlannedSessionId).ToList();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
         sessions[logged.Id] = logged;
-        var records = logs.Where(l => sessions.ContainsKey(l.PlannedSessionId)).Select(l => new TrainingMuscleFeedbackRecord(
-            sessions[l.PlannedSessionId].Date, l.Outcome.ToString(), l.ExerciseFeedbackJson, sessions[l.PlannedSessionId].PrescriptionJson)).ToList();
+        // The engine treats records with the same date as ONE session and orders them by date. Two workouts can happen on the same
+        // day, so each log gets its own ordinal "day" in chronological order (what matters to the engine is the order and that they differ).
+        var ordered = logs.Where(l => sessions.ContainsKey(l.PlannedSessionId)).OrderBy(l => l.PerformedAt).ThenBy(l => l.LoggedAt).ToList();
+        var records = ordered.Select((l, index) => new TrainingMuscleFeedbackRecord(
+            DateOnly.FromDayNumber(index), l.Outcome.ToString(), l.ExerciseFeedbackJson, sessions[l.PlannedSessionId].PrescriptionJson)).ToList();
         var week = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == logged.WeekNumber)
             .Select(s => s.PrescriptionJson).ToListAsync(ct);
         var planned = TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets(week);
@@ -604,7 +649,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var decisions = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings);
 
         var cooling = (await db.PlanAdaptations.AsNoTracking()
-            .Where(a => a.PlanId == plan.Id && a.Kind.StartsWith(MuscleKindPrefix) && a.AppliedAt > now.AddDays(-MuscleCooldownDays)).ToListAsync(ct))
+            .Where(a => a.PlanId == plan.Id && a.Kind.StartsWith(MuscleKindPrefix)).ToListAsync(ct))
+            .Where(a => (a.EvidenceAt ?? a.AppliedAt) > evidenceNow.AddDays(-MuscleCooldownDays))
             .SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
         foreach (var decision in decisions)
         {
@@ -628,7 +674,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             db.PlanAdaptations.Add(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = kind, ExerciseIds = [decision.ExerciseId],
-                SessionsChanged = changed, Explanation = decision.Explanation, AppliedAt = now
+                SessionsChanged = changed, Explanation = decision.Explanation, AppliedAt = now, EvidenceAt = evidenceNow
             });
             applied.Add(new AppliedAdaptationView(kind, [decision.ExerciseId], changed, decision.Explanation));
             // One exercise can be proposed for several of its muscles at once: change it only once.
@@ -777,7 +823,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
                           join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
                           where log.UserId == userId && ids.Contains(set.ExerciseId) && set.Completed && !set.PainReported
-                          select new { set.ExerciseId, log.Id, log.LoggedAt, set.SetNumber, set.WeightKg, set.Repetitions, set.Rir })
+                          select new { set.ExerciseId, log.Id, LoggedAt = log.PerformedAt, log.PerformedOn, set.SetNumber, set.WeightKg, set.Repetitions, set.Rir })
             .ToListAsync(ct);
         foreach (var byExercise in rows.GroupBy(r => r.ExerciseId))
         {
@@ -794,7 +840,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 basis = atTop ? "increase" : "repeat";
             }
             result[byExercise.Key] = new LastPerformanceView(
-                DateOnly.FromDateTime(sets[0].LoggedAt.UtcDateTime),
+                sets[0].PerformedOn,
                 sets.Select(r => new LastSetView(r.SetNumber, r.WeightKg, r.Repetitions, r.Rir)).ToList(), suggested, basis);
         }
         return result;
@@ -829,7 +875,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             loadReferences: await LoadReferencesAsync(plan.UserId, ct));
         if (!generation.Succeeded) return null;
 
-        var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow());
+        var firstIndex = (await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0) + 1;
+        var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -843,7 +890,16 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return mesocycle;
     }
 
-    private static TrainingMesocycle AddMesocycle(TrainingPlan plan, MesocycleSlot slot, MesocycleGeneration generation, DateTimeOffset now)
+    /// <summary>Numbers the sessions of a block in program order (planned date, then title), continuing from <paramref name="firstIndex"/>.</summary>
+    private static int NumberSessions(TrainingMesocycle mesocycle, int firstIndex)
+    {
+        foreach (var session in mesocycle.Sessions.OrderBy(s => s.Date).ThenBy(s => s.Title, StringComparer.Ordinal))
+            session.SequenceIndex = firstIndex++;
+        return firstIndex;
+    }
+
+    private static TrainingMesocycle AddMesocycle(
+        TrainingPlan plan, MesocycleSlot slot, MesocycleGeneration generation, DateTimeOffset now, int firstIndex)
     {
         var mesocycle = new TrainingMesocycle
         {
@@ -857,6 +913,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 Title = session.Title, EstimatedDurationMinutes = session.EstimatedDurationMinutes,
                 PrescriptionJson = session.PrescriptionJson, Status = PlannedSessionStatus.Planned, UpdatedAt = now
             });
+        NumberSessions(mesocycle, firstIndex);
         plan.Mesocycles.Add(mesocycle);
         return mesocycle;
     }
@@ -871,7 +928,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private async Task<IReadOnlyList<TrainingLoadReference>> LoadReferencesAsync(Guid userId, CancellationToken ct)
     {
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.UserId == userId)
-            .OrderByDescending(l => l.LoggedAt).Take(LoadReferenceLogs).ToListAsync(ct);
+            .OrderByDescending(l => l.PerformedAt).Take(LoadReferenceLogs).ToListAsync(ct);
         var references = new List<TrainingLoadReference>();
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var log in logs)
@@ -928,5 +985,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
             log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
-                .Select(s => new LoggedSetView(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported)).ToList()));
+                .Select(s => new LoggedSetView(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported)).ToList(),
+            log.PerformedAt, log.PerformedOn),
+        session.SequenceIndex);
 }

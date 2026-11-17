@@ -86,6 +86,7 @@ public sealed class PlannedSessionConfiguration : IEntityTypeConfiguration<Plann
         builder.Property(x => x.PrescriptionJson).HasColumnType("text").IsRequired();
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
         builder.HasIndex(x => new { x.PlanId, x.Date });
+        builder.HasIndex(x => new { x.PlanId, x.SequenceIndex }).IsUnique();
         // NoAction: the block's cascade removes the sessions; a second cascade path from the plan is not needed.
         builder.HasOne<TrainingPlan>().WithMany().HasForeignKey(x => x.PlanId).OnDelete(DeleteBehavior.NoAction);
     }
@@ -105,6 +106,9 @@ public sealed class WorkoutLogConfiguration : IEntityTypeConfiguration<WorkoutLo
         builder.Property(x => x.ExerciseFeedbackJson).HasMaxLength(4000);
         builder.HasIndex(x => x.PlannedSessionId).IsUnique();
         builder.HasIndex(x => new { x.PlanId, x.LoggedAt });
+        builder.Property(x => x.TimeZoneId).HasMaxLength(64).IsRequired();
+        builder.HasIndex(x => new { x.PlanId, x.PerformedAt });
+        builder.HasIndex(x => new { x.UserId, x.ClientRequestId }).IsUnique().HasFilter("\"ClientRequestId\" IS NOT NULL");
         builder.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         builder.HasOne<TrainingPlan>().WithMany().HasForeignKey(x => x.PlanId).OnDelete(DeleteBehavior.Cascade);
         builder.HasOne<PlannedSession>().WithMany().HasForeignKey(x => x.PlannedSessionId).OnDelete(DeleteBehavior.Cascade);

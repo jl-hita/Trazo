@@ -31,6 +31,7 @@ public sealed class MutableClock(DateTimeOffset now) : TimeProvider
 /// <summary>HTTP-level behaviour of the administration overview: access, the numbers, the alerts and the short cache.</summary>
 public sealed class AdminOverviewApiTests : IDisposable
 {
+    private int _sequence;
     private static readonly DateTimeOffset Start = new(2026, 11, 16, 8, 0, 0, TimeSpan.Zero);
     private readonly SetupFixture _fixture = new();
     private readonly string _keys = Path.Combine(Path.GetTempPath(), $"trazo-keys-{Guid.NewGuid():N}");
@@ -211,8 +212,8 @@ public sealed class AdminOverviewApiTests : IDisposable
             var plan = new TrainingPlan { Id = Guid.NewGuid(), UserId = recent.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-2), UpdatedAt = Start };
             var oldPlan = new TrainingPlan { Id = Guid.NewGuid(), UserId = recent.Id, Status = TrainingPlanStatus.Archived, Goal = "Strength", Experience = "Beginner", Split = "Automatic", CreatedAt = Start.AddDays(-20), UpdatedAt = Start };
             var meso = new TrainingMesocycle { Id = Guid.NewGuid(), PlanId = plan.Id, PhaseType = "Build", CreatedAt = Start };
-            var recentSession = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, Title = "A", PrescriptionJson = "{}", UpdatedAt = Start };
-            var oldSession = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, Title = "B", PrescriptionJson = "{}", UpdatedAt = Start };
+            var recentSession = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, SequenceIndex = 1, Title = "A", PrescriptionJson = "{}", UpdatedAt = Start };
+            var oldSession = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, SequenceIndex = 2, Title = "B", PrescriptionJson = "{}", UpdatedAt = Start };
             db.TrainingPlans.AddRange(plan, oldPlan);
             db.TrainingMesocycles.Add(meso);
             db.PlannedSessions.AddRange(recentSession, oldSession);
@@ -267,10 +268,10 @@ public sealed class AdminOverviewApiTests : IDisposable
             var plan = new TrainingPlan { Id = Guid.NewGuid(), UserId = a.Id, Goal = "Strength", Experience = "Beginner", Split = "Automatic", CreatedAt = Start.AddDays(-1), UpdatedAt = Start };
             var planB = new TrainingPlan { Id = Guid.NewGuid(), UserId = b.Id, Goal = "Strength", Experience = "Beginner", Split = "Automatic", CreatedAt = Start.AddDays(-1), UpdatedAt = Start };
             var meso = new TrainingMesocycle { Id = Guid.NewGuid(), PlanId = plan.Id, PhaseType = "Build", CreatedAt = Start };
-            var session = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, Title = "A", PrescriptionJson = "{}", UpdatedAt = Start };
+            var session = new PlannedSession { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, SequenceIndex = Interlocked.Increment(ref _sequence), Title = "A", PrescriptionJson = "{}", UpdatedAt = Start };
             db.TrainingPlans.AddRange(plan, planB);
             db.TrainingMesocycles.Add(meso);
-            PlannedSession Extra() => new() { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, Title = "X", PrescriptionJson = "{}", UpdatedAt = Start };
+            PlannedSession Extra() => new() { Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = meso.Id, SequenceIndex = Interlocked.Increment(ref _sequence), Title = "X", PrescriptionJson = "{}", UpdatedAt = Start };
             db.PlannedSessions.Add(session);
             for (var i = 0; i < 3; i++)
             {
@@ -391,7 +392,7 @@ public sealed class AdminOverviewApiTests : IDisposable
             await using var db = Db();
             for (var i = 0; i < count; i++)
             {
-                var session = new PlannedSession { Id = Guid.NewGuid(), PlanId = planId, MesocycleId = mesoId, Title = "S", PrescriptionJson = "{}", UpdatedAt = Start };
+                var session = new PlannedSession { Id = Guid.NewGuid(), PlanId = planId, MesocycleId = mesoId, SequenceIndex = Interlocked.Increment(ref _sequence), Title = "S", PrescriptionJson = "{}", UpdatedAt = Start };
                 db.PlannedSessions.Add(session);
                 db.WorkoutLogs.Add(new WorkoutLog
                 {
