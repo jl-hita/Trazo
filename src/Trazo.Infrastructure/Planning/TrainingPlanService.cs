@@ -454,6 +454,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private const int RecoveryLookbackDays = 6;
 
 
+    /// <summary>
+    /// Resolves the next actionable session through the plan's timeline abstraction, not by asking which date is today.
+    /// Calendar plans may therefore return an overdue session; sequence plans simply return the next unresolved item in
+    /// rotation. Recovery alternatives are suggestions over later pending sessions and never advance or reorder the plan.
+    /// </summary>
     public async Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct)
     {
         // Reading the current week generates the block when it is first needed, so the next session always exists once this returns.
@@ -758,6 +763,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     // ---------------------------------------------------------------- log + adapt
 
+    /// <summary>
+    /// Stores a result against its planned session, even when the workout happened later (or is registered after a newer one).
+    /// Idempotency is checked before the active-session state is changed; adaptation is then gated by workout chronology so
+    /// an old result enriches history without rolling the already-adapted future prescription backwards.
+    /// </summary>
     public async Task<PlanResult<LogResult>> LogSessionAsync(Guid userId, Guid sessionId, ParsedLog log, CancellationToken ct)
     {
         await UseUserClockAsync(userId, ct);
@@ -880,6 +890,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     }
 
     /// <summary>Reads the whole history of the plan, asks the planner what to change and applies it to the upcoming sessions.</summary>
+    /// <summary>
+    /// Rebuilds the engine's evidence in performed-at order, evaluates session-level and exercise-level feedback, then applies
+    /// accepted actions only to unresolved sessions beyond the furthest resolved program index. The evidence timestamp (not
+    /// request time) anchors cooldowns; this is what makes late registration safe and prevents it from consuming future work.
+    /// </summary>
     private async Task<AdaptationReport> AdaptAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, IReadOnlyList<TrainingExercisePrescription> prescribed,
         DateTimeOffset now, CancellationToken ct)
