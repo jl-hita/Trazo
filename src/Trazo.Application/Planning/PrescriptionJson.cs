@@ -32,6 +32,30 @@ public static class PrescriptionJson
         return root.ToJsonString(Options);
     }
 
+    /// <summary>
+    /// Appends one exercise the user added to this single session. It is marked <c>extra</c>: it is not part of the program,
+    /// so nothing copies it to other sessions. Everything else in the JSON (superset groups, swaps, adaptation marks) is kept.
+    /// </summary>
+    public static string AppendExtra(string json, TrainingExercisePrescription exercise)
+    {
+        var root = JsonNode.Parse(json)!.AsObject();
+        var array = root["exercises"] as JsonArray ?? [];
+        var item = JsonNode.Parse(JsonSerializer.Serialize(exercise, Options))!.AsObject();
+        item["extra"] = true;
+        array.Add(item);
+        root["exercises"] = array;
+        return root.ToJsonString(Options);
+    }
+
+    /// <summary>True when the user added the exercise to this session on top of the program.</summary>
+    public static bool IsExtra(string json, string exerciseId)
+    {
+        if (JsonNode.Parse(json) is not JsonObject { } root || root["exercises"] is not JsonArray array) return false;
+        return array.OfType<JsonObject>()
+            .FirstOrDefault(item => string.Equals((string?)item["exerciseId"], exerciseId, StringComparison.OrdinalIgnoreCase))
+            ?["extra"]?.GetValue<bool>() ?? false;
+    }
+
     /// <summary>The superset group letter of an exercise, if it belongs to one.</summary>
     public static string? SupersetGroup(string json, string exerciseId)
     {

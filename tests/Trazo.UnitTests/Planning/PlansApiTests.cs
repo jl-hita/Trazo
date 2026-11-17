@@ -163,6 +163,48 @@ public abstract class PlansApiBase : IDisposable
 /// <summary>The user-facing plan API: creation, the current week only, logging with adaptation, swaps and ownership.</summary>
 public sealed class PlansApiTests() : PlansApiBase(enforced: false)
 {
+    // ------------------------------------------------------------------ extra exercise
+
+    [Fact]
+    public async Task AnExerciseAddedToASessionIsLoggedAndCounted_ButNeverCopiedToOtherSessions()
+    {
+        var (_, client, week) = await StartPlanAsync();
+        var sessions = week.GetProperty("sessions").EnumerateArray().ToList();
+        var first = sessions[0];
+        var sessionId = first.GetProperty("id").GetString();
+        var everywhere = sessions.SelectMany(s => s.GetProperty("exercises").EnumerateArray()).Select(e => e.GetProperty("exerciseId").GetString()).ToHashSet();
+        var extra = new[] { "push-up", "squat", "ohp", "plank", "lunge" }.First(id => !everywhere.Contains(id));
+        var url = $"/api/v1/plans/current/sessions/{sessionId}/exercises";
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(url, new { exerciseId = "" })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(url, new { exerciseId = "does-not-exist" })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync(url, new { exerciseId = extra, sets = 99 })).StatusCode);
+
+        var added = await client.PostAsJsonAsync(url, new { exerciseId = extra, sets = 2 });
+        Assert.True(added.StatusCode == HttpStatusCode.OK, await added.Content.ReadAsStringAsync());
+        var exercises = (await JsonAsync(added)).GetProperty("exercises").EnumerateArray().ToList();
+        var item = exercises.Single(e => e.GetProperty("exerciseId").GetString() == extra);
+        Assert.True(item.GetProperty("isExtra").GetBoolean());
+        Assert.Equal(2, item.GetProperty("sets").GetInt32());
+        Assert.Equal(exercises.Count, exercises.Select(e => e.GetProperty("order").GetInt32()).Distinct().Count());
+        Assert.False((await client.PostAsJsonAsync(url, new { exerciseId = extra })).IsSuccessStatusCode); // already in the session
+
+        // The other sessions do not get it.
+        var after = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var others = after.GetProperty("sessions").EnumerateArray().Skip(1)
+            .SelectMany(s => s.GetProperty("exercises").EnumerateArray()).Select(e => e.GetProperty("exerciseId").GetString());
+        Assert.DoesNotContain(extra, others);
+
+        // It is logged like any other exercise, and once the session is logged nothing more can be added.
+        var withExtra = after.GetProperty("sessions")[0];
+        var log = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{sessionId}/log",
+            new { outcome = "Completed", sets = CompleteSets(withExtra) });
+        Assert.True(log.StatusCode == HttpStatusCode.OK, await log.Content.ReadAsStringAsync());
+        var logged = (await JsonAsync(log)).GetProperty("session").GetProperty("log").GetProperty("sets").EnumerateArray();
+        Assert.Contains(logged, s => s.GetProperty("exerciseId").GetString() == extra);
+        Assert.False((await client.PostAsJsonAsync(url, new { exerciseId = "lunge" })).IsSuccessStatusCode);
+    }
+
     // ------------------------------------------------------------------ access
 
     [Fact]

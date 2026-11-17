@@ -209,6 +209,7 @@ errors list the offending fields. All routes are in the OpenAPI document with th
 | POST | `/current/sessions/{id}/log` | Record a session; with Premium it also adapts the upcoming ones (`adaptation.locked` is true otherwise). Generated plans without Premium answer 402 `premium_required` | 200 `LogResult` | 400, 402, 404, 409 |
 | GET | `/current/sessions/{id}/exercises/{exerciseId}/alternatives?limit=5` | Replacement options (1-10) | 200 | 402, 404 |
 | POST | `/current/sessions/{id}/exercises/{exerciseId}/swap` | Replace one exercise (optionally in the rest of the block) | 200 `SessionView` | 400, 402, 404 |
+| POST | `/current/sessions/{id}/exercises` | Add an exercise to one pending session (`exerciseId`, optional `sets`, `minRepetitions`, `maxRepetitions`, `targetRir`, `restSeconds`). Marked `isExtra`; it is logged and counts for history, progress and load, but is never copied to other sessions or blocks. Not allowed if already in the session or ruled out by the profile | 200 `SessionView` | 400, 402, 404 |
 
 ### Deload weeks
 

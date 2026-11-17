@@ -79,6 +79,10 @@ public static class PlansEndpoints
             .WithSummary("Replaces an exercise of a pending session (optionally in the rest of the block) with one of its alternatives.")
             .Produces<SessionView>().ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapPost("/current/sessions/{sessionId:guid}/exercises", AddExerciseAsync).WithName("AddPlanSessionExercise")
+            .WithSummary("Adds an exercise to one pending session only. It is logged and counts for progress and load, but is never repeated in other sessions.")
+            .Produces<SessionView>().ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
         return endpoints;
     }
 
@@ -196,6 +200,17 @@ public static class PlansEndpoints
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["replacementExerciseId"] = ["El ejercicio de sustitución es obligatorio."] });
         var result = await plans.SwapExerciseAsync(userId, sessionId, exerciseId.Trim().ToLowerInvariant(), replacement,
             request.ApplyToRemainingBlock ?? false, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> AddExerciseAsync(
+        Guid sessionId, AddExerciseRequest request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var id = request.ExerciseId?.Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(id) || id.Length > 100)
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["exerciseId"] = ["El ejercicio es obligatorio."] });
+        var result = await plans.AddExerciseAsync(userId, sessionId, request with { ExerciseId = id }, ct);
         return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 
