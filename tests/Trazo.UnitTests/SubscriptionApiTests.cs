@@ -48,6 +48,24 @@ public sealed class FakePlayBillingClient : IPlayBillingClient
 
     public Task CheckConnectionAsync(CancellationToken ct) =>
         Failure is not null ? throw Failure : Task.CompletedTask;
+
+    public enum DeferBehaviour { Works, Rejected, AppliesButAnswerIsLost, AnswersWithoutMoving }
+
+    public DeferBehaviour Defer { get; set; } = DeferBehaviour.Works;
+    /// <summary>Every call the backend made to the defer API: (token, days, validateOnly).</summary>
+    public List<(string Token, double Days, bool ValidateOnly)> DeferCalls { get; } = [];
+
+    public Task<PlayDeferResult> DeferAsync(string purchaseToken, string etag, TimeSpan duration, bool validateOnly, CancellationToken ct)
+    {
+        DeferCalls.Add((purchaseToken, duration.TotalDays, validateOnly));
+        if (!Purchases.TryGetValue(purchaseToken, out var p)) throw new PlayBillingException(PlayBillingFailure.InvalidPurchase, "unknown");
+        if (etag != p.Etag || Defer == DeferBehaviour.Rejected) throw new PlayBillingException(PlayBillingFailure.InvalidPurchase, "rejected");
+        if (validateOnly) return Task.FromResult(new PlayDeferResult(p.ExpiryTime + duration));
+        if (Defer == DeferBehaviour.AnswersWithoutMoving) return Task.FromResult(new PlayDeferResult(p.ExpiryTime));
+        Purchases[purchaseToken] = p with { ExpiryTime = p.ExpiryTime + duration };
+        if (Defer == DeferBehaviour.AppliesButAnswerIsLost) throw new PlayBillingException(PlayBillingFailure.Unavailable, "timeout");
+        return Task.FromResult(new PlayDeferResult(p.ExpiryTime + duration));
+    }
 }
 
 public sealed class FakePubSubValidator : IPubSubTokenValidator

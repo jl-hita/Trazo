@@ -398,6 +398,40 @@ export class AdminApi {
     return firstValueFrom(this.http.post<AdminSubscriptionDetail>(`${API}/subscriptions/${id}/refresh`, {}));
   }
 
+  private query(params: Record<string, string | boolean | undefined>): HttpParams {
+    let p = new HttpParams();
+    for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== '') p = p.set(k, String(v));
+    return p;
+  }
+
+  getReferralSummary(range: { from?: string; to?: string }): Promise<any> {
+    return firstValueFrom(this.http.get<any>(`${API}/referrals/summary`, { params: this.query(range) }));
+  }
+
+  getFunnel(params: { from?: string; to?: string; channel?: string }): Promise<any> {
+    return firstValueFrom(this.http.get<any>(`${API}/analytics/funnel`, { params: this.query(params) }));
+  }
+
+  getReferrals(params: { status?: string; incidents?: boolean }): Promise<{ items: any[] }> {
+    return firstValueFrom(this.http.get<{ items: any[] }>(`${API}/referrals`, { params: this.query({ ...params, pageSize: '100' }) }));
+  }
+
+  getUserLedger(userId: string): Promise<{ items: any[] }> {
+    return firstValueFrom(this.http.get<{ items: any[] }>(`${API}/referrals/users/${userId}/ledger`));
+  }
+
+  voidGrant(id: string, reason: string): Promise<{ outcome: string }> {
+    return firstValueFrom(this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/void`, { reason }));
+  }
+
+  retryGrant(id: string): Promise<{ outcome: string }> {
+    return firstValueFrom(this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/retry`, {}));
+  }
+
+  reconcileReferrals(): Promise<{ conversions: number; pendingResolved: number; pendingWaiting: number }> {
+    return firstValueFrom(this.http.post<{ conversions: number; pendingResolved: number; pendingWaiting: number }>(`${API}/referrals/reconcile`, {}));
+  }
+
   getPromotions(): Promise<PromotionsView> {
     return firstValueFrom(this.http.get<PromotionsView>(`${API}/settings/promotions`));
   }

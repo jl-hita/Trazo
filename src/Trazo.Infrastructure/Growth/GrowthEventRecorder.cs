@@ -55,8 +55,9 @@ public sealed class GrowthEventRecorder(TrazoDbContext db, TimeProvider clock, I
         string.IsNullOrWhiteSpace(value) ? null : value.Length > max ? value[..max] : value;
 }
 
-/// <summary>Placeholder until referral relationships exist: no attribution.</summary>
+/// <summary>The referral code a user arrived with, if any.</summary>
 internal static class ReferralAttribution
 {
-    public static Task<string?> LookupAsync(TrazoDbContext db, Guid userId, CancellationToken ct) => Task.FromResult<string?>(null);
+    public static Task<string?> LookupAsync(TrazoDbContext db, Guid userId, CancellationToken ct) =>
+        db.ReferralRelationships.AsNoTracking().Where(r => r.ReferredUserId == userId).Select(r => r.Code).FirstOrDefaultAsync(ct);
 }

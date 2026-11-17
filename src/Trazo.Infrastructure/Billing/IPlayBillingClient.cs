@@ -11,7 +11,8 @@ public sealed record PlaySubscription(
     bool Acknowledged,
     string? LatestOrderId,
     string? ObfuscatedExternalAccountId,
-    bool IsTestPurchase)
+    bool IsTestPurchase,
+    string? Etag = null)
 {
     public const string Active = "SUBSCRIPTION_STATE_ACTIVE";
     public const string Pending = "SUBSCRIPTION_STATE_PENDING";
@@ -22,6 +23,9 @@ public sealed record PlaySubscription(
     public const string Expired = "SUBSCRIPTION_STATE_EXPIRED";
     public const string PendingPurchaseCanceled = "SUBSCRIPTION_STATE_PENDING_PURCHASE_CANCELED";
 }
+
+/// <summary>What Google answered to a deferral: the expiry it now reports for the subscription (the latest item).</summary>
+public sealed record PlayDeferResult(DateTimeOffset NewExpiry);
 
 public enum PlayBillingFailure
 {
@@ -56,6 +60,14 @@ public interface IPlayBillingClient
     Task<PlaySubscription> GetSubscriptionAsync(string purchaseToken, CancellationToken ct);
 
     Task AcknowledgeAsync(string productId, string purchaseToken, CancellationToken ct);
+
+    /// <summary>
+    /// Postpones the next renewal (purchases.subscriptionsv2.defer). <paramref name="etag"/> must be the one returned by the latest
+    /// <see cref="GetSubscriptionAsync"/>: Google rejects the call otherwise. With <paramref name="validateOnly"/> Google only
+    /// checks the request and changes nothing. Returns the new expiry Google reports. Never assume a deferral happened unless this
+    /// returns without throwing and the expiry moved.
+    /// </summary>
+    Task<PlayDeferResult> DeferAsync(string purchaseToken, string etag, TimeSpan duration, bool validateOnly, CancellationToken ct);
 
     /// <summary>
     /// Checks that the stored credentials and package name are accepted by Google, without needing a real purchase.

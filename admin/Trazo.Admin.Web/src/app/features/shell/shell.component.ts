@@ -35,6 +35,7 @@ export class ShellComponent {
     { label: 'Overview', icon: '◫', link: '/overview' },
     { label: 'Users', icon: '◎', link: '/users' },
     { label: 'Subscriptions', icon: '◇', link: '/subscriptions' },
+    { label: 'Referrals & funnel', icon: '⇄', link: '/referrals' },
     { label: 'Training library', icon: '▤', link: '/exercises' },
     { label: 'Plan reviews', icon: '✎', link: '/reviews' },
     { label: 'Planning engine', icon: '⌘', link: '/planning' },

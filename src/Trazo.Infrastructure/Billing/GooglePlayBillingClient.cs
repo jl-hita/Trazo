@@ -44,7 +44,40 @@ public sealed class GooglePlayBillingClient(IRuntimeSettings settings) : IPlayBi
             purchase.AcknowledgementState == "ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED",
             item.LatestSuccessfulOrderId,
             purchase.ExternalAccountIdentifiers?.ObfuscatedExternalAccountId,
-            purchase.TestPurchase is not null);
+            purchase.TestPurchase is not null,
+            purchase.ETag);
+    }
+
+    public async Task<PlayDeferResult> DeferAsync(string purchaseToken, string etag, TimeSpan duration, bool validateOnly, CancellationToken ct)
+    {
+        var (service, package) = await CreateServiceAsync(ct);
+        using var _ = service;
+        var body = new DeferSubscriptionPurchaseRequest
+        {
+            DeferralContext = new DeferralContext
+            {
+                ETag = etag,
+                // Protobuf Duration: whole seconds with an "s" suffix.
+                DeferDuration = ((long)duration.TotalSeconds).ToString(System.Globalization.CultureInfo.InvariantCulture) + "s",
+                ValidateOnly = validateOnly
+            }
+        };
+        DeferSubscriptionPurchaseResponse response;
+        try
+        {
+            response = await service.Purchases.Subscriptionsv2.Defer(body, package, purchaseToken).ExecuteAsync(ct);
+        }
+        catch (GoogleApiException ex)
+        {
+            throw Translate(ex);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new PlayBillingException(PlayBillingFailure.Unavailable, "Google Play could not be reached.", ex);
+        }
+        var expiry = response.ItemExpiryTimeDetails?.Select(x => x.ExpiryTimeDateTimeOffset).Where(x => x is not null).Max()
+            ?? throw new PlayBillingException(PlayBillingFailure.Unavailable, "Google Play answered the deferral without an expiry time.");
+        return new PlayDeferResult(expiry);
     }
 
     public async Task AcknowledgeAsync(string productId, string purchaseToken, CancellationToken ct)
