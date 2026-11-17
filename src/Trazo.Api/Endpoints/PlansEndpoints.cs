@@ -42,6 +42,9 @@ public static class PlansEndpoints
             .Produces<PlanView>(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapPut("/current/manual", UpdateManualAsync).WithName("UpdateManualPlan")
+            .WithSummary("Rewrites the routines of the user's own plan from today on (name, notes, days, exercises, supersets). Logged sessions are kept.")
+            .Produces<PlanView>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
         group.MapGet("/current", GetCurrentAsync).WithName("GetCurrentPlan")
             .WithSummary("The active plan: profile and macrocycle phases, without any session detail.")
             .Produces<PlanView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -120,6 +123,17 @@ public static class PlansEndpoints
         var result = await plans.CreateManualAsync(userId, parsed.Plan!, ct);
         if (result.Succeeded && sentZone) await accounts.SetTimeZoneAsync(userId, request.TimeZone!, ct);
         return result.Succeeded ? Results.Created("/api/v1/plans/current", result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> UpdateManualAsync(
+        ManualPlanInput request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        // Length and start date belong to the plan and cannot be edited: the parser only needs values that pass its checks.
+        var parsed = ManualPlanParser.Parse(request with { TotalWeeks = null, StartDate = null }, await plans.TodayAsync(userId, ct));
+        if (!parsed.Succeeded) return Results.ValidationProblem(parsed.Errors.ToDictionary(p => p.Key, p => p.Value));
+        var result = await plans.UpdateManualAsync(userId, parsed.Plan!, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 
     private static async Task<IResult> GetCurrentAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)

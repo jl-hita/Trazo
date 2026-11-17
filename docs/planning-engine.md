@@ -418,6 +418,19 @@ Generated plans do not use supersets.
 Free accounts (and lapsed Premium) get `lastPerformance` and a proposed load that repeats the last load; the proposed **increase**
 (`suggestionBasis: increase`) is automatic progression and is Premium only.
 
+## Editing a manual plan (`PUT /api/v1/plans/current/manual`)
+
+Body as in creation (name, notes, days with exercises and optional `supersetGroup`); `totalWeeks` and `startDate` are ignored because the
+plan keeps its length. Only plans with origin `Manual` can be edited (`400 not_allowed` otherwise, `404 no_active_plan` without a plan).
+Logged sessions and past days stay as they are; every pending session from today on is replaced by the new routines, so loads
+written by the adaptation into those sessions are lost (the user's edit wins). Days dropped from the routine disappear from the
+future weeks; a new weekday creates sessions from today on. Free for every account.
+
+The plan keeps its way of scheduling. A **sequence** (asynchronous) plan has no dates or "today": every pending session is replaced,
+`days[].day` is ignored and `sessionsPerPeriod` becomes the number of routines sent. Each logged session keeps its place in its
+period; the new routines fill the positions of that period that are still free, and all sessions are renumbered (`sequenceIndex`)
+in program order. A calendar plan whose request lacks a weekday for a day answers `400`.
+
 ## Post-exercise questionnaire (muscle feedback)
 
 `POST .../log` accepts `exerciseFeedback`: an object by exercise id with `stimulus` (`low|adequate|high`), `discomfort` (`none|mild|strong`) and

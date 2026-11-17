@@ -16,6 +16,7 @@ public interface ITrainingPlanService
     Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct);
     /// <summary>Creates a plan written by the user (free): their routines repeated every week, no engine involved.</summary>
     Task<PlanResult<PlanView>> CreateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct);
+    Task<PlanResult<PlanView>> UpdateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct);
     Task<PlanView?> GetCurrentAsync(Guid userId, CancellationToken ct);
     Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct);
     Task<PlanResult<LogResult>> LogSessionAsync(Guid userId, Guid sessionId, ParsedLog log, CancellationToken ct);
@@ -213,24 +214,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             for (var week = slot.StartWeek; week <= slot.EndWeek; week++)
                 foreach (var day in manual.Days)
                 {
-                    var prescription = day.Exercises.Select((exercise, index) =>
-                    {
-                        var candidate = catalog[exercise.ExerciseId];
-                        return new TrainingExercisePrescription(
-                            candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, index + 1, exercise.Sets,
-                            exercise.MinRepetitions, exercise.MaxRepetitions, exercise.TargetRir, exercise.RestSeconds,
-                            TrainingProgressionRule.DoubleProgression, "Elegido por el usuario.",
-                            candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
-                    }).ToList();
-                    var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45)) / 60.0);
-                    mesocycle.Sessions.Add(new PlannedSession
-                    {
-                        Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycle.Id, WeekNumber = week,
-                        Date = calendar ? PlanSchedule.DateFor(plan.StartDate, week, day.Day!.Value) : null, Title = day.Title,
-                        EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240), PrescriptionJson = PrescriptionJson.Serialize(prescription,
-                            day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!)),
-                        Status = PlannedSessionStatus.Planned, UpdatedAt = now
-                    });
+                    mesocycle.Sessions.Add(BuildManualSession(plan, mesocycle.Id, week, day, catalog, now));
                 }
             nextIndex = NumberSessions(mesocycle, nextIndex);
             plan.Mesocycles.Add(mesocycle);
@@ -248,6 +232,109 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
         }
         return PlanResult<PlanView>.Ok(ToView(plan, calendar ? PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today) : new PlanPosition(PlanTimeline.InProgress, 1)));
+    }
+
+    private static PlannedSession BuildManualSession(
+        TrainingPlan plan, Guid mesocycleId, int week, ManualDay day, IReadOnlyDictionary<string, TrainingExerciseCandidate> catalog, DateTimeOffset now)
+    {
+        var prescription = day.Exercises.Select((exercise, index) =>
+        {
+            var candidate = catalog[exercise.ExerciseId];
+            return new TrainingExercisePrescription(
+                candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, index + 1, exercise.Sets,
+                exercise.MinRepetitions, exercise.MaxRepetitions, exercise.TargetRir, exercise.RestSeconds,
+                TrainingProgressionRule.DoubleProgression, "Elegido por el usuario.",
+                candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
+        }).ToList();
+        var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45)) / 60.0);
+        return new PlannedSession
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycleId, WeekNumber = week,
+            // A sequence plan has no calendar: its sessions carry no date and follow the order of the routine.
+            Date = IsSequence(plan) ? null : PlanSchedule.DateFor(plan.StartDate, week, day.Day!.Value), Title = day.Title,
+            EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240),
+            PrescriptionJson = PrescriptionJson.Serialize(prescription,
+                day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!)),
+            Status = PlannedSessionStatus.Planned, UpdatedAt = now
+        };
+    }
+
+    /// <summary>
+    /// Rewrites the routines of the user's own plan from today on. Sessions already logged and past days stay as they are;
+    /// every pending session from today onwards is replaced by the new routines (loads set by the adaptation are lost, the
+    /// user's edit wins). The plan's length and start date do not change.
+    /// </summary>
+    public async Task<PlanResult<PlanView>> UpdateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<PlanView>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (plan.Origin != TrainingPlanOrigin.Manual)
+            return PlanResult<PlanView>.Fail(PlanFailure.NotAllowed, "Solo se pueden editar los planes que has creado tú.");
+
+        var catalog = (await LoadCandidatesAsync(ct)).Candidates.ToDictionary(c => c.ExerciseId, StringComparer.OrdinalIgnoreCase);
+        var errors = new Dictionary<string, string[]>();
+        for (var d = 0; d < manual.Days.Count; d++)
+            for (var e = 0; e < manual.Days[d].Exercises.Count; e++)
+                if (!catalog.ContainsKey(manual.Days[d].Exercises[e].ExerciseId))
+                    errors[$"days.{d + 1}.exercises.{e + 1}"] = ["El ejercicio no existe en el catálogo."];
+        if (errors.Count > 0)
+            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Algún ejercicio no existe en el catálogo.", errors);
+
+        // The plan keeps its way of scheduling: a calendar plan needs a weekday on every day, a sequence plan ignores them.
+        var sequence = IsSequence(plan);
+        if (!sequence && manual.Days.Any(d => d.Day is null))
+            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Cada día de un plan con calendario necesita su día de la semana.",
+                new Dictionary<string, string[]> { ["days"] = ["Indica el día de la semana de cada rutina."] });
+
+        var now = clock.GetUtcNow();
+        var logged = (await db.WorkoutLogs.Where(l => l.PlanId == plan.Id).Select(l => l.PlannedSessionId).ToListAsync(ct)).ToHashSet();
+        var sessions = await db.PlannedSessions.Where(s => s.PlanId == plan.Id).ToListAsync(ct);
+        // Sequence plans: the routine position (0-based, in program order within its period) of every logged session, so the
+        // new routines fill only the positions that are still free in that period.
+        var positionOf = sequence
+            ? sessions.GroupBy(s => s.WeekNumber).SelectMany(g => g.OrderBy(s => s.SequenceIndex).Select((s, i) => (s, i)))
+                .Where(p => logged.Contains(p.s.Id)).ToDictionary(p => p.s.Id, p => p.i)
+            : [];
+        var loggedPositions = sessions.Where(s => positionOf.ContainsKey(s.Id)).Select(s => (s.WeekNumber, positionOf[s.Id])).ToHashSet();
+        var loggedDates = sessions.Where(s => logged.Contains(s.Id)).Select(s => s.Date).ToHashSet();
+        // Calendar: pending sessions from today on are replaced. Sequence: there is no "today", every pending session is.
+        db.PlannedSessions.RemoveRange(sessions.Where(s => !logged.Contains(s.Id) && (sequence || s.Date >= Today)));
+
+        plan.MacrocycleName = manual.Name;
+        plan.MacrocycleNotes = manual.Notes;
+        plan.TrainingDays = sequence ? [] : manual.Days.Select(d => d.Day.ToString()).ToArray();
+        if (sequence) plan.SessionsPerPeriod = manual.Days.Count;
+        plan.UpdatedAt = now;
+        foreach (var phase in plan.Phases)
+        {
+            phase.Name = manual.Name;
+            phase.Objective = manual.Notes.Length > 0 ? manual.Notes : "Plan manual";
+        }
+        // Kept sessions (logged, or past and unlogged in a calendar plan) plus the new ones, keyed to be numbered in program order.
+        var ordered = new List<(int Mesocycle, int Week, int Position, PlannedSession Session)>();
+        foreach (var kept in sessions.Where(s => logged.Contains(s.Id) || (!sequence && s.Date < Today)))
+            ordered.Add((plan.Mesocycles.First(m => m.Id == kept.MesocycleId).Sequence, kept.WeekNumber, positionOf.GetValueOrDefault(kept.Id), kept));
+        foreach (var mesocycle in plan.Mesocycles)
+            for (var week = mesocycle.StartWeek; week < mesocycle.StartWeek + mesocycle.Weeks; week++)
+                for (var position = 0; position < manual.Days.Count; position++)
+                {
+                    var day = manual.Days[position];
+                    if (sequence ? loggedPositions.Contains((week, position))
+                                 : PlanSchedule.DateFor(plan.StartDate, week, day.Day!.Value) is var date && (date < Today || loggedDates.Contains(date)))
+                        continue;
+                    var created = BuildManualSession(plan, mesocycle.Id, week, day, catalog, now);
+                    db.PlannedSessions.Add(created);
+                    ordered.Add((mesocycle.Sequence, week, position, created));
+                }
+        // Program order: block, period, then the position in the routine (sequence) or the date (calendar).
+        var index = 1;
+        foreach (var item in ordered
+                     .OrderBy(o => o.Mesocycle).ThenBy(o => o.Week).ThenBy(o => sequence ? o.Position : 0)
+                     .ThenBy(o => o.Session.Date).ThenBy(o => o.Session.Title, StringComparer.Ordinal))
+            item.Session.SequenceIndex = index++;
+        await db.SaveChangesAsync(ct);
+        return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
     }
 
     // ---------------------------------------------------------------- read

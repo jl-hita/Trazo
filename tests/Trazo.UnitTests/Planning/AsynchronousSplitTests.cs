@@ -258,6 +258,40 @@ public sealed class AsynchronousSplitApiTests() : PlansApiBase(enforced: true)
     }
 
     [Fact]
+    public async Task ASequenceManualPlanCanBeEdited_KeepingWhatWasLogged_AndNumberingTheRestInOrder()
+    {
+        var client = await StartManualAsync("seq-edit@example.com", totalWeeks: 4);
+        var first = (await NextAsync(client)).GetProperty("session");
+        Assert.Equal("Empuje A", first.GetProperty("title").GetString());
+        Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, first)).StatusCode);
+
+        var edited = new
+        {
+            name = "Rotación 2", schedulingMode = "Sequence", days = new object[]
+            {
+                new { title = "Tirón", exercises = new object[] { new { exerciseId = "squat", sets = 3 } } },
+                new { title = "Pierna nueva", exercises = new object[] { new { exerciseId = "squat", sets = 2 } } }
+            }
+        };
+        var response = await client.PutAsJsonAsync("/api/v1/plans/current/manual", edited);
+        Assert.True(response.StatusCode == HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+        Assert.Equal("Rotación 2", (await JsonAsync(response)).GetProperty("macrocycle").GetProperty("name").GetString());
+
+        var sessions = await BlockAsync(client);
+        // The logged session keeps its routine and place; the rest of its period and the later ones follow the new routine.
+        Assert.Equal("Empuje A", sessions[0].GetProperty("title").GetString());
+        Assert.Equal(8, sessions.Count); // 4 periods of 2 sessions
+        Assert.Equal("Pierna nueva", sessions[1].GetProperty("title").GetString()); // position 2 of the new routine fills what is left of period 1
+        Assert.Equal(Enumerable.Range(1, sessions.Count), sessions.Select(s => s.GetProperty("sequenceIndex").GetInt32()));
+        Assert.All(sessions, s => Assert.Equal(JsonValueKind.Null, s.GetProperty("date").ValueKind));
+
+        // What is next now is the first pending session of the edited program, and it can be logged.
+        var next = (await NextAsync(client)).GetProperty("session");
+        Assert.Equal(2, next.GetProperty("sequenceIndex").GetInt32());
+        Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, next)).StatusCode);
+    }
+
+    [Fact]
     public async Task ASkippedSessionCountsAsResolved_SoOmittingNeverBlocksTheProgram()
     {
         var client = await StartGeneratedAsync("seq-skip@example.com", perPeriod: 2);
