@@ -93,7 +93,7 @@ public sealed class RuntimeSettings(
         var rows = await LoadAsync(ct);
         var e = BuildEmail(rows);
         return new SettingsView(Get(rows, SettingKeys.GoogleClientId) ?? "", e.Host, e.Port, e.EnableSsl,
-            e.Username, !string.IsNullOrEmpty(e.Password), e.From, e.ActionBaseUrl);
+            e.Username, !string.IsNullOrEmpty(e.Password), e.From, e.ActionBaseUrl, e.Enabled);
     }
 
     public async Task<PromotionsConfig> GetPromotionsAsync(CancellationToken ct = default)
@@ -152,7 +152,8 @@ public sealed class RuntimeSettings(
         return new EmailConfig(
             Get(rows, SettingKeys.SmtpHost) ?? "", port, ssl,
             Get(rows, SettingKeys.SmtpUsername), Get(rows, SettingKeys.SmtpPassword),
-            Get(rows, SettingKeys.EmailFrom) ?? "", Get(rows, SettingKeys.EmailActionBaseUrl)?.TrimEnd('/') ?? "");
+            Get(rows, SettingKeys.EmailFrom) ?? "", Get(rows, SettingKeys.EmailActionBaseUrl)?.TrimEnd('/') ?? "",
+            !bool.TryParse(Get(rows, SettingKeys.EmailEnabled), out var enabled) || enabled);
     }
 
     private async Task<Dictionary<string, AppSetting>> LoadAsync(CancellationToken ct) =>

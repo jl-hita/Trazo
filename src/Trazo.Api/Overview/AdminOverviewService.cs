@@ -73,7 +73,7 @@ public sealed class AdminOverviewService(
         var lastSend = EmailDeliveryRecorder.Parse(
             await db.AppSettings.AsNoTracking().Where(x => x.Key == EmailDeliveryRecorder.Key).Select(x => x.Value).FirstOrDefaultAsync(ct));
         var configuration = new OverviewConfiguration(
-            email.IsComplete, lastSend is null ? null : new OverviewSmtpSend(lastSend.Succeeded, lastSend.At, lastSend.Error),
+            email.IsComplete || !email.Enabled, lastSend is null || !email.Enabled ? null : new OverviewSmtpSend(lastSend.Succeeded, lastSend.At, lastSend.Error),
             !string.IsNullOrWhiteSpace(google.ClientId), play.Configured, play.RtdnConfigured, enforced,
             MissingSettings(email, google, play, enforced));
 

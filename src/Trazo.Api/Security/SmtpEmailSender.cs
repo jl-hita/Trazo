@@ -40,11 +40,18 @@ public sealed class SystemNetSmtpTransport : ISmtpTransport
 
 /// <summary>Sends transactional email using the effective (database, then environment) SMTP settings, read on every send.</summary>
 public sealed class SmtpEmailSender(
-    IRuntimeSettings settings, ISmtpTransport transport, IEmailDeliveryRecorder? recorder = null) : IEmailSender
+    IRuntimeSettings settings, ISmtpTransport transport, IEmailDeliveryRecorder? recorder = null,
+    ILogger<SmtpEmailSender>? logger = null) : IEmailSender
 {
     public async Task SendAsync(string recipient, string subject, string body, CancellationToken cancellationToken)
     {
         var config = await settings.GetEmailAsync(cancellationToken);
+        if (!config.Enabled)
+        {
+            // Email switched off in the settings (test installations): drop the message without touching the SMTP server.
+            logger?.LogInformation("Email is disabled in the settings; a message was not sent.");
+            return;
+        }
         if (string.IsNullOrWhiteSpace(config.Host) || string.IsNullOrWhiteSpace(config.From))
             throw new InvalidOperationException("Transactional email is not configured.");
         try

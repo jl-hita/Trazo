@@ -62,6 +62,10 @@ type Mode = 'setup' | 'settings';
 
       <fieldset>
         <legend>Transactional email (SMTP)</legend>
+        <label class="check"><input type="checkbox" name="emailEnabled" [ngModel]="emailEnabled()" (ngModelChange)="emailEnabled.set($event)"> Send emails</label>
+        @if (!emailEnabled()) {
+          <p class="hint">Email is off: verification, password-reset and notification messages are silently dropped. Use only on test installations.</p>
+        }
         <div class="row">
           <label>Host <input type="text" name="host" required [ngModel]="host()" (ngModelChange)="host.set($event)"></label>
           <label>Port <input type="number" name="port" required min="1" max="65535" [ngModel]="port()" (ngModelChange)="port.set($event)"></label>
@@ -106,6 +110,7 @@ export class ConfigFormComponent {
   protected readonly host = signal('');
   protected readonly port = signal(587);
   protected readonly ssl = signal(true);
+  protected readonly emailEnabled = signal(true);
   protected readonly username = signal('');
   /** null = keep the stored password (only meaningful when one is stored). */
   protected readonly password = signal<string | null>('');
@@ -149,6 +154,7 @@ export class ConfigFormComponent {
     this.host.set(s.smtpHost);
     this.port.set(s.smtpPort);
     this.ssl.set(s.smtpEnableSsl);
+    this.emailEnabled.set(s.emailEnabled ?? true);
     this.username.set(s.smtpUsername ?? '');
     this.passwordSet.set(s.smtpPasswordSet);
     this.password.set(s.smtpPasswordSet ? null : '');
@@ -161,7 +167,8 @@ export class ConfigFormComponent {
   private email(): EmailSettings {
     return {
       host: this.host().trim(), port: Number(this.port()), enableSsl: this.ssl(), username: this.username().trim(),
-      password: this.password(), from: this.from().trim(), actionBaseUrl: this.actionBaseUrl().trim()
+      password: this.password(), from: this.from().trim(), actionBaseUrl: this.actionBaseUrl().trim(),
+      enabled: this.emailEnabled()
     };
   }
 
