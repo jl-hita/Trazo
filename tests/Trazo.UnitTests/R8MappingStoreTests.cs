@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Trazo.Api.Support;
 using Xunit;
 
+namespace Trazo.UnitTests;
+
 public sealed class R8MappingStoreTests
 {
     [Fact]
@@ -30,7 +32,7 @@ public sealed class R8MappingStoreTests
     }
 
     [Fact]
-    public async Task TryRetraceAsync_DoesNotRunWithoutVersionOrMatchingMapping()
+    public async Task TryRetraceAsync_ReturnsNullWhenVersionOrMatchingMappingIsMissing()
     {
         var directory = Path.Combine(Path.GetTempPath(), "trazo-r8-" + Guid.NewGuid().ToString("N"));
         try
