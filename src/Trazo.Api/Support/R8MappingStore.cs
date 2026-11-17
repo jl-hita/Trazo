@@ -15,11 +15,11 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
     private string? MappingDirectory => configuration["Diagnostics:MappingsPath"] is { Length: > 0 } path ? path : null;
     private string RetraceExecutable => configuration["Diagnostics:RetraceExecutable"] ?? "retrace";
 
-    public async Task<bool> StoreAsync(string version, Stream content, CancellationToken ct)
+    public async Task<string?> StoreAsync(string version, Stream content, CancellationToken ct)
     {
         var cleanVersion = ErrorTicketService.CleanVersion(version);
         var directory = MappingDirectory;
-        if (cleanVersion is null || directory is null) return false;
+        if (cleanVersion is null || directory is null) return null;
 
         Directory.CreateDirectory(directory);
         var destination = Path.Combine(directory, cleanVersion + ".mapping.txt");
@@ -34,8 +34,10 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
                 if (output.Length is 0 or > MaxMappingBytes)
                     throw new InvalidDataException("The R8 mapping file is empty or exceeds the size limit.");
             }
+            await using var mappingFile = File.OpenRead(temporary);
+            var hash = Convert.ToHexString(await SHA256.HashDataAsync(mappingFile, ct)).ToLowerInvariant();
             File.Move(temporary, destination, overwrite: true);
-            return true;
+            return hash;
         }
         finally
         {
