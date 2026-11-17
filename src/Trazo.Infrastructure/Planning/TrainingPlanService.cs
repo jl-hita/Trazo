@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Trazo.Application.Localization;
 using Trazo.Application.Planning;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
@@ -40,7 +41,7 @@ public interface ITrainingPlanService
 /// user really did and no stored data (or response) ever contains the whole macrocycle in detail. Every method takes the
 /// user id and only ever touches that user's active plan.
 /// </summary>
-public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions) : ITrainingPlanService
+public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions, RequestLanguage language) : ITrainingPlanService
 {
     public const string LockedMessage = "Este plan se generó automáticamente: para usarlo necesitas Premium.";
     public const string AdaptationLockedMessage = "La adaptación automática es una función Premium.";
@@ -67,7 +68,32 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var zone = await zones.ResolveAsync(userId, ct);
         _today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(clock.GetUtcNow(), zone).DateTime);
+        // Exercise names are stored in Spanish in the prescription; in English they are read from the catalog, once per request.
+        if (Lang == AppLanguage.En && _namesEn is null)
+            _namesEn = (await db.ExerciseCatalog.AsNoTracking().Select(e => new { e.Id, e.NameEn }).ToListAsync(ct))
+                .Where(e => !string.IsNullOrWhiteSpace(e.NameEn)).ToDictionary(e => e.Id, e => e.NameEn, StringComparer.OrdinalIgnoreCase);
     }
+
+    // ---------------------------------------------------------------- language
+
+    private AppLanguage Lang => language.Current;
+    private Dictionary<string, string>? _namesEn;
+    /// <summary>Titles, phases and objectives of a GENERATED plan are the engine's texts; in a manual plan they are the user's own words.</summary>
+    private bool _generatedPlan = true;
+
+    private string T(string text) => Localizer.Translate(text, Lang) ?? text;
+    private string? Tn(string? text) => Localizer.Translate(text, Lang);
+    private string TitleOf(string title) => _generatedPlan ? T(title) : title;
+    private string NameOf(string exerciseId, string fallback) =>
+        Lang == AppLanguage.En && _namesEn is not null && _namesEn.TryGetValue(exerciseId, out var name) ? name : fallback;
+
+    private AdaptationReport Localized(AdaptationReport r) => Lang == AppLanguage.Es ? r : r with
+    {
+        Exercises = r.Exercises.Select(e => e with { Explanation = T(e.Explanation) }).ToList(),
+        SessionExplanation = T(r.SessionExplanation),
+        Applied = r.Applied.Select(a => a with { Explanation = T(a.Explanation) }).ToList(),
+        Notes = r.Notes.Select(T).ToList()
+    };
 
     public async Task<DateOnly> TodayAsync(Guid userId, CancellationToken ct)
     {
@@ -85,6 +111,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         new("Sunday", 7, "Domingo", "D")
     ];
 
+    private static readonly IReadOnlyList<DayOption> WeekDaysEn =
+    [
+        new("Monday", 1, "Monday", "M"), new("Tuesday", 2, "Tuesday", "T"), new("Wednesday", 3, "Wednesday", "W"),
+        new("Thursday", 4, "Thursday", "T"), new("Friday", 5, "Friday", "F"), new("Saturday", 6, "Saturday", "S"),
+        new("Sunday", 7, "Sunday", "S")
+    ];
+
     public async Task<PlanOptions> GetOptionsAsync(CancellationToken ct)
     {
         var equipment = (await db.ExerciseCatalog.AsNoTracking().Where(e => e.IsActive).Select(e => e.RequiredEquipment).ToListAsync(ct))
@@ -94,7 +127,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
             WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
             2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
-            WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
+            Lang == AppLanguage.En ? WeekDaysEn : WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
             PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod);
     }
 
@@ -439,7 +472,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var next = timeline.Next(
             pending.Select(s => new TimelineSession(s.Id, s.SequenceIndex, s.WeekNumber, s.Date, s.Title)).ToList(), Today,
             RecoveryAdvisor.AlternativeCandidates + 1);
-        var overdue = next.Overdue.Select(s => new OverdueSessionView(s.Id, s.SequenceIndex, s.Title, s.Date!.Value)).ToList();
+        var overdue = next.Overdue.Select(s => new OverdueSessionView(s.Id, s.SequenceIndex, TitleOf(s.Title), s.Date!.Value)).ToList();
         if (next.Next is null)
             return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, null, null, null, false, overdue);
 
@@ -469,10 +502,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 PrescriptionJson.Read(s.PrescriptionJson).Select(e => new RecoveryPlannedExercise(
                     e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList())).ToList();
             var recommendation = RecoveryAdvisor.Recommend(
-                candidates, await RecoveryHistoryAsync(userId, clock.GetUtcNow(), ct), clock.GetUtcNow(), Enum.Parse<TrainingExperience>(plan.Experience));
+                candidates, await RecoveryHistoryAsync(userId, clock.GetUtcNow(), ct), clock.GetUtcNow(), Enum.Parse<TrainingExperience>(plan.Experience), Lang);
             availability = new AvailabilityView(
                 recommendation.Next.State.ToString(), recommendation.Next.AvailableAt, recommendation.Next.Reasons,
-                recommendation.Alternatives.Select(a => new RecoveryAlternativeView(a.SessionId, a.SequenceIndex, a.Title)).ToList());
+                recommendation.Alternatives.Select(a => new RecoveryAlternativeView(a.SessionId, a.SequenceIndex, TitleOf(a.Title))).ToList());
         }
 
         return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
@@ -497,9 +530,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var days = (int)Math.Floor((clock.GetUtcNow() - at).TotalDays);
         if (days < ReentryAfterDays) return null;
         var applied = premium && await EaseBackInAsync(plan, next, at, ct);
-        return new ReentryView(days, applied
+        return new ReentryView(days, T(applied
             ? $"Llevas {days} días sin entrenar. Hemos aligerado esta sesión (una serie menos y una repetición más en reserva) para que vuelvas con buen pie; tu plan sigue donde lo dejaste."
-            : $"Llevas {days} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión.", applied);
+            : $"Llevas {days} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión."), applied);
     }
 
     public const string ReentryKind = "reentry";
@@ -653,7 +686,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             var session = sessions[log.PlannedSessionId];
             var planned = PrescriptionJson.Read(session.PrescriptionJson).Sum(e => e.Sets);
-            return new HistoryItem(session.Id, session.WeekNumber, session.Date, session.Title, log.Outcome.ToString(),
+            return new HistoryItem(session.Id, session.WeekNumber, session.Date, TitleOf(session.Title), log.Outcome.ToString(),
                 log.LoggedAt, log.Sets.Count(s => s.Completed), planned, log.PerformedAt);
         }).ToList();
     }
@@ -805,6 +838,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var report = await subscriptions.HasPremiumAsync(userId, ct)
             ? await AdaptAsync(plan, session, workout, prescribed, now, ct)
             : new AdaptationReport([], "none", AdaptationLockedMessage, [], [], Locked: true);
+        report = Localized(report);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -828,7 +862,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
         var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id).OrderBy(a => a.AppliedAt).ToListAsync(ct))
             .Select(a => new AppliedAdaptationView(a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation)).ToList();
-        var report = new AdaptationReport([], "none", "Este registro ya estaba guardado.", applied, []);
+        var report = Localized(new AdaptationReport([], "none", "Este registro ya estaba guardado.", applied, []));
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, existing), report, Replayed: true));
     }
 
@@ -965,9 +999,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, ct) : ([], []);
         applied.AddRange(feedback.Applied);
 
-        return new AdaptationReport(
+        return Localized(new AdaptationReport(
             outcome.Exercises.Select(a => new ExerciseAdviceView(a.ExerciseId, a.Action, a.Explanation, a.NextLoadKg, a.SuggestedRepetitions)).ToList(),
-            outcome.SessionAction, outcome.SessionExplanation, applied, outcome.Notes.Concat(feedback.Notes).Concat(lateNotes).ToList());
+            outcome.SessionAction, outcome.SessionExplanation, applied, outcome.Notes.Concat(feedback.Notes).Concat(lateNotes).ToList()));
 
         static bool Set(out string target, string value) { target = value; return true; }
     }
@@ -1056,8 +1090,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return PlanResult<AlternativesResult>.Ok(new AlternativesResult(
             exerciseId,
             alternatives.Alternatives.Select(a => new AlternativeView(
-                a.ExerciseId, a.Name, a.MovementPattern, a.PrimaryMuscleGroups, a.RequiredEquipment, a.MatchLevel)).ToList(),
-            alternatives.Message));
+                a.ExerciseId, NameOf(a.ExerciseId, a.Name), a.MovementPattern, a.PrimaryMuscleGroups, a.RequiredEquipment, a.MatchLevel)).ToList(),
+            Tn(alternatives.Message)));
     }
 
     public async Task<PlanResult<SessionView>> SwapExerciseAsync(
@@ -1185,9 +1219,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     // ---------------------------------------------------------------- generation of later blocks
 
-    private async Task<TrainingPlan?> ActivePlanAsync(Guid userId, CancellationToken ct) =>
-        await db.TrainingPlans.Include(p => p.Phases).Include(p => p.Mesocycles)
+    private async Task<TrainingPlan?> ActivePlanAsync(Guid userId, CancellationToken ct)
+    {
+        var plan = await db.TrainingPlans.Include(p => p.Phases).Include(p => p.Mesocycles)
             .FirstOrDefaultAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct);
+        _generatedPlan = plan is null || plan.Origin == TrainingPlanOrigin.Generated;
+        return plan;
+    }
 
     private async Task<WeekView> BuildWeekAsync(TrainingPlan plan, PlanPosition position, CancellationToken ct)
     {
@@ -1385,18 +1423,23 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             plan.Id, plan.Status.ToString(), plan.Origin.ToString(), position.State.ToString(), position.Week, plan.TotalWeeks, plan.StartDate,
             IsSequence(plan) ? null : plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1), plan.Goal, plan.Experience, plan.Split, plan.TrainingDays,
             plan.MaxSessionMinutes, plan.AvailableEquipment, plan.ExcludedExerciseIds, plan.Limitations, phase?.SequenceNumber,
-            new MacrocycleView(plan.MacrocycleName, plan.MacrocycleNotes, plan.Phases.OrderBy(p => p.SequenceNumber)
-                .Select(p => new PhaseView(p.SequenceNumber, p.Name, p.PhaseType, p.StartDate, p.EndDate, p.Objective, p.StartPeriod, p.EndPeriod)).ToList()),
-            plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer,
+            new MacrocycleView(
+                plan.Origin == TrainingPlanOrigin.Generated ? T(plan.MacrocycleName) : plan.MacrocycleName,
+                plan.Origin == TrainingPlanOrigin.Generated ? T(plan.MacrocycleNotes) : plan.MacrocycleNotes,
+                plan.Phases.OrderBy(p => p.SequenceNumber)
+                    .Select(p => new PhaseView(
+                        p.SequenceNumber, plan.Origin == TrainingPlanOrigin.Generated ? T(p.Name) : p.Name, p.PhaseType, p.StartDate, p.EndDate,
+                        T(p.Objective), p.StartPeriod, p.EndPeriod)).ToList()),
+            T(plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer),
             plan.SchedulingMode.ToString(), plan.SessionsPerPeriod);
     }
 
-    private static SessionView ToSessionView(PlannedSession session, WorkoutLog? log, IReadOnlyDictionary<string, LastPerformanceView>? last = null) => new(
-        session.Id, session.WeekNumber, session.Date, session.Date?.DayOfWeek, session.Title, session.EstimatedDurationMinutes,
+    private SessionView ToSessionView(PlannedSession session, WorkoutLog? log, IReadOnlyDictionary<string, LastPerformanceView>? last = null) => new(
+        session.Id, session.WeekNumber, session.Date, session.Date?.DayOfWeek, TitleOf(session.Title), session.EstimatedDurationMinutes,
         session.Status.ToString(),
         PrescriptionJson.Read(session.PrescriptionJson).OrderBy(e => e.Order).Select(e => new ExerciseView(
-            e.ExerciseId, e.ExerciseNameSnapshot, e.Order, e.Sets, e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve,
-            e.RestSeconds, e.ProgressionRule.ToString(), e.TargetLoadKg, e.LoadBasis, e.WarmupSets, e.WarmupNote,
+            e.ExerciseId, NameOf(e.ExerciseId, e.ExerciseNameSnapshot), e.Order, e.Sets, e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve,
+            e.RestSeconds, e.ProgressionRule.ToString(), e.TargetLoadKg, Tn(e.LoadBasis), e.WarmupSets, Tn(e.WarmupNote),
             e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
             PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId),
             last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null,

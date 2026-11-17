@@ -1,3 +1,4 @@
+using Trazo.Application.Localization;
 using Trazo.Training;
 
 namespace Trazo.Application.Planning;
@@ -54,13 +55,14 @@ public static class RecoveryAdvisor
     public const int AlternativeCandidates = 3;
 
     public static RecoveryRecommendation Recommend(
-        IReadOnlyList<RecoveryCandidate> candidates, IReadOnlyList<RecoveryExposure> history, DateTimeOffset now, TrainingExperience experience)
+        IReadOnlyList<RecoveryCandidate> candidates, IReadOnlyList<RecoveryExposure> history, DateTimeOffset now, TrainingExperience experience,
+        AppLanguage language = AppLanguage.Es)
     {
         ArgumentNullException.ThrowIfNull(candidates);
         if (candidates.Count == 0) throw new ArgumentException("At least one candidate is needed.", nameof(candidates));
         var readyAt = MuscleReadiness(history, experience);
         var assessed = candidates.OrderBy(c => c.SequenceIndex).Take(AlternativeCandidates + 1)
-            .Select(c => Assess(c, readyAt, now)).ToList();
+            .Select(c => Assess(c, readyAt, now, language)).ToList();
         var next = assessed[0];
         var alternatives = next.State == RecoveryState.Ready
             ? []
@@ -69,12 +71,13 @@ public static class RecoveryAdvisor
     }
 
     public static RecoveryAssessment Assess(
-        RecoveryCandidate candidate, IReadOnlyList<RecoveryExposure> history, DateTimeOffset now, TrainingExperience experience) =>
-        Assess(candidate, MuscleReadiness(history, experience), now);
+        RecoveryCandidate candidate, IReadOnlyList<RecoveryExposure> history, DateTimeOffset now, TrainingExperience experience,
+        AppLanguage language = AppLanguage.Es) =>
+        Assess(candidate, MuscleReadiness(history, experience), now, language);
 
     private sealed record Readiness(DateTimeOffset At, DateTimeOffset PerformedAt, double Sets);
 
-    private static RecoveryAssessment Assess(RecoveryCandidate candidate, Dictionary<string, Readiness> readyAt, DateTimeOffset now)
+    private static RecoveryAssessment Assess(RecoveryCandidate candidate, Dictionary<string, Readiness> readyAt, DateTimeOffset now, AppLanguage language)
     {
         var limiting = new List<(string Muscle, Readiness Readiness)>();
         foreach (var (muscle, sets) in EffectiveSets(candidate.Exercises.Select(e => (e.PrimaryMuscles, e.SecondaryMuscles, (double)e.Sets))))
@@ -86,9 +89,12 @@ public static class RecoveryAdvisor
 
         var availableAt = limiting.Max(l => l.Readiness.At);
         var state = availableAt - now <= TimeSpan.FromHours(CautionHours) ? RecoveryState.Caution : RecoveryState.Wait;
-        var reasons = limiting.OrderByDescending(l => l.Readiness.At).Take(3).Select(l =>
-            $"{Label(l.Muscle)}: trabajado hace {Hours(now - l.Readiness.PerformedAt)} ({Math.Round(l.Readiness.Sets)} series efectivas); " +
-            $"necesita unas {Hours(l.Readiness.At - now)} más.").ToList();
+        var english = language == AppLanguage.En;
+        var reasons = limiting.OrderByDescending(l => l.Readiness.At).Take(3).Select(l => english
+            ? $"{Label(l.Muscle, language)}: worked {Hours(now - l.Readiness.PerformedAt, language)} ago ({Math.Round(l.Readiness.Sets)} effective sets); " +
+              $"needs about {Hours(l.Readiness.At - now, language)} more."
+            : $"{Label(l.Muscle, language)}: trabajado hace {Hours(now - l.Readiness.PerformedAt, language)} ({Math.Round(l.Readiness.Sets)} series efectivas); " +
+              $"necesita unas {Hours(l.Readiness.At - now, language)} más.").ToList();
         return new(candidate.SessionId, candidate.SequenceIndex, candidate.Title, state, availableAt, reasons);
     }
 
@@ -161,10 +167,10 @@ public static class RecoveryAdvisor
         return factor;
     }
 
-    private static string Hours(TimeSpan span)
+    private static string Hours(TimeSpan span, AppLanguage language)
     {
         var hours = Math.Max(1, (int)Math.Round(span.TotalHours));
-        return hours >= 48 ? $"{Math.Round(hours / 24.0, 1):0.#} días" : $"{hours} h";
+        return hours >= 48 ? $"{Math.Round(hours / 24.0, 1):0.#} {(language == AppLanguage.En ? "days" : "días")}" : $"{hours} h";
     }
 
     private static readonly Dictionary<string, string> Labels = new(StringComparer.Ordinal)
@@ -176,5 +182,15 @@ public static class RecoveryAdvisor
         ["Serratus"] = "Serrato", ["TibialisAnterior"] = "Tibial anterior", ["RotatorCuff"] = "Manguito rotador"
     };
 
-    private static string Label(string muscle) => Labels.GetValueOrDefault(muscle, muscle);
+    private static readonly Dictionary<string, string> LabelsEn = new(StringComparer.Ordinal)
+    {
+        ["Chest"] = "Chest", ["Lats"] = "Lats", ["UpperBack"] = "Upper back", ["Deltoids"] = "Shoulders", ["Biceps"] = "Biceps",
+        ["Triceps"] = "Triceps", ["Forearms"] = "Forearms", ["Abdominals"] = "Abs", ["Obliques"] = "Obliques",
+        ["ErectorSpinae"] = "Lower back", ["Glutes"] = "Glutes", ["Quadriceps"] = "Quads", ["Hamstrings"] = "Hamstrings",
+        ["Calves"] = "Calves", ["Adductors"] = "Adductors", ["Abductors"] = "Abductors", ["HipFlexors"] = "Hip flexors",
+        ["Serratus"] = "Serratus", ["TibialisAnterior"] = "Tibialis anterior", ["RotatorCuff"] = "Rotator cuff"
+    };
+
+    private static string Label(string muscle, AppLanguage language) =>
+        (language == AppLanguage.En ? LabelsEn : Labels).GetValueOrDefault(muscle, muscle);
 }

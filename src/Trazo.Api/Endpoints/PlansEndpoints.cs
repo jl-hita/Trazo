@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Trazo.Api.Security;
+using Trazo.Api.Support;
 using Trazo.Application.Planning;
 using Trazo.Infrastructure.Planning;
 
@@ -19,6 +20,7 @@ public static class PlansEndpoints
         var group = endpoints.MapGroup("/api/v1/plans").WithTags("Plans")
             .RequireAuthorization()
             .RequireRateLimiting(RateLimitPolicy)
+            .AddLanguage()
             .AddEndpointFilter(async (context, next) =>
             {
                 // The app sends its IANA zone with each request (X-Time-Zone); an invalid value is ignored.
