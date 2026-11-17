@@ -52,7 +52,8 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
         finally
         {
             try { if (File.Exists(temporary)) File.Delete(temporary); }
-            catch (IOException ex) { logger.LogWarning("Could not remove a temporary R8 mapping file ({ExceptionType}).", ex.GetType().Name); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            { logger.LogWarning("Could not remove a temporary R8 mapping file ({ExceptionType}).", ex.GetType().Name); }
         }
     }
 
@@ -90,9 +91,11 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
             try { await process.WaitForExitAsync(timeout.Token); }
             catch (OperationCanceledException)
             {
-                try { process.Kill(entireProcessTree: true); } catch (InvalidOperationException) { }
+                try { process.Kill(entireProcessTree: true); }
+                catch (Exception killError) when (killError is InvalidOperationException or System.ComponentModel.Win32Exception) { }
                 if (ct.IsCancellationRequested) throw;
-                try { await Task.WhenAll(stdout, stderr); } catch (IOException) { }
+                try { await Task.WhenAll(stdout, stderr); }
+                catch (Exception readError) when (readError is IOException or InvalidOperationException) { }
                 logger.LogWarning("R8 Retrace timed out for Android version {AppVersion}.", cleanVersion);
                 return null;
             }
@@ -120,7 +123,8 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
         finally
         {
             try { if (File.Exists(traceFile)) File.Delete(traceFile); }
-            catch (IOException ex) { logger.LogWarning("Could not remove a temporary Retrace input ({ExceptionType}).", ex.GetType().Name); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            { logger.LogWarning("Could not remove a temporary Retrace input ({ExceptionType}).", ex.GetType().Name); }
         }
     }
 
