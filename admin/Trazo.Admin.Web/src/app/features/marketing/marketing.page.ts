@@ -7,8 +7,9 @@ import { StrategiesTabComponent } from './strategies.tab';
 import { CampaignsTabComponent } from './campaigns.tab';
 import { FunnelTabComponent } from './funnel.tab';
 import { LeversTabComponent } from './levers.tab';
+import { EconomicsTabComponent } from './economics.tab';
 
-type Tab = 'overview' | 'strategies' | 'campaigns' | 'funnel' | 'levers';
+type Tab = 'overview' | 'strategies' | 'economics' | 'campaigns' | 'funnel' | 'levers';
 
 /**
  * Marketing panel for the commercial role (and the superadmin): which acquisition strategies bring people who sign up, train, pay and stay.
@@ -17,7 +18,7 @@ type Tab = 'overview' | 'strategies' | 'campaigns' | 'funnel' | 'levers';
 @Component({
   selector: 'trazo-marketing-page',
   standalone: true,
-  imports: [FormsModule, OverviewTabComponent, StrategiesTabComponent, CampaignsTabComponent, FunnelTabComponent, LeversTabComponent],
+  imports: [FormsModule, OverviewTabComponent, StrategiesTabComponent, CampaignsTabComponent, FunnelTabComponent, LeversTabComponent, EconomicsTabComponent],
   encapsulation: ViewEncapsulation.None,
   styles: [`
     .mk { max-width: 1280px; }
@@ -116,6 +117,7 @@ type Tab = 'overview' | 'strategies' | 'campaigns' | 'funnel' | 'levers';
         @switch (tab()) {
           @case ('overview') { <mk-overview [range]="range()" /> }
           @case ('strategies') { <mk-strategies [range]="range()" (openCampaign)="tab.set('campaigns')" /> }
+          @case ('economics') { <mk-economics [range]="range()" /> }
           @case ('campaigns') { <mk-campaigns [range]="range()" /> }
           @case ('funnel') { <mk-funnel [range]="range()" /> }
           @case ('levers') { <mk-levers [range]="range()" /> }
@@ -128,7 +130,7 @@ export class MarketingPageComponent {
   protected readonly auth = inject(AuthService);
   protected readonly presets = [{ days: 7, label: '7 days' }, { days: 30, label: '30 days' }, { days: 90, label: '90 days' }, { days: 365, label: '12 months' }];
   protected readonly tabs: { key: Tab; label: string }[] = [
-    { key: 'overview', label: 'Overview' }, { key: 'strategies', label: 'Strategies' }, { key: 'campaigns', label: 'Campaigns' },
+    { key: 'overview', label: 'Overview' }, { key: 'strategies', label: 'Strategies' }, { key: 'economics', label: 'Unit economics' }, { key: 'campaigns', label: 'Campaigns' },
     { key: 'funnel', label: 'Funnel & retention' }, { key: 'levers', label: 'Other levers' }
   ];
   protected readonly tab = signal<Tab>('overview');

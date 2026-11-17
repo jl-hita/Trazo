@@ -78,6 +78,7 @@ public sealed class SetupFixture : IDisposable
               "UserId" TEXT PRIMARY KEY, "CampaignId" TEXT NOT NULL, "Source" TEXT NOT NULL, "AttributedAt" TEXT NOT NULL);
             CREATE TABLE campaign_daily_stats (
               "CampaignId" TEXT NOT NULL, "Day" TEXT NOT NULL, "Clicks" INTEGER NOT NULL, "Installs" INTEGER NOT NULL, PRIMARY KEY ("CampaignId", "Day"));
+            CREATE TABLE store_downloads ("Week" TEXT PRIMARY KEY, "Downloads" INTEGER NOT NULL, "Note" TEXT NULL, "UpdatedBy" TEXT NULL, "UpdatedAt" TEXT NOT NULL);
             CREATE TABLE campaign_spend (
               "Id" TEXT PRIMARY KEY, "CampaignId" TEXT NOT NULL, "Day" TEXT NOT NULL, "Amount" TEXT NOT NULL, "Note" TEXT NULL,
               "CreatedBy" TEXT NULL, "CreatedAt" TEXT NOT NULL);

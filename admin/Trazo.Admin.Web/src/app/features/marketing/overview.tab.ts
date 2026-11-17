@@ -19,6 +19,12 @@ import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.cha
         }
         <div class="mk-card"><b>{{ fmt.int(s.paywallViews) }}</b><span>Premium offer opened</span></div>
         <div class="mk-card"><b>{{ fmt.int(s.waitlistConfirmed) }}</b><span>Confirmed on the waitlist</span></div>
+        @if (s.downloads !== null) {
+          <div class="mk-card"><b>{{ fmt.int(s.downloads) }}</b><span>Store downloads (Play Console)</span></div>
+          <div class="mk-card"><b>{{ fmt.pct(s.downloadToSignup) }}</b><span>Downloads that created an account</span></div>
+        } @else {
+          <div class="mk-card"><b>—</b><span>Store downloads: enter them in Other levers</span></div>
+        }
       </div>
 
       <div class="mk-grid2">

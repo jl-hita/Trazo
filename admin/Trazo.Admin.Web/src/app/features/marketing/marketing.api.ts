@@ -40,7 +40,7 @@ export interface MixRow { key: string; name: string; signups: number; paid: numb
 export interface SummaryReport {
   kpis: Kpi[]; signupToTrial: number | null; signupToPaid: number | null; trialToPaid: number | null; cohort: number; paywallViews: number;
   subscribers: { paying: number; trialing: number; cancelingAtPeriodEnd: number; billing: number };
-  mix: MixRow[]; weeks: WeekPoint[]; waitlistConfirmed: number; activeCampaigns: number;
+  mix: MixRow[]; weeks: WeekPoint[]; waitlistConfirmed: number; activeCampaigns: number; downloads: number | null; downloadToSignup: number | null;
 }
 
 export interface PaywallReport {
@@ -72,6 +72,22 @@ export interface ReferralReport {
   renewedAtLeastOnce: number; renewedAtLeastThree: number; topCodes: { key: string; users: number; paid: number }[];
 }
 
+export interface DownloadWeek { week: string; downloads: number | null; signups: number; downloadToSignup: number | null; note: string | null; }
+export interface DownloadsReport {
+  weeks: DownloadWeek[]; downloads: number; signupsInThoseWeeks: number; downloadToSignup: number | null; unregisteredInstalls: number;
+  weeksWithData: number; weeksMissing: number;
+}
+
+export interface EconomicsRow {
+  kind: string; key: string; name: string; signups: number; payers: number; spend: number; netRevenue: number; paidMonths: number;
+  cac: number | null; netPerMonth: number | null; monthlyChurn: number | null; lifetimeMonths: number | null; ltv: number | null;
+  ltvToCac: number | null; paybackMonths: number | null; reliable: boolean;
+}
+export interface EconomicsReport {
+  minPayers: number; lifetimeCapMonths: number; overall: EconomicsRow; rows: EconomicsRow[];
+  survival: { months: number; retained: number | null; eligible: number }[]; insights: Insight[];
+}
+
 export interface MarketingOptions { channels: string[]; statuses: string[]; minReliable: number; retentionWeeks: number; }
 
 const API = '/api/v1/admin/marketing';
@@ -100,6 +116,12 @@ export class MarketingApi {
   funnel(r: Range, segment: string): Promise<MarketingFunnel> { return firstValueFrom(this.http.get<MarketingFunnel>(`${API}/funnel`, { params: this.params(r, { segment }) })); }
   retention(r: Range, segment: string): Promise<RetentionReport> { return firstValueFrom(this.http.get<RetentionReport>(`${API}/retention`, { params: this.params(r, { segment }) })); }
   paywall(r: Range): Promise<PaywallReport> { return firstValueFrom(this.http.get<PaywallReport>(`${API}/paywall`, { params: this.params(r) })); }
+  economics(r: Range): Promise<EconomicsReport> { return firstValueFrom(this.http.get<EconomicsReport>(`${API}/economics`, { params: this.params(r) })); }
+  downloads(r: Range): Promise<DownloadsReport> { return firstValueFrom(this.http.get<DownloadsReport>(`${API}/downloads`, { params: this.params(r) })); }
+  saveDownloads(input: { week: string; downloads: number; note: string | null }): Promise<{ week: string; downloads: number }> {
+    return firstValueFrom(this.http.put<{ week: string; downloads: number }>(`${API}/downloads`, input));
+  }
+  deleteDownloads(week: string): Promise<void> { return firstValueFrom(this.http.delete<void>(`${API}/downloads/${week}`)); }
   waitlist(): Promise<WaitlistReport> { return firstValueFrom(this.http.get<WaitlistReport>(`${API}/waitlist`)); }
   referrals(r: Range): Promise<ReferralReport> { return firstValueFrom(this.http.get<ReferralReport>(`${API}/referrals`, { params: this.params(r) })); }
 

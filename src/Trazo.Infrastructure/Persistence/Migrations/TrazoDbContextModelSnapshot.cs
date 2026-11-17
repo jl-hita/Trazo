@@ -730,5 +730,16 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasOne("Trazo.Domain.Marketing.MarketingCampaign", null)
                 .WithMany().HasForeignKey("CampaignId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
+
+        modelBuilder.Entity("Trazo.Domain.Marketing.StoreDownloads", b =>
+        {
+            b.Property<DateOnly>("Week").HasColumnType("date");
+            b.Property<int>("Downloads").HasColumnType("integer");
+            b.Property<string>("Note").HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("UpdatedBy").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Week");
+            b.ToTable("store_downloads");
+        });
     }
 }

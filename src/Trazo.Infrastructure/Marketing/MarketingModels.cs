@@ -41,7 +41,7 @@ public sealed record SubscribersNow(int Paying, int Trialing, int CancelingAtPer
 public sealed record SummaryReport(
     DateTimeOffset From, DateTimeOffset To, IReadOnlyList<Kpi> Kpis, double? SignupToTrial, double? SignupToPaid, double? TrialToPaid,
     int Cohort, int PaywallViews, SubscribersNow Subscribers, IReadOnlyList<MixRow> Mix, IReadOnlyList<WeekPoint> Weeks,
-    int WaitlistConfirmed, int ActiveCampaigns);
+    int WaitlistConfirmed, int ActiveCampaigns, int? Downloads, double? DownloadToSignup);
 
 public sealed record PaywallSourceRow(string Source, int Views, double Share);
 public sealed record PaywallWeekRow(string Week, int Total, IReadOnlyDictionary<string, int> BySource);
@@ -54,3 +54,24 @@ public sealed record WaitlistReport(int Total, int Confirmed, int Invited, doubl
 
 public sealed record CampaignDay(DateOnly Day, int Clicks, int Installs, int Signups, decimal Spend);
 public sealed record CampaignDetail(CampaignView Campaign, SegmentRow Row, IReadOnlyList<CampaignDay> Days, IReadOnlyList<SpendView> Spend);
+
+public sealed record DownloadWeek(string Week, int? Downloads, int Signups, double? DownloadToSignup, string? Note);
+/// <summary>Store downloads (typed in from Google Play Console) against accounts created, week by week.</summary>
+public sealed record DownloadsReport(
+    IReadOnlyList<DownloadWeek> Weeks, int Downloads, int SignupsInThoseWeeks, double? DownloadToSignup, int UnregisteredInstalls,
+    int WeeksWithData, int WeeksMissing);
+
+public sealed record SurvivalPoint(int Months, double? Retained, int Eligible);
+
+/// <summary>
+/// Unit economics of one strategy: what a paying customer costs, brings per month and keeps paying for. Orientative: it needs enough
+/// payers (see <see cref="Reliable"/>), uses Google Play prices of the tax settings and observed renewals, and caps the lifetime.
+/// </summary>
+public sealed record EconomicsRow(
+    string Kind, string Key, string Name, int Signups, int Payers, decimal Spend, decimal NetRevenue, decimal PaidMonths,
+    decimal? Cac, decimal? NetPerMonth, double? MonthlyChurn, double? LifetimeMonths, decimal? Ltv, double? LtvToCac, double? PaybackMonths,
+    bool Reliable);
+
+public sealed record EconomicsReport(
+    DateTimeOffset From, DateTimeOffset To, int MinPayers, int LifetimeCapMonths, EconomicsRow Overall, IReadOnlyList<EconomicsRow> Rows,
+    IReadOnlyList<SurvivalPoint> Survival, IReadOnlyList<Insight> Insights);

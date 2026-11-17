@@ -57,3 +57,14 @@ public sealed class CampaignSpendConfiguration : IEntityTypeConfiguration<Campai
         b.HasOne<MarketingCampaign>().WithMany().HasForeignKey(x => x.CampaignId).OnDelete(DeleteBehavior.Cascade);
     }
 }
+
+public sealed class StoreDownloadsConfiguration : IEntityTypeConfiguration<StoreDownloads>
+{
+    public void Configure(EntityTypeBuilder<StoreDownloads> b)
+    {
+        b.ToTable("store_downloads");
+        b.HasKey(x => x.Week);
+        b.Property(x => x.Note).HasMaxLength(200);
+        b.Property(x => x.UpdatedBy).HasMaxLength(60);
+    }
+}
