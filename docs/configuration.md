@@ -30,6 +30,18 @@ valor válido en la base de datos  >  variable de entorno / appsettings  >  valo
 
 Si la base de datos no responde, se conservan los últimos valores buenos (al arrancar: entorno/defectos) y se avisa en el log. Los ajustes nunca son necesarios para arrancar ni para iniciar sesión.
 
+## Diagnóstico Android (R8 Retrace)
+
+Estas claves son configuración de infraestructura y se mantienen en el entorno de systemd (`/etc/trazo/trazo.env`), no en Ajustes de la aplicación:
+
+| Variable de entorno | Para qué sirve |
+| --- | --- |
+| `Diagnostics__MappingUploadKey` | Secreto compartido con GitHub Actions para aceptar mappings de releases Android. |
+| `Diagnostics__MappingsPath` | Directorio privado y persistente donde se guardan mappings por versión (fuera del web root). |
+| `Diagnostics__RetraceExecutable` | Ruta al ejecutable `retrace` del Android SDK. Si se omite, se busca `retrace` en el PATH. |
+
+El host necesita Java 11+ y Android SDK command-line tools con R8 Retrace. Si el mapping o el ejecutable no están disponibles, el sistema conserva el stack trace ofuscado y sigue registrando el ticket.
+
 ## Inventario
 
 Leyenda de «Crítica»: **Sí** = sin ella el backend no arranca o nadie puede iniciar sesión (o un error equivale a un bloqueo).
