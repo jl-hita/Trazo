@@ -54,12 +54,12 @@ export class LoginPageComponent {
         const r = await this.auth.login(this.email().trim(), this.password());
         if (r.status === 'two-factor') { this.challenge.set(r.challengeToken); return; }
       }
-      if (!this.auth.isStaff) {
+      if (!this.auth.canUseConsole) {
         this.auth.clear();
         this.error.set('This console is only available to administrators.');
         return;
       }
-      await this.router.navigateByUrl(this.auth.isSuperadmin ? '/overview' : '/reviews');
+      await this.router.navigateByUrl(this.auth.home);
     } catch (e) {
       const status = (e as { status?: number }).status;
       this.error.set(status === 429 ? 'Too many attempts. Wait a minute.'

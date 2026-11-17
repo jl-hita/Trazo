@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { adminGuard, loginGuard, setupGuard, setupPageGuard, superadminGuard } from './core/guards';
+import { adminGuard, fiscalGuard, loginGuard, setupGuard, setupPageGuard, staffGuard, superadminGuard } from './core/guards';
 
 export const routes: Routes = [
   // Páginas legales públicas, accesibles sin iniciar sesión.
@@ -70,7 +70,9 @@ export const routes: Routes = [
     loadComponent: () => import('./features/shell/shell.component').then(m => m.ShellComponent),
     children: [
       // Open to every administrator.
-      { path: 'reviews', loadComponent: () => import('./features/reviews/reviews.page').then(m => m.ReviewsPageComponent) },
+      { path: 'reviews', canActivate: [staffGuard], loadComponent: () => import('./features/reviews/reviews.page').then(m => m.ReviewsPageComponent) },
+      // Tax management: the superadmin and the accountant (gestor).
+      { path: 'fiscal', canActivate: [fiscalGuard], loadComponent: () => import('./features/fiscal/fiscal.page').then(m => m.FiscalPageComponent) },
       // Superadmin only (the API refuses the rest to administrators as well).
       {
         path: '',
@@ -79,7 +81,6 @@ export const routes: Routes = [
           { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
           { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
           { path: 'referrals', loadComponent: () => import('./features/referrals/referrals.page').then(m => m.ReferralsPageComponent) },
-          { path: 'fiscal', loadComponent: () => import('./features/fiscal/fiscal.page').then(m => m.FiscalPageComponent) },
           { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
           { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
           { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },

@@ -27,9 +27,10 @@ export class ShellComponent {
     return s ? `Entorno ${s.environment}, versión ${s.version}${s.commit ? `, commit ${s.commit}` : ''}` : 'Versión no disponible';
   });
   protected readonly initial = computed(() => (this.auth.user()?.displayName ?? 'A').charAt(0).toUpperCase());
-  /** Administrators only get the plan reviews; every other section is for the superadmin. */
+  /** Administrators only get the plan reviews and the accountant only the tax management; every other section is for the superadmin. */
   protected get navigation(): { label: string; icon: string; link?: string }[] {
-    return this.auth.isSuperadmin ? this.allNavigation : this.allNavigation.filter(item => item.link === '/reviews');
+    if (this.auth.isSuperadmin) return this.allNavigation;
+    return this.allNavigation.filter(item => item.link === (this.auth.isAccountant ? '/fiscal' : '/reviews'));
   }
   private readonly allNavigation: { label: string; icon: string; link?: string }[] = [
     { label: 'Overview', icon: '◫', link: '/overview' },
