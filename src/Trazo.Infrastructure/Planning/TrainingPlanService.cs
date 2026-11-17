@@ -889,11 +889,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             && s.SkippedReason == set.SkippedReason && s.PainReported == set.Pain));
     }
 
-    /// <summary>Reads the whole history of the plan, asks the planner what to change and applies it to the upcoming sessions.</summary>
     /// <summary>
-    /// Rebuilds the engine's evidence in performed-at order, evaluates session-level and exercise-level feedback, then applies
-    /// accepted actions only to unresolved sessions beyond the furthest resolved program index. The evidence timestamp (not
-    /// request time) anchors cooldowns; this is what makes late registration safe and prevents it from consuming future work.
+    /// Reads the plan history, rebuilds the engine's evidence in performed-at order, evaluates session-level and exercise-level
+    /// feedback, then applies accepted actions only to unresolved sessions beyond the furthest resolved program index. The
+    /// evidence timestamp (not request time) anchors cooldowns; this makes late registration safe and prevents it from
+    /// consuming future work.
     /// </summary>
     private async Task<AdaptationReport> AdaptAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, IReadOnlyList<TrainingExercisePrescription> prescribed,
