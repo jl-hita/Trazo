@@ -140,10 +140,16 @@ public sealed record NextPositionView(int Period, int SessionInPeriod, int Sessi
 public sealed record NextSessionView(
     Guid PlanId, string SchedulingMode, string Timeline, SessionView? Session, NextPositionView? Position,
     AvailabilityView? Availability, bool AvailabilityLocked, IReadOnlyList<OverdueSessionView> Overdue, bool Locked = false,
-    ReentryView? Reentry = null);
+    ReentryView? Reentry = null, RescheduleOfferView? Reschedule = null);
 
 /// <summary>Shown when the user has been away for a long time: advice to ease back in. The plan does not move meanwhile.</summary>
-public sealed record ReentryView(int DaysSinceLastWorkout, string Message);
+public sealed record ReentryView(int DaysSinceLastWorkout, string Message, bool Applied = false);
+
+/// <summary>Offered in a calendar plan when the program is at least a week behind the calendar: <c>POST plans/current/reschedule</c> moves it to today.</summary>
+public sealed record RescheduleOfferView(int WeeksBehind);
+
+/// <summary>What rescheduling did: whole weeks the pending program moved forward, sessions whose date changed, and the plan's new dates.</summary>
+public sealed record RescheduleResult(int WeeksShifted, int SessionsMoved, DateOnly StartDate, DateOnly EndDate);
 
 public sealed record PlanOptions(
     IReadOnlyList<string> Goals, IReadOnlyList<string> Experience, IReadOnlyList<string> Splits,

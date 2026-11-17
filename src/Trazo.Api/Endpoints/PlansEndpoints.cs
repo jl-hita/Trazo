@@ -66,6 +66,10 @@ public static class PlansEndpoints
         group.MapGet("/progress", GetProgressAsync).WithName("GetProgress")
             .WithSummary("Progress across all the user's plans: per exercise (load, estimated 1RM, records), weekly sets per muscle and streak. Read-only.")
             .Produces<ProgressView>();
+        group.MapPost("/current/reschedule", RescheduleAsync).WithName("ReschedulePlan")
+            .WithSummary("Calendar plans: moves the pending program forward, by whole weeks, so its first pending week is the current one. Offered by /current/next when the program is at least a week behind.")
+            .Produces<RescheduleResult>().ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/current/archive", ArchiveAsync).WithName("ArchivePlan")
             .WithSummary("Closes the active plan so a new one can be created. The history is kept.")
             .Produces(StatusCodes.Status204NoContent).ProducesProblem(StatusCodes.Status404NotFound);
@@ -178,6 +182,13 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         return Results.Ok(await plans.GetProgressAsync(userId, ct));
+    }
+
+    private static async Task<IResult> RescheduleAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.RescheduleAsync(userId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 
     private static async Task<IResult> ArchiveAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)

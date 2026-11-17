@@ -61,6 +61,11 @@ public sealed class TrainingPlan
     public PlanSchedulingMode SchedulingMode { get; set; } = PlanSchedulingMode.Calendar;
     /// <summary>Sessions in one period: the training days of a calendar plan, the sessions of one rotation in a sequence plan.</summary>
     public int SessionsPerPeriod { get; set; }
+    /// <summary>
+    /// Days the calendar has been moved forward by rescheduling the plan from today. <see cref="StartDate"/> already includes them;
+    /// the date a workout may be registered from is <c>StartDate - ScheduleShiftDays</c>, so rescheduling never closes the past.
+    /// </summary>
+    public int ScheduleShiftDays { get; set; }
     public string[] TrainingDays { get; set; } = [];
     public int MaxSessionMinutes { get; set; }
     /// <summary>Equipment tokens the user has. Empty means everything is available.</summary>
