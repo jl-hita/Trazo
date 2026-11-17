@@ -493,4 +493,83 @@ public sealed class MarketingApiTests : IDisposable
         Assert.Equal((null, null), MarketingAnalytics.Wilson(0, 0));
         Assert.Equal("\"a,b\"", MarketingAnalytics.Csv("a,b"));
     }
+
+    // ------------------------------------------------------------------ downloads and unit economics
+
+    [Fact]
+    public async Task DownloadsAreTypedInPerWeekAndComparedWithSignups()
+    {
+        var c = await ClientAsync("commercial");
+        Assert.Equal(HttpStatusCode.Forbidden, (await (await ClientAsync("admin")).GetAsync("/api/v1/admin/marketing/downloads")).StatusCode);
+        await SeedPersonAsync(null, daysAgo: 5);
+        await SeedPersonAsync(null, daysAgo: 6);
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await c.PutAsJsonAsync("/api/v1/admin/marketing/downloads", new { week = "2026-11-11", downloads = -1 })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await c.PutAsJsonAsync("/api/v1/admin/marketing/downloads", new { week = "2035-01-01", downloads = 5 })).StatusCode);
+        var saved = await Json(await c.PutAsJsonAsync("/api/v1/admin/marketing/downloads", new { week = "2026-11-11", downloads = 100, note = "Play Console" }));
+        Assert.Equal("2026-11-09", saved.GetProperty("week").GetString()); // any day of the week is moved to its Monday
+        Assert.Equal(HttpStatusCode.OK, (await c.PutAsJsonAsync("/api/v1/admin/marketing/downloads", new { week = "2026-11-10", downloads = 120 })).StatusCode); // replaces
+
+        var from = Uri.EscapeDataString("2026-10-26T00:00:00Z");
+        var to = Uri.EscapeDataString("2026-11-17T00:00:00Z");
+        var report = await Json(await c.GetAsync($"/api/v1/admin/marketing/downloads?from={from}&to={to}"));
+        Assert.Equal(120, report.GetProperty("downloads").GetInt32());
+        Assert.Equal(2, report.GetProperty("signupsInThoseWeeks").GetInt32());
+        Assert.Equal(118, report.GetProperty("unregisteredInstalls").GetInt32());
+        Assert.Equal(1, report.GetProperty("weeksWithData").GetInt32());
+        Assert.Equal(3, report.GetProperty("weeksMissing").GetInt32()); // Oct 26, Nov 2 and the running week
+        Assert.Equal(2.0 / 120, report.GetProperty("downloadToSignup").GetDouble(), 3);
+
+        var summary = await Json(await c.GetAsync($"/api/v1/admin/marketing/summary?from={from}&to={to}"));
+        Assert.Equal(120, summary.GetProperty("downloads").GetInt32());
+
+        Assert.Equal(HttpStatusCode.NoContent, (await c.DeleteAsync("/api/v1/admin/marketing/downloads/2026-11-09")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await c.DeleteAsync("/api/v1/admin/marketing/downloads/2026-11-09")).StatusCode);
+    }
+
+    [Fact]
+    public async Task UnitEconomicsGiveChurnLifetimeValuePaybackAndTheSurvivalCurve()
+    {
+        var c = await ClientAsync("commercial");
+        var ads = await CreateCampaignAsync(c, "econ-ads", "Econ ads");
+        Assert.Equal(HttpStatusCode.OK, (await c.PostAsJsonAsync($"/api/v1/admin/marketing/campaigns/{ads}/spend", new { day = "2026-06-10", amount = 500 })).StatusCode);
+        for (var i = 0; i < 4; i++) await SeedPersonAsync(ads, daysAgo: 200, paid: true);               // paid once and left
+        for (var i = 0; i < 6; i++) await SeedPersonAsync(ads, daysAgo: 200, paid: true, renewals: 6);  // still paying after seven months
+        await SeedPersonAsync(ads, daysAgo: 200, paid: true, testPurchase: true);                       // a test purchase is not a payer
+
+        var q = $"?from={Uri.EscapeDataString("2026-04-01T00:00:00Z")}&to={Uri.EscapeDataString("2026-11-17T00:00:00Z")}";
+        var report = await Json(await c.GetAsync($"/api/v1/admin/marketing/economics{q}"));
+        var row = report.GetProperty("rows").EnumerateArray().Single(r => r.GetProperty("key").GetString() == "campaign:econ-ads");
+        Assert.Equal(10, row.GetProperty("payers").GetInt32());
+        Assert.True(row.GetProperty("reliable").GetBoolean());
+        Assert.Equal(50m, row.GetProperty("cac").GetDecimal());
+        var churn = row.GetProperty("monthlyChurn").GetDouble();
+        Assert.InRange(churn, 0.08, 0.11);
+        Assert.InRange(row.GetProperty("lifetimeMonths").GetDouble(), 9, 12);
+        Assert.True(row.GetProperty("netPerMonth").GetDecimal() > 0);
+        Assert.True(row.GetProperty("ltv").GetDecimal() > 0);
+        Assert.True(row.GetProperty("ltvToCac").GetDouble() > 0);
+        Assert.True(row.GetProperty("paybackMonths").GetDouble() > 0);
+
+        var survival = report.GetProperty("survival").EnumerateArray().ToList();
+        Assert.Equal(13, survival.Count);
+        Assert.Equal(1.0, survival[0].GetProperty("retained").GetDouble());
+        Assert.Equal(0.6, survival[1].GetProperty("retained").GetDouble(), 3); // six of ten kept paying
+        Assert.Equal(JsonValueKind.Null, survival[12].GetProperty("retained").ValueKind); // nobody is old enough yet
+
+        var overall = report.GetProperty("overall");
+        Assert.Equal(10, overall.GetProperty("payers").GetInt32());
+        Assert.Equal(50m, overall.GetProperty("cac").GetDecimal()); // blended: all spend over all payers
+    }
+
+    [Fact]
+    public async Task UnitEconomicsAreProvisionalWithFewPayers()
+    {
+        var c = await ClientAsync("commercial");
+        await SeedPersonAsync(null, daysAgo: 100, paid: true);
+        var report = await Json(await c.GetAsync($"/api/v1/admin/marketing/economics{Query()}"));
+        Assert.False(report.GetProperty("overall").GetProperty("reliable").GetBoolean());
+        Assert.Contains(report.GetProperty("insights").EnumerateArray(), i => i.GetProperty("title").GetString()!.StartsWith("Too few paying"));
+        Assert.Equal(HttpStatusCode.Forbidden, (await (await ClientAsync("accountant")).GetAsync("/api/v1/admin/marketing/economics")).StatusCode);
+    }
 }

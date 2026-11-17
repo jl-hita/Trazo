@@ -19,6 +19,8 @@ public interface IMarketingAnalytics
     Task<RetentionReport> RetentionAsync(DateTimeOffset from, DateTimeOffset to, string? segment, CancellationToken ct);
     Task<PaywallReport> PaywallAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
     Task<WaitlistReport> WaitlistAsync(CancellationToken ct);
+    Task<DownloadsReport> DownloadsAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
+    Task<EconomicsReport> EconomicsAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
     Task<CampaignDetail> CampaignAsync(Guid id, DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
     Task<string> StrategiesCsvAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct);
 }
@@ -429,10 +431,12 @@ public sealed class MarketingAnalytics(TrazoDbContext db, IFiscalService fiscal,
             live.Count(s => s.Status == SubscriptionStatus.Trial && s.ExpiresAt > now),
             live.Count(s => s.Status == SubscriptionStatus.Canceled && s.ExpiresAt > now),
             live.Count(s => s.Status is SubscriptionStatus.GracePeriod or SubscriptionStatus.OnHold));
+        var downloads = await DownloadsAsync(from, to, ct);
         var confirmed = await db.WaitlistEntries.AsNoTracking().CountAsync(w => w.ConfirmedAt != null, ct);
         var active = data.Campaigns.Count(c => c.Status == CampaignStatuses.Active);
         return new SummaryReport(from, to, kpis, Rate(trials, data.People.Count), Rate(paid, data.People.Count),
-            Rate(data.People.Count(p => p.Trial && p.Paid), trials), data.People.Count, paywall.Sum(v => v.Views), subscribers, mix, weeks, confirmed, active);
+            Rate(data.People.Count(p => p.Trial && p.Paid), trials), data.People.Count, paywall.Sum(v => v.Views), subscribers, mix, weeks, confirmed, active,
+            downloads.WeeksWithData == 0 ? null : downloads.Downloads, downloads.DownloadToSignup);
     }
 
     // ------------------------------------------------------------------ paywall, waitlist
@@ -462,6 +466,135 @@ public sealed class MarketingAnalytics(TrazoDbContext db, IFiscalService fiscal,
         var weeks = rows.GroupBy(r => Week(r.CreatedAt)).OrderByDescending(g => g.Key).Take(12).OrderBy(g => g.Key).Select(g => new WaitlistWeek(g.Key, g.Count())).ToList();
         return new WaitlistReport(rows.Count, confirmed, invited, Rate(confirmed, rows.Count), Rate(invited, confirmed),
             rows.GroupBy(r => r.Language).ToDictionary(g => g.Key, g => g.Count()), weeks);
+    }
+
+    // ------------------------------------------------------------------ store downloads
+
+    public async Task<DownloadsReport> DownloadsAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
+    {
+        var first = DownloadsService.MondayOf(DateOnly.FromDateTime(from.UtcDateTime));
+        var end = DateOnly.FromDateTime(to.UtcDateTime);
+        var entered = (await db.StoreDownloads.AsNoTracking().ToListAsync(ct)).Where(d => d.Week >= first && d.Week < end).ToDictionary(d => d.Week);
+        var signups = (await db.GrowthEvents.AsNoTracking().Where(e => e.Name == GrowthEventNames.Signup).Select(e => e.OccurredAt).ToListAsync(ct))
+            .Where(t => t >= from && t < to).GroupBy(t => DownloadsService.MondayOf(DateOnly.FromDateTime(t.UtcDateTime))).ToDictionary(g => g.Key, g => g.Count());
+        var weeks = new List<DownloadWeek>();
+        var withData = 0; var missing = 0; var downloads = 0; var signed = 0; var unregistered = 0;
+        for (var w = first; w < end; w = w.AddDays(7))
+        {
+            var s = signups.GetValueOrDefault(w);
+            if (entered.TryGetValue(w, out var d))
+            {
+                withData++; downloads += d.Downloads; signed += s; unregistered += Math.Max(0, d.Downloads - s);
+                weeks.Add(new DownloadWeek(w.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), d.Downloads, s, Rate(s, d.Downloads), d.Note));
+            }
+            else
+            {
+                missing++;
+                if (s > 0) weeks.Add(new DownloadWeek(w.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), null, s, null, null));
+            }
+        }
+        return new DownloadsReport(weeks, downloads, signed, Rate(signed, downloads), unregistered, withData, missing);
+    }
+
+    // ------------------------------------------------------------------ unit economics
+
+    public const int MinPayers = 10;
+    public const int LifetimeCapMonths = 36;
+    private const double GraceMonths = 0.5;
+
+    private sealed record Coverage(decimal Months, double Elapsed, bool Churned);
+
+    /// <summary>Months of Premium a payer paid for (annual charge = 12, refunded charge dropped), how long ago they started and whether that paid time ran out.</summary>
+    private static Coverage? CoverageOf(Person p, DateTimeOffset now)
+    {
+        var charges = p.Sales.Where(s => s.Event is FiscalEstimator.FirstPurchase or FiscalEstimator.Renewed).OrderBy(s => s.At).ToList();
+        if (charges.Count == 0) return null;
+        decimal months = 0;
+        for (var i = 0; i < charges.Count; i++) months += FiscalEstimator.PlanOf(charges, i) == "annual" ? 12 : 1;
+        if (p.Sales.Any(s => s.Event == FiscalEstimator.Refunded)) months -= FiscalEstimator.PlanOf(charges, charges.Count - 1) == "annual" ? 12 : 1;
+        months = Math.Max(0, months);
+        var elapsed = (now - charges[0].At).TotalDays / 30.4375;
+        return new Coverage(months, elapsed, (double)months + GraceMonths < elapsed);
+    }
+
+    private EconomicsRow Economy(string kind, string key, string name, IReadOnlyList<Person> people, decimal spend, FiscalProfile profile)
+    {
+        var now = clock.GetUtcNow();
+        var covers = people.Select(p => CoverageOf(p, now)).OfType<Coverage>().ToList();
+        var payers = covers.Count;
+        var months = covers.Sum(c => c.Months);
+        var revenue = Revenue(people, profile);
+        var exposure = covers.Sum(c => Math.Min((double)c.Months, c.Elapsed));
+        var churned = covers.Count(c => c.Churned);
+        double? churn = payers > 0 && exposure > 0 ? Math.Round(churned / exposure, 4) : null;
+        double? lifetime = churn is null ? null : churn == 0 ? LifetimeCapMonths : Math.Round(Math.Min(1 / churn.Value, LifetimeCapMonths), 1);
+        decimal? perMonth = months > 0 ? Math.Round(revenue / months, 2) : null;
+        decimal? ltv = perMonth is { } pm && lifetime is { } l ? Math.Round(pm * (decimal)l, 2) : null;
+        decimal? cac = spend > 0 && payers > 0 ? Math.Round(spend / payers, 2) : null;
+        return new EconomicsRow(kind, key, name, people.Count, payers, spend, revenue, months, cac, perMonth, churn, lifetime, ltv,
+            ltv is { } v && cac is { } c ? Math.Round((double)(v / c), 2) : null,
+            cac is { } c2 && perMonth is { } p2 && p2 > 0 ? Math.Round((double)(c2 / p2), 1) : null, payers >= MinPayers);
+    }
+
+    public async Task<EconomicsReport> EconomicsAsync(DateTimeOffset from, DateTimeOffset to, CancellationToken ct)
+    {
+        var data = await LoadAsync(from, to, ct);
+        var traffic = await TrafficAsync(from, to, ct);
+        var now = clock.GetUtcNow();
+        decimal SpendOf(IEnumerable<Guid> ids) => ids.Sum(i => traffic.Spend.GetValueOrDefault(i));
+
+        var overall = Economy("overall", "all", "All accounts (blended)", data.People, SpendOf(data.Campaigns.Select(c => c.Id)), data.Profile);
+        var rows = new List<EconomicsRow>
+        {
+            Economy("channel", CampaignChannels.Organic, ChannelName(CampaignChannels.Organic), data.People.Where(p => p.Channel == CampaignChannels.Organic).ToList(), 0, data.Profile),
+            Economy("channel", CampaignChannels.Referral, ChannelName(CampaignChannels.Referral), data.People.Where(p => p.Channel == CampaignChannels.Referral).ToList(), 0, data.Profile)
+        };
+        foreach (var channel in CampaignChannels.All)
+        {
+            var ids = data.Campaigns.Where(c => c.Channel == channel).Select(c => c.Id).ToList();
+            var people = data.People.Where(p => p.Channel == channel).ToList();
+            if (ids.Count > 0 || people.Count > 0) rows.Add(Economy("channel", $"channel:{channel}", ChannelName(channel), people, SpendOf(ids), data.Profile));
+        }
+        foreach (var c in data.Campaigns)
+        {
+            var people = data.People.Where(p => p.CampaignId == c.Id).ToList();
+            var spend = traffic.Spend.GetValueOrDefault(c.Id);
+            if (people.Count > 0 || spend > 0) rows.Add(Economy("campaign", $"campaign:{c.Slug}", c.Name, people, spend, data.Profile));
+        }
+
+        var payerCovers = data.People.Select(p => CoverageOf(p, now)).OfType<Coverage>().ToList();
+        var survival = Enumerable.Range(0, 13).Select(m =>
+        {
+            var eligible = payerCovers.Where(c => m == 0 || c.Elapsed >= m + GraceMonths).ToList();
+            return new SurvivalPoint(m, Rate(eligible.Count(c => c.Months > m), eligible.Count), eligible.Count);
+        }).ToList();
+        return new EconomicsReport(from, to, MinPayers, LifetimeCapMonths, overall, rows, survival, EconomyInsights(overall, rows));
+    }
+
+    public static List<Insight> EconomyInsights(EconomicsRow overall, IReadOnlyList<EconomicsRow> rows)
+    {
+        var list = new List<Insight>();
+        if (!overall.Reliable)
+        {
+            list.Add(new Insight("info", $"Too few paying customers to project lifetime value ({overall.Payers} of {MinPayers} needed)",
+                "Lifetime value, churn and payback are shown but provisional: a handful of payers can move them a lot. Judge by cost per payer meanwhile."));
+            return list;
+        }
+        if (overall.MonthlyChurn is > 0.15)
+            list.Add(new Insight("warn", $"High churn: {P(overall.MonthlyChurn)} of payers leave each month",
+                $"The average payer stays about {overall.LifetimeMonths?.ToString("0.#", CultureInfo.InvariantCulture)} months. Improving retention raises lifetime value for every channel at once."));
+        foreach (var r in rows.Where(x => x.Reliable && x.LtvToCac is not null))
+        {
+            var ratio = r.LtvToCac!.Value.ToString("0.#", CultureInfo.InvariantCulture);
+            var payback = r.PaybackMonths?.ToString("0.#", CultureInfo.InvariantCulture);
+            if (r.LtvToCac >= 3)
+                list.Add(new Insight("good", $"Pays back well: {r.Name}", $"Lifetime value is {ratio}x its cost per payer; it recovers the spend in {payback} months. Rule of thumb: 3x or more is healthy."));
+            else if (r.LtvToCac < 1)
+                list.Add(new Insight("warn", $"Does not pay back: {r.Name}", $"Lifetime value is {ratio}x its cost per payer ({E(r.Cac)} to win a payer who brings {E(r.NetPerMonth)} a month). Fix or stop it."));
+            else if (r.PaybackMonths > 12)
+                list.Add(new Insight("warn", $"Slow payback: {r.Name}", $"It takes {payback} months of subscription to recover what it cost to win the customer."));
+        }
+        return list;
     }
 
     // ------------------------------------------------------------------ one campaign, export

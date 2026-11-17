@@ -52,6 +52,14 @@ public static partial class MarketingEndpoints
             Run(async () => { var (f, t) = Period(from, to, clock); return Results.Ok(await a.RetentionAsync(f, t, segment, ct)); }));
         g.MapGet("/paywall", (IMarketingAnalytics a, TimeProvider clock, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct) =>
             Run(async () => { var (f, t) = Period(from, to, clock); return Results.Ok(await a.PaywallAsync(f, t, ct)); }));
+        g.MapGet("/economics", (IMarketingAnalytics a, TimeProvider clock, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct) =>
+            Run(async () => { var (f, t) = Period(from, to, clock); return Results.Ok(await a.EconomicsAsync(f, t, ct)); }));
+        g.MapGet("/downloads", (IMarketingAnalytics a, TimeProvider clock, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct) =>
+            Run(async () => { var (f, t) = Period(from, to, clock); return Results.Ok(await a.DownloadsAsync(f, t, ct)); }));
+        g.MapPut("/downloads", (DownloadsInput body, IDownloadsService s, ClaimsPrincipal user, CancellationToken ct) =>
+            Run(async () => Results.Ok(await s.SaveAsync(body, OperationsSettingsEndpoints.Actor(user), ct))));
+        g.MapDelete("/downloads/{week}", (DateOnly week, IDownloadsService s, CancellationToken ct) =>
+            Run(async () => { await s.DeleteAsync(week, ct); return Results.NoContent(); }));
         g.MapGet("/waitlist", (IMarketingAnalytics a, CancellationToken ct) => Run(async () => Results.Ok(await a.WaitlistAsync(ct))));
         g.MapGet("/referrals", (Trazo.Infrastructure.Growth.IGrowthAnalytics a, TimeProvider clock, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct) =>
             Run(async () => { var (f, t) = Period(from, to, clock); return Results.Ok(await a.ReferralsAsync(f, t, ct)); }));

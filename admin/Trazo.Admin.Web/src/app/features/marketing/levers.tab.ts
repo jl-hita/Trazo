@@ -1,5 +1,6 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { MarketingApi, PaywallReport, Range, ReferralReport, WaitlistReport, fmt, marketingError } from './marketing.api';
+import { FormsModule } from '@angular/forms';
+import { DownloadsReport, MarketingApi, PaywallReport, Range, ReferralReport, WaitlistReport, fmt, marketingError } from './marketing.api';
 import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.charts';
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -10,9 +11,36 @@ const SOURCE_LABELS: Record<string, string> = {
 @Component({
   selector: 'mk-levers',
   standalone: true,
-  imports: [BarsComponent, ColumnsComponent],
+  imports: [FormsModule, BarsComponent, ColumnsComponent],
   template: `
     @if (error()) { <p class="mk-err" role="alert">{{ error() }}</p> }
+
+    @if (message()) { <p class="mk-ok" role="status">{{ message() }}</p> }
+    @if (downloads(); as dl) {
+      <h2>Store downloads (Google Play Console) against accounts created</h2>
+      <p class="mk-note">Google Play does not tell the backend how many people install the app, so type the weekly figure from Play Console (Statistics → Installs → new users).
+        Then the panel shows how many downloads end in an account, and how many installs never register: the part no campaign link can see.</p>
+      <form class="mk-form" (ngSubmit)="saveDownloads()" #df="ngForm">
+        <label class="mk-field">Any day of the week <input type="date" name="week" [(ngModel)]="dlWeek" required></label>
+        <label class="mk-field">New downloads that week <input type="number" name="dl" [(ngModel)]="dlCount" required min="0" step="1"></label>
+        <label class="mk-field">Note <input name="note" [(ngModel)]="dlNote" maxlength="200" placeholder="Launch week"></label>
+        <div><button class="mk-btn on" type="submit" [disabled]="df.invalid">Save week</button></div>
+      </form>
+      <div class="mk-cards" style="margin-top:14px">
+        <div class="mk-card"><b>{{ fmt.int(dl.downloads) }}</b><span>Downloads in {{ dl.weeksWithData }} weeks entered</span></div>
+        <div class="mk-card"><b>{{ fmt.pct(dl.downloadToSignup) }}</b><span>Became an account ({{ dl.signupsInThoseWeeks }})</span></div>
+        <div class="mk-card"><b>{{ fmt.int(dl.unregisteredInstalls) }}</b><span>Installs without an account</span></div>
+        <div class="mk-card"><b [class.mk-down]="dl.weeksMissing > 0">{{ dl.weeksMissing }}</b><span>Weeks of the period without a figure</span></div>
+      </div>
+      @if (dl.weeks.length) {
+        <div class="mk-scroll"><table class="mk-table">
+          <thead><tr><th>Week starting</th><th>Downloads</th><th>Accounts created</th><th>Download → account</th><th>Note</th><th></th></tr></thead>
+          <tbody>@for (w of dl.weeks; track w.week) {
+            <tr><td>{{ w.week }}</td><td>{{ w.downloads === null ? 'missing' : w.downloads }}</td><td>{{ w.signups }}</td><td>{{ fmt.pct(w.downloadToSignup) }}</td><td>{{ w.note ?? '' }}</td>
+              <td>@if (w.downloads !== null) { <button class="mk-btn danger" type="button" (click)="removeDownloads(w.week)">Remove</button> }</td></tr>
+          }</tbody></table></div>
+      }
+    }
 
     @if (paywall(); as p) {
       <h2>Premium offer: where people see it</h2>
@@ -67,7 +95,12 @@ export class LeversTabComponent {
   protected readonly paywall = signal<PaywallReport | null>(null);
   protected readonly referrals = signal<ReferralReport | null>(null);
   protected readonly waitlist = signal<WaitlistReport | null>(null);
+  protected readonly downloads = signal<DownloadsReport | null>(null);
   protected readonly error = signal('');
+  protected readonly message = signal('');
+  protected dlWeek = new Date().toISOString().slice(0, 10);
+  protected dlCount: number | null = null;
+  protected dlNote = '';
 
   protected readonly sourceRows = computed<BarRow[]>(() =>
     (this.paywall()?.sources ?? []).filter(s => s.views > 0).map(s => ({ label: SOURCE_LABELS[s.source] ?? s.source, value: s.share, text: `${s.views} · ${fmt.pct(s.share, 0)}` })));
@@ -83,11 +116,26 @@ export class LeversTabComponent {
     effect(() => { const r = this.range(); void this.load(r); });
   }
 
-  private async load(range: Range): Promise<void> {
-    this.error.set('');
+  protected async saveDownloads(): Promise<void> {
+    if (this.dlCount === null) return;
+    this.error.set(''); this.message.set('');
     try {
-      const [p, r, w] = await Promise.all([this.api.paywall(range), this.api.referrals(range), this.api.waitlist()]);
-      this.paywall.set(p); this.referrals.set(r); this.waitlist.set(w);
+      const saved = await this.api.saveDownloads({ week: this.dlWeek, downloads: this.dlCount, note: this.dlNote.trim() || null });
+      this.message.set(`Saved: ${saved.downloads} downloads for the week of ${saved.week}.`);
+      this.dlCount = null; this.dlNote = '';
+      await this.load(this.range());
+    } catch (e) { this.error.set(marketingError(e)); }
+  }
+
+  protected async removeDownloads(week: string): Promise<void> {
+    this.error.set(''); this.message.set('');
+    try { await this.api.deleteDownloads(week); await this.load(this.range()); } catch (e) { this.error.set(marketingError(e)); }
+  }
+
+  private async load(range: Range): Promise<void> {
+    try {
+      const [p, r, w, dl] = await Promise.all([this.api.paywall(range), this.api.referrals(range), this.api.waitlist(), this.api.downloads(range)]);
+      this.paywall.set(p); this.referrals.set(r); this.waitlist.set(w); this.downloads.set(dl);
     } catch (e) { this.error.set(marketingError(e)); }
   }
 }
