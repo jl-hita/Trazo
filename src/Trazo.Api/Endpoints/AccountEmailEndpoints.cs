@@ -115,6 +115,7 @@ public static class AccountEmailEndpoints
  public sealed record RequestNote(string From,DateTimeOffset At);
  public static async Task IssueAsync(TrazoUser user,string purpose,string subject,string intro,TimeSpan lifetime,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,CancellationToken ct,RequestNote? requestNote=null,Trazo.Application.Localization.AppLanguage language=Trazo.Application.Localization.AppLanguage.Es)
  {
+  language=Trazo.Application.Localization.LanguageNegotiation.FromChoice(user.Language)??language; // the language the user chose, else the request's
   string Tr(string text)=>Trazo.Application.Localization.Localizer.Translate(text,language)!;
   var raw=Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)).TrimEnd('=').Replace('+','-').Replace('/','_');
   var now=DateTimeOffset.UtcNow;

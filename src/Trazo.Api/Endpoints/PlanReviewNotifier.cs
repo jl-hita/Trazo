@@ -77,18 +77,22 @@ internal static class PlanReviewNotifier
             {
                 using var scope = scopes.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
-                var to = await db.Users.AsNoTracking().Where(u => u.Id == userId && u.DisabledAt == null && u.EmailVerifiedAt != null)
-                    .Select(u => u.Email).FirstOrDefaultAsync();
-                if (to is null) return;
+                var target = await db.Users.AsNoTracking().Where(u => u.Id == userId && u.DisabledAt == null && u.EmailVerifiedAt != null)
+                    .Select(u => new { u.Email, u.Language }).FirstOrDefaultAsync();
+                if (target is null) return;
+                var to = target.Email;
+                // The language the user chose (Spanish when they did not: there is no request to ask).
+                var language = Trazo.Application.Localization.LanguageNegotiation.FromChoice(target.Language) ?? Trazo.Application.Localization.AppLanguage.Es;
+                string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language)!;
                 // The text never says what the team wrote; the app translates it from the kind.
                 await PushAsync(scope, logger, [userId], new PushMessage("TRAZO",
-                    closed ? "Hemos terminado de revisar tu rutina." : "Tienes un mensaje del equipo.", closed ? "review-closed" : "review-reply"));
+                    Tr(closed ? "Hemos terminado de revisar tu rutina." : "Tienes un mensaje del equipo."), closed ? "review-closed" : "review-reply"));
                 var email = scope.ServiceProvider.GetRequiredService<IEmailSender>();
                 await email.SendAsync(to,
-                    closed ? "TRAZO: hemos terminado de revisar tu rutina" : "TRAZO: tienes un mensaje del equipo",
+                    Tr(closed ? "TRAZO: hemos terminado de revisar tu rutina" : "TRAZO: tienes un mensaje del equipo"),
                     closed
-                        ? "El equipo ha terminado la revisión manual de tu rutina. Abre la app (Cuenta → Revisión manual) para leer su respuesta."
-                        : "El equipo ha respondido a tu petición de revisión. Abre la app (Cuenta → Revisión manual) para leerlo.",
+                        ? Tr("El equipo ha terminado la revisión manual de tu rutina.") + " " + Tr("Abre la app (Cuenta → Revisión manual) para leer su respuesta.")
+                        : Tr("El equipo ha respondido a tu petición de revisión.") + " " + Tr("Abre la app (Cuenta → Revisión manual) para leerlo."),
                     CancellationToken.None);
             }
             catch (Exception ex)

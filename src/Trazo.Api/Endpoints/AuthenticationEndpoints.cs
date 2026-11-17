@@ -589,5 +589,5 @@ public static class AuthenticationEndpoints
             ? id : throw new UnauthorizedAccessException();
 
     private static UserSummary ToSummary(TrazoUser user) =>
-        new(user.Id, user.Email, user.DisplayName, user.Role, user.TwoFactorEnabled, user.GoogleSubject is not null);
+        new(user.Id, user.Email, user.DisplayName, user.Role, user.TwoFactorEnabled, user.GoogleSubject is not null, user.Language);
 }

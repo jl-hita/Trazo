@@ -12,6 +12,7 @@ namespace Trazo.Api.Endpoints;
 
 public sealed record TimeZoneRequest(string? TimeZone);
 public sealed record DeletionRequestBody(string? Email);
+public sealed record LanguageRequest(string? Language);
 public sealed record DeletionConfirmBody(string? Token, string? Code);
 
 /// <summary>
@@ -37,6 +38,9 @@ public static class AccountEndpoints
         group.MapGet("/export", ExportAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("ExportAccount")
             .WithSummary("Downloads all the data of the user as JSON (access and portability). Contains no secrets.")
             .Produces<AccountExport>();
+        group.MapPut("/language", SetLanguageAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetLanguage")
+            .WithSummary("Chooses the language of the texts of the API, e-mails and notifications: es, en, or empty/auto to follow the language of each request.")
+            .Produces(StatusCodes.Status204NoContent).ProducesValidationProblem();
         group.MapPut("/time-zone", SetTimeZoneAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetTimeZone")
             .WithSummary("Saves the IANA time zone (for example Europe/Madrid) used for today and the current plan week.")
             .Produces(StatusCodes.Status204NoContent).ProducesValidationProblem();
@@ -62,10 +66,16 @@ public static class AccountEndpoints
     private static Guid? UserId(ClaimsPrincipal principal) =>
         Guid.TryParse(principal.FindFirstValue("sub") ?? principal.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
 
-    private static async Task<IResult> InfoAsync(ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
+    private static async Task<IResult> InfoAsync(ClaimsPrincipal principal, IAccountService accounts, HttpContext http, CancellationToken ct)
     {
         if (UserId(principal) is not { } id) return Results.Unauthorized();
-        return await accounts.GetInfoAsync(id, ct) is { } info ? Results.Ok(info) : Results.Unauthorized();
+        if (await accounts.GetInfoAsync(id, ct) is not { } info) return Results.Unauthorized();
+        var language = http.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current;
+        return Results.Ok(info with
+        {
+            CannotDeleteReason = Trazo.Application.Localization.Localizer.Translate(info.CannotDeleteReason, language),
+            Deletion = info.Deletion with { Warning = Trazo.Application.Localization.Localizer.Translate(info.Deletion.Warning, language) }
+        });
     }
 
     private static async Task<IResult> ExportAsync(ClaimsPrincipal principal, IAccountService accounts, HttpContext http, CancellationToken ct)
@@ -75,6 +85,14 @@ public static class AccountEndpoints
         http.Response.Headers.CacheControl = "no-store";
         http.Response.Headers.ContentDisposition = "attachment; filename=\"trazo-datos.json\"";
         return Results.Ok(export);
+    }
+
+    private static async Task<IResult> SetLanguageAsync(LanguageRequest request, ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } id) return Results.Unauthorized();
+        if (!Trazo.Application.Localization.LanguageNegotiation.TryNormalizeChoice(request.Language, out _))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["language"] = ["Usa es, en o auto."] });
+        return await accounts.SetLanguageAsync(id, request.Language, ct) ? Results.NoContent() : Results.Unauthorized();
     }
 
     private static async Task<IResult> SetTimeZoneAsync(TimeZoneRequest request, ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
@@ -135,13 +153,14 @@ public static class AccountEndpoints
 
     private static async Task SendLinkAsync(IServiceScopeFactory scopes, string normalizedEmail, string baseUrl, Trazo.Application.Localization.AppLanguage language)
     {
-        string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language)!;
         try
         {
             using var scope = scopes.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
             var user = await db.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
             if (user is null || user.DisabledAt is not null) return;
+            language = Trazo.Application.Localization.LanguageNegotiation.FromChoice(user.Language) ?? language;
+            string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language)!;
             var raw = await AccountEmailEndpoints.CreateTokenAsync(user, DeletePurpose, LinkLifetime, db, CancellationToken.None);
             var url = $"{baseUrl}/account/delete/confirm?token={Uri.EscapeDataString(raw)}";
             await scope.ServiceProvider.GetRequiredService<IEmailSender>().SendAsync(user.Email, Tr("Confirma la eliminación de tu cuenta de TRAZO"),

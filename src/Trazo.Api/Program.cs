@@ -253,6 +253,19 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseCors("AdminFrontend");
 app.UseAuthentication();
+// A user who chose a language gets it whatever the header says (so texts, e-mails and notifications agree with each other).
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true
+        && Guid.TryParse(context.User.FindFirst("sub")?.Value ?? context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out var userId))
+    {
+        var db = context.RequestServices.GetRequiredService<Trazo.Infrastructure.Persistence.TrazoDbContext>();
+        var choice = await db.Users.AsNoTracking().Where(u => u.Id == userId).Select(u => u.Language).FirstOrDefaultAsync(context.RequestAborted);
+        if (Trazo.Application.Localization.LanguageNegotiation.FromChoice(choice) is { } chosen)
+            context.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current = chosen;
+    }
+    await next();
+});
 // After authentication: the per-user limiters partition by the "sub" claim, which does not exist before it.
 app.UseRateLimiter();
 app.UseAuthorization();
