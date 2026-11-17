@@ -48,9 +48,10 @@ net revenue** and **return on spend**.
 * **Overview**: flows against the previous period (signups, trials, new payers, renewals, cancellations, refunds), conversion of the
   cohort, subscribers right now, where signups come from, week by week.
 * **Strategies**: insights, ranking by any metric, channel and campaign comparison tables, CSV download.
+* **Unit economics**: cost to win a payer, net income per payer per month, monthly churn, expected months paying, lifetime value, value ÷ cost and payback, per strategy, plus the curve of how long payers keep paying (annual plans count as 12 months). Provisional until 10 payers; lifetime capped at 36 months; churn from paid time that ran out (half a month of grace for late renewals).
 * **Campaigns**: create / edit / pause / archive campaigns, copy the link, daily clicks-installs-signups chart, spend entries per day.
 * **Funnel & retention**: the funnel and a weekly retention heat map for everybody or one strategy.
-* **Other levers**: where the Premium offer is opened (anonymous counter), the invitation programme and the landing waitlist.
+* **Other levers**: store downloads typed in weekly from Play Console (downloads → accounts, installs that never register, weeks missing), where the Premium offer is opened (anonymous counter), the invitation programme and the landing waitlist.
 
 ## API (`/api/v1/admin/marketing`, policy `marketing` = superadmin + commercial)
 
@@ -61,6 +62,8 @@ net revenue** and **return on spend**.
 | `GET /strategies?from&to` | Overall, channel rows, campaign rows and insights. |
 | `GET /strategies.csv?from&to` | The same table as CSV (formulas in names are defused with a leading `'`). |
 | `GET /funnel?from&to&segment` / `GET /retention?from&to&segment` | `segment` = `all`, `organic`, `referral`, `channel:<type>` or `campaign:<link name>`. |
+| `GET /economics?from&to` | Unit economics per strategy and the payer survival curve. |
+| `GET/PUT /downloads`, `DELETE /downloads/{monday}` | Weekly Play Console downloads (any day of the week is moved to its Monday) against accounts created. |
 | `GET /paywall?from&to` / `GET /waitlist` / `GET /referrals?from&to` | Offer openings by source, waitlist counts, invitation programme report. |
 | `GET/POST /campaigns`, `PUT /campaigns/{id}`, `GET /campaigns/{id}?from&to` | Campaign management and detail (the link name is fixed at creation). |
 | `POST /campaigns/{id}/spend`, `DELETE /campaigns/{id}/spend/{spendId}` | Spend per day, in euros. |
@@ -82,5 +85,5 @@ Channel types: `ads`, `social`, `influencer`, `email`, `partner`, `content`, `pr
 
 ## Not included (yet)
 
-Per-country or per-device breakdowns, A/B experiment arms (`growth_events.variant` is reserved), automated spend import from ad platforms,
+Automatic download counts (Google does not report them to the backend: they are typed in), per-country or per-device breakdowns, A/B experiment arms (`growth_events.variant` is reserved), automated spend import from ad platforms,
 and sending the weekly summary by e-mail (see the conversion backlog).

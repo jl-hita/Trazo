@@ -1,0 +1,83 @@
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { EconomicsReport, MarketingApi, Range, fmt, marketingError } from './marketing.api';
+import { BarRow, BarsComponent } from './marketing.charts';
+
+/**
+ * Unit economics: what winning a paying customer costs, what that customer brings per month, how long they keep paying and whether the
+ * strategy pays back. It is an estimate built on observed renewals and the Google Play prices of the tax settings.
+ */
+@Component({
+  selector: 'mk-economics',
+  standalone: true,
+  imports: [BarsComponent],
+  template: `
+    @if (error()) { <p class="mk-err" role="alert">{{ error() }}</p> }
+    @if (data(); as d) {
+      @if (d.insights.length) {
+        <div class="mk-insights">
+          @for (i of d.insights; track i.title) { <div class="mk-insight" [class]="'mk-insight ' + i.kind"><b>{{ i.title }}</b><span>{{ i.detail }}</span></div> }
+        </div>
+      }
+      <h2>All strategies together (blended)</h2>
+      <div class="mk-cards">
+        <div class="mk-card"><b>{{ d.overall.payers }}</b><span>Paying customers (accounts of the period)</span></div>
+        <div class="mk-card"><b>{{ fmt.eur(d.overall.cac) }}</b><span>Cost to win a payer (all spend ÷ all payers)</span></div>
+        <div class="mk-card"><b>{{ fmt.eur(d.overall.netPerMonth) }}</b><span>Net income per payer per month</span></div>
+        <div class="mk-card"><b>{{ fmt.pct(d.overall.monthlyChurn) }}</b><span>Payers lost per month</span></div>
+        <div class="mk-card"><b>{{ d.overall.lifetimeMonths ?? '—' }}</b><span>Expected months paying (cap {{ d.lifetimeCapMonths }})</span></div>
+        <div class="mk-card"><b>{{ fmt.eur(d.overall.ltv) }}</b><span>Lifetime value per payer (net)</span></div>
+        <div class="mk-card"><b>{{ d.overall.ltvToCac ?? '—' }}{{ d.overall.ltvToCac === null ? '' : '×' }}</b><span>Lifetime value ÷ cost</span></div>
+        <div class="mk-card"><b>{{ d.overall.paybackMonths ?? '—' }}</b><span>Months to recover the cost</span></div>
+      </div>
+      @if (!d.overall.reliable) { <p class="mk-muted">Provisional: fewer than {{ d.minPayers }} payers in the period.</p> }
+
+      <h2>How long payers keep paying</h2>
+      <p class="mk-note">Of the payers old enough to have reached each month, the share still covered by a payment. Annual plans count as twelve months. Months nobody has reached yet stay empty.</p>
+      <div class="mk-panel"><mk-bars [rows]="survival()" [max]="1" /></div>
+
+      <h2>By strategy</h2>
+      <div class="mk-scroll"><table class="mk-table">
+        <thead><tr><th>Strategy</th><th>Signups</th><th>Payers</th><th>Spend</th><th>Cost / payer</th><th>Net / month</th><th>Churn / month</th><th>Months paying</th>
+          <th>Lifetime value</th><th>Value ÷ cost</th><th>Payback (months)</th></tr></thead>
+        <tbody>
+          @for (r of d.rows; track r.key) {
+            <tr><td><span class="name">{{ r.name }}@if (!r.reliable && r.payers > 0) { <span class="mk-flag" title="Fewer payers than needed: provisional">provisional</span> }</span></td>
+              <td>{{ r.signups }}</td><td>{{ r.payers }}</td><td>{{ r.spend ? fmt.eur(r.spend) : '—' }}</td><td>{{ fmt.eur(r.cac) }}</td><td>{{ fmt.eur(r.netPerMonth) }}</td>
+              <td>{{ fmt.pct(r.monthlyChurn) }}</td><td>{{ r.lifetimeMonths ?? '—' }}</td><td>{{ fmt.eur(r.ltv) }}</td>
+              <td [class.mk-up]="(r.ltvToCac ?? 0) >= 3" [class.mk-down]="r.ltvToCac !== null && r.ltvToCac < 1">{{ r.ltvToCac === null ? '—' : r.ltvToCac + '×' }}</td>
+              <td>{{ r.paybackMonths ?? '—' }}</td></tr>
+          }
+        </tbody></table></div>
+      <details class="mk-help mk-panel" style="margin-top:18px">
+        <summary>How these figures are worked out</summary>
+        <ul>
+          <li><b>Cost per payer</b> = spend entered for the campaign in the period ÷ its payers. Organic and referral have no entered spend, so no cost.</li>
+          <li><b>Net per month</b> = estimated net income of the payers (Google Play prices, VAT and Google's fee taken out, refunds deducted) ÷ months they paid for.</li>
+          <li><b>Churn</b> = payers whose paid time ran out ÷ payer-months observed. <b>Months paying</b> = 1 ÷ churn, capped at {{ d.lifetimeCapMonths }}.</li>
+          <li><b>Lifetime value</b> = net per month × months paying. <b>Payback</b> = cost per payer ÷ net per month. Rule of thumb: value ÷ cost of 3× or more is healthy; below 1× the strategy loses money.</li>
+          <li>With few payers every one of these moves a lot. They only stop being flagged provisional from {{ d.minPayers }} payers, and old cohorts are worth more than recent ones.</li>
+        </ul>
+      </details>
+    } @else if (!error()) { <p class="mk-empty">Loading…</p> }
+  `
+})
+export class EconomicsTabComponent {
+  private readonly api = inject(MarketingApi);
+  readonly range = input.required<Range>();
+  protected readonly fmt = fmt;
+  protected readonly data = signal<EconomicsReport | null>(null);
+  protected readonly error = signal('');
+  protected readonly survival = computed<BarRow[]>(() =>
+    (this.data()?.survival ?? []).filter(p => p.retained !== null)
+      .map(p => ({ label: p.months === 0 ? 'First month' : `After ${p.months} month${p.months === 1 ? '' : 's'}`, value: p.retained ?? 0, text: `${fmt.pct(p.retained, 0)} of ${p.eligible}` })));
+
+  constructor() {
+    effect(() => { const r = this.range(); void this.load(r); });
+  }
+
+  private async load(range: Range): Promise<void> {
+    this.error.set('');
+    try { this.data.set(await this.api.economics(range)); } catch (e) { this.error.set(marketingError(e)); }
+  }
+}
+

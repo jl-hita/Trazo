@@ -49,7 +49,7 @@ public static class FiscalEstimator
     }
 
     /// <summary>Monthly or annual, from the gap to the neighbouring charge of the same subscription (Google reports both under one product).</summary>
-    private static string PlanOf(IReadOnlyList<SaleObservation> paid, int index)
+    public static string PlanOf(IReadOnlyList<SaleObservation> paid, int index)
     {
         double? gap = null;
         if (index + 1 < paid.Count) gap = (paid[index + 1].At - paid[index].At).TotalDays;

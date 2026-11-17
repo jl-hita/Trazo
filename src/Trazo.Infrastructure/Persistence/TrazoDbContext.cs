@@ -40,6 +40,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Marketing.CampaignAttribution> CampaignAttributions => Set<Trazo.Domain.Marketing.CampaignAttribution>();
     public DbSet<Trazo.Domain.Marketing.CampaignDailyStat> CampaignDailyStats => Set<Trazo.Domain.Marketing.CampaignDailyStat>();
     public DbSet<Trazo.Domain.Marketing.CampaignSpend> CampaignSpends => Set<Trazo.Domain.Marketing.CampaignSpend>();
+    public DbSet<Trazo.Domain.Marketing.StoreDownloads> StoreDownloads => Set<Trazo.Domain.Marketing.StoreDownloads>();
 
     public DbSet<Trazo.Domain.Fiscal.FiscalEntry> FiscalEntries => Set<Trazo.Domain.Fiscal.FiscalEntry>();
     public DbSet<Trazo.Domain.Fiscal.FiscalClosure> FiscalClosures => Set<Trazo.Domain.Fiscal.FiscalClosure>();

@@ -79,3 +79,16 @@ public sealed class CampaignSpend
     public string? CreatedBy { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }
+
+/// <summary>
+/// Downloads of the app in one week as shown by Google Play Console (new installs). Entered by hand: the store does not report them
+/// to the backend. It holds no user. <see cref="Week"/> is the Monday of the week.
+/// </summary>
+public sealed class StoreDownloads
+{
+    public DateOnly Week { get; set; }
+    public int Downloads { get; set; }
+    public string? Note { get; set; }
+    public string? UpdatedBy { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
+}
