@@ -29,10 +29,19 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
             await using (var output = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None,
                 64 * 1024, FileOptions.Asynchronous | FileOptions.SequentialScan))
             {
-                await content.CopyToAsync(output, ct);
+                var buffer = new byte[64 * 1024];
+                long total = 0;
+                int read;
+                while ((read = await content.ReadAsync(buffer.AsMemory(), ct)) > 0)
+                {
+                    total += read;
+                    if (total > MaxMappingBytes)
+                        throw new InvalidDataException("The R8 mapping file exceeds the 50 MB limit.");
+                    await output.WriteAsync(buffer.AsMemory(0, read), ct);
+                }
                 await output.FlushAsync(ct);
-                if (output.Length is 0 or > MaxMappingBytes)
-                    throw new InvalidDataException("The R8 mapping file is empty or exceeds the size limit.");
+                if (total == 0)
+                    throw new InvalidDataException("The R8 mapping file is empty.");
             }
             string hash;
             await using (var mappingFile = File.OpenRead(temporary))
