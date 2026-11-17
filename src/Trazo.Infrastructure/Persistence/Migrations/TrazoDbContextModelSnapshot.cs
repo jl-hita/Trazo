@@ -606,5 +606,59 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
                 .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.SetNull);
         });
+
+        modelBuilder.Entity("Trazo.Domain.Fiscal.FiscalEntry", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Kind").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<DateOnly>("Date").HasColumnType("date");
+            b.Property<string>("Period").IsRequired().HasMaxLength(7).HasColumnType("character varying(7)");
+            b.Property<string>("Concept").IsRequired().HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("Counterparty").HasMaxLength(150).HasColumnType("character varying(150)");
+            b.Property<string>("CounterpartyTaxId").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("CounterpartyCountry").HasMaxLength(2).HasColumnType("character varying(2)");
+            b.Property<string>("InvoiceNumber").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<string>("Category").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<decimal>("Base").HasPrecision(14, 2).HasColumnType("numeric(14,2)");
+            b.Property<string>("VatTreatment").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<decimal>("VatRatePct").HasPrecision(5, 2).HasColumnType("numeric(5,2)");
+            b.Property<decimal>("VatAmount").HasPrecision(14, 2).HasColumnType("numeric(14,2)");
+            b.Property<decimal>("WithholdingPct").HasPrecision(5, 2).HasColumnType("numeric(5,2)");
+            b.Property<decimal>("WithholdingAmount").HasPrecision(14, 2).HasColumnType("numeric(14,2)");
+            b.Property<decimal>("DeductiblePct").HasPrecision(5, 2).HasColumnType("numeric(5,2)");
+            b.Property<decimal>("Total").HasPrecision(14, 2).HasColumnType("numeric(14,2)");
+            b.Property<string>("Source").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("Notes").HasMaxLength(500).HasColumnType("character varying(500)");
+            b.Property<string>("CreatedBy").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Period", "Kind", "Date");
+            b.ToTable("fiscal_entries");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Fiscal.FiscalClosure", b =>
+        {
+            b.Property<string>("Period").HasMaxLength(7).HasColumnType("character varying(7)");
+            b.Property<DateTimeOffset>("ClosedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("ClosedBy").IsRequired().HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<int>("EntryCount").HasColumnType("integer");
+            b.Property<string>("SnapshotJson").IsRequired().HasMaxLength(4000).HasColumnType("character varying(4000)");
+            b.HasKey("Period");
+            b.ToTable("fiscal_closures");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Fiscal.FiscalAuditEntry", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Period").IsRequired().HasMaxLength(7).HasColumnType("character varying(7)");
+            b.Property<string>("Action").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("Actor").IsRequired().HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<string>("Reason").HasMaxLength(300).HasColumnType("character varying(300)");
+            b.Property<DateTimeOffset>("At").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("At");
+            b.ToTable("fiscal_audit");
+        });
     }
 }

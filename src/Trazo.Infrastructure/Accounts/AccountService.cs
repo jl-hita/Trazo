@@ -39,7 +39,9 @@ public static class AccountData
     public static readonly IReadOnlySet<Type> NotPersonal = new HashSet<Type>
     {
         typeof(ExerciseCatalogItem), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket),
-        typeof(Trazo.Domain.Analytics.PaywallView)
+        typeof(Trazo.Domain.Analytics.PaywallView),
+        // Business books of the owner: they refer to suppliers and customers, never to app users.
+        typeof(Trazo.Domain.Fiscal.FiscalEntry), typeof(Trazo.Domain.Fiscal.FiscalClosure), typeof(Trazo.Domain.Fiscal.FiscalAuditEntry)
     };
 }
 

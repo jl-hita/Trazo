@@ -36,6 +36,10 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Growth.ReferralRelationship> ReferralRelationships => Set<Trazo.Domain.Growth.ReferralRelationship>();
     public DbSet<Trazo.Domain.Growth.GrowthEvent> GrowthEvents => Set<Trazo.Domain.Growth.GrowthEvent>();
 
+    public DbSet<Trazo.Domain.Fiscal.FiscalEntry> FiscalEntries => Set<Trazo.Domain.Fiscal.FiscalEntry>();
+    public DbSet<Trazo.Domain.Fiscal.FiscalClosure> FiscalClosures => Set<Trazo.Domain.Fiscal.FiscalClosure>();
+    public DbSet<Trazo.Domain.Fiscal.FiscalAuditEntry> FiscalAudit => Set<Trazo.Domain.Fiscal.FiscalAuditEntry>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrazoDbContext).Assembly);

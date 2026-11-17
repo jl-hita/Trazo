@@ -56,6 +56,7 @@ public static class DependencyInjection
         services.AddScoped<ISubscriptionObserver, Trazo.Infrastructure.Growth.ReferralSubscriptionObserver>();
         services.AddScoped<Trazo.Infrastructure.Growth.ReferralReconciler>();
         services.AddScoped<Trazo.Infrastructure.Growth.IGrowthAnalytics, Trazo.Infrastructure.Growth.GrowthAnalytics>();
+        services.AddScoped<Trazo.Infrastructure.Fiscal.IFiscalService, Trazo.Infrastructure.Fiscal.FiscalService>();
         services.AddScoped<Trazo.Application.Localization.RequestLanguage>();
         services.AddScoped<Trazo.Infrastructure.Planning.IUserTimeZone, Trazo.Infrastructure.Planning.UserTimeZone>();
         services.AddScoped<Trazo.Infrastructure.Accounts.IAccountService, Trazo.Infrastructure.Accounts.AccountService>();
