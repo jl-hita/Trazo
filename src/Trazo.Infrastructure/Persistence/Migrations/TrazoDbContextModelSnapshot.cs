@@ -496,5 +496,65 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("Source");
             b.ToTable("exercise_catalog");
         });
+
+        modelBuilder.Entity("Trazo.Domain.Growth.PremiumGrant", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("Kind").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("SourceKey").IsRequired().HasMaxLength(80).HasColumnType("character varying(80)");
+            b.Property<int>("Days").HasColumnType("integer");
+            b.Property<string>("Status").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.Property<DateTimeOffset>("GrantedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("StartsAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("EndsAt").HasColumnType("timestamp with time zone");
+            b.Property<Guid?>("OriginUserId").HasColumnType("uuid");
+            b.Property<Guid?>("OriginSubscriptionId").HasColumnType("uuid");
+            b.Property<Guid?>("DeferredSubscriptionId").HasColumnType("uuid");
+            b.Property<DateTimeOffset?>("GoogleExpiryBefore").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("GoogleExpiryAfter").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("AppliedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("VoidedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("VoidReason").HasMaxLength(300).HasColumnType("character varying(300)");
+            b.Property<string>("VoidedBy").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<int>("DeferAttempts").HasColumnType("integer");
+            b.Property<string>("LastDeferError").HasMaxLength(300).HasColumnType("character varying(300)");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Kind", "SourceKey").IsUnique();
+            b.HasIndex("Status");
+            b.HasIndex("UserId", "Status");
+            b.ToTable("premium_grants");
+        });
+        modelBuilder.Entity("Trazo.Domain.Growth.PremiumGrant", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Growth.GrowthEvent", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Name").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<DateTimeOffset>("OccurredAt").HasColumnType("timestamp with time zone");
+            b.Property<Guid?>("UserId").HasColumnType("uuid");
+            b.Property<string>("Channel").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("Reference").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("Plan").HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("AppVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("Variant").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("DedupeKey").HasMaxLength(120).HasColumnType("character varying(120)");
+            b.HasKey("Id");
+            b.HasIndex("DedupeKey").IsUnique().HasFilter("\"DedupeKey\" IS NOT NULL");
+            b.HasIndex("Name", "OccurredAt");
+            b.HasIndex("Reference", "Name");
+            b.HasIndex("UserId");
+            b.ToTable("growth_events");
+        });
+        modelBuilder.Entity("Trazo.Domain.Growth.GrowthEvent", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.SetNull);
+        });
     }
 }

@@ -37,8 +37,33 @@ public static class SettingKeys
     public const string PushSenderId = "Push:Fcm:SenderId";
     public const string PushServiceAccountJson = "Push:Fcm:ServiceAccountJson";
 
+    // Promotions (superadmin): the welcome Premium period of new accounts and the referral programme.
+    public const string SignupTrialEnabled = "Promotions:SignupTrial:Enabled";
+    public const string SignupTrialDays = "Promotions:SignupTrial:Days";
+    public const string ReferralsEnabled = "Promotions:Referrals:Enabled";
+    public const string ReferralRewardDays = "Promotions:Referrals:RewardDays";
+
     /// <summary>Marker row: its primary key makes "complete the setup" a single-winner operation.</summary>
     public const string SetupCompletedAt = "Setup:CompletedAt";
+}
+
+/// <summary>
+/// Promotional Premium time. Defaults: 30 days of welcome Premium for new accounts, and 30 days per paying referral, both on.
+/// The days are recorded on each ledger row when granted, so changing them never rewrites the past.
+/// </summary>
+public sealed record PromotionsConfig(bool SignupTrialEnabled, int SignupTrialDays, bool ReferralsEnabled, int ReferralRewardDays)
+{
+    public const int DefaultDays = 30;
+    public const int MaxDays = 365;
+    public static readonly PromotionsConfig Default = new(true, DefaultDays, true, DefaultDays);
+
+    public static Dictionary<string, string[]> Validate(PromotionsConfig input)
+    {
+        var errors = new Dictionary<string, string[]>();
+        if (input.SignupTrialDays is < 1 or > MaxDays) errors["signupTrialDays"] = [$"Must be between 1 and {MaxDays} days."];
+        if (input.ReferralRewardDays is < 1 or > MaxDays) errors["referralRewardDays"] = [$"Must be between 1 and {MaxDays} days."];
+        return errors;
+    }
 }
 
 public sealed record GoogleConfig(string ClientId);

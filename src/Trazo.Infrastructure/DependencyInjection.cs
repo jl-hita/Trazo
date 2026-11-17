@@ -47,6 +47,10 @@ public static class DependencyInjection
         services.TryAddSingleton(TimeProvider.System);
         services.AddScoped<IPlayBillingClient, GooglePlayBillingClient>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
+        services.AddScoped<Trazo.Infrastructure.Growth.IPremiumGrantService, Trazo.Infrastructure.Growth.PremiumGrantService>();
+        services.AddScoped<Trazo.Infrastructure.Growth.IGrowthEvents, Trazo.Infrastructure.Growth.GrowthEventRecorder>();
+        services.AddScoped<Trazo.Infrastructure.Growth.ISignupTrialService, Trazo.Infrastructure.Growth.SignupTrialService>();
+        services.AddScoped<ISubscriptionObserver, Trazo.Infrastructure.Growth.GrowthSubscriptionObserver>();
         services.AddScoped<Trazo.Application.Localization.RequestLanguage>();
         services.AddScoped<Trazo.Infrastructure.Planning.IUserTimeZone, Trazo.Infrastructure.Planning.UserTimeZone>();
         services.AddScoped<Trazo.Infrastructure.Accounts.IAccountService, Trazo.Infrastructure.Accounts.AccountService>();

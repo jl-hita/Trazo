@@ -15,7 +15,26 @@ public sealed record VerifyResult(VerifyOutcome Outcome, Subscription? Subscript
 /// <summary>What the API tells a user about their own subscription.</summary>
 public sealed record SubscriptionStatusView(
     bool HasAccess, string Status, string? ProductId, DateTimeOffset? StartedAt, DateTimeOffset? ExpiresAt,
-    bool AutoRenewing, string Source, bool Enforced = true);
+    bool AutoRenewing, string Source, bool Enforced = true, DateTimeOffset? PromoExpiresAt = null);
+
+/// <summary>What changed in a subscription row after it was verified or re-read from Google. Observers react to it (analytics, referral rewards).</summary>
+public sealed record SubscriptionChange(
+    Subscription Row, bool IsNew, SubscriptionStatus? PreviousStatus, DateTimeOffset? PreviousPaidAt, string? PreviousOrderId, bool Revoked)
+{
+    /// <summary>The first time Google reported a real payment (not a free trial) for this purchase.</summary>
+    public bool FirstPaid => PreviousPaidAt is null && Row.PaidAt is not null && !Revoked;
+    public bool TrialStarted => Row.Status == SubscriptionStatus.Trial && PreviousStatus != SubscriptionStatus.Trial;
+    /// <summary>A later paid order on a purchase that was already paid.</summary>
+    public bool Renewed => PreviousPaidAt is not null && Row.Status == SubscriptionStatus.Active && Row.LatestOrderId is not null && Row.LatestOrderId != PreviousOrderId;
+    public bool Canceled => Row.Status == SubscriptionStatus.Canceled && PreviousStatus != SubscriptionStatus.Canceled;
+    public bool Expired => Row.Status == SubscriptionStatus.Expired && PreviousStatus != SubscriptionStatus.Expired;
+}
+
+/// <summary>Reacts to verified subscription changes. Observers must be idempotent: the same change can be delivered twice (duplicate notifications).</summary>
+public interface ISubscriptionObserver
+{
+    Task OnChangedAsync(SubscriptionChange change, CancellationToken ct);
+}
 
 public interface ISubscriptionService
 {
@@ -41,8 +60,31 @@ public interface ISubscriptionService
 
 public sealed class SubscriptionService(
     TrazoDbContext db, IPlayBillingClient play, IRuntimeSettings settings, ISecretProtector protector, TimeProvider clock,
-    ILogger<SubscriptionService> logger) : ISubscriptionService
+    ILogger<SubscriptionService> logger, Trazo.Infrastructure.Growth.IPremiumGrantService grants,
+    IEnumerable<ISubscriptionObserver> observers) : ISubscriptionService
 {
+    private async Task NotifyAsync(Subscription row, bool isNew, (SubscriptionStatus? Status, DateTimeOffset? PaidAt, string? Order) before,
+        bool revoked, CancellationToken ct)
+    {
+        var change = new SubscriptionChange(row, isNew, before.Status, before.PaidAt, before.Order, revoked);
+        foreach (var observer in observers)
+        {
+            try
+            {
+                await observer.OnChangedAsync(change, ct);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                // The purchase is already stored: a failing observer must never fail the verification or the notification.
+                // Referral rewards are also picked up by the reconciliation sweep, so nothing is lost.
+                logger.LogError(ex, "A subscription observer failed for subscription {SubscriptionId}.", row.Id);
+            }
+        }
+    }
+
+    private static (SubscriptionStatus? Status, DateTimeOffset? PaidAt, string? Order) Snapshot(Subscription? row) =>
+        row is null ? (null, null, null) : (row.Status, row.PaidAt, row.LatestOrderId);
+
     public static string HashToken(string purchaseToken) =>
         Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(purchaseToken)));
 
@@ -64,6 +106,8 @@ public sealed class SubscriptionService(
 
         var now = clock.GetUtcNow();
         var row = existing;
+        var before = Snapshot(existing);
+        var isNew = existing is null;
         if (row is null)
         {
             row = new Subscription
@@ -89,6 +133,7 @@ public sealed class SubscriptionService(
                 : new VerifyResult(VerifyOutcome.TokenInUse, null);
         }
         await AcknowledgeIfNeededAsync(row, info, purchaseToken, ct);
+        await NotifyAsync(row, isNew, before, false, ct);
         return new VerifyResult(VerifyOutcome.Verified, row);
     }
 
@@ -114,10 +159,12 @@ public sealed class SubscriptionService(
         var hash = HashToken(purchaseToken);
         var row = await db.Subscriptions.SingleOrDefaultAsync(x => x.PurchaseTokenHash == hash, ct);
         if (row is null) return null;
+        var before = Snapshot(row);
         row.Status = SubscriptionStatus.Revoked;
         row.AutoRenewing = false;
         row.UpdatedAt = clock.GetUtcNow();
         await db.SaveChangesAsync(ct);
+        await NotifyAsync(row, false, before, true, ct);
         return row;
     }
 
@@ -140,15 +187,18 @@ public sealed class SubscriptionService(
         var best = rows.Where(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now))
                        .OrderByDescending(x => x.ExpiresAt).FirstOrDefault()
                    ?? rows.OrderByDescending(x => x.UpdatedAt).FirstOrDefault();
+        var promoEnd = await grants.PromoEndAsync(userId, ct);
         if (best is null)
-            return new SubscriptionStatusView(false, "none", null, null, null, false, SubscriptionSources.GooglePlay);
+            return promoEnd is null
+                ? new SubscriptionStatusView(false, "none", null, null, null, false, SubscriptionSources.GooglePlay)
+                : new SubscriptionStatusView(true, "none", null, null, null, false, SubscriptionSources.Promo, PromoExpiresAt: promoEnd);
         var access = SubscriptionAccess.Grants(best.Status, best.ExpiresAt, now);
         // A row whose period ended but was never refreshed is reported as expired.
         var status = !access && best.Status is SubscriptionStatus.Trial or SubscriptionStatus.Active
             or SubscriptionStatus.GracePeriod or SubscriptionStatus.Canceled
             ? SubscriptionStatus.Expired : best.Status;
-        return new SubscriptionStatusView(access, ToApiName(status), best.ProductId, best.StartedAt, best.ExpiresAt,
-            best.AutoRenewing, best.Source);
+        return new SubscriptionStatusView(access || promoEnd is not null, ToApiName(status), best.ProductId, best.StartedAt, best.ExpiresAt,
+            best.AutoRenewing, access ? best.Source : promoEnd is not null ? SubscriptionSources.Promo : best.Source, PromoExpiresAt: promoEnd);
     }
 
     public async Task<bool> HasAccessAsync(Guid userId, CancellationToken ct)
@@ -156,7 +206,8 @@ public sealed class SubscriptionService(
         if (!await settings.GetSubscriptionsEnforcedAsync(ct)) return true;
         var now = clock.GetUtcNow();
         var rows = await db.Subscriptions.AsNoTracking().Where(x => x.UserId == userId).ToListAsync(ct);
-        return rows.Any(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now));
+        // Effective Premium = a valid Google Play subscription OR an active promotional window of the ledger.
+        return rows.Any(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now)) || await grants.HasPromoAsync(userId, ct);
     }
 
     public async Task<bool> HasPremiumAsync(Guid userId, CancellationToken ct)
@@ -201,9 +252,11 @@ public sealed class SubscriptionService(
             await db.SaveChangesAsync(ct);
             return row;
         }
+        var before = Snapshot(row);
         Apply(row, info, now);
         await db.SaveChangesAsync(ct);
         await AcknowledgeIfNeededAsync(row, info, purchaseToken, ct);
+        await NotifyAsync(row, false, before, false, ct);
         return row;
     }
 

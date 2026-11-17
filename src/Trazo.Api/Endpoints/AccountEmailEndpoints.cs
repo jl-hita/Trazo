@@ -20,7 +20,7 @@ public static class AccountEmailEndpoints
   group.MapPost("/password/reset",ResetAsync);
   return endpoints;
  }
- private static async Task<IResult> VerifyAsync(EmailTokenRequest request,TrazoDbContext db,CancellationToken ct)
+ private static async Task<IResult> VerifyAsync(EmailTokenRequest request,TrazoDbContext db,Trazo.Infrastructure.Growth.ISignupTrialService growth,CancellationToken ct)
  {
   var token=await FindToken(request.Token,"verify-email",db,ct);
   if(token is null)return ApiErrors.BadRequest(new{error="The verification link is invalid or expired."});
@@ -33,6 +33,7 @@ public static class AccountEmailEndpoints
   if(consumed!=1)return ApiErrors.BadRequest(new{error="The verification link is invalid or expired."});
   user.EmailVerifiedAt=now;user.UpdatedAt=now;
   await db.SaveChangesAsync(ct);await tx.CommitAsync(ct);
+  await growth.ActivatedAsync(user.Id,ct);
   return Results.Ok(new{verified=true});
  }
  private static async Task<IResult> ResendAsync(ResendVerificationRequest request,TrazoDbContext db,IEmailSender email,IRuntimeSettings config,DeletionRequestThrottle throttle,Trazo.Application.Localization.RequestLanguage language,CancellationToken ct)
