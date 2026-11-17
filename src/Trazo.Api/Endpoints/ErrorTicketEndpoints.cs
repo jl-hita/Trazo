@@ -160,7 +160,7 @@ public static class ErrorTicketEndpoints
     private static async Task<IResult> GetAsync(Guid id, TrazoDbContext db, CancellationToken ct)
     {
         var ticket = await db.ErrorTickets.AsNoTracking().Where(x => x.Id == id)
-            .Select(x => new { x.Id, x.Source, x.AppVersion, x.ErrorType, x.Occurrences, x.FirstSeenAt, x.LastSeenAt, x.Status, x.StackTrace })
+            .Select(x => new { x.Id, x.Source, x.AppVersion, x.ErrorType, x.Occurrences, x.FirstSeenAt, x.LastSeenAt, x.Status, x.StackTrace, x.OriginalStackTrace })
             .FirstOrDefaultAsync(ct);
         return ticket is null ? Results.NotFound() : Results.Ok(ticket);
     }
