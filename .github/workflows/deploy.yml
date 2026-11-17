@@ -63,6 +63,8 @@ jobs:
 
       - name: Test
         run: dotnet test Trazo.sln -c Release --no-build
+        env:
+          DOTNET_TieredPGO: "0"
 
       - name: Publish
         run: |

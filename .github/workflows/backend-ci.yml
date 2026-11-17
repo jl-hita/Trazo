@@ -23,8 +23,27 @@ permissions:
   contents: read
 
 jobs:
-  build-and-test:
+  # La batería es casi toda de integración (un host ASP.NET por test) y va limitada por CPU:
+  # se reparte en tres jobs en paralelo. El tercero es el COMPLEMENTO de los dos primeros
+  # (filtro negado), así una clase nueva siempre se ejecuta en algún lado sin tocar este archivo.
+  test:
+    name: test (${{ matrix.shard }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: heavy-1
+            filter: "FullyQualifiedName~ReferralApiTests|FullyQualifiedName~SubscriptionApiTests|FullyQualifiedName~AccountApiTests|FullyQualifiedName~WaitlistApiTests"
+          - shard: heavy-2
+            filter: "FullyQualifiedName~PlansApiTests|FullyQualifiedName~FlexibleRegistrationTests|FullyQualifiedName~AdminOverviewApiTests|FullyQualifiedName~AsynchronousSplitApiTests|FullyQualifiedName~PushApiTests|FullyQualifiedName~PlansSubscriptionTests"
+          - shard: rest
+            filter: "FullyQualifiedName!~ReferralApiTests&FullyQualifiedName!~SubscriptionApiTests&FullyQualifiedName!~AccountApiTests&FullyQualifiedName!~WaitlistApiTests&FullyQualifiedName!~PlansApiTests&FullyQualifiedName!~FlexibleRegistrationTests&FullyQualifiedName!~AdminOverviewApiTests&FullyQualifiedName!~AsynchronousSplitApiTests&FullyQualifiedName!~PushApiTests&FullyQualifiedName!~PlansSubscriptionTests"
+    env:
+      # Sin instrumentación PGO el arranque de cada host de prueba cuesta ~25 % menos CPU.
+      DOTNET_TieredPGO: "0"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
@@ -35,4 +54,12 @@ jobs:
       - name: Build
         run: dotnet build Trazo.sln --configuration Release --no-restore
       - name: Test
-        run: dotnet test Trazo.sln --configuration Release --no-build --logger "trx;LogFileName=trazo-tests.trx"
+        run: dotnet test Trazo.sln --configuration Release --no-build --filter "${{ matrix.filter }}" --logger "trx;LogFileName=trazo-tests.trx"
+
+  # Un único check estable para el resto del repositorio: falla si cualquier reparto falla o se cancela.
+  build-and-test:
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "${{ needs.test.result }}" = "success"
