@@ -20,9 +20,10 @@ are not reported again, which would loop.
 
 - A ticket has no user, no IP, no device and no request data. The public endpoint stores none of them.
 - Android crash traces are first passed through R8 Retrace when their exact app version has a mapping file. Retrace runs
-  **before** scrubbing because the obfuscated class/method names are needed for the lookup. The resulting trace is then
-  scrubbed (`ErrorTicketService.Scrub`): emails, JWTs and `Bearer` tokens, GUIDs, IPv4 addresses, URL query strings,
-  long hex/base64 strings and home folders are replaced by placeholders.
+  **before** scrubbing because the obfuscated class/method names are needed for the lookup. The readable trace is shown by
+  default; the scrubbed original obfuscated trace is retained as well and can be switched to in the admin console.
+  Both traces are scrubbed (`ErrorTicketService.Scrub`): emails, JWTs and `Bearer` tokens, GUIDs, IPv4 addresses, URL
+  query strings, long hex/base64 strings and home folders are replaced by placeholders.
 - Historical tickets without an app version, releases without an uploaded mapping, or installations without the Retrace
   executable are **not retraced**. Their original obfuscated trace is scrubbed and stored as-is; a Retrace failure never
   prevents a ticket from being recorded.
@@ -56,7 +57,7 @@ selection. Older tickets with a missing or unmatched version remain obfuscated.
 
 The Android release workflow uploads `mapping.txt` after every minified build to
 `POST /api/internal/diagnostics/mappings?appVersion=0.2.2%2B30029`, using the
-`X-Trazo-Diagnostics-Key` header. Configure these server settings:
+`X-Trazo-Diagnostics-Key` header. The API returns the SHA-256 checksum of the stored mapping in the accepted response. Configure these server settings:
 
 - `Diagnostics:MappingUploadKey`: long random secret; set the matching GitHub Actions secret
   `TRAZO_DIAGNOSTICS_UPLOAD_KEY`. It is optional for publishing, but without it mappings are not uploaded.
@@ -73,7 +74,7 @@ Superadmin:
 | Route | |
 |---|---|
 | `GET /api/v1/admin/error-tickets` | `status` (`new`, `seen`, `resolved`), `source` (`backend`, `android`), `q` (type or trace), `page`, `pageSize` (≤100). Answers `items`, paging and `overall` counts per status |
-| `GET /api/v1/admin/error-tickets/{id}` | The ticket with its `stackTrace` |
+| `GET /api/v1/admin/error-tickets/{id}` | The ticket with its `stackTrace` (readable by default) and nullable `originalStackTrace` (obfuscated version when Retrace succeeded) |
 | `PUT /api/v1/admin/error-tickets/{id}/status` | `{ "status": "seen" }` |
 | `DELETE /api/v1/admin/error-tickets/{id}` | |
 | `POST /api/v1/admin/error-tickets/test-exception` | Throws on purpose (HTTP 500) to check the whole chain; the console has a *Trigger test error* button |
