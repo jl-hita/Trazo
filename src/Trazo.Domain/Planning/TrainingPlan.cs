@@ -9,6 +9,13 @@ public enum TrainingPlanStatus
     Archived
 }
 
+/// <summary>How a plan advances: by calendar weeks, or by the order of its sessions (the user trains on whatever days suit them).</summary>
+public enum PlanSchedulingMode
+{
+    Calendar,
+    Sequence
+}
+
 public enum TrainingPlanOrigin
 {
     Manual,
@@ -49,7 +56,11 @@ public sealed class TrainingPlan
     public required string Experience { get; set; }
     public required string Split { get; set; }
     public DateOnly StartDate { get; set; }
+    /// <summary>Plan length in periods: weeks in a calendar plan, cycles (one pass through the session rotation) in a sequence plan.</summary>
     public int TotalWeeks { get; set; }
+    public PlanSchedulingMode SchedulingMode { get; set; } = PlanSchedulingMode.Calendar;
+    /// <summary>Sessions in one period: the training days of a calendar plan, the sessions of one rotation in a sequence plan.</summary>
+    public int SessionsPerPeriod { get; set; }
     public string[] TrainingDays { get; set; } = [];
     public int MaxSessionMinutes { get; set; }
     /// <summary>Equipment tokens the user has. Empty means everything is available.</summary>
@@ -80,8 +91,11 @@ public sealed class TrainingPlanPhase
     public int SequenceNumber { get; set; }
     public required string Name { get; set; }
     public required string PhaseType { get; set; }
-    public DateOnly StartDate { get; set; }
-    public DateOnly EndDate { get; set; }
+    /// <summary>First and last plan period (week, or cycle in a sequence plan) of the phase, 1-based. The dates exist only in calendar plans.</summary>
+    public int StartPeriod { get; set; }
+    public int EndPeriod { get; set; }
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public required string Objective { get; set; }
 }
 
@@ -109,7 +123,13 @@ public sealed class PlannedSession
     public Guid MesocycleId { get; set; }
     /// <summary>Plan week, 1-based.</summary>
     public int WeekNumber { get; set; }
-    public DateOnly Date { get; set; }
+    /// <summary>Planned date. Null in a sequence plan: those sessions have no date, only a place in the program.</summary>
+    public DateOnly? Date { get; set; }
+    /// <summary>
+    /// Position of the session in the program, 1-based and unique inside the plan. It is the identity of the session in the
+    /// program order and never changes when the user logs the session on a different day than planned.
+    /// </summary>
+    public int SequenceIndex { get; set; }
     public required string Title { get; set; }
     public int EstimatedDurationMinutes { get; set; }
     /// <summary>
@@ -128,7 +148,16 @@ public sealed class WorkoutLog
     public Guid UserId { get; set; }
     public Guid PlanId { get; set; }
     public Guid PlannedSessionId { get; set; }
+    /// <summary>When the log was REGISTERED in TRAZO (server clock). The time the workout happened is <see cref="PerformedAt"/>.</summary>
     public DateTimeOffset LoggedAt { get; set; }
+    /// <summary>When the workout really happened. Defaults to the registration time; it is the chronology of all the evidence.</summary>
+    public DateTimeOffset PerformedAt { get; set; }
+    /// <summary>The local date of <see cref="PerformedAt"/> in <see cref="TimeZoneId"/> (the day the user trained).</summary>
+    public DateOnly PerformedOn { get; set; }
+    /// <summary>IANA zone used to compute <see cref="PerformedOn"/>.</summary>
+    public string TimeZoneId { get; set; } = string.Empty;
+    /// <summary>Optional idempotency key sent by the client: the same key always means the same request.</summary>
+    public Guid? ClientRequestId { get; set; }
     public WorkoutOutcome Outcome { get; set; }
     /// <summary>None, Time, Fatigue, Equipment, Motivation, Illness or Other.</summary>
     public string NonCompletionReason { get; set; } = "None";
@@ -138,6 +167,11 @@ public sealed class WorkoutLog
     public decimal? SessionRpe { get; set; }
     public bool PainReported { get; set; }
     public string? Notes { get; set; }
+    /// <summary>
+    /// Post-exercise answers, one object per exercise (the engine's format): <c>[{"exerciseId":"bench","stimulus":"adequate","discomfort":"none","preFatigue":"recovered"}]</c>.
+    /// Collected for every account; only Premium adapts the plan from them.
+    /// </summary>
+    public string? ExerciseFeedbackJson { get; set; }
 
     public List<WorkoutSetLog> Sets { get; set; } = [];
 }
@@ -169,4 +203,6 @@ public sealed class PlanAdaptation
     public int SessionsChanged { get; set; }
     public required string Explanation { get; set; }
     public DateTimeOffset AppliedAt { get; set; }
+    /// <summary>When the workout that caused the change happened (its <c>PerformedAt</c>). Cooldowns are measured from it. Null on old rows.</summary>
+    public DateTimeOffset? EvidenceAt { get; set; }
 }

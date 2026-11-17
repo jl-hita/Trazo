@@ -3,7 +3,7 @@ using Trazo.Training;
 namespace Trazo.Application.Planning;
 
 public sealed record GeneratedSession(
-    int WeekNumber, DateOnly Date, DayOfWeek Day, string Title, int EstimatedDurationMinutes, string PrescriptionJson);
+    int WeekNumber, DateOnly? Date, DayOfWeek Day, string Title, int EstimatedDurationMinutes, string PrescriptionJson);
 
 public sealed record MesocycleGeneration(
     IReadOnlyList<GeneratedSession> Sessions, IReadOnlyList<string> Errors, TrainingProgramQualityReport? Quality,
@@ -46,15 +46,20 @@ public static class MesocycleGenerator
             SelectionSeed: seed), catalog);
         if (!result.Succeeded) return new([], result.Errors, null);
 
-        var sessions = result.Prescription!.Sessions
+        // A sequence plan has no dates: its sessions keep the order of the rotation (the engine's days only lay it out).
+        var sequence = profile.SchedulingMode == Trazo.Domain.Planning.PlanSchedulingMode.Sequence;
+        var generated = result.Prescription!.Sessions
             .Select(session =>
             {
                 var week = slot.StartWeek + session.WeekNumber - 1;
                 return new GeneratedSession(
-                    week, PlanSchedule.DateFor(profile.StartDate, week, session.Day), session.Day, session.Title,
-                    session.EstimatedDurationMinutes, PrescriptionJson.Serialize(session.Exercises));
-            })
-            .OrderBy(session => session.Date).ThenBy(session => session.Title, StringComparer.Ordinal)
+                    week, sequence ? null : PlanSchedule.DateFor(profile.StartDate, week, session.Day), session.Day, session.Title,
+                    session.EstimatedDurationMinutes, PrescriptionJson.Serialize(
+                        slot.PhaseType == IntensificationPhase.PhaseType ? IntensificationPhase.Apply(session.Exercises) : session.Exercises));
+            });
+        var sessions = (sequence
+                ? generated.OrderBy(session => session.WeekNumber).ThenBy(session => profile.TrainingDays.ToList().IndexOf(session.Day))
+                : generated.OrderBy(session => session.Date).ThenBy(session => session.Title, StringComparer.Ordinal))
             .ToArray();
         return new(sessions, [], result.Prescription.QualityReport, result.Prescription.EngineVersion);
     }

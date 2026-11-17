@@ -17,7 +17,9 @@ public sealed record PlanProfileInput(
     string? Split,
     bool? IncludeDeloadPhases,
     int? DeloadEveryTrainingWeeks,
-    string? TimeZone = null);
+    string? TimeZone = null,
+    string? SchedulingMode = null,
+    int? SessionsPerPeriod = null);
 
 /// <summary>A validated, typed profile the engine can use.</summary>
 public sealed record PlanProfile(
@@ -32,7 +34,9 @@ public sealed record PlanProfile(
     IReadOnlyList<string> Limitations,
     TrainingProgramSplit Split,
     bool IncludeDeloadPhases,
-    int DeloadEveryTrainingWeeks);
+    int DeloadEveryTrainingWeeks,
+    Trazo.Domain.Planning.PlanSchedulingMode SchedulingMode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar,
+    int SessionsPerPeriod = 0);
 
 public sealed record PlanProfileResult(PlanProfile? Profile, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -74,14 +78,34 @@ public static partial class PlanProfileParser
         if (!string.IsNullOrWhiteSpace(input.Split) && !TryEnum(input.Split, out split))
             Fail("split", "La distribución no es válida.");
 
+        var mode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar;
+        if (!string.IsNullOrWhiteSpace(input.SchedulingMode) && !TryEnum(input.SchedulingMode, out mode))
+            Fail("schedulingMode", $"El modo debe ser uno de: {string.Join(", ", Enum.GetNames<Trazo.Domain.Planning.PlanSchedulingMode>())}.");
+        var sequence = mode == Trazo.Domain.Planning.PlanSchedulingMode.Sequence;
+
         var days = new List<DayOfWeek>();
-        foreach (var name in input.TrainingDays ?? [])
+        var perPeriod = 0;
+        if (sequence)
         {
-            if (TryEnum<DayOfWeek>(name, out var day)) days.Add(day);
-            else Fail("trainingDays", $"El día '{Clip(name)}' no es válido.");
+            // No fixed days: the plan is a rotation of sessions. The engine still needs a set of days to lay one rotation out,
+            // so it gets as many well-spread synthetic days as sessions; they are never shown nor stored.
+            if (input.SessionsPerPeriod is not (>= MinimumSessionsPerPeriod and <= MaximumSessionsPerPeriod))
+                Fail("sessionsPerPeriod", $"Indica entre {MinimumSessionsPerPeriod} y {MaximumSessionsPerPeriod} sesiones por ciclo.");
+            else perPeriod = input.SessionsPerPeriod.Value;
+            if ((input.TrainingDays?.Length ?? 0) > 0) Fail("trainingDays", "Un plan asíncrono no tiene días fijos de entrenamiento.");
+            if (perPeriod > 0) days = SyntheticDays(perPeriod).ToList();
         }
-        if (days.Distinct().Count() != days.Count) Fail("trainingDays", "No se puede repetir un día de entrenamiento.");
-        if (days.Distinct().Count() is < 2 or > 6) Fail("trainingDays", "Selecciona entre 2 y 6 días de entrenamiento por semana.");
+        else
+        {
+            foreach (var name in input.TrainingDays ?? [])
+            {
+                if (TryEnum<DayOfWeek>(name, out var day)) days.Add(day);
+                else Fail("trainingDays", $"El día '{Clip(name)}' no es válido.");
+            }
+            if (days.Distinct().Count() != days.Count) Fail("trainingDays", "No se puede repetir un día de entrenamiento.");
+            if (days.Distinct().Count() is < 2 or > 6) Fail("trainingDays", "Selecciona entre 2 y 6 días de entrenamiento por semana.");
+            perPeriod = days.Distinct().Count();
+        }
 
         var minutes = input.MaxSessionMinutes ?? 60;
         if (minutes is < 35 or > 180) Fail("maxSessionMinutes", "La duración máxima de sesión debe estar entre 35 y 180 minutos.");
@@ -131,8 +155,21 @@ public static partial class PlanProfileParser
         if (errors.Count > 0)
             return new(null, errors.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray()));
         return new(new PlanProfile(goal, experience, start, totalWeeks, days.Distinct().ToList(), minutes, equipment,
-            excluded, limitations, split, includeDeload, deloadEvery), new Dictionary<string, string[]>());
+            excluded, limitations, split, includeDeload, deloadEvery, mode, perPeriod), new Dictionary<string, string[]>());
     }
+
+    public const int MinimumSessionsPerPeriod = 2;
+    public const int MaximumSessionsPerPeriod = 6;
+
+    /// <summary>Well-spread days of the week for one rotation of <paramref name="sessions"/> sessions (what the engine lays out).</summary>
+    public static IReadOnlyList<DayOfWeek> SyntheticDays(int sessions) => sessions switch
+    {
+        2 => [DayOfWeek.Monday, DayOfWeek.Thursday],
+        3 => [DayOfWeek.Monday, DayOfWeek.Wednesday, DayOfWeek.Friday],
+        4 => [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Thursday, DayOfWeek.Friday],
+        5 => [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Friday, DayOfWeek.Saturday],
+        _ => [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
+    };
 
     /// <summary>Same rule as the engine: lower case, words joined by hyphens.</summary>
     public static string NormalizeToken(string? value) =>

@@ -6,7 +6,8 @@ public sealed record ParsedSet(string ExerciseId, int SetNumber, decimal? Weight
 
 public sealed record ParsedLog(
     WorkoutOutcome Outcome, string NonCompletionReason, string Recovery, decimal? SessionRpe, bool Pain, string? Notes,
-    IReadOnlyList<ParsedSet> Sets);
+    IReadOnlyList<ParsedSet> Sets, IReadOnlyDictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null,
+    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null);
 
 public sealed record ParsedLogResult(ParsedLog? Log, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -64,10 +65,41 @@ public static class LogSessionValidator
                 set.PainReported ?? string.Equals(skipped, "pain", StringComparison.Ordinal)));
         }
 
+        var feedback = new Dictionary<string, ExerciseFeedbackInput>(StringComparer.Ordinal);
+        if ((request.ExerciseFeedback?.Count ?? 0) > MaximumFeedbackExercises) Fail("exerciseFeedback", $"Se admiten respuestas de como máximo {MaximumFeedbackExercises} ejercicios.");
+        foreach (var (rawId, answer) in (request.ExerciseFeedback ?? []).Take(MaximumFeedbackExercises))
+        {
+            var id = rawId?.Trim().ToLowerInvariant();
+            var field = $"exerciseFeedback.{id}";
+            if (string.IsNullOrEmpty(id) || id.Length > 100 || answer is null) { Fail("exerciseFeedback", "Cada respuesta necesita un ejercicio."); continue; }
+            var stimulus = Answer(answer.Stimulus, StimulusAnswers);
+            var discomfort = Answer(answer.Discomfort, DiscomfortAnswers);
+            var preFatigue = Answer(answer.PreFatigue, PreFatigueAnswers);
+            if (stimulus == Invalid) Fail(field, $"El estímulo debe ser: {string.Join(", ", StimulusAnswers)}.");
+            if (discomfort == Invalid) Fail(field, $"Las molestias deben ser: {string.Join(", ", DiscomfortAnswers)}.");
+            if (preFatigue == Invalid) Fail(field, $"La fatiga previa debe ser: {string.Join(", ", PreFatigueAnswers)}.");
+            if (stimulus is null && discomfort is null && preFatigue is null) continue;
+            feedback[id] = new ExerciseFeedbackInput(stimulus, discomfort, preFatigue);
+        }
+
+        if (request.PerformedAt is { } performed && performed.Year < 2000) Fail("performedAt", "La fecha del entrenamiento no es válida.");
+        if (request.ClientRequestId == Guid.Empty) Fail("clientRequestId", "El identificador de la petición no es válido.");
+
         if (errors.Count > 0) return new(null, errors.ToDictionary(p => p.Key, p => p.Value.ToArray()));
-        return new(new ParsedLog(outcome, reason!, recovery!, request.SessionRpe, request.PainReported ?? false, notes, sets),
+        return new(new ParsedLog(outcome, reason!, recovery!, request.SessionRpe, request.PainReported ?? false, notes, sets, feedback,
+                request.PerformedAt, request.ClientRequestId),
             new Dictionary<string, string[]>());
     }
+
+    private const int MaximumFeedbackExercises = 30;
+    private const string Invalid = "\u0000";
+    private static readonly string[] StimulusAnswers = ["low", "adequate", "high"];
+    private static readonly string[] DiscomfortAnswers = ["none", "mild", "strong"];
+    private static readonly string[] PreFatigueAnswers = ["recovered", "loaded"];
+
+    /// <summary>Null when not answered, <see cref="Invalid"/> when the value is not one of the allowed ones.</summary>
+    private static string? Answer(string? value, string[] allowed) =>
+        string.IsNullOrWhiteSpace(value) ? null : allowed.FirstOrDefault(a => a.Equals(value.Trim(), StringComparison.OrdinalIgnoreCase)) ?? Invalid;
 
     private static string? Canonical(string? value, string[] allowed, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback

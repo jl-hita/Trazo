@@ -266,8 +266,8 @@ public sealed record ExportPlan(
     int DeloadEveryTrainingWeeks, string MacrocycleName, string MacrocycleNotes, DateTimeOffset CreatedAt,
     IReadOnlyList<ExportPhase> Phases, IReadOnlyList<ExportSession> Sessions);
 
-public sealed record ExportPhase(int Sequence, string Name, string Type, DateOnly StartDate, DateOnly EndDate, string Objective);
-public sealed record ExportSession(Guid Id, int Week, DateOnly Date, string Title, string Status, int EstimatedDurationMinutes, JsonElement Prescription);
+public sealed record ExportPhase(int Sequence, string Name, string Type, DateOnly? StartDate, DateOnly? EndDate, string Objective);
+public sealed record ExportSession(Guid Id, int Week, DateOnly? Date, string Title, string Status, int EstimatedDurationMinutes, JsonElement Prescription);
 
 public sealed record ExportWorkoutLog(
     Guid Id, Guid PlanId, Guid SessionId, DateTimeOffset LoggedAt, string Outcome, string NonCompletionReason, string Recovery,

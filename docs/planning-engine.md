@@ -335,8 +335,7 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 
 - The plan is a generated draft; it is not a clinical prescription. The disclaimer travels in `PlanView`.
 - The week follows UTC. A device-timezone parameter can be added when the Android app needs it.
-- Intensification phases are scheduled in the macrocycle summary, but the generator does not yet change its prescription for
-  them (the source engine does not either: only the deload is a generator mode).
+- Intensification blocks (strength plans for non-beginners, second half) change the prescription of the heavy lifts: see "Intensification blocks" below.
 - The muscle questionnaire (`TrainingMuscleFeedback*`) is available in the library but not exposed.
 - Catalog data the engine cannot fix: `bench-press` and `db-bench-press` are `Intermediate` in the production catalog, so
   beginners never receive them. It needs a data migration or an administrator edit (the seeder never overwrites rows);
@@ -358,6 +357,32 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
   The app should send `X-Time-Zone: <TimeZone.getDefault().id>` on every plan request.
 - `POST /plans/current/sessions/{id}/log` is idempotent: repeating a request whose log is already saved with exactly the same data answers `200` with the saved
   session and `"replayed": true`. A different log for an already logged session still answers `409 session_already_logged`.
+
+## Planned vs performed vs registered (flexible registration)
+
+A session has an **identity and a place in the program** (`PlannedSession.Id`, `sequenceIndex`, 1-based, unique in the plan, in planned-date order);
+the planned `date` is only a suggestion. A log records **when the workout happened** and **when it was registered**, separately:
+
+| Field | Meaning |
+|---|---|
+| `performedAt` (log) | Instant of the workout. Defaults to the registration time. Chronology of all evidence (progression, adaptation, history, "last time"). |
+| `performedOn` (log) | Local day of `performedAt` in the user's zone (`timeZoneId` is stored with it, so a later zone change does not rewrite history). |
+| `loggedAt` (log) | When it was registered in TRAZO (server clock). |
+| `clientRequestId` (request, optional) | Idempotency key: the same key always answers the saved result (`replayed: true`), even if the body differs; the same key on another session is `400`. |
+
+Rules (see `docs/engine-async-split-audit-and-design.md` in the Android repo for the design this belongs to):
+
+- `POST .../log` accepts `performedAt` (optional). It cannot be more than 5 minutes in the future (a smaller drift is clamped to now) nor before the plan's start day (`400`, field `performedAt`).
+- There is **no registration window** any more: a session of an active plan can be registered however late and in any order. `session_out_of_window` is still
+  returned by swap/alternatives of sessions out of the current and previous plan weeks, not by logging.
+- Logging never changes a session's identity or planned date.
+- Adaptation reads the history ordered by `performedAt`, with `now` = the newest `performedAt`; cooldowns use the adaptation's `EvidenceAt` (the `performedAt` of the workout that caused it).
+- Only **pending sessions after the furthest resolved `sequenceIndex`** can be adapted. Sessions already resolved are never rewritten, and forgotten pending sessions before that point never use up an adaptation.
+- A workout **older than another one already saved** is stored and enters the history, but does not apply automatic changes (the report says so in `notes`): the plan was already adapted with newer data.
+- Muscle feedback treats every log as its own exposure even when several happen on the same local day.
+
+Migration `20261117100000_WorkoutPerformedAtAndSessionSequence`: `PerformedAt = LoggedAt`, `PerformedOn` = day of `LoggedAt` in `Europe/Madrid`, `TimeZoneId = 'Europe/Madrid'` for old logs;
+`SequenceIndex` numbered per plan by (`Date`, `Title`, `Id`); drops the now-redundant `IX_workout_logs_UserId` (covered by the new `(UserId, ClientRequestId)` index). Clients that do not send `performedAt` keep working unchanged.
 
 ## Last performance and proposed load
 
@@ -389,6 +414,9 @@ the app does one set of each in turn and rests after the last. The group is stor
 (like `swappedFromExerciseId`), so the adjuster keeps it; it is returned as `supersetGroup` in each exercise of the week and the block.
 Generated plans do not use supersets.
 
+Free accounts (and lapsed Premium) get `lastPerformance` and a proposed load that repeats the last load; the proposed **increase**
+(`suggestionBasis: increase`) is automatic progression and is Premium only.
+
 ## Editing a manual plan (`PUT /api/v1/plans/current/manual`)
 
 Body as in creation (name, notes, days with exercises and optional `supersetGroup`); `totalWeeks` and `startDate` are ignored because the
@@ -396,3 +424,53 @@ plan keeps its length. Only plans with origin `Manual` can be edited (`400 not_a
 Logged sessions and past days stay as they are; every pending session from today on is replaced by the new routines, so loads
 written by the adaptation into those sessions are lost (the user's edit wins). Days dropped from the routine disappear from the
 future weeks; a new weekday creates sessions from today on. Free for every account.
+
+The plan keeps its way of scheduling. A **sequence** (asynchronous) plan has no dates or "today": every pending session is replaced,
+`days[].day` is ignored and `sessionsPerPeriod` becomes the number of routines sent. Each logged session keeps its place in its
+period; the new routines fill the positions of that period that are still free, and all sessions are renumbered (`sequenceIndex`)
+in program order. A calendar plan whose request lacks a weekday for a day answers `400`.
+
+## Post-exercise questionnaire (muscle feedback)
+
+`POST .../log` accepts `exerciseFeedback`: an object by exercise id with `stimulus` (`low|adequate|high`), `discomfort` (`none|mild|strong`) and
+`preFatigue` (`recovered|loaded`); every field is optional and invalid values give `400`. It is saved with the log for every account
+(`workout_logs.ExerciseFeedbackJson`, migration `WorkoutExerciseFeedback`). Only Premium adapts from it, with the engine's
+`TrainingMuscleFeedbackAdapter`: one set more for an exercise after two sessions with low stimulus, recovered and no discomfort (below the 20-set
+weekly ceiling and 5 sets per exercise); one set less after repeated high stimulus with fatigue. Each change applies to the next sessions, has a
+14-day cooldown per exercise and is audited as `muscle_add_set` / `muscle_reduce_set`. Discomfort is never automated: mild repeated or strong discomfort
+only adds a note (swap or review suggestion) to the adaptation report.
+
+## Intensification blocks
+
+For a block whose phase is `intensification` (only strength plans of non-beginners get one, in the second half), `IntensificationPhase` (Application layer, not the
+shared engine) rewrites the generated prescription: lifts worked in 6 repetitions or fewer move to a lower range (floor 2; for example 3-6 becomes 2-4), the
+target RIR drops by one (never below 1), rest grows 30 s (max 300 s) and the target load, when there is one, follows the range with the Epley ratio (capped at +8 %,
+rounded to the load increment). Accessories keep their volume and range. Double progression and the adaptation work on the new range unchanged.
+
+## Next session and recovery (`GET /api/v1/plans/current/next`)
+
+The backend decides which session the user should do next; clients only show it.
+
+- `session`: the first **pending** session in program order (`sequenceIndex`), whatever its planned date. A session logged out of order does not move the program. `null` when nothing is pending (plan finished) or the plan is locked (`locked: true`).
+- `position`: `period` (plan week; in the asynchronous mode it will be the cycle), `sessionInPeriod`/`sessionsInPeriod` and the block (`mesocycle`).
+- `overdue`: pending sessions whose planned date has passed. They can still be registered (there is no window) and are never skipped automatically.
+- `schedulingMode`: `Calendar` today. `IPlanTimeline` (`CalendarTimeline`) answers "which is next / what is late"; the engine itself (generation, prescription, progression, adaptation) is shared by every mode.
+- `availability` (**Premium**; without it `availabilityLocked: true` and `availability: null`): `state` `Ready | Caution | Wait`, `availableAt`, `reasons` (Spanish, naming the muscles) and `alternatives` (later pending sessions that are ready now). It is advice: it never blocks logging.
+
+`RecoveryAdvisor` (application layer, not the shared engine) works per muscle, not with a fixed rest: effective sets (primary 1, secondary 0.5) over the last 6 days of the user's workouts, weighted by proximity to failure (RIR), scaled by experience, and lengthened by insufficient/partial recovery, session RPE >= 9, pain and "loaded" pre-fatigue answers. Window = `24 h + 5.5 h x weighted sets`, capped at 120 h; a muscle with fewer than 2 effective sets is not counted, and a pending session only counts muscles it trains with at least 3 effective sets. `Caution` = at most 12 h short. The coefficients are product values (constants in `RecoveryAdvisor`) to be tuned with real data.
+
+## Asynchronous split (`schedulingMode: "Sequence"`)
+
+A plan advances either by calendar weeks (`Calendar`, the default and every existing plan) or by the order of its sessions (`Sequence`): the user trains on whatever days suit them and the program continues from the session that follows the last one resolved. It is not a calendar plan without days: the **same engine** (generation, selection, prescription, progression, adaptation, recovery) runs for both, and only the answer to "where am I / what is next" changes (`IPlanTimeline`: `CalendarTimeline`, `SequenceTimeline`).
+
+- **Creation**: `POST /plans` with `schedulingMode: "Sequence"` and `sessionsPerPeriod` (2-6, the sessions of one rotation); `trainingDays` must not be sent. Manual plans (`POST /plans/manual`, free) accept `schedulingMode: "Sequence"` too: the routines are a rotation in the order given and `day` is not needed. `GET /plans/options` announces `schedulingModes` and the allowed `sessionsPerPeriod`. The mode is chosen at creation and does not change afterwards (archive and create another).
+- **Period**: the plan's unit of progress is the *period* (`weekNumber` in the responses): a week in a calendar plan, a **cycle** (one pass through the rotation) in a sequence plan. `totalWeeks` is the number of periods. Phases and blocks (mesocycles of at most 4 periods) are ranges of periods (`startPeriod`/`endPeriod` in `phases`), so the macrocycle structure is identical in both modes; the dates exist only in calendar plans.
+- **No dates**: in a sequence plan `date`, `day`, `weekStart`, `weekEnd`, `endDate` and the phase dates are `null`; `sequenceIndex` is the identity and order of every session. Clients must treat those fields as optional.
+- **Position**: the current period is the one of the first pending session; the plan is finished only when every period has been generated and every session resolved (done, partial or skipped). The clock never moves it. A block is generated when the previous one is resolved.
+- **Deloads and blocks follow progress**: a deload cycle is reached by resolving the cycles before it, never because weeks passed. The reactive deload (fatigue) still exists; its window is the next rotation of sessions (`sessionsPerPeriod`) instead of 7 days.
+- **Registration**: identical to the calendar mode (see "Planned vs performed vs registered"): any pending session can be logged at any time and in any order; a log older than newer ones already saved never changes the plan.
+- **Next session and recovery**: `GET /plans/current/next` returns the first pending session of the rotation, never any `overdue`, and (Premium) the recovery advice with ready alternatives, exactly as in the calendar mode. `reentry` appears after 21 days without training: the plan stays where it was and suggests easing back in (informational; it does not rewrite the plan).
+- **Compatibility**: migration `20261117150000_AsynchronousSplit` (existing plans become `Calendar`; `sessionsPerPeriod` from their training days; phase `startPeriod`/`endPeriod` back-filled from the dates; dates become nullable). `PlanView`, `SessionView`, `WeekView` and friends only gain fields or turn some dates nullable (always present in calendar plans). Android must read the new fields before offering the mode.
+- Fixed on the way: a block generated for an already tracked plan was saved as an UPDATE of an existing row and failed, so the second block of any plan could not be generated; it is now added explicitly.
+
+Not yet: the calendar plan's "recolocar plan desde hoy" after a week without logs, and an automatic lighter first session on re-entry.
