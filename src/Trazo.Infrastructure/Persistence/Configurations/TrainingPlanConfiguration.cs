@@ -142,6 +142,8 @@ public sealed class PlanAdaptationConfiguration : IEntityTypeConfiguration<PlanA
         builder.Property(x => x.ExerciseIds).AsJsonText();
         builder.Property(x => x.Explanation).HasMaxLength(600).IsRequired();
         builder.HasIndex(x => new { x.PlanId, x.AppliedAt });
+        // One lighter first session per absence, even if two requests arrive at once: the second insert fails and changes nothing.
+        builder.HasIndex(x => new { x.PlanId, x.EvidenceAt }).IsUnique().HasFilter("\"Kind\" = 'reentry'");
         builder.HasOne<TrainingPlan>().WithMany().HasForeignKey(x => x.PlanId).OnDelete(DeleteBehavior.Cascade);
     }
 }

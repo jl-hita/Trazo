@@ -24,6 +24,8 @@ public interface ITrainingPlanService
     Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct);
     /// <summary>The session to do next (by program order, whatever the date), with where it sits and whether the muscles are recovered.</summary>
     Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct);
+    /// <summary>Moves the pending program of a calendar plan forward, by whole weeks, so its first pending week is the current one.</summary>
+    Task<PlanResult<RescheduleResult>> RescheduleAsync(Guid userId, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
@@ -355,6 +357,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         var session = pending.First(s => s.Id == next.Next.Id);
         var premium = await subscriptions.HasPremiumAsync(userId, ct);
+        var reentry = await ReentryAsync(plan, session, premium, ct);
+        if (reentry is { Applied: true })
+        {
+            // The session may have just been made lighter: show and assess what is stored now.
+            session = await db.PlannedSessions.AsNoTracking().FirstAsync(s => s.Id == session.Id, ct);
+            pending[pending.FindIndex(s => s.Id == session.Id)] = session;
+        }
         var logs = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id && l.PlannedSessionId == session.Id).ToListAsync(ct);
         var last = await LastPerformanceAsync(userId, [session], premium, ct);
         var inPeriod = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == session.WeekNumber).Select(s => s.SequenceIndex).ToListAsync(ct);
@@ -379,21 +388,125 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         }
 
         return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
-            availability, AvailabilityLocked: !premium, overdue, Reentry: await ReentryAsync(plan, ct));
+            availability, AvailabilityLocked: !premium, overdue, Reentry: reentry,
+            Reschedule: await OfferRescheduleAsync(plan, ct));
     }
 
     /// <summary>Days without training after which a sequence plan suggests easing back in. The plan itself never moves while the user is away.</summary>
     public const int ReentryAfterDays = 21;
 
-    private async Task<ReentryView?> ReentryAsync(TrainingPlan plan, CancellationToken ct)
+    /// <summary>
+    /// After <see cref="ReentryAfterDays"/> days without training the user is told to ease back in and, with Premium, the first session
+    /// is made lighter on its own (one set less in every exercise and one repetition more in reserve), once per absence. The plan does
+    /// not move meanwhile; the usual restoring rules give the sets back after clean sessions. Reading the next session does this,
+    /// like reading the week generates its block.
+    /// </summary>
+    private async Task<ReentryView?> ReentryAsync(TrainingPlan plan, PlannedSession next, bool premium, CancellationToken ct)
     {
-        if (!IsSequence(plan)) return null;
         var lastWorkout = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id)
             .OrderByDescending(l => l.PerformedAt).Select(l => (DateTimeOffset?)l.PerformedAt).FirstOrDefaultAsync(ct);
         if (lastWorkout is not { } at) return null;
         var days = (int)Math.Floor((clock.GetUtcNow() - at).TotalDays);
-        return days < ReentryAfterDays ? null : new ReentryView(days,
-            $"Llevas {days} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión.");
+        if (days < ReentryAfterDays) return null;
+        var applied = premium && await EaseBackInAsync(plan, next, at, ct);
+        return new ReentryView(days, applied
+            ? $"Llevas {days} días sin entrenar. Hemos aligerado esta sesión (una serie menos y una repetición más en reserva) para que vuelvas con buen pie; tu plan sigue donde lo dejaste."
+            : $"Llevas {days} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión.", applied);
+    }
+
+    public const string ReentryKind = "reentry";
+
+    private async Task<RescheduleOfferView?> OfferRescheduleAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var behind = await WeeksBehindAsync(plan, await PositionAsync(plan, ct), ct);
+        return behind >= 1 ? new RescheduleOfferView(behind) : null;
+    }
+
+    /// <summary>True when the session is (now or already) lighter for this absence; false when nothing could be lightened.</summary>
+    private async Task<bool> EaseBackInAsync(TrainingPlan plan, PlannedSession next, DateTimeOffset lastWorkout, CancellationToken ct)
+    {
+        if (await db.PlanAdaptations.AsNoTracking().AnyAsync(a => a.PlanId == plan.Id && a.Kind == ReentryKind && a.EvidenceAt == lastWorkout, ct))
+            return true;
+        // A deload is already as light as it gets.
+        if (plan.Mesocycles.FirstOrDefault(m => m.Id == next.MesocycleId) is { IsDeload: true } || PrescriptionJson.IsAdaptationDeload(next.PrescriptionJson))
+            return false;
+        var session = await db.PlannedSessions.FirstAsync(s => s.Id == next.Id, ct);
+        var ids = PrescriptionJson.Read(session.PrescriptionJson).Select(e => e.ExerciseId).ToHashSet(StringComparer.Ordinal);
+        var json = session.PrescriptionJson;
+        var changed = false;
+        if (TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, ids, out var fewer, out _)) { json = fewer; changed = true; }
+        if (TrainingAdaptationPrescriptionAdjuster.TryRaiseReserve(json, out var reserve, out _)) { json = reserve; changed = true; }
+        if (!changed) return false;
+
+        var now = clock.GetUtcNow();
+        session.PrescriptionJson = json;
+        session.UpdatedAt = now;
+        db.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = ReentryKind, ExerciseIds = ids.OrderBy(id => id, StringComparer.Ordinal).ToArray(),
+            SessionsChanged = 1, AppliedAt = now, EvidenceAt = lastWorkout,
+            Explanation = "Primera sesión tras una ausencia larga: una serie menos en cada ejercicio y una repetición más en reserva."
+        });
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException)
+        {
+            // Another request lightened it first (the unique index lets only one): nothing is changed twice.
+            db.ChangeTracker.Clear();
+            return true;
+        }
+        return true;
+    }
+
+    // ---------------------------------------------------------------- reschedule from today (calendar plans)
+
+    /// <summary>
+    /// How many whole weeks the pending program is behind the calendar: the current week minus the first week that still has
+    /// something to do. Zero or negative means it is on time (or ahead).
+    /// </summary>
+    private async Task<int> WeeksBehindAsync(TrainingPlan plan, PlanPosition position, CancellationToken ct)
+    {
+        if (IsSequence(plan) || position.State != PlanTimeline.InProgress) return 0;
+        var firstPending = await db.PlannedSessions.AsNoTracking()
+            .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned).Select(s => (int?)s.WeekNumber).MinAsync(ct);
+        // Everything generated is resolved: the next block starts right after the last one generated.
+        var first = firstPending ?? (plan.Mesocycles.Count == 0 ? 1 : plan.Mesocycles.Max(m => m.StartWeek + m.Weeks - 1) + 1);
+        return position.Week - first;
+    }
+
+    public async Task<PlanResult<RescheduleResult>> RescheduleAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<RescheduleResult>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (IsSequence(plan))
+            return PlanResult<RescheduleResult>.Fail(PlanFailure.NotAllowed, "Un plan sin días fijos no tiene calendario que recolocar: sigue donde lo dejaste.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<RescheduleResult>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+
+        var position = PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today);
+        var behind = await WeeksBehindAsync(plan, position, ct);
+        if (behind < 1) return PlanResult<RescheduleResult>.Ok(new(0, 0, plan.StartDate, plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1)));
+
+        // Whole weeks, so every session keeps its weekday. The pending program moves; what was already done is never rewritten (it keeps its planned date and its real one), and the
+        // days moved are remembered so a late workout of the days skipped can still be registered.
+        var days = behind * 7;
+        var first = position.Week - behind;
+        var moving = await db.PlannedSessions.Where(s => s.PlanId == plan.Id && s.WeekNumber >= first && s.Status == PlannedSessionStatus.Planned).ToListAsync(ct);
+        var now = clock.GetUtcNow();
+        foreach (var session in moving) { session.Date = session.Date?.AddDays(days); session.UpdatedAt = now; }
+        foreach (var phase in plan.Phases) { phase.StartDate = phase.StartDate?.AddDays(days); phase.EndDate = phase.EndDate?.AddDays(days); }
+        plan.StartDate = plan.StartDate.AddDays(days);
+        plan.ScheduleShiftDays += days;
+        plan.UpdatedAt = now;
+        db.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = "reschedule", ExerciseIds = [], SessionsChanged = moving.Count, AppliedAt = now, EvidenceAt = now,
+            Explanation = $"El programa pendiente se movió {behind} semana(s) para continuar desde esta semana."
+        });
+        await db.SaveChangesAsync(ct);
+        return PlanResult<RescheduleResult>.Ok(new(behind, moving.Count, plan.StartDate, plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1)));
     }
 
     /// <summary>The user's recent workouts (any plan) as the recovery advisor needs them: sets done per exercise and how it felt.</summary>
@@ -559,7 +672,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 new Dictionary<string, string[]> { ["performedAt"] = ["No puede estar en el futuro."] });
         if (performedAt > now) performedAt = now;
         var performedOn = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(performedAt, zone).DateTime);
-        if (performedOn < plan.StartDate)
+        if (performedOn < plan.StartDate.AddDays(-plan.ScheduleShiftDays))
             return PlanResult<LogResult>.Fail(PlanFailure.InvalidRequest, "El entrenamiento no puede ser anterior al inicio del plan.",
                 new Dictionary<string, string[]> { ["performedAt"] = ["Es anterior al inicio del plan."] });
 

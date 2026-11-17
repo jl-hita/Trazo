@@ -288,6 +288,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<int>("TotalWeeks").HasColumnType("integer");
             b.Property<string>("SchedulingMode").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<int>("SessionsPerPeriod").HasColumnType("integer");
+            b.Property<int>("ScheduleShiftDays").HasColumnType("integer");
             b.Property<string[]>("TrainingDays").IsRequired().HasColumnType("text");
             b.Property<int>("MaxSessionMinutes").HasColumnType("integer");
             b.Property<string[]>("AvailableEquipment").IsRequired().HasColumnType("text");
@@ -452,6 +453,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset?>("EvidenceAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
             b.HasIndex("PlanId", "AppliedAt");
+            b.HasIndex("PlanId", "EvidenceAt").IsUnique().HasFilter("\"Kind\" = 'reentry'");
             b.ToTable("plan_adaptations");
         });
         modelBuilder.Entity("Trazo.Domain.Planning.PlanAdaptation", b =>
