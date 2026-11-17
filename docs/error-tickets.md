@@ -19,9 +19,13 @@ are not reported again, which would loop.
 ## Anonymity
 
 - A ticket has no user, no IP, no device and no request data. The public endpoint stores none of them.
-- Before storing, the trace is **scrubbed** (`ErrorTicketService.Scrub`): emails, JWTs and `Bearer` tokens, GUIDs, IPv4
-  addresses, URL query strings, long hex/base64 strings and home folders are replaced by placeholders. It is applied to the
-  API's own traces and to the app's, in one place.
+- Android crash traces are first passed through R8 Retrace when their exact app version has a mapping file. Retrace runs
+  **before** scrubbing because the obfuscated class/method names are needed for the lookup. The resulting trace is then
+  scrubbed (`ErrorTicketService.Scrub`): emails, JWTs and `Bearer` tokens, GUIDs, IPv4 addresses, URL query strings,
+  long hex/base64 strings and home folders are replaced by placeholders.
+- Historical tickets without an app version, releases without an uploaded mapping, or installations without the Retrace
+  executable are **not retraced**. Their original obfuscated trace is scrubbed and stored as-is; a Retrace failure never
+  prevents a ticket from being recorded.
 - The email notice names the error **type** only, never the trace.
 - Tickets hold no personal data, so account deletion does not touch them (`AccountData.NotPersonal`).
 - The privacy policy should mention that crash reports without identifiers are collected.
@@ -46,7 +50,23 @@ read it). A failure to send is logged and ignored: the ticket is in the console.
 
 ## API
 
-`POST /api/v1/diagnostics/errors` `{ "appVersion": "1.0.3", "stackTrace": "..." }` (anonymous).
+`POST /api/v1/diagnostics/errors` `{ "appVersion": "0.2.2+30029", "stackTrace": "..." }` (anonymous).
+The Android app version must include both versionName and versionCode (`versionName+versionCode`) for exact mapping
+selection. Older tickets with a missing or unmatched version remain obfuscated.
+
+The Android release workflow uploads `mapping.txt` after every minified build to
+`POST /api/internal/diagnostics/mappings?appVersion=0.2.2%2B30029`, using the
+`X-Trazo-Diagnostics-Key` header. Configure these server settings:
+
+- `Diagnostics:MappingUploadKey`: long random secret; set the matching GitHub Actions secret
+  `TRAZO_DIAGNOSTICS_UPLOAD_KEY`. It is optional for publishing, but without it mappings are not uploaded.
+- `Diagnostics:MappingsPath`: private writable directory outside the web root (for example
+  `/var/lib/trazo/r8-mappings`); grant access only to the API service account and administrators.
+- `Diagnostics:RetraceExecutable`: path to Android SDK command-line tools' `retrace` executable, or simply
+  `retrace` if it is on the service PATH. The host needs Java 11+ and Android command-line tools installed.
+
+Mappings are stored outside the public web root, named by the validated app version, and replaced atomically on re-upload.
+Retrace is time-limited; if its executable or mapping is unavailable, the ticket falls back to the original obfuscated trace.
 
 Superadmin:
 
