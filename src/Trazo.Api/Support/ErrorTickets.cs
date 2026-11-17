@@ -120,14 +120,16 @@ public sealed class ErrorTicketRecorder(IServiceScopeFactory scopes, TimeProvide
             var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
             // Retrace Android crashes before scrubbing: the obfuscated frames are needed by R8. Missing version/mapping
             // or an unavailable Retrace tool returns null and leaves the original trace untouched.
-            var trace = report.Source == ErrorTicketSource.Android
-                ? await mappings.TryRetraceAsync(report.AppVersion, report.StackTrace, ct) ?? report.StackTrace
-                : report.StackTrace;
+            var retracedTrace = report.Source == ErrorTicketSource.Android
+                ? await mappings.TryRetraceAsync(report.AppVersion, report.StackTrace, ct)
+                : null;
+            var trace = retracedTrace ?? report.StackTrace;
             var scrubbedTrace = ErrorTicketService.Scrub(trace);
             var fingerprint = ErrorTicketService.Fingerprint(report.Source, scrubbedTrace);
             // A repeat is cheap and always counted; only a brand-new ticket spends the hourly budget.
             if (!await db.ErrorTickets.AsNoTracking().AnyAsync(x => x.Fingerprint == fingerprint, ct) && !_newTickets.TryTake()) return;
-            var (outcome, id, type) = await ErrorTicketService.RecordAsync(db, report.Source, report.AppVersion, trace, clock.GetUtcNow(), ct);
+            var (outcome, id, type) = await ErrorTicketService.RecordAsync(db, report.Source, report.AppVersion, trace, clock.GetUtcNow(), ct,
+                retracedTrace is null ? null : report.StackTrace);
             if (outcome == ErrorTicketOutcome.Repeated || !_emails.TryTake()) return;
             await NotifyAsync(scope.ServiceProvider, report, type, outcome == ErrorTicketOutcome.Reopened, ct);
         }
