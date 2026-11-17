@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.Security.Claims;
 using System.Text.Json;
 using Trazo.Api.Billing;
@@ -56,14 +57,14 @@ public static class SubscriptionEndpoints
                     return Results.Ok(await subscriptions.GetStatusAsync(userId, ct));
                 case VerifyOutcome.TokenInUse:
                     logger.LogWarning("User {UserId} tried to link a purchase token that belongs to another account.", userId);
-                    return Results.Json(new { error = "purchase_already_linked", message = "This purchase is linked to another account." },
+                    return ApiErrors.Json(new { error = "purchase_already_linked", message = "This purchase is linked to another account." },
                         statusCode: StatusCodes.Status409Conflict);
                 case VerifyOutcome.AccountMismatch:
                     logger.LogWarning("User {UserId} tried to link a purchase made by a different account.", userId);
-                    return Results.Json(new { error = "purchase_account_mismatch", message = "This purchase was made by another account." },
+                    return ApiErrors.Json(new { error = "purchase_account_mismatch", message = "This purchase was made by another account." },
                         statusCode: StatusCodes.Status409Conflict);
                 default:
-                    return Results.Json(new { error = "product_mismatch", message = "The purchase is for a different product." },
+                    return ApiErrors.Json(new { error = "product_mismatch", message = "The purchase is for a different product." },
                         statusCode: StatusCodes.Status400BadRequest);
             }
         }
@@ -149,19 +150,19 @@ public static class SubscriptionEndpoints
         switch (ex.Failure)
         {
             case PlayBillingFailure.InvalidPurchase:
-                return Results.Json(new { error = "invalid_purchase", message = "Google Play does not recognise this purchase." },
+                return ApiErrors.Json(new { error = "invalid_purchase", message = "Google Play does not recognise this purchase." },
                     statusCode: StatusCodes.Status400BadRequest);
             case PlayBillingFailure.NotConfigured:
                 logger.LogError(ex, "Google Play Billing is not configured.");
-                return Results.Json(new { error = "billing_not_configured", message = "Subscriptions are not available yet." },
+                return ApiErrors.Json(new { error = "billing_not_configured", message = "Subscriptions are not available yet." },
                     statusCode: StatusCodes.Status503ServiceUnavailable);
             case PlayBillingFailure.Unauthorized:
                 logger.LogError(ex, "Google Play rejected the configured service account.");
-                return Results.Json(new { error = "billing_unavailable", message = "The purchase could not be verified. Try again later." },
+                return ApiErrors.Json(new { error = "billing_unavailable", message = "The purchase could not be verified. Try again later." },
                     statusCode: StatusCodes.Status502BadGateway);
             default:
                 logger.LogWarning(ex, "Google Play is unavailable.");
-                return Results.Json(new { error = "billing_unavailable", message = "The purchase could not be verified. Try again later." },
+                return ApiErrors.Json(new { error = "billing_unavailable", message = "The purchase could not be verified. Try again later." },
                     statusCode: StatusCodes.Status503ServiceUnavailable);
         }
     }

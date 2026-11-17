@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Security;
-using Trazo.Api.Support;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
 
@@ -22,7 +21,7 @@ public static class PlanReviewEndpoints
     public static IEndpointRouteBuilder MapPlanReviewEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var user = endpoints.MapGroup("/api/v1/plans/current/review-request").WithTags("Plans")
-            .RequireActiveSubscription().RequireRateLimiting(PlansEndpoints.RateLimitPolicy).AddLanguage();
+            .RequireActiveSubscription().RequireRateLimiting(PlansEndpoints.RateLimitPolicy);
         user.MapGet("", GetMineAsync).WithName("GetPlanReviewRequest")
             .WithSummary("The latest manual-review request of the active plan. With messages=true it includes the conversation and marks it as read.")
             .Produces<ReviewRequestView>().ProducesProblem(StatusCodes.Status404NotFound);

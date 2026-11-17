@@ -41,6 +41,7 @@ public static class AdminUsersEndpoints
         IRuntimeSettings settings,
         ClaimsPrincipal principal,
         ILoggerFactory loggerFactory,
+        Trazo.Application.Localization.RequestLanguage language,
         CancellationToken cancellationToken)
     {
         var displayName = request.DisplayName?.Trim();
@@ -90,7 +91,8 @@ public static class AdminUsersEndpoints
                 db,
                 emailSender,
                 settings,
-                cancellationToken);
+                cancellationToken,
+                language: language.Current);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {

@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Training;
 using Trazo.Infrastructure.Persistence;
@@ -132,17 +133,20 @@ public static class ExerciseCatalogEndpoints
                 .Select(g => new FilterOption(g.Key, ExerciseVocabulary.Label(labels, g.Key), g.Count()))
                 .OrderBy(o => o.Label, StringComparer.CurrentCultureIgnoreCase).ThenBy(o => o.Key, StringComparer.Ordinal).ToList();
 
+        // The labels follow the language of the request (the keys never do).
+        var english = http.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current == Trazo.Application.Localization.AppLanguage.En;
         var options = new ExerciseFilterOptions(
-            Build(rows.Select(r => r.MovementPattern), ExerciseVocabulary.Patterns),
-            Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), ExerciseVocabulary.Muscles),
-            Build(rows.SelectMany(r => r.RequiredEquipment.Append(r.Equipment).Distinct()), ExerciseVocabulary.Equipment),
-            Build(rows.Select(r => r.MinimumExperience), ExerciseVocabulary.Levels),
-            Build(rows.Select(r => r.Difficulty), ExerciseVocabulary.Levels),
+            Build(rows.Select(r => r.MovementPattern), english ? ExerciseVocabulary.PatternsEn : ExerciseVocabulary.Patterns),
+            Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), english ? ExerciseVocabulary.MusclesEn : ExerciseVocabulary.Muscles),
+            Build(rows.SelectMany(r => r.RequiredEquipment.Append(r.Equipment).Distinct()), english ? ExerciseVocabulary.EquipmentEn : ExerciseVocabulary.Equipment),
+            Build(rows.Select(r => r.MinimumExperience), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
+            Build(rows.Select(r => r.Difficulty), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
             new ExerciseFilterParameters("movementPattern", "muscle", "equipment", "experience", "difficulty"));
 
         // Cacheable: the answer only changes when the catalog does, so clients revalidate with the ETag.
         var etag = "\"" + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(options)))[..24] + "\"";
         http.Response.Headers.CacheControl = "public, max-age=300";
+        http.Response.Headers.Vary = "Accept-Language";
         http.Response.Headers.ETag = etag;
         if (http.Request.Headers.IfNoneMatch.ToString() == etag) return Results.StatusCode(StatusCodes.Status304NotModified);
         return Results.Ok(options);
@@ -154,7 +158,7 @@ public static class ExerciseCatalogEndpoints
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(id) || id.Length > 100)
-            return Results.BadRequest(new { error = "A valid exercise ID is required." });
+            return ApiErrors.BadRequest(new { error = "A valid exercise ID is required." });
 
         var exercise = await db.ExerciseCatalog
             .AsNoTracking()
@@ -241,7 +245,7 @@ public sealed record FilterOption(string Key, string Label, int Count);
 public sealed record ExerciseFilterParameters(string MovementPattern, string Muscle, string Equipment, string Experience, string Difficulty);
 
 /// <summary>
-/// Keys are the values stored in the catalog (stable, accepted as they are by the list filters); labels are Spanish. A value
+/// Keys are the values stored in the catalog (stable, accepted as they are by the list filters); labels are Spanish or English, by the language of the request. A value
 /// without a known label gets a readable fallback, so a new catalog value never breaks the screen.
 /// </summary>
 public sealed record ExerciseFilterOptions(
@@ -280,6 +284,28 @@ public static class ExerciseVocabulary
         ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
         ("smith-machine", "Máquina Smith"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
         ("dip-bar", "Paralelas"), ("trx", "TRX"), ("other", "Otro"));
+
+    public static readonly IReadOnlyDictionary<string, string> PatternsEn = Map(
+        ("Squat", "Squat"), ("Hinge", "Hip hinge"), ("HorizontalPush", "Horizontal push"), ("VerticalPush", "Vertical push"),
+        ("HorizontalPull", "Horizontal pull"), ("VerticalPull", "Vertical pull"), ("SingleLeg", "Single-leg"),
+        ("Core", "Core"), ("Accessory", "Accessory"));
+
+    public static readonly IReadOnlyDictionary<string, string> MusclesEn = Map(
+        ("Chest", "Chest"), ("Lats", "Lats"), ("UpperBack", "Upper back"), ("Deltoids", "Shoulders"), ("Biceps", "Biceps"),
+        ("Triceps", "Triceps"), ("Forearms", "Forearms"), ("Abdominals", "Abs"), ("Obliques", "Obliques"),
+        ("ErectorSpinae", "Lower back"), ("Glutes", "Glutes"), ("Quadriceps", "Quads"), ("Hamstrings", "Hamstrings"),
+        ("Calves", "Calves"), ("Adductors", "Adductors"), ("Abductors", "Abductors"), ("HipFlexors", "Hip flexors"),
+        ("Serratus", "Serratus"), ("TibialisAnterior", "Tibialis anterior"), ("RotatorCuff", "Rotator cuff"));
+
+    public static readonly IReadOnlyDictionary<string, string> EquipmentEn = Map(
+        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"), ("machine", "Machine"),
+        ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("bodyweight", "Bodyweight"),
+        ("body-only", "Bodyweight"), ("band", "Resistance band"), ("bands", "Resistance bands"), ("ez-bar", "EZ bar"),
+        ("smith-machine", "Smith machine"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
+        ("dip-bar", "Dip bars"), ("trx", "TRX"), ("other", "Other"));
+
+    public static readonly IReadOnlyDictionary<string, string> LevelsEn = Map(
+        ("Beginner", "Beginner"), ("Intermediate", "Intermediate"), ("Advanced", "Advanced"));
 
     /// <summary>Used for both minimum experience (Beginner…) and difficulty (beginner…); matching ignores case.</summary>
     public static readonly IReadOnlyDictionary<string, string> Levels = Map(

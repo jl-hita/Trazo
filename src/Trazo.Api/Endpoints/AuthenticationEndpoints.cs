@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -49,9 +50,11 @@ public static class AuthenticationEndpoints
         ISetupService setup,
         DeletionRequestThrottle emailThrottle,
         ILoggerFactory loggerFactory,
+        Trazo.Application.Localization.RequestLanguage language,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
+        string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language.Current)!;
         var email = NormalizeEmail(request.Email);
         if (email is null || request.DisplayName is null || request.DisplayName.Trim().Length is < 2 or > 100)
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["account"] = ["A valid email and display name are required."] });
@@ -65,9 +68,9 @@ public static class AuthenticationEndpoints
             {
                 try
                 {
-                    await emailSender.SendAsync(request.Email.Trim(), "Ya tienes una cuenta en TRAZO",
-                        "Alguien ha intentado crear una cuenta de TRAZO con este correo, pero ya existe una.\n\n" +
-                        "Si has sido tú, inicia sesión o usa la opción de contraseña olvidada. Si no has sido tú, ignora este mensaje: no ha cambiado nada.",
+                    await emailSender.SendAsync(request.Email.Trim(), Tr("Ya tienes una cuenta en TRAZO"),
+                        Tr("Alguien ha intentado crear una cuenta de TRAZO con este correo, pero ya existe una.") + "\n\n" +
+                        Tr("Si has sido tú, inicia sesión o usa la opción de contraseña olvidada. Si no has sido tú, ignora este mensaje: no ha cambiado nada."),
                         cancellationToken);
                 }
                 catch (Exception exception) when (exception is not OperationCanceledException)
@@ -96,7 +99,7 @@ public static class AuthenticationEndpoints
         try
         {
             await AccountEmailEndpoints.IssueAsync(user, "verify-email", "Verifica tu correo de TRAZO",
-                "Para activar tu cuenta, abre este enlace:", TimeSpan.FromHours(24), db, emailSender, configuration, cancellationToken);
+                "Para activar tu cuenta, abre este enlace:", TimeSpan.FromHours(24), db, emailSender, configuration, cancellationToken, language: language.Current);
             return RegistrationAccepted();
         }
         catch (DbUpdateException)
@@ -165,7 +168,7 @@ public static class AuthenticationEndpoints
         if (verification == PasswordVerificationResult.SuccessRehashNeeded)
             user.PasswordHash = hasher.HashPassword(user, request.Password);
         if (user.EmailVerifiedAt is null)
-            return Results.Conflict(new { code = "email_not_verified", error = "Verifica tu correo antes de iniciar sesión." });
+            return ApiErrors.Conflict(new { code = "email_not_verified", error = "Verifica tu correo antes de iniciar sesión." });
         attempts.Reset(user.Id, address);
         user.UpdatedAt = now;
 
@@ -212,7 +215,7 @@ public static class AuthenticationEndpoints
         if (user is null)
         {
             if (await db.Users.AnyAsync(x => x.NormalizedEmail == email, cancellationToken))
-                return Results.Conflict(new { error = "An account already uses this email. Sign in to that account and link Google from its security settings." });
+                return ApiErrors.Conflict(new { error = "An account already uses this email. Sign in to that account and link Google from its security settings." });
 
             var now = DateTimeOffset.UtcNow;
             user = new TrazoUser
@@ -267,9 +270,9 @@ public static class AuthenticationEndpoints
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
         if (user is null) return Results.Unauthorized();
         if (!string.Equals(user.Email, payload.Email, StringComparison.OrdinalIgnoreCase))
-            return Results.BadRequest(new { error = "The verified Google email must match the email on this TRAZO account." });
+            return ApiErrors.BadRequest(new { error = "The verified Google email must match the email on this TRAZO account." });
         if (await db.Users.AnyAsync(x => x.GoogleSubject == payload.Subject && x.Id != userId, cancellationToken))
-            return Results.Conflict(new { error = "This Google account is already linked to another TRAZO account." });
+            return ApiErrors.Conflict(new { error = "This Google account is already linked to another TRAZO account." });
         user.GoogleSubject = payload.Subject;
         user.EmailVerifiedAt ??= DateTimeOffset.UtcNow;
         user.UpdatedAt = DateTimeOffset.UtcNow;
@@ -352,7 +355,7 @@ public static class AuthenticationEndpoints
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == GetUserId(principal), cancellationToken);
         if (user is null) return Results.Unauthorized();
         if (user.TwoFactorEnabled)
-            return Results.Conflict(new { error = "Disable two-factor authentication before replacing its authenticator." });
+            return ApiErrors.Conflict(new { error = "Disable two-factor authentication before replacing its authenticator." });
         var secret = TotpService.GenerateSecret();
         user.ProtectedAuthenticatorKey = protection.CreateProtector("TRAZO.Authenticator.v1").Protect(secret);
         user.UpdatedAt = DateTimeOffset.UtcNow;
@@ -375,11 +378,11 @@ public static class AuthenticationEndpoints
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == GetUserId(principal), cancellationToken);
         if (user is null) return Results.Unauthorized();
         if (string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
-            return Results.BadRequest(new { error = "Start two-factor setup first." });
+            return ApiErrors.BadRequest(new { error = "Start two-factor setup first." });
         var secret = protection.CreateProtector("TRAZO.Authenticator.v1").Unprotect(user.ProtectedAuthenticatorKey);
         if (!TotpService.TryGetMatchingStep(secret, request.Code, DateTimeOffset.UtcNow, out var matchingStep) ||
             (user.LastTotpStep is not null && matchingStep <= user.LastTotpStep.Value))
-            return Results.BadRequest(new { error = "The authenticator code is invalid or has already been used." });
+            return ApiErrors.BadRequest(new { error = "The authenticator code is invalid or has already been used." });
 
         var recoveryCodes = TotpService.GenerateRecoveryCodes();
         var now = DateTimeOffset.UtcNow;
@@ -418,7 +421,7 @@ public static class AuthenticationEndpoints
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == GetUserId(principal), cancellationToken);
         if (user is null) return Results.Unauthorized();
         if (!user.TwoFactorEnabled || string.IsNullOrWhiteSpace(user.ProtectedAuthenticatorKey))
-            return Results.BadRequest(new { error = "Two-factor authentication is not enabled." });
+            return ApiErrors.BadRequest(new { error = "Two-factor authentication is not enabled." });
         var now = DateTimeOffset.UtcNow;
         // A stolen access token must not be enough to guess the code and switch the protection off.
         if (user.LockoutEnd > now) return Results.Unauthorized();
@@ -567,7 +570,7 @@ public static class AuthenticationEndpoints
         bool.TryParse(configuration["Authentication:Google:RequireNonce"], out var required) && required;
 
     private static IResult SetupRequired() =>
-        Results.Json(new { code = "setup_required", error = "The initial setup has not been completed." }, statusCode: StatusCodes.Status409Conflict);
+        ApiErrors.Json(new { code = "setup_required", error = "The initial setup has not been completed." }, statusCode: StatusCodes.Status409Conflict);
 
     private static string? NormalizeEmail(string? email)
     {

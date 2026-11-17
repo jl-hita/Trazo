@@ -735,6 +735,63 @@ public sealed class AccountApiTests : IDisposable
         return await client.PostAsJsonAsync("/api/v1/auth/password/forgot", new { email });
     }
 
+    private HttpClient ClientIn(string language)
+    {
+        var client = _factory.CreateClient();
+        client.DefaultRequestHeaders.Add("Accept-Language", language);
+        return client;
+    }
+
+    [Fact]
+    public async Task ThePasswordResetEmailIsInEnglishWhenTheRequestAsksForEnglish_AndInSpanishByDefault()
+    {
+        await AddUserAsync("english.mail@example.com");
+        var english = ClientIn("en-GB,en;q=0.9");
+        english.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "okhttp/4.12.0");
+        Assert.Equal(HttpStatusCode.Accepted, (await english.PostAsJsonAsync("/api/v1/auth/password/forgot", new { email = "english.mail@example.com" })).StatusCode);
+        var body = await WaitForMailAsync(_mail, 1);
+        var sent = _mail.Sent.ToArray()[0];
+        Assert.Equal("Reset your TRAZO password", sent.Subject);
+        Assert.Contains("Use this link to reset your password:", body);
+        Assert.Contains("This request was made from the TRAZO app on", body);
+        Assert.Contains("The link expires in 30 minutes. If you did not request this action, ignore this message.", body);
+        Assert.DoesNotContain("enlace", body);
+    }
+
+    [Fact]
+    public async Task TheErrorsOfTheAuthenticationAreInTheLanguageOfTheRequest_WhateverLanguageTheCodeWasWrittenIn()
+    {
+        await AddUserAsync("setup.done@example.com", role: "superadmin"); // with no administrator the API is still in its initial setup
+        var invalid = new { email = "no-email", displayName = "", password = "x" };
+        var spanish = await JsonAsync(await _factory.CreateClient().PostAsJsonAsync("/api/v1/auth/register", invalid));
+        Assert.Equal("Se necesita un correo y un nombre válidos.", spanish.GetProperty("errors").GetProperty("account")[0].GetString());
+        var english = await JsonAsync(await ClientIn("en").PostAsJsonAsync("/api/v1/auth/register", invalid));
+        Assert.Equal("A valid email and display name are required.", english.GetProperty("errors").GetProperty("account")[0].GetString());
+
+        // A body of the { error } kind: written in Spanish in the code for one link and in English for the other.
+        var link = new { token = "nope" };
+        var es = await JsonAsync(await _factory.CreateClient().PostAsJsonAsync("/api/v1/auth/email/verify", link));
+        var en = await JsonAsync(await ClientIn("en").PostAsJsonAsync("/api/v1/auth/email/verify", link));
+        Assert.Equal("El enlace de verificación no es válido o ha caducado.", es.GetProperty("error").GetString());
+        Assert.Equal("The verification link is invalid or expired.", en.GetProperty("error").GetString());
+        var reset = new { token = "nope", newPassword = "CorrectHorse1Battery" };
+        Assert.Equal("El enlace no es válido o ha caducado.", (await JsonAsync(await _factory.CreateClient().PostAsJsonAsync("/api/v1/auth/password/reset", reset))).GetProperty("error").GetString());
+        Assert.Equal("The link is not valid or has expired.", (await JsonAsync(await ClientIn("en").PostAsJsonAsync("/api/v1/auth/password/reset", reset))).GetProperty("error").GetString());
+    }
+
+    [Fact]
+    public async Task TheAccountDeletionPageFollowsTheLanguageOfTheBrowser()
+    {
+        var spanish = await _factory.CreateClient().GetStringAsync("/account/delete");
+        Assert.Contains("<html lang=\"es\">", spanish);
+        Assert.Contains("Eliminar mi cuenta de TRAZO", spanish);
+        var english = await ClientIn("en-US,en;q=0.8").GetStringAsync("/account/delete");
+        Assert.Contains("<html lang=\"en\">", english);
+        Assert.Contains("Delete my TRAZO account", english);
+        Assert.Contains("Deleting the account does not cancel your Google Play subscription.", english);
+        Assert.DoesNotContain("Eliminar", english);
+    }
+
     [Theory]
     [InlineData("okhttp/4.12.0", "desde la app de TRAZO", "app")]
     [InlineData("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36", "desde la web", "web")]
