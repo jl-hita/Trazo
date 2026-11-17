@@ -73,13 +73,14 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
             if (!process.Start()) return null;
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
             timeout.CancelAfter(TimeSpan.FromSeconds(15));
-            var stdout = process.StandardOutput.ReadToEndAsync(timeout.Token);
-            var stderr = process.StandardError.ReadToEndAsync(timeout.Token);
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
             try { await process.WaitForExitAsync(timeout.Token); }
             catch (OperationCanceledException)
             {
                 try { process.Kill(entireProcessTree: true); } catch (InvalidOperationException) { }
                 if (ct.IsCancellationRequested) throw;
+                try { await Task.WhenAll(stdout, stderr); } catch (IOException) { }
                 logger.LogWarning("R8 Retrace timed out for Android version {AppVersion}.", cleanVersion);
                 return null;
             }
