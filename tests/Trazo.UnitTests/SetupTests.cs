@@ -50,6 +50,17 @@ public sealed class SetupFixture : IDisposable
               "Id" TEXT PRIMARY KEY, "Fingerprint" TEXT NOT NULL UNIQUE, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL,
               "ErrorType" TEXT NOT NULL, "StackTrace" TEXT NOT NULL, "Occurrences" INTEGER NOT NULL,
               "FirstSeenAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL, "Status" TEXT NOT NULL);
+            CREATE TABLE premium_grants (
+              "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Kind" TEXT NOT NULL, "SourceKey" TEXT NOT NULL, "Days" INTEGER NOT NULL,
+              "Status" TEXT NOT NULL, "GrantedAt" TEXT NOT NULL, "StartsAt" TEXT NULL, "EndsAt" TEXT NULL, "OriginUserId" TEXT NULL,
+              "OriginSubscriptionId" TEXT NULL, "DeferredSubscriptionId" TEXT NULL, "GoogleExpiryBefore" TEXT NULL, "GoogleExpiryAfter" TEXT NULL,
+              "AppliedAt" TEXT NULL, "VoidedAt" TEXT NULL, "VoidReason" TEXT NULL, "VoidedBy" TEXT NULL, "DeferAttempts" INTEGER NOT NULL,
+              "LastDeferError" TEXT NULL, "UpdatedAt" TEXT NOT NULL);
+            CREATE UNIQUE INDEX "IX_premium_grants_Kind_SourceKey" ON premium_grants ("Kind", "SourceKey");
+            CREATE TABLE growth_events (
+              "Id" TEXT PRIMARY KEY, "Name" TEXT NOT NULL, "OccurredAt" TEXT NOT NULL, "UserId" TEXT NULL, "Channel" TEXT NULL,
+              "Reference" TEXT NULL, "Plan" TEXT NULL, "AppVersion" TEXT NULL, "Variant" TEXT NULL, "DedupeKey" TEXT NULL);
+            CREATE UNIQUE INDEX "IX_growth_events_DedupeKey" ON growth_events ("DedupeKey");
             """);
     }
 

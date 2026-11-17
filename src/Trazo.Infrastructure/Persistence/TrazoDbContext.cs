@@ -31,6 +31,9 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Support.ErrorTicket> ErrorTickets => Set<Trazo.Domain.Support.ErrorTicket>();
     public DbSet<Trazo.Domain.Analytics.PaywallView> PaywallViews => Set<Trazo.Domain.Analytics.PaywallView>();
 
+    public DbSet<Trazo.Domain.Growth.PremiumGrant> PremiumGrants => Set<Trazo.Domain.Growth.PremiumGrant>();
+    public DbSet<Trazo.Domain.Growth.GrowthEvent> GrowthEvents => Set<Trazo.Domain.Growth.GrowthEvent>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrazoDbContext).Assembly);

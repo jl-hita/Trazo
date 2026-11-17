@@ -51,6 +51,7 @@ public static class AuthenticationEndpoints
         DeletionRequestThrottle emailThrottle,
         ILoggerFactory loggerFactory,
         Trazo.Application.Localization.RequestLanguage language,
+        Trazo.Infrastructure.Growth.ISignupTrialService growth,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
@@ -100,6 +101,7 @@ public static class AuthenticationEndpoints
         {
             await AccountEmailEndpoints.IssueAsync(user, "verify-email", "Verifica tu correo de TRAZO",
                 "Para activar tu cuenta, abre este enlace:", TimeSpan.FromHours(24), db, emailSender, configuration, cancellationToken, language: language.Current);
+            await growth.SignedUpAsync(user.Id, cancellationToken);
             return RegistrationAccepted();
         }
         catch (DbUpdateException)
@@ -198,6 +200,7 @@ public static class AuthenticationEndpoints
         GoogleNonceStore nonces,
         IConfiguration appConfiguration,
         ILoggerFactory loggerFactory,
+        Trazo.Infrastructure.Growth.ISignupTrialService growth,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
@@ -212,6 +215,7 @@ public static class AuthenticationEndpoints
 
         var user = await db.Users.SingleOrDefaultAsync(x => x.GoogleSubject == subject, cancellationToken);
         if (user?.DisabledAt is not null) return Results.Unauthorized();
+        var createdNow = false;
         if (user is null)
         {
             if (await db.Users.AnyAsync(x => x.NormalizedEmail == email, cancellationToken))
@@ -232,6 +236,7 @@ public static class AuthenticationEndpoints
                 LastLoginAt = now
             };
             db.Users.Add(user);
+            createdNow = true;
         }
         else
         {
@@ -248,6 +253,12 @@ public static class AuthenticationEndpoints
         }
 
         var pair = await tokens.CreateTokenPairAsync(user, db, request.DeviceName, cancellationToken);
+        if (createdNow)
+        {
+            // A Google account arrives verified, so it is signed up and activated at once.
+            await growth.SignedUpAsync(user.Id, cancellationToken);
+            await growth.ActivatedAsync(user.Id, cancellationToken);
+        }
         return Results.Ok(new TokenResponse(pair.AccessToken, pair.RefreshToken, "Bearer",
             AuthTokenService.AccessTokenMinutes * 60, ToSummary(user)));
     }

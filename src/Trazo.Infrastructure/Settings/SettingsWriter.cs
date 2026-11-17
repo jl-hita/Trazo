@@ -12,6 +12,8 @@ public interface ISettingsWriter
     /// <summary>Validates and persists configuration (superadmin edits). Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdateAsync(GoogleConfig google, EmailConfig email, CancellationToken ct);
     Task SetSubscriptionsEnforcedAsync(bool enforced, CancellationToken ct);
+    /// <summary>Validates and persists the welcome-period and referral-reward settings. Returns validation errors, if any.</summary>
+    Task<Dictionary<string, string[]>> UpdatePromotionsAsync(PromotionsConfig input, CancellationToken ct);
     /// <summary>Validates and persists the Google Play Billing configuration. Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct);
     /// <summary>Validates and persists the push-notification (Firebase) configuration. Returns validation errors, if any.</summary>
@@ -123,6 +125,18 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
         }
         await db.SaveChangesAsync(ct);
         return new OperationsUpdateResult(errors, changes);
+    }
+
+    public async Task<Dictionary<string, string[]>> UpdatePromotionsAsync(PromotionsConfig input, CancellationToken ct)
+    {
+        var errors = PromotionsConfig.Validate(input);
+        if (errors.Count > 0) return errors;
+        await Upsert(SettingKeys.SignupTrialEnabled, input.SignupTrialEnabled ? "true" : "false", false, ct);
+        await Upsert(SettingKeys.SignupTrialDays, input.SignupTrialDays.ToString(CultureInfo.InvariantCulture), false, ct);
+        await Upsert(SettingKeys.ReferralsEnabled, input.ReferralsEnabled ? "true" : "false", false, ct);
+        await Upsert(SettingKeys.ReferralRewardDays, input.ReferralRewardDays.ToString(CultureInfo.InvariantCulture), false, ct);
+        await db.SaveChangesAsync(ct);
+        return errors;
     }
 
     private async Task<(bool Changed, string? Previous)> UpsertTracked(string key, string value, bool secret, CancellationToken ct)

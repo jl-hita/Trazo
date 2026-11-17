@@ -102,3 +102,38 @@ queries Google with a fake token: an "unknown purchase" answer proves the creden
 - The wizard on first start is unchanged; Play Billing is configured afterwards in Settings.
 - There is no periodic reconciliation job yet: rows only change on verify, on a notification, or on an admin
   refresh. Expiry is still enforced on every access check from `ExpiresAt`.
+
+## Promotional Premium time (ledger) and welcome period
+
+Premium time that does not come from a store purchase lives in its own table, `premium_grants`. **The `subscriptions` table is never
+altered to fake a purchase.** Effective access is the union of both:
+
+```
+hasAccess = (a Google Play row grants access) OR (an active promotional window covers "now")
+```
+
+`GET /api/v1/subscription` reports `source: "google_play"` while a purchase grants access, `source: "promo"` when only promotional time
+does, and always returns `promoExpiresAt` (end of the current promotional access, or `null`). Older clients ignore the new field.
+
+| Kind | Reason (`SourceKey`) | Notes |
+|---|---|---|
+| `signup_trial` | the account id | Given when the account is activated (e-mail verified, admin-verified, or first Google sign-in). |
+| `referral_reward` | the referral | See `docs/referrals.md`. |
+| `admin_grant` | free text id | Manual, always with a reason. |
+
+`(Kind, SourceKey)` is unique: the same reason can never be rewarded twice, even with concurrent requests. Active grants are chained
+(a new one starts when the user's earlier promotional time ends, or when a non-renewing paid period ends), so days accumulate and never
+overlap. Statuses: `active` (a window), `pending` (earned, waiting to be applied), `deferred` (applied by deferring the Google renewal,
+confirmed by Google) and `voided` (kept for audit).
+
+Superadmin settings (`GET/PUT /api/v1/admin/settings/promotions`, Settings → Promotions): welcome period on/off (default on) and its days
+(default 30), referral programme on/off and reward days (default 30). Each grant stores the days it was given with, so changing the
+setting never rewrites the past. This welcome period is independent from any free-trial offer configured on the Google Play base plan.
+
+## Funnel events
+
+`growth_events` is a small, privacy-preserving log (no e-mail, name, IP or device id; the user id becomes `NULL` when the account is
+deleted). The economic events are written by the backend from purchases verified with Google Play: `trial_started`, `first_purchase`
+(first real payment, never the trial), `renewed`, `canceled`, `expired`, `refunded`. Account events: `signup`, `email_verified`,
+`signup_trial_granted`. Every event has a dedupe key, so duplicate or out-of-order notifications never count twice. The same table
+serves the general conversion funnel and the referral funnel (`reference` = referral code, `channel` = `referral`).

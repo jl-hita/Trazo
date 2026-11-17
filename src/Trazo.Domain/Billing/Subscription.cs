@@ -22,6 +22,8 @@ public enum SubscriptionStatus
 public static class SubscriptionSources
 {
     public const string GooglePlay = "google_play";
+    /// <summary>Premium time from the promotional ledger (welcome period, referral rewards), not from a store purchase.</summary>
+    public const string Promo = "promo";
 }
 
 /// <summary>A user's subscription purchase. The store is the source of truth; this row is a verified cache of it.</summary>

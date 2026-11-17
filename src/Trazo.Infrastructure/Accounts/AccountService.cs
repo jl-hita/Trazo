@@ -25,6 +25,8 @@ public static class AccountData
         typeof(Subscription), typeof(TrainingPlan), typeof(TrainingPlanPhase), typeof(TrainingMesocycle), typeof(PlannedSession),
         typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation), typeof(PlanReviewRequest), typeof(PlanReviewMessage),
         typeof(Trazo.Domain.Push.DeviceToken),
+        // The Premium-time ledger is deleted; funnel events are anonymised (their user id is cleared, the rest holds no personal data).
+        typeof(Trazo.Domain.Growth.PremiumGrant), typeof(Trazo.Domain.Growth.GrowthEvent),
         // Not linked to the account: matched by the account's email (the person may have joined the waitlist before registering).
         typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
@@ -167,6 +169,13 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         rows += await StepAsync(db.TrainingPlanPhases.Where(p => plans.Contains(p.PlanId)), ct);
         rows += await StepAsync(db.TrainingPlans.Where(p => p.UserId == userId), ct);
         rows += await StepAsync(db.Subscriptions.Where(s => s.UserId == userId), ct);
+        // Funnel events keep no person: the user id is cleared and the anonymous row still counts in the aggregates.
+        rows += await db.GrowthEvents.Where(e => e.UserId == userId)
+            .ExecuteUpdateAsync(u => u.SetProperty(e => e.UserId, (Guid?)null), ct);
+        // A reward earned by someone else because of this account stays theirs; only the link to this person goes.
+        await db.PremiumGrants.Where(g => g.OriginUserId == userId && g.UserId != userId)
+            .ExecuteUpdateAsync(u => u.SetProperty(g => g.OriginUserId, (Guid?)null).SetProperty(g => g.OriginSubscriptionId, (Guid?)null), ct);
+        rows += await StepAsync(db.PremiumGrants.Where(g => g.UserId == userId), ct);
         rows += await StepAsync(db.RefreshTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.DeviceTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.AuthChallenges.Where(c => c.UserId == userId), ct);
@@ -227,6 +236,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         var adaptations = await db.PlanAdaptations.AsNoTracking().Where(a => planIds.Contains(a.PlanId)).OrderBy(a => a.AppliedAt).ToListAsync(ct);
         var subscriptions = await db.Subscriptions.AsNoTracking().Where(s => s.UserId == userId).OrderBy(s => s.StartedAt).ToListAsync(ct);
         var devices = await db.RefreshTokens.AsNoTracking().Where(t => t.UserId == userId).OrderBy(t => t.CreatedAt).ToListAsync(ct);
+        var premiumGrants = await db.PremiumGrants.AsNoTracking().Where(g => g.UserId == userId).OrderBy(g => g.GrantedAt).ToListAsync(ct);
 
         return new AccountExport(
             clock.GetUtcNow(), "1",
@@ -249,7 +259,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
             adaptations.Select(a => new ExportAdaptation(a.PlanId, a.WorkoutLogId, a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation, a.AppliedAt)).ToList(),
             subscriptions.Select(s => new ExportSubscription(
                 s.Source, s.ProductId, s.Status.ToString(), s.StartedAt, s.ExpiresAt, s.AutoRenewing, s.LatestOrderId, s.IsTestPurchase)).ToList(),
-            devices.Select(d => new ExportDevice(d.DeviceName, d.CreatedAt, d.ExpiresAt, d.RevokedAt)).ToList());
+            devices.Select(d => new ExportDevice(d.DeviceName, d.CreatedAt, d.ExpiresAt, d.RevokedAt)).ToList(),
+            premiumGrants.Select(g => new ExportPremiumGrant(g.Kind, g.Days, g.Status, g.GrantedAt, g.StartsAt, g.EndsAt)).ToList());
     }
 
     private static JsonElement ParseJson(string json)
@@ -264,7 +275,10 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
 public sealed record AccountExport(
     DateTimeOffset GeneratedAt, string Version, ExportAccount Account, IReadOnlyList<ExportPlan> Plans,
     IReadOnlyList<ExportWorkoutLog> WorkoutLogs, IReadOnlyList<ExportAdaptation> Adaptations,
-    IReadOnlyList<ExportSubscription> Subscriptions, IReadOnlyList<ExportDevice> Devices);
+    IReadOnlyList<ExportSubscription> Subscriptions, IReadOnlyList<ExportDevice> Devices,
+    IReadOnlyList<ExportPremiumGrant> PremiumGrants);
+
+public sealed record ExportPremiumGrant(string Kind, int Days, string Status, DateTimeOffset GrantedAt, DateTimeOffset? StartsAt, DateTimeOffset? EndsAt);
 
 public sealed record ExportAccount(
     Guid Id, string Email, string DisplayName, string Role, DateTimeOffset? EmailVerifiedAt, bool HasPassword, bool GoogleLinked,

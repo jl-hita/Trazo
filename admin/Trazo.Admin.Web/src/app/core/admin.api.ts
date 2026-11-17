@@ -186,6 +186,11 @@ export interface PushInput {
 
 export interface PushSendResult { ok: boolean; message: string; }
 
+export interface PromotionsSettings {
+  signupTrialEnabled: boolean; signupTrialDays: number; referralsEnabled: boolean; referralRewardDays: number;
+}
+export interface PromotionsView extends PromotionsSettings { maxDays: number; }
+
 export interface PlayBillingView {
   packageName: string; serviceAccountSet: boolean; serviceAccountEmail: string | null; rtdnSecretSet: boolean;
   rtdnAudience: string | null; rtdnServiceAccountEmail: string | null; configured: boolean; rtdnConfigured: boolean;
@@ -391,6 +396,14 @@ export class AdminApi {
 
   refreshSubscription(id: string): Promise<AdminSubscriptionDetail> {
     return firstValueFrom(this.http.post<AdminSubscriptionDetail>(`${API}/subscriptions/${id}/refresh`, {}));
+  }
+
+  getPromotions(): Promise<PromotionsView> {
+    return firstValueFrom(this.http.get<PromotionsView>(`${API}/settings/promotions`));
+  }
+
+  savePromotions(settings: PromotionsSettings): Promise<PromotionsView> {
+    return firstValueFrom(this.http.put<PromotionsView>(`${API}/settings/promotions`, settings));
   }
 
   getAccessSettings(): Promise<{ subscriptionsEnforced: boolean }> {

@@ -284,14 +284,17 @@ public static class AdminUsersEndpoints
     }
 
     private static async Task<IResult> VerifyEmailAsync(
-        Guid id, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+        Guid id, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory,
+        Trazo.Infrastructure.Growth.ISignupTrialService growth, CancellationToken cancellationToken)
     {
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (user is null) return Results.NotFound();
         var now = DateTimeOffset.UtcNow;
+        var wasVerified = user.EmailVerifiedAt is not null;
         user.EmailVerifiedAt ??= now;
         user.UpdatedAt = now;
         await db.SaveChangesAsync(cancellationToken);
+        if (!wasVerified && user.Role == "user") await growth.ActivatedAsync(user.Id, cancellationToken);
         Log(loggerFactory, ActorId(principal), "marked the email as verified for", id);
         return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
     }

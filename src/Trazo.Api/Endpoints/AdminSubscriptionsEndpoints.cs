@@ -38,8 +38,33 @@ public static class AdminSubscriptionsEndpoints
             return Results.Ok(new { subscriptionsEnforced = r.SubscriptionsEnforced });
         });
         settings.MapPost("/test", TestConnectionAsync).RequireRateLimiting(SetupEndpoints.SetupTestPolicy);
+
+        // Welcome Premium period of new accounts and referral reward: on/off and number of days, superadmin only.
+        var promotions = endpoints.MapGroup("/api/v1/admin/settings/promotions").WithTags("Settings")
+            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+        promotions.MapGet("", async (IRuntimeSettings s, CancellationToken ct) => Results.Ok(PromotionsBody(await s.GetPromotionsAsync(ct))));
+        promotions.MapPut("", async (PromotionsSettingsRequest r, ISettingsWriter w, IRuntimeSettings s,
+            System.Security.Claims.ClaimsPrincipal principal, ILoggerFactory loggerFactory, CancellationToken ct) =>
+        {
+            var before = await s.GetPromotionsAsync(ct);
+            var input = new PromotionsConfig(r.SignupTrialEnabled, r.SignupTrialDays, r.ReferralsEnabled, r.ReferralRewardDays);
+            var errors = await w.UpdatePromotionsAsync(input, ct);
+            if (errors.Count > 0) return Results.ValidationProblem(errors);
+            loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
+                "Superadmin {Actor} changed promotions: welcome period {Before} -> {After}, referral reward {RewardBefore} -> {RewardAfter}.",
+                OperationsSettingsEndpoints.Actor(principal),
+                before.SignupTrialEnabled ? before.SignupTrialDays + "d" : "off", input.SignupTrialEnabled ? input.SignupTrialDays + "d" : "off",
+                before.ReferralsEnabled ? before.ReferralRewardDays + "d" : "off", input.ReferralsEnabled ? input.ReferralRewardDays + "d" : "off");
+            return Results.Ok(PromotionsBody(input));
+        });
         return endpoints;
     }
+
+    private static object PromotionsBody(PromotionsConfig c) => new
+    {
+        signupTrialEnabled = c.SignupTrialEnabled, signupTrialDays = c.SignupTrialDays,
+        referralsEnabled = c.ReferralsEnabled, referralRewardDays = c.ReferralRewardDays, maxDays = PromotionsConfig.MaxDays
+    };
 
     private static async Task<IResult> ListAsync(
         TrazoDbContext db, TimeProvider clock, string? q, string? status, string? source, string? user,

@@ -441,6 +441,134 @@ public sealed class SubscriptionApiTests : IDisposable
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
     }
 
+    // ---- Promotional ledger and funnel events ----
+
+    private async Task AddGrantAsync(Guid userId, int days, string status = "active", DateTimeOffset? start = null)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var s = start ?? Now;
+        db.PremiumGrants.Add(new Trazo.Domain.Growth.PremiumGrant
+        {
+            Id = Guid.NewGuid(), UserId = userId, Kind = "signup_trial", SourceKey = userId.ToString("N"), Days = days, Status = status,
+            GrantedAt = s, StartsAt = s, EndsAt = s.AddDays(days), UpdatedAt = s
+        });
+        await db.SaveChangesAsync();
+    }
+
+    [Fact]
+    public async Task Status_WithAnActivePromotionalGrant_HasAccessFromThePromoSource()
+    {
+        var user = await AddUserAsync("promo@example.com");
+        Assert.False((await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"))).GetProperty("hasAccess").GetBoolean());
+
+        await AddGrantAsync(user.Id, 30);
+
+        var body = await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"));
+        Assert.True(body.GetProperty("hasAccess").GetBoolean());
+        Assert.Equal("promo", body.GetProperty("source").GetString());
+        Assert.Equal("none", body.GetProperty("status").GetString());
+        Assert.NotEqual(JsonValueKind.Null, body.GetProperty("promoExpiresAt").ValueKind);
+    }
+
+    [Fact]
+    public async Task Status_WithAnExpiredPromotionalGrant_HasNoAccess()
+    {
+        var user = await AddUserAsync("oldpromo@example.com");
+        await AddGrantAsync(user.Id, 30, start: Now.AddDays(-60));
+
+        var body = await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"));
+        Assert.False(body.GetProperty("hasAccess").GetBoolean());
+    }
+
+    [Fact]
+    public async Task VoidedOrPendingGrants_DoNotGiveAccess()
+    {
+        var user = await AddUserAsync("voided@example.com");
+        await AddGrantAsync(user.Id, 30, status: "voided");
+        Assert.False((await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"))).GetProperty("hasAccess").GetBoolean());
+    }
+
+    [Fact]
+    public async Task PromoAndPaidSubscription_Combine_PaidSourceWinsWhileItLasts()
+    {
+        var user = await AddUserAsync("both@example.com");
+        await AddGrantAsync(user.Id, 30);
+        _play.Purchases["tok-both"] = Purchase(expiresInDays: 20);
+        await VerifyAsync(user, "tok-both");
+
+        var body = await JsonAsync(await ClientFor(user).GetAsync("/api/v1/subscription"));
+        Assert.True(body.GetProperty("hasAccess").GetBoolean());
+        Assert.Equal("google_play", body.GetProperty("source").GetString());
+    }
+
+    private async Task<List<Trazo.Domain.Growth.GrowthEvent>> EventsAsync()
+    {
+        using var scope = _factory.Services.CreateScope();
+        return await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().GrowthEvents.AsNoTracking().ToListAsync();
+    }
+
+    [Fact]
+    public async Task VerifiedPurchases_ProduceFunnelEvents_OnceEach()
+    {
+        var user = await AddUserAsync("funnel@example.com");
+        _play.Purchases["tok-f"] = Purchase(trial: true);
+        await VerifyAsync(user, "tok-f");
+        await VerifyAsync(user, "tok-f"); // restore / retry: nothing is counted twice
+
+        // The trial ends and the first payment is taken.
+        _play.Purchases["tok-f"] = Purchase(trial: false) with { LatestOrderId = "GPA.2" };
+        await _factory.CreateClient().SendAsync(Notification(SubscriptionNotification("tok-f")));
+        await _factory.CreateClient().SendAsync(Notification(SubscriptionNotification("tok-f"))); // duplicate RTDN
+        // A renewal.
+        _play.Purchases["tok-f"] = Purchase(trial: false) with { LatestOrderId = "GPA.3" };
+        await _factory.CreateClient().SendAsync(Notification(SubscriptionNotification("tok-f")));
+
+        var events = (await EventsAsync()).Where(e => e.UserId == user.Id).Select(e => e.Name).OrderBy(x => x).ToList();
+        Assert.Equal(["first_purchase", "renewed", "trial_started"], events);
+    }
+
+    [Fact]
+    public async Task Refund_RecordsARefundedEvent_FromTheVoidedNotification()
+    {
+        var user = await AddUserAsync("refund@example.com");
+        _play.Purchases["tok-r"] = Purchase();
+        await VerifyAsync(user, "tok-r");
+        var voided = JsonSerializer.Serialize(new
+        {
+            version = "1.0", packageName = "com.trazo.android", eventTimeMillis = "1",
+            voidedPurchaseNotification = new { purchaseToken = "tok-r", orderId = "GPA.1", productType = 1, refundType = 1 }
+        });
+        await _factory.CreateClient().SendAsync(Notification(voided));
+
+        Assert.Contains(await EventsAsync(), e => e.Name == "refunded" && e.UserId == user.Id);
+    }
+
+    [Fact]
+    public async Task PromotionSettings_AreSuperadminOnly_Validated_AndReadBack()
+    {
+        var root = await AddUserAsync("root@example.com", "superadmin");
+        var user = await AddUserAsync("alice@example.com");
+        Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(user).GetAsync("/api/v1/admin/settings/promotions")).StatusCode);
+
+        var defaults = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/settings/promotions"));
+        Assert.True(defaults.GetProperty("signupTrialEnabled").GetBoolean());
+        Assert.Equal(30, defaults.GetProperty("signupTrialDays").GetInt32());
+        Assert.Equal(30, defaults.GetProperty("referralRewardDays").GetInt32());
+
+        var bad = await ClientFor(root).PutAsJsonAsync("/api/v1/admin/settings/promotions",
+            new { signupTrialEnabled = true, signupTrialDays = 0, referralsEnabled = true, referralRewardDays = 30 });
+        Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+
+        var ok = await ClientFor(root).PutAsJsonAsync("/api/v1/admin/settings/promotions",
+            new { signupTrialEnabled = false, signupTrialDays = 14, referralsEnabled = true, referralRewardDays = 45 });
+        Assert.Equal(HttpStatusCode.OK, ok.StatusCode);
+        var saved = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/settings/promotions"));
+        Assert.False(saved.GetProperty("signupTrialEnabled").GetBoolean());
+        Assert.Equal(14, saved.GetProperty("signupTrialDays").GetInt32());
+        Assert.Equal(45, saved.GetProperty("referralRewardDays").GetInt32());
+    }
+
     // ---- Access policy ----
 
     private async Task<HttpResponseMessage> RunFilterAsync(TrazoUser? user)

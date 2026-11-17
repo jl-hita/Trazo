@@ -18,6 +18,8 @@ public interface IRuntimeSettings
     Task<SettingsView> GetViewAsync(CancellationToken ct = default);
     /// <summary>True when paid access is required. Off by default: everything is free.</summary>
     Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default);
+    /// <summary>Welcome period and referral reward settings (defaults when never saved).</summary>
+    Task<PromotionsConfig> GetPromotionsAsync(CancellationToken ct = default);
     Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default);
     Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default);
     Task<PushConfig> GetPushAsync(CancellationToken ct = default);
@@ -92,6 +94,18 @@ public sealed class RuntimeSettings(
         var e = BuildEmail(rows);
         return new SettingsView(Get(rows, SettingKeys.GoogleClientId) ?? "", e.Host, e.Port, e.EnableSsl,
             e.Username, !string.IsNullOrEmpty(e.Password), e.From, e.ActionBaseUrl);
+    }
+
+    public async Task<PromotionsConfig> GetPromotionsAsync(CancellationToken ct = default)
+    {
+        var rows = await LoadAsync(ct);
+        var d = PromotionsConfig.Default;
+        bool Flag(string key, bool fallback) => bool.TryParse(Get(rows, key), out var v) ? v : fallback;
+        int Days(string key, int fallback) =>
+            int.TryParse(Get(rows, key), NumberStyles.None, CultureInfo.InvariantCulture, out var v) && v is >= 1 and <= PromotionsConfig.MaxDays ? v : fallback;
+        return new PromotionsConfig(
+            Flag(SettingKeys.SignupTrialEnabled, d.SignupTrialEnabled), Days(SettingKeys.SignupTrialDays, d.SignupTrialDays),
+            Flag(SettingKeys.ReferralsEnabled, d.ReferralsEnabled), Days(SettingKeys.ReferralRewardDays, d.ReferralRewardDays));
     }
 
     public async Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default) =>

@@ -216,5 +216,14 @@ public sealed class AdminUsersApiTests : IDisposable
 
         var verified = await JsonAsync(await client.PostAsync($"/api/v1/admin/users/{user.Id}/verify-email", null));
         Assert.True(verified.GetProperty("emailVerified").GetBoolean());
+
+        // Activating an account gives the welcome Premium period (30 days by default), once.
+        await client.PostAsync($"/api/v1/admin/users/{user.Id}/verify-email", null);
+        using var check = _factory.Services.CreateScope();
+        var grants = await check.ServiceProvider.GetRequiredService<TrazoDbContext>().PremiumGrants.AsNoTracking()
+            .Where(x => x.UserId == user.Id).ToListAsync();
+        var grant = Assert.Single(grants);
+        Assert.Equal("signup_trial", grant.Kind);
+        Assert.Equal(30, grant.Days);
     }
 }
