@@ -7,6 +7,12 @@ namespace Trazo.Training;
 /// </summary>
 public static class TrainingAdaptationPolicy
 {
+    /// <summary>
+    /// Applies session-level safety and fatigue rules in precedence order: invalid data and pain block first, then repeated
+    /// multi-signal stress may propose a deload, followed by completion/recovery/time checks. It deliberately does not infer
+    /// per-exercise load progression; that requires set-level evidence and is handled by the progression engine.
+    /// The input must remain oldest-to-newest because the last item is treated as the latest session.
+    /// </summary>
     public static TrainingAdaptationDecision Evaluate(IReadOnlyList<TrainingSessionFeedback> recentFeedback)
     {
         ArgumentNullException.ThrowIfNull(recentFeedback);
