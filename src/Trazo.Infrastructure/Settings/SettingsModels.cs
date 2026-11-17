@@ -10,6 +10,8 @@ public static class SettingKeys
     public const string SmtpPassword = "Email:Smtp:Password";
     public const string EmailFrom = "Email:From";
     public const string EmailActionBaseUrl = "Email:ActionBaseUrl";
+    /// <summary>When "false" no email is sent (for test installations). Absent means enabled.</summary>
+    public const string EmailEnabled = "Email:Enabled";
 
     public const string SubscriptionsEnforced = "Billing:Enforced";
     public const string PlayPackageName = "Billing:Play:PackageName";
@@ -69,7 +71,8 @@ public sealed record PromotionsConfig(bool SignupTrialEnabled, int SignupTrialDa
 public sealed record GoogleConfig(string ClientId);
 
 public sealed record EmailConfig(
-    string Host, int Port, bool EnableSsl, string? Username, string? Password, string From, string ActionBaseUrl)
+    string Host, int Port, bool EnableSsl, string? Username, string? Password, string From, string ActionBaseUrl,
+    bool Enabled = true)
 {
     public bool IsComplete =>
         !string.IsNullOrWhiteSpace(Host) && !string.IsNullOrWhiteSpace(From) &&
@@ -94,7 +97,7 @@ public sealed record SetupResult(SetupOutcome Outcome, IReadOnlyDictionary<strin
 /// <summary>Settings shown to a superadmin. The SMTP password is never included.</summary>
 public sealed record SettingsView(
     string GoogleClientId, string SmtpHost, int SmtpPort, bool SmtpEnableSsl, string? SmtpUsername,
-    bool SmtpPasswordSet, string EmailFrom, string EmailActionBaseUrl);
+    bool SmtpPasswordSet, string EmailFrom, string EmailActionBaseUrl, bool EmailEnabled = true);
 
 /// <summary>
 /// Google Play Billing configuration. The service-account key and the notification secret are stored

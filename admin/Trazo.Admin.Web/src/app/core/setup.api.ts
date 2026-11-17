@@ -21,6 +21,8 @@ export interface EmailSettings {
   password: string | null;
   from: string;
   actionBaseUrl: string;
+  /** false = no email is sent (test installations). */
+  enabled: boolean;
 }
 
 export interface AdminAccount { email: string; displayName: string; password: string; }
@@ -36,6 +38,7 @@ export interface SettingsView {
   smtpPasswordSet: boolean;
   emailFrom: string;
   emailActionBaseUrl: string;
+  emailEnabled: boolean;
 }
 
 const API = '/api/v1';

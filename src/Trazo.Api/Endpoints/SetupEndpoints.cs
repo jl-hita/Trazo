@@ -144,5 +144,5 @@ public static class SetupEndpoints
     private static GoogleConfig ToGoogle(GoogleSettingsRequest g) => new(g.ClientId?.Trim() ?? "");
 
     private static EmailConfig ToEmail(EmailSettingsRequest e) =>
-        new(e.Host?.Trim() ?? "", e.Port, e.EnableSsl, e.Username, e.Password, e.From?.Trim() ?? "", e.ActionBaseUrl?.Trim() ?? "");
+        new(e.Host?.Trim() ?? "", e.Port, e.EnableSsl, e.Username, e.Password, e.From?.Trim() ?? "", e.ActionBaseUrl?.Trim() ?? "", e.Enabled ?? true);
 }

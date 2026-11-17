@@ -38,6 +38,7 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
             await Upsert(SettingKeys.SmtpPassword, email.Password ?? "", true, ct);
         await Upsert(SettingKeys.EmailFrom, email.From.Trim(), false, ct);
         await Upsert(SettingKeys.EmailActionBaseUrl, email.ActionBaseUrl.Trim().TrimEnd('/'), false, ct);
+        await Upsert(SettingKeys.EmailEnabled, email.Enabled ? "true" : "false", false, ct);
     }
 
     public async Task<Dictionary<string, string[]>> UpdateAsync(GoogleConfig google, EmailConfig email, CancellationToken ct)

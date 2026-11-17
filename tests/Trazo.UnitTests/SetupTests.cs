@@ -313,6 +313,28 @@ public sealed class SettingsEncryptionAndPrecedenceTests
     }
 
     [Fact]
+    public async Task SmtpEmailSender_DropsMessages_WhenDisabled_AndResumesWhenEnabled()
+    {
+        using var fx = new SetupFixture();
+        var (db, setup, runtime, writer) = fx.NewServices();
+        using var _ = db;
+        var input = SetupFixture.ValidInput();
+        await setup.CompleteAsync(input);
+        var transport = new RecordingTransport();
+        var sender = new SmtpEmailSender(runtime, transport);
+        Assert.True((await runtime.GetViewAsync()).EmailEnabled);
+
+        await writer.UpdateAsync(input.Google, input.Email with { Password = null, Enabled = false }, default);
+        Assert.False((await runtime.GetViewAsync()).EmailEnabled);
+        await sender.SendAsync("u@example.com", "s", "b", default);
+        Assert.Empty(transport.Hosts);
+
+        await writer.UpdateAsync(input.Google, input.Email with { Password = null, Enabled = true }, default);
+        await sender.SendAsync("u@example.com", "s", "b", default);
+        Assert.Single(transport.Hosts);
+    }
+
+    [Fact]
     public async Task SmtpEmailSender_Throws_WhenNotConfigured()
     {
         using var fx = new SetupFixture();

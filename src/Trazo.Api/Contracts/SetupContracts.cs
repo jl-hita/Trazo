@@ -2,7 +2,8 @@ namespace Trazo.Api.Contracts;
 
 public sealed record GoogleSettingsRequest(string? ClientId);
 public sealed record EmailSettingsRequest(
-    string? Host, int Port, bool EnableSsl, string? Username, string? Password, string? From, string? ActionBaseUrl);
+    string? Host, int Port, bool EnableSsl, string? Username, string? Password, string? From, string? ActionBaseUrl,
+    bool? Enabled = null);
 public sealed record AdminAccountRequest(string? Email, string? DisplayName, string? Password);
 public sealed record CompleteSetupRequest(GoogleSettingsRequest? Google, EmailSettingsRequest? Email, AdminAccountRequest? Admin);
 public sealed record UpdateSettingsRequest(GoogleSettingsRequest? Google, EmailSettingsRequest? Email);
