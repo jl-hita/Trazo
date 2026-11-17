@@ -883,6 +883,12 @@ public static class TrainingProgramGenerator
         return errors;
     }
 
+    /// <summary>
+    /// Adds only the optional isolation/accessory layer after the session's required movement patterns have been selected.
+    /// The candidate pool is constrained by the split (upper/lower/push/pull), equipment, exclusions and remaining session time;
+    /// within that pool the engine chooses the muscles with the largest remaining weekly deficit. This stage must not be used
+    /// to compensate for a missing required compound pattern: those failures are handled earlier and reported explicitly.
+    /// </summary>
     private static void AddOptionalAccessoryExercises(
         TrainingProgramGenerationRequest request,
         IEnumerable<TrainingExerciseCandidate> catalog,
