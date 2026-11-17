@@ -27,6 +27,7 @@ public static class AccountData
         typeof(Trazo.Domain.Push.DeviceToken),
         // The Premium-time ledger is deleted; funnel events are anonymised (their user id is cleared, the rest holds no personal data).
         typeof(Trazo.Domain.Growth.PremiumGrant), typeof(Trazo.Domain.Growth.GrowthEvent),
+        typeof(Trazo.Domain.Growth.ReferralCode), typeof(Trazo.Domain.Growth.ReferralRelationship),
         // Not linked to the account: matched by the account's email (the person may have joined the waitlist before registering).
         typeof(Trazo.Domain.Waitlist.WaitlistEntry)
     };
@@ -176,6 +177,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         await db.PremiumGrants.Where(g => g.OriginUserId == userId && g.UserId != userId)
             .ExecuteUpdateAsync(u => u.SetProperty(g => g.OriginUserId, (Guid?)null).SetProperty(g => g.OriginSubscriptionId, (Guid?)null), ct);
         rows += await StepAsync(db.PremiumGrants.Where(g => g.UserId == userId), ct);
+        rows += await StepAsync(db.ReferralRelationships.Where(r => r.ReferrerUserId == userId || r.ReferredUserId == userId), ct);
+        rows += await StepAsync(db.ReferralCodes.Where(c => c.UserId == userId), ct);
         rows += await StepAsync(db.RefreshTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.DeviceTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.AuthChallenges.Where(c => c.UserId == userId), ct);

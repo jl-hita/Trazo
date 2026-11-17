@@ -51,6 +51,11 @@ public static class DependencyInjection
         services.AddScoped<Trazo.Infrastructure.Growth.IGrowthEvents, Trazo.Infrastructure.Growth.GrowthEventRecorder>();
         services.AddScoped<Trazo.Infrastructure.Growth.ISignupTrialService, Trazo.Infrastructure.Growth.SignupTrialService>();
         services.AddScoped<ISubscriptionObserver, Trazo.Infrastructure.Growth.GrowthSubscriptionObserver>();
+        services.AddScoped<Trazo.Infrastructure.Growth.IReferralService, Trazo.Infrastructure.Growth.ReferralService>();
+        services.AddScoped<Trazo.Infrastructure.Growth.IReferralRewardService, Trazo.Infrastructure.Growth.ReferralRewardService>();
+        services.AddScoped<ISubscriptionObserver, Trazo.Infrastructure.Growth.ReferralSubscriptionObserver>();
+        services.AddScoped<Trazo.Infrastructure.Growth.ReferralReconciler>();
+        services.AddScoped<Trazo.Infrastructure.Growth.IGrowthAnalytics, Trazo.Infrastructure.Growth.GrowthAnalytics>();
         services.AddScoped<Trazo.Application.Localization.RequestLanguage>();
         services.AddScoped<Trazo.Infrastructure.Planning.IUserTimeZone, Trazo.Infrastructure.Planning.UserTimeZone>();
         services.AddScoped<Trazo.Infrastructure.Accounts.IAccountService, Trazo.Infrastructure.Accounts.AccountService>();

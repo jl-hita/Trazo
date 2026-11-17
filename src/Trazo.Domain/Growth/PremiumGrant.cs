@@ -53,6 +53,8 @@ public sealed class PremiumGrant
     public Guid? DeferredSubscriptionId { get; set; }
     public DateTimeOffset? GoogleExpiryBefore { get; set; }
     public DateTimeOffset? GoogleExpiryAfter { get; set; }
+    /// <summary>Order id of the subscription when a deferral was first attempted: a later order means a normal renewal happened in between.</summary>
+    public string? GoogleOrderBefore { get; set; }
     public DateTimeOffset? AppliedAt { get; set; }
     public DateTimeOffset? VoidedAt { get; set; }
     public string? VoidReason { get; set; }

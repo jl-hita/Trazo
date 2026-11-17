@@ -46,6 +46,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // Logs shown in the administration console. The test host has no PostgreSQL, so it does not store them.
 if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services.AddDatabaseLogging(builder.Configuration);
+// Retries pending referral rewards and converts invitations the event path missed. Not run by the test host.
+if (!builder.Environment.IsEnvironment("Testing"))
+    builder.Services.AddHostedService<Trazo.Infrastructure.Growth.ReferralReconcilerWorker>();
 builder.Services.AddSingleton<AuthTokenService>();
 builder.Services.AddSingleton<Trazo.Api.Overview.OverviewCache>();
 builder.Services.AddScoped<Trazo.Api.Overview.OverviewInsightsBuilder>();
@@ -182,6 +185,15 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             "diag|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    options.AddPolicy(ReferralEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            "ref|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 60, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    // Public invitation page and install-referrer counter: anonymous, so per IP and fixed.
+    options.AddPolicy(ReferralEndpoints.PublicRateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            "refpub|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy("auth", httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
@@ -312,6 +324,7 @@ app.MapOperationsSettingsEndpoints();
 app.MapWaitlistEndpoints();
 app.MapPushEndpoints();
 app.MapAnalyticsEndpoints();
+app.MapReferralEndpoints();
 app.MapErrorTicketEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (

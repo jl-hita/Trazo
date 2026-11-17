@@ -513,6 +513,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<Guid?>("DeferredSubscriptionId").HasColumnType("uuid");
             b.Property<DateTimeOffset?>("GoogleExpiryBefore").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("GoogleExpiryAfter").HasColumnType("timestamp with time zone");
+            b.Property<string>("GoogleOrderBefore").HasMaxLength(100).HasColumnType("character varying(100)");
             b.Property<DateTimeOffset?>("AppliedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("VoidedAt").HasColumnType("timestamp with time zone");
             b.Property<string>("VoidReason").HasMaxLength(300).HasColumnType("character varying(300)");
@@ -530,6 +531,55 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
         {
             b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
                 .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Growth.ReferralCode", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<string>("Code").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Code").IsUnique();
+            b.HasIndex("UserId").IsUnique();
+            b.ToTable("referral_codes");
+        });
+        modelBuilder.Entity("Trazo.Domain.Growth.ReferralCode", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Growth.ReferralRelationship", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("ReferrerUserId").HasColumnType("uuid");
+            b.Property<Guid>("ReferredUserId").HasColumnType("uuid");
+            b.Property<string>("Code").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("Source").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("Status").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.Property<DateTimeOffset>("AttributedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("AppVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<Guid?>("ConversionSubscriptionId").HasColumnType("uuid");
+            b.Property<string>("ConversionPlan").HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<DateTimeOffset?>("ConvertedAt").HasColumnType("timestamp with time zone");
+            b.Property<Guid?>("RewardGrantId").HasColumnType("uuid");
+            b.Property<int?>("RewardDays").HasColumnType("integer");
+            b.Property<string>("Incident").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("Code");
+            b.HasIndex("ReferredUserId").IsUnique();
+            b.HasIndex("Status");
+            b.HasIndex("ReferrerUserId", "Status");
+            b.ToTable("referral_relationships");
+        });
+        modelBuilder.Entity("Trazo.Domain.Growth.ReferralRelationship", b =>
+        {
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("ReferrerUserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("ReferredUserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
 
         modelBuilder.Entity("Trazo.Domain.Growth.GrowthEvent", b =>

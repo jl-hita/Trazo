@@ -17,10 +17,45 @@ public sealed class PremiumGrantConfiguration : IEntityTypeConfiguration<Premium
         b.Property(x => x.VoidReason).HasMaxLength(300);
         b.Property(x => x.VoidedBy).HasMaxLength(40);
         b.Property(x => x.LastDeferError).HasMaxLength(300);
+        b.Property(x => x.GoogleOrderBefore).HasMaxLength(100);
         b.HasIndex(x => new { x.Kind, x.SourceKey }).IsUnique();
         b.HasIndex(x => new { x.UserId, x.Status });
         b.HasIndex(x => x.Status);
         b.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public sealed class ReferralCodeConfiguration : IEntityTypeConfiguration<ReferralCode>
+{
+    public void Configure(EntityTypeBuilder<ReferralCode> b)
+    {
+        b.ToTable("referral_codes");
+        b.HasKey(x => x.Id);
+        b.Property(x => x.Code).HasMaxLength(12).IsRequired();
+        b.HasIndex(x => x.Code).IsUnique();
+        b.HasIndex(x => x.UserId).IsUnique();
+        b.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public sealed class ReferralRelationshipConfiguration : IEntityTypeConfiguration<ReferralRelationship>
+{
+    public void Configure(EntityTypeBuilder<ReferralRelationship> b)
+    {
+        b.ToTable("referral_relationships");
+        b.HasKey(x => x.Id);
+        b.Property(x => x.Code).HasMaxLength(12).IsRequired();
+        b.Property(x => x.Source).HasMaxLength(20).IsRequired();
+        b.Property(x => x.Status).HasMaxLength(16).IsRequired();
+        b.Property(x => x.AppVersion).HasMaxLength(40);
+        b.Property(x => x.ConversionPlan).HasMaxLength(200);
+        b.Property(x => x.Incident).HasMaxLength(40);
+        b.HasIndex(x => x.ReferredUserId).IsUnique();
+        b.HasIndex(x => new { x.ReferrerUserId, x.Status });
+        b.HasIndex(x => x.Status);
+        b.HasIndex(x => x.Code);
+        b.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.ReferrerUserId).OnDelete(DeleteBehavior.Cascade);
+        b.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.ReferredUserId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 

@@ -78,6 +78,7 @@ export const routes: Routes = [
         children: [
           { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
           { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
+          { path: 'referrals', loadComponent: () => import('./features/referrals/referrals.page').then(m => m.ReferralsPageComponent) },
           { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
           { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
           { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },

@@ -55,8 +55,17 @@ public sealed class SetupFixture : IDisposable
               "Status" TEXT NOT NULL, "GrantedAt" TEXT NOT NULL, "StartsAt" TEXT NULL, "EndsAt" TEXT NULL, "OriginUserId" TEXT NULL,
               "OriginSubscriptionId" TEXT NULL, "DeferredSubscriptionId" TEXT NULL, "GoogleExpiryBefore" TEXT NULL, "GoogleExpiryAfter" TEXT NULL,
               "AppliedAt" TEXT NULL, "VoidedAt" TEXT NULL, "VoidReason" TEXT NULL, "VoidedBy" TEXT NULL, "DeferAttempts" INTEGER NOT NULL,
-              "LastDeferError" TEXT NULL, "UpdatedAt" TEXT NOT NULL);
+              "LastDeferError" TEXT NULL, "GoogleOrderBefore" TEXT NULL, "UpdatedAt" TEXT NOT NULL);
             CREATE UNIQUE INDEX "IX_premium_grants_Kind_SourceKey" ON premium_grants ("Kind", "SourceKey");
+            CREATE TABLE referral_codes ("Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Code" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL);
+            CREATE UNIQUE INDEX "IX_referral_codes_Code" ON referral_codes ("Code");
+            CREATE UNIQUE INDEX "IX_referral_codes_UserId" ON referral_codes ("UserId");
+            CREATE TABLE referral_relationships (
+              "Id" TEXT PRIMARY KEY, "ReferrerUserId" TEXT NOT NULL, "ReferredUserId" TEXT NOT NULL, "Code" TEXT NOT NULL, "Source" TEXT NOT NULL,
+              "Status" TEXT NOT NULL, "AttributedAt" TEXT NOT NULL, "AppVersion" TEXT NULL, "ConversionSubscriptionId" TEXT NULL,
+              "ConversionPlan" TEXT NULL, "ConvertedAt" TEXT NULL, "RewardGrantId" TEXT NULL, "RewardDays" INTEGER NULL, "Incident" TEXT NULL,
+              "UpdatedAt" TEXT NOT NULL);
+            CREATE UNIQUE INDEX "IX_referral_relationships_ReferredUserId" ON referral_relationships ("ReferredUserId");
             CREATE TABLE growth_events (
               "Id" TEXT PRIMARY KEY, "Name" TEXT NOT NULL, "OccurredAt" TEXT NOT NULL, "UserId" TEXT NULL, "Channel" TEXT NULL,
               "Reference" TEXT NULL, "Plan" TEXT NULL, "AppVersion" TEXT NULL, "Variant" TEXT NULL, "DedupeKey" TEXT NULL);

@@ -52,6 +52,8 @@ public static class AuthenticationEndpoints
         ILoggerFactory loggerFactory,
         Trazo.Application.Localization.RequestLanguage language,
         Trazo.Infrastructure.Growth.ISignupTrialService growth,
+        Trazo.Infrastructure.Growth.IReferralService referrals,
+        HttpContext http,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
@@ -101,7 +103,8 @@ public static class AuthenticationEndpoints
         {
             await AccountEmailEndpoints.IssueAsync(user, "verify-email", "Verifica tu correo de TRAZO",
                 "Para activar tu cuenta, abre este enlace:", TimeSpan.FromHours(24), db, emailSender, configuration, cancellationToken, language: language.Current);
-            await growth.SignedUpAsync(user.Id, cancellationToken);
+            await growth.SignedUpAsync(user.Id, ReferralEndpoints.AppVersion(http), cancellationToken);
+            await referrals.AttributeAsync(user.Id, user.Email, request.ReferralCode, request.ReferralSource, ReferralEndpoints.AppVersion(http), cancellationToken);
             return RegistrationAccepted();
         }
         catch (DbUpdateException)
@@ -201,6 +204,8 @@ public static class AuthenticationEndpoints
         IConfiguration appConfiguration,
         ILoggerFactory loggerFactory,
         Trazo.Infrastructure.Growth.ISignupTrialService growth,
+        Trazo.Infrastructure.Growth.IReferralService referrals,
+        HttpContext http,
         CancellationToken cancellationToken)
     {
         if (await setup.IsOpenAsync(cancellationToken)) return SetupRequired();
@@ -256,7 +261,8 @@ public static class AuthenticationEndpoints
         if (createdNow)
         {
             // A Google account arrives verified, so it is signed up and activated at once.
-            await growth.SignedUpAsync(user.Id, cancellationToken);
+            await growth.SignedUpAsync(user.Id, ReferralEndpoints.AppVersion(http), cancellationToken);
+            await referrals.AttributeAsync(user.Id, user.Email, request.ReferralCode, request.ReferralSource, ReferralEndpoints.AppVersion(http), cancellationToken);
             await growth.ActivatedAsync(user.Id, cancellationToken);
         }
         return Results.Ok(new TokenResponse(pair.AccessToken, pair.RefreshToken, "Bearer",

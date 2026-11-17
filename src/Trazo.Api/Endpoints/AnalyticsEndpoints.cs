@@ -16,9 +16,28 @@ public static class AnalyticsEndpoints
 
     public static IEndpointRouteBuilder MapAnalyticsEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGroup("/api/v1/analytics").WithTags("Analytics").RequireAuthorization().RequireRateLimiting(RateLimitPolicy)
-            .MapPost("/paywall-view", RecordPaywallViewAsync);
+        var group = endpoints.MapGroup("/api/v1/analytics").WithTags("Analytics").RequireAuthorization().RequireRateLimiting(RateLimitPolicy);
+        group.MapPost("/paywall-view", RecordPaywallViewAsync);
+        group.MapPost("/events", RecordEventAsync);
         return endpoints;
+    }
+
+    /// <summary>
+    /// Usage milestones the app may report for the signed-in user (a closed list: see <see cref="Trazo.Domain.Growth.GrowthEventNames.ClientReportable"/>).
+    /// Money events (trial, payment, renewal, refund) are never accepted here: the backend writes them from Google Play.
+    /// Each milestone is recorded once per user.
+    /// </summary>
+    private static async Task<IResult> RecordEventAsync(
+        ClientEventRequest? request, HttpContext http, System.Security.Claims.ClaimsPrincipal principal,
+        Trazo.Infrastructure.Growth.IGrowthEvents events, CancellationToken ct)
+    {
+        var name = request?.Name?.Trim();
+        if (name is null || name != Trazo.Domain.Growth.GrowthEventNames.OnboardingCompleted)
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["name"] = ["Unknown event."] });
+        if (SubscriptionEndpoints.UserId(principal) is not { } userId) return Results.Unauthorized();
+        await events.RecordAsync(name, userId, new Trazo.Infrastructure.Growth.GrowthEventInfo(
+            AppVersion: ReferralEndpoints.AppVersion(http), DedupeKey: $"{name}:{userId:N}"), ct);
+        return Results.NoContent();
     }
 
     private static async Task<IResult> RecordPaywallViewAsync(

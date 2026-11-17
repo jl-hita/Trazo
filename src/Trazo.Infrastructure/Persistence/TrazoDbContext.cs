@@ -32,6 +32,8 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Analytics.PaywallView> PaywallViews => Set<Trazo.Domain.Analytics.PaywallView>();
 
     public DbSet<Trazo.Domain.Growth.PremiumGrant> PremiumGrants => Set<Trazo.Domain.Growth.PremiumGrant>();
+    public DbSet<Trazo.Domain.Growth.ReferralCode> ReferralCodes => Set<Trazo.Domain.Growth.ReferralCode>();
+    public DbSet<Trazo.Domain.Growth.ReferralRelationship> ReferralRelationships => Set<Trazo.Domain.Growth.ReferralRelationship>();
     public DbSet<Trazo.Domain.Growth.GrowthEvent> GrowthEvents => Set<Trazo.Domain.Growth.GrowthEvent>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

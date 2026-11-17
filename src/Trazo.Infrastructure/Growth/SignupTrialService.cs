@@ -7,7 +7,7 @@ namespace Trazo.Infrastructure.Growth;
 public interface ISignupTrialService
 {
     /// <summary>The account was created (registration form or first Google sign-in).</summary>
-    Task SignedUpAsync(Guid userId, CancellationToken ct);
+    Task SignedUpAsync(Guid userId, string? appVersion, CancellationToken ct);
 
     /// <summary>
     /// The account became usable (e-mail verified, or Google sign-in). Gives the welcome Premium period when the superadmin has
@@ -18,8 +18,8 @@ public interface ISignupTrialService
 
 public sealed class SignupTrialService(IRuntimeSettings settings, IPremiumGrantService grants, IGrowthEvents events) : ISignupTrialService
 {
-    public Task SignedUpAsync(Guid userId, CancellationToken ct) =>
-        events.RecordAsync(GrowthEventNames.Signup, userId, new GrowthEventInfo(DedupeKey: $"signup:{userId:N}"), ct);
+    public Task SignedUpAsync(Guid userId, string? appVersion, CancellationToken ct) =>
+        events.RecordAsync(GrowthEventNames.Signup, userId, new GrowthEventInfo(AppVersion: appVersion, DedupeKey: $"signup:{userId:N}"), ct);
 
     public async Task<PremiumGrant?> ActivatedAsync(Guid userId, CancellationToken ct)
     {
