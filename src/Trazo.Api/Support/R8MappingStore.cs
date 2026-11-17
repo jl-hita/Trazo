@@ -104,6 +104,7 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
                 logger.LogWarning("R8 Retrace failed for Android version {AppVersion} (exit code {ExitCode}).", cleanVersion, process.ExitCode);
                 return null;
             }
+            if (string.Equals(output.Trim(), obfuscatedTrace.Trim(), StringComparison.Ordinal)) return null;
             return output.Length <= ErrorTicketService.MaxStackTraceLength * 2
                 ? output
                 : output[..(ErrorTicketService.MaxStackTraceLength * 2)];
