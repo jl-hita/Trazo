@@ -186,6 +186,7 @@ public sealed class ErrorTicketsApiTests : IDisposable
         Assert.Equal("java.lang.IllegalStateException", ticket.ErrorType);
         Assert.Equal(2, ticket.Occurrences);
         Assert.Equal("1.0.4", ticket.AppVersion);
+        Assert.Null(ticket.OriginalStackTrace); // no mapping configured: keep and show the received obfuscated trace
         Assert.Equal(ErrorTicketStatus.New, ticket.Status);
         Assert.DoesNotContain("ana.lopez", ticket.StackTrace);
         Assert.Contains("PlanViewModel.load", ticket.StackTrace);
