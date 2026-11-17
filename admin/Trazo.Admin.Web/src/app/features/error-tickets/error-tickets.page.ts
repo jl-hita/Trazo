@@ -99,7 +99,7 @@ import { errorMessage } from '../../core/setup.api';
                     <span>{{ d.occurrences }} {{ d.occurrences === 1 ? 'time' : 'times' }}</span>
                   </div>
                   @if (d.originalStackTrace) {
-                    <button type="button" class="et-btn" (click)="showOriginalTrace.update(v => !v)">
+                    <button type="button" class="et-btn" (click)="toggleOriginalTrace()">
                       {{ showOriginalTrace() ? 'Show retraced trace' : 'Show original obfuscated trace' }}
                     </button>
                   }
@@ -228,6 +228,8 @@ export class ErrorTicketsPageComponent {
       }
     } finally { this.testing.set(false); }
   }
+
+  protected toggleOriginalTrace(): void { this.showOriginalTrace.update(value => !value); }
 
   protected async copy(ticket: ErrorTicketDetail): Promise<void> {
     try {
