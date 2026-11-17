@@ -358,6 +358,32 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 - `POST /plans/current/sessions/{id}/log` is idempotent: repeating a request whose log is already saved with exactly the same data answers `200` with the saved
   session and `"replayed": true`. A different log for an already logged session still answers `409 session_already_logged`.
 
+## Planned vs performed vs registered (flexible registration)
+
+A session has an **identity and a place in the program** (`PlannedSession.Id`, `sequenceIndex`, 1-based, unique in the plan, in planned-date order);
+the planned `date` is only a suggestion. A log records **when the workout happened** and **when it was registered**, separately:
+
+| Field | Meaning |
+|---|---|
+| `performedAt` (log) | Instant of the workout. Defaults to the registration time. Chronology of all evidence (progression, adaptation, history, "last time"). |
+| `performedOn` (log) | Local day of `performedAt` in the user's zone (`timeZoneId` is stored with it, so a later zone change does not rewrite history). |
+| `loggedAt` (log) | When it was registered in TRAZO (server clock). |
+| `clientRequestId` (request, optional) | Idempotency key: the same key always answers the saved result (`replayed: true`), even if the body differs; the same key on another session is `400`. |
+
+Rules (see `docs/engine-async-split-audit-and-design.md` in the Android repo for the design this belongs to):
+
+- `POST .../log` accepts `performedAt` (optional). It cannot be more than 5 minutes in the future (a smaller drift is clamped to now) nor before the plan's start day (`400`, field `performedAt`).
+- There is **no registration window** any more: a session of an active plan can be registered however late and in any order. `session_out_of_window` is still
+  returned by swap/alternatives of sessions out of the current and previous plan weeks, not by logging.
+- Logging never changes a session's identity or planned date.
+- Adaptation reads the history ordered by `performedAt`, with `now` = the newest `performedAt`; cooldowns use the adaptation's `EvidenceAt` (the `performedAt` of the workout that caused it).
+- Only **pending sessions after the furthest resolved `sequenceIndex`** can be adapted. Sessions already resolved are never rewritten, and forgotten pending sessions before that point never use up an adaptation.
+- A workout **older than another one already saved** is stored and enters the history, but does not apply automatic changes (the report says so in `notes`): the plan was already adapted with newer data.
+- Muscle feedback treats every log as its own exposure even when several happen on the same local day.
+
+Migration `20261117100000_WorkoutPerformedAtAndSessionSequence`: `PerformedAt = LoggedAt`, `PerformedOn` = day of `LoggedAt` in `Europe/Madrid`, `TimeZoneId = 'Europe/Madrid'` for old logs;
+`SequenceIndex` numbered per plan by (`Date`, `Title`, `Id`); drops the now-redundant `IX_workout_logs_UserId` (covered by the new `(UserId, ClientRequestId)` index). Clients that do not send `performedAt` keep working unchanged.
+
 ## Last performance and proposed load
 
 Each exercise of `GET /plans/current/week` carries `lastPerformance` (null when the user never logged it): the date and the completed,

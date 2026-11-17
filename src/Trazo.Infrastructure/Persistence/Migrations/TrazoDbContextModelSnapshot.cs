@@ -216,8 +216,8 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
             b.HasIndex("PurchaseTokenHash").IsUnique();
-            b.HasIndex("UserId");
             b.HasIndex("Status", "ExpiresAt");
+            b.HasIndex("UserId");
             b.ToTable("subscriptions");
         });
         modelBuilder.Entity("Trazo.Domain.Billing.Subscription", b =>
@@ -357,6 +357,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<Guid>("MesocycleId").HasColumnType("uuid");
             b.Property<int>("WeekNumber").HasColumnType("integer");
             b.Property<DateOnly>("Date").HasColumnType("date");
+            b.Property<int>("SequenceIndex").HasColumnType("integer");
             b.Property<string>("Title").IsRequired().HasMaxLength(160).HasColumnType("character varying(160)");
             b.Property<int>("EstimatedDurationMinutes").HasColumnType("integer");
             b.Property<string>("PrescriptionJson").IsRequired().HasColumnType("text");
@@ -364,6 +365,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
             b.HasIndex("PlanId", "Date");
+            b.HasIndex("PlanId", "SequenceIndex").IsUnique();
             b.HasIndex("MesocycleId");
             b.ToTable("planned_sessions");
         });
@@ -382,6 +384,10 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<Guid>("PlanId").HasColumnType("uuid");
             b.Property<Guid>("PlannedSessionId").HasColumnType("uuid");
             b.Property<DateTimeOffset>("LoggedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("PerformedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateOnly>("PerformedOn").HasColumnType("date");
+            b.Property<string>("TimeZoneId").IsRequired().HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<Guid?>("ClientRequestId").HasColumnType("uuid");
             b.Property<string>("Outcome").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<string>("NonCompletionReason").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<string>("Recovery").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
@@ -392,7 +398,8 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasKey("Id");
             b.HasIndex("PlannedSessionId").IsUnique();
             b.HasIndex("PlanId", "LoggedAt");
-            b.HasIndex("UserId");
+            b.HasIndex("PlanId", "PerformedAt");
+            b.HasIndex("UserId", "ClientRequestId").IsUnique().HasFilter("\"ClientRequestId\" IS NOT NULL");
             b.ToTable("workout_logs");
         });
         modelBuilder.Entity("Trazo.Domain.Planning.WorkoutLog", b =>
@@ -438,6 +445,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<int>("SessionsChanged").HasColumnType("integer");
             b.Property<string>("Explanation").IsRequired().HasMaxLength(600).HasColumnType("character varying(600)");
             b.Property<DateTimeOffset>("AppliedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("EvidenceAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
             b.HasIndex("PlanId", "AppliedAt");
             b.ToTable("plan_adaptations");

@@ -63,11 +63,12 @@ public sealed record LoggedSetView(string ExerciseId, int SetNumber, decimal? We
 
 public sealed record LogView(
     Guid Id, DateTimeOffset LoggedAt, string Outcome, string NonCompletionReason, string Recovery, decimal? SessionRpe,
-    bool PainReported, string? Notes, IReadOnlyList<LoggedSetView> Sets);
+    bool PainReported, string? Notes, IReadOnlyList<LoggedSetView> Sets, DateTimeOffset? PerformedAt = null, DateOnly? PerformedOn = null);
 
+/// <summary><c>Date</c> is the planned date; <c>SequenceIndex</c> is the position of the session in the program (it never changes).</summary>
 public sealed record SessionView(
     Guid Id, int WeekNumber, DateOnly Date, DayOfWeek Day, string Title, int EstimatedDurationMinutes, string Status,
-    IReadOnlyList<ExerciseView> Exercises, LogView? Log);
+    IReadOnlyList<ExerciseView> Exercises, LogView? Log, int SequenceIndex = 0);
 
 public sealed record WeekView(
     Guid PlanId, int WeekNumber, DateOnly WeekStart, DateOnly WeekEnd, string Timeline, MesocycleView? Mesocycle,
@@ -100,7 +101,8 @@ public sealed record AlternativeView(
 public sealed record AlternativesResult(string ExerciseId, IReadOnlyList<AlternativeView> Alternatives, string? Message);
 
 public sealed record HistoryItem(
-    Guid SessionId, int WeekNumber, DateOnly Date, string Title, string Outcome, DateTimeOffset LoggedAt, int CompletedSets, int PlannedSets);
+    Guid SessionId, int WeekNumber, DateOnly Date, string Title, string Outcome, DateTimeOffset LoggedAt, int CompletedSets, int PlannedSets,
+    DateTimeOffset? PerformedAt = null);
 
 /// <summary>
 /// Volume of one plan week, in sets. <see cref="PlannedSets"/> is null while the block of that week has not been generated
@@ -131,7 +133,8 @@ public sealed record LogSetRequest(
 
 public sealed record LogSessionRequest(
     string? Outcome, string? NonCompletionReason, string? Recovery, decimal? SessionRpe, bool? PainReported,
-    string? Notes, LogSetRequest[]? Sets, Dictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null);
+    string? Notes, LogSetRequest[]? Sets, Dictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null,
+    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null);
 
 /// <summary>The three post-exercise questions: stimulus low|adequate|high, discomfort none|mild|strong, pre-fatigue recovered|loaded.</summary>
 public sealed record ExerciseFeedbackInput(string? Stimulus, string? Discomfort, string? PreFatigue);

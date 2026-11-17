@@ -110,6 +110,11 @@ public sealed class PlannedSession
     /// <summary>Plan week, 1-based.</summary>
     public int WeekNumber { get; set; }
     public DateOnly Date { get; set; }
+    /// <summary>
+    /// Position of the session in the program, 1-based and unique inside the plan. It is the identity of the session in the
+    /// program order and never changes when the user logs the session on a different day than planned.
+    /// </summary>
+    public int SequenceIndex { get; set; }
     public required string Title { get; set; }
     public int EstimatedDurationMinutes { get; set; }
     /// <summary>
@@ -128,7 +133,16 @@ public sealed class WorkoutLog
     public Guid UserId { get; set; }
     public Guid PlanId { get; set; }
     public Guid PlannedSessionId { get; set; }
+    /// <summary>When the log was REGISTERED in TRAZO (server clock). The time the workout happened is <see cref="PerformedAt"/>.</summary>
     public DateTimeOffset LoggedAt { get; set; }
+    /// <summary>When the workout really happened. Defaults to the registration time; it is the chronology of all the evidence.</summary>
+    public DateTimeOffset PerformedAt { get; set; }
+    /// <summary>The local date of <see cref="PerformedAt"/> in <see cref="TimeZoneId"/> (the day the user trained).</summary>
+    public DateOnly PerformedOn { get; set; }
+    /// <summary>IANA zone used to compute <see cref="PerformedOn"/>.</summary>
+    public string TimeZoneId { get; set; } = string.Empty;
+    /// <summary>Optional idempotency key sent by the client: the same key always means the same request.</summary>
+    public Guid? ClientRequestId { get; set; }
     public WorkoutOutcome Outcome { get; set; }
     /// <summary>None, Time, Fatigue, Equipment, Motivation, Illness or Other.</summary>
     public string NonCompletionReason { get; set; } = "None";
@@ -174,4 +188,6 @@ public sealed class PlanAdaptation
     public int SessionsChanged { get; set; }
     public required string Explanation { get; set; }
     public DateTimeOffset AppliedAt { get; set; }
+    /// <summary>When the workout that caused the change happened (its <c>PerformedAt</c>). Cooldowns are measured from it. Null on old rows.</summary>
+    public DateTimeOffset? EvidenceAt { get; set; }
 }
