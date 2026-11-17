@@ -12,6 +12,9 @@ public sealed record MesocycleSlot(int Sequence, int PhaseSequenceNumber, string
 
 public sealed record PhaseSpan(int Sequence, string Type, DateOnly Start, DateOnly End);
 
+/// <summary>A phase as a range of plan periods (1-based, inclusive).</summary>
+public sealed record PeriodSpan(int Sequence, string Type, int StartPeriod, int EndPeriod);
+
 public enum PlanTimeline
 {
     NotStarted,
@@ -35,17 +38,24 @@ public static class PlanSchedule
     }
 
     /// <summary>Cuts every phase of the macrocycle into blocks of at most <see cref="MaxMesocycleWeeks"/> weeks.</summary>
-    public static IReadOnlyList<MesocycleSlot> Slots(DateOnly planStart, IEnumerable<PhaseSpan> phases)
+    public static IReadOnlyList<MesocycleSlot> Slots(DateOnly planStart, IEnumerable<PhaseSpan> phases) =>
+        Slots(phases.Select(p => new PeriodSpan(
+            p.Sequence, p.Type, (p.Start.DayNumber - planStart.DayNumber) / 7 + 1, (p.End.DayNumber - planStart.DayNumber) / 7 + 1)));
+
+    /// <summary>
+    /// The same cut, from the periods of every phase. A period is a week in a calendar plan and a cycle (one pass through the
+    /// session rotation) in a sequence plan, so both modes share the structure of the macrocycle.
+    /// </summary>
+    public static IReadOnlyList<MesocycleSlot> Slots(IEnumerable<PeriodSpan> phases)
     {
         var slots = new List<MesocycleSlot>();
         foreach (var phase in phases.OrderBy(p => p.Sequence))
         {
-            var weeks = (phase.End.DayNumber - phase.Start.DayNumber + 1) / 7;
-            var firstWeek = (phase.Start.DayNumber - planStart.DayNumber) / 7 + 1;
-            for (var offset = 0; offset < weeks; offset += MaxMesocycleWeeks)
+            var periods = phase.EndPeriod - phase.StartPeriod + 1;
+            for (var offset = 0; offset < periods; offset += MaxMesocycleWeeks)
                 slots.Add(new MesocycleSlot(
-                    slots.Count + 1, phase.Sequence, phase.Type, firstWeek + offset,
-                    Math.Min(MaxMesocycleWeeks, weeks - offset)));
+                    slots.Count + 1, phase.Sequence, phase.Type, phase.StartPeriod + offset,
+                    Math.Min(MaxMesocycleWeeks, periods - offset)));
         }
         return slots;
     }

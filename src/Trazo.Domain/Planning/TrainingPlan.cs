@@ -9,6 +9,13 @@ public enum TrainingPlanStatus
     Archived
 }
 
+/// <summary>How a plan advances: by calendar weeks, or by the order of its sessions (the user trains on whatever days suit them).</summary>
+public enum PlanSchedulingMode
+{
+    Calendar,
+    Sequence
+}
+
 public enum TrainingPlanOrigin
 {
     Manual,
@@ -49,7 +56,11 @@ public sealed class TrainingPlan
     public required string Experience { get; set; }
     public required string Split { get; set; }
     public DateOnly StartDate { get; set; }
+    /// <summary>Plan length in periods: weeks in a calendar plan, cycles (one pass through the session rotation) in a sequence plan.</summary>
     public int TotalWeeks { get; set; }
+    public PlanSchedulingMode SchedulingMode { get; set; } = PlanSchedulingMode.Calendar;
+    /// <summary>Sessions in one period: the training days of a calendar plan, the sessions of one rotation in a sequence plan.</summary>
+    public int SessionsPerPeriod { get; set; }
     public string[] TrainingDays { get; set; } = [];
     public int MaxSessionMinutes { get; set; }
     /// <summary>Equipment tokens the user has. Empty means everything is available.</summary>
@@ -80,8 +91,11 @@ public sealed class TrainingPlanPhase
     public int SequenceNumber { get; set; }
     public required string Name { get; set; }
     public required string PhaseType { get; set; }
-    public DateOnly StartDate { get; set; }
-    public DateOnly EndDate { get; set; }
+    /// <summary>First and last plan period (week, or cycle in a sequence plan) of the phase, 1-based. The dates exist only in calendar plans.</summary>
+    public int StartPeriod { get; set; }
+    public int EndPeriod { get; set; }
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public required string Objective { get; set; }
 }
 
@@ -109,7 +123,8 @@ public sealed class PlannedSession
     public Guid MesocycleId { get; set; }
     /// <summary>Plan week, 1-based.</summary>
     public int WeekNumber { get; set; }
-    public DateOnly Date { get; set; }
+    /// <summary>Planned date. Null in a sequence plan: those sessions have no date, only a place in the program.</summary>
+    public DateOnly? Date { get; set; }
     /// <summary>
     /// Position of the session in the program, 1-based and unique inside the plan. It is the identity of the session in the
     /// program order and never changes when the user logs the session on a different day than planned.

@@ -220,7 +220,7 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
         Assert.True(phases.Count >= 3); // training phases separated by deloads
         Assert.Contains(phases, p => p.GetProperty("type").GetString() == "deload");
         Assert.DoesNotContain("exerciseId", text);
-        Assert.DoesNotContain("sessions", text);
+        Assert.DoesNotContain("\"sessions\"", text); // the key of a session list ("sessionsPerPeriod" is only a count)
         Assert.Equal("/api/v1/plans/current", response.Headers.Location?.ToString());
 
         var current = await (await client.GetAsync("/api/v1/plans/current")).Content.ReadAsStringAsync();
@@ -666,8 +666,8 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
             storedPlan.StartDate = storedPlan.StartDate.AddDays(-28);
             foreach (var phase in storedPlan.Phases)
             {
-                phase.StartDate = phase.StartDate.AddDays(-28);
-                phase.EndDate = phase.EndDate.AddDays(-28);
+                phase.StartDate = phase.StartDate?.AddDays(-28);
+                phase.EndDate = phase.EndDate?.AddDays(-28);
             }
             await db.SaveChangesAsync();
         }

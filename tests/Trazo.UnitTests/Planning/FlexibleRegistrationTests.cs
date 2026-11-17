@@ -76,6 +76,27 @@ public sealed class FlexibleRegistrationTests() : PlansApiBase(enforced: false)
         Assert.Equal(dates.OrderBy(d => d, StringComparer.Ordinal), dates);
     }
 
+    [Fact]
+    public async Task ALaterBlockOfACalendarPlanIsGeneratedWhenItsWeekIsReached_ContinuingTheProgramNumbering()
+    {
+        var (client, sessions) = await StartAsync("later-block@example.com");
+        using (var scope = _factory.Services.CreateScope())
+        {
+            // Three more weeks pass. Phases are periods, so only the start date moves.
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            var plan = await db.TrainingPlans.SingleAsync();
+            plan.StartDate = plan.StartDate.AddDays(-21); // started a week ago, so week 5 is reached
+            await db.SaveChangesAsync();
+        }
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        Assert.Equal(5, week.GetProperty("weekNumber").GetInt32());
+        Assert.Equal(2, week.GetProperty("mesocycle").GetProperty("sequence").GetInt32());
+        Assert.True(week.GetProperty("mesocycle").GetProperty("isDeload").GetBoolean()); // week 5 of 12 is a deload
+        var next = week.GetProperty("sessions").EnumerateArray().Select(s => s.GetProperty("sequenceIndex").GetInt32()).ToList();
+        Assert.NotEmpty(next);
+        Assert.True(next.Min() > sessions.Max(s => s.GetProperty("sequenceIndex").GetInt32()));
+    }
+
     // ------------------------------------------------------------------ real date vs registration date
 
     [Fact]

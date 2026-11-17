@@ -21,6 +21,21 @@ public interface IPlanTimeline
 }
 
 /// <summary>
+/// The sequence-driven (asynchronous) plan: there are no days, so the next session is the first pending one of the rotation and
+/// nothing is ever "late". The user trains whenever it suits them; the program advances only when sessions are resolved.
+/// </summary>
+public sealed class SequenceTimeline : IPlanTimeline
+{
+    public string Mode => "Sequence";
+
+    public TimelineNext Next(IReadOnlyCollection<TimelineSession> pending, DateOnly today, int candidates)
+    {
+        var ordered = pending.OrderBy(s => s.SequenceIndex).ToList();
+        return new TimelineNext(ordered.FirstOrDefault(), ordered.Take(Math.Max(1, candidates)).ToList(), []);
+    }
+}
+
+/// <summary>
 /// The week-based plan: the next session is the first pending one of the program (by <see cref="TimelineSession.SequenceIndex"/>,
 /// which follows the planned dates), even if its date has passed. A session is late when its planned date is before today.
 /// </summary>

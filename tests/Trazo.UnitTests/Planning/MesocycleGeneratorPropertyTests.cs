@@ -179,7 +179,7 @@ public sealed class MesocycleGeneratorPropertyTests
 
         Assert.True(second.Succeeded);
         Assert.Equal(5, second.Sessions.Min(s => s.WeekNumber)); // absolute plan weeks
-        Assert.InRange(second.Sessions.Min(s => s.Date), new DateOnly(2026, 12, 14), new DateOnly(2026, 12, 20));
+        Assert.InRange(second.Sessions.Min(s => s.Date!.Value), new DateOnly(2026, 12, 14), new DateOnly(2026, 12, 20));
         var usedSecond = second.Sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)).Select(e => e.ExerciseId).Distinct().ToList();
         Assert.NotEqual(usedFirst.Order(), usedSecond.Order()); // at least one equivalent exercise was rotated in
     }
