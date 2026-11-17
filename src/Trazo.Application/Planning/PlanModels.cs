@@ -51,7 +51,8 @@ public sealed record ExerciseView(
     IReadOnlyList<string> SecondaryMuscles,
     string? SwappedFromExerciseId,
     LastPerformanceView? LastPerformance = null,
-    string? SupersetGroup = null);
+    string? SupersetGroup = null,
+    bool IsExtra = false);
 
 /// <summary>One set of the last time the user did an exercise.</summary>
 public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir);
@@ -168,6 +169,9 @@ public sealed record LogSessionRequest(
 
 /// <summary>The three post-exercise questions: stimulus low|adequate|high, discomfort none|mild|strong, pre-fatigue recovered|loaded.</summary>
 public sealed record ExerciseFeedbackInput(string? Stimulus, string? Discomfort, string? PreFatigue);
+
+/// <summary>An exercise the user adds to one session. Sets, repetitions, RIR and rest are optional and default to a moderate dose.</summary>
+public sealed record AddExerciseRequest(string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds);
 
 public sealed record SwapRequest(string? ReplacementExerciseId, bool? ApplyToRemainingBlock);
 

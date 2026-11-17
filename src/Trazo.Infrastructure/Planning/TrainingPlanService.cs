@@ -20,6 +20,7 @@ public interface ITrainingPlanService
     Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct);
     Task<PlanResult<LogResult>> LogSessionAsync(Guid userId, Guid sessionId, ParsedLog log, CancellationToken ct);
     Task<PlanResult<AlternativesResult>> GetAlternativesAsync(Guid userId, Guid sessionId, string exerciseId, int limit, CancellationToken ct);
+    Task<PlanResult<SessionView>> AddExerciseAsync(Guid userId, Guid sessionId, AddExerciseRequest request, CancellationToken ct);
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
     Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct);
     /// <summary>The session to do next (by program order, whatever the date), with where it sits and whether the muscles are recovered.</summary>
@@ -893,6 +894,61 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return PlanResult<SessionView>.Ok(ToSessionView(context.Session, null));
     }
 
+    /// <summary>
+    /// Adds one exercise to a single pending session. It is part of that session only: it is logged, counts for the history, the
+    /// progress and the load like any other, but it is never copied to other sessions or blocks.
+    /// </summary>
+    public async Task<PlanResult<SessionView>> AddExerciseAsync(Guid userId, Guid sessionId, AddExerciseRequest request, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<SessionView>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<SessionView>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+        var session = await db.PlannedSessions.FirstOrDefaultAsync(s => s.Id == sessionId && s.PlanId == plan.Id, ct);
+        if (session is null) return PlanResult<SessionView>.Fail(PlanFailure.SessionNotFound, "La sesión no existe.");
+        var window = WindowCheck(plan, session);
+        if (window is not null) return PlanResult<SessionView>.Fail(PlanFailure.SessionOutOfWindow, window);
+        if (session.Status != PlannedSessionStatus.Planned)
+            return PlanResult<SessionView>.Fail(PlanFailure.NotAllowed, "Solo se pueden añadir ejercicios a sesiones pendientes.");
+
+        var errors = new Dictionary<string, string[]>();
+        var sets = request.Sets ?? 3;
+        var min = request.MinRepetitions ?? 8;
+        var max = request.MaxRepetitions ?? Math.Max(min, 12);
+        var rest = request.RestSeconds ?? 90;
+        if (sets is < 1 or > 10) errors["sets"] = ["Las series deben estar entre 1 y 10."];
+        if (min is < 1 or > 50) errors["minRepetitions"] = ["Las repeticiones mínimas deben estar entre 1 y 50."];
+        if (max < min || max > 100) errors["maxRepetitions"] = ["Las repeticiones máximas deben ser al menos las mínimas y no pasar de 100."];
+        if (request.TargetRir is < 0 or > 10) errors["targetRir"] = ["El RIR debe estar entre 0 y 10."];
+        if (rest is < 0 or > 600) errors["restSeconds"] = ["El descanso debe estar entre 0 y 600 segundos."];
+        if (errors.Count > 0)
+            return PlanResult<SessionView>.Fail(PlanFailure.InvalidRequest, "Revisa los datos del ejercicio.", errors);
+
+        var candidates = (await LoadCandidatesAsync(ct)).Candidates;
+        var candidate = candidates.FirstOrDefault(c => string.Equals(c.ExerciseId, request.ExerciseId, StringComparison.OrdinalIgnoreCase));
+        if (candidate is null)
+            return PlanResult<SessionView>.Fail(PlanFailure.InvalidRequest, "El ejercicio no existe en el catálogo.",
+                new Dictionary<string, string[]> { ["exerciseId"] = ["El ejercicio no existe en el catálogo."] });
+        var prescribed = PrescriptionJson.Read(session.PrescriptionJson);
+        if (prescribed.Any(e => string.Equals(e.ExerciseId, candidate.ExerciseId, StringComparison.OrdinalIgnoreCase)))
+            return PlanResult<SessionView>.Fail(PlanFailure.NotAllowed, "Ese ejercicio ya está en la sesión.");
+        // The user chooses freely, but never something the profile rules out (injuries or exercises they excluded).
+        var excluded = plan.ExcludedExerciseIds.Concat(LimitationRules.ExcludedExerciseIds(plan.Limitations, candidates))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (excluded.Contains(candidate.ExerciseId))
+            return PlanResult<SessionView>.Fail(PlanFailure.NotAllowed, "Ese ejercicio no es compatible con tu perfil.");
+
+        var exercise = new TrainingExercisePrescription(
+            candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, prescribed.Count == 0 ? 1 : prescribed.Max(e => e.Order) + 1, sets,
+            min, max, request.TargetRir ?? 2m, rest, TrainingProgressionRule.DoubleProgression, "Añadido por el usuario a esta sesión.",
+            candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
+        session.PrescriptionJson = PrescriptionJson.AppendExtra(session.PrescriptionJson, exercise);
+        session.EstimatedDurationMinutes = Math.Clamp(session.EstimatedDurationMinutes + (int)Math.Ceiling(sets * (rest + 45) / 60.0), 10, 240);
+        session.UpdatedAt = clock.GetUtcNow();
+        await db.SaveChangesAsync(ct);
+        return PlanResult<SessionView>.Ok(ToSessionView(session, null));
+    }
+
     private sealed record SessionContext(
         PlanFailure? Failure, string? Message, TrainingPlan? Plan, PlannedSession? Session,
         TrainingExercisePrescription? Exercise, IReadOnlyList<TrainingExerciseCandidate>? Candidates, IReadOnlyList<TrainingExercisePrescription>? Prescribed);
@@ -1144,7 +1200,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
             PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId),
             last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null,
-            PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId))).ToList(),
+            PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId),
+            PrescriptionJson.IsExtra(session.PrescriptionJson, e.ExerciseId))).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
             log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
