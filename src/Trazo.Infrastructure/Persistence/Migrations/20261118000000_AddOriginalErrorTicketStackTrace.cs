@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Trazo.Infrastructure.Persistence;
 
 namespace Trazo.Infrastructure.Persistence.Migrations;
 
