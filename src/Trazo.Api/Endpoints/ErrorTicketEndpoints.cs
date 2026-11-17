@@ -77,9 +77,10 @@ public static class ErrorTicketEndpoints
         try
         {
             await using var bounded = new BoundedReadStream(context.Request.Body, R8MappingStore.MaxMappingBytes);
-            if (!await mappings.StoreAsync(version, bounded, ct))
+            var sha256 = await mappings.StoreAsync(version, bounded, ct);
+            if (sha256 is null)
                 return Results.Problem("R8 mapping storage is not configured.", statusCode: StatusCodes.Status503ServiceUnavailable);
-            return Results.Accepted(value: new { accepted = true, appVersion = version });
+            return Results.Accepted(value: new { accepted = true, appVersion = version, sha256 });
         }
         catch (InvalidDataException ex)
         {
