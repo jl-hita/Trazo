@@ -88,7 +88,8 @@ public static partial class ErrorTicketService
     /// race to create the same ticket end up as one ticket with two occurrences.
     /// </summary>
     public static async Task<(ErrorTicketOutcome Outcome, Guid Id, string ErrorType)> RecordAsync(
-        TrazoDbContext db, string source, string? appVersion, string stackTrace, DateTimeOffset now, CancellationToken ct)
+        TrazoDbContext db, string source, string? appVersion, string stackTrace, DateTimeOffset now, CancellationToken ct,
+        string? originalStackTrace = null)
     {
         var trace = Scrub(stackTrace);
         var fingerprint = Fingerprint(source, trace);
@@ -100,7 +101,9 @@ public static partial class ErrorTicketService
                 ticket = new ErrorTicket
                 {
                     Id = Guid.NewGuid(), Fingerprint = fingerprint, Source = source, AppVersion = CleanVersion(appVersion),
-                    ErrorType = ErrorTypeOf(trace), StackTrace = trace, Occurrences = 1, FirstSeenAt = now, LastSeenAt = now,
+                    ErrorType = ErrorTypeOf(trace), StackTrace = trace,
+                    OriginalStackTrace = originalStackTrace is null ? null : Scrub(originalStackTrace),
+                    Occurrences = 1, FirstSeenAt = now, LastSeenAt = now,
                     Status = ErrorTicketStatus.New
                 };
                 db.ErrorTickets.Add(ticket);
@@ -112,6 +115,7 @@ public static partial class ErrorTicketService
             ticket.LastSeenAt = now;
             if (reopened) ticket.Status = ErrorTicketStatus.New;
             if (CleanVersion(appVersion) is { } version) ticket.AppVersion = version;
+            if (originalStackTrace is not null) ticket.OriginalStackTrace = Scrub(originalStackTrace);
             await db.SaveChangesAsync(ct);
             return (reopened ? ErrorTicketOutcome.Reopened : ErrorTicketOutcome.Repeated, ticket.Id, ticket.ErrorType);
         }
