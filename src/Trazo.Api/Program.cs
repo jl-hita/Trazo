@@ -203,6 +203,12 @@ builder.Services.AddOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions
             .AllowAnyHeader()
             .AllowAnyMethod()));
 builder.Services.AddCors();
+// Error answers (ProblemDetails) are put in the language of the request on the way out (see ProblemTranslator).
+builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
+{
+    if (context.HttpContext.RequestServices.GetService<Trazo.Application.Localization.RequestLanguage>() is { } language)
+        Trazo.Api.Support.ProblemTranslator.Translate(context.ProblemDetails, language.Current);
+});
 
 var app = builder.Build();
 
@@ -222,6 +228,13 @@ if (app.Environment.IsDevelopment())
 // First, so it sees every exception of the pipeline: reports it as an anonymous error ticket and answers a plain 500.
 app.UseExceptionHandler();
 app.UseForwardedHeaders();
+// The language of the request, for everything that answers in text: from Accept-Language, Spanish by default.
+app.Use(async (context, next) =>
+{
+    context.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current =
+        Trazo.Application.Localization.LanguageNegotiation.FromAcceptLanguage(context.Request.Headers.AcceptLanguage.ToString());
+    await next();
+});
 // Baseline for every answer of the API. Pages that need more (the account-deletion pages) set their own on top.
 app.Use(async (context, next) =>
 {

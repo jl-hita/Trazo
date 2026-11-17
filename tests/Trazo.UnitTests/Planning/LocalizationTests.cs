@@ -68,6 +68,24 @@ public sealed class LocalizerTests
         Assert.Equal("Mi rutina de los lunes", En("Mi rutina de los lunes")); // what the user wrote is theirs
     }
 
+    [Fact]
+    public void TextsWrittenInEnglishComeOutInSpanishForSpanishRequests_AndSpanishOnesAreUnchanged()
+    {
+        Assert.Equal("Empieza primero la configuración de la verificación en dos pasos.", Localizer.Translate("Start two-factor setup first.", AppLanguage.Es));
+        Assert.Equal("El enlace no es válido.", Localizer.Translate("The link is invalid.", AppLanguage.Es));
+        Assert.Equal("El objetivo no es válido.", Localizer.Translate("El objetivo no es válido.", AppLanguage.Es));
+        Assert.Equal("Something nobody translated.", Localizer.Translate("Something nobody translated.", AppLanguage.Es));
+        // The same text in English stays English.
+        Assert.Equal("Start two-factor setup first.", Localizer.Translate("Start two-factor setup first.", AppLanguage.En));
+    }
+
+    [Fact]
+    public void ATemplateValueThatIsItselfAPhraseIsTranslated()
+    {
+        Assert.Equal("This request was made from the web on 16/11/2026 at 08:00 (UTC).",
+            En("Esta solicitud se hizo desde la web el 16/11/2026 a las 08:00 (hora UTC)."));
+    }
+
     [Theory]
     [InlineData(null, AppLanguage.Es)]
     [InlineData("", AppLanguage.Es)]

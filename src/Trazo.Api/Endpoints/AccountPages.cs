@@ -1,6 +1,7 @@
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using Trazo.Application.Localization;
 
 namespace Trazo.Api.Endpoints;
 
@@ -35,9 +36,12 @@ public static class AccountPages
 
     private static string E(string? value) => WebUtility.HtmlEncode(value ?? "");
 
-    private static string Layout(string title, string body) => $"""
+    /// <summary>The page in the language of the visitor (Spanish unless the browser asked for English).</summary>
+    private static string Pick(AppLanguage language, string es, string en) => language == AppLanguage.En ? en : es;
+
+    private static string Layout(AppLanguage language, string title, string body) => $"""
         <!doctype html>
-        <html lang="es">
+        <html lang="{(language == AppLanguage.En ? "en" : "es")}">
         <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,7 +57,9 @@ public static class AccountPages
         </html>
         """;
 
-    private const string WhatIsDeleted = """
+    private static string WhatIsDeleted(AppLanguage language) => language == AppLanguage.En ? WhatIsDeletedEn : WhatIsDeletedEs;
+
+    private const string WhatIsDeletedEs = """
         <h2>Qué se elimina</h2>
         <ul>
         <li>Tu cuenta: correo, nombre, contraseña, vinculación con Google y verificación en dos pasos.</li>
@@ -66,7 +72,35 @@ public static class AccountPages
         (Play Store &rarr; Pagos y suscripciones &rarr; Suscripciones) para no seguir pagando.</p>
         """;
 
-    public static string RequestForm(string? error = null) => Layout("Eliminar cuenta", $"""
+    private const string WhatIsDeletedEn = """
+        <h2>What is deleted</h2>
+        <ul>
+        <li>Your account: email, name, password, Google link and two-step verification.</li>
+        <li>Your training plans and all your session logs, including the notes and any pain or limitations you reported.</li>
+        <li>The adaptations of your plan, your devices and open sessions, and your subscription data kept in TRAZO.</li>
+        </ul>
+        <p>Deletion is immediate and irreversible. TRAZO keeps no copy of this data.</p>
+        <h2>Google Play subscription</h2>
+        <p><strong>Deleting the account does not cancel your Google Play subscription.</strong> If you have one, cancel it in Google Play
+        (Play Store &rarr; Payments &amp; subscriptions &rarr; Subscriptions) so you stop paying.</p>
+        """;
+
+    public static string RequestForm(string? error = null, AppLanguage language = AppLanguage.Es) => language == AppLanguage.En ? RequestFormEn(error) : RequestFormEs(error);
+
+    private static string RequestFormEn(string? error) => Layout(AppLanguage.En, "Delete account", $"""
+        <h1>Delete my TRAZO account</h1>
+        <p class="muted">You can also do it from the app settings. Here you can do it without opening it.</p>
+        {(error is null ? "" : $"<p class=\"alert\" role=\"alert\">{E(error)}</p>")}
+        <form class="card" method="post" action="/api/v1/account/deletion-request">
+        <label for="email">Email of your account</label>
+        <input id="email" name="email" type="email" autocomplete="email" required maxlength="320">
+        <p class="muted">We will send you a confirmation link that expires in 30 minutes. Nothing is deleted until you open it and confirm.</p>
+        <button type="submit">Send me the link</button>
+        </form>
+        {WhatIsDeletedEn}
+        """);
+
+    private static string RequestFormEs(string? error = null) => Layout(AppLanguage.Es, "Eliminar cuenta", $"""
         <h1>Eliminar mi cuenta de TRAZO</h1>
         <p class="muted">También puedes hacerlo desde los ajustes de la app. Aquí puedes hacerlo sin abrirla.</p>
         {(error is null ? "" : $"<p class=\"alert\" role=\"alert\">{E(error)}</p>")}
@@ -76,41 +110,61 @@ public static class AccountPages
         <p class="muted">Te enviaremos un enlace de confirmación que caduca en 30 minutos. No se elimina nada hasta que lo abras y confirmes.</p>
         <button type="submit">Enviarme el enlace</button>
         </form>
-        {WhatIsDeleted}
+        {WhatIsDeletedEs}
         """);
 
-    public static string RequestReceived() => Layout("Revisa tu correo", """
-        <h1>Revisa tu correo</h1>
-        <p class="ok" role="status">Si existe una cuenta con ese correo, te hemos enviado un enlace para confirmar la eliminación. Caduca en 30 minutos.</p>
-        <p class="muted">Si no lo recibes, revisa la carpeta de spam. Si no has solicitado esto, ignora el mensaje: no se borrará nada.</p>
-        """);
+    public static string RequestReceived(AppLanguage language = AppLanguage.Es) => language == AppLanguage.En
+        ? Layout(language, "Check your email", """
+            <h1>Check your email</h1>
+            <p class="ok" role="status">If an account exists with that email, we have sent you a link to confirm the deletion. It expires in 30 minutes.</p>
+            <p class="muted">If you do not receive it, check your spam folder. If you did not request this, ignore the message: nothing will be deleted.</p>
+            """)
+        : Layout(language, "Revisa tu correo", """
+            <h1>Revisa tu correo</h1>
+            <p class="ok" role="status">Si existe una cuenta con ese correo, te hemos enviado un enlace para confirmar la eliminación. Caduca en 30 minutos.</p>
+            <p class="muted">Si no lo recibes, revisa la carpeta de spam. Si no has solicitado esto, ignora el mensaje: no se borrará nada.</p>
+            """);
 
-    public static string Confirm(string token, string maskedEmail, bool needsCode, string? error = null) => Layout("Confirmar eliminación", $"""
-        <h1>Confirma la eliminación</h1>
-        <p>Vas a eliminar de forma definitiva la cuenta <strong>{E(maskedEmail)}</strong> y todos sus datos.</p>
+    public static string Confirm(string token, string maskedEmail, bool needsCode, string? error = null, AppLanguage language = AppLanguage.Es) =>
+        Layout(language, Pick(language, "Confirmar eliminación", "Confirm deletion"), $"""
+        <h1>{Pick(language, "Confirma la eliminación", "Confirm the deletion")}</h1>
+        <p>{Pick(language, "Vas a eliminar de forma definitiva la cuenta", "You are about to permanently delete the account")} <strong>{E(maskedEmail)}</strong> {Pick(language, "y todos sus datos.", "and all its data.")}</p>
         {(error is null ? "" : $"<p class=\"alert\" role=\"alert\">{E(error)}</p>")}
         <form class="card" method="post" action="/api/v1/account/deletion-request/confirm">
         <input type="hidden" name="token" value="{E(token)}">
-        {(needsCode ? "<label for=\"code\">Código de verificación en dos pasos (o código de recuperación)</label><input id=\"code\" name=\"code\" type=\"text\" autocomplete=\"one-time-code\" inputmode=\"numeric\" required maxlength=\"32\">" : "")}
-        <button class="danger" type="submit">Eliminar definitivamente mi cuenta</button>
+        {(needsCode ? $"<label for=\"code\">{Pick(language, "Código de verificación en dos pasos (o código de recuperación)", "Two-step verification code (or recovery code)")}</label><input id=\"code\" name=\"code\" type=\"text\" autocomplete=\"one-time-code\" inputmode=\"numeric\" required maxlength=\"32\">" : "")}
+        <button class="danger" type="submit">{Pick(language, "Eliminar definitivamente mi cuenta", "Permanently delete my account")}</button>
         </form>
-        {WhatIsDeleted}
+        {WhatIsDeleted(language)}
         """);
 
-    public static string Done() => Layout("Cuenta eliminada", """
-        <h1>Cuenta eliminada</h1>
-        <p class="ok" role="status">Tu cuenta y tus datos se han eliminado de TRAZO.</p>
-        <p>Recuerda cancelar tu suscripción de Google Play si tenías una: eliminar la cuenta no la cancela.</p>
-        """);
+    public static string Done(AppLanguage language = AppLanguage.Es) => language == AppLanguage.En
+        ? Layout(language, "Account deleted", """
+            <h1>Account deleted</h1>
+            <p class="ok" role="status">Your account and your data have been deleted from TRAZO.</p>
+            <p>Remember to cancel your Google Play subscription if you had one: deleting the account does not cancel it.</p>
+            """)
+        : Layout(language, "Cuenta eliminada", """
+            <h1>Cuenta eliminada</h1>
+            <p class="ok" role="status">Tu cuenta y tus datos se han eliminado de TRAZO.</p>
+            <p>Recuerda cancelar tu suscripción de Google Play si tenías una: eliminar la cuenta no la cancela.</p>
+            """);
 
-    public static string Invalid() => Layout("Enlace no válido", """
-        <h1>Enlace no válido</h1>
-        <p class="alert" role="alert">El enlace no es válido, ya se ha usado o ha caducado.</p>
-        <p><a href="/account/delete">Solicitar un enlace nuevo</a></p>
-        """);
+    public static string Invalid(AppLanguage language = AppLanguage.Es) => language == AppLanguage.En
+        ? Layout(language, "Invalid link", """
+            <h1>Invalid link</h1>
+            <p class="alert" role="alert">The link is not valid, has already been used or has expired.</p>
+            <p><a href="/account/delete">Request a new link</a></p>
+            """)
+        : Layout(language, "Enlace no válido", """
+            <h1>Enlace no válido</h1>
+            <p class="alert" role="alert">El enlace no es válido, ya se ha usado o ha caducado.</p>
+            <p><a href="/account/delete">Solicitar un enlace nuevo</a></p>
+            """);
 
-    public static string Blocked(string message) => Layout("No se puede eliminar", $"""
-        <h1>No se puede eliminar la cuenta</h1>
-        <p class="alert" role="alert">{E(message)}</p>
+    public static string Blocked(string message, AppLanguage language = AppLanguage.Es) =>
+        Layout(language, Pick(language, "No se puede eliminar", "Cannot delete"), $"""
+        <h1>{Pick(language, "No se puede eliminar la cuenta", "The account cannot be deleted")}</h1>
+        <p class="alert" role="alert">{E(Localizer.Translate(message, language))}</p>
         """);
 }

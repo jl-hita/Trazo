@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -109,12 +110,12 @@ public static class WaitlistEndpoints
     private static async Task<IResult> ConfirmAsync(WaitlistTokenRequest? request, TrazoDbContext db, TimeProvider clock, CancellationToken ct) =>
         await WaitlistService.ConfirmAsync(db, request?.Token, clock.GetUtcNow(), ct)
             ? Results.Ok(new { confirmed = true })
-            : Results.BadRequest(new { error = "The link is invalid, expired or already used." });
+            : ApiErrors.BadRequest(new { error = "The link is invalid, expired or already used." });
 
     private static async Task<IResult> UnsubscribeAsync(WaitlistTokenRequest? request, TrazoDbContext db, IDataProtectionProvider protection, CancellationToken ct)
     {
         var id = ReadUnsubscribeToken(protection, request?.Token);
-        if (id is null) return Results.BadRequest(new { error = "The link is invalid." });
+        if (id is null) return ApiErrors.BadRequest(new { error = "The link is invalid." });
         // Idempotent: opening the link again after the data is gone is still a success for the person.
         await WaitlistService.DeleteByIdAsync(db, id.Value, ct);
         return Results.Ok(new { unsubscribed = true });

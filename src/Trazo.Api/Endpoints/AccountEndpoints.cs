@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Features;
@@ -53,7 +54,7 @@ public static class AccountEndpoints
             .WithName("ConfirmAccountDeletion")
             .WithSummary("Web flow: consumes the link token and deletes the account.");
 
-        endpoints.MapGet("/account/delete", (HttpContext http) => Html(http, AccountPages.RequestForm())).AllowAnonymous().ExcludeFromDescription();
+        endpoints.MapGet("/account/delete", (HttpContext http) => Html(http, AccountPages.RequestForm(null, Lang(http)))).AllowAnonymous().ExcludeFromDescription();
         endpoints.MapGet("/account/delete/confirm", ConfirmPageAsync).AllowAnonymous().RequireRateLimiting("auth").ExcludeFromDescription();
         return endpoints;
     }
@@ -92,11 +93,11 @@ public static class AccountEndpoints
         var user = await db.Users.FirstOrDefaultAsync(u => u.Id == id, ct);
         if (user is null) return Results.Unauthorized();
         if (!await reauth.VerifyAsync(user, request, ct))
-            return Results.Json(new { code = "reauthentication_failed", error = "La contraseña, el token de Google o el código no son válidos." },
+            return ApiErrors.Json(new { code = "reauthentication_failed", error = "La contraseña, el token de Google o el código no son válidos." },
                 statusCode: StatusCodes.Status403Forbidden);
         var result = await accounts.DeleteAsync(id, ct);
         if (!result.Deleted)
-            return Results.Conflict(new { code = "last_superadmin", error = "Eres el último superadministrador: nombra a otro antes de eliminar la cuenta." });
+            return ApiErrors.Conflict(new { code = "last_superadmin", error = "Eres el último superadministrador: nombra a otro antes de eliminar la cuenta." });
         Audit(loggers, "self", result);
         return Results.Ok(new { deleted = true, playSubscriptionNotCancelled = result.PlaySubscriptionNotCancelled,
             manageSubscriptionUrl = result.PlaySubscriptionNotCancelled ? AccountService.ManageSubscriptionsUrl : null });
@@ -109,9 +110,12 @@ public static class AccountEndpoints
 
     // ---------------------------------------------------------------- web flow
 
+    private static Trazo.Application.Localization.AppLanguage Lang(HttpContext http) => http.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current;
+
     private static async Task<IResult> RequestDeletionAsync(
-        HttpRequest request, DeletionRequestThrottle throttle, IServiceScopeFactory scopes, IConfiguration configuration, CancellationToken ct)
+        HttpRequest request, DeletionRequestThrottle throttle, IServiceScopeFactory scopes, IConfiguration configuration, Trazo.Application.Localization.RequestLanguage language, CancellationToken ct)
     {
+        var chosen = language.Current;
         string? email;
         var html = request.HasFormContentType;
         if (html) email = (await ReadFormAsync(request, ct))?["email"].ToString();
@@ -123,14 +127,15 @@ public static class AccountEndpoints
         {
             var baseUrl = (configuration["Account:PublicBaseUrl"] ?? DefaultPublicBaseUrl).TrimEnd('/');
             // Sent in the background so the response time does not depend on the address existing.
-            _ = Task.Run(() => SendLinkAsync(scopes, normalized, baseUrl));
+            _ = Task.Run(() => SendLinkAsync(scopes, normalized, baseUrl, chosen));
         }
-        return html ? HtmlResult(request.HttpContext, AccountPages.RequestReceived(), StatusCodes.Status202Accepted)
-            : Results.Accepted(value: new { message = "Si existe una cuenta con ese correo, enviaremos un enlace de confirmación." });
+        return html ? HtmlResult(request.HttpContext, AccountPages.RequestReceived(chosen), StatusCodes.Status202Accepted)
+            : Results.Accepted(value: new { message = Trazo.Application.Localization.Localizer.Translate("Si existe una cuenta con ese correo, enviaremos un enlace de confirmación.", chosen) });
     }
 
-    private static async Task SendLinkAsync(IServiceScopeFactory scopes, string normalizedEmail, string baseUrl)
+    private static async Task SendLinkAsync(IServiceScopeFactory scopes, string normalizedEmail, string baseUrl, Trazo.Application.Localization.AppLanguage language)
     {
+        string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language)!;
         try
         {
             using var scope = scopes.CreateScope();
@@ -139,10 +144,10 @@ public static class AccountEndpoints
             if (user is null || user.DisabledAt is not null) return;
             var raw = await AccountEmailEndpoints.CreateTokenAsync(user, DeletePurpose, LinkLifetime, db, CancellationToken.None);
             var url = $"{baseUrl}/account/delete/confirm?token={Uri.EscapeDataString(raw)}";
-            await scope.ServiceProvider.GetRequiredService<IEmailSender>().SendAsync(user.Email, "Confirma la eliminación de tu cuenta de TRAZO",
-                $"Has pedido eliminar tu cuenta de TRAZO y todos sus datos.\n\nPara confirmarlo, abre este enlace:\n\n{url}\n\n" +
-                $"El enlace caduca en {(int)LinkLifetime.TotalMinutes} minutos y solo se puede usar una vez. Si no has sido tú, ignora este mensaje: no se borrará nada.\n\n" +
-                "Eliminar la cuenta no cancela tu suscripción de Google Play; cancélala en Google Play si tenías una.",
+            await scope.ServiceProvider.GetRequiredService<IEmailSender>().SendAsync(user.Email, Tr("Confirma la eliminación de tu cuenta de TRAZO"),
+                Tr("Has pedido eliminar tu cuenta de TRAZO y todos sus datos.") + "\n\n" + Tr("Para confirmarlo, abre este enlace:") + $"\n\n{url}\n\n" +
+                Tr($"El enlace caduca en {(int)LinkLifetime.TotalMinutes} minutos y solo se puede usar una vez.") + " " + Tr("Si no has sido tú, ignora este mensaje: no se borrará nada.") + "\n\n" +
+                Tr("Eliminar la cuenta no cancela tu suscripción de Google Play; cancélala en Google Play si tenías una."),
                 CancellationToken.None);
         }
         catch (Exception ex)
@@ -156,9 +161,9 @@ public static class AccountEndpoints
     private static async Task<IResult> ConfirmPageAsync(HttpContext http, TrazoDbContext db, string? token, CancellationToken ct)
     {
         var link = await FindLinkAsync(token, db, ct);
-        if (link is null) return HtmlResult(http, AccountPages.Invalid(), StatusCodes.Status400BadRequest);
+        if (link is null) return HtmlResult(http, AccountPages.Invalid(Lang(http)), StatusCodes.Status400BadRequest);
         var (_, user) = link.Value;
-        return Html(http, AccountPages.Confirm(token!, Mask(user.Email), user.TwoFactorEnabled));
+        return Html(http, AccountPages.Confirm(token!, Mask(user.Email), user.TwoFactorEnabled, null, Lang(http)));
     }
 
     private static async Task<IResult> ConfirmDeletionAsync(
@@ -170,21 +175,21 @@ public static class AccountEndpoints
         else { var body = await ReadJsonAsync<DeletionConfirmBody>(request, ct); token = body?.Token; code = body?.Code; }
         var http = request.HttpContext;
 
-        IResult Invalid() => html ? HtmlResult(http, AccountPages.Invalid(), StatusCodes.Status400BadRequest)
-            : Results.BadRequest(new { code = "invalid_link", error = "El enlace no es válido o ha caducado." });
+        IResult Invalid() => html ? HtmlResult(http, AccountPages.Invalid(Lang(http)), StatusCodes.Status400BadRequest)
+            : ApiErrors.BadRequest(new { code = "invalid_link", error = "El enlace no es válido o ha caducado." });
 
         var link = await FindLinkAsync(token, db, ct);
         if (link is null) return Invalid();
         var (row, user) = link.Value;
 
         if (user.TwoFactorEnabled && !await reauth.VerifySecondFactorAsync(user, code, ct, countFailure: true))
-            return html ? HtmlResult(http, AccountPages.Confirm(token!, Mask(user.Email), true, "El código no es válido."), StatusCodes.Status403Forbidden)
-                : Results.Json(new { code = "reauthentication_failed", error = "El código no es válido." }, statusCode: StatusCodes.Status403Forbidden);
+            return html ? HtmlResult(http, AccountPages.Confirm(token!, Mask(user.Email), true, "El código no es válido.", Lang(http)), StatusCodes.Status403Forbidden)
+                : ApiErrors.Json(new { code = "reauthentication_failed", error = "El código no es válido." }, statusCode: StatusCodes.Status403Forbidden);
 
         var info = await accounts.GetInfoAsync(user.Id, ct);
         if (info is { CanDelete: false })
-            return html ? HtmlResult(http, AccountPages.Blocked(info.CannotDeleteReason!), StatusCodes.Status409Conflict)
-                : Results.Conflict(new { code = "last_superadmin", error = info.CannotDeleteReason });
+            return html ? HtmlResult(http, AccountPages.Blocked(info.CannotDeleteReason!, Lang(http)), StatusCodes.Status409Conflict)
+                : ApiErrors.Conflict(new { code = "last_superadmin", error = info.CannotDeleteReason });
 
         // Single use: only one request can flip ConsumedAt.
         var now = DateTimeOffset.UtcNow;
@@ -195,7 +200,7 @@ public static class AccountEndpoints
         var result = await accounts.DeleteAsync(user.Id, ct);
         if (!result.Deleted) return Invalid();
         Audit(loggers, "web-link", result);
-        return html ? HtmlResult(http, AccountPages.Done(), StatusCodes.Status200OK)
+        return html ? HtmlResult(http, AccountPages.Done(Lang(http)), StatusCodes.Status200OK)
             : Results.Ok(new { deleted = true, playSubscriptionNotCancelled = result.PlaySubscriptionNotCancelled });
     }
 

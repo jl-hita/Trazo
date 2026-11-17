@@ -108,7 +108,7 @@ public static class SetupEndpoints
 
     private static async Task<IResult> TestSmtpAsync(
         TestSmtpRequest request, IRuntimeSettings? stored, ISmtpTransport transport, CancellationToken ct,
-        IEmailDeliveryRecorder? recorder = null)
+        IEmailDeliveryRecorder? recorder = null, Trazo.Application.Localization.RequestLanguage? language = null)
     {
         if (request.Email is null) return Results.ValidationProblem(new Dictionary<string, string[]> { ["email"] = ["Required."] });
         var config = ToEmail(request.Email);
@@ -122,8 +122,8 @@ public static class SetupEndpoints
         try
         {
             await transport.SendAsync(config with { Host = config.Host.Trim(), From = config.From.Trim() },
-                request.Recipient!.Trim(), "TRAZO: prueba de correo",
-                "Este es un correo de prueba de TRAZO. Si lo has recibido, la configuración SMTP es correcta.", ct);
+                request.Recipient!.Trim(), Trazo.Application.Localization.Localizer.Translate("TRAZO: prueba de correo", language?.Current ?? Trazo.Application.Localization.AppLanguage.Es)!,
+                Trazo.Application.Localization.Localizer.Translate("Este es un correo de prueba de TRAZO. Si lo has recibido, la configuración SMTP es correcta.", language?.Current ?? Trazo.Application.Localization.AppLanguage.Es)!, ct);
             if (recorder is not null) await recorder.RecordAsync(null, CancellationToken.None);
             return Results.Ok(new { ok = true, message = "Test email sent." });
         }
