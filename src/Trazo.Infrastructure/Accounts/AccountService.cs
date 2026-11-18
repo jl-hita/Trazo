@@ -40,7 +40,7 @@ public static class AccountData
     /// </summary>
     public static readonly IReadOnlySet<Type> NotPersonal = new HashSet<Type>
     {
-        typeof(ExerciseCatalogItem), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket),
+        typeof(ExerciseCatalogItem), typeof(ExerciseCatalogTranslation), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket),
         typeof(Trazo.Domain.Analytics.PaywallView),
         // Marketing campaigns, their anonymous daily counters and the owner-entered spend: no user in any of them.
         typeof(Trazo.Domain.Marketing.MarketingCampaign), typeof(Trazo.Domain.Marketing.CampaignDailyStat), typeof(Trazo.Domain.Marketing.CampaignSpend), typeof(Trazo.Domain.Marketing.StoreDownloads),

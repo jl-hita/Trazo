@@ -498,6 +498,31 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("exercise_catalog");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Training.ExerciseCatalogTranslation", b =>
+        {
+            b.Property<string>("ExerciseId").HasMaxLength(100).HasColumnType("character varying(100)").HasColumnName("exercise_id");
+            b.Property<string>("LanguageCode").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<string>("Name").HasMaxLength(200).HasColumnType("character varying(200)");
+            b.Property<string>("Description").HasColumnType("text");
+            b.Property<string[]>("Instructions").HasColumnType("text[]");
+            b.Property<string[]>("Tips").HasColumnType("text[]");
+            b.Property<string>("Status").IsRequired().ValueGeneratedOnAdd().HasMaxLength(16).HasDefaultValue("draft").HasColumnType("character varying(16)");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("ExerciseId", "LanguageCode");
+            b.HasIndex("LanguageCode", "Status");
+            b.ToTable("exercise_catalog_translations", t =>
+            {
+                t.HasCheckConstraint("CK_exercise_catalog_translations_language", "\"LanguageCode\" ~ '^[a-z]{2,3}(-[A-Z]{2})?$'");
+                t.HasCheckConstraint("CK_exercise_catalog_translations_status", "\"Status\" IN ('draft', 'review', 'published')");
+            });
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Training.ExerciseCatalogTranslation", b =>
+        {
+            b.HasOne("Trazo.Domain.Training.ExerciseCatalogItem", null)
+                .WithMany().HasForeignKey("ExerciseId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Growth.PremiumGrant", b =>
         {
             b.Property<Guid>("Id").HasColumnType("uuid");

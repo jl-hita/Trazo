@@ -36,9 +36,24 @@ public sealed class ExerciseEquipmentRequirementsTests
     }
 
     [Fact]
+    public void AuditOverridesIncludeTheActualSupportsAndAttachments()
+    {
+        Assert.Equal(["barbell", "squat-rack"],
+            ExerciseEquipmentRequirements.Normalize("inverted-row", ["barbell"]));
+        Assert.Equal(["barbell", "landmine", "t-bar-row-handle"],
+            ExerciseEquipmentRequirements.Normalize("t-bar-row", ["barbell"]));
+        Assert.Equal(["ez-bar", "preacher-curl-bench"],
+            ExerciseEquipmentRequirements.Normalize("preacher-curl", ["ez-bar", "bench"]));
+        Assert.Equal(["lat-pulldown-machine"],
+            ExerciseEquipmentRequirements.Normalize("lat-pulldown", ["cable"]));
+        Assert.Equal(["step"],
+            ExerciseEquipmentRequirements.Normalize("step-ups", ["bench"]));
+    }
+
+    [Fact]
     public void UnmappedExercisesKeepTheirExistingRequirements()
     {
-        Assert.Equal(["barbell", "bench"],
+        Assert.Equal(["barbell", "bench", "squat-rack"],
             ExerciseEquipmentRequirements.Normalize("close-grip-bench-press", ["barbell", "bench"]));
         Assert.Empty(ExerciseEquipmentRequirements.Normalize("bodyweight-squat", []));
     }
