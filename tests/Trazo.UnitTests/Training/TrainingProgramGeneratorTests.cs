@@ -1052,7 +1052,7 @@ public sealed class TrainingProgramGeneratorTests
             .ToArray();
         var request = new TrainingProgramGenerationRequest(
             TrainingGoal.Strength, TrainingExperience.Advanced, new DateOnly(2026, 10, 26), 4,
-            [DayOfWeek.Monday, DayOfWeek.Thursday], 90, ["barbell", "dumbbell", "machine", "cable"], [])
+            [DayOfWeek.Monday, DayOfWeek.Thursday], 90, ["barbell", "dumbbell", "calf-raise-machine", "leg-extension-machine", "cable"], [])
         {
             Split = TrainingProgramSplit.FullBody
         };
@@ -1095,10 +1095,10 @@ public sealed class TrainingProgramGeneratorTests
                     TrainingMovementPattern.Accessory, ["dumbbell"], [TrainingGoal.Hypertrophy],
                     TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], []),
                 new TrainingExerciseCandidate("machine-calf-raise", "catalog-2026-10", "Gemelo en máquina",
-                    TrainingMovementPattern.Accessory, ["machine"], [TrainingGoal.Hypertrophy],
+                    TrainingMovementPattern.Accessory, ["calf-raise-machine"], [TrainingGoal.Hypertrophy],
                     TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Calves], []),
                 new TrainingExerciseCandidate("leg-extension", "catalog-2026-10", "Extensión de cuádriceps",
-                    TrainingMovementPattern.Accessory, ["machine"], [TrainingGoal.Hypertrophy],
+                    TrainingMovementPattern.Accessory, ["leg-extension-machine"], [TrainingGoal.Hypertrophy],
                     TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Quadriceps], [])
             })
             .ToArray();
