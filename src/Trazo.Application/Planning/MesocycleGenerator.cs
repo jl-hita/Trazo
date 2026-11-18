@@ -43,7 +43,8 @@ public static class MesocycleGenerator
             LoadReferences: loadReferences,
             PreviousBlockExerciseIds: previousBlockExerciseIds,
             ContinuesPreviousBlock: continuesPreviousBlock,
-            SelectionSeed: seed), catalog);
+            SelectionSeed: seed,
+            IsSequence: profile.SchedulingMode == Trazo.Domain.Planning.PlanSchedulingMode.Sequence), catalog);
         if (!result.Succeeded) return new([], result.Errors, null);
 
         // A sequence plan has no dates: its sessions keep the order of the rotation (the engine's days only lay it out).
