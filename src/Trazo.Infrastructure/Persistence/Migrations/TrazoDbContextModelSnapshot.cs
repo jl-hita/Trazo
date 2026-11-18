@@ -542,6 +542,12 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("UserId", "Status");
             b.ToTable("premium_grants");
         });
+        modelBuilder.Entity("Trazo.Domain.Training.ExerciseCatalogTranslation", b =>
+        {
+            b.HasOne("Trazo.Domain.Training.ExerciseCatalogItem", null)
+                .WithMany().HasForeignKey("ExerciseId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Growth.PremiumGrant", b =>
         {
             b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
