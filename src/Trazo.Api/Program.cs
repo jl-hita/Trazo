@@ -317,6 +317,7 @@ app.MapAdminLibraryTransferEndpoints();
 app.MapAdminLogsEndpoints();
 app.MapAdminOverviewEndpoints();
 app.MapAccountEmailEndpoints();
+app.MapPasswordSetupEndpoints();
 app.MapAccountEndpoints();
 app.MapSubscriptionEndpoints();
 app.MapPlansEndpoints();

@@ -181,6 +181,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
           }
 
           <div class="actions">
+            @if (!u.hasPassword && !u.disabled) { <button type="button" (click)="sendPasswordInvitation()" [disabled]="busy()">Send password setup link</button> }
             @if (!u.emailVerified) { <button type="button" (click)="run('verify-email')" [disabled]="busy()">Mark email verified</button> }
             @if (u.lockedOut) { <button type="button" (click)="run('unlock')" [disabled]="busy()">Unlock</button> }
             <button type="button" (click)="run('revoke-sessions')" [disabled]="busy() || u.activeSessionCount === 0" [class.danger]="confirming() === 'revoke-sessions'">
@@ -350,6 +351,22 @@ export class UsersPageComponent {
       this.deleteConfirm.set('');
       this.message.set(result.playSubscriptionNotCancelled ? 'Account deleted. Its Google Play subscription is NOT cancelled.' : 'Account deleted.');
       await this.load();
+    } catch (e) {
+      this.panelError.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  protected async sendPasswordInvitation(): Promise<void> {
+    const u = this.selected();
+    if (!u || u.hasPassword || u.disabled) return;
+    this.busy.set(true);
+    this.panelError.set('');
+    this.message.set('');
+    try {
+      await this.api.sendPasswordInvitation(u.id);
+      this.message.set('Password setup link sent to ' + u.email + '.');
     } catch (e) {
       this.panelError.set(errorMessage(e));
     } finally {

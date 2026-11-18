@@ -298,6 +298,10 @@ export class AdminApi {
     return firstValueFrom(this.http.delete<{ deleted: boolean; playSubscriptionNotCancelled: boolean }>(`${API}/users/${id}`, { body: { confirmEmail } }));
   }
 
+  sendPasswordInvitation(id: string): Promise<void> {
+    return firstValueFrom(this.http.post<void>(`${API}/users/${id}/password-invitation`, {}));
+  }
+
   userAction(id: string, action: UserAction): Promise<AdminUserDetail> {
     return firstValueFrom(this.http.post<AdminUserDetail>(`${API}/users/${id}/${action}`, {}));
   }
