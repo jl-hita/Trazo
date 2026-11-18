@@ -19,6 +19,11 @@ on:
       - "global.json"
       - ".github/workflows/backend-ci.yml"
 
+# Cancel superseded CI runs for the same PR or branch; keep unrelated work independent.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
