@@ -60,13 +60,42 @@ public sealed class ExerciseCatalogTranslationResolverTests
     }
 
     [Fact]
-    public void UnpublishedOrMissingSpanishRowsUseLegacySpanishColumnsAsSafeFallback()
+    public void UnsupportedLanguageFallsBackToSpanishAndIsMarkedIncompleteForRequestedLanguage()
     {
         var result = ExerciseCatalogTranslationResolver.Resolve("fr", [],
             "Press de banca", "Bench press", "Descripción.", EsInstructions, EsTips);
 
-        Assert.Equal("es", result.RequestedLanguage);
+        Assert.Equal("fr", result.RequestedLanguage);
         Assert.Equal("Descripción.", result.Description);
+        Assert.Equal("es", result.DescriptionLanguage);
+        Assert.False(result.IsCompleteForRequestedLanguage);
+        Assert.Equal(["name", "description", "instructions", "tips"], result.MissingFields);
+    }
+
+    [Fact]
+    public void PublishedEnglishTranslationIsUsedInsteadOfSpanishFallback()
+    {
+        var rows = new[]
+        {
+            new ExerciseCatalogTranslation
+            {
+                ExerciseId = "bench", LanguageCode = "es", Name = "Press de banca",
+                Description = "Ejercicio de pecho.", Instructions = EsInstructions, Tips = EsTips, Status = "published"
+            },
+            new ExerciseCatalogTranslation
+            {
+                ExerciseId = "bench", LanguageCode = "en", Name = "Bench press",
+                Description = "A chest exercise.", Instructions = ["Set your feet.", "Lower with control.", "Press up."],
+                Tips = ["Stay controlled.", "Do not bounce."], Status = "published"
+            }
+        };
+
+        var result = ExerciseCatalogTranslationResolver.Resolve("en", rows,
+            "Press de banca", "Bench press", "Ejercicio de pecho.", EsInstructions, EsTips);
+
+        Assert.Equal("A chest exercise.", result.Description);
+        Assert.Equal("en", result.DescriptionLanguage);
         Assert.True(result.IsCompleteForRequestedLanguage);
+        Assert.Empty(result.MissingFields);
     }
 }
