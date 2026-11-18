@@ -1244,7 +1244,8 @@ public static class TrainingProgramGenerator
                 TrainingProgramSplit.FullBody => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? fullBodyA : fullBodyB) with { Title = "Cuerpo completo " + (char)('A' + i) }).ToArray(),
                 TrainingProgramSplit.UpperLower => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? upperA : lowerA) with { Title = (i % 2 == 0 ? "Tren superior " : "Tren inferior ") + (char)('A' + i / 2) }).ToArray(),
                 TrainingProgramSplit.PushPullLegs when daysPerWeek == 3 => [push, pull, legs],
-                    TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
+                TrainingProgramSplit.PushPullLegs when daysPerWeek == 4 => [push, pull, legs, upperB with { Title = "Tren superior B" }],
+                TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
                 TrainingProgramSplit.PushPullLegs when daysPerWeek == 6 => [push, pull, legs, pushB, pullB, legs with { Title = "Pierna B", Patterns = lowerB.Patterns }],
                 TrainingProgramSplit.Automatic => daysPerWeek switch
                 {
@@ -1263,7 +1264,6 @@ public static class TrainingProgramGenerator
             TrainingProgramSplit.FullBody when daysPerWeek == 2 => [fullBodyA, fullBodyB],
             TrainingProgramSplit.FullBody when daysPerWeek == 3 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }],
             TrainingProgramSplit.FullBody when daysPerWeek == 4 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }, fullBodyB with { Title = "Cuerpo completo D" }],
-            TrainingProgramSplit.PushPullLegs when daysPerWeek == 4 => [push, pull, legs, upperB with { Title = "Tren superior B" }],
             TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
             TrainingProgramSplit.UpperLower when daysPerWeek == 2 => [upperA, lowerA],
             TrainingProgramSplit.UpperLower when daysPerWeek == 4 => [upperA, lowerA, upperB, lowerB],
