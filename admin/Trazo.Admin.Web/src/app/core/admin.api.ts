@@ -424,7 +424,7 @@ export class AdminApi {
     return firstValueFrom(this.http.get<any>(`${API}/analytics/funnel`, { params: this.query(params) }));
   }
 
-  getReferrals(params: { status?: string; incidents?: boolean; page?: number; pageSize?: number }): Promise<{ total: number; page: number; pageSize: number; items: any[] }> {
+  getReferrals(params: { status?: string; incidents?: boolean; from?: string; to?: string; page?: number; pageSize?: number }): Promise<{ total: number; page: number; pageSize: number; items: any[] }> {
     return firstValueFrom(this.http.get<{ total: number; page: number; pageSize: number; items: any[] }>(`${API}/referrals`, { params: this.query({ ...params, page: String(params.page ?? 1), pageSize: String(params.pageSize ?? 25) }) }));
   }
 
