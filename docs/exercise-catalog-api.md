@@ -57,8 +57,7 @@ These read-only catalog endpoints are currently public. They expose catalog data
 ## Filter options
 
 `GET /api/v1/exercises/options` (public, cacheable with `ETag` and `Cache-Control: public, max-age=300`) returns the vocabulary of the filters,
-derived from the active catalog: `movementPatterns`, `muscles`, `equipment`, `experienceLevels` and `difficulties`. The equipment vocabulary is derived exclusively from `requiredEquipment`, never the legacy descriptive `equipment` field. Generic `machine` is not a valid equipment requirement; each machine must use a specific stable identifier. Every item is a list of
-`{ key, label, count }`. `key` is the stored value and is what the list filters accept (stable); `label` is Spanish; `count` is the number of exercises.
+derived from the active catalog: `movementPatterns`, `muscles`, `equipment`, `experienceLevels` and `difficulties`. The equipment vocabulary is derived exclusively from `requiredEquipment`, never the legacy descriptive `equipment` field. Generic `machine` is not a valid equipment requirement; each machine must use a specific stable identifier. Each option is an object `{ key, label, count }`. `key` is the stored value and is what the list filters accept (stable); `label` is Spanish; `count` is the number of exercises.
 `parameters` names the query parameter fed by each list. A value without a known Spanish label gets a readable fallback.
 
 Subscription access: `GET /api/v1/exercises*`, the images and this endpoint are public; only `/api/v1/plans/*` requires an active subscription when "Require a subscription" is on.
