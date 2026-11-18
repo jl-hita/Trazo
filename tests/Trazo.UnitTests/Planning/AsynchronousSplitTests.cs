@@ -25,7 +25,7 @@ public sealed class AsynchronousSplitRulesTests
         Assert.True(ok.Succeeded);
         Assert.Equal(PlanSchedulingMode.Sequence, ok.Profile!.SchedulingMode);
         Assert.Equal(3, ok.Profile.SessionsPerPeriod);
-        Assert.Equal(3, ok.Profile.TrainingDays.Count); // synthetic days only lay the rotation out in the engine
+        Assert.Empty(ok.Profile.TrainingDays); // a sequence plan has no days, not even synthetic ones
 
         Assert.Contains("sessionsPerPeriod", PlanProfileParser.Parse(Input(perPeriod: null), Today).Errors.Keys);
         Assert.Contains("sessionsPerPeriod", PlanProfileParser.Parse(Input(perPeriod: 7), Today).Errors.Keys);
@@ -42,18 +42,6 @@ public sealed class AsynchronousSplitRulesTests
         Assert.Equal(PlanSchedulingMode.Calendar, parsed.Profile!.SchedulingMode);
         Assert.Equal(3, parsed.Profile.SessionsPerPeriod);
         Assert.Equal([DayOfWeek.Monday, DayOfWeek.Wednesday, DayOfWeek.Friday], parsed.Profile.TrainingDays);
-    }
-
-    [Theory]
-    [InlineData(2)]
-    [InlineData(3)]
-    [InlineData(4)]
-    [InlineData(5)]
-    [InlineData(6)]
-    public void TheSyntheticDaysAreDistinctAndAsManyAsTheSessions(int sessions)
-    {
-        var days = PlanProfileParser.SyntheticDays(sessions);
-        Assert.Equal(sessions, days.Distinct().Count());
     }
 
     [Fact]

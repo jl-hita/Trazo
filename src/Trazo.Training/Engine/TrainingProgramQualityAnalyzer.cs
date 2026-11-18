@@ -119,7 +119,12 @@ public static class TrainingProgramQualityAnalyzer
     private static string NormalizeExerciseName(string value) =>
         string.Join(' ', (value ?? string.Empty).Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
 
-    public static TrainingProgramQualityReport Analyze(TrainingProgramPrescription plan)
+    /// <summary>
+    /// Weekly volume and frequency per muscle and review warnings. <paramref name="weeksPerGroup"/> is how many nominal weeks each group of
+    /// sessions spans: 1 for the weeks of a calendar plan; K/N for the rotation of a sequence plan (K sessions in the cycle, N sessions
+    /// in seven days), whose volumes stay as prescribed per rotation and whose thresholds are judged per seven days.
+    /// </summary>
+    public static TrainingProgramQualityReport Analyze(TrainingProgramPrescription plan, decimal weeksPerGroup = 1m, bool rotation = false)
     {
         ArgumentNullException.ThrowIfNull(plan);
         var weeklyVolumes = new List<TrainingWeeklyMuscleVolume>();
@@ -169,8 +174,8 @@ public static class TrainingProgramQualityAnalyzer
                     .Sum(exercise => exercise.Sets);
                 muscles.Add(new TrainingMuscleVolume(muscle, primarySets, secondarySets,
                     primaryFrequency, secondaryFrequency, estimatedEffectiveSets));
-                if (estimatedEffectiveSets > HighEffectiveSetReviewThreshold)
-                    warnings.Add($"Semana {week}: {muscle} acumula {estimatedEffectiveSets:0.##} series con estímulo efectivo estimado; revisa volumen, rendimiento y recuperación.");
+                if (estimatedEffectiveSets / weeksPerGroup > HighEffectiveSetReviewThreshold)
+                    warnings.Add($"{GroupLabel(week, rotation)}: {muscle} acumula {estimatedEffectiveSets:0.##} series con estímulo efectivo estimado; revisa volumen, rendimiento y recuperación.");
             }
 
             foreach (var session in sessions)
@@ -191,7 +196,7 @@ public static class TrainingProgramQualityAnalyzer
 
                 var sessionWorkingSets = session.Exercises.Sum(exercise => exercise.Sets);
                 if (sessionWorkingSets > HighSessionWorkingSetReviewThreshold)
-                    warnings.Add($"Semana {week}: '{session.Title}' concentra {sessionWorkingSets} series de trabajo. Supera el umbral interno de revisión de {HighSessionWorkingSetReviewThreshold} series por sesión; no es un límite fisiológico ni una cifra prescrita por ACSM. Revisa la fatiga intra-sesión y la posible redistribución semanal.");
+                    warnings.Add($"{GroupLabel(week, rotation)}: '{session.Title}' concentra {sessionWorkingSets} series de trabajo. Supera el umbral interno de revisión de {HighSessionWorkingSetReviewThreshold} series por sesión; no es un límite fisiológico ni una cifra prescrita por ACSM. Revisa la fatiga intra-sesión y la posible redistribución semanal.");
             }
 
             var isStrengthGoal = string.Equals(plan.Goal, "Strength", StringComparison.OrdinalIgnoreCase);
@@ -207,8 +212,8 @@ public static class TrainingProgramQualityAnalyzer
                         TrainingExerciseStimulus.GetEffectiveMuscles(
                             exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
                             .Contains(muscle)));
-                    if (effectiveFrequency is > 0 and < 2)
-                        warnings.Add($"Semana {week}: {muscle} recibe estímulo efectivo en 1 sesión. ACSM 2026 destaca al menos dos sesiones semanales de entrenamiento de fuerza; aplicar esa frecuencia a cada músculo es una heurística interna de revisión, no un mínimo universal ni una recomendación de frecuencia para hipertrofia. Revisa la distribución del split.");
+                    if (effectiveFrequency > 0 && effectiveFrequency / weeksPerGroup < 2m)
+                        warnings.Add($"{GroupLabel(week, rotation)}: {muscle} recibe estímulo efectivo en {(!rotation ? "1 sesión" : $"{effectiveFrequency / weeksPerGroup:0.#} sesiones por semana")}. ACSM 2026 destaca al menos dos sesiones semanales de entrenamiento de fuerza; aplicar esa frecuencia a cada músculo es una heurística interna de revisión, no un mínimo universal ni una recomendación de frecuencia para hipertrofia. Revisa la distribución del split.");
                 }
             }
 
@@ -225,15 +230,19 @@ public static class TrainingProgramQualityAnalyzer
             "Estimación basada en series prescritas y una auditoría explícita por ejercicio: cuentan las series de músculos primarios y las contribuciones secundarias con estímulo dinámico relevante. No se contabilizan estabilizadores ni participaciones incidentales. Las contribuciones secundarias no tienen un crédito fraccionario universal.",
             weeklyVolumes,
             warnings.Distinct(StringComparer.Ordinal).ToArray(),
-            sessionVolumes);
+            sessionVolumes,
+            weeksPerGroup);
     }
+
+    private static string GroupLabel(int week, bool rotation) => rotation ? "Rotación" : $"Semana {week}";
 }
 
 public sealed record TrainingProgramQualityReport(
     string Methodology,
     IReadOnlyList<TrainingWeeklyMuscleVolume> WeeklyMuscleVolumes,
     IReadOnlyList<string> Warnings,
-    IReadOnlyList<TrainingSessionMuscleVolume>? SessionVolumes = null);
+    IReadOnlyList<TrainingSessionMuscleVolume>? SessionVolumes = null,
+    decimal WeeksPerGroup = 1m);
 
 public sealed record TrainingSessionMuscleVolume(
     int WeekNumber,

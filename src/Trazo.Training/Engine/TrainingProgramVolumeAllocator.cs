@@ -44,14 +44,26 @@ public static class TrainingProgramVolumeAllocator
         TrainingExperience experience,
         IReadOnlyList<TrainingMuscleVolumeTarget>? preferences,
         int maximumSessionDurationMinutes,
-        IReadOnlySet<string>? accessoryExerciseIds = null)
+        IReadOnlySet<string>? accessoryExerciseIds = null,
+        decimal weeksPerGroup = 1m,
+        int? sessionsPerWeekOverride = null)
     {
         ArgumentNullException.ThrowIfNull(sessions);
         var errors = ValidatePreferences(preferences);
         if (errors.Count > 0)
             return new(sessions, Array.Empty<string>(), errors);
 
-        var sessionsPerWeek = sessions.GroupBy(session => session.WeekNumber)
+        if (weeksPerGroup <= 0m)
+            throw new ArgumentOutOfRangeException(nameof(weeksPerGroup), "A group of sessions spans a positive number of weeks.");
+        // A group is normally one week. A rotation window (see TrainingSessionRotation) spans K/N nominal weeks: every
+        // target and ceiling is weekly, so the volume of the group is expressed per week (divided by weeksPerGroup) and
+        // one added set counts for 1/weeksPerGroup of it. With a group of one week nothing changes.
+        var step = 1m / weeksPerGroup;
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal> WeeklyVolume(IEnumerable<TrainingSessionPrescription> group) =>
+            weeksPerGroup == 1m
+                ? CalculateEffectiveVolume(group)
+                : CalculateEffectiveVolume(group).ToDictionary(pair => pair.Key, pair => pair.Value / weeksPerGroup);
+        var sessionsPerWeek = sessionsPerWeekOverride ?? sessions.GroupBy(session => session.WeekNumber)
             .Select(group => group.Count())
             .DefaultIfEmpty(3)
             .Max();
@@ -89,7 +101,7 @@ public static class TrainingProgramVolumeAllocator
                 .ToArray();
             // A target muscle that the draft does not train at all is reported, not silently dropped.
             var applicableTargets = targets.ToDictionary(pair => pair.Key, pair => pair.Value);
-            var primaryVolume = CalculateEffectiveVolume(weekSessions);
+            var primaryVolume = WeeklyVolume(weekSessions);
 
             foreach (var muscle in applicableTargets.Keys.Where(muscle => !stimulatedMuscles.Contains(muscle)))
                 warnings.Add($"Semana {week}: no hay ningún ejercicio disponible con estímulo suficiente para {muscle}; no se inventa cobertura a partir de una participación incidental.");
@@ -114,7 +126,7 @@ public static class TrainingProgramVolumeAllocator
                         if (duration + addedDuration > maximumSessionDurationMinutes * 60m)
                             continue;
 
-                        var score = DeficitScore(exercise, primaryVolume, applicableTargets, goal, experience, preferences);
+                        var score = DeficitScore(exercise, primaryVolume, applicableTargets, goal, experience, preferences, step);
                         if (score <= 0m)
                             continue;
                         var localPrimaryVolume = TrainingExerciseStimulus.GetEffectiveMuscles(
@@ -150,7 +162,7 @@ public static class TrainingProgramVolumeAllocator
                     SelectionRationale = AppendAllocationRationale(exercises[best.ExerciseIndex].SelectionRationale)
                 };
                 weekSessions[best.SessionIndex] = selectedSession with { Exercises = exercises };
-                primaryVolume = CalculateEffectiveVolume(weekSessions);
+                primaryVolume = WeeklyVolume(weekSessions);
             }
 
             // Time fill: the weekly targets are central values, so a user who offers long sessions would otherwise
@@ -181,13 +193,13 @@ public static class TrainingProgramVolumeAllocator
                                 .Where(applicableTargets.ContainsKey)
                                 .ToArray();
                             if (tracked.Length == 0 ||
-                                IsAtCeiling(exercise, primaryVolume, applicableTargets, goal, experience, preferences, addedSets: 1m))
+                                IsAtCeiling(exercise, primaryVolume, applicableTargets, goal, experience, preferences, addedSets: step, step: step))
                                 continue;
                             // This extra volume is optional, so in hypertrophy (where arms carry a full target) it
                             // also stops at the ceiling of the synergists: more pressing must not push the triceps
                             // beyond their range just because there is time left.
                             if (goal == TrainingGoal.Hypertrophy && tracked.Any(muscle =>
-                                    primaryVolume.GetValueOrDefault(muscle) + 1m >
+                                    primaryVolume.GetValueOrDefault(muscle) + step >
                                     applicableTargets[muscle] + GetUpperHeadroom(goal, experience, preferences, muscle, applicableTargets[muscle])))
                                 continue;
                             // The main lifts of a strength plan first; then the least used session and, inside it,
@@ -213,7 +225,7 @@ public static class TrainingProgramVolumeAllocator
                         SelectionRationale = AppendAllocationRationale(filledExercises[pick.Value.Exercise].SelectionRationale)
                     };
                     weekSessions[pick.Value.Session] = filled with { Exercises = filledExercises };
-                    primaryVolume = CalculateEffectiveVolume(weekSessions);
+                    primaryVolume = WeeklyVolume(weekSessions);
                 }
             }
 
@@ -293,7 +305,8 @@ public static class TrainingProgramVolumeAllocator
         IReadOnlyDictionary<TrainingMuscleGroup, decimal> targets,
         TrainingGoal goal,
         TrainingExperience experience,
-        IReadOnlyList<TrainingMuscleVolumeTarget>? preferences)
+        IReadOnlyList<TrainingMuscleVolumeTarget>? preferences,
+        decimal step = 1m)
     {
         // Targets refer to effective sets. A compound may continue contributing while all
         // its stimulated muscles remain inside their accepted ranges, even if one has passed
@@ -308,7 +321,7 @@ public static class TrainingProgramVolumeAllocator
         // A compound may contribute one additional set when another stimulated muscle is
         // exactly at its target, but must not keep accumulating volume once any target
         // muscle has exceeded its central target.
-        if (IsAtCeiling(exercise, primaryVolume, targets, goal, experience, preferences, addedSets: 0m))
+        if (IsAtCeiling(exercise, primaryVolume, targets, goal, experience, preferences, addedSets: 0m, step: step))
             return 0m;
 
         // Every target muscle weighs the same: hamstrings no longer yield to quadriceps, glutes and calves.
@@ -331,7 +344,8 @@ public static class TrainingProgramVolumeAllocator
         TrainingGoal goal,
         TrainingExperience experience,
         IReadOnlyList<TrainingMuscleVolumeTarget>? preferences,
-        decimal addedSets)
+        decimal addedSets,
+        decimal step = 1m)
     {
         var limiting = exercise.PrimaryMuscleGroups.Where(targets.ContainsKey).ToArray();
         if (limiting.Length == 0)
@@ -349,7 +363,7 @@ public static class TrainingProgramVolumeAllocator
         return TrainingExerciseStimulus.GetEffectiveMuscles(
                 exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
             .Where(muscle => targets.ContainsKey(muscle) && !HasExplicitTarget(preferences, muscle))
-            .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(1m, addedSets) > AbsoluteWeeklySetCeiling);
+            .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(step, addedSets) > AbsoluteWeeklySetCeiling);
     }
 
     internal static IReadOnlyDictionary<TrainingMuscleGroup, decimal> GetWeeklyTargets(
