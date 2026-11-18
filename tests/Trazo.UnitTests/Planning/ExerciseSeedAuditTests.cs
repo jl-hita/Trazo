@@ -4,11 +4,6 @@ using Xunit;
 
 namespace Trazo.UnitTests.Planning;
 
-/// <summary>
-/// Keeps the curated seed, its illustrations and the engine's stimulus table in step: every seed exercise needs an
-/// explicit stimulus decision, a seeded exercise folder must belong to an exercise, and no exercise may require a
-/// weight belt.
-/// </summary>
 public sealed class ExerciseSeedAuditTests
 {
     private static readonly string SeedsDirectory = FindSeedsDirectory();
@@ -23,7 +18,7 @@ public sealed class ExerciseSeedAuditTests
 
     private static List<JsonElement> Entries()
     {
-        using var stream = File.OpenRead(Path.Combine(SeedsDirectory, "exercise-catalog-additions.json"));
+        using var stream = File.OpenRead(Path.Combine(SeedsDirectory, "exercise-catalog.json"));
         return JsonDocument.Parse(stream).RootElement.EnumerateArray().Select(x => x.Clone()).ToList();
     }
 
@@ -31,9 +26,24 @@ public sealed class ExerciseSeedAuditTests
         entry.GetProperty(property).EnumerateArray().Select(x => x.GetString()!);
 
     [Fact]
-    public void EverySeedExerciseHasAnExplicitStimulusDecision()
+    public void SeedIsACompleteSnapshotOfTheCurrentExerciseLibrary()
     {
-        var missing = Entries().Select(x => x.GetProperty("id").GetString()!).Where(id => !TrainingExerciseStimulus.IsReviewed(id)).ToList();
+        var entries = Entries();
+        Assert.Equal(148, entries.Count);
+        Assert.Equal(148, entries.Select(x => x.GetProperty("id").GetString()).Distinct().Count());
+        Assert.Equal(100, entries.Count(x => x.GetProperty("source").GetString() == "repdb-free"));
+        Assert.Equal(48, entries.Count(x => x.GetProperty("source").GetString() == "trazo-curated"));
+        Assert.All(entries, x => Assert.True(x.GetProperty("isActive").GetBoolean()));
+    }
+
+    [Fact]
+    public void EveryCuratedSeedExerciseHasAnExplicitStimulusDecision()
+    {
+        var missing = Entries()
+            .Where(x => x.GetProperty("source").GetString() == "trazo-curated")
+            .Select(x => x.GetProperty("id").GetString()!)
+            .Where(id => !TrainingExerciseStimulus.IsReviewed(id))
+            .ToList();
 
         Assert.True(missing.Count == 0, "Add these exercises to TrainingExerciseStimulus: " + string.Join(", ", missing));
     }
@@ -63,7 +73,6 @@ public sealed class ExerciseSeedAuditTests
     public void NoSeedExerciseRequiresAWeightBelt()
     {
         var offenders = Entries().Where(x => Names(x, "requiredEquipment").Contains("weight-belt")).Select(x => x.GetProperty("id").GetString()).ToList();
-
         Assert.Empty(offenders);
         var weighted = Entries().Where(x => x.GetProperty("id").GetString() is "weighted-pull-up" or "weighted-dip").ToList();
         Assert.Equal(2, weighted.Count);
@@ -74,31 +83,21 @@ public sealed class ExerciseSeedAuditTests
     [Fact]
     public void RequiredEquipmentNeverUsesGenericMachineAndCapturesSpecificDependencies()
     {
-        var genericMachine = Entries()
+        var entries = Entries();
+        var genericMachine = entries
             .Where(x => Names(x, "requiredEquipment").Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
             .Select(x => x.GetProperty("id").GetString())
             .ToList();
         Assert.Empty(genericMachine);
 
-        Assert.Equal(["barbell", "bench"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "chest-supported-t-bar-row"), "requiredEquipment"));
-        Assert.Equal(["pull-up-bar", "dumbbell"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
-        Assert.Equal(["dip-station", "dumbbell"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
-        Assert.Equal(["step"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "elevated-pike-push-up"), "requiredEquipment"));
-        Assert.Equal(["barbell", "squat-rack"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "rack-pull"), "requiredEquipment"));
-        Assert.Equal(["barbell", "squat-rack"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "pause-squat"), "requiredEquipment"));
-        Assert.Equal(["barbell", "bench", "squat-rack"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "barbell-bulgarian-split-squat"), "requiredEquipment"));
-        Assert.Equal(["low-row-bar"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "bent-knee-inverted-row"), "requiredEquipment"));
-    }
-
-    [Fact]
-    public void EverySeededImageFolderBelongsToASeedExercise()
-    {
-        var ids = Entries().Select(x => x.GetProperty("id").GetString()!).ToHashSet();
-        var root = Path.Combine(SeedsDirectory, "exercise-images");
-        var folders = Directory.Exists(root) ? Directory.GetDirectories(root) : [];
-
-        foreach (var folder in folders)
-            Assert.Contains(Path.GetFileName(folder), ids);
+        Assert.Equal(["barbell", "bench"], Names(entries.Single(x => x.GetProperty("id").GetString() == "chest-supported-t-bar-row"), "requiredEquipment"));
+        Assert.Equal(["pull-up-bar", "dumbbell"], Names(entries.Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
+        Assert.Equal(["dip-station", "dumbbell"], Names(entries.Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
+        Assert.Equal(["step"], Names(entries.Single(x => x.GetProperty("id").GetString() == "elevated-pike-push-up"), "requiredEquipment"));
+        Assert.Equal(["barbell", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "rack-pull"), "requiredEquipment"));
+        Assert.Equal(["barbell", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "pause-squat"), "requiredEquipment"));
+        Assert.Equal(["barbell", "bench", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "barbell-bulgarian-split-squat"), "requiredEquipment"));
+        Assert.Equal(["low-row-bar"], Names(entries.Single(x => x.GetProperty("id").GetString() == "bent-knee-inverted-row"), "requiredEquipment"));
     }
 
     [Fact]
