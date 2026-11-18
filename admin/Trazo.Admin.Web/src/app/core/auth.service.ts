@@ -25,10 +25,11 @@ export class AuthService {
   get isStaff(): boolean { return this.user()?.role === 'admin' || this.isSuperadmin; }
   /** The accountant (gestor) only sees the tax management. */
   get isAccountant(): boolean { return this.user()?.role === 'accountant'; }
-  /** The commercial (marketing) role only sees the marketing panel. */
+  /** The commercial role manages marketing and the referral programme. */
   get isCommercial(): boolean { return this.user()?.role === 'commercial'; }
   get canUseConsole(): boolean { return this.isStaff || this.isAccountant || this.isCommercial; }
   get canSeeMarketing(): boolean { return this.isSuperadmin || this.isCommercial; }
+  get canSeeReferrals(): boolean { return this.isSuperadmin || this.isCommercial; }
   get canSeeFiscal(): boolean { return this.isSuperadmin || this.isAccountant; }
   /** Landing page of each role. */
   get home(): string { return this.isSuperadmin ? '/overview' : this.isAccountant ? '/fiscal' : this.isCommercial ? '/marketing' : '/reviews'; }
