@@ -29,6 +29,8 @@ public interface ITrainingPlanService
     Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct);
     /// <summary>Moves the pending program of a calendar plan forward, by whole weeks, so its first pending week is the current one.</summary>
     Task<PlanResult<RescheduleResult>> RescheduleAsync(Guid userId, CancellationToken ct);
+    /// <summary>Omits a pending session on purpose: resolved without being training, no progression, no volume adaptation unless the reason is physical (Premium).</summary>
+    Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
@@ -491,7 +493,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         var session = pending.First(s => s.Id == next.Next.Id);
         var premium = await subscriptions.HasPremiumAsync(userId, ct);
-        var reentry = await ReentryAsync(plan, session, premium, ct);
+        var lastTrained = await LastTrainingAsync(plan, ct);
+        int? daysAway = lastTrained is { } trained ? (int)Math.Floor((clock.GetUtcNow() - trained).TotalDays) : null;
+        var behind = await WeeksBehindAsync(plan, await PositionAsync(plan, ct), ct);
+        var recentResolved = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.Status != PlannedSessionStatus.Planned)
+            .OrderByDescending(s => s.SequenceIndex).Take(AdjustmentAdvisor.SkipWindow).Select(s => s.Status).ToListAsync(ct);
+        var advice = AdjustmentAdvisor.Advise(new AdjustmentInput(
+            IsSequence(plan), daysAway, overdue.Count, behind, recentResolved.Count, recentResolved.Count(s => s == PlannedSessionStatus.Skipped)));
+        var reentry = await ReentryAsync(plan, pending, premium, advice, lastTrained, daysAway, ct);
         if (reentry is { Applied: true })
         {
             // The session may have just been made lighter: show and assess what is stored now.
@@ -523,64 +532,98 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
             availability, AvailabilityLocked: !premium, overdue, Reentry: reentry,
-            Reschedule: await OfferRescheduleAsync(plan, ct));
+            Reschedule: behind >= 1 ? new RescheduleOfferView(behind) : null, Adjustment: AdjustmentOf(advice, daysAway, behind, overdue.Count));
     }
 
-    /// <summary>Days without training after which a sequence plan suggests easing back in. The plan itself never moves while the user is away.</summary>
-    public const int ReentryAfterDays = 21;
+    /// <summary>The advisor's decision with its explanation in the request's language.</summary>
+    private AdjustmentView AdjustmentOf(AdjustmentAdvice advice, int? days, int weeksBehind, int overdue)
+    {
+        var message = advice.Reason switch
+        {
+            AdjustmentReason.BehindCalendar => string.Format(T("Vas {0} semana(s) por detrás del calendario: puedes mover el programa pendiente a esta semana sin perder ninguna sesión."), weeksBehind),
+            AdjustmentReason.LateSessions => advice.SuggestSkip
+                ? string.Format(T("Tienes {0} sesiones atrasadas. Hazlas por orden o, si ya no te conviene recuperar la más antigua, omítela."), overdue)
+                : T("Tienes una sesión atrasada: sigue pendiente y es la siguiente; no se pierde nada."),
+            AdjustmentReason.AbsenceShort => string.Format(T("Llevas {0} días sin entrenar: la primera sesión sale más ligera y el plan sigue donde lo dejaste."), days),
+            AdjustmentReason.AbsenceLong => string.Format(T("Llevas {0} días sin entrenar: las dos primeras sesiones salen más ligeras y el plan sigue donde lo dejaste."), days),
+            AdjustmentReason.AbsenceVeryLong => string.Format(T("Llevas {0} días sin entrenar: tu situación puede haber cambiado. Puedes seguir con este plan o crear uno nuevo con tu perfil actual."), days),
+            AdjustmentReason.RepeatedSkips => T("Has omitido varias de tus últimas sesiones: quizá este plan ya no encaja con tu disponibilidad. Puedes crear uno nuevo con tu perfil actual."),
+            _ => T("Vas al día: sigue con la siguiente sesión.")
+        };
+        return new AdjustmentView(advice.Strategy.ToString(), advice.Reason.ToString(), message, advice.EaseBackSessions, advice.CanReschedule, advice.SuggestSkip, CanSkip: true);
+    }
+
+    /// <summary>The newest workout that was really done. An omitted session is not training, so it never resets the absence clock.</summary>
+    private async Task<DateTimeOffset?> LastTrainingAsync(TrainingPlan plan, CancellationToken ct) =>
+        await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted)
+            .OrderByDescending(l => l.PerformedAt).Select(l => (DateTimeOffset?)l.PerformedAt).FirstOrDefaultAsync(ct);
 
     /// <summary>
-    /// After <see cref="ReentryAfterDays"/> days without training the user is told to ease back in and, with Premium, the first session
-    /// is made lighter on its own (one set less in every exercise and one repetition more in reserve), once per absence. The plan does
-    /// not move meanwhile; the usual restoring rules give the sets back after clean sessions. Reading the next session does this,
-    /// like reading the week generates its block.
+    /// After <see cref="AdjustmentAdvisor.EaseBackAfterDays"/> days without training the user is told to ease back in and, with Premium, the first
+    /// session (the first two after <see cref="AdjustmentAdvisor.DeepEaseBackAfterDays"/>) is made lighter on its own (one set less in every exercise and one
+    /// repetition more in reserve), once per absence. The plan does not move meanwhile; the usual restoring rules give the sets back after clean
+    /// sessions. Reading the next session does this, like reading the week generates its block.
     /// </summary>
-    private async Task<ReentryView?> ReentryAsync(TrainingPlan plan, PlannedSession next, bool premium, CancellationToken ct)
+    private async Task<ReentryView?> ReentryAsync(
+        TrainingPlan plan, IReadOnlyList<PlannedSession> pending, bool premium, AdjustmentAdvice advice, DateTimeOffset? lastTrained, int? days, CancellationToken ct)
     {
-        var lastWorkout = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id)
-            .OrderByDescending(l => l.PerformedAt).Select(l => (DateTimeOffset?)l.PerformedAt).FirstOrDefaultAsync(ct);
-        if (lastWorkout is not { } at) return null;
-        var days = (int)Math.Floor((clock.GetUtcNow() - at).TotalDays);
-        if (days < ReentryAfterDays) return null;
-        var applied = premium && await EaseBackInAsync(plan, next, at, ct);
-        return new ReentryView(days, T(applied
-            ? $"Llevas {days} días sin entrenar. Hemos aligerado esta sesión (una serie menos y una repetición más en reserva) para que vuelvas con buen pie; tu plan sigue donde lo dejaste."
-            : $"Llevas {days} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión."), applied);
+        if (lastTrained is not { } at || days is not { } away || advice.EaseBackSessions == 0) return null;
+        var applied = premium && await EaseBackInAsync(plan, pending, advice.EaseBackSessions, at, ct);
+        return new ReentryView(away, T(applied
+            ? $"Llevas {away} días sin entrenar. Hemos aligerado esta sesión (una serie menos y una repetición más en reserva) para que vuelvas con buen pie; tu plan sigue donde lo dejaste."
+            : $"Llevas {away} días sin entrenar. Tu plan sigue donde lo dejaste: empieza con cargas algo más ligeras y una serie menos en la primera sesión."), applied);
     }
 
     public const string ReentryKind = "reentry";
+    public const string SkipKind = "skip";
 
-    private async Task<RescheduleOfferView?> OfferRescheduleAsync(TrainingPlan plan, CancellationToken ct)
+    /// <summary>
+    /// True when the next session is (now or already) lighter for this absence; false when nothing could be lightened. Each session carries the
+    /// instant of the absence it was lightened for, so nothing is done twice, however many times the next session is read or whatever was omitted meanwhile.
+    /// </summary>
+    private async Task<bool> EaseBackInAsync(TrainingPlan plan, IReadOnlyList<PlannedSession> pending, int count, DateTimeOffset lastWorkout, CancellationToken ct)
     {
-        var behind = await WeeksBehindAsync(plan, await PositionAsync(plan, ct), ct);
-        return behind >= 1 ? new RescheduleOfferView(behind) : null;
-    }
-
-    /// <summary>True when the session is (now or already) lighter for this absence; false when nothing could be lightened.</summary>
-    private async Task<bool> EaseBackInAsync(TrainingPlan plan, PlannedSession next, DateTimeOffset lastWorkout, CancellationToken ct)
-    {
-        if (await db.PlanAdaptations.AsNoTracking().AnyAsync(a => a.PlanId == plan.Id && a.Kind == ReentryKind && a.EvidenceAt == lastWorkout, ct))
-            return true;
-        // A deload is already as light as it gets.
-        if (plan.Mesocycles.FirstOrDefault(m => m.Id == next.MesocycleId) is { IsDeload: true } || PrescriptionJson.IsAdaptationDeload(next.PrescriptionJson))
-            return false;
-        var session = await db.PlannedSessions.FirstAsync(s => s.Id == next.Id, ct);
-        var ids = PrescriptionJson.Read(session.PrescriptionJson).Select(e => e.ExerciseId).ToHashSet(StringComparer.Ordinal);
-        var json = session.PrescriptionJson;
-        var changed = false;
-        if (TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, ids, out var fewer, out _)) { json = fewer; changed = true; }
-        if (TrainingAdaptationPrescriptionAdjuster.TryRaiseReserve(json, out var reserve, out _)) { json = reserve; changed = true; }
-        if (!changed) return false;
+        var absence = lastWorkout.ToString("O", System.Globalization.CultureInfo.InvariantCulture);
+        var targets = pending.Take(count).ToList();
+        var already = targets.Count(t => PrescriptionJson.EasedBackFor(t.PrescriptionJson) == absence);
+        var changedSessions = 0;
+        var exerciseIds = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var target in targets)
+        {
+            if (PrescriptionJson.EasedBackFor(target.PrescriptionJson) == absence) continue;
+            // A deload is already as light as it gets.
+            if (plan.Mesocycles.FirstOrDefault(m => m.Id == target.MesocycleId) is { IsDeload: true } || PrescriptionJson.IsAdaptationDeload(target.PrescriptionJson))
+                continue;
+            var session = await db.PlannedSessions.FirstAsync(s => s.Id == target.Id, ct);
+            var ids = PrescriptionJson.Read(session.PrescriptionJson).Select(e => e.ExerciseId).ToHashSet(StringComparer.Ordinal);
+            var json = session.PrescriptionJson;
+            var changed = false;
+            if (TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, ids, out var fewer, out _)) { json = fewer; changed = true; }
+            if (TrainingAdaptationPrescriptionAdjuster.TryRaiseReserve(json, out var reserve, out _)) { json = reserve; changed = true; }
+            if (!changed) continue;
+            session.PrescriptionJson = PrescriptionJson.MarkEasedBack(json, absence);
+            session.UpdatedAt = clock.GetUtcNow();
+            changedSessions++;
+            exerciseIds.UnionWith(ids);
+        }
+        if (changedSessions == 0) return already > 0;
 
         var now = clock.GetUtcNow();
-        session.PrescriptionJson = json;
-        session.UpdatedAt = now;
-        db.PlanAdaptations.Add(new PlanAdaptation
+        var row = await db.PlanAdaptations.FirstOrDefaultAsync(a => a.PlanId == plan.Id && a.Kind == ReentryKind && a.EvidenceAt == lastWorkout, ct);
+        if (row is null)
+            db.PlanAdaptations.Add(new PlanAdaptation
+            {
+                Id = Guid.NewGuid(), PlanId = plan.Id, Kind = ReentryKind, ExerciseIds = exerciseIds.OrderBy(id => id, StringComparer.Ordinal).ToArray(),
+                SessionsChanged = changedSessions, AppliedAt = now, EvidenceAt = lastWorkout,
+                Explanation = count > 1
+                    ? "Primeras sesiones tras una ausencia larga: una serie menos en cada ejercicio y una repetición más en reserva."
+                    : "Primera sesión tras una ausencia larga: una serie menos en cada ejercicio y una repetición más en reserva."
+            });
+        else
         {
-            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = ReentryKind, ExerciseIds = ids.OrderBy(id => id, StringComparer.Ordinal).ToArray(),
-            SessionsChanged = 1, AppliedAt = now, EvidenceAt = lastWorkout,
-            Explanation = "Primera sesión tras una ausencia larga: una serie menos en cada ejercicio y una repetición más en reserva."
-        });
+            row.SessionsChanged += changedSessions;
+            row.ExerciseIds = row.ExerciseIds.Union(exerciseIds).OrderBy(id => id, StringComparer.Ordinal).ToArray();
+        }
         try
         {
             await db.SaveChangesAsync(ct);
@@ -641,6 +684,81 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         });
         await db.SaveChangesAsync(ct);
         return PlanResult<RescheduleResult>.Ok(new(behind, moving.Count, plan.StartDate, plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1)));
+    }
+
+    // ---------------------------------------------------------------- omit a session on purpose
+
+    /// <summary>Reasons that say something about the body: only these let the engine adapt the plan after an omission (Premium).</summary>
+    private const int MaximumSkipNotes = 1000;
+    private static readonly string[] PhysicalSkipReasons = ["Fatigue", "Illness"];
+
+    /// <summary>
+    /// Omits a pending session: the user will not do it and does not want it back. It is resolved as <see cref="PlannedSessionStatus.Skipped"/> with a
+    /// log without sets (the history is kept), it is not an exposure (no progression), it is not training (the absence clock does not restart) and
+    /// the plan keeps going with the next session. Omitting for a reason of agenda (time, equipment, motivation, other) changes nothing else; a
+    /// physical reason (fatigue, illness) goes through the usual adaptation (Premium), like any session not completed for that reason.
+    /// </summary>
+    public async Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<SkipResult>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        var session = await db.PlannedSessions.FirstOrDefaultAsync(s => s.Id == sessionId && s.PlanId == plan.Id, ct);
+        if (session is null) return PlanResult<SkipResult>.Fail(PlanFailure.SessionNotFound, "La sesión no existe.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<SkipResult>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+        if (session.Status != PlannedSessionStatus.Planned)
+            return PlanResult<SkipResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está resuelta.");
+
+        var canonical = string.IsNullOrWhiteSpace(reason)
+            ? "Other"
+            : LogSessionValidator.Reasons.FirstOrDefault(r => r != "None" && string.Equals(r, reason.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (canonical is null)
+            return PlanResult<SkipResult>.Fail(PlanFailure.InvalidRequest, "El motivo no es válido.",
+                new Dictionary<string, string[]> { ["reason"] = ["Usa Time, Fatigue, Equipment, Motivation, Illness u Other."] });
+        var note = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
+        if (note is { Length: > MaximumSkipNotes })
+            return PlanResult<SkipResult>.Fail(PlanFailure.InvalidRequest, "Las notas son demasiado largas.",
+                new Dictionary<string, string[]> { ["notes"] = [$"Máximo {MaximumSkipNotes} caracteres."] });
+
+        var now = clock.GetUtcNow();
+        var zone = await zones.ResolveAsync(userId, ct);
+        var workout = new WorkoutLog
+        {
+            Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, PlannedSessionId = session.Id, LoggedAt = now, PerformedAt = now,
+            PerformedOn = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(now, zone).DateTime), TimeZoneId = zone.Id,
+            Outcome = WorkoutOutcome.NotCompleted, NonCompletionReason = canonical, Notes = note
+        };
+        db.WorkoutLogs.Add(workout);
+        session.Status = PlannedSessionStatus.Skipped;
+        session.UpdatedAt = now;
+
+        var physical = PhysicalSkipReasons.Contains(canonical);
+        var adapted = false;
+        if (physical && await subscriptions.HasPremiumAsync(userId, ct))
+        {
+            var report = await AdaptAsync(plan, session, workout, PrescriptionJson.Read(session.PrescriptionJson), now, ct);
+            adapted = report.Applied.Count > 0;
+        }
+        db.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = SkipKind, ExerciseIds = [], SessionsChanged = 0,
+            AppliedAt = now, EvidenceAt = now,
+            Explanation = $"Sesión omitida a propósito ({canonical}): no cuenta como entrenamiento ni como exposición y el plan sigue con la siguiente."
+        });
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException)
+        {
+            // Two identical requests at once: the second one finds the session already resolved.
+            db.ChangeTracker.Clear();
+            return PlanResult<SkipResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está resuelta.");
+        }
+        var message = physical
+            ? T("Sesión omitida. El plan sigue con la siguiente y tiene en cuenta cómo te encuentras.")
+            : T("Sesión omitida. El plan sigue con la siguiente; no se ha cambiado nada más.");
+        return PlanResult<SkipResult>.Ok(new SkipResult(ToSessionView(session, workout), adapted, message));
     }
 
     /// <summary>The user's recent workouts (any plan) as the recovery advisor needs them: sets done per exercise and how it felt.</summary>
