@@ -245,7 +245,7 @@ export interface ErrorTicketSummary {
   id: string; source: 'backend' | 'android'; appVersion: string | null; errorType: string;
   occurrences: number; firstSeenAt: string; lastSeenAt: string; status: ErrorTicketStatus;
 }
-export interface ErrorTicketDetail extends ErrorTicketSummary { stackTrace: string; }
+export interface ErrorTicketDetail extends ErrorTicketSummary { stackTrace: string; originalStackTrace: string | null; }
 export interface ErrorTicketPage extends Page<ErrorTicketSummary> { overall: { total: number; new: number; seen: number; resolved: number }; }
 
 const API = '/api/v1/admin';

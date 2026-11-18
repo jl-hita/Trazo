@@ -98,7 +98,12 @@ import { errorMessage } from '../../core/setup.api';
                     <span>Last seen {{ d.lastSeenAt | date: 'yyyy-MM-dd HH:mm' }}</span>
                     <span>{{ d.occurrences }} {{ d.occurrences === 1 ? 'time' : 'times' }}</span>
                   </div>
-                  <pre class="et-trace" tabindex="0">{{ d.stackTrace }}</pre>
+                  @if (d.originalStackTrace) {
+                    <button type="button" class="et-btn" (click)="toggleOriginalTrace()">
+                      {{ showOriginalTrace() ? 'Show retraced trace' : 'Show original obfuscated trace' }}
+                    </button>
+                  }
+                  <pre class="et-trace" tabindex="0">{{ showOriginalTrace() && d.originalStackTrace ? d.originalStackTrace : d.stackTrace }}</pre>
                   <div class="et-actions">
                     @if (d.status !== 'resolved') { <button type="button" class="et-btn" (click)="setStatus(d, 'resolved')">Mark as resolved</button> }
                     @if (d.status === 'resolved') { <button type="button" class="et-btn" (click)="setStatus(d, 'new')">Reopen</button> }
@@ -148,6 +153,7 @@ export class ErrorTicketsPageComponent {
   protected readonly testing = signal(false);
   protected readonly openId = signal<string | null>(null);
   protected readonly detail = signal<ErrorTicketDetail | null>(null);
+  protected readonly showOriginalTrace = signal(false);
   protected readonly confirmId = signal<string | null>(null);
   protected readonly tickets = computed<ErrorTicketSummary[]>(() => this.data()?.items ?? []);
   protected readonly totalPages = computed(() => Math.max(1, this.data()?.totalPages ?? 1));
@@ -188,6 +194,7 @@ export class ErrorTicketsPageComponent {
     if (this.openId() === ticket.id) { this.openId.set(null); return; }
     this.openId.set(ticket.id);
     this.detail.set(null);
+    this.showOriginalTrace.set(false);
     try {
       const loaded = await this.api.getErrorTicket(ticket.id);
       if (this.openId() !== ticket.id) return;
@@ -222,8 +229,14 @@ export class ErrorTicketsPageComponent {
     } finally { this.testing.set(false); }
   }
 
+  protected toggleOriginalTrace(): void { this.showOriginalTrace.update(value => !value); }
+
   protected async copy(ticket: ErrorTicketDetail): Promise<void> {
-    try { await navigator.clipboard.writeText(ticket.stackTrace); this.error.set(''); }
+    try {
+      const trace = this.showOriginalTrace() && ticket.originalStackTrace ? ticket.originalStackTrace : ticket.stackTrace;
+      await navigator.clipboard.writeText(trace);
+      this.error.set('');
+    }
     catch { this.error.set('The browser did not allow copying; select the text and copy it by hand.'); }
   }
 

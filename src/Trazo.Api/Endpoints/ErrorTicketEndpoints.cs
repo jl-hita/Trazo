@@ -30,6 +30,13 @@ public static class ErrorTicketEndpoints
             .WithMetadata(new RequestSizeLimitMetadata(64 * 1024))
             .RequireRateLimiting(RateLimitPolicy);
 
+        // Private CI-to-API channel. The upload key is independent from user authentication and is never exposed to the app.
+        endpoints.MapPost("/api/internal/diagnostics/mappings", UploadMappingAsync)
+            .WithTags("Diagnostics")
+            .AllowAnonymous()
+            .WithMetadata(new Microsoft.AspNetCore.Cors.DisableCorsAttribute())
+            .WithMetadata(new RequestSizeLimitMetadata(R8MappingStore.MaxMappingBytes));
+
         var admin = endpoints.MapGroup("/api/v1/admin/error-tickets")
             .WithTags("Admin error tickets")
             .RequireAuthorization(SetupEndpoints.SuperadminPolicy);
@@ -49,6 +56,60 @@ public static class ErrorTicketEndpoints
     private sealed class RequestSizeLimitMetadata(long maxRequestBodySize) : IRequestSizeLimitMetadata
     {
         public long? MaxRequestBodySize { get; } = maxRequestBodySize;
+    }
+
+    private static async Task<IResult> UploadMappingAsync(HttpContext context, R8MappingStore mappings, IConfiguration configuration, CancellationToken ct)
+    {
+        var expectedKey = configuration["Diagnostics:MappingUploadKey"];
+        var suppliedKey = context.Request.Headers["X-Trazo-Diagnostics-Key"].ToString();
+        if (string.IsNullOrWhiteSpace(expectedKey))
+            return Results.Problem("R8 mapping uploads are not configured.", statusCode: StatusCodes.Status503ServiceUnavailable);
+        if (!R8MappingStore.IsValidUploadKey(expectedKey, suppliedKey)) return Results.Unauthorized();
+
+        var version = context.Request.Query["appVersion"].ToString();
+        if (ErrorTicketService.CleanVersion(version) is null)
+            return Results.BadRequest(new { error = "A valid appVersion is required (for example 0.2.2+30029)." });
+        if (!string.Equals(context.Request.ContentType?.Split(';')[0], "text/plain", StringComparison.OrdinalIgnoreCase))
+            return Results.BadRequest(new { error = "Content-Type must be text/plain." });
+        if (context.Request.ContentLength is > R8MappingStore.MaxMappingBytes)
+            return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
+
+        try
+        {
+            await using var bounded = new BoundedReadStream(context.Request.Body, R8MappingStore.MaxMappingBytes);
+            var sha256 = await mappings.StoreAsync(version, bounded, ct);
+            if (sha256 is null)
+                return Results.Problem("R8 mapping storage is not configured.", statusCode: StatusCodes.Status503ServiceUnavailable);
+            return Results.Accepted(value: new { accepted = true, appVersion = version, sha256 });
+        }
+        catch (InvalidDataException ex)
+        {
+            return Results.BadRequest(new { error = ex.Message });
+        }
+    }
+
+    /// <summary>Enforces a hard limit even when the sender does not provide Content-Length.</summary>
+    private sealed class BoundedReadStream(Stream inner, long limit) : Stream
+    {
+        private long _read;
+        public override bool CanRead => inner.CanRead;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => _read; set => throw new NotSupportedException(); }
+        public override int Read(byte[] buffer, int offset, int count) => Count(inner.Read(buffer, offset, count));
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
+            Count(await inner.ReadAsync(buffer, cancellationToken));
+        private int Count(int count)
+        {
+            _read += count;
+            if (_read > limit) throw new InvalidDataException("The R8 mapping file exceeds the 50 MB limit.");
+            return count;
+        }
+        public override void Flush() => throw new NotSupportedException();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
     private static IResult ReportAsync(ReportErrorRequest? request, ErrorTicketQueue queue)
@@ -100,7 +161,7 @@ public static class ErrorTicketEndpoints
     private static async Task<IResult> GetAsync(Guid id, TrazoDbContext db, CancellationToken ct)
     {
         var ticket = await db.ErrorTickets.AsNoTracking().Where(x => x.Id == id)
-            .Select(x => new { x.Id, x.Source, x.AppVersion, x.ErrorType, x.Occurrences, x.FirstSeenAt, x.LastSeenAt, x.Status, x.StackTrace })
+            .Select(x => new { x.Id, x.Source, x.AppVersion, x.ErrorType, x.Occurrences, x.FirstSeenAt, x.LastSeenAt, x.Status, x.StackTrace, x.OriginalStackTrace })
             .FirstOrDefaultAsync(ct);
         return ticket is null ? Results.NotFound() : Results.Ok(ticket);
     }

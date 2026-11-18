@@ -33,6 +33,9 @@ public sealed class ErrorTicket
     public required string ErrorType { get; set; }
     /// <summary>The complete, scrubbed stack trace of the first occurrence.</summary>
     public required string StackTrace { get; set; }
+    /// <summary>The scrubbed original obfuscated trace, retained only when a readable R8-retraced trace was produced.</summary>
+    [System.ComponentModel.DataAnnotations.MaxLength(16000)]
+    public string? OriginalStackTrace { get; set; }
     public int Occurrences { get; set; }
     public DateTimeOffset FirstSeenAt { get; set; }
     public DateTimeOffset LastSeenAt { get; set; }

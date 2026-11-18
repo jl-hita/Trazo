@@ -99,7 +99,7 @@ public sealed class ErrorTicketExceptionHandler(ErrorTicketQueue queue, ILoggerF
 }
 
 /// <summary>Stores queued reports and tells the superadmins about new or reopened tickets.</summary>
-public sealed class ErrorTicketRecorder(IServiceScopeFactory scopes, TimeProvider clock, ILoggerFactory loggers)
+public sealed class ErrorTicketRecorder(IServiceScopeFactory scopes, TimeProvider clock, ILoggerFactory loggers, R8MappingStore mappings)
 {
     public static readonly string? ServerVersion = typeof(ErrorTicketRecorder).Assembly.GetName().Version?.ToString();
     public const int MaxNewTicketsPerHour = 200;
@@ -118,11 +118,18 @@ public sealed class ErrorTicketRecorder(IServiceScopeFactory scopes, TimeProvide
         {
             using var scope = scopes.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
-            var trace = ErrorTicketService.Scrub(report.StackTrace);
-            var fingerprint = ErrorTicketService.Fingerprint(report.Source, trace);
+            // Retrace Android crashes before scrubbing: the obfuscated frames are needed by R8. Missing version/mapping
+            // or an unavailable Retrace tool returns null and leaves the original trace untouched.
+            var retracedTrace = report.Source == ErrorTicketSource.Android
+                ? await mappings.TryRetraceAsync(report.AppVersion, report.StackTrace, ct)
+                : null;
+            var trace = retracedTrace ?? report.StackTrace;
+            var scrubbedTrace = ErrorTicketService.Scrub(trace);
+            var fingerprint = ErrorTicketService.Fingerprint(report.Source, scrubbedTrace);
             // A repeat is cheap and always counted; only a brand-new ticket spends the hourly budget.
             if (!await db.ErrorTickets.AsNoTracking().AnyAsync(x => x.Fingerprint == fingerprint, ct) && !_newTickets.TryTake()) return;
-            var (outcome, id, type) = await ErrorTicketService.RecordAsync(db, report.Source, report.AppVersion, report.StackTrace, clock.GetUtcNow(), ct);
+            var (outcome, id, type) = await ErrorTicketService.RecordAsync(db, report.Source, report.AppVersion, trace, clock.GetUtcNow(), ct,
+                retracedTrace is null ? null : report.StackTrace);
             if (outcome == ErrorTicketOutcome.Repeated || !_emails.TryTake()) return;
             await NotifyAsync(scope.ServiceProvider, report, type, outcome == ErrorTicketOutcome.Reopened, ct);
         }
@@ -179,6 +186,7 @@ public static class ErrorTicketExtensions
     {
         services.AddProblemDetails();
         services.AddSingleton<ErrorTicketQueue>();
+        services.AddSingleton<R8MappingStore>();
         services.AddSingleton<ErrorTicketRecorder>();
         services.AddExceptionHandler<ErrorTicketExceptionHandler>();
         services.AddHostedService<ErrorTicketWriter>();
