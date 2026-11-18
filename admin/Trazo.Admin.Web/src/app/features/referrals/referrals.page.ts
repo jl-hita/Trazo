@@ -169,8 +169,8 @@ import { errorMessage } from '../../core/setup.api';
 })
 export class ReferralsPageComponent {
   private readonly api = inject(AdminApi);
-  protected readonly from = signal('');
-  protected readonly to = signal('');
+  protected readonly from = signal(new Date(Date.now() - 90 * 86_400_000).toISOString().slice(0, 10));
+  protected readonly to = signal(new Date().toISOString().slice(0, 10));
   protected readonly channel = signal('');
   protected readonly status = signal('');
   protected readonly incidents = signal(false);
@@ -233,6 +233,7 @@ export class ReferralsPageComponent {
       const result = await this.api.getReferrals({
         status: this.status() || undefined,
         incidents: this.incidents() || undefined,
+        ...this.range(),
         page: this.page(),
         pageSize: this.pageSize
       });
