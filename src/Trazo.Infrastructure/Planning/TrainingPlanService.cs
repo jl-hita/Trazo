@@ -32,7 +32,7 @@ public interface ITrainingPlanService
     /// <summary>Omits a pending session on purpose: resolved without being training, no progression, no volume adaptation unless the reason is physical (Premium).</summary>
     Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
-    /// <summary>What the engine adjusted and why, newest first (Premium accounts accumulate automatic ones; omissions and moves are for everyone).</summary>
+    /// <summary>The active plan's adjustment history, newest first; by default only the block in progress, or every block when <paramref name="wholePlan"/> is true.</summary>
     Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
@@ -40,10 +40,10 @@ public interface ITrainingPlanService
 }
 
 /// <summary>
-/// Orchestrates the planning engine against the database. A plan stores its profile and the macrocycle phases; the
-/// sessions are generated one mesocycle at a time, when their first week is reached, so a future block can use what the
-/// user really did and no stored data (or response) ever contains the whole macrocycle in detail. Every method takes the
-/// user id and only ever touches that user's active plan.
+/// Orchestrates the planning engine against the database. A plan stores its profile and macrocycle phases; sessions are
+/// generated one block at a time, when that block's first period is needed. This lets each future block use the user's real
+/// training history without pre-generating the whole macrocycle. A period is a calendar week in calendar mode and a group
+/// of consecutive sessions in sequence mode. Every method is scoped to the supplied user and their active plan.
 /// </summary>
 public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions, RequestLanguage language) : ITrainingPlanService
 {
@@ -1139,10 +1139,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     }
 
     /// <summary>
-    /// Reads the plan history, rebuilds the engine's evidence in performed-at order, evaluates session-level and exercise-level
-    /// feedback, then applies accepted actions only to unresolved sessions beyond the furthest resolved program index. The
-    /// evidence timestamp (not request time) anchors cooldowns; this makes late registration safe and prevents it from
-    /// consuming future work.
+    /// Rebuilds the feedback evidence from workouts ordered by <c>PerformedAt</c>, not registration time, then evaluates
+    /// session-level and exercise-level answers. Only the newest workout evidence may change the prescription; a late
+    /// registration is still retained in history but cannot roll newer decisions back. Accepted actions apply only to
+    /// pending sessions after the furthest resolved <c>SequenceIndex</c>, so completed or skipped work is never rewritten.
+    /// Cooldowns are anchored to the evidence instant rather than request time, making retries and delayed registration safe.
     /// </summary>
     private async Task<AdaptationReport> AdaptAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, IReadOnlyList<TrainingExercisePrescription> prescribed,
@@ -1538,8 +1539,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     }
 
     /// <summary>
-    /// The latest completed sets of every exercise in this week's sessions, from any session of the user
-    /// (so a plan that starts after another one still shows what the user lifted before). The proposed load repeats the
+    /// The latest completed sets of every exercise in the supplied generated sessions, from any session of the user
+    /// (so a new plan can still start from loads lifted in an earlier plan). The proposed load repeats the
     /// heaviest load of that day, or adds one increment when every completed set reached the top of the range.
     /// </summary>
     private async Task<Dictionary<string, LastPerformanceView>> LastPerformanceAsync(
