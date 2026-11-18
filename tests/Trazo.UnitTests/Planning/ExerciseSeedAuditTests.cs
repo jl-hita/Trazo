@@ -90,14 +90,14 @@ public sealed class ExerciseSeedAuditTests
             .ToList();
         Assert.Empty(genericMachine);
 
-        Assert.Equal(["barbell", "bench"], Names(entries.Single(x => x.GetProperty("id").GetString() == "chest-supported-t-bar-row"), "requiredEquipment"));
+        Assert.Equal(["barbell", "landmine", "t-bar-row-handle", "bench"], Names(entries.Single(x => x.GetProperty("id").GetString() == "chest-supported-t-bar-row"), "requiredEquipment"));
         Assert.Equal(["pull-up-bar", "dumbbell"], Names(entries.Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
         Assert.Equal(["dip-station", "dumbbell"], Names(entries.Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
         Assert.Equal(["step"], Names(entries.Single(x => x.GetProperty("id").GetString() == "elevated-pike-push-up"), "requiredEquipment"));
         Assert.Equal(["barbell", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "rack-pull"), "requiredEquipment"));
         Assert.Equal(["barbell", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "pause-squat"), "requiredEquipment"));
         Assert.Equal(["barbell", "bench", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "barbell-bulgarian-split-squat"), "requiredEquipment"));
-        Assert.Equal(["low-row-bar"], Names(entries.Single(x => x.GetProperty("id").GetString() == "bent-knee-inverted-row"), "requiredEquipment"));
+        Assert.Equal(["barbell", "squat-rack"], Names(entries.Single(x => x.GetProperty("id").GetString() == "bent-knee-inverted-row"), "requiredEquipment"));
     }
 
     [Fact]
