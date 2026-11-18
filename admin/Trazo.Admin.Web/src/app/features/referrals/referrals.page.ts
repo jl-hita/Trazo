@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminApi } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
-/** Referral programme and conversion funnel: totals, audit of invitations and rewards. Economic data is never edited, only voided with a reason. */
+/** Referral programme operations: aggregate performance, invitation audit, reward recovery and audited reward cancellation. */
 @Component({
   selector: 'trazo-referrals-page',
   standalone: true,
@@ -33,7 +33,7 @@ import { errorMessage } from '../../core/setup.api';
   template: `
     <div class="page-heading">
       <div><p class="eyebrow">GROWTH</p><h1>Referrals &amp; funnel</h1>
-        <p class="subtitle">Invitations, conversions to a first real payment, rewards (promotional days or Google Play deferrals) and the signup-to-retention funnel. Read-only: a reward can only be voided, with a reason that is recorded.</p></div>
+        <p class="subtitle">Manage invitations and rewards, review conversion and retention, resolve pending grants and investigate incidents. Reward cancellations require a reason and are recorded in the audit trail.</p></div>
     </div>
     <div class="rf">
       <div class="rf-toolbar">
