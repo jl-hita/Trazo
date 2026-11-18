@@ -1350,6 +1350,24 @@ public sealed class TrainingProgramGeneratorTests
         Assert.Equal(count, sessions.Select(s => s.Title).Distinct().Count());
     }
 
+    [Fact]
+    public void SequenceRotationCanResumeAtTheCorrectPositionInANewBlock()
+    {
+        var generated = TrainingProgramGenerator.Generate(Request() with
+        {
+            TrainingDays = Enumerable.Range(0, 3).Select(index => (DayOfWeek)((index + 1) % 7)).ToArray(),
+            Split = TrainingProgramSplit.UpperLower,
+            DurationWeeks = 1,
+            MaximumSessionDurationMinutes = 90,
+            IsSequence = true,
+            RotationStartIndex = 1
+        }, Catalog());
+
+        Assert.True(generated.Succeeded, string.Join("; ", generated.Errors));
+        var firstSession = generated.Prescription!.Sessions.Single().Title;
+        Assert.Equal("Tren inferior A", firstSession);
+    }
+
     [Theory]
     [InlineData(TrainingProgramSplit.UpperLower, 3)]
     [InlineData(TrainingProgramSplit.FullBody, 5)]
