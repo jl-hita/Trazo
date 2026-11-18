@@ -13,31 +13,62 @@
       <p class="lead">{{ t.lead }}</p>
       <a class="btn" href="#waitlist" (click)="$event.preventDefault(); waitlist.scrollIntoView({ behavior: 'smooth' })">{{ t.cta }}</a>
     </div>
-    <div class="phone"><div class="shot"><img [src]="t.shots[0].file" width="1280" height="2856" [alt]="t.shotAlt + ': ' + t.shots[0].caption"></div></div>
+    <div class="phone"><div class="shot"><img [src]="t.showcase[3].shots[0].file" width="1280" height="2856" [alt]="t.shotAlt + ': ' + t.showcase[3].shots[0].caption"></div></div>
   </div>
 
-  <section class="auto-section">
+  <section class="auto-section" id="engine">
     <div class="wrap">
       <div class="pricing-heading">
-        <h2>{{ t.autoTitle }}</h2>
-        <p class="lead">{{ t.autoLead }}</p>
+        <h2>{{ t.loopTitle }}</h2>
+        <p class="lead">{{ t.loopLead }}</p>
       </div>
-      <div class="auto-grid">
-        @for (b of t.autoBlocks; track b.title) {
-          <article class="auto-card">
-            <p class="plan-label">{{ b.badge }}</p>
-            <h3>{{ b.title }}</h3>
-            <p class="auto-text">{{ b.text }}</p>
-            <ul>
-              @for (point of b.points; track point) {
-                <li>{{ point }}</li>
-              }
-            </ul>
-          </article>
+      <ol class="loop">
+        @for (l of t.loop; track l.title) {
+          <li><h3>{{ l.title }}</h3><p>{{ l.text }}</p></li>
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="centered">{{ t.pillarsTitle }}</h2>
+      <div class="grid">
+        @for (p of t.pillars; track p.title) {
+          <div class="card">
+            <span class="dot"></span>
+            <h3>{{ p.title }} @if (p.premium) { <span class="plan-badge">{{ t.premiumName }}</span> }</h3>
+            <p>{{ p.text }}</p>
+          </div>
         }
       </div>
     </div>
   </section>
+
+  @for (row of t.showcase; track row.title; let i = $index) {
+    <section [class.alt]="i % 2 === 0" class="showcase">
+      <div class="wrap row" [class.flip]="i % 2 === 1">
+        <div class="copy">
+          <p class="eyebrow">{{ row.kicker }} @if (row.premium) { <span class="plan-badge">{{ t.premiumName }}</span> }</p>
+          <h2>{{ row.title }}</h2>
+          <p class="lead">{{ row.text }}</p>
+          <ul class="points">
+            @for (point of row.points; track point) {
+              <li>{{ point }}</li>
+            }
+          </ul>
+        </div>
+        <div class="phones" [class.three]="row.shots.length === 3">
+          @for (s of row.shots; track s.file) {
+            <figure>
+              <div class="phone"><div class="shot"><img [src]="s.file" width="1280" height="2856" loading="lazy" [alt]="t.shotAlt + ': ' + s.caption"></div></div>
+              <figcaption>{{ s.caption }}</figcaption>
+            </figure>
+          }
+        </div>
+      </div>
+    </section>
+  }
 
   <section class="alt">
     <div class="wrap">
@@ -80,20 +111,6 @@
         </article>
       </div>
       <p class="pricing-note">{{ t.pricingNote }}</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2>{{ t.shotsTitle }}</h2>
-      <div class="shots">
-        @for (s of t.shots; track s.file) {
-          <figure>
-            <div class="phone"><div class="shot"><img [src]="s.file" width="1280" height="2856" loading="lazy" [alt]="t.shotAlt + ': ' + s.caption"></div></div>
-            <figcaption>{{ s.caption }}</figcaption>
-          </figure>
-        }
-      </div>
     </div>
   </section>
 
