@@ -143,7 +143,7 @@ public static class ExerciseCatalogEndpoints
     private static async Task<IResult> OptionsAsync(TrazoDbContext db, HttpContext http, CancellationToken cancellationToken)
     {
         var rows = await db.ExerciseCatalog.AsNoTracking().Where(x => x.IsActive)
-            .Select(x => new { x.MovementPattern, x.PrimaryMuscles, x.SecondaryMuscles, x.Equipment, x.RequiredEquipment, x.MinimumExperience, x.Difficulty })
+            .Select(x => new { x.MovementPattern, x.PrimaryMuscles, x.SecondaryMuscles, x.RequiredEquipment, x.MinimumExperience, x.Difficulty })
             .ToListAsync(cancellationToken);
 
         static IReadOnlyList<FilterOption> Build(IEnumerable<string?> values, IReadOnlyDictionary<string, string> labels) =>
