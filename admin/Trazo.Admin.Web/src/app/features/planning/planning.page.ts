@@ -116,7 +116,7 @@ function nextMonday(): string {
         </div>
         <label>Available equipment
           <input type="text" name="equipment" placeholder="empty = everything" [ngModel]="equipment()" (ngModelChange)="equipment.set($event)">
-          <span class="hint">Comma separated, e.g. barbell, dumbbell, bench, machine, cable, pull-up-bar.</span>
+          <span class="hint">Comma separated, e.g. barbell, dumbbell, bench, leg-press-machine, smith-machine, cable, pull-up-bar.</span>
         </label>
         <label>Excluded exercise ids
           <input type="text" name="excluded" [ngModel]="excluded()" (ngModelChange)="excluded.set($event)">
