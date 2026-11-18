@@ -10,8 +10,8 @@ export type LoginResult = { status: 'ok' } | { status: 'two-factor'; challengeTo
 const KEY = 'trazo.admin.session';
 
 /**
- * Admin session. Tokens live in sessionStorage (cleared when the tab closes). Only users with the
- * role-specific access: superadmins see everything, while commercial and accountant roles see their assigned panels.
+ * Admin session. Tokens live in sessionStorage (cleared when the tab closes).
+ * Access is role-specific: superadmins see everything, while commercial and accountant roles see their assigned panels.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
