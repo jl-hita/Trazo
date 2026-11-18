@@ -246,7 +246,7 @@ public sealed class EngineCoachingQualityTests
     {
         // hack-squat and leg-press share priority, level and equipment: the plan seed decides, not the id.
         var firstMachineSquat = Enumerable.Range(1, 20)
-            .Select(seed => Block(PlanTestCatalog.Profile(TrainingGoal.GeneralFitness, TrainingExperience.Beginner, 2, ["machine", "cable"]), seed))
+            .Select(seed => Block(PlanTestCatalog.Profile(TrainingGoal.GeneralFitness, TrainingExperience.Beginner, 2, ["hack-squat-machine", "leg-press-machine", "cable"]), seed))
             .Select(block => Week(block).SelectMany(session => session).First(exercise => Pattern(exercise) == TrainingMovementPattern.Squat).ExerciseId)
             .ToHashSet();
 
