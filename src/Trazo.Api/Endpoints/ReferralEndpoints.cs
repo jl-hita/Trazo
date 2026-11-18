@@ -19,7 +19,7 @@ public sealed record ClientEventRequest(string? Name);
 
 /// <summary>
 /// The referral programme: the signed-in user's code, link, statistics and rewards; the public invitation page and Android App
-/// Links file; and the superadmin audit views. Attribution and every economic decision are made here, never by the app.
+/// Links file; and the commercial/superadmin administration views. Attribution and every economic decision are made here, never by the app.
 /// </summary>
 public static class ReferralEndpoints
 {
