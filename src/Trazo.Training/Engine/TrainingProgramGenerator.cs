@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.11.0";
+    public const string EngineVersion = "0.11.1";
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
     // within this share of the time offered.
     private const decimal StrengthMainLiftTimeShare = 0.85m;
@@ -1010,6 +1010,17 @@ public static class TrainingProgramGenerator
                 currentEffectiveVolume.GetValueOrDefault(TrainingMuscleGroup.Lats) <
                     targets.GetValueOrDefault(TrainingMuscleGroup.Lats) &&
                 (allowedMuscles is null || allowedMuscles.Contains(TrainingMuscleGroup.Lats));
+            // The chest gets the same first call as the lats. Without it the back had a reserved direct exercise and the chest did not, and
+            // upper sessions ended with the chest at the bottom of its range (a press is limited to five sets) and the back above it.
+            var hasDirectChestAccessory = catalogCandidates.Any(candidate =>
+                candidate.MovementPattern == TrainingMovementPattern.Accessory &&
+                candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Chest) &&
+                selectedThisWeek.Contains(candidate.ExerciseId));
+            var prioritizeChestAccessory =
+                !hasDirectChestAccessory &&
+                currentEffectiveVolume.GetValueOrDefault(TrainingMuscleGroup.Chest) <
+                    targets.GetValueOrDefault(TrainingMuscleGroup.Chest) &&
+                (allowedMuscles is null || allowedMuscles.Contains(TrainingMuscleGroup.Chest));
 
             // Remaining direct-isolation exposures needed this week (hypertrophy only).
             var directNeeds = new Dictionary<DirectIsolationGap, int>();
@@ -1071,6 +1082,9 @@ public static class TrainingProgramGenerator
                 .ThenByDescending(item =>
                     prioritizeLatAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Lats))
+                .ThenByDescending(item =>
+                    prioritizeChestAccessory &&
+                    item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Chest))
                 .ThenByDescending(item => DirectNeed(item.Candidate))
                 .ThenByDescending(item =>
                     prioritizeCalfAccessory &&
