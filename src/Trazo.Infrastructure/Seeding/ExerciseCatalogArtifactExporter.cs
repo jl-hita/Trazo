@@ -108,6 +108,27 @@ public sealed class ExerciseCatalogArtifactExporter(
 
         Directory.CreateDirectory(directory);
 
+        if (OperatingSystem.IsLinux())
+        {
+            // The catalog contains exercise metadata only. Make this one directory
+            // readable by the self-hosted Actions runner without exposing the
+            // private Data Protection directory or allowing directory enumeration
+            // of /var/lib/trazo itself.
+            if (string.Equals(fullPath, "/var/lib/trazo/artifacts/exercise-catalog.json", StringComparison.Ordinal))
+            {
+                File.SetUnixFileMode(
+                    "/var/lib/trazo",
+                    UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                    UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
+            }
+
+            File.SetUnixFileMode(
+                directory,
+                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                UnixFileMode.GroupRead | UnixFileMode.GroupExecute |
+                UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+        }
+
         var temporaryPath = Path.Combine(directory, $".exercise-catalog-{Guid.NewGuid():N}.tmp");
         try
         {
