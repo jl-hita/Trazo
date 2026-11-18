@@ -97,4 +97,16 @@ public static class PrescriptionJson
     public static bool IsAdaptationDeload(string json) =>
         JsonNode.Parse(json) is JsonObject root && root["adaptationDeload"] is JsonValue marker
         && marker.TryGetValue<bool>(out var value) && value;
+
+    /// <summary>The absence (instant of the last workout, round-trip format) this session was already made lighter for, or null.</summary>
+    public static string? EasedBackFor(string json) =>
+        JsonNode.Parse(json) is JsonObject root && root["easedBackFor"] is JsonValue marker && marker.TryGetValue<string>(out var value) ? value : null;
+
+    /// <summary>Marks the session as already lightened for the absence that started at <paramref name="absence"/>, so it is never done twice.</summary>
+    public static string MarkEasedBack(string json, string absence)
+    {
+        var root = (JsonObject)JsonNode.Parse(json)!;
+        root["easedBackFor"] = absence;
+        return root.ToJsonString(new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web));
+    }
 }

@@ -71,6 +71,10 @@ public static class PlansEndpoints
             .WithSummary("Calendar plans: moves the pending program forward, by whole weeks, so its first pending week is the current one. Offered by /current/next when the program is at least a week behind.")
             .Produces<RescheduleResult>().ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapPost("/current/sessions/{sessionId:guid}/skip", SkipAsync).WithName("SkipPlanSession")
+            .WithSummary("Omits a pending session on purpose (reason: Time, Fatigue, Equipment, Motivation, Illness, Other). The plan goes on with the next one; it is not training, not an exposure and adapts nothing unless the reason is physical (Premium).")
+            .Produces<SkipResult>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status402PaymentRequired)
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
         group.MapPost("/current/archive", ArchiveAsync).WithName("ArchivePlan")
             .WithSummary("Closes the active plan so a new one can be created. The history is kept.")
             .Produces(StatusCodes.Status204NoContent).ProducesProblem(StatusCodes.Status404NotFound);
@@ -189,6 +193,14 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         var result = await plans.RescheduleAsync(userId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> SkipAsync(
+        Guid sessionId, SkipSessionRequest request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.SkipSessionAsync(userId, sessionId, request.Reason, request.Notes, ct);
         return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 

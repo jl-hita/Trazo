@@ -155,7 +155,21 @@ public sealed record NextPositionView(int Period, int SessionInPeriod, int Sessi
 public sealed record NextSessionView(
     Guid PlanId, string SchedulingMode, string Timeline, SessionView? Session, NextPositionView? Position,
     AvailabilityView? Availability, bool AvailabilityLocked, IReadOnlyList<OverdueSessionView> Overdue, bool Locked = false,
-    ReentryView? Reentry = null, RescheduleOfferView? Reschedule = null);
+    ReentryView? Reentry = null, RescheduleOfferView? Reschedule = null, AdjustmentView? Adjustment = null);
+
+/// <summary>
+/// What to do about the sessions not done, decided by <c>AdjustmentAdvisor</c> from the real state: <c>Strategy</c> is Continue, Shift, EaseBack
+/// or Rebuild; <c>Reason</c> the code and <c>Message</c> the explanation. <c>CanReschedule</c> offers <c>POST plans/current/reschedule</c>;
+/// <c>SuggestSkip</c> says omitting the oldest late session (<c>POST plans/current/sessions/{id}/skip</c>) is better than recovering it.
+/// Omitting is always available while there is a pending session and is never done on its own.
+/// </summary>
+public sealed record AdjustmentView(string Strategy, string Reason, string Message, int EaseBackSessions, bool CanReschedule, bool SuggestSkip, bool CanSkip);
+
+/// <summary>Omits a pending session on purpose: <c>Reason</c> is Time, Fatigue, Equipment, Motivation, Illness or Other.</summary>
+public sealed record SkipSessionRequest(string? Reason, string? Notes);
+
+/// <summary>What omitting did: the session (now Skipped), the next one, and whether the omission also adapted the plan (physical reasons, Premium).</summary>
+public sealed record SkipResult(SessionView Session, bool Adapted, string Message);
 
 /// <summary>Shown when the user has been away for a long time: advice to ease back in. The plan does not move meanwhile.</summary>
 public sealed record ReentryView(int DaysSinceLastWorkout, string Message, bool Applied = false);
