@@ -120,8 +120,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     public async Task<PlanOptions> GetOptionsAsync(CancellationToken ct)
     {
+        // RequiredEquipment is the single source of truth for the generator selector.
+        // The legacy Equipment field is descriptive metadata and must never expose generic or stale options.
         var equipment = (await db.ExerciseCatalog.AsNoTracking().Where(e => e.IsActive).Select(e => e.RequiredEquipment).ToListAsync(ct))
             .SelectMany(list => list).Select(PlanProfileParser.NormalizeToken).Where(token => token.Length > 0)
+            .Where(token => !string.Equals(token, "machine", StringComparison.OrdinalIgnoreCase))
             .Distinct().OrderBy(token => token, StringComparer.Ordinal).ToArray();
         return new PlanOptions(
             Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
