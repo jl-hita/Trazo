@@ -110,7 +110,7 @@ public static partial class AdminExercisesEndpoints
         }).ToListAsync(cancellationToken);
 
         static string[] Distinct(IEnumerable<string?> values) =>
-            values.Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v!).Distinct().Order().ToArray();
+            values.Where(v => !string.IsNullOrWhiteSpace(v) && !string.Equals(v.Trim(), "machine", StringComparison.OrdinalIgnoreCase)).Select(v => v!).Distinct().Order().ToArray();
 
         return Results.Ok(new AdminExerciseOptions(
             Distinct(rows.Select(r => r.MovementPattern)),
