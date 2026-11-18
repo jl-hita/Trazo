@@ -3,10 +3,6 @@ using Trazo.Training;
 namespace Trazo.Application.Planning;
 
 /// <summary>
-/// One generated session. <paramref name="Date"/> and <paramref name="Day"/> exist only in a calendar plan; a sequence plan has
-/// neither, and its sessions are identified by their order.
-/// </summary>
-/// <summary>
 /// One generated session in program order. <c>WeekNumber</c> is the plan period number (a calendar week in calendar mode, a
 /// sequence period in sequence mode); <c>Date</c> and <c>Day</c> are populated only for calendar plans.
 /// </summary>
