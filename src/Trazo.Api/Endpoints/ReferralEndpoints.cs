@@ -218,12 +218,18 @@ public static class ReferralEndpoints
         return Results.Ok(await analytics.FunnelAsync(f, t, channel, ReferralService.NormalizeCode(reference), ct));
     }
 
-    private static async Task<IResult> AdminListAsync(TrazoDbContext db, string? status, bool? incidents, int page = 1, int pageSize = 25, CancellationToken ct = default)
+    private static async Task<IResult> AdminListAsync(TrazoDbContext db, string? status, bool? incidents, DateTimeOffset? from, DateTimeOffset? to,
+        int page = 1, int pageSize = 25, CancellationToken ct = default)
     {
-        if (page < 1 || pageSize is < 1 or > 100) return Results.ValidationProblem(new Dictionary<string, string[]> { ["paging"] = ["page must be positive and pageSize between 1 and 100."] });
+        var errors = new Dictionary<string, string[]>();
+        if (page < 1 || pageSize is < 1 or > 100) errors["paging"] = ["page must be positive and pageSize between 1 and 100."];
+        if (from.HasValue && to.HasValue && from >= to) errors["period"] = ["'from' must be before 'to'."];
+        if (errors.Count > 0) return Results.ValidationProblem(errors);
         var rels = db.ReferralRelationships.AsNoTracking().AsQueryable();
         if (!string.IsNullOrWhiteSpace(status)) rels = rels.Where(r => r.Status == status);
         if (incidents == true) rels = rels.Where(r => r.Incident != null);
+        if (from.HasValue) rels = rels.Where(r => r.AttributedAt >= from.Value);
+        if (to.HasValue) rels = rels.Where(r => r.AttributedAt < to.Value);
         var all = await rels.ToListAsync(ct);
         var total = all.Count;
         var slice = all.OrderByDescending(r => r.AttributedAt).Skip((page - 1) * pageSize).Take(pageSize).ToList();
