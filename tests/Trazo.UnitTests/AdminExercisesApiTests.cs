@@ -118,6 +118,24 @@ public sealed class AdminExercisesApiTests : IDisposable
     }
 
     [Fact]
+    public async Task PublicCompleteCatalog_ReturnsAllActiveExercisesWithRequiredEquipment()
+    {
+        var admin = await ClientAsync("superadmin");
+        Assert.Equal(HttpStatusCode.Created, (await admin.PostAsJsonAsync("/api/v1/admin/exercises", Input("Complete catalog exercise"))).StatusCode);
+
+        var publicClient = await ClientAsync(null);
+        var response = await publicClient.GetAsync("/api/v1/exercises/all");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var exercises = await JsonAsync(response);
+        Assert.Equal(JsonValueKind.Array, exercises.ValueKind);
+        var exercise = exercises.EnumerateArray().Single(x => x.GetProperty("nameEn").GetString() == "Complete catalog exercise");
+        Assert.Equal(new[] { "barbell", "bench" },
+            exercise.GetProperty("requiredEquipment").EnumerateArray().Select(x => x.GetString()).ToArray());
+        Assert.True(exercise.TryGetProperty("instructionsEs", out _));
+        Assert.True(exercise.TryGetProperty("suitableGoals", out _));
+    }
+
+    [Fact]
     public async Task List_FiltersAndOptions()
     {
         var client = await ClientAsync("superadmin");
