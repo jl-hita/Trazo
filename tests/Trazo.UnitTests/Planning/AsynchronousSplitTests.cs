@@ -87,9 +87,9 @@ public sealed class AsynchronousSplitApiTests() : PlansApiBase(enforced: true)
 {
     private static readonly DateOnly Started = new(2026, 11, 9);
 
-    private static object GeneratedSequence(int perPeriod = 2, object? trainingDays = null) => new
+    private static object GeneratedSequence(int perPeriod = 2, object? trainingDays = null, string split = "Automatic") => new
     {
-        goal = "Hypertrophy", experience = "Intermediate", totalWeeks = 12, startDate = Started, schedulingMode = "Sequence",
+        goal = "Hypertrophy", experience = "Intermediate", split, totalWeeks = 12, startDate = Started, schedulingMode = "Sequence",
         sessionsPerPeriod = perPeriod, trainingDays, maxSessionMinutes = 75,
         availableEquipment = new[] { "barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar" },
         excludedExerciseIds = Array.Empty<string>(), limitations = Array.Empty<string>()
@@ -166,6 +166,24 @@ public sealed class AsynchronousSplitApiTests() : PlansApiBase(enforced: true)
         Assert.All(phases, p => Assert.Equal(JsonValueKind.Null, p.GetProperty("startDate").ValueKind));
         Assert.Equal(1, phases[0].GetProperty("startPeriod").GetInt32());
         Assert.Contains(phases, p => p.GetProperty("type").GetString() == "deload" && p.GetProperty("startPeriod").GetInt32() == 5);
+    }
+
+    [Theory]
+    [InlineData("PushPullLegs", 4)]
+    [InlineData("FullBody", 6)]
+    [InlineData("UpperLower", 3)]
+    [InlineData("Automatic", 5)]
+    public async Task GeneratedSequenceSupportsSplitSpecificRotationLengths(string split, int sessionsPerPeriod)
+    {
+        var client = ClientFor(await AddUserAsync($"seq-{split}-{sessionsPerPeriod}@example.com", subscribed: true));
+        var response = await client.PostAsJsonAsync("/api/v1/plans", GeneratedSequence(sessionsPerPeriod, split: split));
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var plan = await JsonAsync(response);
+        Assert.Equal("Sequence", plan.GetProperty("schedulingMode").GetString());
+        Assert.Equal(sessionsPerPeriod, plan.GetProperty("sessionsPerPeriod").GetInt32());
+        var sessions = await BlockAsync(client);
+        Assert.Equal(sessionsPerPeriod * 4, sessions.Count);
+        Assert.Equal(sessionsPerPeriod, sessions.Where(s => s.GetProperty("weekNumber").GetInt32() == 1).Count());
     }
 
     [Fact]
