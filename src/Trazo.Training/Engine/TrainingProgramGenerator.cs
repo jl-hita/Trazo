@@ -858,7 +858,7 @@ public static class TrainingProgramGenerator
             {
                 if (exercise.RequiredEquipment.Any(string.IsNullOrWhiteSpace))
                     errors.Add($"El ejercicio '{exercise.ExerciseId}' contiene un requisito de material vacío.");
-                if (exercise.RequiredEquipment.Any(value => NormalizeEquipmentToken(value).Equals("machine", StringComparison.OrdinalIgnoreCase)))
+                if (exercise.RequiredEquipment.Any(value => !string.IsNullOrWhiteSpace(value) && NormalizeEquipmentToken(value).Equals("machine", StringComparison.OrdinalIgnoreCase)))
                     errors.Add($"El ejercicio '{exercise.ExerciseId}' debe especificar el tipo concreto de máquina, no el requisito genérico 'machine'.");
                 if (exercise.SuitableGoals.Any(goal => !Enum.IsDefined(goal)))
                     errors.Add($"El ejercicio '{exercise.ExerciseId}' contiene un objetivo compatible no válido.");
