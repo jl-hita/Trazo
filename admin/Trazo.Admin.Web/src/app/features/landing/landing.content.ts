@@ -12,9 +12,12 @@ export interface LandingContent {
   headB: string;
   lead: string;
   cta: string;
-  autoTitle: string;
-  autoLead: string;
-  autoBlocks: { badge: string; title: string; text: string; points: string[] }[];
+  loopTitle: string;
+  loopLead: string;
+  loop: { title: string; text: string }[];
+  pillarsTitle: string;
+  pillars: { title: string; text: string; premium?: boolean }[];
+  showcase: { kicker: string; title: string; text: string; points: string[]; premium?: boolean; shots: { file: string; caption: string }[] }[];
   featuresTitle: string;
   features: { title: string; text: string }[];
   pricingTitle: string;
@@ -33,8 +36,6 @@ export interface LandingContent {
   pricingNote: string;
   faqTitle: string;
   faq: { q: string; a: string }[];
-  shotsTitle: string;
-  shots: { file: string; caption: string }[];
   shotAlt: string;
   howTitle: string;
   steps: { title: string; text: string }[];
@@ -60,40 +61,60 @@ export interface LandingContent {
 export const PRIVACY_URL = '/privacidad';
 export const TERMS_URL = '/condiciones';
 
-const shots = (lang: LandingLang, captions: string[]) =>
-  ['02-plan', '03-session', '04-workout', '06-catalog'].map((f, i) => ({ file: `/landing/screenshots/${lang}/${f}.png`, caption: captions[i] }));
+const shot = (lang: LandingLang, file: string, caption: string) => ({ file: `/landing/screenshots/${lang}/${file}.png`, caption });
 
 export const LANDING: Record<LandingLang, LandingContent> = {
   es: {
-    title: 'TRAZO · Entrenamiento de fuerza con plan y progresión',
-    description: 'Planifica gratis a tu manera, o deja que TRAZO genere tu plan completo y lo adapte automáticamente a tu progreso con Premium.',
+    title: 'TRAZO · El motor de entrenamiento de fuerza que se adapta a ti',
+    description: 'TRAZO no es una plantilla: es un motor que genera tu macrociclo, ajusta cargas y series sesión a sesión según cómo respondes y te explica cada cambio. Planificar a mano es gratis.',
     otherLang: 'en', otherPath: '/en', otherLabel: 'English', otherAria: 'Open the English version',
-    eyebrow: 'ADVANCED STRENGTH TRAINING',
-    headA: 'Tu entrenamiento,', headB: 'construido con criterio',
-    lead: 'Planifica gratis a tu manera. Con Premium, TRAZO genera tu plan completo y lo adapta sesión a sesión según cómo respondes al entrenamiento.',
+    eyebrow: 'MOTOR DE ENTRENAMIENTO ADAPTATIVO',
+    headA: 'Tu plan no es una plantilla.', headB: 'Es un motor que se adapta a ti',
+    lead: 'TRAZO construye tu macrociclo completo, ajusta cargas y series sesión a sesión según cómo respondes, y te explica cada cambio. Con días fijos o sin ellos.',
     cta: 'Quiero entrar en la lista de espera',
-    autoTitle: 'Tu plan, generado y adaptado automáticamente',
-    autoLead: 'Dos funciones Premium que se encargan del trabajo duro de la programación.',
-    autoBlocks: [
+    loopTitle: 'Un ciclo que se cierra en cada sesión',
+    loopLead: 'Planificar a mano es gratis. La generación y la adaptación automáticas son Premium.',
+    loop: [
+      { title: 'Genera', text: 'Objetivo, nivel, material y molestias. El motor diseña el macrociclo: fases, descargas, ejercicios y volumen por músculo.' },
+      { title: 'Entrena', text: 'Registras series, cargas y RIR. Ves lo que hiciste la última vez y la carga que toca ahora.' },
+      { title: 'Escucha', text: 'Al terminar cuentas cómo vas: recuperación, esfuerzo, dolor y cómo ha ido cada músculo.' },
+      { title: 'Adapta', text: 'Sube la carga, quita o añade series, programa una descarga. Cada bloque nuevo parte de lo que de verdad levantaste.' }
+    ],
+    pillarsTitle: 'Lo que hace distinto a este motor',
+    pillars: [
+      { title: 'Progresión doble por ejercicio', text: 'Primero repeticiones, luego carga: cuando llegas al tope del rango con margen, sube un escalón. Si todavía no toca, mantiene.' },
+      { title: 'Volumen por músculo', text: 'Las series se reparten hacia el volumen semanal que necesita cada músculo, según tu nivel y el tiempo que tienes.' },
+      { title: 'Recuperación por músculo', text: 'Antes de proponerte la siguiente sesión, comprueba si los músculos que va a trabajar ya están recuperados.', premium: true },
+      { title: 'Descargas cuando toca', text: 'Semanas ligeras programadas y una descarga extra si aparecen fatiga acumulada o un rendimiento a la baja.' },
+      { title: 'El dolor manda', text: 'Si indicas dolor, nunca sube la carga y no automatiza nada: te avisa para que lo revises. Y tus molestias articulares dejan fuera los ejercicios que las agravan.' },
+      { title: 'Cada cambio, explicado', text: 'No es una caja negra: cada ajuste llega con su motivo y queda en el historial de tu plan.' }
+    ],
+    showcase: [
       {
-        badge: 'Premium', title: 'Generación automática',
-        text: 'Responde a unas preguntas y recibe un macrociclo completo, no solo una rutina suelta.',
-        points: [
-          'Fases, semanas de descarga y progresión de cargas ya planificadas',
-          'Ejercicios elegidos según tu objetivo, nivel, material y limitaciones',
-          'Sesiones listas, con series, repeticiones, RIR y descanso',
-          'Cada bloque nuevo se genera a partir de lo que ya has hecho'
-        ]
+        kicker: 'Empieza en un minuto', title: 'Cuéntale cómo entrenas',
+        text: 'Objetivo, nivel, material y molestias. Sin cuestionarios eternos: el motor hace el resto.',
+        points: ['Hipertrofia, fuerza o forma general', 'El material que tienes y las zonas a proteger', 'Duración del plan y semanas de descarga a tu gusto'],
+        premium: true,
+        shots: [shot('es', '10-wizard-goal', 'Objetivo y nivel'), shot('es', '12-wizard-details', 'Material y molestias')]
       },
       {
-        badge: 'Premium', title: 'Adaptación automática',
-        text: 'Registra la sesión y TRAZO ajusta las siguientes según cómo te ha ido, sin que tengas que rehacer el plan.',
-        points: [
-          'Sube la carga cuando progresas y la mantiene cuando todavía no toca',
-          'Reduce series o añade margen si la recuperación o el rendimiento bajan',
-          'Frena la progresión y puede programar una descarga si aparecen fatiga o dolor',
-          'Te explica cada cambio: sabes qué se ha ajustado y por qué'
-        ]
+        kicker: 'Tu semana, tus reglas', title: 'Con días fijos o sin ellos',
+        text: 'Elige un calendario o un ciclo continuo. TRAZO te dice cuál es la siguiente sesión y tú entrenas cuando puedas.',
+        points: ['Las sesiones atrasadas no se pierden ni se omiten solas', 'Aviso de recuperación antes de empezar', 'Sesión de reentrada más ligera si vuelves tras semanas fuera'],
+        shots: [shot('es', '11-wizard-flexible', 'Sin días fijos'), shot('es', '14-plan-sequence', 'Siguiente sesión')]
+      },
+      {
+        kicker: 'Entrena', title: 'Sabe qué hiciste la última vez',
+        text: 'Cada ejercicio muestra tu rendimiento anterior y la carga propuesta. Registrar una serie son dos toques.',
+        points: ['Última vez y carga objetivo en cada ejercicio', 'Temporizador de descanso integrado', 'Funciona aunque pierdas la conexión'],
+        shots: [shot('es', '16-session', 'La sesión, al detalle'), shot('es', '17-workout', 'Registro de series')]
+      },
+      {
+        kicker: 'Adapta', title: 'Después de cada sesión, un plan mejor',
+        text: 'Termina la sesión y el motor te dice qué ha ajustado y por qué. Tu progreso, siempre a la vista.',
+        points: ['Qué se ha cambiado y la razón de cada cambio', 'Récords, racha y series por músculo', 'El bloque completo, con las cargas afinadas semana a semana'],
+        premium: true,
+        shots: [shot('es', '18-adaptation', 'Así se adapta tu plan'), shot('es', '19-progress', 'Tu progreso'), shot('es', '15-block', 'Tu bloque')]
       }
     ],
     featuresTitle: 'Todo lo que necesitas para entrenar con criterio',
@@ -132,6 +153,8 @@ export const LANDING: Record<LandingLang, LandingContent> = {
     pricingNote: 'Precios previstos para el lanzamiento. La planificación manual seguirá siendo gratuita; la generación y la adaptación automáticas serán Premium. Premium incluye 14 días de prueba gratuita.',
     faqTitle: 'Preguntas frecuentes',
     faq: [
+      { q: '¿Es inteligencia artificial?', a: 'No. El motor es determinista y se basa en reglas de entrenamiento: progresión doble, volumen semanal por músculo, recuperación y descargas. No hay texto inventado ni azar oculto: aplica reglas conocidas a tus datos y cada decisión llega con su explicación.' },
+      { q: '¿Puedo entrenar sin días fijos?', a: 'Sí. Puedes elegir un ciclo continuo en lugar de un calendario: TRAZO te dice cuál es la siguiente sesión y entrenas cuando puedas. Las sesiones atrasadas se registran con su fecha real y nunca se omiten solas. Esta opción es gratuita.' },
       { q: '¿Qué es gratis y qué es Premium?', a: 'Gratis: crear tus propios macrociclos, mesociclos y rutinas, registrar entrenamientos, consultar el historial y usar el catálogo. Premium: la generación automática de tu plan y la adaptación automática de tus entrenamientos según tu feedback.' },
       { q: '¿Qué hace exactamente la generación automática?', a: 'A partir de tu objetivo, nivel, días, tiempo, material y limitaciones, TRAZO construye un macrociclo con sus fases y descargas y genera las sesiones de cada bloque a partir de lo que ya has entrenado.' },
       { q: '¿Cómo se adapta mi plan?', a: 'Cada vez que registras una sesión (series, cargas, RIR, recuperación y dolor), TRAZO ajusta las siguientes: modifica la carga, reduce series, añade margen o programa una descarga si hace falta. Siempre te explica qué ha cambiado y por qué.' },
@@ -140,8 +163,6 @@ export const LANDING: Record<LandingLang, LandingContent> = {
       { q: '¿Puedo cancelar cuando quiera?', a: 'Sí, la suscripción se gestiona desde Google Play y puedes cancelarla en cualquier momento.' },
       { q: '¿TRAZO sustituye a un profesional?', a: 'No. TRAZO ofrece planes de entrenamiento orientativos y no sustituye el consejo de un profesional sanitario ni de un entrenador.' }
     ],
-    shotsTitle: 'Así se ve',
-    shots: shots('es', ['Tu semana', 'La sesión, al detalle', 'Registro de series', 'Catálogo']),
     shotAlt: 'Captura de la app TRAZO',
     howTitle: 'Cómo funciona',
     steps: [
@@ -164,35 +185,56 @@ export const LANDING: Record<LandingLang, LandingContent> = {
     terms: 'Condiciones de uso', contact: 'Contacto', admin: 'Acceso administración', skip: 'Saltar al contenido'
   },
   en: {
-    title: 'TRAZO · Strength training with a plan and progression',
-    description: 'Plan your training for free, or let TRAZO generate your full plan and adapt it automatically to your progress with Premium.',
+    title: 'TRAZO · The strength training engine that adapts to you',
+    description: 'TRAZO is not a template: it is an engine that builds your macrocycle, adjusts loads and sets session by session to how you respond, and explains every change. Planning by hand is free.',
     otherLang: 'es', otherPath: '/', otherLabel: 'Español', otherAria: 'Abrir la versión en español',
-    eyebrow: 'ADVANCED STRENGTH TRAINING',
-    headA: 'Your training,', headB: 'engineered with purpose',
-    lead: 'Plan your way for free. With Premium, TRAZO generates your complete plan and adapts it session by session to how you respond to training.',
+    eyebrow: 'ADAPTIVE TRAINING ENGINE',
+    headA: 'Your plan is not a template.', headB: 'It is an engine that adapts to you',
+    lead: 'TRAZO builds your full macrocycle, adjusts loads and sets session by session to how you respond, and explains every change. With fixed days or without them.',
     cta: 'Join the waitlist',
-    autoTitle: 'Your plan, generated and adapted automatically',
-    autoLead: 'Two Premium features that take care of the hard work of programming.',
-    autoBlocks: [
+    loopTitle: 'A loop that closes every session',
+    loopLead: 'Planning by hand is free. Automatic generation and adaptation are Premium.',
+    loop: [
+      { title: 'Generate', text: 'Goal, level, equipment and aches. The engine designs the macrocycle: phases, deloads, exercises and volume per muscle.' },
+      { title: 'Train', text: 'You log sets, loads and RIR. You see what you did last time and the load that is due now.' },
+      { title: 'Listen', text: 'When you finish you say how it went: recovery, effort, pain and how each muscle responded.' },
+      { title: 'Adapt', text: 'It raises the load, cuts or adds sets, schedules a deload. Every new block starts from what you really lifted.' }
+    ],
+    pillarsTitle: 'What makes this engine different',
+    pillars: [
+      { title: 'Double progression per exercise', text: 'Reps first, then load: when you reach the top of the range with margin to spare, it goes up one step. If it is not time yet, it holds.' },
+      { title: 'Volume per muscle', text: 'Sets are distributed towards the weekly volume each muscle needs, for your level and the time you have.' },
+      { title: 'Recovery per muscle', text: 'Before suggesting your next session, it checks whether the muscles it will work have recovered.', premium: true },
+      { title: 'Deloads when due', text: 'Scheduled light weeks, plus an extra deload if accumulated fatigue or falling performance shows up.' },
+      { title: 'Pain comes first', text: 'If you report pain, it never raises the load and automates nothing: it flags it for you to review. And your joint aches rule out the exercises that aggravate them.' },
+      { title: 'Every change, explained', text: 'It is not a black box: each adjustment comes with its reason and stays in your plan history.' }
+    ],
+    showcase: [
       {
-        badge: 'Premium', title: 'Automatic generation',
-        text: 'Answer a few questions and get a complete macrocycle, not just a loose routine.',
-        points: [
-          'Phases, deload weeks and load progression already planned',
-          'Exercises chosen for your goal, level, equipment and limitations',
-          'Ready-made sessions with sets, reps, RIR and rest',
-          'Every new block is generated from what you have already done'
-        ]
+        kicker: 'Start in a minute', title: 'Tell it how you train',
+        text: 'Goal, level, equipment and aches. No endless questionnaires: the engine does the rest.',
+        points: ['Muscle growth, strength or general fitness', 'The equipment you have and the areas to protect', 'Plan length and deload weeks the way you like'],
+        premium: true,
+        shots: [shot('en', '10-wizard-goal', 'Goal and level'), shot('en', '12-wizard-details', 'Equipment and aches')]
       },
       {
-        badge: 'Premium', title: 'Automatic adaptation',
-        text: 'Log your session and TRAZO adjusts the next ones to how it went, without you having to rebuild the plan.',
-        points: [
-          'Raises the load when you progress and holds it when it is not time yet',
-          'Cuts sets or adds margin when recovery or performance drops',
-          'Slows progression and can schedule a deload when fatigue or pain show up',
-          'Explains every change: you know what was adjusted and why'
-        ]
+        kicker: 'Your week, your rules', title: 'With fixed days or without them',
+        text: 'Pick a calendar or a continuous cycle. TRAZO tells you which session comes next and you train when you can.',
+        points: ['Late sessions are never lost or skipped on their own', 'Recovery advice before you start', 'A lighter re-entry session if you come back after weeks away'],
+        shots: [shot('en', '11-wizard-flexible', 'No fixed days'), shot('en', '14-plan-sequence', 'Next session')]
+      },
+      {
+        kicker: 'Train', title: 'It knows what you did last time',
+        text: 'Every exercise shows your previous performance and the suggested load. Logging a set takes two taps.',
+        points: ['Last time and target load on every exercise', 'Built-in rest timer', 'Works even when you lose connection'],
+        shots: [shot('en', '16-session', 'Session in detail'), shot('en', '17-workout', 'Set logging')]
+      },
+      {
+        kicker: 'Adapt', title: 'After every session, a better plan',
+        text: 'Finish the session and the engine tells you what it adjusted and why. Your progress, always in view.',
+        points: ['What changed and the reason for each change', 'Records, streak and sets per muscle', 'The whole block, with loads fine-tuned week by week'],
+        premium: true,
+        shots: [shot('en', '18-adaptation', 'How your plan adapts'), shot('en', '19-progress', 'Your progress'), shot('en', '15-block', 'Your block')]
       }
     ],
     featuresTitle: 'Everything you need to train with purpose',
@@ -231,6 +273,8 @@ export const LANDING: Record<LandingLang, LandingContent> = {
     pricingNote: 'Planned launch pricing. Manual planning will remain free; automatic generation and adaptation will be Premium. Premium includes a 14-day free trial.',
     faqTitle: 'Frequently asked questions',
     faq: [
+      { q: 'Is it artificial intelligence?', a: 'No. The engine is deterministic and built on training rules: double progression, weekly volume per muscle, recovery and deloads. There is no made-up text or hidden randomness: it applies known rules to your data and every decision comes with its explanation.' },
+      { q: 'Can I train without fixed days?', a: 'Yes. You can choose a continuous cycle instead of a calendar: TRAZO tells you which session comes next and you train when you can. Late sessions are logged with their real date and are never skipped on their own. This option is free.' },
       { q: 'What is free and what is Premium?', a: 'Free: build your own macrocycles, mesocycles and routines, log workouts, view your history and use the catalogue. Premium: automatic generation of your plan and automatic adaptation of your workouts from your feedback.' },
       { q: 'What exactly does automatic generation do?', a: 'From your goal, level, days, time, equipment and limitations, TRAZO builds a macrocycle with its phases and deloads and generates the sessions of each block from what you have already trained.' },
       { q: 'How does my plan adapt?', a: 'Each time you log a session (sets, loads, RIR, recovery and pain), TRAZO adjusts the next ones: it changes the load, cuts sets, adds margin or schedules a deload when needed. It always explains what changed and why.' },
@@ -239,8 +283,6 @@ export const LANDING: Record<LandingLang, LandingContent> = {
       { q: 'Can I cancel any time?', a: 'Yes, the subscription is managed through Google Play and you can cancel it at any time.' },
       { q: 'Does TRAZO replace a professional?', a: 'No. TRAZO provides general training plans and does not replace the advice of a healthcare professional or a coach.' }
     ],
-    shotsTitle: 'See it in action',
-    shots: shots('en', ['Your week', 'Session in detail', 'Set logging', 'Catalogue']),
     shotAlt: 'TRAZO app screenshot',
     howTitle: 'How it works',
     steps: [

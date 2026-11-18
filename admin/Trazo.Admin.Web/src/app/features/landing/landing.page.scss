@@ -98,3 +98,35 @@ footer a{color:var(--muted)}
   .price-card{padding:24px}
 }
 .hint{font-weight:400;font-size:.85rem;color:var(--muted);line-height:1.45}
+
+h2.centered{text-align:center}
+.loop{counter-reset:l;list-style:none;padding:0;margin:34px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.loop li{counter-increment:l;position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
+.loop li::before{content:counter(l);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--blue));color:#00201b;font-weight:800;margin-bottom:12px}
+.loop li:not(:last-child)::after{content:"→";position:absolute;right:-16px;top:30px;color:var(--teal);font-weight:800;z-index:1}
+.loop p{margin:0;color:var(--muted);font-size:.96rem}
+.showcase .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
+.showcase .row.flip .copy{order:2}
+.showcase .copy .lead{margin-bottom:20px}
+.points{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+.points li{position:relative;padding-left:25px;font-size:.98rem}
+.points li::before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:800}
+.phones{display:flex;gap:22px;justify-content:center;align-items:flex-start}
+.phones figure{margin:0;flex:1 1 0;max-width:250px}
+.phones figure:nth-child(even){margin-top:36px}
+.phones.three figure{max-width:200px}
+.phones figcaption{color:var(--muted);font-size:.9rem;text-align:center;margin-top:12px}
+.phones .phone{padding:6px;border-radius:26px}
+.phones .shot{border-radius:21px}
+.eyebrow .plan-badge{margin-left:8px}
+@media (max-width:860px){
+  .loop{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .loop li::after{display:none}
+  .showcase .row{grid-template-columns:minmax(0,1fr);gap:34px}
+  .showcase .row.flip .copy{order:0}
+}
+@media (max-width:520px){
+  .loop{grid-template-columns:1fr}
+  .phones{gap:14px}
+  .phones.three figure{max-width:120px}
+}
