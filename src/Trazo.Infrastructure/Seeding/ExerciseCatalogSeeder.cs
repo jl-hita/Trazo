@@ -85,7 +85,7 @@ public sealed class ExerciseCatalogSeeder(
                 // Admin-edited rows have UpdatedAt != CreatedAt and are never overwritten.
                 if (existing.Source == Source && existing.SeedVersion < entry.Version && existing.UpdatedAt == existing.CreatedAt)
                 {
-                    existing.RequiredEquipment = entry.RequiredEquipment;
+                    existing.RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment);
                     existing.SeedVersion = entry.Version;
                     existing.UpdatedAt = now;
                     updated++;
@@ -115,7 +115,7 @@ public sealed class ExerciseCatalogSeeder(
                 SecondaryMuscles = entry.SecondaryMuscles,
                 MinimumExperience = entry.MinimumExperience,
                 SuitableGoals = entry.SuitableGoals,
-                RequiredEquipment = entry.RequiredEquipment,
+                RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment),
                 SelectionPriority = entry.SelectionPriority,
                 SeedVersion = entry.Version,
                 CreatedAt = now,
