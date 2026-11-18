@@ -10,6 +10,7 @@ namespace Trazo.Infrastructure.Persistence;
 public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : DbContext(options)
 {
     public DbSet<ExerciseCatalogItem> ExerciseCatalog => Set<ExerciseCatalogItem>();
+    public DbSet<ExerciseCatalogTranslation> ExerciseCatalogTranslations => Set<ExerciseCatalogTranslation>();
     public DbSet<TrazoUser> Users => Set<TrazoUser>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<AuthChallenge> AuthChallenges => Set<AuthChallenge>();
