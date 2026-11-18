@@ -66,12 +66,6 @@ export interface CampaignDetail {
   days: { day: string; clicks: number; installs: number; signups: number; spend: number }[];
 }
 
-export interface ReferralReport {
-  codesCreated: number; shares: number; linkOpens: number; installsAttributed: number; attributed: number; rewarded: number; voided: number;
-  rewardDaysGranted: number; linkToRegistered: number | null; registeredToPaid: number | null; paidMonthly: number; paidAnnual: number;
-  renewedAtLeastOnce: number; renewedAtLeastThree: number; topCodes: { key: string; users: number; paid: number }[];
-}
-
 export interface DownloadWeek { week: string; downloads: number | null; signups: number; downloadToSignup: number | null; note: string | null; }
 export interface DownloadsReport {
   weeks: DownloadWeek[]; downloads: number; signupsInThoseWeeks: number; downloadToSignup: number | null; unregisteredInstalls: number;
@@ -123,7 +117,6 @@ export class MarketingApi {
   }
   deleteDownloads(week: string): Promise<void> { return firstValueFrom(this.http.delete<void>(`${API}/downloads/${week}`)); }
   waitlist(): Promise<WaitlistReport> { return firstValueFrom(this.http.get<WaitlistReport>(`${API}/waitlist`)); }
-  referrals(r: Range): Promise<ReferralReport> { return firstValueFrom(this.http.get<ReferralReport>(`${API}/referrals`, { params: this.params(r) })); }
 
   campaigns(): Promise<{ items: CampaignItem[] }> { return firstValueFrom(this.http.get<{ items: CampaignItem[] }>(`${API}/campaigns`)); }
   createCampaign(input: CampaignInput): Promise<CampaignItem> { return firstValueFrom(this.http.post<CampaignItem>(`${API}/campaigns`, input)); }
