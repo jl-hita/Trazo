@@ -70,7 +70,8 @@ public sealed class ExerciseCatalogSeeder(
                 entry.InstructionsEs.Any(string.IsNullOrWhiteSpace) ||
                 entry.PrimaryMuscles.Length == 0 ||
                 entry.SuitableGoals.Length == 0 ||
-                entry.SelectionPriority is < 0 or > 100)
+                entry.SelectionPriority is < 0 or > 100 ||
+                entry.RequiredEquipment.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
             {
                 throw new InvalidDataException($"Exercise seed entry '{entry.Id}' failed validation.");
             }
