@@ -56,7 +56,7 @@ public sealed class ExerciseCatalogTranslationResolverTests
         Assert.Equal(EsInstructions, result.Instructions);
         Assert.Equal(EsTips, result.Tips);
         Assert.False(result.IsCompleteForRequestedLanguage);
-        Assert.Equal(["description", "instructions", "tips"], result.MissingFields);
+        Assert.Equal(["name", "description", "instructions", "tips"], result.MissingFields);
     }
 
     [Fact]
