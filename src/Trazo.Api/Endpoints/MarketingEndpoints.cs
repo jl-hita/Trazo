@@ -61,9 +61,6 @@ public static partial class MarketingEndpoints
         g.MapDelete("/downloads/{week}", (DateOnly week, IDownloadsService s, CancellationToken ct) =>
             Run(async () => { await s.DeleteAsync(week, ct); return Results.NoContent(); }));
         g.MapGet("/waitlist", (IMarketingAnalytics a, CancellationToken ct) => Run(async () => Results.Ok(await a.WaitlistAsync(ct))));
-        g.MapGet("/referrals", (Trazo.Infrastructure.Growth.IGrowthAnalytics a, TimeProvider clock, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct) =>
-            Run(async () => { var (f, t) = Period(from, to, clock); return Results.Ok(await a.ReferralsAsync(f, t, ct)); }));
-
         g.MapGet("/campaigns", (ICampaignService s, HttpContext http, IRuntimeSettings settings, CancellationToken ct) =>
             Run(async () =>
             {
