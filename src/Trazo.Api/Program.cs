@@ -127,6 +127,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(SetupEndpoints.StaffPolicy, p => p.RequireRole("admin", "superadmin"));
     options.AddPolicy(SetupEndpoints.FiscalPolicy, p => p.RequireRole("superadmin", "accountant"));
     options.AddPolicy(SetupEndpoints.MarketingPolicy, p => p.RequireRole("superadmin", "commercial"));
+    // The commercial role can administer referrals; unrelated admin settings remain superadmin-only.
+    options.AddPolicy(ReferralEndpoints.ManagementPolicy, p => p.RequireRole("superadmin", "commercial"));
 });
 // Limits come from the runtime settings (database > environment > default) and are read on every request, so a
 // change applies without a restart. The limit is part of the partition key: a new limit starts a fresh window.
