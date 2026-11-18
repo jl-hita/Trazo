@@ -9,8 +9,13 @@ Before the API starts accepting requests, startup runs these steps in order:
 3. Load `Seeds/exercise-catalog-additions.json`.
 4. Validate every seed entry and insert missing exercises.
 5. Preserve existing exercise rows so administrator curation is never overwritten.
+6. Export the complete database-backed catalog to `/var/lib/trazo/artifacts/exercise-catalog.json`.
 
 The seed runs on every startup, but inserts only missing stable exercise IDs. A PostgreSQL transaction-level advisory lock prevents two API instances from racing during initial seeding. A missing or invalid seed is a startup error rather than silently leaving an empty catalog.
+
+After all catalog seeders have completed, startup writes `exercise-catalog.json` from the effective PostgreSQL catalog. It includes active and inactive exercises, all catalog fields (including both `Equipment` and `RequiredEquipment`), a schema version, generation timestamp, and total/active counts. This captures administrator edits as well as imported and curated entries. The file is written to a temporary file and atomically replaced, so a failed write does not leave a partial artifact.
+
+The default path is `/var/lib/trazo/artifacts/exercise-catalog.json`. Override it with `ExerciseCatalogArtifact__Path` if needed. The TRAZO systemd unit already grants the service write access to `/var/lib/trazo`; no HTTP endpoint is added.
 
 ## What is included in this seed
 
