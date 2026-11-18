@@ -1342,13 +1342,13 @@ public sealed record TrainingProgramGenerationRequest(
     TrainingProgramSplit Split = TrainingProgramSplit.Automatic,
     int? RotationIndex = null,
     IReadOnlyList<TrainingLoadReference>? LoadReferences = null,
-    bool IsSequence = false,
     // History of the previous block of the same plan (filled by the server, never trusted for safety):
     // exercises it used, and whether this block directly continues a non-deload block.
     IReadOnlyList<string>? PreviousBlockExerciseIds = null,
     bool ContinuesPreviousBlock = false,
     // Seed of the plan, the same for every block. It only orders candidates that are equally good.
-    int SelectionSeed = 0);
+    int SelectionSeed = 0,
+    bool IsSequence = false);
 
 public sealed record TrainingExerciseCandidate(
     string ExerciseId,
