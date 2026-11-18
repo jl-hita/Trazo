@@ -37,7 +37,7 @@ for s in "$STAGE" "$WEB_STAGE"; do
   [[ -z "$(find "$s" -type l -print -quit)" ]] || fail "el staging $s no puede contener enlaces simbólicos."
 done
 [[ -f "$STAGE/Trazo.Api.dll" ]] || fail "falta Trazo.Api.dll en la publicación."
-[[ -f "$STAGE/Seeds/exercise-catalog-additions.json" ]] || fail "falta Seeds/exercise-catalog-additions.json en la publicación."
+[[ -f "$STAGE/Seeds/exercise-catalog.json" ]] || fail "falta Seeds/exercise-catalog.json en la publicación."
 [[ -f "$WEB_STAGE/index.html" ]] || fail "falta index.html en el frontend compilado."
 command -v flock >/dev/null
 command -v curl >/dev/null
