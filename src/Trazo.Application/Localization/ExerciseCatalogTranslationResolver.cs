@@ -31,14 +31,16 @@ public static class ExerciseCatalogTranslationResolver
         string[] legacyTipsEs)
     {
         var requested = NormalizeLanguage(requestedLanguage);
-        var rows = translations.ToDictionary(x => NormalizeLanguage(x.LanguageCode), StringComparer.OrdinalIgnoreCase);
+        var rows = translations.GroupBy(x => NormalizeLanguage(x.LanguageCode), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.OrderByDescending(x => x.Status == "published").First(), StringComparer.OrdinalIgnoreCase);
         rows.TryGetValue(requested, out var selected);
         rows.TryGetValue("es", out var spanish);
 
-        var name = PublishedValue(selected?.Name);
-        var description = PublishedValue(selected?.Description);
-        var instructions = PublishedArray(selected?.Instructions);
-        var tips = PublishedArray(selected?.Tips);
+        var selectedIsPublished = selected?.Status == "published";
+        var name = PublishedValue(selectedIsPublished ? selected?.Name : null);
+        var description = PublishedValue(selectedIsPublished ? selected?.Description : null);
+        var instructions = PublishedArray(selectedIsPublished ? selected?.Instructions : null);
+        var tips = PublishedArray(selectedIsPublished ? selected?.Tips : null);
 
         var nameLanguage = requested;
         var descriptionLanguage = requested;
