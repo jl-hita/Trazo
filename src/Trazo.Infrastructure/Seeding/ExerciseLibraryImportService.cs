@@ -164,7 +164,8 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         var equipment = StringArray(e, "requiredEquipment") ?? (OptionalString(e, "equipment") is { Length: > 0 } item ? [item] : []);
         var priority = OptionalInt(e, "selectionPriority") ?? 50;
         if (string.IsNullOrWhiteSpace(pattern) || primary.Length == 0 || goals.Length == 0 ||
-            instructions.Length == 0 || priority is < 0 or > 100)
+            instructions.Length == 0 || priority is < 0 or > 100 ||
+            equipment.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
             throw new InvalidDataException($"Approved exercise '{id}' is missing required reviewed metadata.");
 
         const string sql = """
