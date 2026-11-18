@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Trazo.Application.Planning;
 using Trazo.Training;
 using Xunit;
@@ -118,6 +120,70 @@ public sealed class AdaptationHistoryTests() : PlansApiBase(enforced: true)
         var client = ClientFor(await AddUserAsync("hist-none@example.com", subscribed: true));
         Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync("/api/v1/plans/current/adaptations")).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync("/api/v1/plans/current/adaptations?take=0")).StatusCode);
+    }
+
+    [Fact]
+    public async Task ByDefaultOnlyTheBlockInProgressShows_AndThePlanScopeShowsEverything()
+    {
+        var client = await StartAsync("hist-scope@example.com", premium: true);
+        var sessions = await BlockAsync(client);
+        Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, sessions[0])).StatusCode);
+
+        var block = await JsonAsync(await client.GetAsync("/api/v1/plans/current/adaptations"));
+        Assert.Equal("block", block.GetProperty("scope").GetString());
+        var all = await JsonAsync(await client.GetAsync("/api/v1/plans/current/adaptations?scope=plan"));
+        Assert.Equal("plan", all.GetProperty("scope").GetString());
+        // A single block plan: nothing is hidden and nothing is "earlier".
+        Assert.Equal(all.GetProperty("entries").GetArrayLength(), block.GetProperty("entries").GetArrayLength());
+        Assert.False(block.GetProperty("hasEarlier").GetBoolean());
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync("/api/v1/plans/current/adaptations?scope=month")).StatusCode);
+    }
+
+    [Fact]
+    public async Task OnceTheNextBlockStartsTheEarlierOnesAreOffered_NotShown()
+    {
+        var client = await StartAsync("hist-blocks@example.com", premium: true);
+        var sessions = await BlockAsync(client);
+        Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, sessions[0])).StatusCode);
+        var firstBlockEntries = (await AdaptationsAsync(client)).GetProperty("entries").GetArrayLength();
+        Assert.True(firstBlockEntries > 0);
+
+        // The first session now belongs to an earlier block and the rest to the block in progress.
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Persistence.TrazoDbContext>();
+            var first = await db.PlannedSessions.OrderBy(x => x.SequenceIndex).FirstAsync();
+            var current = await db.TrainingMesocycles.FirstAsync();
+            var earlier = new Trazo.Domain.Planning.TrainingMesocycle
+            {
+                Id = Guid.NewGuid(), PlanId = current.PlanId, Sequence = 0, PhaseSequenceNumber = 0, PhaseType = current.PhaseType,
+                StartWeek = 0, Weeks = 1, CreatedAt = Now
+            };
+            db.TrainingMesocycles.Add(earlier);
+            await db.SaveChangesAsync();
+            first.MesocycleId = earlier.Id;
+            await db.SaveChangesAsync();
+        }
+
+        var block = await AdaptationsAsync(client);
+        Assert.Equal(0, block.GetProperty("entries").GetArrayLength());
+        Assert.True(block.GetProperty("hasEarlier").GetBoolean());
+        var all = await JsonAsync(await client.GetAsync("/api/v1/plans/current/adaptations?scope=plan"));
+        Assert.Equal(firstBlockEntries, all.GetProperty("entries").GetArrayLength());
+        Assert.Equal(all.GetProperty("changes").GetInt32(), block.GetProperty("planChanges").GetInt32());
+    }
+
+    [Fact]
+    public async Task ArchivingThePlanLeavesTheAdjustmentsOutOfTheNextOne()
+    {
+        var client = await StartAsync("hist-archive@example.com", premium: true);
+        var sessions = await BlockAsync(client);
+        Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, sessions[0])).StatusCode);
+        Assert.NotEmpty((await AdaptationsAsync(client)).GetProperty("entries").EnumerateArray());
+
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PostAsync("/api/v1/plans/current/archive", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", Manual())).StatusCode);
+        Assert.Empty((await AdaptationsAsync(client)).GetProperty("entries").EnumerateArray());
     }
 
     // ------------------------------------------------------------------ load estimation
