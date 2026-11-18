@@ -239,13 +239,14 @@ public sealed class FlexibleRegistrationTests() : PlansApiBase(enforced: false)
         var (client, sessions) = await StartAsync();
         Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, sessions[3], Now.AddDays(-1))).StatusCode); // newest evidence
         var beforeLate = await BlockSessionsAsync(client); // includes the load carried over by that first log
+        var auditBeforeLate = (await AuditAsync()).Count; // that first log is the newest evidence: it may leave its own decisions
         JsonElement last = default;
         for (var i = 0; i < 3; i++) // the same stressed trio, but they happened BEFORE what is already saved
             last = await JsonAsync(await LogAsync(client, sessions[i], Now.AddDays(-6 + i), stressed: true));
         var report = last.GetProperty("adaptation");
         Assert.Empty(report.GetProperty("applied").EnumerateArray());
         Assert.Contains(report.GetProperty("notes").EnumerateArray(), n => n.GetString()!.Contains("anterior"));
-        Assert.Empty(await AuditAsync());
+        Assert.Equal(auditBeforeLate, (await AuditAsync()).Count); // the late ones change nothing and decide nothing
         var after = await BlockSessionsAsync(client);
         Assert.Equal(beforeLate.Skip(4).Select(s => s.GetProperty("exercises").ToString()), after.Skip(4).Select(s => s.GetProperty("exercises").ToString()));
     }

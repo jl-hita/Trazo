@@ -61,6 +61,9 @@ public static class PlansEndpoints
         group.MapGet("/current/history", GetHistoryAsync).WithName("GetPlanHistory")
             .WithSummary("The sessions the user has logged, newest first.")
             .Produces<IReadOnlyList<HistoryItem>>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/current/adaptations", GetAdaptationsAsync).WithName("GetPlanAdaptations")
+            .WithSummary("What the engine adjusted in the plan and why (sets, reserve, loads, deloads, absences, omissions), newest first, plus the sessions it reviewed and left as they were.")
+            .Produces<AdaptationHistoryView>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current/load", GetLoadAsync).WithName("GetPlanLoad")
             .WithSummary("Weekly volume (sets) of every week of the plan: planned (only for the blocks already generated) against completed (weeks already reached).")
             .Produces<PlanLoadView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -169,6 +172,14 @@ public static class PlansEndpoints
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         if (take is < 1 or > 100) return Results.ValidationProblem(new Dictionary<string, string[]> { ["take"] = ["Debe estar entre 1 y 100."] });
         return await plans.GetHistoryAsync(userId, take, ct) is { } items ? Results.Ok(items) : NoPlan();
+    }
+
+    private static async Task<IResult> GetAdaptationsAsync(
+        ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct, int take = 30)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        if (take is < 1 or > 100) return Results.ValidationProblem(new Dictionary<string, string[]> { ["take"] = ["Debe estar entre 1 y 100."] });
+        return await plans.GetAdaptationsAsync(userId, take, ct) is { } history ? Results.Ok(history) : NoPlan();
     }
 
     private static async Task<IResult> GetLoadAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
