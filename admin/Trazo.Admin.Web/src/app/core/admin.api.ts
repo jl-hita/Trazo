@@ -417,7 +417,7 @@ export class AdminApi {
   }
 
   getReferrals(params: { status?: string; incidents?: boolean; page?: number; pageSize?: number }): Promise<{ total: number; page: number; pageSize: number; items: any[] }> {
-    return firstValueFrom(this.http.get<{ total: number; page: number; pageSize: number; items: any[] }>(`${API}/referrals`, { params: this.query({ ...params, page: params.page ?? 1, pageSize: params.pageSize ?? 25 }) }));
+    return firstValueFrom(this.http.get<{ total: number; page: number; pageSize: number; items: any[] }>(`${API}/referrals`, { params: this.query({ ...params, page: String(params.page ?? 1), pageSize: String(params.pageSize ?? 25) }) }));
   }
 
   getUserLedger(userId: string): Promise<{ items: any[] }> {
