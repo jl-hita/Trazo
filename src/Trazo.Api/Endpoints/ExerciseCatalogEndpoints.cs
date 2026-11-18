@@ -25,6 +25,10 @@ public static class ExerciseCatalogEndpoints
             .WithSummary("Vocabulary of the catalog filters (movement patterns, muscles, equipment, levels) with Spanish labels and counts.")
             .Produces<ExerciseFilterOptions>();
 
+        group.MapGet("/{id}/localized", GetLocalizedByIdAsync)
+            .WithName("GetLocalizedExerciseById")
+            .WithSummary("Get exercise text resolved for the request language, with field-level Spanish fallback.");
+
         group.MapGet("/{id}", GetByIdAsync)
             .WithName("GetExerciseById")
             .WithSummary("Get the complete details of one exercise.");
@@ -168,6 +172,31 @@ public static class ExerciseCatalogEndpoints
         http.Response.Headers.ETag = etag;
         if (http.Request.Headers.IfNoneMatch.ToString() == etag) return Results.StatusCode(StatusCodes.Status304NotModified);
         return Results.Ok(options);
+    }
+
+    private static async Task<IResult> GetLocalizedByIdAsync(
+        string id,
+        TrazoDbContext db,
+        Trazo.Application.Localization.RequestLanguage requestLanguage,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(id) || id.Length > 100)
+            return ApiErrors.BadRequest(new { error = "A valid exercise ID is required." });
+
+        var exercise = await db.ExerciseCatalog.AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id && x.IsActive, cancellationToken);
+        if (exercise is null) return Results.NotFound();
+
+        var translations = await db.ExerciseCatalogTranslations.AsNoTracking()
+            .Where(x => x.ExerciseId == id)
+            .ToListAsync(cancellationToken);
+
+        var language = requestLanguage.Current == Trazo.Application.Localization.AppLanguage.En ? "en" : "es";
+        var resolved = Trazo.Application.Localization.ExerciseCatalogTranslationResolver.Resolve(
+            language, translations, exercise.NameEs, exercise.NameEn, exercise.DescriptionEs,
+            exercise.InstructionsEs, exercise.TipsEs);
+
+        return Results.Ok(resolved);
     }
 
     private static async Task<IResult> GetByIdAsync(
