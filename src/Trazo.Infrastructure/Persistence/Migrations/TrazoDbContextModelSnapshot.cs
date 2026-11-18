@@ -39,7 +39,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("NormalizedEmail").IsUnique();
             b.HasIndex("GoogleSubject").IsUnique();
             b.HasIndex("Role");
-            b.ToTable("users");
+            b.ToTable("users", t => t.HasCheckConstraint("CK_users_role", "\"Role\" IN ('user', 'admin', 'accountant', 'commercial', 'superadmin')"));
         });
 
         modelBuilder.Entity("Trazo.Domain.Identity.EmailActionToken", b =>

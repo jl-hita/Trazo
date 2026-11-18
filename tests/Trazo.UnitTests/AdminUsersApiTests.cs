@@ -138,6 +138,34 @@ public sealed class AdminUsersApiTests : IDisposable
     }
 
     [Fact]
+    public async Task ChangingUsersToCommercialAccountantAndAdminRoles_PersistsAndReturnsTheUpdatedUser()
+    {
+        var superadmin = await AddUserAsync("root@example.com", "superadmin");
+        var commercial = await AddUserAsync("commercial@example.com");
+        var accountant = await AddUserAsync("accountant@example.com");
+        var administrator = await AddUserAsync("administrator@example.com");
+        var client = ClientFor(superadmin);
+
+        foreach (var (user, role) in new[]
+        {
+            (commercial, "commercial"),
+            (accountant, "accountant"),
+            (administrator, "admin")
+        })
+        {
+            var response = await client.PatchAsJsonAsync($"/api/v1/admin/users/{user.Id}", new { role });
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var detail = await JsonAsync(response);
+            Assert.Equal(role, detail.GetProperty("role").GetString());
+
+            var listed = await JsonAsync(await client.GetAsync($"/api/v1/admin/users?role={role}"));
+            Assert.Contains(listed.GetProperty("items").EnumerateArray(),
+                item => item.GetProperty("id").GetGuid() == user.Id);
+        }
+    }
+
+    [Fact]
     public async Task DisablingAnAccount_BlocksTokensRefreshAndLogin_UntilItIsEnabled()
     {
         var admin = await AddUserAsync("root@example.com", "superadmin");
