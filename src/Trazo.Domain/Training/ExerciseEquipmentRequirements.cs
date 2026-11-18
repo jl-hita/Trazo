@@ -44,7 +44,6 @@ public static class ExerciseEquipmentRequirements
             ["paused-bench-press"] = ["barbell", "bench", "squat-rack"],
             ["ohp"] = ["barbell", "squat-rack"],
             ["push-press"] = ["barbell", "squat-rack"],
-            ["latpulldown"] = ["lat-pulldown-machine"],
             ["lat-pulldown"] = ["lat-pulldown-machine"],
             ["step-ups"] = ["step"]
         };
