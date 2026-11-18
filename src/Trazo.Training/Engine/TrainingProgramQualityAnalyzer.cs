@@ -124,7 +124,7 @@ public static class TrainingProgramQualityAnalyzer
     /// sessions spans: 1 for the weeks of a calendar plan; K/N for the rotation of a sequence plan (K sessions in the cycle, N sessions
     /// in seven days), whose volumes stay as prescribed per rotation and whose thresholds are judged per seven days.
     /// </summary>
-    public static TrainingProgramQualityReport Analyze(TrainingProgramPrescription plan, decimal weeksPerGroup = 1m)
+    public static TrainingProgramQualityReport Analyze(TrainingProgramPrescription plan, decimal weeksPerGroup = 1m, bool rotation = false)
     {
         ArgumentNullException.ThrowIfNull(plan);
         var weeklyVolumes = new List<TrainingWeeklyMuscleVolume>();
@@ -175,7 +175,7 @@ public static class TrainingProgramQualityAnalyzer
                 muscles.Add(new TrainingMuscleVolume(muscle, primarySets, secondarySets,
                     primaryFrequency, secondaryFrequency, estimatedEffectiveSets));
                 if (estimatedEffectiveSets / weeksPerGroup > HighEffectiveSetReviewThreshold)
-                    warnings.Add($"{GroupLabel(week, weeksPerGroup)}: {muscle} acumula {estimatedEffectiveSets:0.##} series con estímulo efectivo estimado; revisa volumen, rendimiento y recuperación.");
+                    warnings.Add($"{GroupLabel(week, rotation)}: {muscle} acumula {estimatedEffectiveSets:0.##} series con estímulo efectivo estimado; revisa volumen, rendimiento y recuperación.");
             }
 
             foreach (var session in sessions)
@@ -196,7 +196,7 @@ public static class TrainingProgramQualityAnalyzer
 
                 var sessionWorkingSets = session.Exercises.Sum(exercise => exercise.Sets);
                 if (sessionWorkingSets > HighSessionWorkingSetReviewThreshold)
-                    warnings.Add($"{GroupLabel(week, weeksPerGroup)}: '{session.Title}' concentra {sessionWorkingSets} series de trabajo. Supera el umbral interno de revisión de {HighSessionWorkingSetReviewThreshold} series por sesión; no es un límite fisiológico ni una cifra prescrita por ACSM. Revisa la fatiga intra-sesión y la posible redistribución semanal.");
+                    warnings.Add($"{GroupLabel(week, rotation)}: '{session.Title}' concentra {sessionWorkingSets} series de trabajo. Supera el umbral interno de revisión de {HighSessionWorkingSetReviewThreshold} series por sesión; no es un límite fisiológico ni una cifra prescrita por ACSM. Revisa la fatiga intra-sesión y la posible redistribución semanal.");
             }
 
             var isStrengthGoal = string.Equals(plan.Goal, "Strength", StringComparison.OrdinalIgnoreCase);
@@ -213,7 +213,7 @@ public static class TrainingProgramQualityAnalyzer
                             exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
                             .Contains(muscle)));
                     if (effectiveFrequency > 0 && effectiveFrequency / weeksPerGroup < 2m)
-                        warnings.Add($"{GroupLabel(week, weeksPerGroup)}: {muscle} recibe estímulo efectivo en {(weeksPerGroup == 1m ? "1 sesión" : $"{effectiveFrequency / weeksPerGroup:0.#} sesiones por semana")}. ACSM 2026 destaca al menos dos sesiones semanales de entrenamiento de fuerza; aplicar esa frecuencia a cada músculo es una heurística interna de revisión, no un mínimo universal ni una recomendación de frecuencia para hipertrofia. Revisa la distribución del split.");
+                        warnings.Add($"{GroupLabel(week, rotation)}: {muscle} recibe estímulo efectivo en {(!rotation ? "1 sesión" : $"{effectiveFrequency / weeksPerGroup:0.#} sesiones por semana")}. ACSM 2026 destaca al menos dos sesiones semanales de entrenamiento de fuerza; aplicar esa frecuencia a cada músculo es una heurística interna de revisión, no un mínimo universal ni una recomendación de frecuencia para hipertrofia. Revisa la distribución del split.");
                 }
             }
 
@@ -234,7 +234,7 @@ public static class TrainingProgramQualityAnalyzer
             weeksPerGroup);
     }
 
-    private static string GroupLabel(int week, decimal weeksPerGroup) => weeksPerGroup == 1m ? $"Semana {week}" : "Rotación";
+    private static string GroupLabel(int week, bool rotation) => rotation ? "Rotación" : $"Semana {week}";
 }
 
 public sealed record TrainingProgramQualityReport(

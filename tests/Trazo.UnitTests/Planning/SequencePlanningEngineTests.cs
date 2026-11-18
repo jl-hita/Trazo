@@ -256,6 +256,15 @@ public sealed class SequencePlanningEngineTests
     }
 
     [Fact]
+    public void ASequencePlanNeverTalksAboutWeeksInItsWarnings_EvenWhenAPeriodHoldsAWholeCycle()
+    {
+        var result = Generate(Sequence(TrainingGoal.Hypertrophy, TrainingExperience.Intermediate, 2, TrainingProgramSplit.Automatic));
+        Assert.True(result.Succeeded);
+        Assert.NotEmpty(result.Quality!.Warnings);
+        Assert.DoesNotContain(result.Quality.Warnings, w => w.StartsWith("Semana", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void AGivenSeedAndPositionAlwaysGiveTheSamePlan()
     {
         var profile = Sequence(TrainingGoal.Strength, TrainingExperience.Advanced, 5, TrainingProgramSplit.Automatic);

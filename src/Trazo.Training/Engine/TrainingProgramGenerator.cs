@@ -289,7 +289,7 @@ public static class TrainingProgramGenerator
             prescribedSessions);
         // A sequence plan has no weekly groups: its report describes one pass through the rotation, normalised to seven days.
         var qualityReport = unit.IsSequence
-            ? TrainingProgramQualityAnalyzer.Analyze(plan with { DurationWeeks = 1, Sessions = allocation.Sessions }, unit.WeeksPerUnit)
+            ? TrainingProgramQualityAnalyzer.Analyze(plan with { DurationWeeks = 1, Sessions = allocation.Sessions }, unit.WeeksPerUnit, rotation: true)
             : TrainingProgramQualityAnalyzer.Analyze(plan);
         var oneSetExposures = allocatedSessions.SelectMany(session => session.Exercises)
             .Count(exercise => exercise.Sets <= 1);
