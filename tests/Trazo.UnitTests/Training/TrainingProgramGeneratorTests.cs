@@ -1295,6 +1295,8 @@ public sealed class TrainingProgramGeneratorTests
         {
             Assert.Contains(sessions, session => session.Title.StartsWith("Tracción", StringComparison.Ordinal));
             Assert.Contains(sessions, session => session.Title.StartsWith("Pierna", StringComparison.Ordinal));
+            if (dayCount == 4)
+                Assert.Equal("Torso", sessions[3].Title);
         }
         if (split == TrainingProgramSplit.UpperLower)
         {
