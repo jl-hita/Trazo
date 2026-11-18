@@ -1244,8 +1244,7 @@ public static class TrainingProgramGenerator
                 TrainingProgramSplit.FullBody => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? fullBodyA : fullBodyB) with { Title = "Cuerpo completo " + (char)('A' + i) }).ToArray(),
                 TrainingProgramSplit.UpperLower => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? upperA : lowerA) with { Title = (i % 2 == 0 ? "Tren superior " : "Tren inferior ") + (char)('A' + i / 2) }).ToArray(),
                 TrainingProgramSplit.PushPullLegs when daysPerWeek == 3 => [push, pull, legs],
-                TrainingProgramSplit.PushPullLegs when daysPerWeek == 4 => [push, pull, legs, upperB with { Title = "Torso" }],
-                TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
+                    TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
                 TrainingProgramSplit.PushPullLegs when daysPerWeek == 6 => [push, pull, legs, pushB, pullB, legs with { Title = "Pierna B", Patterns = lowerB.Patterns }],
                 TrainingProgramSplit.Automatic => daysPerWeek switch
                 {
