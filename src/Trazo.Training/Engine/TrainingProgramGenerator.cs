@@ -6,7 +6,7 @@ namespace Trazo.Training;
 ///
 /// Flow of <see cref="Generate"/> (one call produces ONE block/mesocycle of 1–52 weeks):
 ///  1. Validate the request and the catalog (structural errors are returned, never thrown).
-///  2. Pick the weekly split (<see cref="BuildSplit"/>) and, per session, one exercise per movement
+///  2. Pick the split (a week, or a continuous rotation of sessions) (<see cref="TrainingSessionRotation"/>) and, per session, one exercise per movement
 ///     pattern from the reviewed catalog (goal, level, equipment, exclusions; best SelectionPriority,
 ///     optionally rotated within a small curated pool, see <see cref="RotateCuratedPool"/>).
 ///  3. Add 1–4 accessory exercises per session according to the session time budget and the
@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.10.0";
+    public const string EngineVersion = "0.11.0";
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
     // within this share of the time offered.
     private const decimal StrengthMainLiftTimeShare = 0.85m;
@@ -46,11 +46,7 @@ public static class TrainingProgramGenerator
         if (candidateErrors.Count > 0)
             return new(null, candidateErrors);
 
-        var days = request.TrainingDays
-            .Distinct()
-            .OrderBy(day => ((int)day + 6) % 7)
-            .ToArray();
-        var split = BuildSplit(days.Length, request.Split);
+        var unit = GenerationUnit.For(request);
         var excluded = new HashSet<string>(request.ExcludedExerciseIds, StringComparer.OrdinalIgnoreCase);
         var equipment = new HashSet<string>(
             request.AvailableEquipment
@@ -86,177 +82,176 @@ public static class TrainingProgramGenerator
                 .ToArray();
         }
 
-        var sessionPatterns = PlanSessionPatterns(split, request, Compatible);
+        var sessionPatterns = PlanSessionPatterns(unit.Templates, request, Compatible);
         var sessions = new List<TrainingSessionPrescription>();
-        for (var week = 1; week <= request.DurationWeeks; week++)
+        // The sessions of ONE unit (a week of a calendar plan, one pass through the cycle of a sequence plan) are chosen here. Their
+        // selection does not depend on the week: it is stable across weeks to support measurable progression, and variety is managed
+        // within the unit, not across the mesocycle. The unit is allocated once and then laid out over the weeks of the block.
+        const int week = 1;
+        var selectedThisWeek = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        for (var dayIndex = 0; dayIndex < unit.Templates.Count; dayIndex++)
         {
-            // Keep exercise selection stable across weeks to support measurable progression.
-            // Variety is managed within each week's sessions, not across the mesocycle.
-            var selectedThisWeek = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            for (var dayIndex = 0; dayIndex < days.Length; dayIndex++)
+            var sessionTemplate = unit.Templates[dayIndex];
+            var requiredPatterns = sessionPatterns[dayIndex];
+            var prescriptions = new List<TrainingExercisePrescription>();
+            for (var patternIndex = 0; patternIndex < requiredPatterns.Count; patternIndex++)
             {
-                var sessionTemplate = split[dayIndex];
-                var requiredPatterns = sessionPatterns[dayIndex];
-                var prescriptions = new List<TrainingExercisePrescription>();
-                for (var patternIndex = 0; patternIndex < requiredPatterns.Count; patternIndex++)
+                var pattern = requiredPatterns[patternIndex];
+                var compatibleCandidates = Compatible(pattern);
+
+                if (pattern == TrainingMovementPattern.Core)
                 {
-                    var pattern = requiredPatterns[patternIndex];
-                    var compatibleCandidates = Compatible(pattern);
-
-                    if (pattern == TrainingMovementPattern.Core)
-                    {
-                        // Core is optional work: a profile without a compatible core exercise still gets its plan.
-                        var direct = compatibleCandidates.Where(IsDirectCoreExercise).ToArray();
-                        if (direct.Length > 0) compatibleCandidates = direct;
-                        if (compatibleCandidates.Length == 0)
-                            continue;
-                    }
-
-                    // Vertical and horizontal pulling both train the lats/upper back. Do not
-                    // reject an otherwise complete beginner plan merely because a limited
-                    // equipment profile cannot perform a vertical pull (e.g. no cable or
-                    // assisted-pull-up machine). Substitute a horizontal row when this session
-                    // has no horizontal pull; if it already has one, retain that exposure and
-                    // omit the unavailable direction rather than duplicate the same pattern.
-                    if (compatibleCandidates.Length == 0 && pattern == TrainingMovementPattern.VerticalPull)
-                    {
-                        var hasHorizontalPull = requiredPatterns.Take(patternIndex)
-                            .Contains(TrainingMovementPattern.HorizontalPull);
-                        if (hasHorizontalPull)
-                            continue;
-
-                        compatibleCandidates = Compatible(TrainingMovementPattern.HorizontalPull);
-                    }
-
-                    // The same idea for the two patterns a limitation or a small home gym can leave empty: overhead
-                    // pressing (shoulder) and single-leg work (knee). The session keeps its sibling pattern when it
-                    // has one (horizontal press, hinge) and receives it as a substitute when it does not. The
-                    // omission is reported in the plan's warnings; squat, hinge, horizontal press and row are never
-                    // dropped, so a profile without them still fails with the explanation below.
-                    if (compatibleCandidates.Length == 0 &&
-                        pattern is TrainingMovementPattern.VerticalPush or TrainingMovementPattern.SingleLeg)
-                    {
-                        var sibling = pattern == TrainingMovementPattern.VerticalPush
-                            ? TrainingMovementPattern.HorizontalPush
-                            : TrainingMovementPattern.Hinge;
-                        var substitutes = Compatible(sibling);
-                        if (requiredPatterns.Contains(sibling) || substitutes.Length == 0)
-                        {
-                            if (requiredPatterns.Contains(sibling))
-                            {
-                                selectionWarnings.Add($"'{sessionTemplate.Title}': ningún ejercicio de patrón {pattern} es compatible con el material, el nivel y las exclusiones o limitaciones indicadas; la sesión lo omite y conserva el patrón {sibling}.");
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            selectionWarnings.Add($"'{sessionTemplate.Title}': ningún ejercicio de patrón {pattern} es compatible con el material, el nivel y las exclusiones o limitaciones indicadas; se sustituye por un ejercicio de patrón {sibling}.");
-                            compatibleCandidates = substitutes;
-                        }
-                    }
-
-                    // TRAZO: an exercise never appears twice in one session. When the only exercise that fits this pattern is
-                    // already in the session (typical with little equipment: one row serves both pulling patterns), the
-                    // pattern is covered and is skipped instead of repeating the exercise.
-                    var notYetInSession = compatibleCandidates
-                        .Where(x => !prescriptions.Any(p => string.Equals(p.ExerciseId, x.ExerciseId, StringComparison.OrdinalIgnoreCase)))
-                        .ToArray();
-                    if (compatibleCandidates.Length > 0 && notYetInSession.Length == 0)
-                        continue;
-                    compatibleCandidates = notYetInSession;
-
+                    // Core is optional work: a profile without a compatible core exercise still gets its plan.
+                    var direct = compatibleCandidates.Where(IsDirectCoreExercise).ToArray();
+                    if (direct.Length > 0) compatibleCandidates = direct;
                     if (compatibleCandidates.Length == 0)
-                        return Failure(BuildCandidateDiagnostic(pattern, request, catalog, equipment, excluded));
-
-                    // The main lift of a strength session must accept high loads: a barbell or a guided machine,
-                    // never a goblet squat, a dumbbell squat or a push-up, whenever the profile has one.
-                    var isFirstExercise = prescriptions.Count == 0;
-                    var strength = request.Goal == TrainingGoal.Strength;
-                    if (strength && isFirstExercise)
-                    {
-                        var heavy = compatibleCandidates.Where(TrainingExerciseSelection.IsHeavy).ToArray();
-                        if (heavy.Length > 0) compatibleCandidates = heavy;
-                    }
-
-                    // Strength progresses by adding load to the same lifts, so its selection depends only on the
-                    // profile and the plan seed: every block of the plan trains the same exercises on the same days.
-                    // The other goals rotate among the few best exercises from block to block.
-                    var ordered = strength
-                        ? compatibleCandidates
-                        : RotateCuratedPool(compatibleCandidates, Score, request.RotationIndex ?? 0, request.PreviousBlockExerciseIds, request.IsDeload);
-
-                    // Prefer the exercise used least elsewhere in this week's plan, but only among candidates about
-                    // as good as the best one: repeating a good exercise on two days is better than reaching for a
-                    // clearly worse one (a regression far below the user's level) just to add variety.
-                    // Never penalize an exercise for being selected in previous weeks: continuity
-                    // across a mesocycle supports progression and performance tracking.
-                    var bestScore = compatibleCandidates.Max(Score);
-                    // The main lift of a strength session is always the best heavy lift of its pattern.
-                    var candidate = strength && isFirstExercise
-                        ? ordered[0]
-                        : ordered
-                            .Where(x => bestScore - Score(x) <= PoolPriorityWindow)
-                            .MinBy(x => selectedThisWeek.GetValueOrDefault(x.ExerciseId))!;
-
-                    selectedThisWeek[candidate.ExerciseId] = selectedThisWeek.GetValueOrDefault(candidate.ExerciseId) + 1;
-
-                    var heavyPrimaryLift = isFirstExercise && TrainingExerciseSelection.IsHeavy(candidate);
-                    var (sets, minReps, maxReps, rir, rest, progression) = PrescriptionFor(
-                        request.Goal, request.Experience, week, days.Length, pattern,
-                        isPrimaryLift: isFirstExercise, isHeavyLift: heavyPrimaryLift);
-                    prescriptions.Add(new TrainingExercisePrescription(
-                        candidate.ExerciseId,
-                        candidate.CatalogVersion,
-                        candidate.Name,
-                        prescriptions.Count + 1,
-                        sets,
-                        minReps,
-                        maxReps,
-                        rir,
-                        rest,
-                        progression,
-                        $"Patrón {pattern}; metadatos {(candidate.IsReviewed ? "revisados" : "aportados por el profesional propietario")}; compatible con objetivo, experiencia, material y exclusiones.",
-                        candidate.PrimaryMuscleGroups.ToArray(),
-                        candidate.SecondaryMuscleGroups.ToArray()));
+                        continue;
                 }
 
-                // The main lift of a strength session gets its dose from the lift, not from the weekly muscle
-                // accounting: three sets for beginners, four for intermediates and five for advanced lifters, as
-                // long as the session keeps a margin inside the time offered. It is set before the accessories are
-                // chosen so they see what the session already trains.
-                if (request.Goal == TrainingGoal.Strength && prescriptions.Count > 0)
+                // Vertical and horizontal pulling both train the lats/upper back. Do not
+                // reject an otherwise complete beginner plan merely because a limited
+                // equipment profile cannot perform a vertical pull (e.g. no cable or
+                // assisted-pull-up machine). Substitute a horizontal row when this session
+                // has no horizontal pull; if it already has one, retain that exposure and
+                // omit the unavailable direction rather than duplicate the same pattern.
+                if (compatibleCandidates.Length == 0 && pattern == TrainingMovementPattern.VerticalPull)
                 {
-                    var mainLiftSets = request.Experience switch
+                    var hasHorizontalPull = requiredPatterns.Take(patternIndex)
+                        .Contains(TrainingMovementPattern.HorizontalPull);
+                    if (hasHorizontalPull)
+                        continue;
+
+                    compatibleCandidates = Compatible(TrainingMovementPattern.HorizontalPull);
+                }
+
+                // The same idea for the two patterns a limitation or a small home gym can leave empty: overhead
+                // pressing (shoulder) and single-leg work (knee). The session keeps its sibling pattern when it
+                // has one (horizontal press, hinge) and receives it as a substitute when it does not. The
+                // omission is reported in the plan's warnings; squat, hinge, horizontal press and row are never
+                // dropped, so a profile without them still fails with the explanation below.
+                if (compatibleCandidates.Length == 0 &&
+                    pattern is TrainingMovementPattern.VerticalPush or TrainingMovementPattern.SingleLeg)
+                {
+                    var sibling = pattern == TrainingMovementPattern.VerticalPush
+                        ? TrainingMovementPattern.HorizontalPush
+                        : TrainingMovementPattern.Hinge;
+                    var substitutes = Compatible(sibling);
+                    if (requiredPatterns.Contains(sibling) || substitutes.Length == 0)
                     {
-                        TrainingExperience.Beginner => 3,
-                        TrainingExperience.Intermediate => 4,
-                        _ => 5
-                    };
-                    for (var mainSets = mainLiftSets; mainSets > prescriptions[0].Sets; mainSets--)
-                    {
-                        var raised = prescriptions.Select((exercise, index) => index == 0 ? exercise with { Sets = mainSets } : exercise).ToArray();
-                        var raisedSession = new TrainingSessionPrescription(
-                            week, days[dayIndex], sessionTemplate.Title, WarmupAndTransitionsMinutes, raised);
-                        if (TrainingProgramVolumeAllocator.EstimateDurationSeconds(raisedSession) >
-                            request.MaximumSessionDurationMinutes * 60m * StrengthMainLiftTimeShare)
+                        if (requiredPatterns.Contains(sibling))
+                        {
+                            selectionWarnings.Add($"'{sessionTemplate.Title}': ningún ejercicio de patrón {pattern} es compatible con el material, el nivel y las exclusiones o limitaciones indicadas; la sesión lo omite y conserva el patrón {sibling}.");
                             continue;
-                        prescriptions[0] = raised[0];
-                        break;
+                        }
+                    }
+                    else
+                    {
+                        selectionWarnings.Add($"'{sessionTemplate.Title}': ningún ejercicio de patrón {pattern} es compatible con el material, el nivel y las exclusiones o limitaciones indicadas; se sustituye por un ejercicio de patrón {sibling}.");
+                        compatibleCandidates = substitutes;
                     }
                 }
 
-                AddOptionalAccessoryExercises(
-                    request, catalog, equipment, excluded, sessions,
-                    prescriptions, week, days[dayIndex], sessionTemplate.Title, days.Length);
+                // TRAZO: an exercise never appears twice in one session. When the only exercise that fits this pattern is
+                // already in the session (typical with little equipment: one row serves both pulling patterns), the
+                // pattern is covered and is skipped instead of repeating the exercise.
+                var notYetInSession = compatibleCandidates
+                    .Where(x => !prescriptions.Any(p => string.Equals(p.ExerciseId, x.ExerciseId, StringComparison.OrdinalIgnoreCase)))
+                    .ToArray();
+                if (compatibleCandidates.Length > 0 && notYetInSession.Length == 0)
+                    continue;
+                compatibleCandidates = notYetInSession;
 
-                // Final duration is calculated after weekly sets have been allocated.
-                sessions.Add(new TrainingSessionPrescription(
-                    week,
-                    days[dayIndex],
-                    sessionTemplate.Title,
-                    WarmupAndTransitionsMinutes,
-                    prescriptions));
+                if (compatibleCandidates.Length == 0)
+                    return Failure(BuildCandidateDiagnostic(pattern, request, catalog, equipment, excluded));
+
+                // The main lift of a strength session must accept high loads: a barbell or a guided machine,
+                // never a goblet squat, a dumbbell squat or a push-up, whenever the profile has one.
+                var isFirstExercise = prescriptions.Count == 0;
+                var strength = request.Goal == TrainingGoal.Strength;
+                if (strength && isFirstExercise)
+                {
+                    var heavy = compatibleCandidates.Where(TrainingExerciseSelection.IsHeavy).ToArray();
+                    if (heavy.Length > 0) compatibleCandidates = heavy;
+                }
+
+                // Strength progresses by adding load to the same lifts, so its selection depends only on the
+                // profile and the plan seed: every block of the plan trains the same exercises on the same days.
+                // The other goals rotate among the few best exercises from block to block.
+                var ordered = strength
+                    ? compatibleCandidates
+                    : RotateCuratedPool(compatibleCandidates, Score, request.RotationIndex ?? 0, request.PreviousBlockExerciseIds, request.IsDeload);
+
+                // Prefer the exercise used least elsewhere in this week's plan, but only among candidates about
+                // as good as the best one: repeating a good exercise on two days is better than reaching for a
+                // clearly worse one (a regression far below the user's level) just to add variety.
+                // Never penalize an exercise for being selected in previous weeks: continuity
+                // across a mesocycle supports progression and performance tracking.
+                var bestScore = compatibleCandidates.Max(Score);
+                // The main lift of a strength session is always the best heavy lift of its pattern.
+                var candidate = strength && isFirstExercise
+                    ? ordered[0]
+                    : ordered
+                        .Where(x => bestScore - Score(x) <= PoolPriorityWindow)
+                        .MinBy(x => selectedThisWeek.GetValueOrDefault(x.ExerciseId))!;
+
+                selectedThisWeek[candidate.ExerciseId] = selectedThisWeek.GetValueOrDefault(candidate.ExerciseId) + 1;
+
+                var heavyPrimaryLift = isFirstExercise && TrainingExerciseSelection.IsHeavy(candidate);
+                var (sets, minReps, maxReps, rir, rest, progression) = PrescriptionFor(
+                    request.Goal, request.Experience, week, unit.SessionsPerPeriod, pattern,
+                    isPrimaryLift: isFirstExercise, isHeavyLift: heavyPrimaryLift);
+                prescriptions.Add(new TrainingExercisePrescription(
+                    candidate.ExerciseId,
+                    candidate.CatalogVersion,
+                    candidate.Name,
+                    prescriptions.Count + 1,
+                    sets,
+                    minReps,
+                    maxReps,
+                    rir,
+                    rest,
+                    progression,
+                    $"Patrón {pattern}; metadatos {(candidate.IsReviewed ? "revisados" : "aportados por el profesional propietario")}; compatible con objetivo, experiencia, material y exclusiones.",
+                    candidate.PrimaryMuscleGroups.ToArray(),
+                    candidate.SecondaryMuscleGroups.ToArray()));
             }
+
+            // The main lift of a strength session gets its dose from the lift, not from the weekly muscle
+            // accounting: three sets for beginners, four for intermediates and five for advanced lifters, as
+            // long as the session keeps a margin inside the time offered. It is set before the accessories are
+            // chosen so they see what the session already trains.
+            if (request.Goal == TrainingGoal.Strength && prescriptions.Count > 0)
+            {
+                var mainLiftSets = request.Experience switch
+                {
+                    TrainingExperience.Beginner => 3,
+                    TrainingExperience.Intermediate => 4,
+                    _ => 5
+                };
+                for (var mainSets = mainLiftSets; mainSets > prescriptions[0].Sets; mainSets--)
+                {
+                    var raised = prescriptions.Select((exercise, index) => index == 0 ? exercise with { Sets = mainSets } : exercise).ToArray();
+                    var raisedSession = new TrainingSessionPrescription(
+                        week, unit.Days[dayIndex], sessionTemplate.Title, WarmupAndTransitionsMinutes, raised);
+                    if (TrainingProgramVolumeAllocator.EstimateDurationSeconds(raisedSession) >
+                        request.MaximumSessionDurationMinutes * 60m * StrengthMainLiftTimeShare)
+                        continue;
+                    prescriptions[0] = raised[0];
+                    break;
+                }
+            }
+
+            AddOptionalAccessoryExercises(
+                request, catalog, equipment, excluded, sessions,
+                prescriptions, week, unit.Days[dayIndex], sessionTemplate.Title, unit.SessionsPerPeriod, unit.WeeksPerUnit);
+
+            // Final duration is calculated after weekly sets have been allocated.
+            sessions.Add(new TrainingSessionPrescription(
+                week,
+                unit.Days[dayIndex],
+                sessionTemplate.Title,
+                WarmupAndTransitionsMinutes,
+                prescriptions));
         }
 
         // Accessory and core exercises: the allocator gives weekly volume to the compound lifts before them.
@@ -266,15 +261,16 @@ public static class TrainingProgramGenerator
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var allocation = TrainingProgramVolumeAllocator.Allocate(
             sessions, request.Goal, request.Experience, request.MuscleVolumeTargets,
-            request.MaximumSessionDurationMinutes, accessoryIds);
+            request.MaximumSessionDurationMinutes, accessoryIds, unit.WeeksPerUnit, unit.SessionsPerPeriod);
         if (!allocation.Succeeded)
             return new(null, allocation.Errors);
+        var allocatedSessions = unit.LayOut(allocation.Sessions, request.DurationWeeks);
 
         // Allocate volume before reordering. The allocator resolves exact ties by the current
         // exercise order; sorting earlier would silently move sets between exercises even though
         // the orderer itself only changes Order. Apply presentation/fatigue-aware ordering only
         // after weekly set allocation is complete.
-        var orderedAllocatedSessions = allocation.Sessions.Select(session => session with
+        var orderedAllocatedSessions = allocatedSessions.Select(session => session with
         {
             Exercises = TrainingSessionExerciseOrderer.Reorder(
                 session.Exercises, catalog, request.MuscleVolumeTargets)
@@ -291,8 +287,11 @@ public static class TrainingProgramGenerator
             request.StartDate,
             request.DurationWeeks,
             prescribedSessions);
-        var qualityReport = TrainingProgramQualityAnalyzer.Analyze(plan);
-        var oneSetExposures = allocation.Sessions.SelectMany(session => session.Exercises)
+        // A sequence plan has no weekly groups: its report describes one pass through the rotation, normalised to seven days.
+        var qualityReport = unit.IsSequence
+            ? TrainingProgramQualityAnalyzer.Analyze(plan with { DurationWeeks = 1, Sessions = allocation.Sessions }, unit.WeeksPerUnit)
+            : TrainingProgramQualityAnalyzer.Analyze(plan);
+        var oneSetExposures = allocatedSessions.SelectMany(session => session.Exercises)
             .Count(exercise => exercise.Sets <= 1);
         var deloadWarnings = request.IsDeload
             ? new[]
@@ -307,7 +306,7 @@ public static class TrainingProgramGenerator
         {
             QualityReport = qualityReport with
             {
-                Warnings = qualityReport.Warnings.Concat(selectionWarnings).Concat(allocation.Warnings).Concat(deloadWarnings).Distinct(StringComparer.Ordinal).ToArray()
+                Warnings = qualityReport.Warnings.Concat(selectionWarnings).Concat(unit.Warnings(allocation.Warnings, request.DurationWeeks)).Concat(deloadWarnings).Distinct(StringComparer.Ordinal).ToArray()
             }
         };
         var validationErrors = TrainingPrescriptionValidator.Validate(plan);
@@ -763,28 +762,32 @@ public static class TrainingProgramGenerator
         if (request.DurationWeeks is < 1 or > 52) errors.Add("La duración debe estar entre 1 y 52 semanas.");
         if (request.IsDeload && request.DurationWeeks != 1)
             errors.Add("Una descarga activa debe durar exactamente una semana; divide la fase antes de generar.");
-        if (request.TrainingDays is null || request.TrainingDays.Count is < 2 or > 6)
-            errors.Add("Selecciona entre 2 y 6 días de entrenamiento por semana.");
+        if (request.Sequence is { } sequence)
+        {
+            // A sequence plan has no training days: its split is laid over a continuous rotation of sessions.
+            if (sequence.SessionsPerPeriod is < TrainingSessionRotation.MinimumSessionsPerPeriod or > TrainingSessionRotation.MaximumSessionsPerPeriod)
+                errors.Add("Indica entre 2 y 6 sesiones por ciclo.");
+            if (sequence.StartPosition < 0)
+                errors.Add("La posición inicial de la rotación no puede ser negativa.");
+            if (!Enum.IsDefined(request.Split)) errors.Add("La distribución semanal seleccionada no es válida.");
+            else if (!TrainingSessionRotation.IsSupportedSequence(request.Split, sequence.SessionsPerPeriod))
+                errors.Add(request.Split == TrainingProgramSplit.PushPullLegs
+                    ? "Push/Pull/Legs admite de 3 a 6 sesiones por ciclo; cambia el número de sesiones o elige otra distribución."
+                    : "Esta distribución admite de 2 a 6 sesiones por ciclo.");
+        }
         else
         {
-            if (request.TrainingDays.Any(day => !Enum.IsDefined(day)))
-                errors.Add("La disponibilidad contiene un día no válido.");
-            if (request.TrainingDays.Distinct().Count() != request.TrainingDays.Count)
-                errors.Add("No se puede repetir un día de entrenamiento.");
-        }
-        if (!Enum.IsDefined(request.Split)) errors.Add("La distribución semanal seleccionada no es válida.");
-        else if (request.TrainingDays is not null)
-        {
-            var dayCount = request.TrainingDays.Count;
-            var supportedDayCount = request.Split switch
+            if (request.TrainingDays is null || request.TrainingDays.Count is < 2 or > 6)
+                errors.Add("Selecciona entre 2 y 6 días de entrenamiento por semana.");
+            else
             {
-                TrainingProgramSplit.Automatic => dayCount is >= 2 and <= 4,
-                TrainingProgramSplit.FullBody => dayCount is >= 2 and <= 4,
-                TrainingProgramSplit.UpperLower => dayCount is 2 or 4,
-                TrainingProgramSplit.PushPullLegs => dayCount is 3 or 5 or 6,
-                _ => false
-            };
-            if (!supportedDayCount)
+                if (request.TrainingDays.Any(day => !Enum.IsDefined(day)))
+                    errors.Add("La disponibilidad contiene un día no válido.");
+                if (request.TrainingDays.Distinct().Count() != request.TrainingDays.Count)
+                    errors.Add("No se puede repetir un día de entrenamiento.");
+            }
+            if (!Enum.IsDefined(request.Split)) errors.Add("La distribución semanal seleccionada no es válida.");
+            else if (request.TrainingDays is not null && !TrainingSessionRotation.IsSupportedWeekly(request.Split, request.TrainingDays.Count))
                 errors.Add(request.Split switch
                 {
                     TrainingProgramSplit.FullBody => "Cuerpo completo admite de 2 a 4 días; cambia la disponibilidad o elige otra distribución.",
@@ -886,11 +889,14 @@ public static class TrainingProgramGenerator
         int week,
         DayOfWeek day,
         string title,
-        int daysPerWeek)
+        int daysPerWeek,
+        decimal weeksPerUnit)
     {
+        // The deficit of a unit is judged against its share of the weekly targets (the whole week for a calendar plan).
         var targets = TrainingProgramVolumeAllocator.GetWeeklyTargets(
-            request.Goal, request.Experience, request.MuscleVolumeTargets,
-            daysPerWeek, request.MaximumSessionDurationMinutes);
+                request.Goal, request.Experience, request.MuscleVolumeTargets,
+                daysPerWeek, request.MaximumSessionDurationMinutes)
+            .ToDictionary(pair => pair.Key, pair => pair.Value * weeksPerUnit);
         var catalogCandidates = catalog.ToArray();
         var isFullBody = title.Contains("completo", StringComparison.OrdinalIgnoreCase);
         // Short sessions must protect time for the core movement patterns. Accessory slots
@@ -974,7 +980,7 @@ public static class TrainingProgramGenerator
                 selectedThisWeek.Contains(candidate.ExerciseId));
             var prioritizeQuadricepsAccessory =
                 !hasDirectQuadricepsAccessory &&
-                currentEffectiveVolume.GetValueOrDefault(TrainingMuscleGroup.Glutes) + QuadAccessoryGluteTargetBufferSets >=
+                currentEffectiveVolume.GetValueOrDefault(TrainingMuscleGroup.Glutes) + QuadAccessoryGluteTargetBufferSets * weeksPerUnit >=
                     targets.GetValueOrDefault(TrainingMuscleGroup.Glutes) &&
                 currentEffectiveVolume.GetValueOrDefault(TrainingMuscleGroup.Quadriceps) <
                     targets.GetValueOrDefault(TrainingMuscleGroup.Quadriceps) &&
@@ -1194,56 +1200,6 @@ public static class TrainingProgramGenerator
         });
     }
 
-    // Weekly templates. Every template lists the movement patterns a session must cover; titles
-    // are also used later to restrict accessory muscles (e.g. "superior", "Empuje"). Unsupported
-    // split/day combinations return an empty list and are rejected earlier in ValidateRequest.
-    private static IReadOnlyList<SessionTemplate> BuildSplit(int daysPerWeek, TrainingProgramSplit requestedSplit)
-    {
-        var fullBodyA = new SessionTemplate("Cuerpo completo A",
-            [TrainingMovementPattern.Squat, TrainingMovementPattern.HorizontalPush, TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.Hinge, TrainingMovementPattern.Core]);
-        // B templates reverse the order of coexisting large groups (push/pull, quads/posterior chain)
-        // so the muscle that was trained second in A is trained fresh first in B. The squat stays
-        // first in full-body sessions; only the upper-body pair is swapped.
-        var fullBodyB = new SessionTemplate("Cuerpo completo B",
-            [TrainingMovementPattern.Squat, TrainingMovementPattern.VerticalPull, TrainingMovementPattern.VerticalPush, TrainingMovementPattern.SingleLeg, TrainingMovementPattern.Core]);
-        var upperA = new SessionTemplate("Tren superior A",
-            [TrainingMovementPattern.HorizontalPush, TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.VerticalPush, TrainingMovementPattern.VerticalPull, TrainingMovementPattern.Core]);
-        var lowerA = new SessionTemplate("Tren inferior A",
-            [TrainingMovementPattern.Squat, TrainingMovementPattern.Hinge, TrainingMovementPattern.SingleLeg, TrainingMovementPattern.Core]);
-        var upperB = new SessionTemplate("Tren superior B",
-            [TrainingMovementPattern.VerticalPull, TrainingMovementPattern.VerticalPush, TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.HorizontalPush, TrainingMovementPattern.Core]);
-        var lowerB = new SessionTemplate("Tren inferior B",
-            [TrainingMovementPattern.Hinge, TrainingMovementPattern.Squat, TrainingMovementPattern.SingleLeg, TrainingMovementPattern.Core]);
-        var push = new SessionTemplate("Empuje",
-            [TrainingMovementPattern.HorizontalPush, TrainingMovementPattern.VerticalPush, TrainingMovementPattern.Core]);
-        var pull = new SessionTemplate("Tracción",
-            [TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.VerticalPull, TrainingMovementPattern.Core]);
-        var pushB = new SessionTemplate("Empuje B", [TrainingMovementPattern.VerticalPush, TrainingMovementPattern.HorizontalPush, TrainingMovementPattern.Core]);
-        var pullB = new SessionTemplate("Tracción B", [TrainingMovementPattern.VerticalPull, TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.Core]);
-        var legs = new SessionTemplate("Pierna",
-            [TrainingMovementPattern.Squat, TrainingMovementPattern.Hinge, TrainingMovementPattern.SingleLeg, TrainingMovementPattern.Core]);
-
-        return requestedSplit switch
-        {
-            TrainingProgramSplit.FullBody when daysPerWeek == 2 => [fullBodyA, fullBodyB],
-            TrainingProgramSplit.FullBody when daysPerWeek == 3 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }],
-            TrainingProgramSplit.FullBody when daysPerWeek == 4 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }, fullBodyB with { Title = "Cuerpo completo D" }],
-            TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
-            TrainingProgramSplit.UpperLower when daysPerWeek == 2 => [upperA, lowerA],
-            TrainingProgramSplit.UpperLower when daysPerWeek == 4 => [upperA, lowerA, upperB, lowerB],
-            TrainingProgramSplit.PushPullLegs when daysPerWeek == 3 => [push, pull, legs],
-            TrainingProgramSplit.PushPullLegs when daysPerWeek == 6 => [push, pull, legs, pushB, pullB, legs with { Title = "Pierna B", Patterns = lowerB.Patterns }],
-            TrainingProgramSplit.Automatic => daysPerWeek switch
-            {
-                2 => [fullBodyA, fullBodyB],
-                3 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }],
-                4 => [upperA, lowerA, upperB, lowerB],
-                _ => []
-            },
-            _ => []
-        };
-    }
-
     /// <summary>
     /// Keep rep ranges and effort targets stable through the mesocycle. Weekly set distribution
     /// is handled by TrainingProgramVolumeAllocator. Deload planning is a separate, explicit
@@ -1280,7 +1236,6 @@ public static class TrainingProgramGenerator
             baseline.RestSeconds, TrainingProgressionRule.DoubleProgression);
     }
 
-    private sealed record SessionTemplate(string Title, IReadOnlyList<TrainingMovementPattern> Patterns);
 }
 
 public enum TrainingProgramSplit
@@ -1310,7 +1265,10 @@ public sealed record TrainingProgramGenerationRequest(
     IReadOnlyList<string>? PreviousBlockExerciseIds = null,
     bool ContinuesPreviousBlock = false,
     // Seed of the plan, the same for every block. It only orders candidates that are equally good.
-    int SelectionSeed = 0);
+    int SelectionSeed = 0,
+    // A sequence (asynchronous) plan: the sessions follow one continuous rotation instead of the training days of a week, and
+    // TrainingDays is ignored. Null for a calendar plan.
+    TrainingSessionSequence? Sequence = null);
 
 public sealed record TrainingExerciseCandidate(
     string ExerciseId,

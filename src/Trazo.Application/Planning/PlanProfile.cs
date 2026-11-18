@@ -87,13 +87,11 @@ public static partial class PlanProfileParser
         var perPeriod = 0;
         if (sequence)
         {
-            // No fixed days: the plan is a rotation of sessions. The engine still needs a set of days to lay one rotation out,
-            // so it gets as many well-spread synthetic days as sessions; they are never shown nor stored.
+            // No fixed days: the plan is a continuous rotation of sessions, grouped in periods of this many sessions.
             if (input.SessionsPerPeriod is not (>= MinimumSessionsPerPeriod and <= MaximumSessionsPerPeriod))
                 Fail("sessionsPerPeriod", $"Indica entre {MinimumSessionsPerPeriod} y {MaximumSessionsPerPeriod} sesiones por ciclo.");
             else perPeriod = input.SessionsPerPeriod.Value;
             if ((input.TrainingDays?.Length ?? 0) > 0) Fail("trainingDays", "Un plan asíncrono no tiene días fijos de entrenamiento.");
-            if (perPeriod > 0) days = SyntheticDays(perPeriod).ToList();
         }
         else
         {
@@ -160,16 +158,6 @@ public static partial class PlanProfileParser
 
     public const int MinimumSessionsPerPeriod = 2;
     public const int MaximumSessionsPerPeriod = 6;
-
-    /// <summary>Well-spread days of the week for one rotation of <paramref name="sessions"/> sessions (what the engine lays out).</summary>
-    public static IReadOnlyList<DayOfWeek> SyntheticDays(int sessions) => sessions switch
-    {
-        2 => [DayOfWeek.Monday, DayOfWeek.Thursday],
-        3 => [DayOfWeek.Monday, DayOfWeek.Wednesday, DayOfWeek.Friday],
-        4 => [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Thursday, DayOfWeek.Friday],
-        5 => [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Friday, DayOfWeek.Saturday],
-        _ => [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
-    };
 
     /// <summary>Same rule as the engine: lower case, words joined by hyphens.</summary>
     public static string NormalizeToken(string? value) =>

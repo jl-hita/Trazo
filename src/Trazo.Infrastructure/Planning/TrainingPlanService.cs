@@ -131,7 +131,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
             2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
             Lang == AppLanguage.En ? WeekDaysEn : WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
-            PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod);
+            PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod,
+            Enum.GetValues<TrainingProgramSplit>().Select(split => new SplitSupportOption(
+                split.ToString(),
+                Enumerable.Range(2, 5).Where(days => TrainingSessionRotation.IsSupportedWeekly(split, days)).ToArray(),
+                Enumerable.Range(TrainingSessionRotation.MinimumSessionsPerPeriod, TrainingSessionRotation.MaximumSessionsPerPeriod)
+                    .Where(sessions => TrainingSessionRotation.IsSupportedSequence(split, sessions)).ToArray())).ToArray());
     }
 
     private static string[] Names<T>() where T : struct, Enum => Enum.GetNames<T>();
@@ -158,7 +163,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Goal = profile.Goal.ToString(), Experience = profile.Experience.ToString(), Split = profile.Split.ToString(),
             StartDate = profile.StartDate, TotalWeeks = profile.TotalWeeks,
             SchedulingMode = profile.SchedulingMode, SessionsPerPeriod = profile.SessionsPerPeriod,
-            // A sequence plan has no days of the week: the synthetic days the engine lays a rotation out with are never stored.
+            // A sequence plan has no days of the week: its sessions are a continuous rotation identified by their order.
             TrainingDays = profile.SchedulingMode == PlanSchedulingMode.Sequence ? [] : profile.TrainingDays.Select(d => d.ToString()).ToArray(),
             MaxSessionMinutes = profile.MaxSessionMinutes, AvailableEquipment = profile.AvailableEquipment.ToArray(),
             ExcludedExerciseIds = profile.ExcludedExerciseIds.ToArray(), Limitations = profile.Limitations.ToArray(),
@@ -751,7 +756,39 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 hasPlanned ? planned.Sets : null, reached ? logged.Sets : null,
                 hasPlanned ? planned.Sessions : 0, logged.Sessions));
         }
-        return new PlanLoadView(plan.Id, plan.TotalWeeks, position.Week, "sets", weeks);
+        return new PlanLoadView(plan.Id, plan.TotalWeeks, position.Week, "sets", weeks, IsSequence(plan) ? "Rotation" : "Week",
+            await RollingLoadAsync(plan, sessions.Select(s => (s.WeekNumber, s.PrescriptionJson)).ToList(), position, ct));
+    }
+
+    /// <summary>
+    /// What the user really received in the last seven days (from the instants of their workouts, whatever the plan period) against what
+    /// the current block prescribes per seven days. A period of a plan is a group of sessions, so it is never used as if it were time.
+    /// </summary>
+    private async Task<RollingLoadView> RollingLoadAsync(
+        TrainingPlan plan, IReadOnlyList<(int Week, string Json)> sessions, PlanPosition position, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var since = now.AddDays(-LoadMetrics.PaceWindowDays);
+        var recent = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets)
+            .Where(l => l.UserId == plan.UserId && l.PerformedAt > since && l.PerformedAt <= now).ToListAsync(ct);
+        var prescribed = sessions.Where(s => s.Week >= 1).ToList();
+        var ids = recent.SelectMany(l => l.Sets.Select(s => s.ExerciseId)).Concat(prescribed.SelectMany(s => PrescriptionJson.Read(s.Json).Select(e => e.ExerciseId)))
+            .Distinct().ToList();
+        var muscles = (await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id)).Select(e => new { e.Id, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct))
+            .ToDictionary(e => e.Id, e => (Primary: (IReadOnlyList<string>)e.PrimaryMuscles, Secondary: (IReadOnlyList<string>)e.SecondaryMuscles));
+
+        var windowStart = now.AddDays(-7);
+        var workouts = recent.Where(l => l.PerformedAt > windowStart).Select(l => new DoseWorkout(l.PerformedAt,
+            l.Sets.Where(s => s.Completed && muscles.ContainsKey(s.ExerciseId)).GroupBy(s => s.ExerciseId)
+                .Select(g => new DoseExercise(muscles[g.Key].Primary, muscles[g.Key].Secondary, g.Count())).ToList())).ToList();
+
+        var slot = SlotsOf(plan).FirstOrDefault(s => s.Contains(position.Week));
+        var blockSessions = slot is null ? [] : prescribed.Where(s => slot.Contains(s.Week)).ToList();
+        var perSession = blockSessions.Select(s => (IReadOnlyList<DoseExercise>)PrescriptionJson.Read(s.Json)
+            .Select(e => new DoseExercise(e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList());
+        return new RollingLoadView(7, windowStart, now, workouts.Count, plan.SessionsPerPeriod,
+            LoadMetrics.ObservedSessionsPerSevenDays(recent.Select(l => l.PerformedAt).ToList(), now),
+            LoadMetrics.Dose(workouts), slot is null ? [] : LoadMetrics.PrescribedPerSevenDays(perSession, slot.Weeks));
     }
 
     public async Task<bool> ArchiveAsync(Guid userId, CancellationToken ct)
@@ -1338,14 +1375,18 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 .SelectMany(json => PrescriptionJson.Read(json).Select(e => e.ExerciseId)).Distinct().ToArray();
         }
 
+        // The program order of the sessions that already exist says where in the rotation this block begins: a sequence plan
+        // continues from its last session whatever the period or block boundary, and what is persisted is the only state it needs.
+        var existingSessions = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0;
+        var firstIndex = existingSessions + 1;
         var profile = ProfileOf(plan);
         var generation = MesocycleGenerator.Generate(
             profile, plan.Seed, slot, candidates, previousIds,
             continuesPreviousBlock: previous is { IsDeload: false } && previous.Sequence == slot.Sequence - 1,
-            loadReferences: await LoadReferencesAsync(plan.UserId, ct));
+            loadReferences: await LoadReferencesAsync(plan.UserId, ct),
+            rotationPosition: existingSessions);
         if (!generation.Succeeded) return null;
 
-        var firstIndex = (await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0) + 1;
         var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
@@ -1394,7 +1435,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     private static PlanProfile ProfileOf(TrainingPlan plan) => new(
         Enum.Parse<TrainingGoal>(plan.Goal), Enum.Parse<TrainingExperience>(plan.Experience), plan.StartDate, plan.TotalWeeks,
-        IsSequence(plan) ? PlanProfileParser.SyntheticDays(plan.SessionsPerPeriod).ToList() : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
+        IsSequence(plan) ? [] : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
         plan.MaxSessionMinutes, plan.AvailableEquipment,
         plan.ExcludedExerciseIds, plan.Limitations, Enum.Parse<TrainingProgramSplit>(plan.Split), plan.IncludeDeloadPhases,
         plan.DeloadEveryTrainingWeeks, plan.SchedulingMode, plan.SessionsPerPeriod);

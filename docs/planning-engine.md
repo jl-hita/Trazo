@@ -80,7 +80,8 @@ for later, not engine limits.
 ## 3. Architecture
 
 ```
-Trazo.Training        pure engine (copied from DietoExpress + one fix, see 4.9). No EF, no ASP.NET.
+Trazo.Training        pure engine (copied from DietoExpress + one fix, see 4.9). Since 0.11.0 it also owns the
+                      split rotations (`TrainingSessionRotation`). No EF, no ASP.NET.
 Trazo.Domain          Planning/: TrainingPlan, TrainingPlanPhase, TrainingMesocycle, PlannedSession,
                       WorkoutLog, WorkoutSetLog, PlanAdaptation (plain entities, enums as text).
 Trazo.Application     Planning/: pure orchestration
@@ -88,6 +89,7 @@ Trazo.Application     Planning/: pure orchestration
                         LimitationRules        injury area -> exercises to avoid
                         PlanSchedule           macrocycle -> blocks, dates, current week
                         MesocycleGenerator     one block, deterministic for (profile, seed, block, catalog, history)
+                        LoadMetrics            real dose per seven days, exposures and observed pace from the workouts
                         PrescriptionJson       the stored form of a session prescription
                         AdaptationPlanner      logged history -> advice + automatic changes
                         LogSessionValidator    shape and ranges of a session log
@@ -204,7 +206,7 @@ errors list the offending fields. All routes are in the OpenAPI document with th
 | GET | `/current` | Profile and macrocycle phases, no sessions | 200 `PlanView` | 404 |
 | GET | `/current/week` | Sessions of the current week with prescription (generates the block when first needed). `locked` is true for a generated plan without Premium: it is read-only and no block is generated | 200 `WeekView` | 404 |
 | GET | `/current/history?take=30` | Logged sessions, newest first (1-100) | 200 | 404 |
-| GET | `/current/load` | Weekly volume in sets for every plan week: `plannedSets` (null while that block is not generated), `completedSets` (null for weeks not reached yet), phase and deload flag. Read-only, also for a plan locked by a lapsed Premium | 200 `PlanLoadView` | 404 |
+| GET | `/current/load` | Weekly volume in sets for every plan week: `plannedSets` (null while that block is not generated), `completedSets` (null for weeks not reached yet), phase and deload flag. Read-only, also for a plan locked by a lapsed Premium. `periodKind` (`Week`/`Rotation`) says what a period is; `rolling` is the real dose of the last seven days (see "One engine, two scheduling policies") | 200 `PlanLoadView` | 404 |
 | POST | `/current/archive` | Close the active plan | 204 | 404 |
 | POST | `/current/sessions/{id}/log` | Record a session; with Premium it also adapts the upcoming ones (`adaptation.locked` is true otherwise). Generated plans without Premium answer 402 `premium_required` | 200 `LogResult` | 400, 402, 404, 409 |
 | GET | `/current/sessions/{id}/exercises/{exerciseId}/alternatives?limit=5` | Replacement options (1-10) | 200 | 402, 404 |
@@ -455,7 +457,7 @@ The backend decides which session the user should do next; clients only show it.
 - `session`: the first **pending** session in program order (`sequenceIndex`), whatever its planned date. A session logged out of order does not move the program. `null` when nothing is pending (plan finished) or the plan is locked (`locked: true`).
 - `position`: `period` (plan week; in the asynchronous mode it will be the cycle), `sessionInPeriod`/`sessionsInPeriod` and the block (`mesocycle`).
 - `overdue`: pending sessions whose planned date has passed. They can still be registered (there is no window) and are never skipped automatically.
-- `schedulingMode`: `Calendar` today. `IPlanTimeline` (`CalendarTimeline`) answers "which is next / what is late"; the engine itself (generation, prescription, progression, adaptation) is shared by every mode.
+- `schedulingMode`: `Calendar` or `Sequence`. `IPlanTimeline` (`CalendarTimeline`, `SequenceTimeline`) answers "which is next / what is late"; the engine itself (generation, prescription, progression, adaptation) is shared by every mode.
 - `availability` (**Premium**; without it `availabilityLocked: true` and `availability: null`): `state` `Ready | Caution | Wait`, `availableAt`, `reasons` (Spanish, naming the muscles) and `alternatives` (later pending sessions that are ready now). It is advice: it never blocks logging.
 
 `RecoveryAdvisor` (application layer, not the shared engine) works per muscle, not with a fixed rest: effective sets (primary 1, secondary 0.5) over the last 6 days of the user's workouts, weighted by proximity to failure (RIR), scaled by experience, and lengthened by insufficient/partial recovery, session RPE >= 9, pain and "loaded" pre-fatigue answers. Window = `24 h + 5.5 h x weighted sets`, capped at 120 h; a muscle with fewer than 2 effective sets is not counted, and a pending session only counts muscles it trains with at least 3 effective sets. `Caution` = at most 12 h short. The coefficients are product values (constants in `RecoveryAdvisor`) to be tuned with real data.
@@ -475,6 +477,77 @@ A plan advances either by calendar weeks (`Calendar`, the default and every exis
 - Fixed on the way: a block generated for an already tracked plan was saved as an UPDATE of an existing row and failed, so the second block of any plan could not be generated; it is now added explicitly.
 
 Not yet: the calendar plan's "recolocar plan desde hoy" after a week without logs, and an automatic lighter first session on re-entry.
+
+## One engine, two scheduling policies (engine 0.11.0)
+
+*Audit that led here.* The first sequence mode (PR #77-#80) reused the calendar engine with synthetic weekdays: every period was generated as an independent week, so the split **restarted at each period** (with 3 sessions of upper/lower the user would have trained upper, lower, upper on every period), only the combinations a calendar week supports were allowed (no upper/lower in 3 or 5 sessions, no push/pull/legs in 4, no full body in 5 or 6, no automatic split in 5 or 6), and the plan report and the load chart called a group of sessions "a week". A week, a rotation and seven days were three different things sharing one name. The engine itself (selection, prescription, progression, adaptation) was already common and stays so; what changed is what it plans *over*.
+
+### The generation unit
+
+The engine plans one **unit** of sessions at a time and then lays it out over the periods of the block (`GenerationUnit`, `TrainingSessionRotation` in `Trazo.Training/Engine`):
+
+| | Calendar plan | Sequence plan |
+|---|---|---|
+| Unit | one week: the split's list for the training days | one **cycle**: the closed list of K sessions of the split (full body A/B = 2, upper/lower A/B = 4, push/pull/legs A/B = 6) |
+| Nominal weeks of the unit | 1 | K / N (N = sessions per period = the user's habitual sessions in seven days) |
+| Laying out | the unit repeats every week | session number `p` of the plan is `cycle[p mod K]`; the period only groups N consecutive sessions |
+| Start | week 1 | `StartPosition` = number of sessions the plan already has, read from what is persisted (`SequenceIndex`), never from a stored counter or the clock |
+
+The calendar case is the sequence machinery with K = N and one week per unit, so there is **one code path**. `ClassicalPlanGoldenTests` pins 1,188 classical plans (every goal, level, supported split and day count, three equipment sets, block / deload / second block / limitations) by hash: the refactor changed none of them. The classical restrictions are untouched (`IsSupportedWeekly`: full body 2-4, upper/lower 2 or 4, push/pull/legs 3, 5 or 6, automatic 2-4).
+
+Sequence plans accept full body 2-6, upper/lower 2-6, push/pull/legs 3-6 and automatic 2-6 (`IsSupportedSequence`, announced by `GET /plans/options` in `splitSupport` so clients do not rebuild it). Automatic picks full body up to 3 sessions, upper/lower for 4 or 5 and push/pull/legs for 6 (a product choice). When a period holds exactly one split (full body 2, upper/lower 4, push/pull/legs 6, automatic 2 or 4) the sequence plan is identical to the calendar plan (tested).
+
+Odd divisions simply fall out of the rotation: upper/lower in 3 sessions reads `U L U | L U L | U L U` across periods; push/pull/legs in 4 sessions ends its first block on "Empuje B" and the next block (the deload) starts with "Tracción B". There is no restart at a period, a block or a deload.
+
+### Volume: five different things
+
+The allocator, the accessory selection and the quality report plan against **weekly** targets. A cycle spans K/N weeks, so the allocator measures the volume of the unit divided by `weeksPerGroup` (K/N) and one added set counts for N/K of it; with one week per unit nothing changes. Every ceiling stays weekly (20 effective sets, per-exercise limits, time per session). When the minimum dose of the exercises alone exceeds a ceiling (full body six times a week) the plan carries the usual review warning instead of hiding it.
+
+| Quantity | Where | Meaning |
+|---|---|---|
+| Volume per session | prescription / log | sets of one session |
+| Volume per rotation (period) | `weeks[]` of `GET /plans/current/load` | sets of the sessions of a period; `periodKind` says `Week` or `Rotation` |
+| Exposure | `LoadMetrics` | a workout that works a muscle with at least 2 weighted sets |
+| Dose per seven days, prescribed | `rolling.prescribedPer7Days` | the current block divided by the nominal weeks it spans |
+| Dose per seven days, real | `rolling.actual` | weighted sets and exposures of the workouts of the last seven real days (`performedAt`) |
+
+Five sessions done in six days and the same five done in ten days have the same volume per rotation and a different real dose: the dose is computed from instants, never from a period number (`LoadMetricsTests`). `rolling.observedSessionsPer7Days` is the pace between the user's workouts of the last 28 days and is **null** with fewer than four workouts or less than five days between the first and the last: the evidence does not support a number, so none is shown. It describes the recent past; it does not say the user is still training. Weighting (primary 1, secondary 0.5) is the convention of the recovery advice and the progress screen, a product choice and not a measurement of stimulus.
+
+Why not a moving window for the *plan*: the plan has to be generated before it is executed and the engine's targets are weekly, so the plan is balanced per cycle at the nominal cadence; the real dose is measured after the fact in a window of seven real days. Rotations were rejected as the unit of *measurement* (they are not time); exposures alone were rejected (they ignore sets).
+
+### Recovery: hard constraints, soft advice
+
+- Hard (the engine enforces them while generating, in both policies): session time limit, per-exercise set limits, the weekly ceilings, level, equipment, exclusions, limitations, one exercise at most once per session, the classical split and day combinations.
+- Soft (never prevents logging): `RecoveryAdvisor` reads the **instants** of the workouts, the effective sets per muscle weighted by proximity to failure and by what the user reported, and answers `Ready / Caution / Wait` with `availableAt` and alternatives. A period number is never a substitute for elapsed time, and the user can alter the order whenever they want. The coefficients are product values to tune with real data; no physiological model is claimed.
+- The cadence does not change the rule: it already depends on real elapsed time, so a user who trains every other day and one who trains daily get different answers from the same rule.
+
+### Progression
+
+Progression is per exposure: the double progression, the load references of the next block and the adaptation rules read the logged sets ordered by `performedAt` and never the period or the week of the calendar. A sequence plan's blocks, deloads and end are reached by resolving sessions, so progression cannot advance because time passed. A calendar plan keeps its documented behaviour (the next block is generated when its first week arrives). A skipped session is resolved without being an exposure; sessions logged out of order enter the history without applying automatic changes that newer data already superseded (see "Planned vs performed vs registered").
+
+### Execution state
+
+No new table: the state is derived from persisted facts. The last resolved session, the next pending one (`/current/next`), the rotation position (`(sequenceIndex - 1) mod K`), the real instants and the exposures come from `planned_sessions` + `workout_logs`; a stored copy would only be a second source of truth that can drift (a counter on the plan would break as soon as a session is edited or a block is regenerated). The generator receives the position as an argument.
+
+### Compatibility
+
+No schema change and no migration. Plans already created keep their sessions untouched; a sequence plan created with the previous version continues its rotation from the number of sessions it has (for a split whose period held a whole split nothing changes). Contract changes are additive: `PlanOptions.splitSupport`, `PlanLoadView.periodKind` and `.rolling`. `WeekNumber` keeps its column and name and means *period* (documented since the asynchronous split). Android reads `periodKind` to say "cycle" instead of "week" in the load chart; older apps ignore the new fields.
+
+### Alternatives considered
+
+- *One generation per period with the cycle offset* (each period an independent week of N sessions of the rotation): rejected, because the weekly volume targets would be judged on `U L U` and `L U L` separately and always miss.
+- *Allocate a whole block as one group*: rejected, it moves sets between periods arbitrarily and breaks the intra-block ramp.
+- *A persisted rotation index on the plan*: rejected (see Execution state).
+- *Scale every target and ceiling by K/N inside the allocator*: rejected for the same result with many more edits; normalising the measured volume leaves every weekly constant as it is.
+- *Keep two generators*: rejected by the brief; the calendar plan is the K = N special case.
+
+### Known limits
+
+- A cycle of K sessions at N sessions per seven days assumes the user trains about N times a week. A user who trains much less gets a lower real dose (visible in `rolling`) but the plan is not rewritten: no correction factor is invented. Adapting the *prescription* to the observed pace is the next step and needs real data.
+- One core exercise is planned per cycle (not per seven days), so the frequency of the direct core work depends on the cadence.
+- Sequence plans of full body in 5 or 6 sessions per period work the same muscles very frequently; the minimum dose of the exercises can exceed 20 weekly effective sets, which the plan reports in its warnings.
+- The calendar allocator breaks ties by session order and a Sunday sorts first (enum order). This predates the refactor, is pinned by the golden test and was left alone on purpose.
+- `TrainingProgramQualityReport.WeeksPerGroup` was added to the engine: DietoExpress does not have it yet (see `docs/shared-engine-package.md`).
 
 ## Coming back after time away: reschedule and re-entry
 

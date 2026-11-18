@@ -116,8 +116,23 @@ public sealed record HistoryItem(
 public sealed record WeekLoadView(
     int Week, DateOnly? WeekStart, string? PhaseType, bool IsDeload, int? PlannedSets, int? CompletedSets, int PlannedSessions, int LoggedSessions);
 
-/// <summary>Weekly volume of the whole plan, one entry per plan week, to draw planned against real load.</summary>
-public sealed record PlanLoadView(Guid PlanId, int TotalWeeks, int CurrentWeek, string Unit, IReadOnlyList<WeekLoadView> Weeks);
+/// <summary>
+/// Volume of the whole plan, one entry per period, to draw planned against real load. A period is a plan week in a calendar plan and a
+/// rotation (a group of sessions, not seven days) in a sequence plan: <paramref name="PeriodKind"/> says which. What the user really
+/// received in time is in <paramref name="Rolling"/>.
+/// </summary>
+public sealed record PlanLoadView(
+    Guid PlanId, int TotalWeeks, int CurrentWeek, string Unit, IReadOnlyList<WeekLoadView> Weeks, string PeriodKind = "Week",
+    RollingLoadView? Rolling = null);
+
+/// <summary>
+/// The dose of the last seven real days against what the current block prescribes per seven days. <paramref name="ObservedSessionsPer7Days"/>
+/// is null while there is not enough evidence of the user's pace (see <c>LoadMetrics</c>); <paramref name="NominalSessionsPer7Days"/> is what
+/// they planned.
+/// </summary>
+public sealed record RollingLoadView(
+    int WindowDays, DateTimeOffset From, DateTimeOffset To, int Workouts, int NominalSessionsPer7Days, decimal? ObservedSessionsPer7Days,
+    IReadOnlyList<MuscleDoseView> Actual, IReadOnlyList<MuscleDoseView> PrescribedPer7Days);
 
 /// <summary>A pending session whose planned date has passed. It can still be registered, or skipped, whenever the user wants.</summary>
 public sealed record OverdueSessionView(Guid Id, int SequenceIndex, string Title, DateOnly Date);
@@ -157,7 +172,14 @@ public sealed record PlanOptions(
     int MinimumTrainingDays, int MaximumTrainingDays, int MinimumSessionMinutes, int MaximumSessionMinutes,
     int MinimumTotalWeeks, int MaximumTotalWeeks, int DefaultTotalWeeks,
     IReadOnlyList<DayOption> DayOptions, string WeekStartsOn, string DefaultTimeZone,
-    IReadOnlyList<string>? SchedulingModes = null, int MinimumSessionsPerPeriod = 2, int MaximumSessionsPerPeriod = 6);
+    IReadOnlyList<string>? SchedulingModes = null, int MinimumSessionsPerPeriod = 2, int MaximumSessionsPerPeriod = 6,
+    IReadOnlyList<SplitSupportOption>? SplitSupport = null);
+
+/// <summary>
+/// What a split supports: the numbers of training days it accepts in a calendar plan and the numbers of sessions per period it accepts
+/// in a sequence plan. The backend owns these rules; a client should offer only these combinations.
+/// </summary>
+public sealed record SplitSupportOption(string Split, IReadOnlyList<int> CalendarDays, IReadOnlyList<int> SequenceSessions);
 
 /// <summary>A day of the week with a stable id (the English name used everywhere in the API), ISO number (Monday = 1) and Spanish labels.</summary>
 public sealed record DayOption(string Id, int IsoNumber, string Label, string ShortLabel);
