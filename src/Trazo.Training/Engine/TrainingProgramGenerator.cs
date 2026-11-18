@@ -722,29 +722,14 @@ public static class TrainingProgramGenerator
             .Split(' ', StringSplitOptions.RemoveEmptyEntries));
     }
 
-    // Equipment check: every required token must be available. "machine" is the generic gym
-    // option and is interchangeable with any "<something>-machine" token in both directions.
+    // Every required token must be explicitly available. Machine types are never interchangeable:
+    // a leg press, Smith machine and leg extension machine are different pieces of equipment.
     internal static bool HasRequiredEquipment(
         IReadOnlyList<string> requiredEquipment,
         IReadOnlySet<string> availableEquipment)
     {
         if (availableEquipment.Count == 0) return true;
-
-        return requiredEquipment.All(required =>
-        {
-            var token = NormalizeEquipmentToken(required);
-            if (availableEquipment.Contains(token)) return true;
-
-            // "machine" is the broad gym-equipment option. It satisfies a specific machine
-            // requirement; a specific machine also satisfies a generic machine requirement.
-            if (token.Equals("machine", StringComparison.OrdinalIgnoreCase))
-                return availableEquipment.Any(value =>
-                    value.Equals("machine", StringComparison.OrdinalIgnoreCase)
-                    || value.EndsWith("-machine", StringComparison.OrdinalIgnoreCase));
-
-            return token.EndsWith("-machine", StringComparison.OrdinalIgnoreCase)
-                && availableEquipment.Contains("machine");
-        });
+        return requiredEquipment.All(required => availableEquipment.Contains(NormalizeEquipmentToken(required)));
     }
 
     // Explains WHY no exercise was found by counting candidates after each filter step, so the
@@ -872,6 +857,8 @@ public static class TrainingProgramGenerator
             else
             {
                 if (exercise.RequiredEquipment.Any(string.IsNullOrWhiteSpace))
+                if (exercise.RequiredEquipment.Any(value => NormalizeEquipmentToken(value).Equals("machine", StringComparison.OrdinalIgnoreCase)))
+                    errors.Add($"El ejercicio '{exercise.ExerciseId}' debe especificar el tipo concreto de máquina, no el requisito genérico 'machine'.");
                     errors.Add($"El ejercicio '{exercise.ExerciseId}' contiene un requisito de material vacío.");
                 if (exercise.SuitableGoals.Any(goal => !Enum.IsDefined(goal)))
                     errors.Add($"El ejercicio '{exercise.ExerciseId}' contiene un objetivo compatible no válido.");
