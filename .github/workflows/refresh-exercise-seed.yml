@@ -1,7 +1,9 @@
 name: Refresh complete exercise seed
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - chore/full-exercise-library-seed
 
 permissions:
   contents: write
