@@ -1,4 +1,3 @@
-using Trazo.Application.Planning;
 using Trazo.Training;
 using Xunit;
 
@@ -1344,7 +1343,7 @@ public sealed class TrainingProgramGeneratorTests
     [InlineData(TrainingProgramSplit.Automatic, 6)]
     public void SequenceModeSupportsSplitRotationLengths(TrainingProgramSplit split, int count)
     {
-        var generated = TrainingProgramGenerator.Generate(Request() with { TrainingDays = PlanProfileParser.SyntheticDays(count), Split = split, DurationWeeks = 1, MaximumSessionDurationMinutes = 90, IsSequence = true }, Catalog());
+        var generated = TrainingProgramGenerator.Generate(Request() with { TrainingDays = Enumerable.Range(0, count).Select(index => (DayOfWeek)((index + 1) % 7)).ToArray(), Split = split, DurationWeeks = 1, MaximumSessionDurationMinutes = 90, IsSequence = true }, Catalog());
         Assert.True(generated.Succeeded, string.Join("; ", generated.Errors));
         var sessions = generated.Prescription!.Sessions.Where(s => s.WeekNumber == 1).ToArray();
         Assert.Equal(count, sessions.Length);
