@@ -14,7 +14,7 @@ Query parameters:
 | `movementPattern` | Exact movement-pattern filter |
 | `difficulty` | Exact difficulty filter |
 | `experience` | Exact minimum-experience filter |
-| `equipment` | Matches the primary equipment value or any required-equipment entry |
+| `equipment` | Matches an entry in `requiredEquipment` (all listed requirements are AND conditions for availability) |
 | `muscle` | Matches a primary or secondary muscle |
 | `page` | 1-based page number; defaults to 1 |
 | `pageSize` | Results per page; defaults to 30 and is capped at 100 |
@@ -28,6 +28,12 @@ GET /api/v1/exercises?q=press&movementPattern=HorizontalPush&page=1&pageSize=30
 The response contains `items`, `page`, `pageSize`, `totalCount` and `totalPages`. Results are ordered by descending selection priority, then Spanish name and stable ID. Invalid pagination or overlong filter values return HTTP 400.
 
 List items intentionally omit long instructions and tips. Use the detail endpoint when the user opens an exercise.
+
+## Complete active catalog
+
+`GET /api/v1/exercises/all`
+
+Returns every active exercise in one response, ordered by Spanish name and stable ID. Each item has the same complete metadata as the detail endpoint, including `requiredEquipment`. This endpoint is intended for first-party catalog audits and consumers that need the complete authoritative exercise list; it is not paginated.
 
 ## Exercise detail
 
@@ -51,8 +57,7 @@ These read-only catalog endpoints are currently public. They expose catalog data
 ## Filter options
 
 `GET /api/v1/exercises/options` (public, cacheable with `ETag` and `Cache-Control: public, max-age=300`) returns the vocabulary of the filters,
-derived from the active catalog: `movementPatterns`, `muscles`, `equipment`, `experienceLevels` and `difficulties`, each a list of
-`{ key, label, count }`. `key` is the stored value and is what the list filters accept (stable); `label` is Spanish; `count` is the number of exercises.
+derived from the active catalog: `movementPatterns`, `muscles`, `equipment`, `experienceLevels` and `difficulties`. The equipment vocabulary is derived exclusively from `requiredEquipment`, never the legacy descriptive `equipment` field. Generic `machine` is not a valid equipment requirement; each machine must use a specific stable identifier. Each option is an object `{ key, label, count }`. `key` is the stored value and is what the list filters accept (stable); `label` is Spanish; `count` is the number of exercises.
 `parameters` names the query parameter fed by each list. A value without a known Spanish label gets a readable fallback.
 
 Subscription access: `GET /api/v1/exercises*`, the images and this endpoint are public; only `/api/v1/plans/*` requires an active subscription when "Require a subscription" is on.

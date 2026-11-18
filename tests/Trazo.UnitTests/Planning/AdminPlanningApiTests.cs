@@ -76,7 +76,7 @@ public sealed class AdminPlanningApiTests : IDisposable
         ExerciseCandidateMapperTests.Item("triceps-extension", "Accessory", primary: ["Triceps"], secondary: [], equipment: ["cable"]),
         ExerciseCandidateMapperTests.Item("lateral-raise", "Accessory", primary: ["Deltoids"], secondary: [], equipment: ["dumbbell"]),
         ExerciseCandidateMapperTests.Item("calf-raise", "Accessory", primary: ["Calves"], secondary: [], equipment: []),
-        ExerciseCandidateMapperTests.Item("leg-curl", "Accessory", primary: ["Hamstrings"], secondary: [], equipment: ["machine"]),
+        ExerciseCandidateMapperTests.Item("leg-curl", "Accessory", primary: ["Hamstrings"], secondary: [], equipment: ["leg-curl-machine"]),
         ExerciseCandidateMapperTests.Item("rowing", "Cardio")
     ];
 

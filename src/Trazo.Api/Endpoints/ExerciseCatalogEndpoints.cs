@@ -16,6 +16,10 @@ public static class ExerciseCatalogEndpoints
             .WithName("SearchExercises")
             .WithSummary("Search and filter the exercise catalog.");
 
+        group.MapGet("/all", AllAsync)
+            .WithName("GetAllExercises")
+            .WithSummary("Get every active exercise with its complete metadata, including required equipment.");
+
         group.MapGet("/options", OptionsAsync)
             .WithName("GetExerciseFilterOptions")
             .WithSummary("Vocabulary of the catalog filters (movement patterns, muscles, equipment, levels) with Spanish labels and counts.")
@@ -26,6 +30,21 @@ public static class ExerciseCatalogEndpoints
             .WithSummary("Get the complete details of one exercise.");
 
         return endpoints;
+    }
+
+    private static async Task<IResult> AllAsync(TrazoDbContext db, CancellationToken cancellationToken)
+    {
+        var exercises = await db.ExerciseCatalog.AsNoTracking()
+            .Where(x => x.IsActive)
+            .OrderBy(x => x.NameEs).ThenBy(x => x.Id)
+            .Select(x => new ExerciseCatalogDetail(
+                x.Id, x.Source, x.NameEs, x.NameEn, x.DescriptionEs, x.InstructionsEs, x.TipsEs,
+                x.ForceType, x.Mechanic, x.Difficulty, x.Equipment, x.RequiredEquipment, x.BodyPart,
+                x.Met, x.IsUnilateral, x.IsBodyweight, x.MovementPattern, x.PrimaryMuscles,
+                x.SecondaryMuscles, x.MinimumExperience, x.SuitableGoals, x.SelectionPriority))
+            .ToListAsync(cancellationToken);
+
+        return Results.Ok(exercises);
     }
 
     private static async Task<IResult> SearchAsync(
@@ -78,7 +97,6 @@ public static class ExerciseCatalogEndpoints
         {
             var selectedEquipment = equipment.Trim();
             query = query.Where(x =>
-                x.Equipment == selectedEquipment ||
                 x.RequiredEquipment.Contains(selectedEquipment));
         }
 
@@ -125,11 +143,11 @@ public static class ExerciseCatalogEndpoints
     private static async Task<IResult> OptionsAsync(TrazoDbContext db, HttpContext http, CancellationToken cancellationToken)
     {
         var rows = await db.ExerciseCatalog.AsNoTracking().Where(x => x.IsActive)
-            .Select(x => new { x.MovementPattern, x.PrimaryMuscles, x.SecondaryMuscles, x.Equipment, x.RequiredEquipment, x.MinimumExperience, x.Difficulty })
+            .Select(x => new { x.MovementPattern, x.PrimaryMuscles, x.SecondaryMuscles, x.RequiredEquipment, x.MinimumExperience, x.Difficulty })
             .ToListAsync(cancellationToken);
 
         static IReadOnlyList<FilterOption> Build(IEnumerable<string?> values, IReadOnlyDictionary<string, string> labels) =>
-            values.Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v!.Trim()).GroupBy(v => v, StringComparer.Ordinal)
+            values.Where(v => !string.IsNullOrWhiteSpace(v) && !string.Equals(v.Trim(), "machine", StringComparison.OrdinalIgnoreCase)).Select(v => v!.Trim()).GroupBy(v => v, StringComparer.Ordinal)
                 .Select(g => new FilterOption(g.Key, ExerciseVocabulary.Label(labels, g.Key), g.Count()))
                 .OrderBy(o => o.Label, StringComparer.CurrentCultureIgnoreCase).ThenBy(o => o.Key, StringComparer.Ordinal).ToList();
 
@@ -138,7 +156,7 @@ public static class ExerciseCatalogEndpoints
         var options = new ExerciseFilterOptions(
             Build(rows.Select(r => r.MovementPattern), english ? ExerciseVocabulary.PatternsEn : ExerciseVocabulary.Patterns),
             Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), english ? ExerciseVocabulary.MusclesEn : ExerciseVocabulary.Muscles),
-            Build(rows.SelectMany(r => r.RequiredEquipment.Append(r.Equipment).Distinct()), english ? ExerciseVocabulary.EquipmentEn : ExerciseVocabulary.Equipment),
+            Build(rows.SelectMany(r => r.RequiredEquipment).Distinct(), english ? ExerciseVocabulary.EquipmentEn : ExerciseVocabulary.Equipment),
             Build(rows.Select(r => r.MinimumExperience), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
             Build(rows.Select(r => r.Difficulty), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
             new ExerciseFilterParameters("movementPattern", "muscle", "equipment", "experience", "difficulty"));
@@ -279,10 +297,10 @@ public static class ExerciseVocabulary
         ("Serratus", "Serrato"), ("TibialisAnterior", "Tibial anterior"), ("RotatorCuff", "Manguito rotador"));
 
     public static readonly IReadOnlyDictionary<string, string> Equipment = Map(
-        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"), ("machine", "Máquina"),
-        ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("bodyweight", "Peso corporal"),
+        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"),
+        ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("low-row-bar", "Barra baja para remo"), ("bodyweight", "Peso corporal"),
         ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
-        ("smith-machine", "Máquina Smith"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
+        ("smith-machine", "Máquina Smith"), ("leg-press-machine", "Prensa de piernas"), ("dip-station", "Estación de fondos"), ("ab-wheel", "Rueda abdominal"), ("step", "Escalón o plataforma"), ("resistance-band", "Banda elástica"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
         ("dip-bar", "Paralelas"), ("trx", "TRX"), ("other", "Otro"));
 
     public static readonly IReadOnlyDictionary<string, string> PatternsEn = Map(
@@ -298,10 +316,10 @@ public static class ExerciseVocabulary
         ("Serratus", "Serratus"), ("TibialisAnterior", "Tibialis anterior"), ("RotatorCuff", "Rotator cuff"));
 
     public static readonly IReadOnlyDictionary<string, string> EquipmentEn = Map(
-        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"), ("machine", "Machine"),
-        ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("bodyweight", "Bodyweight"),
+        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"),
+        ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("low-row-bar", "Low row bar"), ("bodyweight", "Bodyweight"),
         ("body-only", "Bodyweight"), ("band", "Resistance band"), ("bands", "Resistance bands"), ("ez-bar", "EZ bar"),
-        ("smith-machine", "Smith machine"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
+        ("smith-machine", "Smith machine"), ("leg-press-machine", "Leg press machine"), ("dip-station", "Dip station"), ("ab-wheel", "Ab wheel"), ("step", "Step / stable platform"), ("resistance-band", "Resistance band"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
         ("dip-bar", "Dip bars"), ("trx", "TRX"), ("other", "Other"));
 
     public static readonly IReadOnlyDictionary<string, string> LevelsEn = Map(

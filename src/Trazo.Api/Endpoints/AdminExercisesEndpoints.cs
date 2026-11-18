@@ -61,7 +61,7 @@ public static partial class AdminExercisesEndpoints
         if (!string.IsNullOrWhiteSpace(experience)) query = query.Where(x => x.MinimumExperience == experience);
         if (!string.IsNullOrWhiteSpace(source)) query = query.Where(x => x.Source == source);
         if (!string.IsNullOrWhiteSpace(equipment))
-            query = query.Where(x => x.Equipment == equipment || x.RequiredEquipment.Contains(equipment));
+            query = query.Where(x => x.RequiredEquipment.Contains(equipment));
         if (!string.IsNullOrWhiteSpace(muscle))
             query = query.Where(x => x.PrimaryMuscles.Contains(muscle) || x.SecondaryMuscles.Contains(muscle));
         query = status switch
@@ -105,18 +105,18 @@ public static partial class AdminExercisesEndpoints
     {
         var rows = await db.ExerciseCatalog.AsNoTracking().Select(x => new
         {
-            x.MovementPattern, x.Difficulty, x.MinimumExperience, x.Equipment, x.ForceType, x.Mechanic, x.BodyPart, x.Source,
+            x.MovementPattern, x.Difficulty, x.MinimumExperience, x.ForceType, x.Mechanic, x.BodyPart, x.Source,
             x.PrimaryMuscles, x.SecondaryMuscles, x.SuitableGoals, x.RequiredEquipment
         }).ToListAsync(cancellationToken);
 
         static string[] Distinct(IEnumerable<string?> values) =>
-            values.Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v!).Distinct().Order().ToArray();
+            values.Where(v => !string.IsNullOrWhiteSpace(v) && !string.Equals(v.Trim(), "machine", StringComparison.OrdinalIgnoreCase)).Select(v => v!).Distinct().Order().ToArray();
 
         return Results.Ok(new AdminExerciseOptions(
             Distinct(rows.Select(r => r.MovementPattern)),
             Distinct(rows.Select(r => r.Difficulty)),
             Distinct(rows.Select(r => r.MinimumExperience)),
-            Distinct(rows.Select(r => r.Equipment).Concat(rows.SelectMany(r => r.RequiredEquipment))),
+            Distinct(rows.SelectMany(r => r.RequiredEquipment)),
             Distinct(rows.Select(r => r.ForceType)),
             Distinct(rows.Select(r => r.Mechanic)),
             Distinct(rows.Select(r => r.BodyPart)),
@@ -295,6 +295,8 @@ public static partial class AdminExercisesEndpoints
         var secondary = List("secondaryMuscles", i.SecondaryMuscles, required: false);
         var goals = List("suitableGoals", i.SuitableGoals, required: true);
         var equipmentList = List("requiredEquipment", i.RequiredEquipment, required: false);
+        if (equipmentList.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
+            errors["requiredEquipment"] = ["Specify the exact machine type; generic machine is not a valid equipment requirement."];
         var forceType = Optional("forceType", i.ForceType, 80, "unknown");
         var mechanic = Optional("mechanic", i.Mechanic, 80, "unknown");
         var bodyPart = Optional("bodyPart", i.BodyPart, 100, "unknown");

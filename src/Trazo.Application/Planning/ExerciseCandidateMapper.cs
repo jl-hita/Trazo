@@ -26,6 +26,9 @@ public static class ExerciseCandidateMapper
         foreach (var item in catalog)
         {
             if (!item.IsActive) { skipped.Add(new(item.Id, "Hidden from the catalog.")); continue; }
+            if (item.RequiredEquipment.Any(value => string.Equals(value?.Trim(), "machine", StringComparison.OrdinalIgnoreCase)))
+            { skipped.Add(new(item.Id, "Generic machine equipment is ambiguous; specify the exact machine type.")); continue; }
+
             if (!TryParse<TrainingMovementPattern>(item.MovementPattern, out var pattern))
             { skipped.Add(new(item.Id, $"Movement pattern '{item.MovementPattern}' is not supported by the engine.")); continue; }
             if (!TryParse<TrainingExperience>(item.MinimumExperience, out var experience))

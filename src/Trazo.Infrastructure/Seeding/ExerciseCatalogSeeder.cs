@@ -8,7 +8,8 @@ namespace Trazo.Infrastructure.Seeding;
 
 /// <summary>
 /// Imports first-party curated exercise additions from the versioned JSON seed.
-/// Existing rows are deliberately not overwritten: admin curation always wins.
+/// Existing rows are preserved unless a newer seed version contains a metadata correction and the row
+/// has never been edited locally. Admin curation always wins.
 /// Safe to execute on every startup and serialized across concurrent API instances.
 /// </summary>
 public sealed class ExerciseCatalogSeeder(
@@ -60,6 +61,7 @@ public sealed class ExerciseCatalogSeeder(
 
         var now = DateTimeOffset.UtcNow;
         var inserted = 0;
+        var updated = 0;
         foreach (var entry in entries)
         {
             if (string.IsNullOrWhiteSpace(entry.Id) ||
@@ -70,14 +72,26 @@ public sealed class ExerciseCatalogSeeder(
                 entry.InstructionsEs.Any(string.IsNullOrWhiteSpace) ||
                 entry.PrimaryMuscles.Length == 0 ||
                 entry.SuitableGoals.Length == 0 ||
-                entry.SelectionPriority is < 0 or > 100)
+                entry.SelectionPriority is < 0 or > 100 ||
+                entry.RequiredEquipment.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
             {
                 throw new InvalidDataException($"Exercise seed entry '{entry.Id}' failed validation.");
             }
 
-            var exists = await db.ExerciseCatalog.AnyAsync(x => x.Id == entry.Id, cancellationToken);
-            if (exists)
+            var existing = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == entry.Id, cancellationToken);
+            if (existing is not null)
+            {
+                // Only apply explicit seed-version corrections to untouched first-party seed rows.
+                // Admin-edited rows have UpdatedAt != CreatedAt and are never overwritten.
+                if (existing.Source == Source && existing.SeedVersion < entry.Version && existing.UpdatedAt == existing.CreatedAt)
+                {
+                    existing.RequiredEquipment = entry.RequiredEquipment;
+                    existing.SeedVersion = entry.Version;
+                    existing.UpdatedAt = now;
+                    updated++;
+                }
                 continue;
+            }
 
             db.ExerciseCatalog.Add(new ExerciseCatalogItem
             {
@@ -110,13 +124,13 @@ public sealed class ExerciseCatalogSeeder(
             inserted++;
         }
 
-        if (inserted > 0)
+        if (inserted > 0 || updated > 0)
             await db.SaveChangesAsync(cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation(
-            "Exercise catalog seed processed: {SeedEntries} entries, {Inserted} inserted; existing entries preserved.",
-            entries.Count, inserted);
+            "Exercise catalog seed processed: {SeedEntries} entries, {Inserted} inserted, {Updated} untouched rows updated; locally curated entries preserved.",
+            entries.Count, inserted, updated);
     }
 }
