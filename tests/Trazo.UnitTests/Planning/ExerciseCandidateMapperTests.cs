@@ -56,6 +56,18 @@ public sealed class ExerciseCandidateMapperTests
     }
 
     [Fact]
+    public void RejectsGenericMachineInsteadOfTreatingItAsUniversalEquipment()
+    {
+        var result = ExerciseCandidateMapper.Map([
+            Item("generic-machine", equipment: ["machine"]),
+            Item("specific-machine", equipment: ["leg-press-machine"])
+        ]);
+
+        Assert.Equal(["specific-machine"], result.Candidates.Select(x => x.ExerciseId));
+        Assert.Contains("exact machine type", result.Skipped.Single().Reason);
+    }
+
+    [Fact]
     public void DropsUnknownValuesInsteadOfGuessing()
     {
         var candidate = Assert.Single(ExerciseCandidateMapper.Map([Item(
