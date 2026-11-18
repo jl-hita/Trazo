@@ -161,7 +161,7 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         var secondary = StringArray(e, "reviewedSecondaryMuscles") ?? StringArray(e, "secondaryMuscles") ?? [];
         var experience = OptionalString(e, "minimumExperience") ?? "intermediate";
         var goals = StringArray(e, "suitableGoals") ?? StringArray(e, "goals") ?? [];
-        var equipment = StringArray(e, "requiredEquipment") ?? (OptionalString(e, "equipment") is { Length: > 0 } item ? [item] : []);
+        var sourceEquipment = StringArray(e, "requiredEquipment") ?? (OptionalString(e, "equipment") is { Length: > 0 } item ? [item] : []);\n        var equipment = ExerciseEquipmentRequirements.Normalize(id, sourceEquipment);
         var priority = OptionalInt(e, "selectionPriority") ?? 50;
         if (string.IsNullOrWhiteSpace(pattern) || primary.Length == 0 || goals.Length == 0 ||
             instructions.Length == 0 || priority is < 0 or > 100 ||
