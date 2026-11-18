@@ -176,7 +176,7 @@ public sealed class EngineCoachingQualityTests
                 TrainingMovementPattern.VerticalPush, TrainingMovementPattern.HorizontalPull
             });
             // A barbell or a machine: never a goblet squat, a pulldown, a dumbbell squat or a push-up.
-            Assert.Contains(candidate.RequiredEquipment, token => token is "barbell" or "machine");
+            Assert.Contains(candidate.RequiredEquipment, token => token == "barbell" || token.EndsWith("-machine", StringComparison.OrdinalIgnoreCase));
             Assert.InRange(main.Sets, 3, 5);
             if (experience != TrainingExperience.Beginner)
                 Assert.Equal((3, 6), (main.MinRepetitions, main.MaxRepetitions));
