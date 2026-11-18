@@ -32,13 +32,14 @@ public sealed record RecoveryAssessment(
 public sealed record RecoveryRecommendation(RecoveryAssessment Next, IReadOnlyList<RecoveryAssessment> Alternatives);
 
 /// <summary>
-/// Estimates when the muscles of a pending session will be recovered. It is advice, never a block: the user can always train.
-/// There is no fixed rest: every muscle that was worked has its own window, which grows with the effective sets it received
-/// (primary sets count fully, secondary ones half), with how close to failure they were (RIR), and with what the user reported
-/// (insufficient recovery, high effort, pain, previous fatigue), and it is scaled by the experience level. A session is limited by
-/// the slowest muscle it works meaningfully; sessions that do not overlap with what was trained are ready right away.
-/// The coefficients are product values, kept here together so they can be tuned with real data. It lives in the application
-/// layer (not in the engine shared with DietoExpress) on purpose: see docs/shared-engine-package.md.
+/// Estimates when the muscles of a pending session are likely to be recovered. This is advice, never a gate: the user can always log the
+/// session. Each muscle has its own estimate, based on effective sets from the exercise-specific <c>TrainingStimulus</c> audit:
+/// primary muscles and meaningful secondary contributors count fully; incidental secondary labels do not count. Sets closer to
+/// failure (RIR), prior fatigue, reported recovery, session RPE and pain modify the estimate, which is scaled by experience.
+/// A pending session is limited by its slowest meaningfully trained muscle; a session with no meaningful overlap is Ready.
+/// The time coefficients and feedback multipliers below are product heuristics, not a validated physiological model, and are kept
+/// together so they can be tuned against real usage. This remains in the application layer rather than the shared generation engine
+/// because it consumes user feedback and returns advisory availability, not a prescription.
 /// </summary>
 public static class RecoveryAdvisor
 {

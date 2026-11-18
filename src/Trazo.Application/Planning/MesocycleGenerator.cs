@@ -3,12 +3,17 @@ using Trazo.Training;
 namespace Trazo.Application.Planning;
 
 /// <summary>
-/// One generated session. <paramref name="Date"/> and <paramref name="Day"/> exist only in a calendar plan; a sequence plan has
-/// neither, and its sessions are identified by their order.
+/// One generated session in program order. <c>WeekNumber</c> is the plan period number (a calendar week in calendar mode, a
+/// sequence period in sequence mode); <c>Date</c> and <c>Day</c> are populated only for calendar plans.
 /// </summary>
 public sealed record GeneratedSession(
     int WeekNumber, DateOnly? Date, DayOfWeek? Day, string Title, int EstimatedDurationMinutes, string PrescriptionJson);
 
+/// <summary>
+/// Result of generating one block. A successful result contains the ordered sessions and the engine's non-blocking quality report;
+/// failures contain errors and no sessions. The engine version travels with the result so persisted prescriptions can be traced
+/// to the rules that produced them.
+/// </summary>
 public sealed record MesocycleGeneration(
     IReadOnlyList<GeneratedSession> Sessions, IReadOnlyList<string> Errors, TrainingProgramQualityReport? Quality,
     string EngineVersion = "")
@@ -17,10 +22,10 @@ public sealed record MesocycleGeneration(
 }
 
 /// <summary>
-/// Generates ONE block of a plan with the engine. Pure and deterministic: the same profile, seed, block, catalog, history and
-/// rotation position always give the same sessions. The engine is the same for both scheduling modes; this adapter only says
-/// what the block is laid over: the training days of each week (calendar) or the continuation of the plan's rotation (sequence).
-/// Period numbers (and, in a calendar plan, dates) are absolute in the plan.
+/// Generates ONE block of a plan with the shared pure engine. Given the same profile, seed, block, catalog, history and rotation
+/// position it produces the same sessions. Calendar plans lay the unit over fixed training weekdays; sequence plans lay a continuous
+/// session rotation over consecutive periods and resume at the persisted session position. The period number (and calendar date,
+/// where applicable) is absolute within the plan; a period boundary never resets a sequence rotation.
 /// </summary>
 public static class MesocycleGenerator
 {

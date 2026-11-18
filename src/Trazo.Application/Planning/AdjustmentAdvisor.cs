@@ -31,17 +31,19 @@ public enum AdjustmentReason
 /// <param name="OverdueSessions">Pending sessions whose planned date has passed (calendar only).</param>
 /// <param name="WeeksBehind">Whole weeks the pending program is behind the calendar (calendar only).</param>
 /// <param name="RecentResolved">How many of the last resolved sessions are considered (at most <see cref="AdjustmentAdvisor.SkipWindow"/>).</param>
-/// <param name="RecentSkipped">How many of those were omitted (logged as not done).</param>
+/// <param name="RecentSkipped">How many of those were explicitly omitted (Skipped); incomplete workouts are not omissions.</param>
 public sealed record AdjustmentInput(bool Sequence, int? DaysSinceTraining, int OverdueSessions, int WeeksBehind, int RecentResolved, int RecentSkipped);
 
 /// <param name="EaseBackSessions">How many of the next sessions are made lighter after the absence (0, 1 or 2), whatever the strategy.</param>
-/// <param name="SuggestSkip">The oldest late session is worth omitting instead of recovering (calendar only).</param>
+/// <param name="SuggestSkip">The oldest late session is worth considering for omission (calendar only); the user must decide.</param>
+/// <param name="CanReschedule">A calendar plan is at least one whole week behind and can move its pending dates forward.</param>
 public sealed record AdjustmentAdvice(AdjustmentStrategy Strategy, AdjustmentReason Reason, int EaseBackSessions, bool CanReschedule, bool SuggestSkip);
 
 /// <summary>
 /// Chooses what to do about sessions not done from the real state of the training, so a one-off absence never turns into a volume
-/// change. The order of preference: keep the queue (default) &gt; move the calendar &gt; ease back in &gt; rebuild. Omitting is always the
-/// user's decision; the advisor only suggests it. Pure and deterministic.
+/// change. Strategies are evaluated in this precedence: rebuild after a very long absence or repeated omissions; otherwise ease back
+/// after a qualifying absence; otherwise offer a calendar shift when the plan is at least a week behind; otherwise continue the queue.
+/// A late session remains pending and in order. Omitting is always the user's decision; this advisor only suggests it. Pure and deterministic.
 /// </summary>
 public static class AdjustmentAdvisor
 {
@@ -62,6 +64,10 @@ public static class AdjustmentAdvisor
     public static int EaseBackSessionsFor(int? daysSinceTraining) =>
         daysSinceTraining >= DeepEaseBackAfterDays ? 2 : daysSinceTraining >= EaseBackAfterDays ? 1 : 0;
 
+    /// <summary>
+    /// Applies the strategy precedence documented on this type. Rebuild and ease-back are driven by the real absence/omission history;
+    /// shifting is only available to calendar plans; sequence plans simply continue their session order.
+    /// </summary>
     public static AdjustmentAdvice Advise(AdjustmentInput input)
     {
         var days = input.DaysSinceTraining;

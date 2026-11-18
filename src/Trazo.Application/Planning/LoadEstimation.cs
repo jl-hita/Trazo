@@ -3,10 +3,12 @@ using Trazo.Training;
 namespace Trazo.Application.Planning;
 
 /// <summary>
-/// Estimates the load for the next session of an exercise from several past sessions instead of repeating the last one. Each session
-/// contributes the best estimated maximum of its working sets (Epley with the reserve reported); the sessions are weighted 3:2:1 from the
-/// latest, so a bad day does not drag the load down nor a good one push it up. The estimated maximum becomes the load that matches the
-/// middle of the repetition range at the prescribed reserve, rounded to the usual increment and bounded around the last load. Pure.
+/// Estimates a target load for the next exposure of the same exercise, using up to its three latest sessions (latest first) rather than
+/// blindly repeating the last load. For each usable session it takes the highest estimated 1RM among completed working sets (Epley,
+/// accounting for reported RIR), then combines those estimates with recency weights 3:2:1. At least two sessions must contain usable
+/// sets; otherwise there is not enough evidence and the caller keeps the ordinary repeat/increase progression. The combined estimate
+/// is converted to the midpoint of the prescribed rep range at the target RIR, rounded to the equipment increment, and bounded to
+/// -10%/+5% of the last load. It is exercise-specific: history from a similar movement is not substituted. Pure.
 /// </summary>
 public static class LoadEstimation
 {
@@ -17,7 +19,7 @@ public static class LoadEstimation
 
     private static readonly decimal[] Weights = [3m, 2m, 1m];
 
-    /// <param name="sessions">Working sets of each past session, the latest first.</param>
+    /// <param name="sessions">Working sets grouped by session, newest first; only the first three sessions are considered.</param>
     /// <returns>The load to propose, or null when the evidence is not enough (fewer than two sessions with usable sets).</returns>
     public static decimal? Estimate(
         IReadOnlyList<IReadOnlyList<TrainingExecutedSet>> sessions, int minRepetitions, int maxRepetitions, decimal? targetRir, decimal lastLoadKg)
