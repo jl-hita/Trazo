@@ -27,6 +27,8 @@ import { errorMessage } from '../../core/setup.api';
     .rf .err { color: #f0a3a3; font-size: 12px; }
     .rf .ok { color: #7fd3a0; font-size: 12px; }
     .rf .warn { color: #e6d39b; }
+    .rf-pagination { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:12px 0 20px; color:#8291a6; font-size:12px; }
+    .rf-pagination .controls { display:flex; gap:6px; }
   `],
   template: `
     <div class="page-heading">
@@ -96,14 +98,14 @@ import { errorMessage } from '../../core/setup.api';
         }
       }
 
-      <h2>Invitations</h2>
+      <h2>Invitations <span class="muted">· {{ total() }} total</span></h2>
       <div class="rf-toolbar">
         <label>Status
-          <select [ngModel]="status()" (ngModelChange)="status.set($event); loadList()" name="status">
+          <select [ngModel]="status()" (ngModelChange)="status.set($event); page.set(1); loadList()" name="status">
             <option value="">All</option><option value="registered">Registered</option><option value="rewarded">Rewarded</option>
             <option value="voided">Voided</option><option value="skipped">Skipped</option>
           </select></label>
-        <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); loadList()" name="incidents"> Only incidents</span></label>
+        <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); page.set(1); loadList()" name="incidents"> Only incidents</span></label>
       </div>
       <table class="rf-table">
         <thead><tr><th>Registered</th><th>Referrer</th><th>Invited</th><th>Status</th><th>Reward</th><th></th></tr></thead>
@@ -125,6 +127,13 @@ import { errorMessage } from '../../core/setup.api';
           } @empty { <tr><td colspan="6" class="muted">No invitations for this filter.</td></tr> }
         </tbody>
       </table>
+      <div class="rf-pagination">
+        <span>Page {{ page() }} of {{ pageCount() }}</span>
+        <div class="controls">
+          <button class="rf-btn" type="button" [disabled]="page() <= 1" (click)="changePage(-1)">Previous</button>
+          <button class="rf-btn" type="button" [disabled]="page() >= pageCount()" (click)="changePage(1)">Next</button>
+        </div>
+      </div>
 
       @if (ledgerRows().length) {
         <h2>Premium-time ledger of the selected user</h2>
@@ -155,6 +164,10 @@ export class ReferralsPageComponent {
   protected readonly summary = signal<any>(null);
   protected readonly funnel = signal<any>(null);
   protected readonly items = signal<any[]>([]);
+  protected readonly total = signal(0);
+  protected readonly page = signal(1);
+  protected readonly pageSize = 25;
+  protected readonly pageCount = () => Math.max(1, Math.ceil(this.total() / this.pageSize));
   protected readonly ledgerRows = signal<any[]>([]);
   protected readonly message = signal('');
   protected readonly error = signal('');
@@ -183,8 +196,22 @@ export class ReferralsPageComponent {
 
   protected async loadList(): Promise<void> {
     try {
-      this.items.set((await this.api.getReferrals({ status: this.status() || undefined, incidents: this.incidents() || undefined })).items);
+      const result = await this.api.getReferrals({
+        status: this.status() || undefined,
+        incidents: this.incidents() || undefined,
+        page: this.page(),
+        pageSize: this.pageSize
+      });
+      this.items.set(result.items);
+      this.total.set(result.total);
     } catch (e) { this.error.set(errorMessage(e)); }
+  }
+
+  protected async changePage(delta: number): Promise<void> {
+    const next = this.page() + delta;
+    if (next < 1 || next > this.pageCount()) return;
+    this.page.set(next);
+    await this.loadList();
   }
 
   protected async ledger(userId: string): Promise<void> {
