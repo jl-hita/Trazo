@@ -69,13 +69,13 @@ public sealed class AdminExercisesApiTests : IDisposable
         return client;
     }
 
-    private static object Input(string nameEn = "Press de Banca", string? id = null) => new
+    private static object Input(string nameEn = "Press de Banca", string? id = null, string[]? requiredEquipment = null) => new
     {
         id, nameEs = "Press de banca", nameEn, descriptionEs = "Empuje horizontal con barra.",
         instructionsEs = new[] { "Tumbado, baja la barra al pecho.", "Empuja hasta extender los codos." },
         tipsEs = new[] { "Escápulas retraídas." }, difficulty = "intermediate", equipment = "barbell", bodyPart = "chest",
         movementPattern = "HorizontalPush", primaryMuscles = new[] { "Chest" }, secondaryMuscles = new[] { "Triceps" },
-        minimumExperience = "Beginner", suitableGoals = new[] { "Strength" }, requiredEquipment = new[] { "barbell", "bench" },
+        minimumExperience = "Beginner", suitableGoals = new[] { "Strength" }, requiredEquipment = requiredEquipment ?? new[] { "barbell", "bench" },
         selectionPriority = 80
     };
 
@@ -112,6 +112,7 @@ public sealed class AdminExercisesApiTests : IDisposable
 
         Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsJsonAsync("/api/v1/admin/exercises", Input("Press de Banca Pausado"))).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/v1/admin/exercises", Input(id: "Bad Id!"))).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/v1/admin/exercises", Input(requiredEquipment: ["machine"]))).StatusCode);
 
         var publicDetail = await (await ClientAsync(null)).GetAsync("/api/v1/exercises/press-de-banca-pausado");
         Assert.Equal(HttpStatusCode.OK, publicDetail.StatusCode);
