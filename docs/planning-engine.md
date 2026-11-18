@@ -185,8 +185,9 @@ text so the same mapping works on PostgreSQL and on SQLite in tests. A partial u
     - **Time.** While a session stays under 70 % of the time offered, its compound lifts (never the accessories) take
       one more set at a time up to those ceilings. Sessions of advanced six-day plans still end well under 90 minutes:
       the ceilings, not the clock, are the limit.
-    - **Core.** General-fitness and hypertrophy plans carry one direct core exercise a week (two sets) by default;
-      strength plans none; an explicit professional priority still puts core in every session.
+    - **Core.** No plan carries direct core work by default (engine 0.11.2): the squat, the hinge, the presses and the rows, free weights and
+      cables, make the transversus stabilize, so it is trained indirectly and spending time on it would be wasted. Only an explicit
+      professional priority puts core in every session.
     - **Ported tests updated on purpose** (10 cases of 329): the targets of hamstrings and calves
       (`TrainingProgramVolumeAllocatorTests`), default core and leg-curl count and the accessory-distribution scenario
       (`TrainingProgramGeneratorTests`), the engine version (`TrainingGeneratorEvaluationReportTests`) and the shared
@@ -318,7 +319,7 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
   pair of limitations breaks a full-gym plan and each one really excludes its exercises; every strength session opens
   with a heavy compound of 3-5 sets and keeps its lifts from block to block; the barbell basics compete, ties are not
   alphabetical and nobody is regressed to bodyweight drills when a loadable exercise exists; hamstrings get direct work
-  and never less than the calves; no lone sets; no muscle past 20 weekly sets; one core exercise a week outside strength;
+  and never less than the calves; no lone sets; no muscle past 20 weekly sets; no direct core unless a professional prioritizes it;
   sessions use about half or more of the time offered and the shortest session still produces a plan.
 - `Planning/MesocycleGeneratorPropertyTests` - over a grid of goal x level x days x equipment x seed: sets, reps, RIR and rest
   inside limits; session length within the limit; no repeated exercise in a session; no exercise above the user's level
@@ -460,7 +461,7 @@ The backend decides which session the user should do next; clients only show it.
 - `schedulingMode`: `Calendar` or `Sequence`. `IPlanTimeline` (`CalendarTimeline`, `SequenceTimeline`) answers "which is next / what is late"; the engine itself (generation, prescription, progression, adaptation) is shared by every mode.
 - `availability` (**Premium**; without it `availabilityLocked: true` and `availability: null`): `state` `Ready | Caution | Wait`, `availableAt`, `reasons` (Spanish, naming the muscles) and `alternatives` (later pending sessions that are ready now). It is advice: it never blocks logging.
 
-`RecoveryAdvisor` (application layer, not the shared engine) works per muscle, not with a fixed rest: effective sets (primary 1, secondary 0.5) over the last 6 days of the user's workouts, weighted by proximity to failure (RIR), scaled by experience, and lengthened by insufficient/partial recovery, session RPE >= 9, pain and "loaded" pre-fatigue answers. Window = `24 h + 5.5 h x weighted sets`, capped at 120 h; a muscle with fewer than 2 effective sets is not counted, and a pending session only counts muscles it trains with at least 3 effective sets. `Caution` = at most 12 h short. The coefficients are product values (constants in `RecoveryAdvisor`) to be tuned with real data.
+`RecoveryAdvisor` (application layer, not the shared engine) works per muscle, not with a fixed rest: effective sets (primary and meaningful secondary muscles 1, incidental ones 0: the engine's own definition, the same as the generator and the load chart) over the last 6 days of the user's workouts, weighted by proximity to failure (RIR), scaled by experience, and lengthened by insufficient/partial recovery, session RPE >= 9, pain and "loaded" pre-fatigue answers. Window = `24 h + 5.5 h x weighted sets`, capped at 120 h; a muscle with fewer than 2 effective sets is not counted, and a pending session only counts muscles it trains with at least 3 effective sets. `Caution` = at most 12 h short. The coefficients are product values (constants in `RecoveryAdvisor`) to be tuned with real data.
 
 ## Asynchronous split (`schedulingMode: "Sequence"`)
 
@@ -544,7 +545,6 @@ No schema change and no migration. Plans already created keep their sessions unt
 ### Known limits
 
 - A cycle of K sessions at N sessions per seven days assumes the user trains about N times a week. A user who trains much less gets a lower real dose (visible in `rolling`) but the plan is not rewritten: no correction factor is invented. Adapting the *prescription* to the observed pace is the next step and needs real data.
-- One core exercise is planned per cycle (not per seven days), so the frequency of the direct core work depends on the cadence.
 - Sequence plans of full body in 5 or 6 sessions per period work the same muscles very frequently; the minimum dose of the exercises can exceed 20 weekly effective sets, which the plan reports in its warnings.
 - The calendar allocator breaks ties by session order and a Sunday sorts first (enum order). This predates the refactor, is pinned by the golden test and was left alone on purpose.
 - `TrainingProgramQualityReport.WeeksPerGroup` was added to the engine: DietoExpress does not have it yet (see `docs/shared-engine-package.md`).

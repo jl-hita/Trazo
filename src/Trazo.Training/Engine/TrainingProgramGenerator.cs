@@ -636,9 +636,9 @@ public static class TrainingProgramGenerator
 
     /// <summary>
     /// The movement patterns each session of the week really trains, in order.
-    /// Core: one direct core exercise a week by default in general fitness and hypertrophy (in the session with
-    /// fewer patterns, the first of them on a tie), none in strength, every session when the professional
-    /// prioritizes the abdominal wall.
+    /// Core: no direct core work by default, in any goal. The squat, hinge, presses and rows (free weights, cables,
+    /// anything the transversus has to stabilize) already train it, and spending time on it is wasted; it is added to
+    /// every session only when the professional prioritizes the abdominal wall.
     /// Strength: the session opens with a main lift that can be loaded heavily, and the sessions of the week open
     /// with different patterns when they can (squat, press, deadlift) instead of three squat-first days.
     /// </summary>
@@ -648,21 +648,12 @@ public static class TrainingProgramGenerator
         Func<TrainingMovementPattern, TrainingExerciseCandidate[]> compatible)
     {
         var everySessionHasCore = HasExplicitCorePriority(request.MuscleVolumeTargets);
-        var coreSession = request.Goal == TrainingGoal.Strength
-            ? -1
-            : Enumerable.Range(0, split.Count)
-                .Where(index => split[index].Patterns.Contains(TrainingMovementPattern.Core))
-                .OrderBy(index => split[index].Patterns.Count)
-                .ThenBy(index => index)
-                .DefaultIfEmpty(-1)
-                .First();
-
         var openedWith = new HashSet<TrainingMovementPattern>();
         var result = new IReadOnlyList<TrainingMovementPattern>[split.Count];
         for (var index = 0; index < split.Count; index++)
         {
             var patterns = split[index].Patterns
-                .Where(pattern => pattern != TrainingMovementPattern.Core || everySessionHasCore || index == coreSession)
+                .Where(pattern => pattern != TrainingMovementPattern.Core || everySessionHasCore)
                 .ToList();
             if (request.Goal == TrainingGoal.Strength && patterns.Count > 0)
             {

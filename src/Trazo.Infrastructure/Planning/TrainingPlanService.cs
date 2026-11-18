@@ -522,7 +522,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var candidates = next.Candidates.Select(c => pending.First(s => s.Id == c.Id)).Select(s => new RecoveryCandidate(
                 s.Id, s.SequenceIndex, s.Title,
                 PrescriptionJson.Read(s.PrescriptionJson).Select(e => new RecoveryPlannedExercise(
-                    e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList())).ToList();
+                    e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets, e.ExerciseId)).ToList())).ToList();
             var recommendation = RecoveryAdvisor.Recommend(
                 candidates, await RecoveryHistoryAsync(userId, clock.GetUtcNow(), ct), clock.GetUtcNow(), Enum.Parse<TrainingExperience>(plan.Experience), Lang);
             availability = new AvailabilityView(
@@ -595,6 +595,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             if (plan.Mesocycles.FirstOrDefault(m => m.Id == target.MesocycleId) is { IsDeload: true } || PrescriptionJson.IsAdaptationDeload(target.PrescriptionJson))
                 continue;
             var session = await db.PlannedSessions.FirstAsync(s => s.Id == target.Id, ct);
+            // Another request may have eased it between our read and now: the marker of the stored row is the truth, not the one we read.
+            if (PrescriptionJson.EasedBackFor(session.PrescriptionJson) == absence) { already++; continue; }
             var ids = PrescriptionJson.Read(session.PrescriptionJson).Select(e => e.ExerciseId).ToHashSet(StringComparer.Ordinal);
             var json = session.PrescriptionJson;
             var changed = false;
@@ -783,7 +785,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 var rirs = group.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
                 exercises.Add(new RecoveryExercise(
                     exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), exercise.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
-                    group.Count(), rirs.Count == group.Count() ? rirs.Average() : null, loaded.Contains(group.Key)));
+                    group.Count(), rirs.Count == group.Count() ? rirs.Average() : null, loaded.Contains(group.Key), exercise.ExerciseId));
             }
             exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
         }

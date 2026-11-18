@@ -397,7 +397,7 @@ public sealed class EngineCoachingQualityTests
 
     [Theory]
     [MemberData(nameof(GymProfiles))]
-    public void GeneralFitnessAndHypertrophyGetOneCoreExerciseAWeekAndStrengthNone(TrainingGoal goal, TrainingExperience experience, int days)
+    public void NoGoalGetsDirectCoreWorkByDefault(TrainingGoal goal, TrainingExperience experience, int days)
     {
         var block = Block(PlanTestCatalog.Profile(goal, experience, days, FullGym, minutes: 60));
         Assert.True(block.Succeeded, string.Join("; ", block.Errors));
@@ -406,8 +406,7 @@ public sealed class EngineCoachingQualityTests
         {
             var core = week.SelectMany(session => PrescriptionJson.Read(session.PrescriptionJson))
                 .Where(exercise => Pattern(exercise) == TrainingMovementPattern.Core).ToList();
-            Assert.Equal(goal == TrainingGoal.Strength ? 0 : 1, core.Count);
-            Assert.All(core, exercise => Assert.Contains(TrainingMuscleGroup.Abdominals, exercise.PrimaryMuscleGroups));
+            Assert.Empty(core); // the squat, the hinge and the presses already train it: direct core is a professional's explicit priority
         }
     }
 
