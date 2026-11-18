@@ -24,6 +24,7 @@ public static class ReferralEndpoints
 {
     public const string RateLimitPolicy = "referrals";
     public const string PublicRateLimitPolicy = "referrals-public";
+    public const string ManagementPolicy = "referral-management";
     public const string DefaultPackage = "com.trazo.android";
 
     public static IEndpointRouteBuilder MapReferralEndpoints(this IEndpointRouteBuilder endpoints)
@@ -41,7 +42,7 @@ public static class ReferralEndpoints
         endpoints.MapGet("/.well-known/assetlinks.json", AssetLinksAsync).AllowAnonymous().ExcludeFromDescription();
 
         var admin = endpoints.MapGroup("/api/v1/admin/referrals").WithTags("Admin referrals")
-            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+            .RequireAuthorization(ManagementPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
         admin.MapGet("/summary", AdminSummaryAsync);
         admin.MapGet("", AdminListAsync);
         admin.MapGet("/users/{id:guid}/ledger", AdminLedgerAsync);
@@ -49,7 +50,7 @@ public static class ReferralEndpoints
         admin.MapPost("/grants/{id:guid}/retry", AdminRetryAsync);
         admin.MapPost("/reconcile", AdminReconcileAsync);
         endpoints.MapGet("/api/v1/admin/analytics/funnel", FunnelAsync).WithTags("Admin referrals")
-            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+            .RequireAuthorization(ManagementPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
         return endpoints;
     }
 
