@@ -326,20 +326,30 @@ public static class ExerciseVocabulary
         ("Serratus", "Serrato"), ("TibialisAnterior", "Tibial anterior"), ("RotatorCuff", "Manguito rotador"));
 
     public static readonly IReadOnlyDictionary<string, string> Equipment = Map(
-        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"),
-        ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("low-row-bar", "Barra baja para remo"), ("bodyweight", "Peso corporal"),
-        ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
-        ("smith-machine", "Máquina Smith"), ("leg-press-machine", "Prensa de piernas"), ("dip-station", "Estación de fondos"), ("ab-wheel", "Rueda abdominal"), ("step", "Escalón o plataforma"), ("resistance-band", "Banda elástica"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
-        ("dip-bar", "Paralelas"), ("trx", "TRX"), ("other", "Otro"),
+        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea / estación de cables"),
+        ("bench", "Banco de musculación"), ("squat-rack", "Jaula o rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"),
+        ("low-row-bar", "Barra baja para remo"), ("bodyweight", "Peso corporal"), ("body-only", "Peso corporal"),
+        ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("resistance-band", "Banda elástica"),
+        ("ez-bar", "Barra Z"), ("trap-bar", "Barra hexagonal"), ("smith-machine", "Máquina Smith"),
+        ("leg-press-machine", "Prensa de piernas"), ("hack-squat-machine", "Máquina de sentadilla hack"),
+        ("leg-curl-machine", "Máquina de curl femoral"), ("leg-extension-machine", "Máquina de extensión de piernas"),
+        ("dip-station", "Estación de fondos / paralelas"), ("captains-chair", "Silla romana"),
+        ("ab-wheel", "Rueda abdominal"), ("step", "Cajón o plataforma"), ("stability-ball", "Fitball / balón de estabilidad"),
+        ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
+        ("dip-bar", "Barras paralelas"), ("trx", "TRX"), ("suspension-trainer", "Entrenador de suspensión"),
+        ("rower", "Máquina de remo"), ("glute-ham-developer", "Banco GHD (glute-ham developer)"),
+        ("landmine", "Anclaje landmine para barra"), ("t-bar-row-handle", "Asa para remo en T"),
+        ("preacher-curl-bench", "Banco Scott"), ("other", "Otro"),
         ("assisted-pull-up-machine", "Máquina de dominadas asistidas"), ("chest-press-machine", "Máquina de press de pecho"),
         ("seated-row-machine", "Máquina de remo sentado"), ("hip-abduction-machine", "Máquina de abductores"),
         ("hip-adduction-machine", "Máquina de aductores"), ("back-extension-machine", "Máquina de extensión lumbar"),
         ("bicep-curl-machine", "Máquina de curl de bíceps"), ("standing-calf-raise-machine", "Máquina de gemelos de pie"),
-        ("chest-fly-machine", "Máquina de aperturas de pecho"), ("reverse-fly-machine", "Máquina de aperturas inversas"),
-        ("ab-crunch-machine", "Máquina de abdominales"), ("shoulder-press-machine", "Máquina de press de hombros"),
-        ("pec-deck", "Pec deck"), ("hip-thrust-machine", "Máquina de hip thrust"),
-        ("seated-calf-raise-machine", "Máquina de gemelos sentado"),
-        ("plate-loaded-lateral-raise-machine", "Máquina de elevaciones laterales"), ("lat-pulldown-machine", "Máquina de jalón al pecho"));
+        ("seated-calf-raise-machine", "Máquina de gemelos sentado"), ("chest-fly-machine", "Máquina de aperturas de pecho"),
+        ("reverse-fly-machine", "Máquina de aperturas inversas"), ("ab-crunch-machine", "Máquina de abdominales"),
+        ("shoulder-press-machine", "Máquina de press de hombros"), ("pec-deck", "Pec deck"),
+        ("hip-thrust-machine", "Máquina de hip thrust"),
+        ("plate-loaded-lateral-raise-machine", "Máquina de elevaciones laterales"),
+        ("lat-pulldown-machine", "Máquina de jalón al pecho"));
 
     public static readonly IReadOnlyDictionary<string, string> PatternsEn = Map(
         ("Squat", "Squat"), ("Hinge", "Hip hinge"), ("HorizontalPush", "Horizontal push"), ("VerticalPush", "Vertical push"),
@@ -354,20 +364,30 @@ public static class ExerciseVocabulary
         ("Serratus", "Serratus"), ("TibialisAnterior", "Tibialis anterior"), ("RotatorCuff", "Rotator cuff"));
 
     public static readonly IReadOnlyDictionary<string, string> EquipmentEn = Map(
-        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"),
-        ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("low-row-bar", "Low row bar"), ("bodyweight", "Bodyweight"),
-        ("body-only", "Bodyweight"), ("band", "Resistance band"), ("bands", "Resistance bands"), ("ez-bar", "EZ bar"),
-        ("smith-machine", "Smith machine"), ("leg-press-machine", "Leg press machine"), ("dip-station", "Dip station"), ("ab-wheel", "Ab wheel"), ("step", "Step / stable platform"), ("resistance-band", "Resistance band"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
-        ("dip-bar", "Dip bars"), ("trx", "TRX"), ("other", "Other"),
+        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable station"),
+        ("bench", "Weight bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"),
+        ("low-row-bar", "Low horizontal row bar"), ("bodyweight", "Bodyweight"), ("body-only", "Bodyweight"),
+        ("band", "Resistance band"), ("bands", "Resistance bands"), ("resistance-band", "Resistance band"),
+        ("ez-bar", "EZ bar"), ("trap-bar", "Trap bar / hex bar"), ("smith-machine", "Smith machine"),
+        ("leg-press-machine", "Leg press machine"), ("hack-squat-machine", "Hack squat machine"),
+        ("leg-curl-machine", "Leg curl machine"), ("leg-extension-machine", "Leg extension machine"),
+        ("dip-station", "Dip station / parallel bars"), ("captains-chair", "Captain's chair"),
+        ("ab-wheel", "Ab wheel"), ("step", "Plyometric box / step"), ("stability-ball", "Stability ball"),
+        ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Gymnastics rings"),
+        ("dip-bar", "Dip bars"), ("trx", "TRX"), ("suspension-trainer", "Suspension trainer"),
+        ("rower", "Rowing machine"), ("glute-ham-developer", "Glute-ham developer (GHD)"),
+        ("landmine", "Barbell landmine attachment"), ("t-bar-row-handle", "T-bar row handle"),
+        ("preacher-curl-bench", "Preacher curl bench"), ("other", "Other"),
         ("assisted-pull-up-machine", "Assisted pull-up machine"), ("chest-press-machine", "Chest press machine"),
         ("seated-row-machine", "Seated row machine"), ("hip-abduction-machine", "Hip abduction machine"),
         ("hip-adduction-machine", "Hip adduction machine"), ("back-extension-machine", "Back extension machine"),
         ("bicep-curl-machine", "Biceps curl machine"), ("standing-calf-raise-machine", "Standing calf raise machine"),
-        ("chest-fly-machine", "Chest fly machine"), ("reverse-fly-machine", "Reverse fly machine"),
-        ("ab-crunch-machine", "Ab crunch machine"), ("shoulder-press-machine", "Shoulder press machine"),
-        ("pec-deck", "Pec deck"), ("hip-thrust-machine", "Hip thrust machine"),
-        ("seated-calf-raise-machine", "Seated calf raise machine"),
-        ("plate-loaded-lateral-raise-machine", "Plate-loaded lateral raise machine"), ("lat-pulldown-machine", "Lat pulldown machine"));
+        ("seated-calf-raise-machine", "Seated calf raise machine"), ("chest-fly-machine", "Chest fly machine"),
+        ("reverse-fly-machine", "Reverse fly machine"), ("ab-crunch-machine", "Ab crunch machine"),
+        ("shoulder-press-machine", "Shoulder press machine"), ("pec-deck", "Pec deck"),
+        ("hip-thrust-machine", "Hip thrust machine"),
+        ("plate-loaded-lateral-raise-machine", "Plate-loaded lateral raise machine"),
+        ("lat-pulldown-machine", "Lat pulldown machine"));
 
     public static readonly IReadOnlyDictionary<string, string> LevelsEn = Map(
         ("Beginner", "Beginner"), ("Intermediate", "Intermediate"), ("Advanced", "Advanced"));
