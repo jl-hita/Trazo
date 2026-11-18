@@ -72,6 +72,21 @@ public sealed class ExerciseSeedAuditTests
     }
 
     [Fact]
+    public void RequiredEquipmentNeverUsesGenericMachineAndCapturesSpecificDependencies()
+    {
+        var genericMachine = Entries()
+            .Where(x => Names(x, "requiredEquipment").Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
+            .Select(x => x.GetProperty("id").GetString())
+            .ToList();
+        Assert.Empty(genericMachine);
+
+        Assert.Equal(["barbell", "bench"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "chest-supported-t-bar-row"), "requiredEquipment"));
+        Assert.Equal(["pull-up-bar", "dumbbell"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
+        Assert.Equal(["dip-station", "dumbbell"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
+        Assert.Equal(["step"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "elevated-pike-push-up"), "requiredEquipment"));
+    }
+
+    [Fact]
     public void EverySeededImageFolderBelongsToASeedExercise()
     {
         var ids = Entries().Select(x => x.GetProperty("id").GetString()!).ToHashSet();
