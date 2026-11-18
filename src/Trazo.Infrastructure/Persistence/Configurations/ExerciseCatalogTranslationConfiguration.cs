@@ -25,7 +25,7 @@ public sealed class ExerciseCatalogTranslationConfiguration : IEntityTypeConfigu
         builder.Property(x => x.Description);
         builder.Property(x => x.Instructions).HasColumnType("text[]");
         builder.Property(x => x.Tips).HasColumnType("text[]");
-        builder.Property(x => x.Status).HasMaxLength(16).IsRequired();
+        builder.Property(x => x.Status).HasMaxLength(16).HasDefaultValue("draft").IsRequired();
         builder.Property(x => x.UpdatedAt).HasColumnType("timestamp with time zone");
         builder.HasOne<ExerciseCatalogItem>().WithMany()
             .HasForeignKey(x => x.ExerciseId).OnDelete(DeleteBehavior.Cascade);
