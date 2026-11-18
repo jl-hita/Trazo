@@ -145,7 +145,7 @@ public sealed class ExerciseCatalogArtifactExporter(
             }
 
             if (OperatingSystem.IsLinux())
-                File.SetUnixFileMode(temporaryPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.GroupRead);
+                File.SetUnixFileMode(temporaryPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.GroupRead | UnixFileMode.OtherRead);
 
             // Keep the previous complete snapshot intact if serialization or writing fails.
             File.Move(temporaryPath, fullPath, overwrite: true);
