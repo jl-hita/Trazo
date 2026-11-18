@@ -61,7 +61,7 @@ public static partial class AdminExercisesEndpoints
         if (!string.IsNullOrWhiteSpace(experience)) query = query.Where(x => x.MinimumExperience == experience);
         if (!string.IsNullOrWhiteSpace(source)) query = query.Where(x => x.Source == source);
         if (!string.IsNullOrWhiteSpace(equipment))
-            query = query.Where(x => x.Equipment == equipment || x.RequiredEquipment.Contains(equipment));
+            query = query.Where(x => x.RequiredEquipment.Contains(equipment));
         if (!string.IsNullOrWhiteSpace(muscle))
             query = query.Where(x => x.PrimaryMuscles.Contains(muscle) || x.SecondaryMuscles.Contains(muscle));
         query = status switch
@@ -116,7 +116,7 @@ public static partial class AdminExercisesEndpoints
             Distinct(rows.Select(r => r.MovementPattern)),
             Distinct(rows.Select(r => r.Difficulty)),
             Distinct(rows.Select(r => r.MinimumExperience)),
-            Distinct(rows.Select(r => r.Equipment).Concat(rows.SelectMany(r => r.RequiredEquipment))),
+            Distinct(rows.SelectMany(r => r.RequiredEquipment)),
             Distinct(rows.Select(r => r.ForceType)),
             Distinct(rows.Select(r => r.Mechanic)),
             Distinct(rows.Select(r => r.BodyPart)),
