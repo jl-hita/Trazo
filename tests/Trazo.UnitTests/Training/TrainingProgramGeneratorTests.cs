@@ -1351,6 +1351,37 @@ public sealed class TrainingProgramGeneratorTests
         Assert.Equal(count, sessions.Select(s => s.Title).Distinct().Count());
     }
 
+    [Theory]
+    [InlineData(TrainingProgramSplit.UpperLower, 3)]
+    [InlineData(TrainingProgramSplit.FullBody, 5)]
+    [InlineData(TrainingProgramSplit.Automatic, 5)]
+    [InlineData(TrainingProgramSplit.PushPullLegs, 5)]
+    public void OddLengthSequenceRotationsContinueAcrossPeriodBoundaries(TrainingProgramSplit split, int count)
+    {
+        var generated = TrainingProgramGenerator.Generate(Request() with
+        {
+            TrainingDays = PlanProfileParser.SyntheticDays(count),
+            Split = split,
+            DurationWeeks = 2,
+            MaximumSessionDurationMinutes = 90,
+            IsSequence = true
+        }, Catalog());
+
+        Assert.True(generated.Succeeded, string.Join("; ", generated.Errors));
+        var firstPeriod = generated.Prescription!.Sessions
+            .Where(session => session.WeekNumber == 1)
+            .OrderBy(session => session.Day)
+            .ToArray();
+        var secondPeriod = generated.Prescription.Sessions
+            .Where(session => session.WeekNumber == 2)
+            .OrderBy(session => session.Day)
+            .ToArray();
+
+        Assert.Equal(count, firstPeriod.Length);
+        Assert.Equal(count, secondPeriod.Length);
+        Assert.NotEqual(firstPeriod[^1].Title, secondPeriod[0].Title);
+    }
+
     [Fact]
     public void SequenceModeRejectsTwoSessionPushPullLegs()
     {
