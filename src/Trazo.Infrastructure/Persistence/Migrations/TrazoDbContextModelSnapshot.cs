@@ -506,7 +506,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Description").HasColumnType("text");
             b.Property<string[]>("Instructions").HasColumnType("text[]");
             b.Property<string[]>("Tips").HasColumnType("text[]");
-            b.Property<string>("Status").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.Property<string>("Status").IsRequired().ValueGeneratedOnAdd().HasMaxLength(16).HasDefaultValue("draft").HasColumnType("character varying(16)");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("ExerciseId", "LanguageCode");
             b.HasIndex("LanguageCode", "Status");
