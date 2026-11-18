@@ -25,6 +25,9 @@ public static class DatabaseInitialization
         await seeder.SeedAsync();
         await scope.ServiceProvider.GetRequiredService<ExerciseImageSeeder>().SeedAsync();
 
+        // Export the effective database catalog (including administrator edits), not just seed files.
+        await scope.ServiceProvider.GetRequiredService<ExerciseCatalogArtifactExporter>().GenerateAsync();
+
         var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
         var bootstrapEmail = configuration["BootstrapAdmin:Email"];
         var bootstrapPassword = configuration["BootstrapAdmin:Password"];
