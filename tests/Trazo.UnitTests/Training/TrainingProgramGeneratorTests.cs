@@ -1275,7 +1275,6 @@ public sealed class TrainingProgramGeneratorTests
     [InlineData(TrainingProgramSplit.PushPullLegs, 3, "Empuje")]
     [InlineData(TrainingProgramSplit.PushPullLegs, 6, "Empuje")]
     [InlineData(TrainingProgramSplit.PushPullLegs, 5, "Empuje")]
-    [InlineData(TrainingProgramSplit.PushPullLegs, 4, "Empuje")]
     public void GeneratorHonorsSelectedWeeklySplit(TrainingProgramSplit split, int dayCount, string expectedTitlePrefix)
     {
         var days = new[]
@@ -1308,7 +1307,7 @@ public sealed class TrainingProgramGeneratorTests
     [Theory]
     [InlineData(TrainingProgramSplit.FullBody, 5)]
     [InlineData(TrainingProgramSplit.UpperLower, 3)]
-    [InlineData(TrainingProgramSplit.PushPullLegs, 2)]
+    [InlineData(TrainingProgramSplit.PushPullLegs, 4)]
     [InlineData(TrainingProgramSplit.Automatic, 5)]
     public void GeneratorRejectsUnsupportedSplitAndDayCombinations(TrainingProgramSplit split, int dayCount)
     {
@@ -1324,4 +1323,40 @@ public sealed class TrainingProgramGeneratorTests
         Assert.False(generated.Succeeded);
         Assert.Contains(generated.Errors, error => error.Contains("distribución", StringComparison.OrdinalIgnoreCase));
     }
+    [Theory]
+    [InlineData(TrainingProgramSplit.FullBody, 2)]
+    [InlineData(TrainingProgramSplit.FullBody, 3)]
+    [InlineData(TrainingProgramSplit.FullBody, 4)]
+    [InlineData(TrainingProgramSplit.FullBody, 5)]
+    [InlineData(TrainingProgramSplit.FullBody, 6)]
+    [InlineData(TrainingProgramSplit.UpperLower, 2)]
+    [InlineData(TrainingProgramSplit.UpperLower, 3)]
+    [InlineData(TrainingProgramSplit.UpperLower, 4)]
+    [InlineData(TrainingProgramSplit.UpperLower, 5)]
+    [InlineData(TrainingProgramSplit.UpperLower, 6)]
+    [InlineData(TrainingProgramSplit.PushPullLegs, 3)]
+    [InlineData(TrainingProgramSplit.PushPullLegs, 4)]
+    [InlineData(TrainingProgramSplit.PushPullLegs, 5)]
+    [InlineData(TrainingProgramSplit.PushPullLegs, 6)]
+    [InlineData(TrainingProgramSplit.Automatic, 2)]
+    [InlineData(TrainingProgramSplit.Automatic, 3)]
+    [InlineData(TrainingProgramSplit.Automatic, 4)]
+    [InlineData(TrainingProgramSplit.Automatic, 5)]
+    [InlineData(TrainingProgramSplit.Automatic, 6)]
+    public void SequenceModeSupportsSplitRotationLengths(TrainingProgramSplit split, int count)
+    {
+        var generated = TrainingProgramGenerator.Generate(Request() with { TrainingDays = PlanProfileParser.SyntheticDays(count), Split = split, DurationWeeks = 1, MaximumSessionDurationMinutes = 90, IsSequence = true }, Catalog());
+        Assert.True(generated.Succeeded, string.Join("; ", generated.Errors));
+        var sessions = generated.Prescription!.Sessions.Where(s => s.WeekNumber == 1).ToArray();
+        Assert.Equal(count, sessions.Length);
+        Assert.Equal(count, sessions.Select(s => s.Title).Distinct().Count());
+    }
+
+    [Fact]
+    public void SequenceModeRejectsTwoSessionPushPullLegs()
+    {
+        var generated = TrainingProgramGenerator.Generate(Request() with { TrainingDays = PlanProfileParser.SyntheticDays(2), Split = TrainingProgramSplit.PushPullLegs, IsSequence = true }, Catalog());
+        Assert.False(generated.Succeeded);
+    }
+
 }
