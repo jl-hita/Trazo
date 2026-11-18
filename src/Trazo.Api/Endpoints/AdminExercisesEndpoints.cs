@@ -295,6 +295,8 @@ public static partial class AdminExercisesEndpoints
         var secondary = List("secondaryMuscles", i.SecondaryMuscles, required: false);
         var goals = List("suitableGoals", i.SuitableGoals, required: true);
         var equipmentList = List("requiredEquipment", i.RequiredEquipment, required: false);
+        if (equipmentList.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
+            errors["requiredEquipment"] = ["Specify the exact machine type; generic machine is not a valid equipment requirement."];
         var forceType = Optional("forceType", i.ForceType, 80, "unknown");
         var mechanic = Optional("mechanic", i.Mechanic, 80, "unknown");
         var bodyPart = Optional("bodyPart", i.BodyPart, 100, "unknown");
