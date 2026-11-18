@@ -886,8 +886,10 @@ public sealed class ReferralApiTests : IDisposable
         Assert.Equal(1.0, summary.GetProperty("registeredToPaid").GetDouble());
         Assert.Equal(1, summary.GetProperty("paidMonthly").GetInt32());
 
-        var list = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/referrals?status=rewarded"));
+        var list = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/referrals?status=rewarded&from=2026-11-13T00:00:00Z&to=2026-11-15T00:00:00Z"));
         Assert.Equal(1, list.GetProperty("total").GetInt32());
+        var outsidePeriod = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/referrals?from=2026-11-15T00:00:00Z&to=2026-11-16T00:00:00Z"));
+        Assert.Equal(0, outsidePeriod.GetProperty("total").GetInt32());
         var grantId = Assert.Single(await GrantsOfAsync(referrer.Id)).Id;
         var ledger = await JsonAsync(await ClientFor(root).GetAsync($"/api/v1/admin/referrals/users/{referrer.Id}/ledger"));
         Assert.Equal("referral_reward", ledger.GetProperty("items")[0].GetProperty("kind").GetString());
