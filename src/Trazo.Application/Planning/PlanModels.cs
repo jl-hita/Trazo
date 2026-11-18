@@ -61,7 +61,10 @@ public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetiti
 /// What the user did the last time with an exercise (any plan) and a proposed working load for the next time:
 /// <c>SuggestionBasis</c> is <c>repeat</c> (same load) or <c>increase</c> (every set reached the top of the range).
 /// </summary>
-public sealed record LastPerformanceView(DateOnly Date, IReadOnlyList<LastSetView> Sets, decimal? SuggestedLoadKg, string? SuggestionBasis);
+/// <summary>
+/// <c>SuggestionBasis</c> is <c>repeat</c>, <c>increase</c> or <c>estimate</c> (Premium: from the estimated maximum of the last <c>BasedOnSessions</c> sessions of the exercise).
+/// </summary>
+public sealed record LastPerformanceView(DateOnly Date, IReadOnlyList<LastSetView> Sets, decimal? SuggestedLoadKg, string? SuggestionBasis, int? BasedOnSessions = null);
 
 public sealed record LoggedSetView(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool Pain);
 
@@ -86,6 +89,18 @@ public sealed record BlockWeekView(int WeekNumber, DateOnly? WeekStart, DateOnly
 /// per week. Later blocks are never served: they do not exist until their first week arrives.
 /// </summary>
 public sealed record BlockView(Guid PlanId, MesocycleView? Mesocycle, IReadOnlyList<BlockWeekView> Weeks, bool Locked = false);
+
+/// <summary>One thing the engine did (or decided not to do) after a session, in words the user can read.</summary>
+/// <param name="Kind">reduction_sets, raise_reserve, restore_sets, deload, hold_progression, muscle_add_set, muscle_reduce_set, load_update, reentry, reschedule, skip or review.</param>
+/// <param name="Changed">False for a review that left the plan as it was.</param>
+public sealed record AdaptationEntryView(
+    Guid Id, DateTimeOffset At, string Kind, string Summary, string Explanation, IReadOnlyList<ExerciseRefView> Exercises, int SessionsChanged,
+    bool Changed, string? SourceSession, DateOnly? SourceDate);
+
+public sealed record ExerciseRefView(string ExerciseId, string Name);
+
+/// <summary>The adjustments of the current plan, newest first, with totals. <c>Automatic</c> is false when the account has no automatic adaptation.</summary>
+public sealed record AdaptationHistoryView(int Reviews, int Changes, int SessionsAdjusted, bool Automatic, IReadOnlyList<AdaptationEntryView> Entries);
 
 public sealed record AppliedAdaptationView(string Kind, IReadOnlyList<string> ExerciseIds, int SessionsChanged, string Explanation);
 

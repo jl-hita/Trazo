@@ -577,6 +577,18 @@ Decisions and limits:
 - The thresholds (21, 42, 84 days; 3 of 5 omissions; 2 late sessions) are product values (constants of `AdjustmentAdvisor`) to tune with real data.
 - Load targets are not reduced after an absence: the lighter sessions rely on one set less and one more repetition in reserve, and the usual rules restore them.
 
+## What the engine adjusted, in view (`GET /api/v1/plans/current/adaptations`)
+
+The plan is recalculated **after every logged session**, not at the end of the block: `AdaptAsync` rewrites the pending sessions after the last one resolved (up to 40, in the same block and the next ones already generated). Automatic adaptation is Premium; omissions and moves are for everyone. Everything the engine decides is stored in `plan_adaptations` and shown:
+
+- `entries` (newest first): `kind`, `summary` (one line with the numbers: "Una serie menos en Press banca en las próximas 3 sesiones."), `explanation` (the engine's reason), `exercises` (id and name), `sessionsChanged`, `changed`, and the session that caused it (`sourceSession`, `sourceDate`). Kinds: `reduction_sets`, `muscle_reduce_set`, `muscle_add_set`, `restore_sets`, `raise_reserve`, `deload`, `hold_progression`, `load_update`, `reentry`, `reschedule`, `skip`, `review`.
+- `review` is a session the engine read and **left as it was** (`changed: false`): the user sees that it looked and why it kept the plan. It is written only for the newest evidence (a late log never decides anything).
+- `load_update` records every new target load (`Carga objetivo de la próxima sesión: 62.5 kg. ...`), which used to be written silently into the session.
+- Totals: `reviews`, `changes` (decisions that changed sessions), `sessionsAdjusted`; `automatic` is false when the account has no automatic adaptation (then only omissions and moves appear).
+- Texts follow `Accept-Language`; every new sentence has its entry in `EnglishCatalog`.
+
+**Proposed load with several sessions** (`lastPerformance.suggestionBasis: "estimate"`, `basedOnSessions`; Premium). `LoadEstimation` takes the best estimated maximum (Epley with the reserve reported) of up to the last three sessions of the exercise, weighted 3:2:1 from the latest, converts it to the load of the middle of the repetition range at the prescribed reserve, rounds it to the increment (1 kg below 20 kg, otherwise 2.5 kg) and bounds it around the last load (down 10 %, up 5 %). It needs two sessions with usable sets; with one it stays on `repeat`, and `increase` (every set at the top of the range) keeps priority. Limit: the estimate is per exercise, so a new exercise has no proposal even if an equivalent one has history.
+
 ## Language (`Accept-Language`)
 
 The plan API (`/api/v1/plans/**`, including the review conversation) answers in the language of the request: **Spanish by default**, English when the first language the client asks for (by quality) is `en`. The app should send `Accept-Language: <device language>`; anything missing, malformed or unsupported is Spanish, so no existing client changes. There is no stored preference yet.

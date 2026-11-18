@@ -32,6 +32,8 @@ public interface ITrainingPlanService
     /// <summary>Omits a pending session on purpose: resolved without being training, no progression, no volume adaptation unless the reason is physical (Premium).</summary>
     Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
+    /// <summary>What the engine adjusted and why, newest first (Premium accounts accumulate automatic ones; omissions and moves are for everyone).</summary>
+    Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
@@ -462,6 +464,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     }
 
     private const int RecoveryLookbackDays = 6;
+    private const int LoadEstimationSessions = 3;
 
 
     /// <summary>
@@ -576,6 +579,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     public const string ReentryKind = "reentry";
     public const string SkipKind = "skip";
+    public const string LoadUpdateKind = "load_update";
+    public const string ReviewKind = "review";
 
     /// <summary>
     /// True when the next session is (now or already) lighter for this absence; false when nothing could be lightened. Each session carries the
@@ -807,6 +812,59 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return result;
     }
 
+    public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return null;
+        var all = db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id);
+        var reviews = await all.CountAsync(a => a.Kind == ReviewKind, ct);
+        var changes = await all.CountAsync(a => a.Kind != ReviewKind && a.Kind != SkipKind && a.SessionsChanged > 0, ct);
+        var adjusted = await all.Where(a => a.Kind != ReviewKind && a.Kind != SkipKind).SumAsync(a => (int?)a.SessionsChanged, ct) ?? 0;
+        var rows = await all.OrderByDescending(a => a.AppliedAt).Take(Math.Clamp(take, 1, 100)).ToListAsync(ct);
+
+        var logIds = rows.Where(a => a.WorkoutLogId is not null).Select(a => a.WorkoutLogId!.Value).ToList();
+        var sources = await (from log in db.WorkoutLogs.AsNoTracking()
+                             join session in db.PlannedSessions.AsNoTracking() on log.PlannedSessionId equals session.Id
+                             where logIds.Contains(log.Id)
+                             select new { log.Id, session.Title, log.PerformedOn }).ToDictionaryAsync(x => x.Id, ct);
+        var names = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var json in await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => s.PrescriptionJson).ToListAsync(ct))
+            foreach (var e in PrescriptionJson.Read(json)) names.TryAdd(e.ExerciseId, NameOf(e.ExerciseId, e.ExerciseNameSnapshot));
+
+        var entries = rows.Select(a =>
+        {
+            var refs = a.ExerciseIds.Select(id => new ExerciseRefView(id, names.GetValueOrDefault(id, id))).ToList();
+            var source = a.WorkoutLogId is { } logId && sources.TryGetValue(logId, out var s) ? s : null;
+            return new AdaptationEntryView(
+                a.Id, a.AppliedAt, a.Kind, SummaryOf(a, refs), Tn(a.Explanation) ?? a.Explanation, refs, a.SessionsChanged,
+                a.Kind != ReviewKind && a.SessionsChanged > 0, source is null ? null : TitleOf(source.Title), source?.PerformedOn);
+        }).ToList();
+        return new AdaptationHistoryView(reviews, changes, adjusted, await subscriptions.HasPremiumAsync(userId, ct), entries);
+    }
+
+    /// <summary>One line with the numbers: what changed, in which exercises and for how many sessions.</summary>
+    private string SummaryOf(PlanAdaptation a, IReadOnlyList<ExerciseRefView> exercises)
+    {
+        var names = string.Join(", ", exercises.Select(e => e.Name));
+        var sessions = a.SessionsChanged;
+        return a.Kind switch
+        {
+            "reduction_sets" or "muscle_reduce_set" => string.Format(T("Una serie menos en {0} en las próximas {1} sesiones."), names, sessions),
+            "muscle_add_set" => string.Format(T("Una serie más en {0} en las próximas {1} sesiones."), names, sessions),
+            "restore_sets" => string.Format(T("Se devuelve una serie en {0} ({1} sesiones)."), names, sessions),
+            "raise_reserve" => string.Format(T("Una repetición más en reserva en las próximas {0} sesiones."), sessions),
+            "deload" => string.Format(T("Descarga: la mitad de las series y dos repeticiones más en reserva en {0} sesiones."), sessions),
+            "hold_progression" => T("Progresión de cargas en pausa durante 7 días."),
+            LoadUpdateKind => string.Format(T("Nueva carga objetivo en {0}."), names),
+            ReentryKind => string.Format(T("Vuelta tras una ausencia: {0} sesión(es) más ligeras."), sessions),
+            "reschedule" => string.Format(T("Programa movido: {0} sesiones cambian de fecha."), sessions),
+            SkipKind => T("Sesión omitida a propósito: el plan sigue con la siguiente."),
+            ReviewKind => T("Sesión revisada: no hacía falta cambiar el plan."),
+            _ => Tn(a.Explanation) ?? a.Explanation
+        };
+    }
+
     public async Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct)
     {
         var plan = await ActivePlanAsync(userId, ct);
@@ -1030,7 +1088,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var sameRequest = sent.ClientRequestId is { } key && existing.ClientRequestId == key;
         if (!sameRequest && !SameLog(existing, sent))
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
-        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id).OrderBy(a => a.AppliedAt).ToListAsync(ct))
+        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id && a.Kind != ReviewKind).OrderBy(a => a.AppliedAt).ToListAsync(ct))
             .Select(a => new AppliedAdaptationView(a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation)).ToList();
         var report = Localized(new AdaptationReport([], "none", "Este registro ya estaba guardado.", applied, []));
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, existing), report, Replayed: true));
@@ -1168,11 +1226,26 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 next.PrescriptionJson = updated;
                 next.UpdatedAt = now;
+                var explanation = $"Carga objetivo de la próxima sesión: {advice.NextLoadKg.Value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} kg. {advice.Explanation}";
+                db.PlanAdaptations.Add(new PlanAdaptation
+                {
+                    Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = LoadUpdateKind, ExerciseIds = [advice.ExerciseId],
+                    SessionsChanged = 1, Explanation = explanation, AppliedAt = now, EvidenceAt = evidenceNow
+                });
+                applied.Add(new AppliedAdaptationView(LoadUpdateKind, [advice.ExerciseId], 1, explanation));
             }
         }
 
         var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, ct) : ([], []);
         applied.AddRange(feedback.Applied);
+
+        // A session that was read and needed nothing is also a decision: the user sees that the engine looked at it and why it kept the plan.
+        if (isHead && applied.Count == 0)
+            db.PlanAdaptations.Add(new PlanAdaptation
+            {
+                Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = ReviewKind, ExerciseIds = [],
+                SessionsChanged = 0, Explanation = outcome.SessionExplanation, AppliedAt = now, EvidenceAt = evidenceNow
+            });
 
         return Localized(new AdaptationReport(
             outcome.Exercises.Select(a => new ExerciseAdviceView(a.ExerciseId, a.Action, a.Explanation, a.NextLoadKg, a.SuggestedRepetitions)).ToList(),
@@ -1441,9 +1514,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private async Task<Dictionary<string, LastPerformanceView>> LastPerformanceAsync(
         Guid userId, IReadOnlyList<PlannedSession> sessions, bool premium, CancellationToken ct)
     {
-        var ranges = new Dictionary<string, int>(StringComparer.Ordinal);
+        var ranges = new Dictionary<string, (int Min, int Max, decimal? Rir)>(StringComparer.Ordinal);
         foreach (var e in sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)))
-            ranges.TryAdd(e.ExerciseId, e.MaxRepetitions);
+            ranges.TryAdd(e.ExerciseId, (e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve));
         var result = new Dictionary<string, LastPerformanceView>(StringComparer.Ordinal);
         if (ranges.Count == 0) return result;
         var ids = ranges.Keys.ToList();
@@ -1459,16 +1532,33 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var heaviest = sets.Max(r => r.WeightKg);
             decimal? suggested = null;
             string? basis = null;
+            int? usedSessions = null;
             if (heaviest is > 0)
             {
                 // Proposing a heavier load is automatic progression, a Premium feature; everyone gets the last load to start from.
-                var atTop = premium && sets.Where(r => r.WeightKg == heaviest).All(r => r.Repetitions >= ranges[byExercise.Key]);
+                var range = ranges[byExercise.Key];
+                var atTop = premium && sets.Where(r => r.WeightKg == heaviest).All(r => r.Repetitions >= range.Max);
                 suggested = atTop ? heaviest + (heaviest < 20 ? 1m : 2.5m) : heaviest;
                 basis = atTop ? "increase" : "repeat";
+                // With two or more sessions of the exercise, the load of the new one is estimated from the best of each (weighted towards the
+                // latest) instead of repeating the last one: a bad day does not drag the load down nor a good one push it up. Premium, like every automatic load.
+                if (premium && !atTop)
+                {
+                    var recent = byExercise.GroupBy(r => r.Id).OrderByDescending(g => g.First().LoggedAt).Take(LoadEstimationSessions).ToList();
+                    if (LoadEstimation.Estimate(
+                            recent.Select(g => g.Where(r => r.WeightKg is > 0 && r.Repetitions is > 0)
+                                .Select(r => new TrainingExecutedSet("working", r.WeightKg, r.Repetitions, r.Rir, true)).ToList()).ToList(),
+                            range.Min, range.Max, range.Rir, heaviest!.Value) is { } estimate)
+                    {
+                        suggested = estimate;
+                        basis = "estimate";
+                        usedSessions = recent.Count;
+                    }
+                }
             }
             result[byExercise.Key] = new LastPerformanceView(
                 sets[0].PerformedOn,
-                sets.Select(r => new LastSetView(r.SetNumber, r.WeightKg, r.Repetitions, r.Rir)).ToList(), suggested, basis);
+                sets.Select(r => new LastSetView(r.SetNumber, r.WeightKg, r.Repetitions, r.Rir)).ToList(), suggested, basis, usedSessions);
         }
         return result;
     }
