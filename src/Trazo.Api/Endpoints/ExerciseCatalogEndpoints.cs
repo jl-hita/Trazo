@@ -147,7 +147,7 @@ public static class ExerciseCatalogEndpoints
             .ToListAsync(cancellationToken);
 
         static IReadOnlyList<FilterOption> Build(IEnumerable<string?> values, IReadOnlyDictionary<string, string> labels) =>
-            values.Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v!.Trim()).GroupBy(v => v, StringComparer.Ordinal)
+            values.Where(v => !string.IsNullOrWhiteSpace(v) && !string.Equals(v.Trim(), "machine", StringComparison.OrdinalIgnoreCase)).Select(v => v!.Trim()).GroupBy(v => v, StringComparer.Ordinal)
                 .Select(g => new FilterOption(g.Key, ExerciseVocabulary.Label(labels, g.Key), g.Count()))
                 .OrderBy(o => o.Label, StringComparer.CurrentCultureIgnoreCase).ThenBy(o => o.Key, StringComparer.Ordinal).ToList();
 
