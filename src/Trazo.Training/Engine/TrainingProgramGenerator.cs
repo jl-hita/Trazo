@@ -50,7 +50,7 @@ public static class TrainingProgramGenerator
             .Distinct()
             .OrderBy(day => ((int)day + 6) % 7)
             .ToArray();
-        var split = BuildSplit(days.Length, request.Split);
+        var split = BuildSplit(days.Length, request.Split, request.IsSequence);
         var excluded = new HashSet<string>(request.ExcludedExerciseIds, StringComparer.OrdinalIgnoreCase);
         var equipment = new HashSet<string>(
             request.AvailableEquipment
@@ -793,10 +793,10 @@ public static class TrainingProgramGenerator
             var dayCount = request.TrainingDays.Count;
             var supportedDayCount = request.Split switch
             {
-                TrainingProgramSplit.Automatic => dayCount is >= 2 and <= 4,
-                TrainingProgramSplit.FullBody => dayCount is >= 2 and <= 4,
-                TrainingProgramSplit.UpperLower => dayCount is 2 or 4,
-                TrainingProgramSplit.PushPullLegs => dayCount is 3 or 4 or 5 or 6,
+                TrainingProgramSplit.Automatic => request.IsSequence ? dayCount is >= 2 and <= 6 : dayCount is >= 2 and <= 4,
+                TrainingProgramSplit.FullBody => request.IsSequence ? dayCount is >= 2 and <= 6 : dayCount is >= 2 and <= 4,
+                TrainingProgramSplit.UpperLower => request.IsSequence ? dayCount is >= 2 and <= 6 : dayCount is 2 or 4,
+                TrainingProgramSplit.PushPullLegs => request.IsSequence ? dayCount is >= 3 and <= 6 : dayCount is 3 or 5 or 6,
                 _ => false
             };
             if (!supportedDayCount)
@@ -804,7 +804,7 @@ public static class TrainingProgramGenerator
                 {
                     TrainingProgramSplit.FullBody => "Cuerpo completo admite de 2 a 4 días; cambia la disponibilidad o elige otra distribución.",
                     TrainingProgramSplit.UpperLower => "Torso/Pierna admite 2 o 4 días; cambia la disponibilidad o elige otra distribución.",
-                    TrainingProgramSplit.PushPullLegs => "Push/Pull/Legs admite entre 3 y 6 sesiones por rotación; cambia la disponibilidad o elige otra distribución.",
+                    TrainingProgramSplit.PushPullLegs => "Push/Pull/Legs admite 3, 5 o 6 días; cambia la disponibilidad o elige otra distribución.",
                     _ => "La distribución automática admite entre 2 y 4 días."
                 });
         }
@@ -1210,7 +1210,7 @@ public static class TrainingProgramGenerator
     // Session templates are ordered rotations. Calendar scheduling may place them within a week;
     // sequence scheduling advances through them independently of weekdays. Every template lists
     // the movement patterns a session must cover; titles also constrain accessory muscle selection.
-    private static IReadOnlyList<SessionTemplate> BuildSplit(int daysPerWeek, TrainingProgramSplit requestedSplit)
+    private static IReadOnlyList<SessionTemplate> BuildSplit(int daysPerWeek, TrainingProgramSplit requestedSplit, bool isSequence = false)
     {
         var fullBodyA = new SessionTemplate("Cuerpo completo A",
             [TrainingMovementPattern.Squat, TrainingMovementPattern.HorizontalPush, TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.Hinge, TrainingMovementPattern.Core]);
@@ -1235,6 +1235,29 @@ public static class TrainingProgramGenerator
         var pullB = new SessionTemplate("Tracción B", [TrainingMovementPattern.VerticalPull, TrainingMovementPattern.HorizontalPull, TrainingMovementPattern.Core]);
         var legs = new SessionTemplate("Pierna",
             [TrainingMovementPattern.Squat, TrainingMovementPattern.Hinge, TrainingMovementPattern.SingleLeg, TrainingMovementPattern.Core]);
+
+        if (isSequence)
+        {
+            // Sequence mode is a rotation, not a promise to train on these weekdays. Keep the calendar matrix unchanged.
+            return requestedSplit switch
+            {
+                TrainingProgramSplit.FullBody => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? fullBodyA : fullBodyB) with { Title = "Cuerpo completo " + (char)('A' + i) }).ToArray(),
+                TrainingProgramSplit.UpperLower => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? upperA : lowerA) with { Title = (i % 2 == 0 ? "Tren superior " : "Tren inferior ") + (char)('A' + i / 2) }).ToArray(),
+                TrainingProgramSplit.PushPullLegs when daysPerWeek == 3 => [push, pull, legs],
+                TrainingProgramSplit.PushPullLegs when daysPerWeek == 4 => [push, pull, legs, upperB with { Title = "Torso" }],
+                TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
+                TrainingProgramSplit.PushPullLegs when daysPerWeek == 6 => [push, pull, legs, pushB, pullB, legs with { Title = "Pierna B", Patterns = lowerB.Patterns }],
+                TrainingProgramSplit.Automatic => daysPerWeek switch
+                {
+                    2 or 3 => Enumerable.Range(0, daysPerWeek).Select(i => (i % 2 == 0 ? fullBodyA : fullBodyB) with { Title = "Cuerpo completo " + (char)('A' + i) }).ToArray(),
+                    4 => [upperA, lowerA, upperB, lowerB],
+                    5 => [push, pull, legs, pushB, pullB],
+                    6 => [push, pull, legs, pushB, pullB, legs with { Title = "Pierna B", Patterns = lowerB.Patterns }],
+                    _ => []
+                },
+                _ => []
+            };
+        }
 
         return requestedSplit switch
         {
@@ -1319,6 +1342,7 @@ public sealed record TrainingProgramGenerationRequest(
     TrainingProgramSplit Split = TrainingProgramSplit.Automatic,
     int? RotationIndex = null,
     IReadOnlyList<TrainingLoadReference>? LoadReferences = null,
+    bool IsSequence = false,
     // History of the previous block of the same plan (filled by the server, never trusted for safety):
     // exercises it used, and whether this block directly continues a non-deload block.
     IReadOnlyList<string>? PreviousBlockExerciseIds = null,
