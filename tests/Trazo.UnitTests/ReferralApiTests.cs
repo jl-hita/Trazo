@@ -844,7 +844,7 @@ public sealed class ReferralApiTests : IDisposable
         var admin = await AddUserAsync("admin@example.com", "admin");
         var commercial = await AddUserAsync("commercial@example.com", "commercial");
         var root = await AddUserAsync("root@example.com", "superadmin");
-        foreach (var path in new[] { "/api/v1/admin/referrals/summary", "/api/v1/admin/referrals", "/api/v1/admin/analytics/funnel" })
+        foreach (var path in new[] { "/api/v1/admin/referrals/settings", "/api/v1/admin/referrals/summary", "/api/v1/admin/referrals", "/api/v1/admin/analytics/funnel" })
         {
             Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(user).GetAsync(path)).StatusCode);
             Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(admin).GetAsync(path)).StatusCode);
@@ -852,8 +852,18 @@ public sealed class ReferralApiTests : IDisposable
             Assert.Equal(HttpStatusCode.OK, (await ClientFor(commercial).GetAsync(path)).StatusCode);
             Assert.Equal(HttpStatusCode.OK, (await ClientFor(root).GetAsync(path)).StatusCode);
         }
+        var settings = await JsonAsync(await ClientFor(commercial).GetAsync("/api/v1/admin/referrals/settings"));
+        Assert.Equal(30, settings.GetProperty("referralRewardDays").GetInt32());
+        Assert.Equal(HttpStatusCode.OK, (await ClientFor(commercial).PutAsJsonAsync("/api/v1/admin/referrals/settings",
+            new { enabled = false, rewardDays = 45 })).StatusCode);
+        var persisted = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/settings/promotions"));
+        Assert.False(persisted.GetProperty("referralsEnabled").GetBoolean());
+        Assert.Equal(45, persisted.GetProperty("referralRewardDays").GetInt32());
+
         Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(commercial).PostAsJsonAsync($"/api/v1/admin/referrals/grants/{Guid.NewGuid()}/void", new { reason = "because" })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(admin).PostAsJsonAsync($"/api/v1/admin/referrals/grants/{Guid.NewGuid()}/void", new { reason = "because" })).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(admin).PutAsJsonAsync("/api/v1/admin/referrals/settings",
+            new { enabled = true, rewardDays = 30 })).StatusCode);
     }
 
     [Fact]
