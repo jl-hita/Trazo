@@ -84,6 +84,10 @@ public sealed class ExerciseSeedAuditTests
         Assert.Equal(["pull-up-bar", "dumbbell"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
         Assert.Equal(["dip-station", "dumbbell"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
         Assert.Equal(["step"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "elevated-pike-push-up"), "requiredEquipment"));
+        Assert.Equal(["barbell", "squat-rack"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "rack-pull"), "requiredEquipment"));
+        Assert.Equal(["barbell", "squat-rack"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "pause-squat"), "requiredEquipment"));
+        Assert.Equal(["barbell", "bench", "squat-rack"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "barbell-bulgarian-split-squat"), "requiredEquipment"));
+        Assert.Equal(["low-row-bar"], Names(Entries().Single(x => x.GetProperty("id").GetString() == "bent-knee-inverted-row"), "requiredEquipment"));
     }
 
     [Fact]
