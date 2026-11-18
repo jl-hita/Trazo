@@ -804,7 +804,9 @@ public static class TrainingProgramGenerator
                 {
                     TrainingProgramSplit.FullBody => "Cuerpo completo admite de 2 a 4 días; cambia la disponibilidad o elige otra distribución.",
                     TrainingProgramSplit.UpperLower => "Torso/Pierna admite 2 o 4 días; cambia la disponibilidad o elige otra distribución.",
-                    TrainingProgramSplit.PushPullLegs => "Push/Pull/Legs admite 3, 5 o 6 días; cambia la disponibilidad o elige otra distribución.",
+                    TrainingProgramSplit.PushPullLegs => request.IsSequence
+                        ? "Push/Pull/Legs admite entre 3 y 6 sesiones por rotación; cambia la disponibilidad o elige otra distribución."
+                        : "Push/Pull/Legs admite 3, 5 o 6 días; cambia la disponibilidad o elige otra distribución.",
                     _ => "La distribución automática admite entre 2 y 4 días."
                 });
         }
