@@ -29,6 +29,9 @@ import { errorMessage } from '../../core/setup.api';
     .rf .warn { color: #e6d39b; }
     .rf-pagination { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:12px 0 20px; color:#8291a6; font-size:12px; }
     .rf-pagination .controls { display:flex; gap:6px; }
+    .rf-settings { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:14px; border:1px solid #293444; border-radius:8px; background:#131b27; }
+    .rf-settings label { display:grid; gap:6px; color:#aab6c7; font-size:12px; }
+    .rf-settings input[type=number] { width:110px; padding:9px 11px; border:1px solid #34465b; border-radius:6px; background:#0d1119; color:#e8edf5; }
   `],
   template: `
     <div class="page-heading">
@@ -47,6 +50,16 @@ import { errorMessage } from '../../core/setup.api';
         <button type="button" (click)="reconcile()">Run reconciliation</button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
+      </div>
+
+      <h2>Programme configuration</h2>
+      <div class="rf-settings">
+        <label><span><input type="checkbox" [ngModel]="programmeEnabled()" (ngModelChange)="programmeEnabled.set($event)" name="programmeEnabled"> Enable referral programme</span></label>
+        <label>Reward for a successful referral (days)
+          <input type="number" min="1" [max]="maxRewardDays()" [ngModel]="rewardDays()" (ngModelChange)="rewardDays.set($event)" name="rewardDays">
+        </label>
+        <button class="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (click)="saveProgramme()">Save settings</button>
+        <span class="muted">Maximum {{ maxRewardDays() }} days. Changes affect new rewards, not grants already issued.</span>
       </div>
 
       @if (summary(); as s) {
@@ -162,6 +175,10 @@ export class ReferralsPageComponent {
   protected readonly status = signal('');
   protected readonly incidents = signal(false);
   protected readonly summary = signal<any>(null);
+  protected readonly programmeEnabled = signal(false);
+  protected readonly rewardDays = signal(30);
+  protected readonly maxRewardDays = signal(365);
+  protected readonly settingsBusy = signal(false);
   protected readonly funnel = signal<any>(null);
   protected readonly items = signal<any[]>([]);
   protected readonly total = signal(0);
@@ -186,12 +203,29 @@ export class ReferralsPageComponent {
     this.error.set('');
     try {
       const range = this.range();
-      const [summary, funnel] = await Promise.all([
-        this.api.getReferralSummary(range), this.api.getFunnel({ ...range, channel: this.channel() || undefined })
+      const [summary, funnel, settings] = await Promise.all([
+        this.api.getReferralSummary(range),
+        this.api.getFunnel({ ...range, channel: this.channel() || undefined }),
+        this.api.getReferralProgrammeSettings()
       ]);
       this.summary.set(summary); this.funnel.set(funnel);
+      this.programmeEnabled.set(settings.referralsEnabled);
+      this.rewardDays.set(settings.referralRewardDays);
+      this.maxRewardDays.set(settings.maxDays);
       await this.loadList();
     } catch (e) { this.error.set(errorMessage(e)); }
+  }
+
+  protected async saveProgramme(): Promise<void> {
+    this.settingsBusy.set(true); this.error.set(''); this.message.set('');
+    try {
+      const saved = await this.api.saveReferralProgrammeSettings({ enabled: this.programmeEnabled(), rewardDays: this.rewardDays() });
+      this.programmeEnabled.set(saved.referralsEnabled);
+      this.rewardDays.set(saved.referralRewardDays);
+      this.maxRewardDays.set(saved.maxDays);
+      this.message.set('Referral programme settings saved.');
+    } catch (e) { this.error.set(errorMessage(e)); }
+    finally { this.settingsBusy.set(false); }
   }
 
   protected async loadList(): Promise<void> {
