@@ -796,7 +796,7 @@ public static class TrainingProgramGenerator
                 TrainingProgramSplit.Automatic => dayCount is >= 2 and <= 4,
                 TrainingProgramSplit.FullBody => dayCount is >= 2 and <= 4,
                 TrainingProgramSplit.UpperLower => dayCount is 2 or 4,
-                TrainingProgramSplit.PushPullLegs => dayCount is 3 or 5 or 6,
+                TrainingProgramSplit.PushPullLegs => dayCount is 3 or 4 or 5 or 6,
                 _ => false
             };
             if (!supportedDayCount)
@@ -804,7 +804,7 @@ public static class TrainingProgramGenerator
                 {
                     TrainingProgramSplit.FullBody => "Cuerpo completo admite de 2 a 4 días; cambia la disponibilidad o elige otra distribución.",
                     TrainingProgramSplit.UpperLower => "Torso/Pierna admite 2 o 4 días; cambia la disponibilidad o elige otra distribución.",
-                    TrainingProgramSplit.PushPullLegs => "Push/Pull/Legs admite 3, 5 o 6 días; cambia la disponibilidad o elige otra distribución.",
+                    TrainingProgramSplit.PushPullLegs => "Push/Pull/Legs admite entre 3 y 6 sesiones por rotación; cambia la disponibilidad o elige otra distribución.",
                     _ => "La distribución automática admite entre 2 y 4 días."
                 });
         }
@@ -1207,9 +1207,9 @@ public static class TrainingProgramGenerator
         });
     }
 
-    // Weekly templates. Every template lists the movement patterns a session must cover; titles
-    // are also used later to restrict accessory muscles (e.g. "superior", "Empuje"). Unsupported
-    // split/day combinations return an empty list and are rejected earlier in ValidateRequest.
+    // Session templates are ordered rotations. Calendar scheduling may place them within a week;
+    // sequence scheduling advances through them independently of weekdays. Every template lists
+    // the movement patterns a session must cover; titles also constrain accessory muscle selection.
     private static IReadOnlyList<SessionTemplate> BuildSplit(int daysPerWeek, TrainingProgramSplit requestedSplit)
     {
         var fullBodyA = new SessionTemplate("Cuerpo completo A",
@@ -1241,6 +1241,7 @@ public static class TrainingProgramGenerator
             TrainingProgramSplit.FullBody when daysPerWeek == 2 => [fullBodyA, fullBodyB],
             TrainingProgramSplit.FullBody when daysPerWeek == 3 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }],
             TrainingProgramSplit.FullBody when daysPerWeek == 4 => [fullBodyA, fullBodyB, fullBodyA with { Title = "Cuerpo completo C" }, fullBodyB with { Title = "Cuerpo completo D" }],
+            TrainingProgramSplit.PushPullLegs when daysPerWeek == 4 => [push, pull, legs, upperB with { Title = "Torso" }],
             TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [push, pull, legs, pushB, pullB],
             TrainingProgramSplit.UpperLower when daysPerWeek == 2 => [upperA, lowerA],
             TrainingProgramSplit.UpperLower when daysPerWeek == 4 => [upperA, lowerA, upperB, lowerB],
