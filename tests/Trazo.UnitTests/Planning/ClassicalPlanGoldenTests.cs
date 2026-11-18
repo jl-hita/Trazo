@@ -53,10 +53,10 @@ public sealed class ClassicalPlanGoldenTests
                 continuesPreviousBlock: variant == "second-block");
             var name = $"{goal}|{experience}|{split}|{days}|eq{equipmentIndex}|{variant}";
             var text = new StringBuilder();
-            if (!result.Succeeded) text.AppendLine("ERRORS " + string.Join(" || ", result.Errors));
+            if (!result.Succeeded) text.Append("ERRORS " + string.Join(" || ", result.Errors)).Append((char)10);
             foreach (var session in result.Sessions)
-                text.AppendLine($"{session.WeekNumber}|{session.Date:yyyy-MM-dd}|{session.Day}|{session.Title}|{session.EstimatedDurationMinutes}|{session.PrescriptionJson}");
-            if (result.Quality is { } quality) text.AppendLine("WARN " + string.Join(" || ", quality.Warnings));
+                text.Append($"{session.WeekNumber}|{session.Date:yyyy-MM-dd}|{session.Day}|{session.Title}|{session.EstimatedDurationMinutes}|{session.PrescriptionJson}").Append((char)10);
+            if (result.Quality is { } quality) text.Append("WARN " + string.Join(" || ", quality.Warnings)).Append((char)10);
             yield return (name, text.ToString());
         }
     }
