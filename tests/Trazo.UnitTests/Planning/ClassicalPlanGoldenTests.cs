@@ -66,6 +66,8 @@ public sealed class ClassicalPlanGoldenTests
     [Fact]
     public void ClassicalPlansAreUnchanged()
     {
+        // The engine's warnings format decimals with the current culture; the golden is recorded with the invariant one so it is the same everywhere.
+        System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
         var current = Cases().Select(c => (c.Name, Hash: Hash(c.Text), c.Text)).ToList();
         var path = ResolveGoldenPath();
         if (Environment.GetEnvironmentVariable("TRAZO_UPDATE_GOLDEN") == "1")
