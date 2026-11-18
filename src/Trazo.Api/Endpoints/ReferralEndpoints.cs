@@ -14,6 +14,7 @@ namespace Trazo.Api.Endpoints;
 public sealed record SharedRequest(string? Channel);
 public sealed record InstallReferrerRequest(string? Code);
 public sealed record VoidGrantRequest(string? Reason);
+public sealed record ReferralProgrammeSettingsRequest(bool Enabled, int RewardDays);
 public sealed record ClientEventRequest(string? Name);
 
 /// <summary>
@@ -43,6 +44,23 @@ public static class ReferralEndpoints
 
         var admin = endpoints.MapGroup("/api/v1/admin/referrals").WithTags("Admin referrals")
             .RequireAuthorization(ManagementPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+        admin.MapGet("/settings", async (IRuntimeSettings settings, CancellationToken ct) =>
+        {
+            var current = await settings.GetPromotionsAsync(ct);
+            return Results.Ok(new { referralsEnabled = current.ReferralsEnabled, referralRewardDays = current.ReferralRewardDays, maxDays = PromotionsConfig.MaxDays });
+        });
+        admin.MapPut("/settings", async (ReferralProgrammeSettingsRequest request, ISettingsWriter writer, IRuntimeSettings settings,
+            System.Security.Claims.ClaimsPrincipal principal, ILoggerFactory loggerFactory, CancellationToken ct) =>
+        {
+            var before = await settings.GetPromotionsAsync(ct);
+            var input = new PromotionsConfig(before.SignupTrialEnabled, before.SignupTrialDays, request.Enabled, request.RewardDays);
+            var errors = await writer.UpdatePromotionsAsync(input, ct);
+            if (errors.Count > 0) return Results.ValidationProblem(errors);
+            loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
+                "Commercial/admin {Actor} changed referral programme settings: {EnabledBefore} -> {EnabledAfter}, reward {DaysBefore}d -> {DaysAfter}d.",
+                OperationsSettingsEndpoints.Actor(principal), before.ReferralsEnabled, input.ReferralsEnabled, before.ReferralRewardDays, input.ReferralRewardDays);
+            return Results.Ok(new { referralsEnabled = input.ReferralsEnabled, referralRewardDays = input.ReferralRewardDays, maxDays = PromotionsConfig.MaxDays });
+        });
         admin.MapGet("/summary", AdminSummaryAsync);
         admin.MapGet("", AdminListAsync);
         admin.MapGet("/users/{id:guid}/ledger", AdminLedgerAsync);
