@@ -852,6 +852,7 @@ public sealed class ReferralApiTests : IDisposable
             Assert.Equal(HttpStatusCode.OK, (await ClientFor(commercial).GetAsync(path)).StatusCode);
             Assert.Equal(HttpStatusCode.OK, (await ClientFor(root).GetAsync(path)).StatusCode);
         }
+        var beforePromotions = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/settings/promotions"));
         var settings = await JsonAsync(await ClientFor(commercial).GetAsync("/api/v1/admin/referrals/settings"));
         Assert.Equal(30, settings.GetProperty("referralRewardDays").GetInt32());
         Assert.Equal(HttpStatusCode.OK, (await ClientFor(commercial).PutAsJsonAsync("/api/v1/admin/referrals/settings",
@@ -859,6 +860,8 @@ public sealed class ReferralApiTests : IDisposable
         var persisted = await JsonAsync(await ClientFor(root).GetAsync("/api/v1/admin/settings/promotions"));
         Assert.False(persisted.GetProperty("referralsEnabled").GetBoolean());
         Assert.Equal(45, persisted.GetProperty("referralRewardDays").GetInt32());
+        Assert.Equal(beforePromotions.GetProperty("signupTrialEnabled").GetBoolean(), persisted.GetProperty("signupTrialEnabled").GetBoolean());
+        Assert.Equal(beforePromotions.GetProperty("signupTrialDays").GetInt32(), persisted.GetProperty("signupTrialDays").GetInt32());
 
         Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(commercial).PostAsJsonAsync($"/api/v1/admin/referrals/grants/{Guid.NewGuid()}/void", new { reason = "because" })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(admin).PostAsJsonAsync($"/api/v1/admin/referrals/grants/{Guid.NewGuid()}/void", new { reason = "because" })).StatusCode);
