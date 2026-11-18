@@ -121,6 +121,26 @@ public sealed class ExerciseCatalogSeeder(
                 CreatedAt = now,
                 UpdatedAt = now
             });
+            db.ExerciseCatalogTranslations.AddRange(
+                new ExerciseCatalogTranslation
+                {
+                    ExerciseId = entry.Id,
+                    LanguageCode = "es",
+                    Name = entry.NameEs,
+                    Description = entry.DescriptionEs,
+                    Instructions = entry.InstructionsEs,
+                    Tips = entry.TipsEs,
+                    Status = "published",
+                    UpdatedAt = now
+                },
+                new ExerciseCatalogTranslation
+                {
+                    ExerciseId = entry.Id,
+                    LanguageCode = "en",
+                    Name = entry.NameEn,
+                    Status = "draft",
+                    UpdatedAt = now
+                });
             inserted++;
         }
 
