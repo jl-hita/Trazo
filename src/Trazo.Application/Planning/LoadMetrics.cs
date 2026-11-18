@@ -1,12 +1,12 @@
 namespace Trazo.Application.Planning;
 
 /// <summary>The work done (or prescribed) on one exercise, reduced to what dose needs.</summary>
-public sealed record DoseExercise(IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int Sets);
+public sealed record DoseExercise(string ExerciseId, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int Sets);
 
 /// <summary>A workout that really happened: its instant and what was done.</summary>
 public sealed record DoseWorkout(DateTimeOffset PerformedAt, IReadOnlyList<DoseExercise> Exercises);
 
-/// <summary>Weighted sets of one muscle and in how many workouts (or sessions) it was meaningfully worked.</summary>
+/// <summary>Effective sets of one muscle and in how many workouts (or sessions) it was meaningfully worked.</summary>
 public sealed record MuscleDoseView(string Muscle, decimal Sets, decimal Exposures);
 
 /// <summary>
@@ -17,18 +17,17 @@ public sealed record MuscleDoseView(string Muscle, decimal Sets, decimal Exposur
 /// <list type="bullet">
 /// <item><b>Volume per session</b>: the sets of one session (read from the prescription or the log).</item>
 /// <item><b>Volume per rotation</b>: the sum over the sessions of one period (<c>WeekLoadView</c>).</item>
-/// <item><b>Exposure</b>: a workout that works a muscle with at least <see cref="MeaningfulSets"/> weighted sets.</item>
-/// <item><b>Dose per seven days</b>: the weighted sets and exposures received in a real window of seven days (<see cref="Dose"/>).</item>
+/// <item><b>Exposure</b>: a workout that works a muscle with at least <see cref="MeaningfulSets"/> effective sets.</item>
+/// <item><b>Dose per seven days</b>: the effective sets and exposures received in a real window of seven days (<see cref="Dose"/>).</item>
 /// <item><b>Accumulated dose</b>: the same over any interval, by passing the workouts of that interval.</item>
 /// </list>
-/// Weighting: a set counts 1 for each primary muscle and <see cref="SecondaryWeight"/> for each secondary one, the same convention the
-/// recovery advice and the progress screen use. It is a product convention, not a measurement of stimulus.
+/// Counting: a set counts 1 for every muscle the engine considers really stimulated by the exercise (<c>TrainingStimulus</c>: the primary muscles and
+/// the secondary ones with a meaningful dynamic contribution), exactly as the generator counts the plan, so planned and real dose are comparable
+/// and the engine's 20-set review ceiling applies to both. It is a planning convention, not a measurement of stimulus.
 /// </summary>
 public static class LoadMetrics
 {
-    public const decimal SecondaryWeight = 0.5m;
-
-    /// <summary>A muscle worked with fewer weighted sets than this in a session did not really receive a stimulus (same limit as recovery).</summary>
+    /// <summary>A muscle worked with fewer effective sets than this in a session did not really receive a stimulus (same limit as recovery).</summary>
     public const decimal MeaningfulSets = 2m;
 
     /// <summary>Workouts of the last four weeks are the evidence for the observed pace; fewer than this many say nothing reliable.</summary>
@@ -36,20 +35,17 @@ public static class LoadMetrics
     public const int MinimumWorkoutsForPace = 4;
     public const int MinimumSpanDaysForPace = 5;
 
-    /// <summary>Weighted sets per muscle of one session or workout.</summary>
-    public static IReadOnlyDictionary<string, decimal> Weighted(IEnumerable<DoseExercise> exercises)
+    /// <summary>Effective sets per muscle of one session or workout.</summary>
+    public static IReadOnlyDictionary<string, decimal> Effective(IEnumerable<DoseExercise> exercises)
     {
         var total = new Dictionary<string, decimal>(StringComparer.Ordinal);
         foreach (var exercise in exercises)
-        {
-            foreach (var muscle in exercise.PrimaryMuscles) total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets;
-            foreach (var muscle in exercise.SecondaryMuscles.Except(exercise.PrimaryMuscles, StringComparer.Ordinal))
-                total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets * SecondaryWeight;
-        }
+            foreach (var muscle in Trazo.Training.TrainingStimulus.EffectiveMuscles(exercise.ExerciseId, exercise.PrimaryMuscles, exercise.SecondaryMuscles))
+                total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets;
         return total;
     }
 
-    /// <summary>Dose received over the given workouts: weighted sets and exposures per muscle, most worked first.</summary>
+    /// <summary>Dose received over the given workouts: effective sets and exposures per muscle, most worked first.</summary>
     public static IReadOnlyList<MuscleDoseView> Dose(IEnumerable<DoseWorkout> workouts) => Accumulate(workouts.Select(w => w.Exercises));
 
     /// <summary>
@@ -83,7 +79,7 @@ public static class LoadMetrics
         var sets = new Dictionary<string, decimal>(StringComparer.Ordinal);
         var exposures = new Dictionary<string, decimal>(StringComparer.Ordinal);
         foreach (var session in sessions)
-            foreach (var (muscle, weighted) in Weighted(session))
+            foreach (var (muscle, weighted) in Effective(session))
             {
                 sets[muscle] = sets.GetValueOrDefault(muscle) + weighted;
                 if (weighted >= MeaningfulSets) exposures[muscle] = exposures.GetValueOrDefault(muscle) + 1;

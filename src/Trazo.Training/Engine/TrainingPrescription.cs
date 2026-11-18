@@ -345,3 +345,18 @@ internal static class TrainingExerciseStimulus
         return result;
     }
 }
+
+/// <summary>
+/// The engine's own reading of which muscles an exercise really stimulates (its primary muscles plus the secondary ones with a meaningful
+/// dynamic contribution), by name, for the parts of the application that measure dose and must agree with what the generator planned.
+/// </summary>
+public static class TrainingStimulus
+{
+    public static IReadOnlyCollection<string> EffectiveMuscles(string exerciseId, IEnumerable<string> primary, IEnumerable<string> secondary)
+    {
+        static List<TrainingMuscleGroup> Parse(IEnumerable<string> names) =>
+            names.Select(name => Enum.TryParse<TrainingMuscleGroup>(name, out var muscle) ? (TrainingMuscleGroup?)muscle : null)
+                .Where(muscle => muscle is not null).Select(muscle => muscle!.Value).ToList();
+        return TrainingExerciseStimulus.GetEffectiveMuscles(exerciseId, Parse(primary), Parse(secondary)).Select(muscle => muscle.ToString()).ToList();
+    }
+}

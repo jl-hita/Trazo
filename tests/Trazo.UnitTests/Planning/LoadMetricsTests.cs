@@ -11,18 +11,18 @@ public sealed class LoadMetricsTests
 {
     private static readonly DateTimeOffset Now = new(2026, 11, 16, 18, 0, 0, TimeSpan.Zero);
 
-    private static readonly DoseExercise Bench = new(["Chest"], ["Triceps", "Deltoids"], 4);
-    private static readonly DoseExercise Row = new(["Lats"], ["Biceps"], 4);
+    private static readonly DoseExercise Bench = new("bench-press", ["Chest"], ["Triceps", "Deltoids"], 4);
+    private static readonly DoseExercise Row = new("barbell-row", ["Lats", "UpperBack"], ["Biceps"], 4);
 
     private static DoseWorkout Workout(DateTimeOffset at) => new(at, [Bench, Row]);
 
     [Fact]
-    public void ASetCountsOneForPrimaryMusclesAndHalfForSecondaryOnes_AndAMuscleIsNeverCountedTwiceInOneExercise()
+    public void ASetCountsOneForEveryMuscleTheEngineSaysItStimulates_AndNeverTwiceInOneExercise()
     {
-        var weighted = LoadMetrics.Weighted([Bench, new DoseExercise(["Chest"], ["Chest", "Triceps"], 2)]);
-        Assert.Equal(6m, weighted["Chest"]);      // 4 + 2, the secondary entry for the same muscle does not add
-        Assert.Equal(3m, weighted["Triceps"]);    // 4 x 0.5 + 2 x 0.5
-        Assert.Equal(2m, weighted["Deltoids"]);
+        var effective = LoadMetrics.Effective([Bench, new DoseExercise("bench-press", ["Chest"], ["Chest", "Triceps"], 2)]);
+        Assert.Equal(6m, effective["Chest"]);    // 4 + 2, the secondary entry for the same muscle does not add
+        Assert.Equal(6m, effective["Triceps"]);  // a press counts in full for the triceps, as the generator counts it
+        Assert.False(effective.ContainsKey("Deltoids")); // listed as secondary, but not a meaningful contribution of a bench press
     }
 
     [Fact]
@@ -74,9 +74,9 @@ public sealed class LoadMetricsTests
     [Fact]
     public void AMuscleOnlyCountsAsExposedWhenTheWorkoutReallyWorkedIt()
     {
-        // One set of rows gives the biceps half a weighted set: not an exposure.
-        var dose = LoadMetrics.Dose([new DoseWorkout(Now, [new DoseExercise(["Lats"], ["Biceps"], 1)])]);
-        Assert.Equal(0m, dose.Single(d => d.Muscle == "Biceps").Exposures);
+        // One set of a row is not an exposure of the lats: less than two effective sets did not really stimulate the muscle.
+        var dose = LoadMetrics.Dose([new DoseWorkout(Now, [new DoseExercise("one-arm-seated-cable-row", ["Lats"], ["Biceps"], 1)])]);
+        Assert.Equal(0m, dose.Single(d => d.Muscle == "Lats").Exposures);
         Assert.Equal(1m, dose.Single(d => d.Muscle == "Lats").Sets);
     }
 

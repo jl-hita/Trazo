@@ -780,12 +780,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var windowStart = now.AddDays(-7);
         var workouts = recent.Where(l => l.PerformedAt > windowStart).Select(l => new DoseWorkout(l.PerformedAt,
             l.Sets.Where(s => s.Completed && muscles.ContainsKey(s.ExerciseId)).GroupBy(s => s.ExerciseId)
-                .Select(g => new DoseExercise(muscles[g.Key].Primary, muscles[g.Key].Secondary, g.Count())).ToList())).ToList();
+                .Select(g => new DoseExercise(g.Key, muscles[g.Key].Primary, muscles[g.Key].Secondary, g.Count())).ToList())).ToList();
 
         var slot = SlotsOf(plan).FirstOrDefault(s => s.Contains(position.Week));
         var blockSessions = slot is null ? [] : prescribed.Where(s => slot.Contains(s.Week)).ToList();
         var perSession = blockSessions.Select(s => (IReadOnlyList<DoseExercise>)PrescriptionJson.Read(s.Json)
-            .Select(e => new DoseExercise(e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList());
+            .Select(e => new DoseExercise(e.ExerciseId, e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList());
         return new RollingLoadView(7, windowStart, now, workouts.Count, plan.SessionsPerPeriod,
             LoadMetrics.ObservedSessionsPerSevenDays(recent.Select(l => l.PerformedAt).ToList(), now),
             LoadMetrics.Dose(workouts), slot is null ? [] : LoadMetrics.PrescribedPerSevenDays(perSession, slot.Weeks));
