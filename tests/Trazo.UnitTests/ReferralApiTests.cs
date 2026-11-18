@@ -838,16 +838,21 @@ public sealed class ReferralApiTests : IDisposable
     // ------------------------------------------------------------------ administration
 
     [Fact]
-    public async Task AdminEndpoints_AreSuperadminOnly()
+    public async Task ReferralAdministration_IsAvailableToSuperadminAndCommercialOnly()
     {
         var user = await AddUserAsync("user@example.com");
         var admin = await AddUserAsync("admin@example.com", "admin");
+        var commercial = await AddUserAsync("commercial@example.com", "commercial");
+        var root = await AddUserAsync("root@example.com", "superadmin");
         foreach (var path in new[] { "/api/v1/admin/referrals/summary", "/api/v1/admin/referrals", "/api/v1/admin/analytics/funnel" })
         {
             Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(user).GetAsync(path)).StatusCode);
             Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(admin).GetAsync(path)).StatusCode);
             Assert.Equal(HttpStatusCode.Unauthorized, (await ClientFor(null).GetAsync(path)).StatusCode);
+            Assert.Equal(HttpStatusCode.OK, (await ClientFor(commercial).GetAsync(path)).StatusCode);
+            Assert.Equal(HttpStatusCode.OK, (await ClientFor(root).GetAsync(path)).StatusCode);
         }
+        Assert.Equal(HttpStatusCode.NotFound, (await ClientFor(commercial).PostAsJsonAsync($"/api/v1/admin/referrals/grants/{Guid.NewGuid()}/void", new { reason = "because" })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await ClientFor(admin).PostAsJsonAsync($"/api/v1/admin/referrals/grants/{Guid.NewGuid()}/void", new { reason = "because" })).StatusCode);
     }
 
