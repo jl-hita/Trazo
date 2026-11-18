@@ -7,22 +7,21 @@ using Trazo.Infrastructure.Persistence;
 namespace Trazo.Infrastructure.Seeding;
 
 /// <summary>
-/// Imports first-party curated exercise additions from the versioned JSON seed.
-/// Existing rows are preserved unless a newer seed version contains a metadata correction and the row
-/// has never been edited locally. Admin curation always wins.
+/// Bootstraps the complete, reviewed exercise-library snapshot. Seed versions update only
+/// untouched rows from the same source; administrator edits and rows from other sources win.
 /// Safe to execute on every startup and serialized across concurrent API instances.
 /// </summary>
 public sealed class ExerciseCatalogSeeder(
     TrazoDbContext db,
     ILogger<ExerciseCatalogSeeder> logger)
 {
-    private const string Source = "trazo-curated";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     private sealed class SeedEntry
     {
         public string Id { get; init; } = "";
         public int Version { get; init; } = 1;
+        public string Source { get; init; } = "";
         public string NameEs { get; init; } = "";
         public string NameEn { get; init; } = "";
         public string DescriptionEs { get; init; } = "";
@@ -43,28 +42,35 @@ public sealed class ExerciseCatalogSeeder(
         public string[] SuitableGoals { get; init; } = [];
         public string[] RequiredEquipment { get; init; } = [];
         public int SelectionPriority { get; init; } = 50;
+        public bool IsActive { get; init; } = true;
     }
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "Seeds", "exercise-catalog-additions.json");
+        var path = Path.Combine(AppContext.BaseDirectory, "Seeds", "exercise-catalog.json");
         if (!File.Exists(path))
-            throw new FileNotFoundException("The required exercise catalog seed was not published with the API.", path);
+            throw new FileNotFoundException("The complete exercise catalog seed was not published with the API.", path);
 
         await using var stream = File.OpenRead(path);
         var entries = await JsonSerializer.DeserializeAsync<List<SeedEntry>>(stream, JsonOptions, cancellationToken)
             ?? throw new InvalidDataException("Exercise catalog seed is empty or invalid.");
 
+        if (entries.Count == 0 || entries.Select(x => x.Id).Distinct(StringComparer.Ordinal).Count() != entries.Count)
+            throw new InvalidDataException("Exercise catalog seed is empty or contains duplicate exercise IDs.");
+
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
-        // Prevent two API instances from racing through the existence check during first deployment.
         await db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(731904221)", cancellationToken);
 
         var now = DateTimeOffset.UtcNow;
         var inserted = 0;
         var updated = 0;
+        var preserved = 0;
+        var translationsAdded = 0;
+
         foreach (var entry in entries)
         {
             if (string.IsNullOrWhiteSpace(entry.Id) ||
+                entry.Source is not ("repdb-free" or "trazo-curated") ||
                 string.IsNullOrWhiteSpace(entry.NameEn) ||
                 string.IsNullOrWhiteSpace(entry.NameEs) ||
                 entry.Version < 1 ||
@@ -79,78 +85,128 @@ public sealed class ExerciseCatalogSeeder(
             }
 
             var existing = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == entry.Id, cancellationToken);
-            if (existing is not null)
+            if (existing is null)
             {
-                // Only apply explicit seed-version corrections to untouched first-party seed rows.
-                // Admin-edited rows have UpdatedAt != CreatedAt and are never overwritten.
-                if (existing.Source == Source && existing.SeedVersion < entry.Version && existing.UpdatedAt == existing.CreatedAt)
+                db.ExerciseCatalog.Add(new ExerciseCatalogItem
                 {
-                    existing.RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment);
-                    existing.SeedVersion = entry.Version;
-                    existing.UpdatedAt = now;
-                    updated++;
-                }
+                    Id = entry.Id,
+                    Source = entry.Source,
+                    NameEn = entry.NameEn,
+                    NameEs = entry.NameEs,
+                    DescriptionEs = entry.DescriptionEs,
+                    InstructionsEs = entry.InstructionsEs,
+                    TipsEs = entry.TipsEs,
+                    ForceType = entry.ForceType,
+                    Mechanic = entry.Mechanic,
+                    Difficulty = entry.Difficulty,
+                    Equipment = entry.Equipment,
+                    BodyPart = entry.BodyPart,
+                    Met = entry.Met,
+                    IsUnilateral = entry.IsUnilateral,
+                    IsBodyweight = entry.IsBodyweight,
+                    MovementPattern = entry.MovementPattern,
+                    PrimaryMuscles = entry.PrimaryMuscles,
+                    SecondaryMuscles = entry.SecondaryMuscles,
+                    MinimumExperience = entry.MinimumExperience,
+                    SuitableGoals = entry.SuitableGoals,
+                    RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment),
+                    SelectionPriority = entry.SelectionPriority,
+                    SeedVersion = entry.Version,
+                    IsActive = entry.IsActive,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                });
+                inserted++;
+
+                db.ExerciseCatalogTranslations.AddRange(
+                    new ExerciseCatalogTranslation
+                    {
+                        ExerciseId = entry.Id,
+                        LanguageCode = "es",
+                        Name = entry.NameEs,
+                        Description = entry.DescriptionEs,
+                        Instructions = entry.InstructionsEs,
+                        Tips = entry.TipsEs,
+                        Status = "published",
+                        UpdatedAt = now
+                    },
+                    new ExerciseCatalogTranslation
+                    {
+                        ExerciseId = entry.Id,
+                        LanguageCode = "en",
+                        Name = entry.NameEn,
+                        Status = "draft",
+                        UpdatedAt = now
+                    });
+                translationsAdded += 2;
                 continue;
             }
 
-            db.ExerciseCatalog.Add(new ExerciseCatalogItem
+            if (existing.Source == entry.Source &&
+                existing.SeedVersion < entry.Version &&
+                existing.UpdatedAt == existing.CreatedAt)
             {
-                Id = entry.Id,
-                Source = Source,
-                NameEn = entry.NameEn,
-                NameEs = entry.NameEs,
-                DescriptionEs = entry.DescriptionEs,
-                InstructionsEs = entry.InstructionsEs,
-                TipsEs = entry.TipsEs,
-                ForceType = entry.ForceType,
-                Mechanic = entry.Mechanic,
-                Difficulty = entry.Difficulty,
-                Equipment = entry.Equipment,
-                BodyPart = entry.BodyPart,
-                Met = entry.Met,
-                IsUnilateral = entry.IsUnilateral,
-                IsBodyweight = entry.IsBodyweight,
-                MovementPattern = entry.MovementPattern,
-                PrimaryMuscles = entry.PrimaryMuscles,
-                SecondaryMuscles = entry.SecondaryMuscles,
-                MinimumExperience = entry.MinimumExperience,
-                SuitableGoals = entry.SuitableGoals,
-                RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment),
-                SelectionPriority = entry.SelectionPriority,
-                SeedVersion = entry.Version,
-                CreatedAt = now,
-                UpdatedAt = now
-            });
-            db.ExerciseCatalogTranslations.AddRange(
-                new ExerciseCatalogTranslation
+                existing.NameEn = entry.NameEn;
+                existing.NameEs = entry.NameEs;
+                existing.DescriptionEs = entry.DescriptionEs;
+                existing.InstructionsEs = entry.InstructionsEs;
+                existing.TipsEs = entry.TipsEs;
+                existing.ForceType = entry.ForceType;
+                existing.Mechanic = entry.Mechanic;
+                existing.Difficulty = entry.Difficulty;
+                existing.Equipment = entry.Equipment;
+                existing.BodyPart = entry.BodyPart;
+                existing.Met = entry.Met;
+                existing.IsUnilateral = entry.IsUnilateral;
+                existing.IsBodyweight = entry.IsBodyweight;
+                existing.MovementPattern = entry.MovementPattern;
+                existing.PrimaryMuscles = entry.PrimaryMuscles;
+                existing.SecondaryMuscles = entry.SecondaryMuscles;
+                existing.MinimumExperience = entry.MinimumExperience;
+                existing.SuitableGoals = entry.SuitableGoals;
+                existing.RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment);
+                existing.SelectionPriority = entry.SelectionPriority;
+                existing.IsActive = entry.IsActive;
+                existing.SeedVersion = entry.Version;
+                existing.UpdatedAt = now;
+                updated++;
+            }
+            else
+            {
+                preserved++;
+            }
+
+            // Repair missing language rows without replacing translations already curated in the admin.
+            var languages = await db.ExerciseCatalogTranslations
+                .Where(x => x.ExerciseId == entry.Id)
+                .Select(x => x.LanguageCode)
+                .ToListAsync(cancellationToken);
+            if (!languages.Contains("es", StringComparer.Ordinal))
+            {
+                db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
                 {
-                    ExerciseId = entry.Id,
-                    LanguageCode = "es",
-                    Name = entry.NameEs,
-                    Description = entry.DescriptionEs,
-                    Instructions = entry.InstructionsEs,
-                    Tips = entry.TipsEs,
-                    Status = "published",
-                    UpdatedAt = now
-                },
-                new ExerciseCatalogTranslation
-                {
-                    ExerciseId = entry.Id,
-                    LanguageCode = "en",
-                    Name = entry.NameEn,
-                    Status = "draft",
-                    UpdatedAt = now
+                    ExerciseId = entry.Id, LanguageCode = "es", Name = entry.NameEs,
+                    Description = entry.DescriptionEs, Instructions = entry.InstructionsEs,
+                    Tips = entry.TipsEs, Status = "published", UpdatedAt = now
                 });
-            inserted++;
+                translationsAdded++;
+            }
+            if (!languages.Contains("en", StringComparer.Ordinal))
+            {
+                db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
+                {
+                    ExerciseId = entry.Id, LanguageCode = "en", Name = entry.NameEn,
+                    Status = "draft", UpdatedAt = now
+                });
+                translationsAdded++;
+            }
         }
 
-        if (inserted > 0 || updated > 0)
-            await db.SaveChangesAsync(cancellationToken);
-
+        await db.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation(
-            "Exercise catalog seed processed: {SeedEntries} entries, {Inserted} inserted, {Updated} untouched rows updated; locally curated entries preserved.",
-            entries.Count, inserted, updated);
+            "Complete exercise catalog seed processed: {SeedEntries} entries, {Inserted} inserted, {Updated} untouched rows refreshed, {Preserved} existing rows preserved, {TranslationsAdded} missing translations added.",
+            entries.Count, inserted, updated, preserved, translationsAdded);
     }
 }

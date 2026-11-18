@@ -1,4 +1,10 @@
-# Exercise catalog bootstrap
+# Exercise catalog seed
+
+## Complete, reproducible catalog
+
+`Seeds/exercise-catalog.json` is the versioned bootstrap snapshot of the complete exercise library, not merely the TRAZO-curated additions. It is generated from the database-backed catalog artifact published by the latest successful deployment. The snapshot includes every exercise and its current metadata: source, Spanish and English names, Spanish description/instructions/tips, movement and muscle metadata, difficulty, activity state, selection priority, and both `Equipment` and `RequiredEquipment`.
+
+The seed currently represents all 148 exercises in the library (100 `repdb-free` and 48 `trazo-curated`). It is deliberately independent of a runtime RepDB download: a fresh installation can reproduce the library even if the upstream dataset changes or is unavailable.
 
 ## First-run behavior
 
@@ -6,29 +12,17 @@ Before the API starts accepting requests, startup runs these steps in order:
 
 1. Connect to the dedicated TRAZO PostgreSQL database.
 2. Apply all pending Entity Framework Core migrations.
-3. Load `Seeds/exercise-catalog-additions.json`.
-4. Validate every seed entry and insert missing exercises.
-5. Preserve existing exercise rows so administrator curation is never overwritten.
-6. Export the complete database-backed catalog to `/var/lib/trazo/artifacts/exercise-catalog.json`.
+3. Load `Seeds/exercise-catalog.json`.
+4. Validate the complete snapshot, including unique IDs, supported sources, required metadata, and specific equipment requirements (the generic `machine` key is forbidden).
+5. Insert missing exercises and their Spanish-published / English-draft translation rows.
+6. Apply a newer seed version only to rows from the same source that have never been edited locally. Administrator curation and records from other sources are preserved.
+7. Add missing language rows without replacing existing translations.
+8. Export the effective database-backed catalog to `/var/lib/trazo/artifacts/exercise-catalog.json`.
 
-The seed runs on every startup, but inserts only missing stable exercise IDs. A PostgreSQL transaction-level advisory lock prevents two API instances from racing during initial seeding. A missing or invalid seed is a startup error rather than silently leaving an empty catalog.
-
-After all catalog seeders have completed, startup writes `exercise-catalog.json` from the effective PostgreSQL catalog. It includes active and inactive exercises, all catalog fields (including both `Equipment` and `RequiredEquipment`), a schema version, generation timestamp, and total/active counts. This captures administrator edits as well as imported and curated entries. The file is written to a temporary file and atomically replaced, so a failed write does not leave a partial artifact.
-
-The default path is `/var/lib/trazo/artifacts/exercise-catalog.json`. Override it with `ExerciseCatalogArtifact__Path` if needed. The TRAZO systemd unit already grants the service write access to `/var/lib/trazo`; no HTTP endpoint is added.
-
-## What is included in this seed
-
-The file is the first-party curated additions seed currently used by DietoExpress, copied into TRAZO as an independent product-owned file. It contains the extra exercises that are not part of the upstream RepDB catalogue.
-
-This is not a bundled copy of the RepDB dataset. DietoExpress obtains that source catalogue from its upstream dataset endpoint at runtime; the upstream dataset and its licensing conditions must be handled separately before implementing the equivalent TRAZO importer. Do not copy or redistribute the upstream dataset or its images as a repository seed.
-
-The separate curated image seed is not imported by this initial catalog bootstrap. Image ingestion will be added as a distinct step with checksum and content validation.
-
-## Database provisioning
-
-The PostgreSQL database and a dedicated login are provisioned once by the server administrator. The configured login needs schema migration permissions in the TRAZO database. No manual table creation or SQL script is required: EF Core migrations create and evolve the application schema automatically.
+The seed runs on every startup. A PostgreSQL transaction-level advisory lock prevents two API instances from racing during bootstrap. A missing or invalid seed is a startup error rather than silently leaving an incomplete catalog.
 
 ## Updating the seed
 
-Add new curated exercises to the JSON file with stable IDs and increment the entry version when changing its seed definition. Existing database rows are intentionally not overwritten. Changes to already-imported exercises should be delivered through an explicit data migration or a reviewed administrative operation, not by replaying the seed over live data.
+Use the latest successful deployment's `exercise-catalog-*` GitHub Actions artifact as the source snapshot. The workflow that refreshes the repository seed maps the complete artifact to the seed schema and increments the seed version. Review the resulting JSON diff, especially exercise metadata and `RequiredEquipment`, before merging.
+
+Existing database rows are never overwritten merely because the JSON changed: the entry version must be higher, the source must match, and the row must remain untouched (`UpdatedAt == CreatedAt`). Changes made by an administrator therefore remain authoritative.
