@@ -1379,7 +1379,9 @@ public sealed class TrainingProgramGeneratorTests
 
         Assert.Equal(count, firstPeriod.Length);
         Assert.Equal(count, secondPeriod.Length);
-        Assert.NotEqual(firstPeriod[^1].Title, secondPeriod[0].Title);
+        var expectedNextPeriod = firstPeriod.Skip(1).Select(session => session.Title)
+            .Append(firstPeriod[0].Title);
+        Assert.Equal(expectedNextPeriod, secondPeriod.Select(session => session.Title));
     }
 
     [Fact]
