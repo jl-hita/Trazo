@@ -221,6 +221,42 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         var scalar = await command.ExecuteScalarAsync(ct);
         if (scalar is null) return 0;
 
+        // The approved source content is the Spanish translation. Never overwrite a
+        // translation that has been explicitly published/curated by an administrator.
+        const string spanishTranslationSql = """
+            INSERT INTO exercise_catalog_translations
+                (exercise_id, "LanguageCode", "Name", "Description", "Instructions", "Tips", "Status", "UpdatedAt")
+            VALUES (@id, 'es', @name_es, @description, @instructions, @tips, 'published', NOW())
+            ON CONFLICT (exercise_id, "LanguageCode") DO UPDATE SET
+                "Name" = EXCLUDED."Name", "Description" = EXCLUDED."Description",
+                "Instructions" = EXCLUDED."Instructions", "Tips" = EXCLUDED."Tips", "UpdatedAt" = NOW()
+            WHERE exercise_catalog_translations."Status" <> 'published'
+            """;
+        await using (var translationCommand = new NpgsqlCommand(spanishTranslationSql, connection, transaction))
+        {
+            translationCommand.Parameters.AddWithValue("id", id);
+            translationCommand.Parameters.AddWithValue("name_es", nameEs);
+            translationCommand.Parameters.AddWithValue("description", descriptionEs);
+            translationCommand.Parameters.AddWithValue("instructions", instructions);
+            translationCommand.Parameters.AddWithValue("tips", tips);
+            await translationCommand.ExecuteNonQueryAsync(ct);
+        }
+
+        const string englishNameSql = """
+            INSERT INTO exercise_catalog_translations
+                (exercise_id, "LanguageCode", "Name", "Status", "UpdatedAt")
+            VALUES (@id, 'en', @name_en, 'draft', NOW())
+            ON CONFLICT (exercise_id, "LanguageCode") DO UPDATE SET
+                "Name" = EXCLUDED."Name", "UpdatedAt" = NOW()
+            WHERE exercise_catalog_translations."Status" = 'draft'
+            """;
+        await using (var translationCommand = new NpgsqlCommand(englishNameSql, connection, transaction))
+        {
+            translationCommand.Parameters.AddWithValue("id", id);
+            translationCommand.Parameters.AddWithValue("name_en", nameEn);
+            await translationCommand.ExecuteNonQueryAsync(ct);
+        }
+
         var raw = e.GetRawText();
         const string metadataSql = """
             INSERT INTO exercise_catalog_import_metadata
