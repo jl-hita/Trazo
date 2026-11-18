@@ -595,6 +595,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             if (plan.Mesocycles.FirstOrDefault(m => m.Id == target.MesocycleId) is { IsDeload: true } || PrescriptionJson.IsAdaptationDeload(target.PrescriptionJson))
                 continue;
             var session = await db.PlannedSessions.FirstAsync(s => s.Id == target.Id, ct);
+            // Another request may have eased it between our read and now: the marker of the stored row is the truth, not the one we read.
+            if (PrescriptionJson.EasedBackFor(session.PrescriptionJson) == absence) { already++; continue; }
             var ids = PrescriptionJson.Read(session.PrescriptionJson).Select(e => e.ExerciseId).ToHashSet(StringComparer.Ordinal);
             var json = session.PrescriptionJson;
             var changed = false;
