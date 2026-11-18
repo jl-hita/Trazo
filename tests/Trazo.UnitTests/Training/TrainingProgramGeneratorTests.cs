@@ -188,7 +188,7 @@ public sealed class TrainingProgramGeneratorTests
     }
 
     [Fact]
-    public void OneCoreExerciseAWeekByDefaultAndNoDirectCoreAccessories()
+    public void NoDirectCoreWorkByDefault_TheBigLiftsAlreadyTrainIt()
     {
         var catalog = Catalog()
             .Select(exercise => exercise.MovementPattern == TrainingMovementPattern.Squat
@@ -211,9 +211,9 @@ public sealed class TrainingProgramGeneratorTests
         Assert.True(result.Succeeded, string.Join("; ", result.Errors));
         var exercises = result.Prescription!.Sessions.SelectMany(session => session.Exercises).ToArray();
 
-        // Engine 0.10.0: hypertrophy and general-fitness plans carry one core exercise a week by default
-        // (it used to be opt-in). Direct core accessories still need an explicit professional priority.
-        Assert.Single(exercises, exercise => exercise.ExerciseId == "exercise-core");
+        // Engine 0.11.2: no direct core by default in any goal. Free weights, cables and the rest of the exercises make
+        // the transversus stabilize, so it is trained indirectly; direct core needs an explicit professional priority.
+        Assert.DoesNotContain(exercises, exercise => exercise.ExerciseId == "exercise-core");
         Assert.DoesNotContain(exercises, exercise => exercise.ExerciseId == "direct-ab-crunch");
         Assert.Contains(exercises, exercise =>
             exercise.ExerciseId == "squat-basic" &&

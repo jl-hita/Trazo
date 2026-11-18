@@ -14,10 +14,10 @@ public sealed class RecoveryAdvisorTests
 
     private static RecoveryExposure Pressing(double hoursAgo, int sets = 4, decimal? rir = 2m, string recovery = "Unknown", decimal? rpe = null, bool pain = false,
         bool loaded = false) =>
-        new(Now.AddHours(-hoursAgo), [new RecoveryExercise(Chest, Triceps, sets, rir, loaded)], recovery, rpe, pain);
+        new(Now.AddHours(-hoursAgo), [new RecoveryExercise(Chest, Triceps, sets, rir, loaded, "bench-press")], recovery, rpe, pain);
 
     private static RecoveryCandidate Session(int index, string title, string[] primary, string[] secondary, int sets = 4) =>
-        new(Guid.NewGuid(), index, title, [new RecoveryPlannedExercise(primary, secondary, sets)]);
+        new(Guid.NewGuid(), index, title, [new RecoveryPlannedExercise(primary, secondary, sets, "bench-press")]);
 
     private static RecoveryAssessment Assess(RecoveryCandidate candidate, RecoveryExposure[] history,
         TrainingExperience experience = TrainingExperience.Intermediate) =>
@@ -101,11 +101,26 @@ public sealed class RecoveryAdvisorTests
     [Fact]
     public void AMuscleOnlyWorkedAsASecondaryOrTrivially_DoesNotHoldTheSessionBack()
     {
-        // Triceps got 4 secondary sets = 2 effective: the threshold of a real stimulus. A triceps-primary session is not held by it
-        // when it was worked with fewer than the minimum effective sets.
-        var lightPress = new RecoveryExposure(Now.AddHours(-5), [new RecoveryExercise(Chest, Triceps, 2, 2m, false)], "Unknown", null, false);
+        // One set of press is below the threshold of a real stimulus for the triceps: a triceps-primary session is not held by it.
+        var lightPress = new RecoveryExposure(Now.AddHours(-5), [new RecoveryExercise(Chest, Triceps, 1, 2m, false, "bench-press")], "Unknown", null, false);
         var assessment = Assess(Session(2, "Brazos", Triceps, None), [lightPress]);
         Assert.Equal(RecoveryState.Ready, assessment.State);
+    }
+
+    [Fact]
+    public void ARecoveryReadsTheSameEffectiveSetsAsTheEngine_AMeaningfulSecondaryCountsFullyAnIncidentalOneNotAtAll()
+    {
+        // The press stimulates the triceps for real (the engine's definition): four sets of it hold a triceps session back.
+        var press = Pressing(hoursAgo: 5);
+        Assert.Equal(RecoveryState.Wait, Assess(Session(2, "Brazos", Triceps, None), [press]).State);
+
+        // The same sets of an exercise whose secondary muscle the engine does not count never held the triceps back.
+        var incidental = new RecoveryExposure(Now.AddHours(-5), [new RecoveryExercise(Chest, Triceps, 4, 2m, false, "pec-deck")], "Unknown", null, false);
+        Assert.Equal(RecoveryState.Ready, Assess(Session(2, "Brazos", Triceps, None), [incidental]).State);
+
+        // And a planned session is assessed with the same rule: a session whose only link with the last workout is an incidental secondary is ready.
+        var planned = new RecoveryCandidate(Guid.NewGuid(), 2, "Brazos", [new RecoveryPlannedExercise(Triceps, None, 4, "tricep-pushdown")]);
+        Assert.Equal(RecoveryState.Ready, Assess(planned, [incidental]).State);
     }
 
     [Fact]

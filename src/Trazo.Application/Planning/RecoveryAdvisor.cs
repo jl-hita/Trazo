@@ -15,13 +15,13 @@ public enum RecoveryState
 
 /// <summary>What the user did to one exercise in a past workout, reduced to what recovery needs.</summary>
 public sealed record RecoveryExercise(
-    IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int CompletedSets, decimal? AverageRir, bool LoadedBefore);
+    IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int CompletedSets, decimal? AverageRir, bool LoadedBefore, string ExerciseId = "");
 
 /// <summary>A past workout: when it happened, what was done and how the user reported to feel.</summary>
 public sealed record RecoveryExposure(
     DateTimeOffset PerformedAt, IReadOnlyList<RecoveryExercise> Exercises, string Recovery, decimal? SessionRpe, bool Pain);
 
-public sealed record RecoveryPlannedExercise(IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int Sets);
+public sealed record RecoveryPlannedExercise(IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int Sets, string ExerciseId = "");
 
 /// <summary>A pending session the advisor can assess, with its prescribed work.</summary>
 public sealed record RecoveryCandidate(Guid SessionId, int SequenceIndex, string Title, IReadOnlyList<RecoveryPlannedExercise> Exercises);
@@ -45,7 +45,6 @@ public static class RecoveryAdvisor
     public const double BaseHours = 24;
     public const double HoursPerEffectiveSet = 5.5;
     public const double MaximumHours = 120;
-    public const double SecondaryWeight = 0.5;
     /// <summary>A muscle that received less than this many effective sets did not really get a stimulus to recover from.</summary>
     public const double NegligibleSets = 2;
     /// <summary>A pending session only counts a muscle if it works it with at least this many effective sets.</summary>
@@ -80,7 +79,7 @@ public static class RecoveryAdvisor
     private static RecoveryAssessment Assess(RecoveryCandidate candidate, Dictionary<string, Readiness> readyAt, DateTimeOffset now, AppLanguage language)
     {
         var limiting = new List<(string Muscle, Readiness Readiness)>();
-        foreach (var (muscle, sets) in EffectiveSets(candidate.Exercises.Select(e => (e.PrimaryMuscles, e.SecondaryMuscles, (double)e.Sets))))
+        foreach (var (muscle, sets) in EffectiveSets(candidate.Exercises.Select(e => (e.ExerciseId, e.PrimaryMuscles, e.SecondaryMuscles, (double)e.Sets))))
             if (sets >= MeaningfulSets && readyAt.TryGetValue(muscle, out var readiness) && readiness.At > now)
                 limiting.Add((muscle, readiness));
 
@@ -116,7 +115,7 @@ public static class RecoveryAdvisor
             foreach (var exercise in exposure.Exercises.Where(e => e.CompletedSets > 0))
             {
                 var factor = IntensityFactor(exercise.AverageRir) * (exercise.LoadedBefore ? 1.1 : 1.0);
-                foreach (var (muscle, sets) in EffectiveSets([(exercise.PrimaryMuscles, exercise.SecondaryMuscles, (double)exercise.CompletedSets)]))
+                foreach (var (muscle, sets) in EffectiveSets([(exercise.ExerciseId, exercise.PrimaryMuscles, exercise.SecondaryMuscles, (double)exercise.CompletedSets)]))
                 {
                     effective[muscle] = effective.GetValueOrDefault(muscle) + sets;
                     weighted[muscle] = weighted.GetValueOrDefault(muscle) + sets * factor;
@@ -133,14 +132,17 @@ public static class RecoveryAdvisor
         return result;
     }
 
-    private static Dictionary<string, double> EffectiveSets(IEnumerable<(IReadOnlyList<string> Primary, IReadOnlyList<string> Secondary, double Sets)> work)
+    /// <summary>
+    /// Effective sets per muscle with the engine's own definition (<c>TrainingStimulus</c>): a set counts fully for the primary muscles and for the
+    /// secondary ones with a meaningful contribution (the triceps in a press) and not at all for the incidental ones. The same definition the
+    /// generator plans with and the load chart measures, so the volume, the dose and the recovery never disagree about one workout.
+    /// </summary>
+    private static Dictionary<string, double> EffectiveSets(IEnumerable<(string ExerciseId, IReadOnlyList<string> Primary, IReadOnlyList<string> Secondary, double Sets)> work)
     {
         var total = new Dictionary<string, double>(StringComparer.Ordinal);
-        foreach (var (primary, secondary, sets) in work)
-        {
-            foreach (var muscle in primary) total[muscle] = total.GetValueOrDefault(muscle) + sets;
-            foreach (var muscle in secondary.Except(primary, StringComparer.Ordinal)) total[muscle] = total.GetValueOrDefault(muscle) + sets * SecondaryWeight;
-        }
+        foreach (var (exerciseId, primary, secondary, sets) in work)
+            foreach (var muscle in Trazo.Training.TrainingStimulus.EffectiveMuscles(exerciseId, primary, secondary))
+                total[muscle] = total.GetValueOrDefault(muscle) + sets;
         return total;
     }
 
