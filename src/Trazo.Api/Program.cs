@@ -123,7 +123,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(SetupEndpoints.SuperadminPolicy, p => p.RequireRole("superadmin"));
-    // Work every administrator can do (plan reviews). Configuration, users, logs and support tickets stay superadmin-only.
+    // Work every administrator can do (plan reviews). Global configuration, users, logs and support tickets stay superadmin-only.
     options.AddPolicy(SetupEndpoints.StaffPolicy, p => p.RequireRole("admin", "superadmin"));
     options.AddPolicy(SetupEndpoints.FiscalPolicy, p => p.RequireRole("superadmin", "accountant"));
     options.AddPolicy(SetupEndpoints.MarketingPolicy, p => p.RequireRole("superadmin", "commercial"));
