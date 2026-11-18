@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Domain.Training;
 
 namespace Trazo.Infrastructure.Seeding;
 
