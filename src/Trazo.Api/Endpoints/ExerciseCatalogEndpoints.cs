@@ -298,7 +298,7 @@ public static class ExerciseVocabulary
 
     public static readonly IReadOnlyDictionary<string, string> Equipment = Map(
         ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"),
-        ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("bodyweight", "Peso corporal"),
+        ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("low-row-bar", "Barra baja para remo"), ("bodyweight", "Peso corporal"),
         ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
         ("smith-machine", "Máquina Smith"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
         ("dip-bar", "Paralelas"), ("trx", "TRX"), ("other", "Otro"));
@@ -317,7 +317,7 @@ public static class ExerciseVocabulary
 
     public static readonly IReadOnlyDictionary<string, string> EquipmentEn = Map(
         ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"),
-        ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("bodyweight", "Bodyweight"),
+        ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("low-row-bar", "Low row bar"), ("bodyweight", "Bodyweight"),
         ("body-only", "Bodyweight"), ("band", "Resistance band"), ("bands", "Resistance bands"), ("ez-bar", "EZ bar"),
         ("smith-machine", "Smith machine"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
         ("dip-bar", "Dip bars"), ("trx", "TRX"), ("other", "Other"));
