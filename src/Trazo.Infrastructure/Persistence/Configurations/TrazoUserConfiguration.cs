@@ -8,7 +8,7 @@ public sealed class TrazoUserConfiguration : IEntityTypeConfiguration<TrazoUser>
 {
     public void Configure(EntityTypeBuilder<TrazoUser> builder)
     {
-        builder.ToTable("users");
+        builder.ToTable("users", table => table.HasCheckConstraint("CK_users_role", "\"Role\" IN ('user', 'admin', 'accountant', 'commercial', 'superadmin')"));
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Email).HasMaxLength(320).IsRequired();
         builder.Property(x => x.NormalizedEmail).HasMaxLength(320).IsRequired();
