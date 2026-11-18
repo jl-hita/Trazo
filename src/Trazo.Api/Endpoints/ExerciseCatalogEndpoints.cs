@@ -297,7 +297,7 @@ public static class ExerciseVocabulary
         ("Serratus", "Serrato"), ("TibialisAnterior", "Tibial anterior"), ("RotatorCuff", "Manguito rotador"));
 
     public static readonly IReadOnlyDictionary<string, string> Equipment = Map(
-        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"), ("machine", "Máquina"),
+        ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"),
         ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("bodyweight", "Peso corporal"),
         ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
         ("smith-machine", "Máquina Smith"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
@@ -316,7 +316,7 @@ public static class ExerciseVocabulary
         ("Serratus", "Serratus"), ("TibialisAnterior", "Tibialis anterior"), ("RotatorCuff", "Rotator cuff"));
 
     public static readonly IReadOnlyDictionary<string, string> EquipmentEn = Map(
-        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"), ("machine", "Machine"),
+        ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"),
         ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("bodyweight", "Bodyweight"),
         ("body-only", "Bodyweight"), ("band", "Resistance band"), ("bands", "Resistance bands"), ("ez-bar", "EZ bar"),
         ("smith-machine", "Smith machine"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
