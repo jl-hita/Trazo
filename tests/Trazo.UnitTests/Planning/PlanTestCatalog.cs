@@ -15,8 +15,8 @@ internal static class PlanTestCatalog
     [
         I("squat", "Squat", ["Quadriceps", "Glutes"], ["Hamstrings"], ["barbell", "squat-rack"], "Intermediate", 90),
         I("goblet-squat", "Squat", ["Quadriceps"], ["Glutes"], ["dumbbell"], "Beginner", 80),
-        I("leg-press", "Squat", ["Quadriceps", "Glutes"], [], ["machine"], "Beginner", 85),
-        I("hack-squat", "Squat", ["Quadriceps", "Glutes"], [], ["machine"], "Beginner", 85),
+        I("leg-press", "Squat", ["Quadriceps", "Glutes"], [], ["leg-press-machine"], "Beginner", 85),
+        I("hack-squat", "Squat", ["Quadriceps", "Glutes"], [], ["hack-squat-machine"], "Beginner", 85),
         I("bodyweight-squat", "Squat", ["Quadriceps", "Glutes"], [], [], "Beginner", 60),
         I("rack-pull", "Hinge", ["UpperBack", "Glutes"], ["Hamstrings"], ["barbell"], "Advanced", 95),
         I("hip-thrust", "Hinge", ["Glutes"], ["Hamstrings"], ["barbell", "bench"], "Beginner", 85),
@@ -26,12 +26,12 @@ internal static class PlanTestCatalog
         I("glute-bridge", "Hinge", ["Glutes"], ["Hamstrings"], [], "Beginner", 60),
         I("bench-press", "HorizontalPush", ["Chest"], ["Triceps", "Deltoids"], ["barbell", "bench"], "Beginner", 90),
         I("db-bench-press", "HorizontalPush", ["Chest"], ["Triceps"], ["dumbbell", "bench"], "Beginner", 85),
-        I("chest-press-machine", "HorizontalPush", ["Chest"], ["Triceps"], ["machine"], "Beginner", 80),
+        I("chest-press-machine", "HorizontalPush", ["Chest"], ["Triceps"], ["chest-press-machine"], "Beginner", 80),
         I("push-up", "HorizontalPush", ["Chest"], ["Triceps"], [], "Beginner", 70),
         I("knee-push-up", "HorizontalPush", ["Chest"], ["Triceps"], [], "Beginner", 70),
         I("ohp", "VerticalPush", ["Deltoids"], ["Triceps"], ["barbell"], "Intermediate", 90),
         I("db-shoulder-press", "VerticalPush", ["Deltoids"], ["Triceps"], ["dumbbell"], "Beginner", 85),
-        I("machine-shoulder-press", "VerticalPush", ["Deltoids"], ["Triceps"], ["machine"], "Beginner", 80),
+        I("machine-shoulder-press", "VerticalPush", ["Deltoids"], ["Triceps"], ["shoulder-press-machine"], "Beginner", 80),
         I("barbell-row", "HorizontalPull", ["UpperBack", "Lats"], ["Biceps"], ["barbell"], "Intermediate", 90),
         I("db-row", "HorizontalPull", ["Lats", "UpperBack"], ["Biceps"], ["dumbbell"], "Beginner", 85),
         I("seated-cable-row", "HorizontalPull", ["Lats", "UpperBack"], ["Biceps"], ["cable"], "Beginner", 80),
@@ -41,7 +41,7 @@ internal static class PlanTestCatalog
         I("lunge", "SingleLeg", ["Quadriceps", "Glutes"], ["Hamstrings"], ["dumbbell"], "Beginner", 80),
         I("bulgarian-split-squat", "SingleLeg", ["Quadriceps", "Glutes"], ["Hamstrings"], ["dumbbell", "bench"], "Intermediate", 85),
         I("step-up", "SingleLeg", ["Quadriceps", "Glutes"], [], ["dumbbell", "bench"], "Beginner", 70),
-        I("single-leg-press", "SingleLeg", ["Quadriceps", "Glutes"], [], ["machine"], "Beginner", 60),
+        I("single-leg-press", "SingleLeg", ["Quadriceps", "Glutes"], [], ["single-leg-press-machine"], "Beginner", 60),
         I("plank", "Core", ["Abdominals"], ["Obliques"], [], "Beginner", 70),
         I("cable-crunch", "Core", ["Abdominals"], [], ["cable"], "Beginner", 70),
         I("dumbbell-curl", "Accessory", ["Biceps"], ["Forearms"], ["dumbbell"], "Beginner", 80),
@@ -50,12 +50,12 @@ internal static class PlanTestCatalog
         I("overhead-tricep-extension", "Accessory", ["Triceps"], [], ["dumbbell"], "Beginner", 75),
         I("lateral-raise", "Accessory", ["Deltoids"], [], ["dumbbell"], "Beginner", 80),
         I("calf-raise", "Accessory", ["Calves"], [], [], "Beginner", 70),
-        I("standing-calf-raise", "Accessory", ["Calves"], [], ["machine"], "Beginner", 75),
-        I("leg-curl", "Accessory", ["Hamstrings"], [], ["machine"], "Beginner", 80),
-        I("leg-extension", "Accessory", ["Quadriceps"], [], ["machine"], "Beginner", 75),
+        I("standing-calf-raise", "Accessory", ["Calves"], [], ["calf-raise-machine"], "Beginner", 75),
+        I("leg-curl", "Accessory", ["Hamstrings"], [], ["leg-curl-machine"], "Beginner", 80),
+        I("leg-extension", "Accessory", ["Quadriceps"], [], ["leg-extension-machine"], "Beginner", 75),
         I("face-pull", "Accessory", ["Deltoids", "UpperBack"], [], ["cable"], "Beginner", 70),
         I("cable-fly", "Accessory", ["Chest"], [], ["cable"], "Beginner", 70),
-        I("rowing-machine", "Cardio", ["Quadriceps"], [], ["machine"])
+        I("rowing-machine", "Cardio", ["Quadriceps"], [], ["rowing-machine"])
     ];
 
     public static IReadOnlyList<TrainingExerciseCandidate> Candidates() => ExerciseCandidateMapper.Map(Items()).Candidates;
