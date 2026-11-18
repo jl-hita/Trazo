@@ -67,8 +67,8 @@ public sealed class ExerciseSeedAuditTests
         Assert.Empty(offenders);
         var weighted = Entries().Where(x => x.GetProperty("id").GetString() is "weighted-pull-up" or "weighted-dip").ToList();
         Assert.Equal(2, weighted.Count);
-        Assert.Equal(["pull-up-bar"], Names(weighted.Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
-        Assert.Equal(["dip-station"], Names(weighted.Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
+        Assert.Equal(["pull-up-bar", "dumbbell"], Names(weighted.Single(x => x.GetProperty("id").GetString() == "weighted-pull-up"), "requiredEquipment"));
+        Assert.Equal(["dip-station", "dumbbell"], Names(weighted.Single(x => x.GetProperty("id").GetString() == "weighted-dip"), "requiredEquipment"));
     }
 
     [Fact]
