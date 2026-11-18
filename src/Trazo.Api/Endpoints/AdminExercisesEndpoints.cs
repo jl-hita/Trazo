@@ -105,7 +105,7 @@ public static partial class AdminExercisesEndpoints
     {
         var rows = await db.ExerciseCatalog.AsNoTracking().Select(x => new
         {
-            x.MovementPattern, x.Difficulty, x.MinimumExperience, x.Equipment, x.ForceType, x.Mechanic, x.BodyPart, x.Source,
+            x.MovementPattern, x.Difficulty, x.MinimumExperience, x.ForceType, x.Mechanic, x.BodyPart, x.Source,
             x.PrimaryMuscles, x.SecondaryMuscles, x.SuitableGoals, x.RequiredEquipment
         }).ToListAsync(cancellationToken);
 
