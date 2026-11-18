@@ -99,8 +99,14 @@ public sealed record AdaptationEntryView(
 
 public sealed record ExerciseRefView(string ExerciseId, string Name);
 
-/// <summary>The adjustments of the current plan, newest first, with totals. <c>Automatic</c> is false when the account has no automatic adaptation.</summary>
-public sealed record AdaptationHistoryView(int Reviews, int Changes, int SessionsAdjusted, bool Automatic, IReadOnlyList<AdaptationEntryView> Entries);
+/// <summary>
+/// The adjustments of the current plan, newest first, with totals. <c>Scope</c> is <c>block</c> (the block in progress, the default) or <c>plan</c>
+/// (every block of the active plan); the totals and the entries follow it. <c>PlanChanges</c> is the number of changes in the whole plan and
+/// <c>HasEarlier</c> says there is more than the block shows. <c>Automatic</c> is false when the account has no automatic adaptation.
+/// </summary>
+public sealed record AdaptationHistoryView(
+    int Reviews, int Changes, int SessionsAdjusted, bool Automatic, IReadOnlyList<AdaptationEntryView> Entries,
+    string Scope = "block", int PlanChanges = 0, bool HasEarlier = false);
 
 public sealed record AppliedAdaptationView(string Kind, IReadOnlyList<string> ExerciseIds, int SessionsChanged, string Explanation);
 

@@ -33,7 +33,7 @@ public interface ITrainingPlanService
     Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     /// <summary>What the engine adjusted and why, newest first (Premium accounts accumulate automatic ones; omissions and moves are for everyone).</summary>
-    Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, CancellationToken ct);
+    Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
@@ -812,12 +812,42 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return result;
     }
 
-    public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, CancellationToken ct)
+    /// <summary>
+    /// The adjustments of the active plan. They belong to the plan (archiving it or creating another leaves them out) and, by default, to the block in
+    /// progress: the one of the first pending session (the last one when everything is resolved). An adjustment is in a block when the workout that
+    /// caused it is; the ones with no workout (absences, moves) belong to the block when they happened after the last workout of an earlier block.
+    /// </summary>
+    public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct)
     {
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
-        var all = db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id);
+        var planRows = db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id);
+        var planChanges = await planRows.CountAsync(a => a.Kind != ReviewKind && a.Kind != SkipKind && a.SessionsChanged > 0, ct);
+        var planCount = await planRows.CountAsync(ct);
+
+        var all = planRows;
+        if (!wholePlan)
+        {
+            var current = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned)
+                              .OrderBy(s => s.SequenceIndex).Select(s => (Guid?)s.MesocycleId).FirstOrDefaultAsync(ct)
+                          ?? await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).OrderByDescending(s => s.SequenceIndex)
+                              .Select(s => (Guid?)s.MesocycleId).FirstOrDefaultAsync(ct);
+            if (current is { } block)
+            {
+                var inBlock = db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.MesocycleId == block);
+                var blockStart = await inBlock.MinAsync(s => (int?)s.SequenceIndex, ct) ?? 0;
+                var blockLogIds = await (from log in db.WorkoutLogs.AsNoTracking() join s in inBlock on log.PlannedSessionId equals s.Id select log.Id).ToListAsync(ct);
+                var earlier = await (from log in db.WorkoutLogs.AsNoTracking()
+                                     join s in db.PlannedSessions.AsNoTracking() on log.PlannedSessionId equals s.Id
+                                     where log.PlanId == plan.Id && s.SequenceIndex < blockStart
+                                     select (DateTimeOffset?)log.LoggedAt).MaxAsync(ct);
+                all = earlier is { } after
+                    ? planRows.Where(a => a.WorkoutLogId != null ? blockLogIds.Contains(a.WorkoutLogId.Value) : a.AppliedAt > after)
+                    : planRows.Where(a => a.WorkoutLogId == null || blockLogIds.Contains(a.WorkoutLogId.Value));
+            }
+        }
+        var shown = await all.CountAsync(ct);
         var reviews = await all.CountAsync(a => a.Kind == ReviewKind, ct);
         var changes = await all.CountAsync(a => a.Kind != ReviewKind && a.Kind != SkipKind && a.SessionsChanged > 0, ct);
         var adjusted = await all.Where(a => a.Kind != ReviewKind && a.Kind != SkipKind).SumAsync(a => (int?)a.SessionsChanged, ct) ?? 0;
@@ -840,7 +870,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 a.Id, a.AppliedAt, a.Kind, SummaryOf(a, refs), Tn(a.Explanation) ?? a.Explanation, refs, a.SessionsChanged,
                 a.Kind != ReviewKind && a.SessionsChanged > 0, source is null ? null : TitleOf(source.Title), source?.PerformedOn);
         }).ToList();
-        return new AdaptationHistoryView(reviews, changes, adjusted, await subscriptions.HasPremiumAsync(userId, ct), entries);
+        return new AdaptationHistoryView(reviews, changes, adjusted, await subscriptions.HasPremiumAsync(userId, ct), entries,
+            wholePlan ? "plan" : "block", planChanges, HasEarlier: planCount > shown);
     }
 
     /// <summary>One line with the numbers: what changed, in which exercises and for how many sessions.</summary>

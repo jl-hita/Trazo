@@ -62,7 +62,7 @@ public static class PlansEndpoints
             .WithSummary("The sessions the user has logged, newest first.")
             .Produces<IReadOnlyList<HistoryItem>>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current/adaptations", GetAdaptationsAsync).WithName("GetPlanAdaptations")
-            .WithSummary("What the engine adjusted in the plan and why (sets, reserve, loads, deloads, absences, omissions), newest first, plus the sessions it reviewed and left as they were.")
+            .WithSummary("What the engine adjusted in the plan and why (sets, reserve, loads, deloads, absences, omissions), newest first, plus the sessions it reviewed and left as they were. scope=block (default): the block in progress; scope=plan: every block of the active plan.")
             .Produces<AdaptationHistoryView>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current/load", GetLoadAsync).WithName("GetPlanLoad")
             .WithSummary("Weekly volume (sets) of every week of the plan: planned (only for the blocks already generated) against completed (weeks already reached).")
@@ -175,11 +175,13 @@ public static class PlansEndpoints
     }
 
     private static async Task<IResult> GetAdaptationsAsync(
-        ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct, int take = 30)
+        ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct, int take = 30, string scope = "block")
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         if (take is < 1 or > 100) return Results.ValidationProblem(new Dictionary<string, string[]> { ["take"] = ["Debe estar entre 1 y 100."] });
-        return await plans.GetAdaptationsAsync(userId, take, ct) is { } history ? Results.Ok(history) : NoPlan();
+        if (!string.Equals(scope, "block", StringComparison.OrdinalIgnoreCase) && !string.Equals(scope, "plan", StringComparison.OrdinalIgnoreCase))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["scope"] = ["Usa block o plan."] });
+        return await plans.GetAdaptationsAsync(userId, take, string.Equals(scope, "plan", StringComparison.OrdinalIgnoreCase), ct) is { } history ? Results.Ok(history) : NoPlan();
     }
 
     private static async Task<IResult> GetLoadAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
