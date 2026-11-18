@@ -86,16 +86,21 @@ public static class TrainingProgramGenerator
                 .ToArray();
         }
 
-        var sessionPatterns = PlanSessionPatterns(split, request, Compatible);
         var sessions = new List<TrainingSessionPrescription>();
         for (var week = 1; week <= request.DurationWeeks; week++)
         {
+            // A sequence is one continuous rotation. Odd-length rotations must carry their position
+            // into the next period/block instead of restarting at session A every time.
+            var weekSplit = request.IsSequence
+                ? RotateSplit(split, request.RotationStartIndex + week - 1)
+                : split;
+            var sessionPatterns = PlanSessionPatterns(weekSplit, request, Compatible);
             // Keep exercise selection stable across weeks to support measurable progression.
             // Variety is managed within each week's sessions, not across the mesocycle.
             var selectedThisWeek = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             for (var dayIndex = 0; dayIndex < days.Length; dayIndex++)
             {
-                var sessionTemplate = split[dayIndex];
+                var sessionTemplate = weekSplit[dayIndex];
                 var requiredPatterns = sessionPatterns[dayIndex];
                 var prescriptions = new List<TrainingExercisePrescription>();
                 for (var patternIndex = 0; patternIndex < requiredPatterns.Count; patternIndex++)
@@ -1212,6 +1217,15 @@ public static class TrainingProgramGenerator
     // Session templates are ordered rotations. Calendar scheduling may place them within a week;
     // sequence scheduling advances through them independently of weekdays. Every template lists
     // the movement patterns a session must cover; titles also constrain accessory muscle selection.
+    private static IReadOnlyList<SessionTemplate> RotateSplit(IReadOnlyList<SessionTemplate> templates, int offset)
+    {
+        if (templates.Count < 2) return templates;
+        var start = ((offset % templates.Count) + templates.Count) % templates.Count;
+        return Enumerable.Range(0, templates.Count)
+            .Select(index => templates[(start + index) % templates.Count])
+            .ToArray();
+    }
+
     private static IReadOnlyList<SessionTemplate> BuildSplit(int daysPerWeek, TrainingProgramSplit requestedSplit, bool isSequence = false)
     {
         var fullBodyA = new SessionTemplate("Cuerpo completo A",
@@ -1349,7 +1363,9 @@ public sealed record TrainingProgramGenerationRequest(
     bool ContinuesPreviousBlock = false,
     // Seed of the plan, the same for every block. It only orders candidates that are equally good.
     int SelectionSeed = 0,
-    bool IsSequence = false);
+    bool IsSequence = false,
+    // Zero-based position of the first session in the global rotation (keeps odd-length cycles continuous across blocks).
+    int RotationStartIndex = 0);
 
 public sealed record TrainingExerciseCandidate(
     string ExerciseId,
