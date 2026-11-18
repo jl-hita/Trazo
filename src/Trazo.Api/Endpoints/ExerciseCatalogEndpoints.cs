@@ -300,7 +300,7 @@ public static class ExerciseVocabulary
         ("barbell", "Barra"), ("dumbbell", "Mancuernas"), ("kettlebell", "Pesa rusa"), ("cable", "Polea"),
         ("bench", "Banco"), ("squat-rack", "Rack de sentadillas"), ("pull-up-bar", "Barra de dominadas"), ("low-row-bar", "Barra baja para remo"), ("bodyweight", "Peso corporal"),
         ("body-only", "Peso corporal"), ("band", "Banda elástica"), ("bands", "Bandas elásticas"), ("ez-bar", "Barra Z"),
-        ("smith-machine", "Máquina Smith"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
+        ("smith-machine", "Máquina Smith"), ("leg-press-machine", "Prensa de piernas"), ("dip-station", "Estación de fondos"), ("ab-wheel", "Rueda abdominal"), ("step", "Escalón o plataforma"), ("resistance-band", "Banda elástica"), ("low-row-bar", "Barra baja para remo"), ("medicine-ball", "Balón medicinal"), ("exercise-ball", "Fitball"), ("rings", "Anillas"),
         ("dip-bar", "Paralelas"), ("trx", "TRX"), ("other", "Otro"));
 
     public static readonly IReadOnlyDictionary<string, string> PatternsEn = Map(
@@ -319,7 +319,7 @@ public static class ExerciseVocabulary
         ("barbell", "Barbell"), ("dumbbell", "Dumbbells"), ("kettlebell", "Kettlebell"), ("cable", "Cable"),
         ("bench", "Bench"), ("squat-rack", "Squat rack"), ("pull-up-bar", "Pull-up bar"), ("low-row-bar", "Low row bar"), ("bodyweight", "Bodyweight"),
         ("body-only", "Bodyweight"), ("band", "Resistance band"), ("bands", "Resistance bands"), ("ez-bar", "EZ bar"),
-        ("smith-machine", "Smith machine"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
+        ("smith-machine", "Smith machine"), ("leg-press-machine", "Leg press machine"), ("dip-station", "Dip station"), ("ab-wheel", "Ab wheel"), ("step", "Step / stable platform"), ("resistance-band", "Resistance band"), ("low-row-bar", "Low row bar"), ("medicine-ball", "Medicine ball"), ("exercise-ball", "Exercise ball"), ("rings", "Rings"),
         ("dip-bar", "Dip bars"), ("trx", "TRX"), ("other", "Other"));
 
     public static readonly IReadOnlyDictionary<string, string> LevelsEn = Map(
