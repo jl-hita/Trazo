@@ -408,6 +408,14 @@ export class AdminApi {
     return p;
   }
 
+  getReferralProgrammeSettings(): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
+    return firstValueFrom(this.http.get<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`));
+  }
+
+  saveReferralProgrammeSettings(input: { enabled: boolean; rewardDays: number }): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
+    return firstValueFrom(this.http.put<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`, input));
+  }
+
   getReferralSummary(range: { from?: string; to?: string }): Promise<any> {
     return firstValueFrom(this.http.get<any>(`${API}/referrals/summary`, { params: this.query(range) }));
   }
