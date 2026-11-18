@@ -16,6 +16,10 @@ public static class ExerciseCatalogEndpoints
             .WithName("SearchExercises")
             .WithSummary("Search and filter the exercise catalog.");
 
+        group.MapGet("/all", AllAsync)
+            .WithName("GetAllExercises")
+            .WithSummary("Get every active exercise with its complete metadata, including required equipment.");
+
         group.MapGet("/options", OptionsAsync)
             .WithName("GetExerciseFilterOptions")
             .WithSummary("Vocabulary of the catalog filters (movement patterns, muscles, equipment, levels) with Spanish labels and counts.")
@@ -26,6 +30,21 @@ public static class ExerciseCatalogEndpoints
             .WithSummary("Get the complete details of one exercise.");
 
         return endpoints;
+    }
+
+    private static async Task<IResult> AllAsync(TrazoDbContext db, CancellationToken cancellationToken)
+    {
+        var exercises = await db.ExerciseCatalog.AsNoTracking()
+            .Where(x => x.IsActive)
+            .OrderBy(x => x.NameEs).ThenBy(x => x.Id)
+            .Select(x => new ExerciseCatalogDetail(
+                x.Id, x.Source, x.NameEs, x.NameEn, x.DescriptionEs, x.InstructionsEs, x.TipsEs,
+                x.ForceType, x.Mechanic, x.Difficulty, x.Equipment, x.RequiredEquipment, x.BodyPart,
+                x.Met, x.IsUnilateral, x.IsBodyweight, x.MovementPattern, x.PrimaryMuscles,
+                x.SecondaryMuscles, x.MinimumExperience, x.SuitableGoals, x.SelectionPriority))
+            .ToListAsync(cancellationToken);
+
+        return Results.Ok(exercises);
     }
 
     private static async Task<IResult> SearchAsync(
@@ -78,7 +97,6 @@ public static class ExerciseCatalogEndpoints
         {
             var selectedEquipment = equipment.Trim();
             query = query.Where(x =>
-                x.Equipment == selectedEquipment ||
                 x.RequiredEquipment.Contains(selectedEquipment));
         }
 
@@ -138,7 +156,7 @@ public static class ExerciseCatalogEndpoints
         var options = new ExerciseFilterOptions(
             Build(rows.Select(r => r.MovementPattern), english ? ExerciseVocabulary.PatternsEn : ExerciseVocabulary.Patterns),
             Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), english ? ExerciseVocabulary.MusclesEn : ExerciseVocabulary.Muscles),
-            Build(rows.SelectMany(r => r.RequiredEquipment.Append(r.Equipment).Distinct()), english ? ExerciseVocabulary.EquipmentEn : ExerciseVocabulary.Equipment),
+            Build(rows.SelectMany(r => r.RequiredEquipment).Distinct(), english ? ExerciseVocabulary.EquipmentEn : ExerciseVocabulary.Equipment),
             Build(rows.Select(r => r.MinimumExperience), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
             Build(rows.Select(r => r.Difficulty), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
             new ExerciseFilterParameters("movementPattern", "muscle", "equipment", "experience", "difficulty"));
