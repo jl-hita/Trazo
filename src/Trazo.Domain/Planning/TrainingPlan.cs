@@ -73,6 +73,8 @@ public sealed class TrainingPlan
     public string[] ExcludedExerciseIds { get; set; } = [];
     /// <summary>Body areas with a limitation or injury (see the options endpoint). Drives exercise exclusions.</summary>
     public string[] Limitations { get; set; } = [];
+    /// <summary>Per-muscle priorities as "Muscle:Priority" entries (Emphasize, Grow, Maintain). A muscle that is not listed is Grow.</summary>
+    public string[] MusclePriorities { get; set; } = [];
     public bool IncludeDeloadPhases { get; set; }
     /// <summary>Training weeks between deloads (4-8), or 0 when TRAZO places them automatically.</summary>
     public int DeloadEveryTrainingWeeks { get; set; } = 4;
