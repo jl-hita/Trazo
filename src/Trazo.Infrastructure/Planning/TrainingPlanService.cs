@@ -792,8 +792,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private static string[]? OriginalDaysOf(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals) =>
         ActiveReduction(plan, proposals) is { } reduction ? SplitDays(reduction.FromDays) : null;
 
+    /// <summary>The first block not generated yet: where a reorganisation starts to apply (it may be a deload).</summary>
     private MesocycleSlot? NextSlotOf(TrainingPlan plan) =>
         SlotsOf(plan).FirstOrDefault(s => plan.Mesocycles.All(m => m.Sequence != s.Sequence));
+
+    /// <summary>The first block not generated yet that is not a deload: the one a proposal is previewed and validated against.</summary>
+    private MesocycleSlot? NextTrainingSlotOf(TrainingPlan plan) =>
+        SlotsOf(plan).FirstOrDefault(s => !s.IsDeload && plan.Mesocycles.All(m => m.Sequence != s.Sequence));
 
     private async Task<IReadOnlyList<string>?> LastBlockExerciseIdsAsync(TrainingPlan plan, CancellationToken ct)
     {
@@ -836,7 +841,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
 
         FrequencyDraft? draft = null;
-        if (assessment.Pattern is FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn && NextSlotOf(plan) is { } slot)
+        if (assessment.Pattern is FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn && NextTrainingSlotOf(plan) is { } slot)
         {
             var catalog = (await LoadCandidatesAsync(ct)).Candidates;
             var originalDays = original?.Select(Enum.Parse<DayOfWeek>).ToList();
@@ -918,7 +923,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// <summary>Applies new days to the plan for the blocks generated from now on. The sessions that already exist are not touched.</summary>
     private async Task<PlanResult<bool>> ApplyFrequencyAsync(TrainingPlan plan, FrequencyProposal proposal, CancellationToken ct)
     {
-        var slot = NextSlotOf(plan);
+        var slot = NextTrainingSlotOf(plan);
         var toDays = SplitDays(proposal.ToDays);
         var profile = ProfileOf(plan) with
         {
@@ -939,7 +944,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         plan.UpdatedAt = now;
         proposal.Status = FrequencyProposal.Accepted;
         proposal.DecidedAt = now;
-        proposal.AppliedFromSequence = slot?.Sequence;
+        proposal.AppliedFromSequence = NextSlotOf(plan)?.Sequence;
         db.PlanAdaptations.Add(new PlanAdaptation
         {
             Id = Guid.NewGuid(), PlanId = plan.Id, Kind = "frequency_reorganization", ExerciseIds = [], SessionsChanged = 0, AppliedAt = now, EvidenceAt = now,

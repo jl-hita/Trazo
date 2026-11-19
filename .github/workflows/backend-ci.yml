@@ -39,11 +39,11 @@ jobs:
       matrix:
         include:
           - shard: heavy-1
-            filter: "FullyQualifiedName~ReferralApiTests|FullyQualifiedName~SubscriptionApiTests|FullyQualifiedName~AccountApiTests|FullyQualifiedName~WaitlistApiTests"
+            filter: "Category!=Postgres&(FullyQualifiedName~ReferralApiTests|FullyQualifiedName~SubscriptionApiTests|FullyQualifiedName~AccountApiTests|FullyQualifiedName~WaitlistApiTests)"
           - shard: heavy-2
-            filter: "FullyQualifiedName~PlansApiTests|FullyQualifiedName~FlexibleRegistrationTests|FullyQualifiedName~AdminOverviewApiTests|FullyQualifiedName~AsynchronousSplitApiTests|FullyQualifiedName~PushApiTests|FullyQualifiedName~PlansSubscriptionTests"
+            filter: "Category!=Postgres&(FullyQualifiedName~PlansApiTests|FullyQualifiedName~FlexibleRegistrationTests|FullyQualifiedName~AdminOverviewApiTests|FullyQualifiedName~AsynchronousSplitApiTests|FullyQualifiedName~PushApiTests|FullyQualifiedName~PlansSubscriptionTests)"
           - shard: rest
-            filter: "FullyQualifiedName!~ReferralApiTests&FullyQualifiedName!~SubscriptionApiTests&FullyQualifiedName!~AccountApiTests&FullyQualifiedName!~WaitlistApiTests&FullyQualifiedName!~PlansApiTests&FullyQualifiedName!~FlexibleRegistrationTests&FullyQualifiedName!~AdminOverviewApiTests&FullyQualifiedName!~AsynchronousSplitApiTests&FullyQualifiedName!~PushApiTests&FullyQualifiedName!~PlansSubscriptionTests"
+            filter: "Category!=Postgres&FullyQualifiedName!~ReferralApiTests&FullyQualifiedName!~SubscriptionApiTests&FullyQualifiedName!~AccountApiTests&FullyQualifiedName!~WaitlistApiTests&FullyQualifiedName!~PlansApiTests&FullyQualifiedName!~FlexibleRegistrationTests&FullyQualifiedName!~AdminOverviewApiTests&FullyQualifiedName!~AsynchronousSplitApiTests&FullyQualifiedName!~PushApiTests&FullyQualifiedName!~PlansSubscriptionTests"
     env:
       # Sin instrumentación PGO el arranque de cada host de prueba cuesta ~25 % menos CPU.
       DOTNET_TieredPGO: "0"
@@ -61,10 +61,44 @@ jobs:
       - name: Test
         run: dotnet test Trazo.sln --configuration Release --no-build --filter "${{ matrix.filter }}" --logger "trx;LogFileName=trazo-tests.trx"
 
+  # Migraciones y planificación sobre un PostgreSQL real (el resto de la batería usa SQLite): las migraciones
+  # de aprendizaje y la reorganización por frecuencia con las migraciones reales.
+  postgres:
+    name: test (postgres)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DOTNET_TieredPGO: "0"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+      TRAZO_TEST_POSTGRES: "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=postgres"
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: "10.0.x"
+      - name: Restore
+        run: dotnet restore Trazo.sln
+      - name: Build
+        run: dotnet build Trazo.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test Trazo.sln --configuration Release --no-build --filter "Category=Postgres" --logger "trx;LogFileName=trazo-postgres.trx"
+
   # Un único check estable para el resto del repositorio: falla si cualquier reparto falla o se cancela.
   build-and-test:
     if: always()
-    needs: test
+    needs: [test, postgres]
     runs-on: ubuntu-latest
     steps:
-      - run: test "${{ needs.test.result }}" = "success"
+      - run: test "${{ needs.test.result }}" = "success" && test "${{ needs.postgres.result }}" = "success"
