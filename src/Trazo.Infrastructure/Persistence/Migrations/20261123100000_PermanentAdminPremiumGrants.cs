@@ -16,6 +16,7 @@ public sealed class PermanentAdminPremiumGrants : Migration
             ALTER TABLE premium_grants DROP CONSTRAINT IF EXISTS "CK_premium_grants_Days";
             ALTER TABLE premium_grants ADD COLUMN "IsPermanent" boolean NOT NULL DEFAULT FALSE;
             ALTER TABLE premium_grants ADD COLUMN "GrantReason" character varying(300) NULL;
+            ALTER TABLE premium_grants ADD COLUMN "GrantedBy" character varying(40) NULL;
             ALTER TABLE premium_grants ADD CONSTRAINT "CK_premium_grants_Days"
                 CHECK (("IsPermanent" = TRUE AND "Days" = 0 AND "Kind" = 'admin_grant') OR ("IsPermanent" = FALSE AND "Days" > 0));
         """);
@@ -26,6 +27,7 @@ public sealed class PermanentAdminPremiumGrants : Migration
         migrationBuilder.Sql("""
             ALTER TABLE premium_grants DROP CONSTRAINT IF EXISTS "CK_premium_grants_Days";
             UPDATE premium_grants SET "Days" = 1, "EndsAt" = "StartsAt" + INTERVAL '1 day' WHERE "IsPermanent" = TRUE;
+            ALTER TABLE premium_grants DROP COLUMN IF EXISTS "GrantedBy";
             ALTER TABLE premium_grants DROP COLUMN IF EXISTS "GrantReason";
             ALTER TABLE premium_grants DROP COLUMN IF EXISTS "IsPermanent";
             ALTER TABLE premium_grants ADD CONSTRAINT "CK_premium_grants_Days" CHECK ("Days" > 0);
