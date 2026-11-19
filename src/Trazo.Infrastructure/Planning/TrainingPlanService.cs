@@ -817,8 +817,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private static string[] SplitDays(string days) => days.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
     private FrequencyProposalView ToView(FrequencyProposal p) => new(
-        p.Id, p.Kind, p.Status, SplitDays(p.FromDays), SplitDays(p.ToDays), p.Reason, FrequencyReorganizer.ReadPreview(p.PreviewJson),
+        p.Id, p.Kind, p.Status, SplitDays(p.FromDays), SplitDays(p.ToDays), Tn(p.Reason) ?? p.Reason, TranslatedPreview(p.PreviewJson),
         p.CreatedAt, p.DecidedAt, p.AppliedFromSequence, p.PolicyVersion);
+
+    /// <summary>The stored preview with its warnings (engine messages, stored in Spanish) in the language of the request.</summary>
+    private FrequencyPreview? TranslatedPreview(string json) =>
+        FrequencyReorganizer.ReadPreview(json) is { } preview ? preview with { Warnings = (preview.Warnings ?? []).Select(w => Tn(w) ?? w).ToList() } : null;
 
     /// <summary>The accepted reduction currently in effect (not undone by a later restore or revert), or null.</summary>
     private static FrequencyProposal? ActiveReduction(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals)
@@ -963,7 +967,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private FrequencyOverviewView FrequencyOverview(TrainingPlan plan, FrequencyAssessment assessment, FrequencyProposal? pending, IReadOnlyList<FrequencyProposal> all)
     {
         var canRevert = OriginalDaysOf(plan, all) is not null;
-        var message = (pending is not null ? pending.Reason : assessment.Reason);
+        var message = Tn(pending is not null ? pending.Reason : assessment.Reason) ?? string.Empty;
         return new FrequencyOverviewView(
             assessment.Pattern.ToString(), message, pending is null ? null : ToView(pending),
             all.Where(p => p.Status != FrequencyProposal.Pending).OrderByDescending(p => p.CreatedAt).Select(ToView).ToList(), canRevert);
@@ -1241,7 +1245,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             .Where(d => d.UserId == userId && d.PlanId == plan.Id)
             .OrderByDescending(d => d.MesocycleSequence).ThenBy(d => d.Muscle).Take(take).ToListAsync(ct);
         return new VolumeDecisionsView(rows.Select(d => new VolumeDecisionView(
-            d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, d.Reason, d.PolicyVersion)).ToList());
+            d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, Tn(d.Reason) ?? d.Reason, d.PolicyVersion)).ToList());
     }
 
     public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct)

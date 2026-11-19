@@ -135,6 +135,32 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
     }
 
     [ScenarioFact]
+    public async Task The_proposal_its_messages_the_adaptation_it_leaves_and_its_errors_are_in_English_when_asked()
+    {
+        var (_, client) = await ThreeDaysForFiveWeeksAsync();
+        client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en");
+        var overview = await JsonAsync(await client.GetAsync(Url));
+        var pending = overview.GetProperty("pending");
+        NewTextsInBothLanguagesTests.AssertEnglish(overview.GetProperty("message").GetString(), "overview message");
+        NewTextsInBothLanguagesTests.AssertEnglish(pending.GetProperty("reason").GetString(), "proposal reason");
+        foreach (var warning in pending.GetProperty("preview").GetProperty("warnings").EnumerateArray())
+            NewTextsInBothLanguagesTests.AssertEnglish(warning.GetString(), "preview warning");
+        var next = await JsonAsync(await client.GetAsync("/api/v1/plans/current/next"));
+        NewTextsInBothLanguagesTests.AssertEnglish(next.GetProperty("frequency").GetProperty("message").GetString(), "frequency message");
+
+        var missing = await client.PostAsync($"{Url}/proposals/{Guid.NewGuid()}/accept", null);
+        NewTextsInBothLanguagesTests.AssertEnglish((await JsonAsync(missing)).GetProperty("detail").GetString(), "error");
+
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsync($"{Url}/proposals/{pending.GetProperty("id").GetGuid()}/accept", null)).StatusCode);
+        var adaptations = await JsonAsync(await client.GetAsync("/api/v1/plans/current/adaptations?scope=plan"));
+        var entry = adaptations.GetProperty("entries").EnumerateArray().First(e => e.GetProperty("kind").GetString() == "frequency_reorganization");
+        NewTextsInBothLanguagesTests.AssertEnglish(entry.GetProperty("summary").GetString(), "adaptation summary");
+        NewTextsInBothLanguagesTests.AssertEnglish(entry.GetProperty("explanation").GetString(), "adaptation explanation");
+        var revert = await JsonAsync(await client.PostAsync($"{Url}/revert", null));
+        NewTextsInBothLanguagesTests.AssertEnglish(revert.GetProperty("history")[0].GetProperty("reason").GetString(), "revert reason");
+    }
+
+    [ScenarioFact]
     public async Task Declining_a_proposal_does_not_offer_the_same_days_again_for_a_while()
     {
         var (_, client) = await ThreeDaysForFiveWeeksAsync();
@@ -184,7 +210,9 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         Assert.All(volume.GetProperty("decisions").EnumerateArray(), d => Assert.True(d.GetProperty("blockSequence").GetInt32() > 1));
         Assert.All(volume.GetProperty("decisions").EnumerateArray(), d => Assert.False(string.IsNullOrWhiteSpace(d.GetProperty("reason").GetString())));
 
-        var reverted = await JsonAsync(await client.PostAsync($"{Url}/revert", null));
+        var revertResponse = await client.PostAsync($"{Url}/revert", null);
+        Assert.True(revertResponse.IsSuccessStatusCode, await revertResponse.Content.ReadAsStringAsync());
+        var reverted = await JsonAsync(revertResponse);
         Assert.False(reverted.GetProperty("canRevert").GetBoolean());
         Assert.Equal(2, reverted.GetProperty("history").GetArrayLength());
         var after = await JsonAsync(await client.GetAsync("/api/v1/plans/current"));
