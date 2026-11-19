@@ -279,6 +279,7 @@ public sealed class AdminUsersApiTests : IDisposable
         Assert.True(grant.GetProperty("permanent").GetBoolean());
         Assert.True(grant.GetProperty("isCurrent").GetBoolean());
         Assert.Equal("Partner access for testing", grant.GetProperty("reason").GetString());
+        Assert.Equal(superadmin.Id.ToString(), grant.GetProperty("grantedBy").GetString());
 
         var history = await JsonAsync(await rootClient.GetAsync($"/api/v1/admin/users/{target.Id}/premium-grants"));
         Assert.Single(history.EnumerateArray());
