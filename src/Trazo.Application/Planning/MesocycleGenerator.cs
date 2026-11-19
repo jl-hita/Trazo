@@ -29,6 +29,20 @@ public sealed record MesocycleGeneration(
 /// </summary>
 public static class MesocycleGenerator
 {
+    /// <summary>
+    /// The weekly target of each configurable muscle for this profile before any learning, with the limits a learned change must respect.
+    /// It uses exactly the same inputs as <see cref="Generate"/>, so the longitudinal layer reads the numbers the generator will use.
+    /// </summary>
+    public static IReadOnlyList<TrainingMuscleBaseline> Baselines(PlanProfile profile)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        var sequence = profile.SchedulingMode == Trazo.Domain.Planning.PlanSchedulingMode.Sequence;
+        return TrainingMusclePriorityPlanner.Baselines(
+            profile.Goal, profile.Experience, profile.MusclePriorities,
+            sequence ? profile.SessionsPerPeriod : profile.TrainingDays.Count, profile.MaxSessionMinutes);
+    }
+
+    /// <param name="learnedTargets">Weekly targets from the longitudinal layer (see <c>Longitudinal.LongitudinalVolumePlanner</c>); null or empty leaves the block exactly as it was without learning.</param>
     /// <param name="rotationPosition">Sequence plans only: how many sessions the plan already has, that is, where in the rotation the
     /// block begins. It comes from what is persisted (the order of the existing sessions), never from the clock.</param>
     public static MesocycleGeneration Generate(
@@ -39,7 +53,8 @@ public static class MesocycleGenerator
         IReadOnlyList<string>? previousBlockExerciseIds = null,
         bool continuesPreviousBlock = false,
         IReadOnlyList<TrainingLoadReference>? loadReferences = null,
-        int rotationPosition = 0)
+        int rotationPosition = 0,
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets = null)
     {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(slot);
@@ -53,7 +68,7 @@ public static class MesocycleGenerator
         // The user's muscle priorities become the volume targets the allocator already understands (none = the default dose).
         var priorities = TrainingMusclePriorityPlanner.Build(
             profile.Goal, profile.Experience, profile.MusclePriorities,
-            sequence ? profile.SessionsPerPeriod : profile.TrainingDays.Count, profile.MaxSessionMinutes);
+            sequence ? profile.SessionsPerPeriod : profile.TrainingDays.Count, profile.MaxSessionMinutes, learnedTargets);
         if (!priorities.Succeeded) return new([], priorities.Errors, null);
         var result = TrainingProgramGenerator.Generate(new TrainingProgramGenerationRequest(
             profile.Goal, profile.Experience, PlanSchedule.WeekStart(profile.StartDate, slot.StartWeek), slot.Weeks,

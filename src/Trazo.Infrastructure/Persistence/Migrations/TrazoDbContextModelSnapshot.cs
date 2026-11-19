@@ -465,6 +465,79 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
                 .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
 
+        modelBuilder.Entity("Trazo.Domain.Planning.MuscleWeekObservation", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<Guid>("PlanId").HasColumnType("uuid");
+            b.Property<int>("Period").HasColumnType("integer");
+            b.Property<int>("MesocycleSequence").HasColumnType("integer");
+            b.Property<bool>("IsDeload").HasColumnType("boolean");
+            b.Property<string>("Muscle").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("Quality").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("Reason").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<decimal>("PrescribedSets").HasPrecision(6, 1).HasColumnType("numeric(6,1)");
+            b.Property<decimal>("PerformedSets").HasPrecision(6, 1).HasColumnType("numeric(6,1)");
+            b.Property<int>("SessionsPlanned").HasColumnType("integer");
+            b.Property<int>("SessionsDone").HasColumnType("integer");
+            b.Property<int>("Exposures").HasColumnType("integer");
+            b.Property<int>("CompletedSets").HasColumnType("integer");
+            b.Property<int>("BelowRangeSets").HasColumnType("integer");
+            b.Property<decimal?>("PerformanceChangePercent").HasPrecision(8, 2).HasColumnType("numeric(8,2)");
+            b.Property<int>("PerformanceSamples").HasColumnType("integer");
+            b.Property<int>("FatigueSignals").HasColumnType("integer");
+            b.Property<int>("FeedbackAnswers").HasColumnType("integer");
+            b.Property<int>("LowStimulusAnswers").HasColumnType("integer");
+            b.Property<int>("DiscomfortAnswers").HasColumnType("integer");
+            b.Property<int>("PainSessions").HasColumnType("integer");
+            b.Property<bool>("ReturnFromAbsence").HasColumnType("boolean");
+            b.Property<DateTimeOffset>("ProcessedThrough").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("UserId", "PlanId", "Period", "Muscle").IsUnique();
+            b.HasIndex("PlanId", "MesocycleSequence");
+            b.ToTable("muscle_week_observations");
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.MuscleWeekObservation", b =>
+        {
+            b.HasOne("Trazo.Domain.Planning.TrainingPlan", null)
+                .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Planning.LongitudinalDecision", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<Guid>("PlanId").HasColumnType("uuid");
+            b.Property<int>("MesocycleSequence").HasColumnType("integer");
+            b.Property<string>("Muscle").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("Action").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<decimal>("BaselineSets").HasPrecision(5, 1).HasColumnType("numeric(5,1)");
+            b.Property<decimal>("PreviousSets").HasPrecision(5, 1).HasColumnType("numeric(5,1)");
+            b.Property<decimal>("ProposedSets").HasPrecision(5, 1).HasColumnType("numeric(5,1)");
+            b.Property<string>("Confidence").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<decimal>("ConfidenceScore").HasPrecision(3, 2).HasColumnType("numeric(3,2)");
+            b.Property<int>("AnalyzedFromPeriod").HasColumnType("integer");
+            b.Property<int>("AnalyzedToPeriod").HasColumnType("integer");
+            b.Property<string>("SignalsJson").IsRequired().HasMaxLength(2000).HasColumnType("character varying(2000)");
+            b.Property<string>("Reason").IsRequired().HasMaxLength(600).HasColumnType("character varying(600)");
+            b.Property<string>("PolicyVersion").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("PlanId", "MesocycleSequence", "Muscle").IsUnique();
+            b.HasIndex("UserId", "CreatedAt");
+            b.ToTable("longitudinal_decisions");
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.LongitudinalDecision", b =>
+        {
+            b.HasOne("Trazo.Domain.Planning.TrainingPlan", null)
+                .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Training.ExerciseCatalogItem", b =>
         {
             b.Property<string>("Id").HasMaxLength(100).HasColumnType("character varying(100)").HasColumnName("exercise_id");

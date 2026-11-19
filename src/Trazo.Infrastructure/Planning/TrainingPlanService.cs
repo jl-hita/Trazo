@@ -1695,17 +1695,30 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var existingSessions = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0;
         var firstIndex = existingSessions + 1;
         var profile = ProfileOf(plan);
+        var loadReferences = await LoadReferencesAsync(plan.UserId, ct);
+        var continues = previous is { IsDeload: false } && previous.Sequence == slot.Sequence - 1;
+        // What this user's own history says about the weekly dose of each muscle (see LongitudinalLearning). It only moves the targets the
+        // priority planner already chose, by one set at most, and only with enough evidence; without it the block is generated as before.
+        var learning = await LongitudinalLearning.ProposeAsync(db, plan, slot, profile, clock.GetUtcNow(), ct);
         var generation = MesocycleGenerator.Generate(
-            profile, plan.Seed, slot, candidates, previousIds,
-            continuesPreviousBlock: previous is { IsDeload: false } && previous.Sequence == slot.Sequence - 1,
-            loadReferences: await LoadReferencesAsync(plan.UserId, ct),
-            rotationPosition: existingSessions);
+            profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
+            loadReferences: loadReferences, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets);
+        var decisions = learning.Decisions;
+        if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
+        {
+            // A learned target must never make a block impossible: fall back to the plan's own targets and keep no decisions.
+            generation = MesocycleGenerator.Generate(
+                profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
+                loadReferences: loadReferences, rotationPosition: existingSessions);
+            decisions = [];
+        }
         if (!generation.Succeeded) return null;
 
         var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
+        db.LongitudinalDecisions.AddRange(decisions);
         try
         {
             await db.SaveChangesAsync(ct);

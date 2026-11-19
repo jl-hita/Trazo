@@ -11,6 +11,10 @@ public enum TrainingMusclePriority
     Maintain
 }
 
+/// <summary>The weekly target of a muscle before learning, and the limits a learned change must respect (all in effective sets).</summary>
+public sealed record TrainingMuscleBaseline(
+    TrainingMuscleGroup Muscle, TrainingMusclePriority Priority, decimal Target, decimal Floor, decimal Ceiling);
+
 public sealed record TrainingMusclePriorityResult(
     IReadOnlyList<TrainingMuscleVolumeTarget> Targets, IReadOnlyList<string> Errors, IReadOnlyList<string> Notes)
 {
@@ -49,16 +53,75 @@ public static class TrainingMusclePriorityPlanner
         TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Calves
     ];
 
-    public static TrainingMusclePriorityResult Build(
+    /// <summary>
+    /// The weekly target each configurable muscle has BEFORE any learning from the user's history, with the limits inside which a
+    /// learned adjustment may move it. It is the single place where those limits come from, so the longitudinal layer never
+    /// invents its own: Emphasize never goes under the normal dose nor above <see cref="EmphasisTargetCeiling"/>, Maintain never
+    /// goes up, Grow stays inside the default range (never above 20).
+    /// </summary>
+    public static IReadOnlyList<TrainingMuscleBaseline> Baselines(
         TrainingGoal goal,
         TrainingExperience experience,
         IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? priorities,
         int sessionsPerWeek,
         int maximumSessionMinutes)
     {
+        if (goal != TrainingGoal.Hypertrophy) return [];
+        var defaults = TrainingProgramVolumeAllocator.GetWeeklyTargets(goal, experience, null, sessionsPerWeek, maximumSessionMinutes);
+        var tolerance = TrainingProgramVolumeAllocator.DefaultTargetTolerance(experience);
+        var result = new List<TrainingMuscleBaseline>();
+        foreach (var muscle in Configurable)
+        {
+            if (!defaults.TryGetValue(muscle, out var normal)) continue;
+            var priority = priorities is not null && priorities.TryGetValue(muscle, out var chosen) ? chosen : TrainingMusclePriority.Grow;
+            switch (priority)
+            {
+                case TrainingMusclePriority.Emphasize:
+                {
+                    var target = Math.Min(EmphasisTargetCeiling, normal + tolerance);
+                    result.Add(new(muscle, priority, target, Math.Min(target, normal), EmphasisTargetCeiling));
+                    break;
+                }
+                case TrainingMusclePriority.Maintain:
+                {
+                    var target = Math.Max(MaintenanceFloorSets, Math.Ceiling(normal / 2m));
+                    result.Add(new(muscle, priority, target, MaintenanceFloorSets, target));
+                    break;
+                }
+                default:
+                    result.Add(new(muscle, priority, normal,
+                        Math.Max(MaintenanceFloorSets, Math.Ceiling(normal * GrowFloorShare)), Math.Min(20m, normal + tolerance)));
+                    break;
+            }
+        }
+        return result;
+    }
+
+    /// <summary>Lowest share of the normal dose a learned reduction may reach for a muscle with the default priority (product limit).</summary>
+    public const decimal GrowFloorShare = 0.6m;
+
+    /// <param name="learnedTargets">
+    /// Weekly targets the longitudinal layer proposes for muscles whose history justifies a change (absent = no change). They are
+    /// clamped here to the limits of <see cref="Baselines"/>, so a learned value can never override a priority or a safety ceiling.
+    /// </param>
+    public static TrainingMusclePriorityResult Build(
+        TrainingGoal goal,
+        TrainingExperience experience,
+        IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? priorities,
+        int sessionsPerWeek,
+        int maximumSessionMinutes,
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets = null)
+    {
         var chosen = (priorities ?? new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>())
             .Where(pair => pair.Value != TrainingMusclePriority.Grow).OrderBy(pair => pair.Key).ToArray();
-        if (chosen.Length == 0) return new([], [], []);
+        var limits = learnedTargets is { Count: > 0 }
+            ? Baselines(goal, experience, priorities, sessionsPerWeek, maximumSessionMinutes).ToDictionary(b => b.Muscle)
+            : new Dictionary<TrainingMuscleGroup, TrainingMuscleBaseline>();
+        // A learned target only counts for a muscle that has a baseline, and is brought inside that baseline's limits.
+        var learned = (learnedTargets ?? new Dictionary<TrainingMuscleGroup, decimal>())
+            .Where(pair => limits.ContainsKey(pair.Key))
+            .ToDictionary(pair => pair.Key, pair => Math.Clamp(Math.Round(pair.Value), limits[pair.Key].Floor, limits[pair.Key].Ceiling));
+        if (chosen.Length == 0 && learned.Count == 0) return new([], [], []);
 
         var errors = new List<string>();
         if (goal != TrainingGoal.Hypertrophy)
@@ -87,16 +150,22 @@ public static class TrainingMusclePriorityPlanner
             var baseline = DefaultOf(muscle);
             if (priority == TrainingMusclePriority.Emphasize)
             {
-                var target = Math.Min(EmphasisTargetCeiling, baseline + tolerance);
+                var target = learned.TryGetValue(muscle, out var adjusted) ? adjusted : Math.Min(EmphasisTargetCeiling, baseline + tolerance);
                 targets.Add(new TrainingMuscleVolumeTarget(muscle, Priority: 1, TargetWeeklyPrimarySets: target));
                 notes.Add($"{muscle}: énfasis, objetivo de {target:0} series efectivas por semana (dosis normal {baseline:0}).");
             }
             else
             {
-                var target = Math.Max(MaintenanceFloorSets, Math.Ceiling(baseline / 2m));
+                var target = learned.TryGetValue(muscle, out var adjusted) ? adjusted : Math.Max(MaintenanceFloorSets, Math.Ceiling(baseline / 2m));
                 targets.Add(new TrainingMuscleVolumeTarget(muscle, Priority: 0, TargetWeeklyPrimarySets: target, Maintenance: true));
                 notes.Add($"{muscle}: mantenimiento, objetivo de {target:0} series efectivas por semana (dosis normal {baseline:0}).");
             }
+        }
+        // Muscles with the default priority whose history justifies a different dose: an explicit target, like any other.
+        foreach (var (muscle, target) in learned.Where(pair => chosen.All(c => c.Key != pair.Key)).OrderBy(pair => pair.Key))
+        {
+            targets.Add(new TrainingMuscleVolumeTarget(muscle, Priority: 0, TargetWeeklyPrimarySets: target));
+            notes.Add($"{muscle}: objetivo de {target:0} series efectivas por semana ajustado a tu respuesta.");
         }
         return new(targets, [], notes);
     }
