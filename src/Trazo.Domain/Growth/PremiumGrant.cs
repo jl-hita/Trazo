@@ -13,7 +13,7 @@ public static class PremiumGrantKinds
 
 public static class PremiumGrantStatuses
 {
-    /// <summary>A promotional window [StartsAt, EndsAt) that gives Premium access by itself.</summary>
+    /// <summary>An active promotional grant. Finite grants use [StartsAt, EndsAt); permanent admin grants have no EndsAt.</summary>
     public const string Active = "active";
     /// <summary>
     /// Earned but not applied yet: the user has an auto-renewing Google Play subscription and the renewal could not be
@@ -48,7 +48,7 @@ public sealed class PremiumGrant
     public string? GrantedBy { get; set; }
     public required string Status { get; set; }
     public DateTimeOffset GrantedAt { get; set; }
-    /// <summary>Effective window of an active grant. Grants of one user are chained, never overlapped.</summary>
+    /// <summary>Effective window of an active grant. Finite promotional windows are chained; a permanent admin grant is an indefinite overlay.</summary>
     public DateTimeOffset? StartsAt { get; set; }
     public DateTimeOffset? EndsAt { get; set; }
     /// <summary>The user whose purchase produced this grant (the referred user), when there is one.</summary>
