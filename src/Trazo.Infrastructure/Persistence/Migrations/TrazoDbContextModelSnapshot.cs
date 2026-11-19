@@ -348,9 +348,16 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<int>("StartWeek").HasColumnType("integer");
             b.Property<int>("Weeks").HasColumnType("integer");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("GenerationSnapshotJson").HasColumnType("text");
+            b.Property<int?>("SnapshotSchemaVersion").HasColumnType("integer");
+            b.Property<string>("EngineVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("CatalogFingerprint").HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<DateTimeOffset?>("GeneratedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
             b.HasIndex("PlanId", "Sequence").IsUnique();
-            b.ToTable("training_mesocycles");
+            b.ToTable("training_mesocycles", t => t.HasCheckConstraint("CK_training_mesocycles_trace_complete",
+                "(\"GenerationSnapshotJson\" IS NULL AND \"SnapshotSchemaVersion\" IS NULL AND \"EngineVersion\" IS NULL AND \"CatalogFingerprint\" IS NULL AND \"GeneratedAt\" IS NULL)"
+                + " OR (\"GenerationSnapshotJson\" IS NOT NULL AND \"SnapshotSchemaVersion\" IS NOT NULL AND \"EngineVersion\" IS NOT NULL AND \"CatalogFingerprint\" IS NOT NULL AND \"GeneratedAt\" IS NOT NULL)"));
         });
         modelBuilder.Entity("Trazo.Domain.Planning.TrainingMesocycle", b =>
         {

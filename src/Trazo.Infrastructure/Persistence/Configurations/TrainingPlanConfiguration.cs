@@ -68,11 +68,24 @@ public sealed class TrainingPlanPhaseConfiguration : IEntityTypeConfiguration<Tr
 
 public sealed class TrainingMesocycleConfiguration : IEntityTypeConfiguration<TrainingMesocycle>
 {
+    private const string TraceCheck =
+        "(\"GenerationSnapshotJson\" IS NULL AND \"SnapshotSchemaVersion\" IS NULL AND \"EngineVersion\" IS NULL AND \"CatalogFingerprint\" IS NULL AND \"GeneratedAt\" IS NULL)"
+        + " OR (\"GenerationSnapshotJson\" IS NOT NULL AND \"SnapshotSchemaVersion\" IS NOT NULL AND \"EngineVersion\" IS NOT NULL AND \"CatalogFingerprint\" IS NOT NULL AND \"GeneratedAt\" IS NOT NULL)";
+
     public void Configure(EntityTypeBuilder<TrainingMesocycle> builder)
     {
-        builder.ToTable("training_mesocycles");
+        // The trace columns are all present or all absent: a block has a complete trace or none (generated before it existed, or manual).
+        builder.ToTable("training_mesocycles", table => table.HasCheckConstraint("CK_training_mesocycles_trace_complete", TraceCheck));
         builder.HasKey(x => x.Id);
         builder.Property(x => x.PhaseType).HasMaxLength(30).IsRequired();
+        // Nullable on purpose: no value is invented for blocks generated before the trace existed.
+        builder.Property(x => x.GenerationSnapshotJson).HasColumnType("text");
+        builder.Property(x => x.EngineVersion).HasMaxLength(40);
+        builder.Property(x => x.CatalogFingerprint).HasMaxLength(64);
+        // Immutable: once written, EF throws if code tries to change any of them.
+        foreach (var trace in new[] { nameof(TrainingMesocycle.GenerationSnapshotJson), nameof(TrainingMesocycle.SnapshotSchemaVersion),
+                     nameof(TrainingMesocycle.EngineVersion), nameof(TrainingMesocycle.CatalogFingerprint), nameof(TrainingMesocycle.GeneratedAt) })
+            builder.Property(trace).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Throw);
         builder.HasIndex(x => new { x.PlanId, x.Sequence }).IsUnique();
         builder.HasMany(x => x.Sessions).WithOne().HasForeignKey(x => x.MesocycleId).OnDelete(DeleteBehavior.Cascade);
     }

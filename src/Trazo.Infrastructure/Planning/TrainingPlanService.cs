@@ -216,7 +216,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
                 "No se pudo generar un plan con ese perfil.", new Dictionary<string, string[]> { ["plan"] = generation.Errors.ToArray() });
         plan.EngineVersion = generation.EngineVersion;
-        AddMesocycle(plan, firstSlot, generation, now, 1);
+        AddMesocycle(plan, firstSlot, generation, now, 1, MesocycleGenerationTrace.Capture(
+            profile, planSeed, firstSlot, candidates.Candidates, generation, rotationPosition: 0, continuesPreviousBlock: false,
+            previousBlockExerciseIds: null, loadReferenceCount: loads.Count, learnedTargets: null, now));
 
         db.TrainingPlans.Add(plan);
         try
@@ -2083,6 +2085,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
             loadReferences: loadReferences, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets);
         var decisions = learning.Decisions;
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? usedTargets = learning.LearnedTargets;
         if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
         {
             // A learned target must never make a block impossible: fall back to the plan's own targets and keep no decisions.
@@ -2090,10 +2093,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
                 loadReferences: loadReferences, rotationPosition: existingSessions);
             decisions = [];
+            usedTargets = null;
         }
         if (!generation.Succeeded) return null;
 
-        var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
+        // The trace records the inputs this block was really generated from, read now: the plan may have changed since it was created.
+        var now = clock.GetUtcNow();
+        var mesocycle = AddMesocycle(plan, slot, generation, now, firstIndex, MesocycleGenerationTrace.Capture(
+            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences.Count, usedTargets, now));
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
@@ -2121,12 +2128,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     }
 
     private static TrainingMesocycle AddMesocycle(
-        TrainingPlan plan, MesocycleSlot slot, MesocycleGeneration generation, DateTimeOffset now, int firstIndex)
+        TrainingPlan plan, MesocycleSlot slot, MesocycleGeneration generation, DateTimeOffset now, int firstIndex, GenerationTrace trace)
     {
         var mesocycle = new TrainingMesocycle
         {
             Id = Guid.NewGuid(), PlanId = plan.Id, Sequence = slot.Sequence, PhaseSequenceNumber = slot.PhaseSequenceNumber,
-            PhaseType = slot.PhaseType, IsDeload = slot.IsDeload, StartWeek = slot.StartWeek, Weeks = slot.Weeks, CreatedAt = now
+            PhaseType = slot.PhaseType, IsDeload = slot.IsDeload, StartWeek = slot.StartWeek, Weeks = slot.Weeks, CreatedAt = now,
+            GenerationSnapshotJson = trace.SnapshotJson, SnapshotSchemaVersion = trace.SnapshotSchemaVersion,
+            EngineVersion = trace.EngineVersion, CatalogFingerprint = trace.CatalogFingerprint, GeneratedAt = trace.GeneratedAt
         };
         foreach (var session in generation.Sessions)
             mesocycle.Sessions.Add(new PlannedSession
