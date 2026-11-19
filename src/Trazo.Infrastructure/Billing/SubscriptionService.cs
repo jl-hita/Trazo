@@ -198,8 +198,8 @@ public sealed class SubscriptionService(
         var status = !access && best.Status is SubscriptionStatus.Trial or SubscriptionStatus.Active
             or SubscriptionStatus.GracePeriod or SubscriptionStatus.Canceled
             ? SubscriptionStatus.Expired : best.Status;
-        return new SubscriptionStatusView(access || promoEnd is not null, ToApiName(status), best.ProductId, best.StartedAt, best.ExpiresAt,
-            best.AutoRenewing, access ? best.Source : promoEnd is not null ? SubscriptionSources.Promo : best.Source, PromoExpiresAt: promoEnd);
+        return new SubscriptionStatusView(access || hasPromo, ToApiName(status), best.ProductId, best.StartedAt, best.ExpiresAt,
+            best.AutoRenewing, access ? best.Source : hasPromo ? SubscriptionSources.Promo : best.Source, PromoExpiresAt: promoEnd);
     }
 
     public async Task<bool> HasAccessAsync(Guid userId, CancellationToken ct)
