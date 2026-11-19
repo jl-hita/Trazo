@@ -408,6 +408,14 @@ export class AdminApi {
     return p;
   }
 
+  getReferralProgrammeSettings(): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
+    return firstValueFrom(this.http.get<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`));
+  }
+
+  saveReferralProgrammeSettings(input: { enabled: boolean; rewardDays: number }): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
+    return firstValueFrom(this.http.put<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`, input));
+  }
+
   getReferralSummary(range: { from?: string; to?: string }): Promise<any> {
     return firstValueFrom(this.http.get<any>(`${API}/referrals/summary`, { params: this.query(range) }));
   }
@@ -416,8 +424,8 @@ export class AdminApi {
     return firstValueFrom(this.http.get<any>(`${API}/analytics/funnel`, { params: this.query(params) }));
   }
 
-  getReferrals(params: { status?: string; incidents?: boolean }): Promise<{ items: any[] }> {
-    return firstValueFrom(this.http.get<{ items: any[] }>(`${API}/referrals`, { params: this.query({ ...params, pageSize: '100' }) }));
+  getReferrals(params: { status?: string; incidents?: boolean; from?: string; to?: string; page?: number; pageSize?: number }): Promise<{ total: number; page: number; pageSize: number; items: any[] }> {
+    return firstValueFrom(this.http.get<{ total: number; page: number; pageSize: number; items: any[] }>(`${API}/referrals`, { params: this.query({ ...params, page: String(params.page ?? 1), pageSize: String(params.pageSize ?? 25) }) }));
   }
 
   getUserLedger(userId: string): Promise<{ items: any[] }> {

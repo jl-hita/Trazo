@@ -61,3 +61,10 @@ export const marketingGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   return auth.canSeeMarketing ? true : inject(Router).createUrlTree([auth.home]);
 };
+
+
+/** Referral programme administration: superadmin and the trusted commercial role. */
+export const referralsGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.canSeeReferrals ? true : inject(Router).createUrlTree([auth.home]);
+};

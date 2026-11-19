@@ -14,16 +14,18 @@ namespace Trazo.Api.Endpoints;
 public sealed record SharedRequest(string? Channel);
 public sealed record InstallReferrerRequest(string? Code);
 public sealed record VoidGrantRequest(string? Reason);
+public sealed record ReferralProgrammeSettingsRequest(bool Enabled, int RewardDays);
 public sealed record ClientEventRequest(string? Name);
 
 /// <summary>
 /// The referral programme: the signed-in user's code, link, statistics and rewards; the public invitation page and Android App
-/// Links file; and the superadmin audit views. Attribution and every economic decision are made here, never by the app.
+/// Links file; and the commercial/superadmin administration views. Attribution and every economic decision are made here, never by the app.
 /// </summary>
 public static class ReferralEndpoints
 {
     public const string RateLimitPolicy = "referrals";
     public const string PublicRateLimitPolicy = "referrals-public";
+    public const string ManagementPolicy = "referral-management";
     public const string DefaultPackage = "com.trazo.android";
 
     public static IEndpointRouteBuilder MapReferralEndpoints(this IEndpointRouteBuilder endpoints)
@@ -41,7 +43,24 @@ public static class ReferralEndpoints
         endpoints.MapGet("/.well-known/assetlinks.json", AssetLinksAsync).AllowAnonymous().ExcludeFromDescription();
 
         var admin = endpoints.MapGroup("/api/v1/admin/referrals").WithTags("Admin referrals")
-            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+            .RequireAuthorization(ManagementPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+        admin.MapGet("/settings", async (IRuntimeSettings settings, CancellationToken ct) =>
+        {
+            var current = await settings.GetPromotionsAsync(ct);
+            return Results.Ok(new { referralsEnabled = current.ReferralsEnabled, referralRewardDays = current.ReferralRewardDays, maxDays = PromotionsConfig.MaxDays });
+        });
+        admin.MapPut("/settings", async (ReferralProgrammeSettingsRequest request, ISettingsWriter writer, IRuntimeSettings settings,
+            System.Security.Claims.ClaimsPrincipal principal, ILoggerFactory loggerFactory, CancellationToken ct) =>
+        {
+            var before = await settings.GetPromotionsAsync(ct);
+            var input = new PromotionsConfig(before.SignupTrialEnabled, before.SignupTrialDays, request.Enabled, request.RewardDays);
+            var errors = await writer.UpdatePromotionsAsync(input, ct);
+            if (errors.Count > 0) return Results.ValidationProblem(errors);
+            loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
+                "Commercial/admin {Actor} changed referral programme settings: {EnabledBefore} -> {EnabledAfter}, reward {DaysBefore}d -> {DaysAfter}d.",
+                OperationsSettingsEndpoints.Actor(principal), before.ReferralsEnabled, input.ReferralsEnabled, before.ReferralRewardDays, input.ReferralRewardDays);
+            return Results.Ok(new { referralsEnabled = input.ReferralsEnabled, referralRewardDays = input.ReferralRewardDays, maxDays = PromotionsConfig.MaxDays });
+        });
         admin.MapGet("/summary", AdminSummaryAsync);
         admin.MapGet("", AdminListAsync);
         admin.MapGet("/users/{id:guid}/ledger", AdminLedgerAsync);
@@ -49,7 +68,7 @@ public static class ReferralEndpoints
         admin.MapPost("/grants/{id:guid}/retry", AdminRetryAsync);
         admin.MapPost("/reconcile", AdminReconcileAsync);
         endpoints.MapGet("/api/v1/admin/analytics/funnel", FunnelAsync).WithTags("Admin referrals")
-            .RequireAuthorization(SetupEndpoints.SuperadminPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
+            .RequireAuthorization(ManagementPolicy).RequireRateLimiting(SetupEndpoints.SetupPolicy);
         return endpoints;
     }
 
@@ -199,12 +218,18 @@ public static class ReferralEndpoints
         return Results.Ok(await analytics.FunnelAsync(f, t, channel, ReferralService.NormalizeCode(reference), ct));
     }
 
-    private static async Task<IResult> AdminListAsync(TrazoDbContext db, string? status, bool? incidents, int page = 1, int pageSize = 25, CancellationToken ct = default)
+    private static async Task<IResult> AdminListAsync(TrazoDbContext db, string? status, bool? incidents, DateTimeOffset? from, DateTimeOffset? to,
+        int page = 1, int pageSize = 25, CancellationToken ct = default)
     {
-        if (page < 1 || pageSize is < 1 or > 100) return Results.ValidationProblem(new Dictionary<string, string[]> { ["paging"] = ["page must be positive and pageSize between 1 and 100."] });
+        var errors = new Dictionary<string, string[]>();
+        if (page < 1 || pageSize is < 1 or > 100) errors["paging"] = ["page must be positive and pageSize between 1 and 100."];
+        if (from.HasValue && to.HasValue && from >= to) errors["period"] = ["'from' must be before 'to'."];
+        if (errors.Count > 0) return Results.ValidationProblem(errors);
         var rels = db.ReferralRelationships.AsNoTracking().AsQueryable();
         if (!string.IsNullOrWhiteSpace(status)) rels = rels.Where(r => r.Status == status);
         if (incidents == true) rels = rels.Where(r => r.Incident != null);
+        if (from.HasValue) rels = rels.Where(r => r.AttributedAt >= from.Value);
+        if (to.HasValue) rels = rels.Where(r => r.AttributedAt < to.Value);
         var all = await rels.ToListAsync(ct);
         var total = all.Count;
         var slice = all.OrderByDescending(r => r.AttributedAt).Skip((page - 1) * pageSize).Take(pageSize).ToList();

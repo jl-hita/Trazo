@@ -10,8 +10,8 @@ export type LoginResult = { status: 'ok' } | { status: 'two-factor'; challengeTo
 const KEY = 'trazo.admin.session';
 
 /**
- * Admin session. Tokens live in sessionStorage (cleared when the tab closes). Only users with the
- * `superadmin` role may use the admin console.
+ * Admin session. Tokens live in sessionStorage (cleared when the tab closes).
+ * Access is role-specific: superadmins see everything, while commercial and accountant roles see their assigned panels.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,10 +25,11 @@ export class AuthService {
   get isStaff(): boolean { return this.user()?.role === 'admin' || this.isSuperadmin; }
   /** The accountant (gestor) only sees the tax management. */
   get isAccountant(): boolean { return this.user()?.role === 'accountant'; }
-  /** The commercial (marketing) role only sees the marketing panel. */
+  /** The commercial role manages marketing and the referral programme. */
   get isCommercial(): boolean { return this.user()?.role === 'commercial'; }
   get canUseConsole(): boolean { return this.isStaff || this.isAccountant || this.isCommercial; }
   get canSeeMarketing(): boolean { return this.isSuperadmin || this.isCommercial; }
+  get canSeeReferrals(): boolean { return this.isSuperadmin || this.isCommercial; }
   get canSeeFiscal(): boolean { return this.isSuperadmin || this.isAccountant; }
   /** Landing page of each role. */
   get home(): string { return this.isSuperadmin ? '/overview' : this.isAccountant ? '/fiscal' : this.isCommercial ? '/marketing' : '/reviews'; }

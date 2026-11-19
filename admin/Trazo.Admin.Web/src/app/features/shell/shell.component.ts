@@ -27,10 +27,11 @@ export class ShellComponent {
     return s ? `Entorno ${s.environment}, versión ${s.version}${s.commit ? `, commit ${s.commit}` : ''}` : 'Versión no disponible';
   });
   protected readonly initial = computed(() => (this.auth.user()?.displayName ?? 'A').charAt(0).toUpperCase());
-  /** Administrators only get the plan reviews, the accountant only the tax management and the commercial only the marketing panel; every other section is for the superadmin. */
+  /** Administrators get plan reviews, the accountant gets tax management, and the commercial role gets marketing and referrals; every other section is for the superadmin. */
   protected get navigation(): { label: string; icon: string; link?: string }[] {
     if (this.auth.isSuperadmin) return this.allNavigation;
-    return this.allNavigation.filter(item => item.link === (this.auth.isAccountant ? '/fiscal' : this.auth.isCommercial ? '/marketing' : '/reviews'));
+    if (this.auth.isCommercial) return this.allNavigation.filter(item => item.link === '/marketing' || item.link === '/referrals');
+    return this.allNavigation.filter(item => item.link === (this.auth.isAccountant ? '/fiscal' : '/reviews'));
   }
   private readonly allNavigation: { label: string; icon: string; link?: string }[] = [
     { label: 'Overview', icon: '◫', link: '/overview' },

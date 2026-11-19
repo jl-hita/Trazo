@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminApi } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
-/** Referral programme and conversion funnel: totals, audit of invitations and rewards. Economic data is never edited, only voided with a reason. */
+/** Referral programme operations: aggregate performance, invitation audit, reward recovery and audited reward cancellation. */
 @Component({
   selector: 'trazo-referrals-page',
   standalone: true,
@@ -27,11 +27,16 @@ import { errorMessage } from '../../core/setup.api';
     .rf .err { color: #f0a3a3; font-size: 12px; }
     .rf .ok { color: #7fd3a0; font-size: 12px; }
     .rf .warn { color: #e6d39b; }
+    .rf-pagination { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:12px 0 20px; color:#8291a6; font-size:12px; }
+    .rf-pagination .controls { display:flex; gap:6px; }
+    .rf-settings { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:14px; border:1px solid #293444; border-radius:8px; background:#131b27; }
+    .rf-settings label { display:grid; gap:6px; color:#aab6c7; font-size:12px; }
+    .rf-settings input[type=number] { width:110px; padding:9px 11px; border:1px solid #34465b; border-radius:6px; background:#0d1119; color:#e8edf5; }
   `],
   template: `
     <div class="page-heading">
       <div><p class="eyebrow">GROWTH</p><h1>Referrals &amp; funnel</h1>
-        <p class="subtitle">Invitations, conversions to a first real payment, rewards (promotional days or Google Play deferrals) and the signup-to-retention funnel. Read-only: a reward can only be voided, with a reason that is recorded.</p></div>
+        <p class="subtitle">Manage invitations and rewards, review conversion and retention, resolve pending grants and investigate incidents. Reward cancellations require a reason and are recorded in the audit trail.</p></div>
     </div>
     <div class="rf">
       <div class="rf-toolbar">
@@ -45,6 +50,16 @@ import { errorMessage } from '../../core/setup.api';
         <button type="button" (click)="reconcile()">Run reconciliation</button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
+      </div>
+
+      <h2>Programme configuration</h2>
+      <div class="rf-settings">
+        <label><span><input type="checkbox" [ngModel]="programmeEnabled()" (ngModelChange)="programmeEnabled.set($event)" name="programmeEnabled"> Enable referral programme</span></label>
+        <label>Reward for a successful referral (days)
+          <input type="number" min="1" [max]="maxRewardDays()" [ngModel]="rewardDays()" (ngModelChange)="rewardDays.set($event)" name="rewardDays">
+        </label>
+        <button class="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (click)="saveProgramme()">Save settings</button>
+        <span class="muted">Maximum {{ maxRewardDays() }} days. Changes affect new rewards, not grants already issued.</span>
       </div>
 
       @if (summary(); as s) {
@@ -96,14 +111,14 @@ import { errorMessage } from '../../core/setup.api';
         }
       }
 
-      <h2>Invitations</h2>
+      <h2>Invitations <span class="muted">· {{ total() }} total</span></h2>
       <div class="rf-toolbar">
         <label>Status
-          <select [ngModel]="status()" (ngModelChange)="status.set($event); loadList()" name="status">
+          <select [ngModel]="status()" (ngModelChange)="status.set($event); page.set(1); loadList()" name="status">
             <option value="">All</option><option value="registered">Registered</option><option value="rewarded">Rewarded</option>
             <option value="voided">Voided</option><option value="skipped">Skipped</option>
           </select></label>
-        <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); loadList()" name="incidents"> Only incidents</span></label>
+        <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); page.set(1); loadList()" name="incidents"> Only incidents</span></label>
       </div>
       <table class="rf-table">
         <thead><tr><th>Registered</th><th>Referrer</th><th>Invited</th><th>Status</th><th>Reward</th><th></th></tr></thead>
@@ -125,6 +140,13 @@ import { errorMessage } from '../../core/setup.api';
           } @empty { <tr><td colspan="6" class="muted">No invitations for this filter.</td></tr> }
         </tbody>
       </table>
+      <div class="rf-pagination">
+        <span>Page {{ page() }} of {{ pageCount() }}</span>
+        <div class="controls">
+          <button class="rf-btn" type="button" [disabled]="page() <= 1" (click)="changePage(-1)">Previous</button>
+          <button class="rf-btn" type="button" [disabled]="page() >= pageCount()" (click)="changePage(1)">Next</button>
+        </div>
+      </div>
 
       @if (ledgerRows().length) {
         <h2>Premium-time ledger of the selected user</h2>
@@ -147,14 +169,22 @@ import { errorMessage } from '../../core/setup.api';
 })
 export class ReferralsPageComponent {
   private readonly api = inject(AdminApi);
-  protected readonly from = signal('');
-  protected readonly to = signal('');
+  protected readonly from = signal(new Date(Date.now() - 90 * 86_400_000).toISOString().slice(0, 10));
+  protected readonly to = signal(new Date().toISOString().slice(0, 10));
   protected readonly channel = signal('');
   protected readonly status = signal('');
   protected readonly incidents = signal(false);
   protected readonly summary = signal<any>(null);
+  protected readonly programmeEnabled = signal(false);
+  protected readonly rewardDays = signal(30);
+  protected readonly maxRewardDays = signal(365);
+  protected readonly settingsBusy = signal(false);
   protected readonly funnel = signal<any>(null);
   protected readonly items = signal<any[]>([]);
+  protected readonly total = signal(0);
+  protected readonly page = signal(1);
+  protected readonly pageSize = 25;
+  protected readonly pageCount = () => Math.max(1, Math.ceil(this.total() / this.pageSize));
   protected readonly ledgerRows = signal<any[]>([]);
   protected readonly message = signal('');
   protected readonly error = signal('');
@@ -173,18 +203,50 @@ export class ReferralsPageComponent {
     this.error.set('');
     try {
       const range = this.range();
-      const [summary, funnel] = await Promise.all([
-        this.api.getReferralSummary(range), this.api.getFunnel({ ...range, channel: this.channel() || undefined })
+      const [summary, funnel, settings] = await Promise.all([
+        this.api.getReferralSummary(range),
+        this.api.getFunnel({ ...range, channel: this.channel() || undefined }),
+        this.api.getReferralProgrammeSettings()
       ]);
       this.summary.set(summary); this.funnel.set(funnel);
+      this.programmeEnabled.set(settings.referralsEnabled);
+      this.rewardDays.set(settings.referralRewardDays);
+      this.maxRewardDays.set(settings.maxDays);
       await this.loadList();
     } catch (e) { this.error.set(errorMessage(e)); }
   }
 
+  protected async saveProgramme(): Promise<void> {
+    this.settingsBusy.set(true); this.error.set(''); this.message.set('');
+    try {
+      const saved = await this.api.saveReferralProgrammeSettings({ enabled: this.programmeEnabled(), rewardDays: this.rewardDays() });
+      this.programmeEnabled.set(saved.referralsEnabled);
+      this.rewardDays.set(saved.referralRewardDays);
+      this.maxRewardDays.set(saved.maxDays);
+      this.message.set('Referral programme settings saved.');
+    } catch (e) { this.error.set(errorMessage(e)); }
+    finally { this.settingsBusy.set(false); }
+  }
+
   protected async loadList(): Promise<void> {
     try {
-      this.items.set((await this.api.getReferrals({ status: this.status() || undefined, incidents: this.incidents() || undefined })).items);
+      const result = await this.api.getReferrals({
+        status: this.status() || undefined,
+        incidents: this.incidents() || undefined,
+        ...this.range(),
+        page: this.page(),
+        pageSize: this.pageSize
+      });
+      this.items.set(result.items);
+      this.total.set(result.total);
     } catch (e) { this.error.set(errorMessage(e)); }
+  }
+
+  protected async changePage(delta: number): Promise<void> {
+    const next = this.page() + delta;
+    if (next < 1 || next > this.pageCount()) return;
+    this.page.set(next);
+    await this.loadList();
   }
 
   protected async ledger(userId: string): Promise<void> {

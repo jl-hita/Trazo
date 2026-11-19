@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DownloadsReport, MarketingApi, PaywallReport, Range, ReferralReport, WaitlistReport, fmt, marketingError } from './marketing.api';
+import { DownloadsReport, MarketingApi, PaywallReport, Range, WaitlistReport, fmt, marketingError } from './marketing.api';
 import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.charts';
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -58,23 +58,6 @@ const SOURCE_LABELS: Record<string, string> = {
       } @else { <p class="mk-empty">The offer was not opened in this period.</p> }
     }
 
-    @if (referrals(); as r) {
-      <h2>Invitation programme</h2>
-      <div class="mk-cards">
-        <div class="mk-card"><b>{{ r.linkOpens }}</b><span>Invitation links opened</span></div>
-        <div class="mk-card"><b>{{ r.shares }}</b><span>Times shared</span></div>
-        <div class="mk-card"><b>{{ r.attributed }}</b><span>Accounts created by invitation ({{ fmt.pct(r.linkToRegistered, 0) }} of links)</span></div>
-        <div class="mk-card"><b>{{ r.rewarded }}</b><span>Became payers ({{ fmt.pct(r.registeredToPaid, 0) }})</span></div>
-        <div class="mk-card"><b>{{ r.paidMonthly }} / {{ r.paidAnnual }}</b><span>Monthly / annual</span></div>
-        <div class="mk-card"><b>{{ r.renewedAtLeastOnce }} / {{ r.renewedAtLeastThree }}</b><span>Renewed 1+ / 3+ times</span></div>
-        <div class="mk-card"><b>{{ r.rewardDaysGranted }}</b><span>Reward days given (your cost)</span></div>
-      </div>
-      @if (r.topCodes.length) {
-        <p class="mk-note">Invitations are personal codes. Codes with very few invitations are grouped as "other" so nobody can be identified.</p>
-        <div class="mk-panel"><mk-bars [rows]="codeRows()" /></div>
-      }
-    }
-
     @if (waitlist(); as w) {
       <h2>Landing waitlist</h2>
       <p class="mk-note">People who asked from the landing page to be told when the app opens. Counts only: e-mail addresses are not shown to this role.</p>
@@ -93,7 +76,6 @@ export class LeversTabComponent {
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
   protected readonly paywall = signal<PaywallReport | null>(null);
-  protected readonly referrals = signal<ReferralReport | null>(null);
   protected readonly waitlist = signal<WaitlistReport | null>(null);
   protected readonly downloads = signal<DownloadsReport | null>(null);
   protected readonly error = signal('');
@@ -106,8 +88,6 @@ export class LeversTabComponent {
     (this.paywall()?.sources ?? []).filter(s => s.views > 0).map(s => ({ label: SOURCE_LABELS[s.source] ?? s.source, value: s.share, text: `${s.views} · ${fmt.pct(s.share, 0)}` })));
   protected readonly paywallLabels = computed(() => this.paywall()?.weeks.map(w => w.week) ?? []);
   protected readonly paywallSeries = computed<Series[]>(() => [{ name: 'Openings', color: '#5b8fcb', values: this.paywall()?.weeks.map(w => w.total) ?? [] }]);
-  protected readonly codeRows = computed<BarRow[]>(() =>
-    (this.referrals()?.topCodes ?? []).map(c => ({ label: c.key === 'other' ? 'Other (small groups)' : c.key, value: c.users, text: `${c.users} · ${c.paid} paid` })));
   protected readonly languages = computed(() => Object.entries(this.waitlist()?.byLanguage ?? {}));
   protected readonly waitLabels = computed(() => this.waitlist()?.weeks.map(w => w.week) ?? []);
   protected readonly waitSeries = computed<Series[]>(() => [{ name: 'Signups', color: '#4fae78', values: this.waitlist()?.weeks.map(w => w.joined) ?? [] }]);
@@ -134,8 +114,8 @@ export class LeversTabComponent {
 
   private async load(range: Range): Promise<void> {
     try {
-      const [p, r, w, dl] = await Promise.all([this.api.paywall(range), this.api.referrals(range), this.api.waitlist(), this.api.downloads(range)]);
-      this.paywall.set(p); this.referrals.set(r); this.waitlist.set(w); this.downloads.set(dl);
+      const [p, w, dl] = await Promise.all([this.api.paywall(range), this.api.waitlist(), this.api.downloads(range)]);
+      this.paywall.set(p); this.waitlist.set(w); this.downloads.set(dl);
     } catch (e) { this.error.set(marketingError(e)); }
   }
 }
