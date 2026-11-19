@@ -182,16 +182,22 @@ public sealed class MarketingApiTests : IDisposable
     public async Task TheCommercialAndTheSuperadminSeeTheWholePanel(string role)
     {
         var client = await ClientAsync(role);
-        foreach (var path in new[] { "summary", "strategies", "funnel", "retention", "paywall", "waitlist", "referrals", "campaigns", "options" })
+        foreach (var path in new[] { "summary", "strategies", "funnel", "retention", "paywall", "waitlist", "campaigns", "options" })
             Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/api/v1/admin/marketing/{path}")).StatusCode);
+
+        // Referral management is a separate panel, not part of Marketing.
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync("/api/v1/admin/marketing/referrals")).StatusCode);
     }
 
     [Fact]
     public async Task TheCommercialSeesNothingElseOfTheConsole()
     {
         var commercial = await ClientAsync("commercial");
-        foreach (var path in new[] { "users", "subscriptions", "referrals", "fiscal/profile", "settings/promotions", "logs", "error-tickets", "waitlist", "overview" })
+        foreach (var path in new[] { "users", "subscriptions", "fiscal/profile", "settings/promotions", "logs", "error-tickets", "waitlist", "overview" })
             Assert.Equal(HttpStatusCode.Forbidden, (await commercial.GetAsync($"/api/v1/admin/{path}")).StatusCode);
+
+        // Commercial can manage referrals, but that permission is isolated from the rest of the console.
+        Assert.Equal(HttpStatusCode.OK, (await commercial.GetAsync("/api/v1/admin/referrals")).StatusCode);
 
         var root = await ClientAsync("superadmin");
         var users = await Json(await root.GetAsync("/api/v1/admin/users?role=commercial"));
