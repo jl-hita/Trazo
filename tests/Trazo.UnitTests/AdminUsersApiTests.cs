@@ -281,7 +281,13 @@ public sealed class AdminUsersApiTests : IDisposable
         Assert.Equal("Partner access for testing", grant.GetProperty("reason").GetString());
         Assert.Equal(superadmin.Id.ToString(), grant.GetProperty("grantedBy").GetString());
 
-        var history = await JsonAsync(await rootClient.GetAsync($"/api/v1/admin/users/{target.Id}/premium-grants"));
+        var historyResponse = await rootClient.GetAsync($"/api/v1/admin/users/{target.Id}/premium-grants");
+        var historyBody = await historyResponse.Content.ReadAsStringAsync();
+        Assert.True(historyResponse.IsSuccessStatusCode,
+            $"Premium grant history returned {(int)historyResponse.StatusCode}: {historyBody}");
+        using var historyDocument = JsonDocument.Parse(historyBody);
+        var history = historyDocument.RootElement;
+        Assert.Equal(JsonValueKind.Array, history.ValueKind);
         Assert.Single(history.EnumerateArray());
 
         var revoked = await rootClient.PostAsJsonAsync(
