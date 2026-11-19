@@ -613,6 +613,22 @@ A review of 20 plans generated from the real exercise library (calendar and sequ
 
 Reviewed and left as they were, with the reason: the selection of exercises (Smith press, leg press, hex-bar deadlift) comes from the catalog's curated priority, which the engine corrects but does not override; shorter leg sessions are the result of reaching the weekly targets with fewer exercises; rest periods of 120 s for 8-12 repetition compounds are at the lower end of what is recommended and raising them lengthens every session estimate; the knee limitation stays an exclusion list of lunges and single-leg work because squats cannot be dropped (see decision 6).
 
+## Muscle priorities (Emphasize / Grow / Maintain)
+
+A generated hypertrophy plan accepts a `musclePriorities` map at creation (`POST /api/v1/plans`) and a replacement through
+`PUT /api/v1/plans/current/muscle-priorities`. A muscle that is not listed is Grow (the default dose). They are stored in
+`training_plans.MusclePriorities` as `"Muscle:Priority"` entries and returned in `PlanView.musclePriorities`.
+
+- **Emphasize**: weekly target at the top of the default range of the level (default + tolerance), never above 18 effective sets; the
+  allocator keeps its usual +/-2 sets around it. At most 3 muscles can be emphasized.
+- **Maintain**: half of the default dose, never below 2 sets. A maintained muscle does not lift the absolute ceiling of the
+  compounds that also train it, so a maintenance priority never raises that muscle's volume.
+- Configurable muscles: chest, lats, upper back, deltoids, biceps, triceps, quadriceps, hamstrings, glutes, calves. Only hypertrophy.
+- Editing applies to the blocks generated from then on; the block in progress is not rewritten. The change is recorded as a
+  `muscle_priorities` adaptation.
+- Emphasis only has effect where accessories and set ceilings leave room: a muscle already saturated by compounds does not grow.
+- The numbers (half the dose, top of range, 18/20 sets) are internal product heuristics, not validated physiological thresholds.
+
 ## Catalog experience levels
 
 `minimumExperience` is a property of the exercise, set from three criteria and compared by the generator with the user's level
