@@ -67,6 +67,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         var (_, client) = await ThreeDaysForFiveWeeksAsync();
         var first = await JsonAsync(await client.GetAsync(Url));
         Assert.Equal("PersistentReduction", first.GetProperty("pattern").GetString());
+        Assert.True(first.GetProperty("pending").ValueKind != JsonValueKind.Null, first.GetProperty("message").ToString());
         var pending = first.GetProperty("pending");
         Assert.Equal(["Monday", "Wednesday", "Friday"], Days(pending.GetProperty("toDays")));
         Assert.Equal(["Monday", "Tuesday", "Thursday", "Friday"], Days(pending.GetProperty("fromDays")));

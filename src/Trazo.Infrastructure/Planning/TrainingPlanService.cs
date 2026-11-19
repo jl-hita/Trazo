@@ -850,6 +850,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 ActiveReduction(plan, all)?.FromMaxSessionMinutes);
         }
 
+        DIAG = (assessment.Pattern is FrequencyPattern.PersistentReduction ? $"slot={(NextTrainingSlotOf(plan) is null ? "null" : "ok")} mes={plan.Mesocycles.Count} draft={(draft is null ? "null" : "ok")} " : "");
         var draftDays = draft is null ? null : string.Join(",", draft.ToDays);
         if (pending is not null && (draft is null || !string.Equals(pending.ToDays, draftDays, StringComparison.Ordinal)))
         {
@@ -875,8 +876,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         if (db.ChangeTracker.HasChanges())
         {
             try { await db.SaveChangesAsync(ct); }
-            catch (DbUpdateException)
+            catch (DbUpdateException dbx)
             {
+                DIAG = "SAVEFAIL " + dbx.GetBaseException().Message;
                 // Another request created the same proposal first: use theirs.
                 db.ChangeTracker.Clear();
                 all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
@@ -886,10 +888,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return (assessment, pending, all);
     }
 
+    [ThreadStatic] private static string? DIAG;
     private FrequencyOverviewView FrequencyOverview(TrainingPlan plan, FrequencyAssessment assessment, FrequencyProposal? pending, IReadOnlyList<FrequencyProposal> all)
     {
         var canRevert = OriginalDaysOf(plan, all) is not null;
-        var message = pending is not null ? pending.Reason : assessment.Reason;
+        var message = (pending is not null ? pending.Reason : assessment.Reason) + " DIAG:" + DIAG;
         return new FrequencyOverviewView(
             assessment.Pattern.ToString(), message, pending is null ? null : ToView(pending),
             all.Where(p => p.Status != FrequencyProposal.Pending).OrderByDescending(p => p.CreatedAt).Select(ToView).ToList(), canRevert);
