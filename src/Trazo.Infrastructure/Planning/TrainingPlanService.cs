@@ -72,6 +72,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private const int FutureToleranceMinutes = 5;
     private const int RecentLogsForHistory = 60;
     private const int LoadReferenceLogs = 40;
+    /// <summary>Exposures of an exercise whose pain blocks increases (the window <see cref="AdaptationPlanner"/> uses).</summary>
+    private const int PainExposureWindow = 3;
+    /// <summary>Sessions in which a pain report blocks every automatic increase (the window of <c>TrainingAdaptationPolicy.Evaluate</c>).</summary>
+    private const int PainSessionWindow = 5;
     private const int MaximumFutureSessionsToAdapt = TrainingAutoAdaptationPolicy.MaximumFutureSessions;
 
     // "Today" follows the user's time zone, not the server's. It is resolved once per request by the methods that take a
@@ -2078,20 +2082,53 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return result;
     }
 
-    /// <summary>The most recent completed performance of each exercise, so a new block starts from real loads.</summary>
+    /// <summary>
+    /// The most recent completed performance of each exercise, so a new block starts from real loads. Pain precedence holds here as it does
+    /// in the progression: the estimator can propose a heavier load than the one used, so a reference is never taken from
+    /// - a session with a pain report, nor from an exercise with pain in any of its last three exposures
+    ///   (<see cref="PainExposureWindow"/>, the window the adaptation uses), nor at all while pain is declared in the last
+    ///   <see cref="PainSessionWindow"/> sessions (the window of the general pain report): the new block then prescribes no load and the
+    ///   user chooses it, as for an exercise without history;
+    /// - a deload session (its loads are lighter on purpose) or a workout registered long after it happened (its order is unreliable).
+    /// The history itself is not touched: the last performance the user sees is read elsewhere and still shows every workout.
+    /// </summary>
     private async Task<IReadOnlyList<TrainingLoadReference>> LoadReferencesAsync(Guid userId, CancellationToken ct)
     {
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.UserId == userId)
-            .OrderByDescending(l => l.PerformedAt).Take(LoadReferenceLogs).ToListAsync(ct);
+            .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(LoadReferenceLogs).ToListAsync(ct);
+        if (logs.Take(PainSessionWindow).Any(l => l.PainReported)) return [];
+
+        var sessionIds = logs.Select(l => l.PlannedSessionId).Distinct().ToList();
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => sessionIds.Contains(s.Id))
+            .Select(s => new { s.Id, s.MesocycleId, s.PrescriptionJson }).ToListAsync(ct);
+        var deloadBlocks = (await db.TrainingMesocycles.AsNoTracking()
+            .Where(m => m.IsDeload && sessions.Select(x => x.MesocycleId).Contains(m.Id)).Select(m => m.Id).ToListAsync(ct)).ToHashSet();
+        var deloadSessions = sessions.Where(s => deloadBlocks.Contains(s.MesocycleId) || PrescriptionJson.IsAdaptationDeload(s.PrescriptionJson))
+            .Select(s => s.Id).ToHashSet();
+
+        static bool HasPain(WorkoutSetLog set) =>
+            set.PainReported || string.Equals(set.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase);
+
         var references = new List<TrainingLoadReference>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var log in logs)
-            foreach (var group in log.Sets.Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).GroupBy(s => s.ExerciseId))
+        // Exposures of each exercise, most recent first.
+        var byExercise = logs.SelectMany(l => l.Sets.GroupBy(s => s.ExerciseId).Select(g => (Log: l, Exercise: g.Key, Sets: g.ToList())))
+            .GroupBy(x => x.Exercise);
+        foreach (var exercise in byExercise)
+        {
+            var exposures = exercise.ToList();
+            // Pain is read on every recent exposure, also a late or deload one: the safety signal never depends on data quality.
+            if (exposures.Take(PainExposureWindow).Any(e => e.Sets.Any(HasPain))) continue;
+            foreach (var exposure in exposures)
             {
-                if (!seen.Add(group.Key)) continue;
-                var top = group.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
-                references.Add(new TrainingLoadReference(group.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, group.Count()));
+                var late = (exposure.Log.LoggedAt - exposure.Log.PerformedAt).TotalDays > Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays;
+                if (late || deloadSessions.Contains(exposure.Log.PlannedSessionId)) continue;
+                var done = exposure.Sets.Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).ToList();
+                if (done.Count == 0) continue;
+                var top = done.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
+                references.Add(new TrainingLoadReference(exercise.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
+                break;
             }
+        }
         return references;
     }
 
