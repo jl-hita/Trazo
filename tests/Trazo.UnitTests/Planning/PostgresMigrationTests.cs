@@ -147,7 +147,7 @@ public sealed class PostgresMigrationTests : IDisposable
         var row = Query(_connection,
             "SELECT concat_ws('|', \"Sequence\", \"GenerationSnapshotJson\" IS NULL, \"SnapshotSchemaVersion\" IS NULL, \"EngineVersion\" IS NULL, " +
             "\"CatalogFingerprint\" IS NULL, \"GeneratedAt\" IS NULL) FROM training_mesocycles").Single();
-        Assert.Equal("1|true|true|true|true|true", row);
+        Assert.Equal("1|t|t|t|t|t", row); // PostgreSQL renders a boolean as t/f
         Assert.Contains(Query(_connection, "SELECT conname FROM pg_constraint WHERE conrelid = 'training_mesocycles'::regclass"),
             c => c == "CK_training_mesocycles_trace_complete");
 
