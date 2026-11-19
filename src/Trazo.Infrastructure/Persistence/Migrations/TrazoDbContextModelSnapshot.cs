@@ -530,7 +530,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Kind").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
             b.Property<string>("SourceKey").IsRequired().HasMaxLength(80).HasColumnType("character varying(80)");
             b.Property<int>("Days").HasColumnType("integer");
-            b.Property<bool>("IsPermanent").HasColumnType("boolean");
+            b.Property<bool>("IsPermanent").ValueGeneratedOnAdd().HasColumnType("boolean").HasDefaultValue(false);
             b.Property<string>("GrantReason").HasMaxLength(300).HasColumnType("character varying(300)");
             b.Property<string>("Status").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
             b.Property<DateTimeOffset>("GrantedAt").HasColumnType("timestamp with time zone");
