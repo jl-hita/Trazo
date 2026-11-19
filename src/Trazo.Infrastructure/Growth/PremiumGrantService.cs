@@ -8,7 +8,7 @@ namespace Trazo.Infrastructure.Growth;
 
 public sealed record GrantRequest(
     Guid UserId, string Kind, string SourceKey, int Days, Guid? OriginUserId = null, Guid? OriginSubscriptionId = null,
-    string Status = PremiumGrantStatuses.Active, bool IsPermanent = false, string? Reason = null);
+    string Status = PremiumGrantStatuses.Active, bool IsPermanent = false, string? Reason = null, string? GrantedBy = null);
 
 public sealed record GrantResult(PremiumGrant Grant, bool Created);
 
@@ -56,7 +56,7 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
         var grant = new PremiumGrant
         {
             Id = Guid.NewGuid(), UserId = request.UserId, Kind = request.Kind, SourceKey = request.SourceKey, Days = request.Days,
-            Status = request.Status, GrantedAt = now, OriginUserId = request.OriginUserId, IsPermanent = request.IsPermanent, GrantReason = request.Reason?.Trim(),
+            Status = request.Status, GrantedAt = now, OriginUserId = request.OriginUserId, IsPermanent = request.IsPermanent, GrantReason = request.Reason?.Trim(), GrantedBy = request.GrantedBy,
             OriginSubscriptionId = request.OriginSubscriptionId, UpdatedAt = now
         };
         if (request.Status == PremiumGrantStatuses.Active) Place(grant, await NextStartAsync(request.UserId, ct), now);
