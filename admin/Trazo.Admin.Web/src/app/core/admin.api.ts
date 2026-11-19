@@ -12,6 +12,12 @@ export interface AdminUserSummary {
 
 export interface AdminUserSession { deviceName: string | null; createdAt: string; expiresAt: string; }
 
+export interface AdminPremiumGrant {
+  id: string; kind: string; status: string; days: number; permanent: boolean;
+  startsAt: string | null; endsAt: string | null; reason: string | null; grantedAt: string;
+  revokedAt: string | null; revocationReason: string | null; revokedBy: string | null; isCurrent: boolean;
+}
+
 export interface AdminUserDetail extends AdminUserSummary {
   failedLoginAttempts: number; disabledAt: string | null; activeSessionCount: number; sessions: AdminUserSession[];
 }
@@ -288,6 +294,19 @@ export class AdminApi {
 
   getUser(id: string): Promise<AdminUserDetail> {
     return firstValueFrom(this.http.get<AdminUserDetail>(`${API}/users/${id}`));
+  }
+
+  listPremiumGrants(userId: string): Promise<AdminPremiumGrant[]> {
+    return firstValueFrom(this.http.get<AdminPremiumGrant[]>(`${API}/users/${userId}/premium-grants`));
+  }
+
+  grantPremium(userId: string, input: { days?: number; permanent: boolean; reason: string }): Promise<AdminPremiumGrant> {
+    return firstValueFrom(this.http.post<AdminPremiumGrant>(`${API}/users/${userId}/premium-grants`, input));
+  }
+
+  revokePremium(userId: string, grantId: string, reason: string): Promise<{ revoked: boolean; grantId: string }> {
+    return firstValueFrom(this.http.post<{ revoked: boolean; grantId: string }>(
+      `${API}/users/${userId}/premium-grants/${grantId}/revoke`, { reason }));
   }
 
   updateUser(id: string, changes: { displayName?: string; role?: string }): Promise<AdminUserDetail> {
