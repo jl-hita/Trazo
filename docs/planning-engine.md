@@ -621,6 +621,17 @@ it, `ExerciseView.replacedPerformance` shows what they did the last time with th
 load). Once the replacement is logged its own history rules (repeat, increase, estimate) and the reference disappears. The muscle evidence used by
 the volume adaptation already follows the muscle, not the exercise, so a swap does not reset it. See `SwapContinuity`.
 
+## Real frequency
+
+`GET /api/v1/plans/current/next` includes `frequency`: the pace the user really keeps (sessions per seven days in the last 28 days, from
+`LoadMetrics.ObservedSessionsPerSevenDays`) against the days the plan was built for. `FrequencyAdvisor` reports `OnTrack`, `Below` or `Above`
+with a tolerance of one session a week, and `Unknown` when there are fewer than four workouts or less than five days of span, or in a
+sequence plan (a rotation has no calendar). When the pace is clearly lower it suggests the frequency a new plan could assume (the pace rounded,
+between 2 and one below the plan).
+
+It is informative: the engine does not add sets to the sessions the user does attend to compensate for the ones they do not, and it does not rewrite
+the days of the plan. The one-session tolerance is a product convention, not a physiological value.
+
 ## Muscle priorities (Emphasize / Grow / Maintain)
 
 A generated hypertrophy plan accepts a `musclePriorities` map at creation (`POST /api/v1/plans`) and a replacement through
