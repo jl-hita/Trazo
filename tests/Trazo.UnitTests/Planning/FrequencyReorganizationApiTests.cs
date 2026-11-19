@@ -15,7 +15,7 @@ namespace Trazo.UnitTests.Planning;
 /// a proposal is created once for a persistent change, can be declined, accepted and reverted, never touches the sessions that exist, and
 /// the next block is generated with the new days and leaves its learning decisions stored.
 /// </summary>
-public abstract class FrequencyApiScenarios(string? postgres) : PlansApiBase(enforced: false, postgres)
+public abstract class FrequencyReorganizationApiScenarios(string? postgres) : PlansApiBase(enforced: false, postgres)
 {
     private const string Url = "/api/v1/plans/current/frequency";
 
@@ -184,9 +184,9 @@ public abstract class FrequencyApiScenarios(string? postgres) : PlansApiBase(enf
     }
 }
 
-public sealed class FrequencyApiTests() : FrequencyApiScenarios(null);
+public sealed class FrequencyReorganizationApiTests() : FrequencyReorganizationApiScenarios(null);
 
 /// <summary>The same scenarios on a real PostgreSQL with the real migrations (CI job "postgres"; needs TRAZO_TEST_POSTGRES).</summary>
 [Trait("Category", "Postgres")]
-public sealed class PostgresFrequencyApiTests() : FrequencyApiScenarios(
+public sealed class PostgresFrequencyReorganizationApiTests() : FrequencyReorganizationApiScenarios(
     Environment.GetEnvironmentVariable("TRAZO_TEST_POSTGRES") ?? throw new InvalidOperationException("TRAZO_TEST_POSTGRES is not set."));
