@@ -28,7 +28,7 @@ public static class AdminPremiumGrantsEndpoints
         var now = clock.GetUtcNow();
         var rows = await db.PremiumGrants.AsNoTracking().Where(x => x.UserId == userId)
             .OrderByDescending(x => x.GrantedAt).ToListAsync(ct);
-        return Results.Ok(rows.Select(x => new AdminPremiumGrantView(
+        var history = rows.Select(x => new AdminPremiumGrantView(
             x.Id, x.Kind, x.Status, x.Days, x.IsPermanent, x.StartsAt, x.EndsAt, x.GrantReason, x.GrantedBy,
             x.GrantedAt, x.VoidedAt, x.VoidReason, x.VoidedBy,
             x.Status == PremiumGrantStatuses.Active && x.StartsAt <= now && (x.IsPermanent || x.EndsAt > now))));
