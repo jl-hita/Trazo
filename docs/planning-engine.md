@@ -621,6 +621,25 @@ counts a full set or nothing; it is a planning convention, not a measurement). E
 `cable-reverse-fly` and `rowing-machine` have no meaningful secondary. A graded model (fractions of a set) was not introduced: there is no
 evidence base in the product to calibrate the fractions.
 
+## Load continuity when an exercise is swapped
+
+TRAZO does not convert a load between two different exercises: a fixed ratio (dumbbell press = x% of barbell press) would be an arbitrary
+physiological constant. When an exercise is swapped, the replacement starts without a target load of its own and, until the user has history with
+it, `ExerciseView.replacedPerformance` shows what they did the last time with the exercise it replaced (`suggestionBasis: "reference"`, no proposed
+load). Once the replacement is logged its own history rules (repeat, increase, estimate) and the reference disappears. The muscle evidence used by
+the volume adaptation already follows the muscle, not the exercise, so a swap does not reset it. See `SwapContinuity`.
+
+## Real frequency
+
+`GET /api/v1/plans/current/next` includes `frequency`: the pace the user really keeps (sessions per seven days in the last 28 days, from
+`LoadMetrics.ObservedSessionsPerSevenDays`) against the days the plan was built for. `FrequencyAdvisor` reports `OnTrack`, `Below` or `Above`
+with a tolerance of one session a week, and `Unknown` when there are fewer than four workouts or less than five days of span, or in a
+sequence plan (a rotation has no calendar). When the pace is clearly lower it suggests the frequency a new plan could assume (the pace rounded,
+between 2 and one below the plan).
+
+It is informative: the engine does not add sets to the sessions the user does attend to compensate for the ones they do not, and it does not rewrite
+the days of the plan. The one-session tolerance is a product convention, not a physiological value.
+
 ## Muscle priorities (Emphasize / Grow / Maintain)
 
 A generated hypertrophy plan accepts a `musclePriorities` map at creation (`POST /api/v1/plans`) and a replacement through

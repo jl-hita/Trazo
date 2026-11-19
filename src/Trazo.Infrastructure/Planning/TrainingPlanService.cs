@@ -538,7 +538,28 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
             availability, AvailabilityLocked: !premium, overdue, Reentry: reentry,
-            Reschedule: behind >= 1 ? new RescheduleOfferView(behind) : null, Adjustment: AdjustmentOf(advice, daysAway, behind, overdue.Count));
+            Reschedule: behind >= 1 ? new RescheduleOfferView(behind) : null, Adjustment: AdjustmentOf(advice, daysAway, behind, overdue.Count),
+            Frequency: await FrequencyAsync(plan, ct));
+    }
+
+    /// <summary>The pace of the last weeks (workouts really done, not omitted) against the days the plan was built for. Informative only.</summary>
+    private async Task<FrequencyView> FrequencyAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var performed = await db.WorkoutLogs.AsNoTracking()
+            .Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted && l.PerformedAt > now.AddDays(-LoadMetrics.PaceWindowDays))
+            .Select(l => l.PerformedAt).ToListAsync(ct);
+        var advice = FrequencyAdvisor.Advise(IsSequence(plan), plan.TrainingDays.Length, LoadMetrics.ObservedSessionsPerSevenDays(performed, now));
+        var message = advice.State switch
+        {
+            FrequencyState.Below => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: recibes menos trabajo por semana del previsto. Si es tu ritmo habitual, crea un plan para {2} días y se repartirá bien."),
+                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal, advice.SuggestedSessionsPerWeek),
+            FrequencyState.Above => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: el plan no añade series por su cuenta; vigila la recuperación."),
+                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal),
+            FrequencyState.OnTrack => T("Tu ritmo real coincide con el del plan."),
+            _ => T("Aún no hay suficientes sesiones recientes para medir tu ritmo.")
+        };
+        return new FrequencyView(advice.State.ToString(), advice.Observed, advice.Nominal, advice.SuggestedSessionsPerWeek, message);
     }
 
     /// <summary>The advisor's decision with its explanation in the request's language.</summary>
@@ -1593,7 +1614,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var ranges = new Dictionary<string, (int Min, int Max, decimal? Rir)>(StringComparer.Ordinal);
         foreach (var e in sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)))
+        {
             ranges.TryAdd(e.ExerciseId, (e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve));
+        }
+        // The exercise a swapped one replaced: its last performance is a reference for the replacement (see SwapContinuity).
+        foreach (var s in sessions)
+            foreach (var e in PrescriptionJson.Read(s.PrescriptionJson))
+                if (PrescriptionJson.SwappedFrom(s.PrescriptionJson, e.ExerciseId) is { } original)
+                    ranges.TryAdd(original, (e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve));
         var result = new Dictionary<string, LastPerformanceView>(StringComparer.Ordinal);
         if (ranges.Count == 0) return result;
         var ids = ranges.Keys.ToList();
@@ -1799,6 +1827,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             DecodePriorities(plan.MusclePriorities).ToDictionary(pair => pair.Key.ToString(), pair => pair.Value.ToString()));
     }
 
+    /// <summary>What the user did with the exercise a swapped one replaced, shown only while the replacement has no history of its own.</summary>
+    private static LastPerformanceView? ReplacedReference(PlannedSession session, string exerciseId, IReadOnlyDictionary<string, LastPerformanceView>? last)
+    {
+        if (last is null || PrescriptionJson.SwappedFrom(session.PrescriptionJson, exerciseId) is not { } original) return null;
+        return SwapContinuity.Reference(last.GetValueOrDefault(original), last.ContainsKey(exerciseId));
+    }
+
     private SessionView ToSessionView(PlannedSession session, WorkoutLog? log, IReadOnlyDictionary<string, LastPerformanceView>? last = null) => new(
         session.Id, session.WeekNumber, session.Date, session.Date?.DayOfWeek, TitleOf(session.Title), session.EstimatedDurationMinutes,
         session.Status.ToString(),
@@ -1809,7 +1844,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId),
             last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null,
             PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId),
-            PrescriptionJson.IsExtra(session.PrescriptionJson, e.ExerciseId))).ToList(),
+            PrescriptionJson.IsExtra(session.PrescriptionJson, e.ExerciseId),
+            ReplacedReference(session, e.ExerciseId, last))).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
             log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
