@@ -187,9 +187,10 @@ public sealed class SubscriptionService(
         var best = rows.Where(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now))
                        .OrderByDescending(x => x.ExpiresAt).FirstOrDefault()
                    ?? rows.OrderByDescending(x => x.UpdatedAt).FirstOrDefault();
-        var promoEnd = await grants.PromoEndAsync(userId, ct);
+        var hasPromo = await grants.HasPromoAsync(userId, ct);
+        var promoEnd = hasPromo ? await grants.PromoEndAsync(userId, ct) : null;
         if (best is null)
-            return promoEnd is null
+            return !hasPromo
                 ? new SubscriptionStatusView(false, "none", null, null, null, false, SubscriptionSources.GooglePlay)
                 : new SubscriptionStatusView(true, "none", null, null, null, false, SubscriptionSources.Promo, PromoExpiresAt: promoEnd);
         var access = SubscriptionAccess.Grants(best.Status, best.ExpiresAt, now);
@@ -197,8 +198,8 @@ public sealed class SubscriptionService(
         var status = !access && best.Status is SubscriptionStatus.Trial or SubscriptionStatus.Active
             or SubscriptionStatus.GracePeriod or SubscriptionStatus.Canceled
             ? SubscriptionStatus.Expired : best.Status;
-        return new SubscriptionStatusView(access || promoEnd is not null, ToApiName(status), best.ProductId, best.StartedAt, best.ExpiresAt,
-            best.AutoRenewing, access ? best.Source : promoEnd is not null ? SubscriptionSources.Promo : best.Source, PromoExpiresAt: promoEnd);
+        return new SubscriptionStatusView(access || hasPromo, ToApiName(status), best.ProductId, best.StartedAt, best.ExpiresAt,
+            best.AutoRenewing, access ? best.Source : hasPromo ? SubscriptionSources.Promo : best.Source, PromoExpiresAt: promoEnd);
     }
 
     public async Task<bool> HasAccessAsync(Guid userId, CancellationToken ct)

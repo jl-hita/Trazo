@@ -254,4 +254,51 @@ public sealed class AdminUsersApiTests : IDisposable
         Assert.Equal("signup_trial", grant.Kind);
         Assert.Equal(30, grant.Days);
     }
+
+    [Fact]
+    public async Task PremiumGrantEndpoints_AreSuperadminOnly_AndCanGrantAndRevokeManualAccess()
+    {
+        var superadmin = await AddUserAsync("premium-root@example.com", "superadmin");
+        var commercial = await AddUserAsync("premium-commercial@example.com", "commercial");
+        var target = await AddUserAsync("premium-target@example.com");
+        var rootClient = ClientFor(superadmin);
+        var commercialClient = ClientFor(commercial);
+
+        Assert.Equal(HttpStatusCode.Forbidden,
+            (await commercialClient.GetAsync($"/api/v1/admin/users/{target.Id}/premium-grants")).StatusCode);
+
+        var invalid = await rootClient.PostAsJsonAsync($"/api/v1/admin/users/{target.Id}/premium-grants",
+            new { days = 0, permanent = false, reason = "test" });
+        Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
+
+        var created = await rootClient.PostAsJsonAsync($"/api/v1/admin/users/{target.Id}/premium-grants",
+            new { permanent = true, reason = "Partner access for testing" });
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var grant = await JsonAsync(created);
+        var grantId = grant.GetProperty("id").GetGuid();
+        Assert.True(grant.GetProperty("permanent").GetBoolean());
+        Assert.True(grant.GetProperty("isCurrent").GetBoolean());
+        Assert.Equal("Partner access for testing", grant.GetProperty("reason").GetString());
+        Assert.Equal(superadmin.Id.ToString(), grant.GetProperty("grantedBy").GetString());
+
+        var historyResponse = await rootClient.GetAsync($"/api/v1/admin/users/{target.Id}/premium-grants");
+        var historyBody = await historyResponse.Content.ReadAsStringAsync();
+        Assert.True(historyResponse.IsSuccessStatusCode,
+            $"Premium grant history returned {(int)historyResponse.StatusCode}: {historyBody}");
+        using var historyDocument = JsonDocument.Parse(historyBody);
+        var history = historyDocument.RootElement;
+        Assert.Equal(JsonValueKind.Array, history.ValueKind);
+        Assert.Single(history.EnumerateArray());
+
+        var revoked = await rootClient.PostAsJsonAsync(
+            $"/api/v1/admin/users/{target.Id}/premium-grants/{grantId}/revoke",
+            new { reason = "Testing period has ended" });
+        Assert.Equal(HttpStatusCode.OK, revoked.StatusCode);
+
+        var after = await JsonAsync(await rootClient.GetAsync($"/api/v1/admin/users/{target.Id}/premium-grants"));
+        Assert.Equal("voided", after[0].GetProperty("status").GetString());
+        Assert.Equal("Testing period has ended", after[0].GetProperty("revocationReason").GetString());
+    }
+
+
 }

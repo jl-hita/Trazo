@@ -8,7 +8,7 @@ namespace Trazo.Infrastructure.Growth;
 
 public sealed record GrantRequest(
     Guid UserId, string Kind, string SourceKey, int Days, Guid? OriginUserId = null, Guid? OriginSubscriptionId = null,
-    string Status = PremiumGrantStatuses.Active);
+    string Status = PremiumGrantStatuses.Active, bool IsPermanent = false, string? Reason = null, string? GrantedBy = null);
 
 public sealed record GrantResult(PremiumGrant Grant, bool Created);
 
@@ -43,7 +43,12 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
 {
     public async Task<GrantResult> GrantAsync(GrantRequest request, CancellationToken ct)
     {
-        if (request.Days <= 0) throw new ArgumentOutOfRangeException(nameof(request), "A grant needs a positive number of days.");
+        if (request.IsPermanent && request.Kind != PremiumGrantKinds.AdminGrant)
+            throw new ArgumentException("Only manual administrative grants can be permanent.", nameof(request));
+        if ((!request.IsPermanent && request.Days <= 0) || (request.IsPermanent && request.Days != 0))
+            throw new ArgumentOutOfRangeException(nameof(request), "A finite grant needs positive days; a permanent grant uses zero days.");
+        if (request.Kind == PremiumGrantKinds.AdminGrant && string.IsNullOrWhiteSpace(request.Reason))
+            throw new ArgumentException("A manual administrative grant needs a reason.", nameof(request));
         var existing = await db.PremiumGrants.SingleOrDefaultAsync(x => x.Kind == request.Kind && x.SourceKey == request.SourceKey, ct);
         if (existing is not null) return new GrantResult(existing, false);
 
@@ -51,7 +56,7 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
         var grant = new PremiumGrant
         {
             Id = Guid.NewGuid(), UserId = request.UserId, Kind = request.Kind, SourceKey = request.SourceKey, Days = request.Days,
-            Status = request.Status, GrantedAt = now, OriginUserId = request.OriginUserId,
+            Status = request.Status, GrantedAt = now, OriginUserId = request.OriginUserId, IsPermanent = request.IsPermanent, GrantReason = request.Reason?.Trim(), GrantedBy = request.GrantedBy,
             OriginSubscriptionId = request.OriginSubscriptionId, UpdatedAt = now
         };
         if (request.Status == PremiumGrantStatuses.Active) Place(grant, await NextStartAsync(request.UserId, ct), now);
@@ -86,20 +91,32 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
         return start;
     }
 
-    public async Task<bool> HasPromoAsync(Guid userId, CancellationToken ct) => await PromoEndAsync(userId, ct) is not null;
+    public async Task<bool> HasPromoAsync(Guid userId, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        // Keep the permanent/finite expiry decision on the client. Besides avoiding provider-specific
+        // nullable-boolean translation differences, this mirrors PromoEndAsync's handling of permanent grants.
+        var active = await db.PremiumGrants.AsNoTracking()
+            .Where(x => x.UserId == userId && x.Status == PremiumGrantStatuses.Active)
+            .ToListAsync(ct);
+        return active.Any(x => x.StartsAt <= now && (x.IsPermanent || x.EndsAt > now));
+    }
 
     public async Task<DateTimeOffset?> PromoEndAsync(Guid userId, CancellationToken ct)
     {
         var now = clock.GetUtcNow();
         var rows = await db.PremiumGrants.AsNoTracking().Where(x => x.UserId == userId && x.Status == PremiumGrantStatuses.Active).ToListAsync(ct);
-        var current = rows.Where(x => x.StartsAt <= now && x.EndsAt > now).Select(x => x.EndsAt).ToList();
+        // A permanent manual grant has no end date. HasPromoAsync still reports access; null here means no finite expiry.
+        if (rows.Any(x => x.IsPermanent && x.StartsAt <= now)) return null;
+        var current = rows.Where(x => !x.IsPermanent && x.StartsAt <= now && x.EndsAt > now).Select(x => x.EndsAt).ToList();
         if (current.Count == 0) return null;
         // Chained windows: access lasts until the last window that is contiguous with the current one.
         var end = current.Max()!.Value;
         foreach (var next in rows.Where(x => x.StartsAt > now).OrderBy(x => x.StartsAt))
         {
-            if (next.StartsAt <= end) { if (next.EndsAt > end) end = next.EndsAt!.Value; }
-            else break;
+            if (next.StartsAt > end) break;
+            if (next.IsPermanent) return null;
+            if (next.EndsAt > end) end = next.EndsAt!.Value;
         }
         return end;
     }
@@ -135,14 +152,18 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
         if (wasActive)
         {
             // Close the gap: later windows of the same user move forward in the chain.
-            var later = (await db.PremiumGrants.Where(x => x.UserId == grant.UserId && x.Status == PremiumGrantStatuses.Active && x.Id != grant.Id).ToListAsync(ct))
-                .Where(x => x.StartsAt >= grant.StartsAt).OrderBy(x => x.StartsAt).ToList();
+            var activeRows = await db.PremiumGrants.Where(x => x.UserId == grant.UserId &&
+                x.Status == PremiumGrantStatuses.Active && x.Id != grant.Id).ToListAsync(ct);
+            var later = (grant.IsPermanent
+                ? activeRows.Where(x => !x.IsPermanent && x.StartsAt >= grant.StartsAt)
+                : activeRows.Where(x => x.StartsAt >= grant.StartsAt))
+                .OrderBy(x => x.StartsAt).ToList();
             foreach (var next in later)
             {
                 next.StartsAt = cursor;
-                next.EndsAt = cursor.AddDays(next.Days);
+                next.EndsAt = next.IsPermanent ? null : cursor.AddDays(next.Days);
                 next.UpdatedAt = now;
-                cursor = next.EndsAt.Value;
+                if (next.EndsAt is { } end) cursor = end;
             }
         }
         await db.SaveChangesAsync(ct);
@@ -153,7 +174,7 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
     private static void Place(PremiumGrant grant, DateTimeOffset start, DateTimeOffset now)
     {
         grant.StartsAt = start;
-        grant.EndsAt = start.AddDays(grant.Days);
+        grant.EndsAt = grant.IsPermanent ? null : start.AddDays(grant.Days);
         grant.AppliedAt ??= now;
     }
 }

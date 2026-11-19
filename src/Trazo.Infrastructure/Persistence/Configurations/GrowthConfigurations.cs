@@ -14,6 +14,9 @@ public sealed class PremiumGrantConfiguration : IEntityTypeConfiguration<Premium
         b.Property(x => x.Kind).HasMaxLength(30).IsRequired();
         b.Property(x => x.SourceKey).HasMaxLength(80).IsRequired();
         b.Property(x => x.Status).HasMaxLength(16).IsRequired();
+        b.Property(x => x.IsPermanent).HasDefaultValue(false);
+        b.Property(x => x.GrantReason).HasMaxLength(300);
+        b.Property(x => x.GrantedBy).HasMaxLength(40);
         b.Property(x => x.VoidReason).HasMaxLength(300);
         b.Property(x => x.VoidedBy).HasMaxLength(40);
         b.Property(x => x.LastDeferError).HasMaxLength(300);

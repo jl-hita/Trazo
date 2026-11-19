@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.api';
+import { AdminApi, AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.api';
 import { AuthService } from '../../core/auth.service';
 import { errorMessage } from '../../core/setup.api';
 
@@ -53,6 +53,13 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
     .user-panel .ok { color: #7fd3a0; font-size: 12px; margin: 0; }
     .user-panel .err, .users-error { color: #f0a3a3; font-size: 12px; margin: 0; }
     .user-panel .hint { color: #7f8da0; font-size: 11px; margin: 0; }
+    .user-panel .premium-section { display: grid; gap: 10px; padding: 14px 0; border-top: 1px solid #293444; border-bottom: 1px solid #293444; }
+    .user-panel .premium-section h3 { margin: 0; color: #e4edf8; font-size: 13px; }
+    .user-panel .premium-grant { display: grid; gap: 4px; padding: 9px; border: 1px solid #34465b; border-radius: 6px; font-size: 11px; color: #aab6c7; }
+    .user-panel .premium-grant strong { color: #e4edf8; font-weight: 600; }
+    .user-panel .premium-form { display: grid; gap: 8px; }
+    .user-panel .premium-form input, .user-panel .premium-form select { width: 100%; box-sizing: border-box; }
+    .user-panel .premium-current { color: #7fd3a0; font-size: 12px; margin: 0; }
     .user-panel .danger-zone { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid #5a2a2a; }
     .user-panel .empty { color: #8291a6; font-size: 13px; text-align: center; padding: 18px 0; }
     @media (max-width: 1280px) { .users-layout { grid-template-columns: 1fr; } .user-panel { position: static; } }
@@ -180,6 +187,53 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
             </ul>
           }
 
+          <section class="premium-section" aria-label="Premium access management">
+            <h3>Premium access</h3>
+            @if (premiumLoading()) { <p class="hint">Loading Premium history…</p> }
+            @if (premiumCurrent()) { <p class="premium-current">Premium access currently active through a grant.</p> }
+            @for (g of premiumGrants(); track g.id) {
+              <div class="premium-grant">
+                <strong>{{ g.permanent ? 'Permanent Premium' : g.days + ' days of Premium' }} · {{ g.status }}</strong>
+                <span>{{ g.startsAt ? 'Starts ' + formatDate(g.startsAt) : 'Not scheduled' }}{{ g.permanent ? '' : (g.endsAt ? ' · Ends ' + formatDate(g.endsAt) : '') }}</span>
+                @if (g.reason) { <span>Reason: {{ g.reason }}</span> }
+                @if (g.grantedBy) { <span>Granted by: {{ g.grantedBy }}</span> }
+                @if (g.revokedAt) { <span>Revoked {{ formatDate(g.revokedAt) }}{{ g.revocationReason ? ' · ' + g.revocationReason : '' }}</span> }
+                @if (g.kind === 'admin_grant' && g.status === 'active') {
+                  @if (premiumRevokeId() === g.id) {
+                    <input type="text" maxlength="300" placeholder="Reason for revocation" aria-label="Reason for revocation"
+                      [ngModel]="premiumRevokeReason()" (ngModelChange)="premiumRevokeReason.set($event)">
+                    <div class="actions">
+                      <button class="danger" type="button" (click)="revokePremium(g.id)" [disabled]="busy() || premiumRevokeReason().trim().length < 5">Confirm revocation</button>
+                      <button type="button" (click)="premiumRevokeId.set(null)">Cancel</button>
+                    </div>
+                  } @else {
+                    <button class="danger" type="button" (click)="premiumRevokeId.set(g.id); premiumRevokeReason.set('')" [disabled]="busy()">Revoke this grant</button>
+                  }
+                }
+              </div>
+            } @empty {
+              @if (!premiumLoading()) { <p class="hint">No Premium grants recorded.</p> }
+            }
+            <div class="premium-form">
+              <label>Grant duration
+                <select [ngModel]="premiumDuration()" (ngModelChange)="premiumDuration.set($event)" [disabled]="busy()">
+                  <option value="30">30 days</option>
+                  <option value="90">90 days</option>
+                  <option value="180">180 days</option>
+                  <option value="365">1 year</option>
+                  <option value="permanent">Permanent</option>
+                </select>
+              </label>
+              <label>Reason (required)
+                <input type="text" maxlength="300" placeholder="e.g. compensation, collaborator, test account"
+                  [ngModel]="premiumReason()" (ngModelChange)="premiumReason.set($event)">
+              </label>
+              <button class="primary" type="button" (click)="grantPremium()" [disabled]="busy() || premiumReason().trim().length < 5">
+                Grant Premium
+              </button>
+            </div>
+          </section>
+
           <div class="actions">
             @if (!u.hasPassword && !u.disabled) { <button type="button" (click)="sendPasswordInvitation()" [disabled]="busy()">Send password setup link</button> }
             @if (!u.emailVerified) { <button type="button" (click)="run('verify-email')" [disabled]="busy()">Mark email verified</button> }
@@ -220,6 +274,7 @@ export class UsersPageComponent {
   private readonly auth = inject(AuthService);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
+  private premiumRequestId = 0;
 
   protected readonly roles = ROLES;
   protected readonly users = signal<AdminUserSummary[]>([]);
@@ -245,6 +300,13 @@ export class UsersPageComponent {
   protected readonly panelError = signal('');
   protected readonly confirming = signal<UserAction | null>(null);
   protected readonly deleteConfirm = signal('');
+  protected readonly premiumGrants = signal<AdminPremiumGrant[]>([]);
+  protected readonly premiumCurrent = computed(() => this.premiumGrants().some(g => g.isCurrent));
+  protected readonly premiumLoading = signal(false);
+  protected readonly premiumDuration = signal('30');
+  protected readonly premiumReason = signal('');
+  protected readonly premiumRevokeId = signal<string | null>(null);
+  protected readonly premiumRevokeReason = signal('');
 
   protected readonly isSelf = computed(() => this.selected()?.id === this.auth.user()?.id);
   protected readonly dirty = computed(() => {
@@ -340,6 +402,59 @@ export class UsersPageComponent {
     await this.perform(() => this.api.userAction(u.id, action), messages[action]);
   }
 
+  protected async grantPremium(): Promise<void> {
+    const u = this.selected();
+    const reason = this.premiumReason().trim();
+    if (!u || reason.length < 5) return;
+    const permanent = this.premiumDuration() === 'permanent';
+    this.busy.set(true);
+    this.panelError.set('');
+    try {
+      await this.api.grantPremium(u.id, permanent
+        ? { permanent: true, reason }
+        : { permanent: false, days: Number(this.premiumDuration()), reason });
+      this.premiumReason.set('');
+      this.message.set(permanent ? 'Permanent Premium access granted.' : 'Premium time granted.');
+      await this.loadPremiumGrants(u.id);
+    } catch (e) {
+      this.panelError.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  protected async revokePremium(grantId: string): Promise<void> {
+    const u = this.selected();
+    const reason = this.premiumRevokeReason().trim();
+    if (!u || reason.length < 5) return;
+    this.busy.set(true);
+    this.panelError.set('');
+    try {
+      await this.api.revokePremium(u.id, grantId, reason);
+      this.premiumRevokeId.set(null);
+      this.premiumRevokeReason.set('');
+      this.message.set('Manual Premium grant revoked. Store purchases and referral rewards are unchanged.');
+      await this.loadPremiumGrants(u.id);
+    } catch (e) {
+      this.panelError.set(errorMessage(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  private async loadPremiumGrants(userId: string): Promise<void> {
+    const requestId = ++this.premiumRequestId;
+    this.premiumLoading.set(true);
+    try {
+      const grants = await this.api.listPremiumGrants(userId);
+      if (requestId === this.premiumRequestId && this.selected()?.id === userId) this.premiumGrants.set(grants);
+    } catch (e) {
+      if (requestId === this.premiumRequestId) this.panelError.set(errorMessage(e));
+    } finally {
+      if (requestId === this.premiumRequestId) this.premiumLoading.set(false);
+    }
+  }
+
   protected async deleteAccount(): Promise<void> {
     const u = this.selected();
     if (!u) return;
@@ -403,6 +518,9 @@ export class UsersPageComponent {
     this.deleteConfirm.set('');
     this.editName.set(detail.displayName);
     this.editRole.set(detail.role);
+    this.premiumGrants.set([]);
+    this.premiumRevokeId.set(null);
+    void this.loadPremiumGrants(detail.id);
   }
 
   private async load(): Promise<void> {
