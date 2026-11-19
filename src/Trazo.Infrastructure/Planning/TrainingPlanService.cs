@@ -211,12 +211,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var firstSlot = SlotsOf(plan).First(slot => slot.Contains(1));
         var loads = await LoadReferencesAsync(userId, ct);
         // A new plan always starts from its own baseline: nothing decided in another plan reaches its first block.
-        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
+        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads.References);
         if (!generation.Succeeded)
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
                 "No se pudo generar un plan con ese perfil.", new Dictionary<string, string[]> { ["plan"] = generation.Errors.ToArray() });
         plan.EngineVersion = generation.EngineVersion;
-        AddMesocycle(plan, firstSlot, generation, now, 1);
+        AddMesocycle(plan, firstSlot, generation, now, 1, MesocycleGenerationTrace.Capture(
+            profile, planSeed, firstSlot, candidates.Candidates, generation, rotationPosition: 0, continuesPreviousBlock: false,
+            previousBlockExerciseIds: null, loadReferences: loads, learnedTargets: null, now));
 
         db.TrainingPlans.Add(plan);
         try
@@ -2081,19 +2083,24 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var learning = await LongitudinalLearning.ProposeAsync(db, plan, slot, profile, clock.GetUtcNow(), ct);
         var generation = MesocycleGenerator.Generate(
             profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
-            loadReferences: loadReferences, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets);
+            loadReferences: loadReferences.References, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets);
         var decisions = learning.Decisions;
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? usedTargets = learning.LearnedTargets;
         if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
         {
             // A learned target must never make a block impossible: fall back to the plan's own targets and keep no decisions.
             generation = MesocycleGenerator.Generate(
                 profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
-                loadReferences: loadReferences, rotationPosition: existingSessions);
+                loadReferences: loadReferences.References, rotationPosition: existingSessions);
             decisions = [];
+            usedTargets = null;
         }
         if (!generation.Succeeded) return null;
 
-        var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
+        // The trace records the inputs this block was really generated from, read now: the plan may have changed since it was created.
+        var now = clock.GetUtcNow();
+        var mesocycle = AddMesocycle(plan, slot, generation, now, firstIndex, MesocycleGenerationTrace.Capture(
+            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now));
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
@@ -2121,12 +2128,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     }
 
     private static TrainingMesocycle AddMesocycle(
-        TrainingPlan plan, MesocycleSlot slot, MesocycleGeneration generation, DateTimeOffset now, int firstIndex)
+        TrainingPlan plan, MesocycleSlot slot, MesocycleGeneration generation, DateTimeOffset now, int firstIndex, GenerationTrace trace)
     {
         var mesocycle = new TrainingMesocycle
         {
             Id = Guid.NewGuid(), PlanId = plan.Id, Sequence = slot.Sequence, PhaseSequenceNumber = slot.PhaseSequenceNumber,
-            PhaseType = slot.PhaseType, IsDeload = slot.IsDeload, StartWeek = slot.StartWeek, Weeks = slot.Weeks, CreatedAt = now
+            PhaseType = slot.PhaseType, IsDeload = slot.IsDeload, StartWeek = slot.StartWeek, Weeks = slot.Weeks, CreatedAt = now,
+            GenerationSnapshotJson = trace.SnapshotJson, SnapshotSchemaVersion = trace.SnapshotSchemaVersion,
+            EngineVersion = trace.EngineVersion, CatalogFingerprint = trace.CatalogFingerprint, GeneratedAt = trace.GeneratedAt
         };
         foreach (var session in generation.Sessions)
             mesocycle.Sessions.Add(new PlannedSession
@@ -2175,11 +2184,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// - a deload session (its loads are lighter on purpose) or a workout registered long after it happened (its order is unreliable).
     /// The history itself is not touched: the last performance the user sees is read elsewhere and still shows every workout.
     /// </summary>
-    private async Task<IReadOnlyList<TrainingLoadReference>> LoadReferencesAsync(Guid userId, CancellationToken ct)
+    private async Task<LoadReferenceSelection> LoadReferencesAsync(Guid userId, CancellationToken ct)
     {
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.UserId == userId)
             .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(LoadReferenceLogs).ToListAsync(ct);
-        if (logs.Take(PainSessionWindow).Any(l => l.PainReported)) return [];
+        LoadReferenceSelection Result(
+            IReadOnlyList<TrainingLoadReference> chosen, IReadOnlyList<LoadReferenceSource> sources, bool suppressed, IReadOnlyList<string> withheld) =>
+            new(chosen, sources, suppressed, withheld, logs.Count, LoadReferenceLogs, PainSessionWindow, PainExposureWindow,
+                Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays);
+        if (logs.Take(PainSessionWindow).Any(l => l.PainReported)) return Result([], [], true, []);
 
         var sessionIds = logs.Select(l => l.PlannedSessionId).Distinct().ToList();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => sessionIds.Contains(s.Id))
@@ -2193,6 +2206,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             set.PainReported || string.Equals(set.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase);
 
         var references = new List<TrainingLoadReference>();
+        var sources = new List<LoadReferenceSource>();
+        var withheld = new List<string>();
         // Exposures of each exercise, most recent first.
         var byExercise = logs.SelectMany(l => l.Sets.GroupBy(s => s.ExerciseId).Select(g => (Log: l, Exercise: g.Key, Sets: g.ToList())))
             .GroupBy(x => x.Exercise);
@@ -2200,7 +2215,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             var exposures = exercise.ToList();
             // Pain is read on every recent exposure, also a late or deload one: the safety signal never depends on data quality.
-            if (exposures.Take(PainExposureWindow).Any(e => e.Sets.Any(HasPain))) continue;
+            if (exposures.Take(PainExposureWindow).Any(e => e.Sets.Any(HasPain))) { withheld.Add(exercise.Key); continue; }
             foreach (var exposure in exposures)
             {
                 var late = (exposure.Log.LoggedAt - exposure.Log.PerformedAt).TotalDays > Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays;
@@ -2209,10 +2224,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 if (done.Count == 0) continue;
                 var top = done.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
                 references.Add(new TrainingLoadReference(exercise.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
+                sources.Add(new LoadReferenceSource(
+                    exercise.Key, exposure.Log.Id, top.SetNumber, exposure.Log.PerformedOn, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
                 break;
             }
         }
-        return references;
+        return Result(references, sources, false, withheld.Order(StringComparer.Ordinal).ToArray());
     }
 
     private async Task<CandidateMappingResult> LoadCandidatesAsync(CancellationToken ct) =>

@@ -99,4 +99,65 @@ public sealed class PostgresMigrationTests : IDisposable
         var up = Query(_connection, "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
         foreach (var table in LearningTables) Assert.Contains(table, up);
     }
+
+    private const string BeforeTrace = "20261126100000_FrequencyProposals";
+
+    /// <summary>Inserts one row giving a neutral value to every NOT NULL column without a default, so the test does not depend on the table's full shape.</summary>
+    private void InsertMinimalRow(string table, Dictionary<string, string> values)
+    {
+        var columns = Query(_connection,
+            $"SELECT column_name || '|' || data_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '{table}' " +
+            "AND is_nullable = 'NO' AND column_default IS NULL");
+        var names = new List<string>();
+        var literals = new List<string>();
+        foreach (var column in columns)
+        {
+            var (name, type) = (column.Split('|')[0], column.Split('|')[1]);
+            names.Add($"\"{name}\"");
+            literals.Add(values.TryGetValue(name, out var given) ? given : type switch
+            {
+                "uuid" => "gen_random_uuid()",
+                "integer" or "bigint" or "smallint" or "numeric" => "1",
+                "boolean" => "false",
+                "date" => "current_date",
+                var t when t.StartsWith("timestamp") => "now()",
+                _ => "'x'"
+            });
+        }
+        Execute(_connection, $"INSERT INTO {table} ({string.Join(", ", names)}) VALUES ({string.Join(", ", literals)})");
+    }
+
+    [ScenarioFact]
+    public void The_trace_migration_keeps_existing_blocks_untraced_and_goes_down_and_up_again()
+    {
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeTrace);
+        var user = Guid.NewGuid();
+        var plan = Guid.NewGuid();
+        InsertMinimalRow("users", new() { ["Id"] = $"'{user}'", ["Role"] = "'user'" });
+        InsertMinimalRow("training_plans", new()
+        {
+            ["Id"] = $"'{plan}'", ["UserId"] = $"'{user}'", ["Status"] = "'Archived'", ["Origin"] = "'Generated'", ["SchedulingMode"] = "'Calendar'"
+        });
+        InsertMinimalRow("training_mesocycles", new() { ["PlanId"] = $"'{plan}'", ["Sequence"] = "1" });
+
+        using (var db = Context()) db.Database.Migrate();
+        using (var db = Context()) Assert.Empty(db.Database.GetPendingMigrations());
+
+        // The block that existed has no trace and no invented values; the data is still there.
+        var row = Query(_connection,
+            "SELECT concat_ws('|', \"Sequence\", \"GenerationSnapshotJson\" IS NULL, \"SnapshotSchemaVersion\" IS NULL, \"EngineVersion\" IS NULL, " +
+            "\"CatalogFingerprint\" IS NULL, \"GeneratedAt\" IS NULL) FROM training_mesocycles").Single();
+        Assert.Equal("1|t|t|t|t|t", row); // PostgreSQL renders a boolean as t/f
+        Assert.Contains(Query(_connection, "SELECT conname FROM pg_constraint WHERE conrelid = 'training_mesocycles'::regclass"),
+            c => c == "CK_training_mesocycles_trace_complete");
+
+        // A half-written trace is refused by the database.
+        Assert.ThrowsAny<Exception>(() => Execute(_connection, "UPDATE training_mesocycles SET \"EngineVersion\" = '0.11.1'"));
+
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeTrace);
+        Assert.DoesNotContain("EngineVersion", Query(_connection,
+            "SELECT column_name FROM information_schema.columns WHERE table_name = 'training_mesocycles'"));
+        Assert.Equal("1", Query(_connection, "SELECT \"Sequence\"::text FROM training_mesocycles").Single());
+        using (var db = Context()) db.Database.Migrate();
+    }
 }

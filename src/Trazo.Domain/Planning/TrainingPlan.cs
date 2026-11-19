@@ -120,6 +120,21 @@ public sealed class TrainingMesocycle
     public int Weeks { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 
+    // ---- Generation trace. Written once, when the engine generates the block, and never changed afterwards. All five are null
+    // together on a block generated before the trace existed and on a manual block (no engine generated it): "no trace available".
+    // Nothing is reconstructed or defaulted for those, because what was true at the time was not stored.
+
+    /// <summary>Structured context the block was generated from (see <c>MesocycleGenerationTrace</c>). Independent of later edits to the plan.</summary>
+    public string? GenerationSnapshotJson { get; set; }
+    /// <summary>Layout version of <see cref="GenerationSnapshotJson"/>, so old snapshots stay readable when the layout grows.</summary>
+    public int? SnapshotSchemaVersion { get; set; }
+    /// <summary>Version of the engine that generated THIS block, read from the engine at the moment of generation (not from the plan).</summary>
+    public string? EngineVersion { get; set; }
+    /// <summary>SHA-256 of the exercise catalog as the generator saw it (see <c>CatalogFingerprint</c>). Equal catalogs give equal values.</summary>
+    public string? CatalogFingerprint { get; set; }
+    /// <summary>When the block was generated.</summary>
+    public DateTimeOffset? GeneratedAt { get; set; }
+
     public List<PlannedSession> Sessions { get; set; } = [];
 }
 
