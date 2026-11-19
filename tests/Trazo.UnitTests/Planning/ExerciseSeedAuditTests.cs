@@ -111,4 +111,18 @@ public sealed class ExerciseSeedAuditTests
             Assert.NotEmpty(Names(entry, "primaryMuscles"));
         }
     }
+
+    [Fact]
+    public void EveryActiveSeedExerciseHasAReviewedIndirectStimulusDecision()
+    {
+        var path = Directory.EnumerateFiles(SeedsDirectory, "exercise-catalog.json").Single();
+        using var document = JsonDocument.Parse(File.ReadAllText(path));
+        var items = document.RootElement.ValueKind == JsonValueKind.Array ? document.RootElement : document.RootElement.GetProperty("exercises");
+        var unreviewed = items.EnumerateArray()
+            .Where(item => !item.TryGetProperty("isActive", out var active) || active.GetBoolean())
+            .Select(item => item.GetProperty("id").GetString()!)
+            .Where(id => !TrainingExerciseStimulus.IsReviewed(id))
+            .ToList();
+        Assert.True(unreviewed.Count == 0, "Exercises without an indirect-stimulus decision: " + string.Join(", ", unreviewed));
+    }
 }

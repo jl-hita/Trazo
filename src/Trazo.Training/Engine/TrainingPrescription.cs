@@ -293,6 +293,7 @@ internal static class TrainingExerciseStimulus
             ["bodyweight-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
             ["bodyweight-reverse-lunge"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
             ["bent-knee-inverted-row"] = [TrainingMuscleGroup.Biceps],
+            ["inverted-row"] = [TrainingMuscleGroup.Biceps], // same movement as the bent-knee version, audited with it
             ["negative-pull-up"] = [TrainingMuscleGroup.Biceps],
             ["band-row"] = [TrainingMuscleGroup.Biceps],
             ["band-lat-pulldown"] = [TrainingMuscleGroup.Biceps],
@@ -323,7 +324,9 @@ internal static class TrainingExerciseStimulus
         "dragon-flag", "standing-ab-wheel-rollout", "single-leg-glute-bridge",
         // TRAZO seed exercises that predate the table (decision: no meaningful secondary).
         "dumbbell-curl", "parallel-bar-dips", "plank", "walking-lunge", "sumo-deadlift",
-        "close-grip-bench-press", "lying-leg-raise"
+        "close-grip-bench-press", "lying-leg-raise",
+        // Audited later: a rear-delt isolation and a cardio machine (not part of hypertrophy programs).
+        "cable-reverse-fly", "rowing-machine"
     ];
 
     public static bool IsReviewed(string exerciseId) =>
