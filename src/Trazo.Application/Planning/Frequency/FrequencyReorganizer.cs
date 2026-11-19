@@ -40,7 +40,7 @@ public static class FrequencyReorganizer
     public static FrequencyDraft? Propose(
         PlanProfile profile, FrequencyAssessment assessment, IReadOnlyList<WeeklyAttendance> weeks, IReadOnlyList<DayOfWeek>? originalDays,
         int seed, MesocycleSlot slot, IReadOnlyCollection<TrainingExerciseCandidate> catalog, IReadOnlyList<string>? previousIds,
-        int? originalMaxSessionMinutes = null, Action<string>? trace = null)
+        int? originalMaxSessionMinutes = null)
     {
         ArgumentNullException.ThrowIfNull(profile);
         if (assessment.TargetDays is not { } target) return null;
@@ -51,7 +51,6 @@ public static class FrequencyReorganizer
         var days = isReturn && originalDays is { } original && original.Count == target
             ? original.OrderBy(FrequencyPatternDetector.Order).ToList()
             : ChooseDays(target, weeks, profile.TrainingDays, isReturn ? originalDays : null);
-        trace?.Invoke($"days={days.Count}/{target}");
         if (days.Count != target) return null;
 
         foreach (var split in new[] { profile.Split, TrainingProgramSplit.Automatic }.Distinct())
@@ -63,7 +62,6 @@ public static class FrequencyReorganizer
                 : CappedMinutes(profile, split, seed, slot, catalog, previousIds);
             var proposed = profile with { TrainingDays = days, Split = split, MaxSessionMinutes = maxMinutes };
             var preview = Preview(profile, proposed, seed, slot, catalog, previousIds);
-            trace?.Invoke($"split={split} max={maxMinutes} preview={(preview is null ? "null" : $"long={preview.ProposedLongestSessionMinutes} avg={preview.ProposedAverageSessionMinutes} curavg={preview.CurrentAverageSessionMinutes}")}");
             if (preview is null) continue;
             if (preview.ProposedLongestSessionMinutes > maxMinutes) continue;
             if (!isReturn && preview.ProposedAverageSessionMinutes > preview.CurrentAverageSessionMinutes * LongerSessionAllowance) continue;

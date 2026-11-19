@@ -673,7 +673,7 @@ their level contradicted siblings that were already Beginner (for example `seate
 `cable-lateral-raise`, `cable-reverse-fly`, `dumbbell-reverse-fly`, `cable-overhead-tricep-extension` and `straight-arm-pulldown`.
 `ExerciseSeedAuditTests` pins the families that must share a level and the exercises that must NOT be relaxed.
 
-## Longitudinal learning (policy `longitudinal-1.0`)
+## Longitudinal learning (policy `longitudinal-1.1`)
 
 The history of a user can move the weekly dose of a muscle in the NEXT block. It never touches the block in progress; short-term
 adaptation (fatigue, pain, frequency) is unchanged.
@@ -691,13 +691,35 @@ skips, post-exercise feedback when it exists, attendance. Data not used: session
 after a long absence, duplicated logs, deload blocks, manual and non-hypertrophy plans. Missing feedback is never negative feedback.
 
 Decisions: Increase, Decrease, Hold or Abstain, one set per block at most, at most 3 sets from the baseline, Maintain never
-increases, pain abstains. An Increase needs a Favorable block with Medium or High confidence, adherence of at least 85 %, regularity
+increases, pain abstains. An Increase needs TWO consecutive Favorable blocks (a single good block is a hint, not a reference), confidence
+of at least 0.65 (a Medium confidence of 0.55 is not solid evidence), adherence of at least 85 %, regularity
 of at least 70 % and no repeated discomfort answers; a Decrease needs repeated unfavorable periods. With insufficient data the block is
 identical to the one generated without learning (covered by `Insufficient_data_changes_nothing`).
+
+All thresholds (two blocks, 0.65, 85 %, 70 %, the 3-set band) are internal product criteria chosen to be conservative; they are not
+demonstrated physiology. They only gate changes of the longitudinal reference. Ordinary short-term adaptations (load, fatigue, safety,
+pain) never wait for them. A decrease still needs one block only, because being cautious costs little.
 
 Every decision is stored in `longitudinal_decisions` (muscle, baseline, previous and proposed sets, signals, period, confidence,
 reason in Spanish, policy version). Observations in `muscle_week_observations` are rebuilt idempotently from the workouts; the profile
 is derived from them, not stored. Both tables are exported and deleted with the account.
 
-Not yet implemented: carrying learning into a new plan, exposing decisions through the API, and the reorganisation proposal for a
-persistent change of real frequency.
+Decisions are exposed through `GET /api/v1/plans/current/volume-decisions`.
+
+### Frequency reorganisation (policy `frequency-1.0`)
+
+When a user persistently trains fewer (or, after a reduction, again more) days than the plan, the plan is reorganised by proposal.
+`FrequencyPatternDetector` reads complete weeks only and ignores weeks without any workout, deload weeks and the week in progress; one
+low week is "occasional" and changes nothing, several low weeks in a row (including the latest ones) are "persistent".
+`FrequencyReorganizer` then picks the target number of days (the weekdays really trained, never three consecutive days for three days
+or fewer), generates the next training block both ways and stores a preview (sessions per week, minutes, sets per muscle, planned
+against performed days). The proposal is a record in `frequency_proposals` (reason, weeks analysed, policy version, status); at most one
+is pending per plan (partial unique index). Nothing already generated is rewritten: accepting changes the plan days from the next
+block that is generated. Skipped sessions are never accumulated and lost volume is never recovered: the new block is generated for the
+new days, and session length is capped (current average + 10 %, rounded down to 5 minutes, never below the current average) so fewer
+days do not mean longer sessions. Learning bands are clamped to each new baseline, so no volume spike follows a change of days.
+Dismissing starts a cooldown for the same days. Returning to the original days is offered when the user trains them again, and
+`POST /plans/current/frequency/revert` goes back at any time; every step stays in the history. Manual and sequence plans are excluded.
+Endpoints: `GET /plans/current/frequency`, `POST .../proposals/{id}/accept`, `.../dismiss`, `POST .../revert`.
+
+Not yet implemented: carrying learning into a new plan (cross-plan learning).
