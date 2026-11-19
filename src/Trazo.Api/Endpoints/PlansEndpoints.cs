@@ -74,6 +74,10 @@ public static class PlansEndpoints
             .WithSummary("Calendar plans: moves the pending program forward, by whole weeks, so its first pending week is the current one. Offered by /current/next when the program is at least a week behind.")
             .Produces<RescheduleResult>().ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapPut("/current/muscle-priorities", UpdateMusclePrioritiesAsync).WithName("UpdateMusclePriorities")
+            .WithSummary("Replaces the muscle priorities (Emphasize, Grow, Maintain per muscle; an absent muscle is Grow) of a generated plan. They apply to the blocks generated from now on.")
+            .Produces<PlanView>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status402PaymentRequired).ProducesProblem(StatusCodes.Status404NotFound);
         group.MapPost("/current/sessions/{sessionId:guid}/skip", SkipAsync).WithName("SkipPlanSession")
             .WithSummary("Omits a pending session on purpose (reason: Time, Fatigue, Equipment, Motivation, Illness, Other). The plan goes on with the next one; it is not training, not an exposure and adapts nothing unless the reason is physical (Premium).")
             .Produces<SkipResult>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status402PaymentRequired)
@@ -206,6 +210,14 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         var result = await plans.RescheduleAsync(userId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> UpdateMusclePrioritiesAsync(
+        UpdateMusclePrioritiesRequest request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.UpdateMusclePrioritiesAsync(userId, request.MusclePriorities, ct);
         return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 

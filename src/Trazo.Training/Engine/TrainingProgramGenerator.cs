@@ -935,7 +935,7 @@ public static class TrainingProgramGenerator
                 .Select(exercise => exercise.ExerciseId)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
             var hamstringsExplicitlyPrioritized = (request.MuscleVolumeTargets ?? Array.Empty<TrainingMuscleVolumeTarget>())
-                .Any(preference => preference.MuscleGroup == TrainingMuscleGroup.Hamstrings &&
+                .Any(preference => preference.MuscleGroup == TrainingMuscleGroup.Hamstrings && !preference.Maintenance &&
                     (preference.Priority > 0 || preference.TargetWeeklyPrimarySets is not null));
             // Direct hamstring accessories (leg curls) already placed this week, counted per session.
             var directHamstringAccessoryIds = catalogCandidates
