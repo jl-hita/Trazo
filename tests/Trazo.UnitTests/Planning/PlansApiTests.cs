@@ -955,6 +955,59 @@ public sealed class PlansSubscriptionTests() : PlansApiBase(enforced: true)
         Assert.Contains(later, x => x.GetProperty("exercises")[0].GetProperty("sets").GetInt32() == 4);
     }
 
+    private static readonly object LowFeedback = new Dictionary<string, object>
+    {
+        ["bench-press"] = new { stimulus = "low", discomfort = "none", preFatigue = "recovered" }
+    };
+
+    private async Task<List<JsonElement>> LogThreeBenchSessionsAsync(HttpClient client, Func<int, object?> feedbackFor, Func<int, bool> painFor)
+    {
+        var days = new object[]
+        {
+            new { day = "Monday", title = "A", exercises = new object[] { new { exerciseId = "bench-press", sets = 3 } } },
+            new { day = "Tuesday", title = "B", exercises = new object[] { new { exerciseId = "bench-press", sets = 3 } } },
+            new { day = "Wednesday", title = "C", exercises = new object[] { new { exerciseId = "bench-press", sets = 3 } } }
+        };
+        Assert.Equal(HttpStatusCode.Created, (await client.PostAsJsonAsync("/api/v1/plans/manual", ManualPlan(days))).StatusCode);
+        var week = await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"));
+        var reports = new List<JsonElement>();
+        foreach (var (session, index) in week.GetProperty("sessions").EnumerateArray().Take(3).Select((x, i) => (x, i)))
+        {
+            var response = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{session.GetProperty("id").GetString()}/log", new
+            {
+                outcome = "Completed", sets = CompleteSets(session), painReported = painFor(index), exerciseFeedback = feedbackFor(index)
+            });
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            reports.Add((await JsonAsync(response)).GetProperty("adaptation"));
+        }
+        return reports;
+    }
+
+    private static bool AppliedAddSet(JsonElement report) =>
+        report.GetProperty("applied").EnumerateArray().Any(x => x.GetProperty("kind").GetString() == "muscle_add_set");
+
+    [Fact]
+    public async Task LowAnswersSeparatedByAnUnansweredSessionDoNotAddASet()
+    {
+        var client = ClientFor(await AddUserAsync("feedback-gap@example.com", subscribed: true));
+
+        var reports = await LogThreeBenchSessionsAsync(client, i => i == 1 ? null : LowFeedback, _ => false);
+
+        Assert.DoesNotContain(reports, AppliedAddSet);
+    }
+
+    [Fact]
+    public async Task ADeclaredPainBlocksTheSetAddedByFavourableMuscleFeedback()
+    {
+        var client = ClientFor(await AddUserAsync("feedback-pain@example.com", subscribed: true));
+
+        // Two clean low-stimulus answers would add a set (see PremiumAddsASetAfterTwoSessionsWithLowStimulus_AndRecovery);
+        // the pain declared on the second session must win.
+        var reports = await LogThreeBenchSessionsAsync(client, _ => LowFeedback, i => i == 1);
+
+        Assert.DoesNotContain(reports, AppliedAddSet);
+    }
+
     [Fact]
     public async Task FreeUsersCreateAndUseManualPlans_WithoutAdaptation()
     {
