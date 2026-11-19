@@ -94,9 +94,12 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
     public async Task<bool> HasPromoAsync(Guid userId, CancellationToken ct)
     {
         var now = clock.GetUtcNow();
-        return await db.PremiumGrants.AsNoTracking().AnyAsync(x => x.UserId == userId &&
-            x.Status == PremiumGrantStatuses.Active && x.StartsAt <= now &&
-            (x.IsPermanent || x.EndsAt > now), ct);
+        // Keep the permanent/finite expiry decision on the client. Besides avoiding provider-specific
+        // nullable-boolean translation differences, this mirrors PromoEndAsync's handling of permanent grants.
+        var active = await db.PremiumGrants.AsNoTracking()
+            .Where(x => x.UserId == userId && x.Status == PremiumGrantStatuses.Active)
+            .ToListAsync(ct);
+        return active.Any(x => x.StartsAt <= now && (x.IsPermanent || x.EndsAt > now));
     }
 
     public async Task<DateTimeOffset?> PromoEndAsync(Guid userId, CancellationToken ct)
