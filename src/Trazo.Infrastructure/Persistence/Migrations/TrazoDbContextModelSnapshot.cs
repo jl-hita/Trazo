@@ -296,6 +296,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string[]>("AvailableEquipment").IsRequired().HasColumnType("text");
             b.Property<string[]>("ExcludedExerciseIds").IsRequired().HasColumnType("text");
             b.Property<string[]>("Limitations").IsRequired().HasColumnType("text");
+            b.Property<string[]>("MusclePriorities").IsRequired().HasColumnType("text");
             b.Property<bool>("IncludeDeloadPhases").HasColumnType("boolean");
             b.Property<int>("DeloadEveryTrainingWeeks").HasColumnType("integer");
             b.Property<int>("Seed").HasColumnType("integer");

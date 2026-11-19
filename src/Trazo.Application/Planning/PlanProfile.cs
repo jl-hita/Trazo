@@ -19,7 +19,9 @@ public sealed record PlanProfileInput(
     int? DeloadEveryTrainingWeeks,
     string? TimeZone = null,
     string? SchedulingMode = null,
-    int? SessionsPerPeriod = null);
+    int? SessionsPerPeriod = null,
+    /// <summary>Muscle name -> "emphasize" | "maintain" | "grow". Anything not listed (or "grow") keeps the default dose.</summary>
+    IReadOnlyDictionary<string, string>? MusclePriorities = null);
 
 /// <summary>A validated, typed profile the engine can use.</summary>
 public sealed record PlanProfile(
@@ -36,7 +38,8 @@ public sealed record PlanProfile(
     bool IncludeDeloadPhases,
     int DeloadEveryTrainingWeeks,
     Trazo.Domain.Planning.PlanSchedulingMode SchedulingMode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar,
-    int SessionsPerPeriod = 0);
+    int SessionsPerPeriod = 0,
+    IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? MusclePriorities = null);
 
 public sealed record PlanProfileResult(PlanProfile? Profile, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -150,10 +153,53 @@ public static partial class PlanProfileParser
             else if (!limitations.Contains(area)) limitations.Add(area);
         }
 
+        var priorities = ParseMusclePriorities(input.MusclePriorities, errors.Count == 0 ? goal : null, experience, perPeriod, minutes, Fail);
+
         if (errors.Count > 0)
             return new(null, errors.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray()));
         return new(new PlanProfile(goal, experience, start, totalWeeks, days.Distinct().ToList(), minutes, equipment,
-            excluded, limitations, split, includeDeload, deloadEvery, mode, perPeriod), new Dictionary<string, string[]>());
+            excluded, limitations, split, includeDeload, deloadEvery, mode, perPeriod, priorities), new Dictionary<string, string[]>());
+    }
+
+    /// <summary>
+    /// Validates the muscle priorities the same way the engine will read them (<see cref="TrainingMusclePriorityPlanner"/>) and
+    /// returns the normalised dictionary: only "emphasize" and "maintain" are kept, "grow" is the default and is not stored.
+    /// <paramref name="goal"/> is null when another field already failed, so the rules that depend on it are not reported twice.
+    /// </summary>
+    public static IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority> ParseMusclePriorities(
+        IReadOnlyDictionary<string, string>? input, TrainingGoal? goal, TrainingExperience experience, int sessionsPerWeek,
+        int maximumSessionMinutes, Action<string, string> fail)
+    {
+        var result = new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>();
+        if (input is null || input.Count == 0) return result;
+        const string field = "musclePriorities";
+        var valid = true;
+        foreach (var (rawMuscle, rawPriority) in input)
+        {
+            if (!TryEnum<TrainingMuscleGroup>(rawMuscle, out var muscle) || !TrainingMusclePriorityPlanner.Configurable.Contains(muscle))
+            {
+                fail(field, $"El grupo muscular '{Clip(rawMuscle)}' no admite prioridad. Admitidos: {string.Join(", ", TrainingMusclePriorityPlanner.Configurable)}.");
+                valid = false;
+                continue;
+            }
+            if (!TryEnum<TrainingMusclePriority>(rawPriority, out var priority))
+            {
+                fail(field, $"La prioridad '{Clip(rawPriority)}' de {muscle} no es válida. Usa: {string.Join(", ", Enum.GetNames<TrainingMusclePriority>())}.");
+                valid = false;
+                continue;
+            }
+            if (!result.TryAdd(muscle, priority))
+            {
+                fail(field, $"El grupo muscular {muscle} está repetido.");
+                valid = false;
+            }
+        }
+        if (!valid || goal is null) return new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>();
+
+        var normalised = result.Where(pair => pair.Value != TrainingMusclePriority.Grow).ToDictionary(pair => pair.Key, pair => pair.Value);
+        var check = TrainingMusclePriorityPlanner.Build(goal.Value, experience, normalised, Math.Max(2, sessionsPerWeek), maximumSessionMinutes);
+        foreach (var error in check.Errors) fail(field, error);
+        return check.Succeeded ? normalised : new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>();
     }
 
     public const int MinimumSessionsPerPeriod = 2;
