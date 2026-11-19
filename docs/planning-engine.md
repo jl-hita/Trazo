@@ -613,3 +613,14 @@ A review of 20 plans generated from the real exercise library (calendar and sequ
 `LoadMetrics` now counts a set for every muscle the engine itself considers stimulated (`TrainingStimulus.EffectiveMuscles`: primary plus meaningful secondary, each at 1) instead of weighting every secondary muscle at 0.5. The old weighting inflated shoulders and upper back (24-33 "weighted" sets) because shrugs and every press were counted; planned and real dose now use the same definition as the generator and the same 20-set review ceiling.
 
 Reviewed and left as they were, with the reason: the selection of exercises (Smith press, leg press, hex-bar deadlift) comes from the catalog's curated priority, which the engine corrects but does not override; shorter leg sessions are the result of reaching the weekly targets with fewer exercises; rest periods of 120 s for 8-12 repetition compounds are at the lower end of what is recommended and raising them lengthens every session estimate; the knee limitation stays an exclusion list of lunges and single-leg work because squats cannot be dropped (see decision 6).
+
+## Real frequency
+
+`GET /api/v1/plans/current/next` includes `frequency`: the pace the user really keeps (sessions per seven days in the last 28 days, from
+`LoadMetrics.ObservedSessionsPerSevenDays`) against the days the plan was built for. `FrequencyAdvisor` reports `OnTrack`, `Below` or `Above`
+with a tolerance of one session a week, and `Unknown` when there are fewer than four workouts or less than five days of span, or in a
+sequence plan (a rotation has no calendar). When the pace is clearly lower it suggests the frequency a new plan could assume (the pace rounded,
+between 2 and one below the plan).
+
+It is informative: the engine does not add sets to the sessions the user does attend to compensate for the ones they do not, and it does not rewrite
+the days of the plan. The one-session tolerance is a product convention, not a physiological value.
