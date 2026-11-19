@@ -613,3 +613,11 @@ A review of 20 plans generated from the real exercise library (calendar and sequ
 `LoadMetrics` now counts a set for every muscle the engine itself considers stimulated (`TrainingStimulus.EffectiveMuscles`: primary plus meaningful secondary, each at 1) instead of weighting every secondary muscle at 0.5. The old weighting inflated shoulders and upper back (24-33 "weighted" sets) because shrugs and every press were counted; planned and real dose now use the same definition as the generator and the same 20-set review ceiling.
 
 Reviewed and left as they were, with the reason: the selection of exercises (Smith press, leg press, hex-bar deadlift) comes from the catalog's curated priority, which the engine corrects but does not override; shorter leg sessions are the result of reaching the weekly targets with fewer exercises; rest periods of 120 s for 8-12 repetition compounds are at the lower end of what is recommended and raising them lengthens every session estimate; the knee limitation stays an exclusion list of lunges and single-leg work because squats cannot be dropped (see decision 6).
+
+## Load continuity when an exercise is swapped
+
+TRAZO does not convert a load between two different exercises: a fixed ratio (dumbbell press = x% of barbell press) would be an arbitrary
+physiological constant. When an exercise is swapped, the replacement starts without a target load of its own and, until the user has history with
+it, `ExerciseView.replacedPerformance` shows what they did the last time with the exercise it replaced (`suggestionBasis: "reference"`, no proposed
+load). Once the replacement is logged its own history rules (repeat, increase, estimate) and the reference disappears. The muscle evidence used by
+the volume adaptation already follows the muscle, not the exercise, so a swap does not reset it. See `SwapContinuity`.
