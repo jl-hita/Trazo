@@ -114,6 +114,13 @@ public sealed record AdaptationHistoryView(
     int Reviews, int Changes, int SessionsAdjusted, bool Automatic, IReadOnlyList<AdaptationEntryView> Entries,
     string Scope = "block", int PlanChanges = 0, bool HasEarlier = false);
 
+/// <summary>One decision of longitudinal learning: how the weekly sets of a muscle changed for a block and why. Action is increase, decrease, hold or abstain.</summary>
+public sealed record VolumeDecisionView(
+    int BlockSequence, string Muscle, string Action, decimal BaselineSets, decimal PreviousSets, decimal ProposedSets,
+    string Confidence, string Reason, string PolicyVersion);
+
+public sealed record VolumeDecisionsView(IReadOnlyList<VolumeDecisionView> Decisions);
+
 public sealed record AppliedAdaptationView(string Kind, IReadOnlyList<string> ExerciseIds, int SessionsChanged, string Explanation);
 
 public sealed record ExerciseAdviceView(string ExerciseId, string Action, string Explanation, decimal? NextLoadKg, IReadOnlyList<int>? SuggestedRepetitions);

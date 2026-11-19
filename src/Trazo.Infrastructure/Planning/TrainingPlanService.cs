@@ -36,6 +36,8 @@ public interface ITrainingPlanService
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     /// <summary>The active plan's adjustment history, newest first; by default only the block in progress, or every block when <paramref name="wholePlan"/> is true.</summary>
     Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct);
+    /// <summary>The volume decisions longitudinal learning made for the blocks of the active plan, newest block first, with the reason of each.</summary>
+    Task<VolumeDecisionsView?> GetVolumeDecisionsAsync(Guid userId, int take, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
@@ -871,6 +873,17 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// progress: the one of the first pending session (the last one when everything is resolved). An adjustment is in a block when the workout that
     /// caused it is; the ones with no workout (absences, moves) belong to the block when they happened after the last workout of an earlier block.
     /// </summary>
+    public async Task<VolumeDecisionsView?> GetVolumeDecisionsAsync(Guid userId, int take, CancellationToken ct)
+    {
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return null;
+        var rows = await db.LongitudinalDecisions.AsNoTracking()
+            .Where(d => d.UserId == userId && d.PlanId == plan.Id)
+            .OrderByDescending(d => d.MesocycleSequence).ThenBy(d => d.Muscle).Take(take).ToListAsync(ct);
+        return new VolumeDecisionsView(rows.Select(d => new VolumeDecisionView(
+            d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, d.Confidence, d.Reason, d.PolicyVersion)).ToList());
+    }
+
     public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct)
     {
         await UseUserClockAsync(userId, ct);

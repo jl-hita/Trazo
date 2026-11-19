@@ -64,6 +64,9 @@ public static class PlansEndpoints
         group.MapGet("/current/adaptations", GetAdaptationsAsync).WithName("GetPlanAdaptations")
             .WithSummary("What the engine adjusted in the plan and why (sets, reserve, loads, deloads, absences, omissions), newest first, plus the sessions it reviewed and left as they were. scope=block (default): the block in progress; scope=plan: every block of the active plan.")
             .Produces<AdaptationHistoryView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/current/volume-decisions", GetVolumeDecisionsAsync).WithName("GetPlanVolumeDecisions")
+            .WithSummary("How the user's history changed the weekly sets of each muscle in the blocks of the active plan, with a plain-language reason per decision (newest block first).")
+            .Produces<VolumeDecisionsView>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current/load", GetLoadAsync).WithName("GetPlanLoad")
             .WithSummary("Weekly volume (sets) of every week of the plan: planned (only for the blocks already generated) against completed (weeks already reached).")
             .Produces<PlanLoadView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -186,6 +189,14 @@ public static class PlansEndpoints
         if (!string.Equals(scope, "block", StringComparison.OrdinalIgnoreCase) && !string.Equals(scope, "plan", StringComparison.OrdinalIgnoreCase))
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["scope"] = ["Usa block o plan."] });
         return await plans.GetAdaptationsAsync(userId, take, string.Equals(scope, "plan", StringComparison.OrdinalIgnoreCase), ct) is { } history ? Results.Ok(history) : NoPlan();
+    }
+
+    private static async Task<IResult> GetVolumeDecisionsAsync(
+        ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct, int take = 60)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        if (take is < 1 or > 200) return Results.ValidationProblem(new Dictionary<string, string[]> { ["take"] = ["Debe estar entre 1 y 200."] });
+        return await plans.GetVolumeDecisionsAsync(userId, take, ct) is { } view ? Results.Ok(view) : NoPlan();
     }
 
     private static async Task<IResult> GetLoadAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
