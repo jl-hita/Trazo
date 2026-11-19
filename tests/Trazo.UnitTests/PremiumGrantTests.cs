@@ -152,6 +152,8 @@ public sealed class PremiumGrantTests : IDisposable
 
         await Assert.ThrowsAsync<ArgumentException>(() => service.GrantAsync(
             new GrantRequest(user.Id, PremiumGrantKinds.AdminGrant, "missing-reason", 0, IsPermanent: true), default));
+        await Assert.ThrowsAsync<ArgumentException>(() => service.GrantAsync(
+            new GrantRequest(user.Id, PremiumGrantKinds.ReferralReward, "permanent-referral", 0, IsPermanent: true, Reason: "Not allowed"), default));
 
         var result = await service.GrantAsync(new GrantRequest(
             user.Id, PremiumGrantKinds.AdminGrant, "permanent-admin", 0, IsPermanent: true, Reason: "Internal test account"), default);
