@@ -50,10 +50,15 @@ public static class MesocycleGenerator
             .Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
 
         var sequence = profile.SchedulingMode == Trazo.Domain.Planning.PlanSchedulingMode.Sequence;
+        // The user's muscle priorities become the volume targets the allocator already understands (none = the default dose).
+        var priorities = TrainingMusclePriorityPlanner.Build(
+            profile.Goal, profile.Experience, profile.MusclePriorities,
+            sequence ? profile.SessionsPerPeriod : profile.TrainingDays.Count, profile.MaxSessionMinutes);
+        if (!priorities.Succeeded) return new([], priorities.Errors, null);
         var result = TrainingProgramGenerator.Generate(new TrainingProgramGenerationRequest(
             profile.Goal, profile.Experience, PlanSchedule.WeekStart(profile.StartDate, slot.StartWeek), slot.Weeks,
             sequence ? [] : profile.TrainingDays, profile.MaxSessionMinutes, profile.AvailableEquipment, excluded,
-            MuscleVolumeTargets: null, IsDeload: slot.IsDeload, Split: profile.Split,
+            MuscleVolumeTargets: priorities.Targets.Count > 0 ? priorities.Targets : null, IsDeload: slot.IsDeload, Split: profile.Split,
             RotationIndex: Math.Abs(seed % 1000) + slot.Sequence,
             LoadReferences: loadReferences,
             PreviousBlockExerciseIds: previousBlockExerciseIds,

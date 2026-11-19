@@ -636,7 +636,7 @@
   },
   {
     "id": "bench-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press de Banca con Barra",
     "nameEn": "Barbell Bench Press",
@@ -669,7 +669,7 @@
       "Deltoids",
       "Triceps"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "Strength",
@@ -1038,7 +1038,7 @@
   },
   {
     "id": "cable-fly",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Aperturas con Cable",
     "nameEn": "Cable Fly",
@@ -1070,7 +1070,7 @@
     "secondaryMuscles": [
       "Deltoids"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"
@@ -1124,7 +1124,7 @@
   },
   {
     "id": "cable-lateral-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Elevación Lateral en Polea",
     "nameEn": "Cable Lateral Raise",
@@ -1156,7 +1156,7 @@
     "secondaryMuscles": [
       "UpperBack"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"
@@ -1169,7 +1169,7 @@
   },
   {
     "id": "cable-overhead-tricep-extension",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps por Encima de la Cabeza con Cable",
     "nameEn": "Cable Overhead Tricep Extension",
@@ -1202,7 +1202,7 @@
     "secondaryMuscles": [
       "Deltoids"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"
@@ -1264,7 +1264,7 @@
   },
   {
     "id": "cable-reverse-fly",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Apertura Inversa con Cable",
     "nameEn": "Cable Reverse Fly",
@@ -1297,7 +1297,7 @@
     "secondaryMuscles": [
       "UpperBack"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"
@@ -1686,7 +1686,7 @@
   },
   {
     "id": "db-bench-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press de Banca con Mancuernas",
     "nameEn": "Dumbbell Bench Press",
@@ -1717,7 +1717,7 @@
       "Deltoids",
       "Triceps"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "Strength",
@@ -2137,7 +2137,7 @@
   },
   {
     "id": "dumbbell-reverse-fly",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Pájaro Invertido con Mancuernas",
     "nameEn": "Dumbbell Reverse Fly",
@@ -2170,7 +2170,7 @@
     "secondaryMuscles": [
       "UpperBack"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"
@@ -2632,7 +2632,7 @@
   },
   {
     "id": "hack-squat",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Hack Squat",
     "nameEn": "Hack Squat",
@@ -2667,7 +2667,7 @@
       "Calves",
       "Hamstrings"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "Strength",
@@ -3230,7 +3230,7 @@
   },
   {
     "id": "incline-db-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press con Mancuernas en Banco Inclinado",
     "nameEn": "Incline Dumbbell Press",
@@ -3262,7 +3262,7 @@
       "Deltoids",
       "Triceps"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "Strength",
@@ -4276,7 +4276,7 @@
   },
   {
     "id": "one-arm-seated-cable-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo Unilateral Sentado en Polea",
     "nameEn": "One-Arm Seated Cable Row",
@@ -4310,7 +4310,7 @@
       "Biceps",
       "Deltoids"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "Strength",
@@ -5236,7 +5236,7 @@
   },
   {
     "id": "seated-cable-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo Sentado en Polea",
     "nameEn": "Seated Cable Row",
@@ -5272,7 +5272,7 @@
       "ErectorSpinae",
       "Deltoids"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "Strength",
@@ -6180,7 +6180,7 @@
   },
   {
     "id": "straight-arm-pulldown",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Jalón con Brazos Rectos",
     "nameEn": "Straight-Arm Pulldown",
@@ -6213,7 +6213,7 @@
       "Deltoids",
       "Triceps"
     ],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"

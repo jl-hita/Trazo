@@ -228,6 +228,8 @@ internal static class EnglishCatalog
          "New target load in {0}."),
         ("Vuelta tras una ausencia: {0} sesión(es) más ligeras.",
          "Coming back after time away: {0} lighter session(s)."),
+        ("Prioridades musculares actualizadas: se aplican a los bloques que se generen a partir de ahora.",
+         "Muscle priorities updated: they apply to the blocks generated from now on."),
         ("Programa movido: {0} sesiones cambian de fecha.",
          "Program moved: {0} sessions change date."),
         ("Sesión omitida a propósito: el plan sigue con la siguiente.",

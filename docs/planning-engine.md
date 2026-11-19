@@ -162,8 +162,8 @@ text so the same mapping works on PostgreSQL and on SQLite in tests. A partial u
       better than prescribing knee push-ups to an intermediate. *Why in the engine and not in a catalog migration:*
       the production catalog is not this repository's seed (the seeder never overwrites rows and administrators edit
       priorities), and the right order depends on the profile (goal, level), which a single stored number cannot
-      express. One fault is data and stays open: `bench-press` and `db-bench-press` are `Intermediate` in production,
-      so beginners never get them; the engine must not override a minimum level (see section 8).
+      express. The catalog fault that kept `bench-press` and `db-bench-press` away from beginners was DATA and was fixed
+      in the seed (see "Catalog experience levels" below); the engine never overrides a minimum level.
     - **The hinge slot trains the hamstrings.** When the profile has a hinge with hamstrings as a primary muscle, glute
       or upper-back variants (bridge, hip thrust, rack pull) are not candidates for that slot.
     - **Strength is built around a main lift.** Each session opens with a lift that accepts high loads (barbell, trap
@@ -341,9 +341,8 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 - The week follows UTC. A device-timezone parameter can be added when the Android app needs it.
 - Intensification blocks (strength plans for non-beginners, second half) change the prescription of the heavy lifts: see "Intensification blocks" below.
 - The muscle questionnaire (`TrainingMuscleFeedback*`) is available in the library but not exposed.
-- Catalog data the engine cannot fix: `bench-press` and `db-bench-press` are `Intermediate` in the production catalog, so
-  beginners never receive them. It needs a data migration or an administrator edit (the seeder never overwrites rows);
-  it is a product decision and is not done.
+- Catalog levels live in the data, not in the engine: see "Catalog experience levels" below. Rows an administrator already
+  edited keep their value (the seeder only refreshes untouched rows of a lower seed version), so check them in the admin.
 - Advanced plans of five or six long sessions stay well under the time offered: the weekly ceilings per muscle (20 sets)
   are reached first. Automatic splits for five and six days, accessory variety between days and rotation between blocks
   outside strength are unchanged.
@@ -624,3 +623,36 @@ between 2 and one below the plan).
 
 It is informative: the engine does not add sets to the sessions the user does attend to compensate for the ones they do not, and it does not rewrite
 the days of the plan. The one-session tolerance is a product convention, not a physiological value.
+
+## Muscle priorities (Emphasize / Grow / Maintain)
+
+A generated hypertrophy plan accepts a `musclePriorities` map at creation (`POST /api/v1/plans`) and a replacement through
+`PUT /api/v1/plans/current/muscle-priorities`. A muscle that is not listed is Grow (the default dose). They are stored in
+`training_plans.MusclePriorities` as `"Muscle:Priority"` entries and returned in `PlanView.musclePriorities`.
+
+- **Emphasize**: weekly target at the top of the default range of the level (default + tolerance), never above 18 effective sets; the
+  allocator keeps its usual +/-2 sets around it. At most 3 muscles can be emphasized.
+- **Maintain**: half of the default dose, never below 2 sets. A maintained muscle does not lift the absolute ceiling of the
+  compounds that also train it, so a maintenance priority never raises that muscle's volume.
+- Configurable muscles: chest, lats, upper back, deltoids, biceps, triceps, quadriceps, hamstrings, glutes, calves. Only hypertrophy.
+- Editing applies to the blocks generated from then on; the block in progress is not rewritten. The change is recorded as a
+  `muscle_priorities` adaptation.
+- Emphasis only has effect where accessories and set ceilings leave room: a muscle already saturated by compounds does not grow.
+- The numbers (half the dose, top of range, 18/20 sets) are internal product heuristics, not validated physiological thresholds.
+
+## Catalog experience levels
+
+`minimumExperience` is a property of the exercise, set from three criteria and compared by the generator with the user's level
+(it is never relaxed by the engine):
+
+- **Beginner**: the path is guided or supported (machine, cable, bench, Smith, bodyweight that can be regressed) or it is a free
+  weight with a low technical demand and a low cost of failure (flat bench press with safeties, dumbbell presses and rows).
+- **Intermediate**: loaded squat/hinge patterns with a real technical demand (bar position, bracing, hip hinge under load),
+  balance-limited unilateral work, or a prerequisite strength (pull-ups, dips).
+- **Advanced**: pauses, deficits, strength-gated or high-skill variants.
+
+These are product criteria, not validated science. Seed version 3 moved twelve exercises from Intermediate to Beginner because
+their level contradicted siblings that were already Beginner (for example `seated-cable-row` against `kneeling-cable-row`):
+`bench-press`, `db-bench-press`, `incline-db-press`, `seated-cable-row`, `one-arm-seated-cable-row`, `hack-squat`, `cable-fly`,
+`cable-lateral-raise`, `cable-reverse-fly`, `dumbbell-reverse-fly`, `cable-overhead-tricep-extension` and `straight-arm-pulldown`.
+`ExerciseSeedAuditTests` pins the families that must share a level and the exercises that must NOT be relaxed.
