@@ -44,6 +44,8 @@ public sealed class PremiumGrant
     public bool IsPermanent { get; set; }
     /// <summary>Required explanation for a manual administrative grant.</summary>
     public string? GrantReason { get; set; }
+    /// <summary>Superadmin user id that created a manual grant.</summary>
+    public string? GrantedBy { get; set; }
     public required string Status { get; set; }
     public DateTimeOffset GrantedAt { get; set; }
     /// <summary>Effective window of an active grant. Grants of one user are chained, never overlapped.</summary>
