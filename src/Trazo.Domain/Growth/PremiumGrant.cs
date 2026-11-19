@@ -40,6 +40,10 @@ public sealed class PremiumGrant
     /// <summary>Natural key of the reason (the referral, the account...). (Kind, SourceKey) is unique, so a reason can never be rewarded twice.</summary>
     public required string SourceKey { get; set; }
     public int Days { get; set; }
+    /// <summary>True when this grant has no expiry. Only manual superadmin grants may be permanent.</summary>
+    public bool IsPermanent { get; set; }
+    /// <summary>Required explanation for a manual administrative grant.</summary>
+    public string? GrantReason { get; set; }
     public required string Status { get; set; }
     public DateTimeOffset GrantedAt { get; set; }
     /// <summary>Effective window of an active grant. Grants of one user are chained, never overlapped.</summary>
