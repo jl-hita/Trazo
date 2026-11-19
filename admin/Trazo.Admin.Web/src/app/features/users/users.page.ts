@@ -190,7 +190,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
           <section class="premium-section" aria-label="Premium access management">
             <h3>Premium access</h3>
             @if (premiumLoading()) { <p class="hint">Loading Premium history…</p> }
-            @if (premiumGrants().some(g => g.isCurrent)) { <p class="premium-current">Premium access currently active through a grant.</p> }
+            @if (premiumCurrent()) { <p class="premium-current">Premium access currently active through a grant.</p> }
             @for (g of premiumGrants(); track g.id) {
               <div class="premium-grant">
                 <strong>{{ g.permanent ? 'Permanent Premium' : g.days + ' days of Premium' }} · {{ g.status }}</strong>
@@ -273,6 +273,7 @@ export class UsersPageComponent {
   private readonly auth = inject(AuthService);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
+  private premiumRequestId = 0;
 
   protected readonly roles = ROLES;
   protected readonly users = signal<AdminUserSummary[]>([]);
@@ -299,6 +300,7 @@ export class UsersPageComponent {
   protected readonly confirming = signal<UserAction | null>(null);
   protected readonly deleteConfirm = signal('');
   protected readonly premiumGrants = signal<AdminPremiumGrant[]>([]);
+  protected readonly premiumCurrent = computed(() => this.premiumGrants().some(g => g.isCurrent));
   protected readonly premiumLoading = signal(false);
   protected readonly premiumDuration = signal('30');
   protected readonly premiumReason = signal('');
@@ -440,10 +442,16 @@ export class UsersPageComponent {
   }
 
   private async loadPremiumGrants(userId: string): Promise<void> {
+    const requestId = ++this.premiumRequestId;
     this.premiumLoading.set(true);
-    try { this.premiumGrants.set(await this.api.listPremiumGrants(userId)); }
-    catch (e) { this.panelError.set(errorMessage(e)); }
-    finally { this.premiumLoading.set(false); }
+    try {
+      const grants = await this.api.listPremiumGrants(userId);
+      if (requestId === this.premiumRequestId && this.selected()?.id === userId) this.premiumGrants.set(grants);
+    } catch (e) {
+      if (requestId === this.premiumRequestId) this.panelError.set(errorMessage(e));
+    } finally {
+      if (requestId === this.premiumRequestId) this.premiumLoading.set(false);
+    }
   }
 
   protected async deleteAccount(): Promise<void> {
