@@ -240,6 +240,72 @@ public abstract class PrescriptionHistoryScenarios(string? postgres) : PlansApiB
         Assert.Contains(exercise, ExerciseIds(now.OriginalPrescriptionJson!));
     }
 
+    // ------------------------------------------------------------------ concurrent edits
+
+    [ScenarioFact]
+    public async Task Concurrent_edits_of_the_same_session_must_not_silently_overwrite_each_other()
+    {
+        await StartPlanAsync("hist-concurrency@example.com");
+        var sessionId = (await SessionsAsync()).First().Id;
+
+        // Two independent request scopes load the same row before either one saves. This is a deterministic
+        // interleaving of the read/modify/write sequence used by SwapExerciseAsync and AddExerciseAsync.
+        using var firstScope = _factory.Services.CreateScope();
+        using var secondScope = _factory.Services.CreateScope();
+        var firstDb = firstScope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var secondDb = secondScope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var first = await firstDb.PlannedSessions.SingleAsync(s => s.Id == sessionId);
+        var second = await secondDb.PlannedSessions.SingleAsync(s => s.Id == sessionId);
+        var original = first.PrescriptionJson;
+        Assert.Equal(original, second.PrescriptionJson);
+
+        static string WithDistinctSets(string json, int sets)
+        {
+            var root = JsonNode.Parse(json)!.AsObject();
+            root["exercises"]!.AsArray()[0]!.AsObject()["sets"] = sets;
+            return root.ToJsonString();
+        }
+
+        var firstAfter = WithDistinctSets(original, 17);
+        var secondAfter = WithDistinctSets(original, 19);
+        var now = DateTimeOffset.UtcNow;
+
+        first.PrescriptionJson = firstAfter;
+        firstDb.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = first.PlanId, Kind = "user_manual_plan_edit", ExerciseIds = [],
+            SessionsChanged = 1, Explanation = "Concurrent edit A", AppliedAt = now, Source = PrescriptionSources.User,
+            SchemaVersion = PrescriptionChangeTrace.SchemaVersion,
+            ChangesJson = PrescriptionChangeTrace.Serialize([
+                new SessionChange(PrescriptionChangeTrace.Modified, first.Id, first.MesocycleId, first.WeekNumber,
+                    first.SequenceIndex, original, firstAfter)
+            ])
+        });
+        await firstDb.SaveChangesAsync();
+
+        // The second context still holds the original value. A correct concurrency guard must reject this stale write,
+        // rather than accepting it and leaving two history entries that branch from the same before-state.
+        second.PrescriptionJson = secondAfter;
+        secondDb.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = second.PlanId, Kind = "user_manual_plan_edit", ExerciseIds = [],
+            SessionsChanged = 1, Explanation = "Concurrent edit B", AppliedAt = now.AddTicks(1), Source = PrescriptionSources.User,
+            SchemaVersion = PrescriptionChangeTrace.SchemaVersion,
+            ChangesJson = PrescriptionChangeTrace.Serialize([
+                new SessionChange(PrescriptionChangeTrace.Modified, second.Id, second.MesocycleId, second.WeekNumber,
+                    second.SequenceIndex, original, secondAfter)
+            ])
+        });
+
+        var conflict = await Record.ExceptionAsync(() => secondDb.SaveChangesAsync());
+        Assert.IsType<DbUpdateConcurrencyException>(conflict);
+
+        var persisted = (await SessionsAsync()).Single(s => s.Id == sessionId);
+        Assert.Equal(firstAfter, persisted.PrescriptionJson);
+        Assert.Single(await RowsAsync("user_manual_plan_edit"));
+        AssertChain(persisted, await RowsAsync());
+    }
+
     // ------------------------------------------------------------------ manual plans
 
     private static object Manual(string name, params (string Title, string Exercise, int Sets)[] days) => new
