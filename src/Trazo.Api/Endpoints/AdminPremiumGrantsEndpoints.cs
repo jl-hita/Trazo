@@ -31,7 +31,8 @@ public static class AdminPremiumGrantsEndpoints
         var history = rows.Select(x => new AdminPremiumGrantView(
             x.Id, x.Kind, x.Status, x.Days, x.IsPermanent, x.StartsAt, x.EndsAt, x.GrantReason, x.GrantedBy,
             x.GrantedAt, x.VoidedAt, x.VoidReason, x.VoidedBy,
-            x.Status == PremiumGrantStatuses.Active && x.StartsAt <= now && (x.IsPermanent || x.EndsAt > now))));
+            x.Status == PremiumGrantStatuses.Active && x.StartsAt <= now && (x.IsPermanent || x.EndsAt > now))).ToArray();
+        return Results.Ok(history);
     }
 
     private static async Task<IResult> GrantAsync(
