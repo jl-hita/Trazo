@@ -196,6 +196,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
                 <strong>{{ g.permanent ? 'Permanent Premium' : g.days + ' days of Premium' }} · {{ g.status }}</strong>
                 <span>{{ g.startsAt ? 'Starts ' + formatDate(g.startsAt) : 'Not scheduled' }}{{ g.permanent ? '' : (g.endsAt ? ' · Ends ' + formatDate(g.endsAt) : '') }}</span>
                 @if (g.reason) { <span>Reason: {{ g.reason }}</span> }
+                @if (g.grantedBy) { <span>Granted by: {{ g.grantedBy }}</span> }
                 @if (g.revokedAt) { <span>Revoked {{ formatDate(g.revokedAt) }}{{ g.revocationReason ? ' · ' + g.revocationReason : '' }}</span> }
                 @if (g.kind === 'admin_grant' && g.status === 'active') {
                   @if (premiumRevokeId() === g.id) {
