@@ -222,7 +222,7 @@ public sealed class LongitudinalScenarioTests
         var b = struggling.Decide();
         Assert.True(a.Decisions.Sum(d => d.ProposedSets) > b.Decisions.Sum(d => d.ProposedSets));
         Assert.All(a.Decisions.Concat(b.Decisions), d => Assert.False(string.IsNullOrWhiteSpace(d.Reason)));
-        Assert.Equal("longitudinal-1.1", LongitudinalPolicy.Version);
+        Assert.Equal("longitudinal-1.2", LongitudinalPolicy.Version);
     }
 
     // Consolidation: one favorable block is a sign, not a reason to raise the individual reference.

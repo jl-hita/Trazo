@@ -34,7 +34,7 @@ internal sealed record Behavior
 internal sealed class PlanSimulator
 {
     public static readonly IReadOnlyList<TrainingExerciseCandidate> Catalog = PlanTestCatalog.Candidates();
-    private static readonly DateTimeOffset Start = new(2026, 11, 16, 9, 0, 0, TimeSpan.Zero);
+    internal static readonly DateTimeOffset Start = new(2026, 11, 16, 9, 0, 0, TimeSpan.Zero);
 
     public PlanProfile Profile { get; set; }
     public int Seed { get; }

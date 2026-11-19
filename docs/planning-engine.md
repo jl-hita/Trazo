@@ -673,7 +673,7 @@ their level contradicted siblings that were already Beginner (for example `seate
 `cable-lateral-raise`, `cable-reverse-fly`, `dumbbell-reverse-fly`, `cable-overhead-tricep-extension` and `straight-arm-pulldown`.
 `ExerciseSeedAuditTests` pins the families that must share a level and the exercises that must NOT be relaxed.
 
-## Longitudinal learning (policy `longitudinal-1.1`)
+## Longitudinal learning (policy `longitudinal-1.2`)
 
 The history of a user can move the weekly dose of a muscle in the NEXT block. It never touches the block in progress; short-term
 adaptation (fatigue, pain, frequency) is unchanged.
@@ -722,4 +722,32 @@ Dismissing starts a cooldown for the same days. Returning to the original days i
 `POST /plans/current/frequency/revert` goes back at any time; every step stays in the history. Manual and sequence plans are excluded.
 Endpoints: `GET /plans/current/frequency`, `POST .../proposals/{id}/accept`, `.../dismiss`, `POST .../revert`.
 
-Not yet implemented: carrying learning into a new plan (cross-plan learning).
+### Learning across plans (policy `longitudinal-1.2`)
+
+The history belongs to the user, not to a plan: observations and decisions are stored with `UserId`, and a new plan reads those of the
+same user only (every query filters by `UserId`; nothing is ever read for or from another user). `TrainingPlanService.CreateAsync` and
+every later block go through the same `LongitudinalLearning.ProposeAsync` and `LongitudinalEngine.Propose`; there is no second engine.
+Nothing new is stored: what is carried is derived from `muscle_week_observations` and `longitudinal_decisions`, and the new plan's first
+block leaves one `longitudinal_decisions` row per muscle (action `carry`, `hold` or `abstain`) with its signals and policy version.
+
+What is carried (`CrossPlanCarry`). Not a volume: the OFFSET (in sets) the earlier plan had earned over ITS baseline, re-applied over the
+NEW baseline, so a different frequency or priority cannot import an absolute number. The offset is the decision the earlier plan would
+have taken for its next block, with the very same rules (two favorable blocks in a row, confidence 0.65 to go up, pain abstains). Then:
+
+| Factor | Effect |
+|---|---|
+| Age of the last evidence of the muscle | Full weight up to 56 days; linear fade to nothing at 240 days (`CarryOverFullWeightDays`, `CarryOverExpiryDays`). A long break is the same as old history. The offset is multiplied by the weight and rounded; confidence is multiplied by it too. |
+| Confidence after fading | An increase needs 0.65, a reduction 0.50. Below that, nothing is carried. |
+| Weekly structure changed (days or split) or priority of the muscle changed | An increase is NOT carried (it was earned in other conditions). A reduction is, because poor tolerance is the safer thing to remember. |
+| Goal other than hypertrophy, manual plans | Not eligible: they are not in the history the plan learns from. |
+| Size | An increase starts at most 1 set over the baseline (`MaximumCarriedIncreaseSets`); reductions are limited by the usual 3-set band and floor. Maintain never goes up. |
+
+It only sets where the new plan STARTS. The evidence of the earlier plan is weighed once (to compute the offset) and is not weighed again
+as new blocks; from the second block on, the new plan's own blocks decide with the ordinary rules, starting from the carried reference.
+Earlier blocks keep joining the "favorable blocks in a row" count only while they still apply (same structure and priority, not faded), so
+data from other conditions cannot complete the two blocks a new plan needs to go up. Ordinary adaptations (load, fatigue, safety) are untouched.
+With no usable history the block is exactly the one generated before (covered by
+`A_user_without_history_gets_exactly_the_block_the_generator_made_before` and the API scenarios, which compare two users created with the
+same seed). All limits are internal product criteria, not physiology; confidence describes how much data supports an estimate, never a
+guarantee. `GET /plans/current/volume-decisions` shows the `carry` decisions of the active plan; the `action` field now has this extra
+value (additive; the Android app does not read this endpoint).

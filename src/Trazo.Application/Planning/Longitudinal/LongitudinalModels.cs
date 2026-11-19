@@ -11,7 +11,8 @@ public enum ChangeResponse { Unknown, Favorable, Unclear, Unfavorable }
 
 public enum DeloadResponse { Unknown, Positive, Neutral, Negative }
 
-public enum VolumeAction { Increase, Decrease, Hold, Abstain }
+/// <summary>Carry: the first block of a new plan starts from the reference learned in an earlier plan (it can be zero sets away from the baseline).</summary>
+public enum VolumeAction { Increase, Decrease, Hold, Abstain, Carry }
 
 /// <summary>The periods of one block of one plan for one muscle, in chronological order of blocks (plan, then sequence).</summary>
 public sealed record BlockEvidence(Guid PlanId, int Sequence, bool IsDeload, IReadOnlyList<Trazo.Domain.Planning.MuscleWeekObservation> Periods);

@@ -70,7 +70,7 @@ public sealed class LongitudinalDecision
     /// <summary>The block the decision was applied to.</summary>
     public int MesocycleSequence { get; set; }
     public required string Muscle { get; set; }
-    /// <summary>increase, decrease, hold or abstain.</summary>
+    /// <summary>increase, decrease, hold, abstain or carry (the first block of a new plan, from the history of earlier plans).</summary>
     public required string Action { get; set; }
     /// <summary>The weekly target the engine would use without learning (level and priority only).</summary>
     public decimal BaselineSets { get; set; }

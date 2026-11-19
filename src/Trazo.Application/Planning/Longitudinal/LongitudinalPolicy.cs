@@ -13,7 +13,7 @@ namespace Trazo.Application.Planning.Longitudinal;
 /// </summary>
 public static class LongitudinalPolicy
 {
-    public const string Version = "longitudinal-1.1";
+    public const string Version = "longitudinal-1.2";
 
     // ---- Quality of an exposure
     /// <summary>A muscle worked with fewer effective sets than this in a session did not get a real exposure (same limit as <c>LoadMetrics</c>).</summary>
@@ -65,6 +65,14 @@ public static class LongitudinalPolicy
     public const decimal StepSets = 1m;
     public const decimal MaximumAboveBaselineSets = 3m;
     public const decimal MaximumBelowBaselineSets = 3m;
+
+    // ---- Carrying what was learned into a new plan (cross-plan learning; product criteria, not physiological values)
+    /// <summary>Days after the last evidence of a muscle during which the history keeps its full weight (a normal gap between two plans).</summary>
+    public const int CarryOverFullWeightDays = 56;
+    /// <summary>Days after the last evidence at which the history no longer says anything: the new plan starts from its own baseline.</summary>
+    public const int CarryOverExpiryDays = 240;
+    /// <summary>Largest increase over the baseline a new plan may start with. Smaller than <see cref="MaximumAboveBaselineSets"/>: the old plan earned it in other conditions.</summary>
+    public const decimal MaximumCarriedIncreaseSets = 1m;
 
     // ---- Frequency evidence (descriptive; it does not change a plan by itself)
     public const int MinimumPeriodsPerFrequencyBucket = 3;

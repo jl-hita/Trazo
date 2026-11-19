@@ -204,7 +204,16 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var candidates = await LoadCandidatesAsync(ct);
         var firstSlot = SlotsOf(plan).First(slot => slot.Contains(1));
         var loads = await LoadReferencesAsync(userId, ct);
-        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
+        // What this user's earlier plans showed about each muscle sets where this plan starts (see LongitudinalLearning); with no usable
+        // history nothing is learned and the block is the one the generator always made. The plan is not stored yet, so it is passed whole.
+        var learning = await LongitudinalLearning.ProposeAsync(db, plan, firstSlot, profile, now, ct);
+        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads, learnedTargets: learning.LearnedTargets);
+        var decisions = learning.Decisions;
+        if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
+        {
+            generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
+            decisions = [];
+        }
         if (!generation.Succeeded)
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
                 "No se pudo generar un plan con ese perfil.", new Dictionary<string, string[]> { ["plan"] = generation.Errors.ToArray() });
@@ -212,6 +221,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         AddMesocycle(plan, firstSlot, generation, now, 1);
 
         db.TrainingPlans.Add(plan);
+        db.LongitudinalDecisions.AddRange(decisions);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -2052,7 +2062,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return mesocycle;
     }
 
-    private static PlanProfile ProfileOf(TrainingPlan plan) => new(
+    internal static PlanProfile ProfileOf(TrainingPlan plan) => new(
         Enum.Parse<TrainingGoal>(plan.Goal), Enum.Parse<TrainingExperience>(plan.Experience), plan.StartDate, plan.TotalWeeks,
         IsSequence(plan) ? [] : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
         plan.MaxSessionMinutes, plan.AvailableEquipment,
@@ -2065,7 +2075,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             .Where(pair => pair.Value != TrainingMusclePriority.Grow)
             .OrderBy(pair => pair.Key).Select(pair => $"{pair.Key}:{pair.Value}").ToArray();
 
-    private static IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority> DecodePriorities(IEnumerable<string> stored)
+    internal static IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority> DecodePriorities(IEnumerable<string> stored)
     {
         var result = new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>();
         foreach (var entry in stored)

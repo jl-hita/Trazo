@@ -36,13 +36,31 @@ public static class LongitudinalLearning
 
         // The rows just built are tracked but not saved yet, so they come from the refresh, not from a new query.
         var observations = await RefreshObservationsAsync(db, plan.UserId, now, ct);
-        var planOrder = (await db.TrainingPlans.AsNoTracking().Where(p => p.UserId == plan.UserId).Select(p => new { p.Id, p.CreatedAt }).ToListAsync(ct))
-            .OrderBy(p => p.CreatedAt).Select((p, index) => (p.Id, Order: index)).ToDictionary(p => p.Id, p => p.Order);
+        var userPlans = await db.TrainingPlans.AsNoTracking().Where(p => p.UserId == plan.UserId).ToListAsync(ct);
+        // The plan being created is not stored yet and is the newest of the user's plans (it was just created), so it goes last.
+        userPlans = userPlans.Any(p => p.Id == plan.Id)
+            ? userPlans.OrderBy(p => p.CreatedAt).ThenBy(p => p.Id).ToList()
+            : userPlans.OrderBy(p => p.CreatedAt).ThenBy(p => p.Id).Append(plan).ToList();
+        var planOrder = userPlans.Select((p, index) => (p.Id, Order: index)).ToDictionary(p => p.Id, p => p.Order);
 
-        var applied = (await db.LongitudinalDecisions.AsNoTracking().Where(d => d.PlanId == plan.Id).ToListAsync(ct));
+        var userDecisions = await db.LongitudinalDecisions.AsNoTracking().Where(d => d.UserId == plan.UserId).ToListAsync(ct);
+        var applied = userDecisions.Where(d => d.PlanId == plan.Id).ToList();
+        // What an earlier plan may teach this one: only the user's own generated hypertrophy plans created before it. Everything is read
+        // by UserId, so another user's history can never reach this block.
+        var earlier = userPlans
+            .Where(p => p.Id != plan.Id && planOrder[p.Id] < planOrder[plan.Id] && p.Origin == TrainingPlanOrigin.Generated
+                && string.Equals(p.Goal, nameof(TrainingGoal.Hypertrophy), StringComparison.Ordinal))
+            .Select(p =>
+            {
+                var past = TrainingPlanService.ProfileOf(p);
+                return new PlanHistory(
+                    p.Id, StructureOf(past), past.Split.ToString(), MesocycleGenerator.Baselines(past),
+                    userDecisions.Where(d => d.PlanId == p.Id).Select(d => new AppliedTarget(d.MesocycleSequence, d.Muscle, d.ProposedSets)).ToList());
+            }).ToList();
         var result = LongitudinalEngine.Propose(
             plan.Id, slot.Sequence, baselines, observations, planOrder,
-            applied.Select(d => new AppliedTarget(d.MesocycleSequence, d.Muscle, d.ProposedSets)).ToList());
+            applied.Select(d => new AppliedTarget(d.MesocycleSequence, d.Muscle, d.ProposedSets)).ToList(),
+            new CrossPlanContext(StructureOf(profile), profile.Split.ToString(), now, earlier));
 
         var decisions = new List<LongitudinalDecision>();
         foreach (var decision in result.Decisions)
@@ -108,6 +126,10 @@ public static class LongitudinalLearning
         }
         return stored;
     }
+
+    /// <summary>Training days of a calendar plan, sessions per period of a sequence plan: the weekly structure the doses were earned under.</summary>
+    private static int StructureOf(PlanProfile p) =>
+        p.SchedulingMode == PlanSchedulingMode.Sequence ? p.SessionsPerPeriod : p.TrainingDays.Count;
 
     private static string Truncate(string text, int max) => text.Length <= max ? text : text[..max];
 }
