@@ -67,6 +67,20 @@ public static class PlansEndpoints
         group.MapGet("/current/volume-decisions", GetVolumeDecisionsAsync).WithName("GetPlanVolumeDecisions")
             .WithSummary("How the user's history changed the weekly sets of each muscle in the blocks of the active plan, with a plain-language reason per decision (newest block first).")
             .Produces<VolumeDecisionsView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/current/frequency", GetFrequencyAsync).WithName("GetPlanFrequency")
+            .WithSummary("The days the user really trains against the plan, the pending reorganisation proposal (created when the change is persistent, never for an irregular week) and the history of proposals.")
+            .Produces<FrequencyOverviewView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapPost("/current/frequency/proposals/{proposalId:guid}/accept", AcceptFrequencyAsync).WithName("AcceptFrequencyProposal")
+            .WithSummary("Accepts a reorganisation proposal: the plan uses the new days from the next block. The block in progress, the sessions and the history are not touched.")
+            .Produces<FrequencyOverviewView>().ProducesProblem(StatusCodes.Status402PaymentRequired)
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapPost("/current/frequency/proposals/{proposalId:guid}/dismiss", DismissFrequencyAsync).WithName("DismissFrequencyProposal")
+            .WithSummary("Declines a reorganisation proposal. The same days are not offered again for a while.")
+            .Produces<FrequencyOverviewView>().ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapPost("/current/frequency/revert", RevertFrequencyAsync).WithName("RevertFrequency")
+            .WithSummary("Goes back to the days before the last accepted reorganisation, from the next block. Nothing is deleted.")
+            .Produces<FrequencyOverviewView>().ProducesProblem(StatusCodes.Status402PaymentRequired)
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
         group.MapGet("/current/load", GetLoadAsync).WithName("GetPlanLoad")
             .WithSummary("Weekly volume (sets) of every week of the plan: planned (only for the blocks already generated) against completed (weeks already reached).")
             .Produces<PlanLoadView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -197,6 +211,33 @@ public static class PlansEndpoints
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         if (take is < 1 or > 200) return Results.ValidationProblem(new Dictionary<string, string[]> { ["take"] = ["Debe estar entre 1 y 200."] });
         return await plans.GetVolumeDecisionsAsync(userId, take, ct) is { } view ? Results.Ok(view) : NoPlan();
+    }
+
+    private static async Task<IResult> GetFrequencyAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        return await plans.GetFrequencyAsync(userId, ct) is { } view ? Results.Ok(view) : NoPlan();
+    }
+
+    private static async Task<IResult> AcceptFrequencyAsync(Guid proposalId, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.AcceptFrequencyProposalAsync(userId, proposalId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> DismissFrequencyAsync(Guid proposalId, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.DismissFrequencyProposalAsync(userId, proposalId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> RevertFrequencyAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.RevertFrequencyAsync(userId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 
     private static async Task<IResult> GetLoadAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)

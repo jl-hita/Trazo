@@ -58,6 +58,21 @@ public sealed record MuscleResponseProfile(
 {
     /// <summary>The most recent non-deload block with enough valid periods, or null.</summary>
     public BlockSummary? LastQualifiedBlock => Blocks.LastOrDefault(b => b.Verdict != BlockVerdict.Insufficient);
+
+    /// <summary>How many of the latest qualified blocks, counting back from the last one, were favorable without interruption.</summary>
+    public int FavorableBlocksInARow
+    {
+        get
+        {
+            var count = 0;
+            foreach (var block in Blocks.Where(b => b.Verdict != BlockVerdict.Insufficient).Reverse())
+            {
+                if (block.Verdict != BlockVerdict.Favorable) break;
+                count++;
+            }
+            return count;
+        }
+    }
 }
 
 public sealed record VolumeDecision(

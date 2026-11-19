@@ -195,7 +195,8 @@ public sealed record NextSessionView(
 /// The pace the user really keeps against the plan's: <c>State</c> is Unknown, OnTrack, Below or Above; <c>Observed</c> and <c>Nominal</c> are sessions
 /// per seven days; <c>SuggestedSessionsPerWeek</c> is only set when the pace is clearly lower. Informative: it changes nothing in the plan.
 /// </summary>
-public sealed record FrequencyView(string State, decimal? Observed, int Nominal, int? SuggestedSessionsPerWeek, string Message);
+public sealed record FrequencyView(
+    string State, decimal? Observed, int Nominal, int? SuggestedSessionsPerWeek, string Message, Guid? ProposalId = null);
 
 /// <summary>
 /// What to do about the sessions not done, decided by <c>AdjustmentAdvisor</c> from the real state: <c>Strategy</c> is Continue, Shift, EaseBack
@@ -270,3 +271,17 @@ public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseIn
 public sealed record ManualExerciseInput(
     string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds,
     string? SupersetGroup = null);
+
+/// <summary>
+/// A proposal to reorganise the training days because the user persistently trains a different number of days. <c>Preview</c> is the next block
+/// as the engine would generate it with the new days against the current ones. Nothing changes until it is accepted, and then only the blocks
+/// generated afterwards: the block in progress is never rewritten.
+/// </summary>
+public sealed record FrequencyProposalView(
+    Guid Id, string Kind, string Status, IReadOnlyList<string> FromDays, IReadOnlyList<string> ToDays, string Reason,
+    Trazo.Application.Planning.Frequency.FrequencyPreview? Preview, DateTimeOffset CreatedAt, DateTimeOffset? DecidedAt,
+    int? AppliedFromSequence, string PolicyVersion);
+
+/// <summary>Where the user's real pace stands (Insufficient, OnTrack, Transient, PersistentReduction, PersistentReturn), the pending proposal if any, and the history.</summary>
+public sealed record FrequencyOverviewView(
+    string Pattern, string Message, FrequencyProposalView? Pending, IReadOnlyList<FrequencyProposalView> History, bool CanRevert);

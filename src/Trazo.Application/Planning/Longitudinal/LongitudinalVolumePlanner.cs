@@ -38,7 +38,11 @@ public static class LongitudinalVolumePlanner
         ArgumentNullException.ThrowIfNull(baseline);
         var muscle = baseline.Muscle.ToString();
         var name = MuscleNames.Es(muscle);
-        var previous = Math.Clamp(previousApplied ?? baseline.Target, baseline.Floor, baseline.Ceiling);
+        // The previous dose is held inside the band this baseline allows. When the baseline moved (for example after the user
+        // trains fewer days and the plan was reorganised) a reference earned under the old baseline cannot carry the dose over it.
+        var previous = Math.Clamp(previousApplied ?? baseline.Target,
+            Math.Max(baseline.Floor, baseline.Target - LongitudinalPolicy.MaximumBelowBaselineSets),
+            Math.Min(baseline.Ceiling, baseline.Target + LongitudinalPolicy.MaximumAboveBaselineSets));
         // Without evidence the block never uses more than the previous one did, and never more than the plan's own target.
         var cautious = Math.Min(previous, baseline.Target);
         var last = profile?.LastQualifiedBlock;
@@ -75,6 +79,10 @@ public static class LongitudinalVolumePlanner
             var cap = Math.Min(baseline.Ceiling, baseline.Target + LongitudinalPolicy.MaximumAboveBaselineSets);
             var blocker =
                 baseline.Priority == TrainingMusclePriority.Maintain ? $"{name} está en mantenimiento, así que no se aumenta."
+                : profile.FavorableBlocksInARow < LongitudinalPolicy.FavorableBlocksToIncrease
+                    ? $"solo hay {profile.FavorableBlocksInARow} bloque favorable seguido y se necesitan {LongitudinalPolicy.FavorableBlocksToIncrease} para consolidar un aumento."
+                : profile.ConfidenceScore < LongitudinalPolicy.IncreaseMinimumConfidence
+                    ? $"la confianza de la estimación ({profile.ConfidenceScore.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}) no llega al mínimo para subir la referencia."
                 : last.Adherence < LongitudinalPolicy.MinimumDoseAdherence ? $"no llegaste a completar el volumen prescrito de {name}."
                 : last.Regularity < LongitudinalPolicy.MinimumRegularity ? "los entrenamientos han sido irregulares."
                 : last.DiscomfortAnswers >= LongitudinalPolicy.DiscomfortAnswersToHold ? $"has indicado molestias en ejercicios de {name}."

@@ -38,7 +38,7 @@ public sealed class PlanSqliteCustomizer(ModelCustomizerDependencies dependencie
 /// <summary>SQLite stand-ins for the planning tables, generated from the EF model.</summary>
 internal static class PlanTestSchema
 {
-    private static readonly string[] Tables = ["training_plans", "training_plan_phases", "training_mesocycles", "planned_sessions", "workout_logs", "workout_set_logs", "plan_adaptations", "muscle_week_observations", "longitudinal_decisions", "plan_review_requests", "plan_review_messages"];
+    private static readonly string[] Tables = ["training_plans", "training_plan_phases", "training_mesocycles", "planned_sessions", "workout_logs", "workout_set_logs", "plan_adaptations", "muscle_week_observations", "longitudinal_decisions", "frequency_proposals", "plan_review_requests", "plan_review_messages"];
 
     public static void Create(SetupFixture fixture)
     {

@@ -48,3 +48,27 @@ public sealed class LongitudinalDecisionConfiguration : IEntityTypeConfiguration
         builder.HasOne<TrainingPlan>().WithMany().HasForeignKey(x => x.PlanId).OnDelete(DeleteBehavior.Cascade);
     }
 }
+
+public sealed class FrequencyProposalConfiguration : IEntityTypeConfiguration<FrequencyProposal>
+{
+    public void Configure(EntityTypeBuilder<FrequencyProposal> builder)
+    {
+        builder.ToTable("frequency_proposals");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Kind).HasMaxLength(10).IsRequired();
+        builder.Property(x => x.Status).HasMaxLength(12).IsRequired();
+        builder.Property(x => x.FromDays).HasMaxLength(80).IsRequired();
+        builder.Property(x => x.ToDays).HasMaxLength(80).IsRequired();
+        builder.Property(x => x.FromSplit).HasMaxLength(20);
+        builder.Property(x => x.ToSplit).HasMaxLength(20);
+        builder.Property(x => x.Reason).HasMaxLength(900).IsRequired();
+        builder.Property(x => x.PreviewJson).HasMaxLength(4000).IsRequired();
+        builder.Property(x => x.PolicyVersion).HasMaxLength(30).IsRequired();
+        // At most one pending proposal per plan: two requests that refresh at once cannot leave two.
+        builder.HasIndex(x => x.PlanId).IsUnique().HasFilter("\"Status\" = 'pending'");
+        builder.HasIndex(x => new { x.PlanId, x.CreatedAt });
+        builder.HasIndex(x => new { x.UserId, x.CreatedAt });
+        builder.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne<TrainingPlan>().WithMany().HasForeignKey(x => x.PlanId).OnDelete(DeleteBehavior.Cascade);
+    }
+}

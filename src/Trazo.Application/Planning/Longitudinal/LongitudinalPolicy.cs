@@ -13,7 +13,7 @@ namespace Trazo.Application.Planning.Longitudinal;
 /// </summary>
 public static class LongitudinalPolicy
 {
-    public const string Version = "longitudinal-1.0";
+    public const string Version = "longitudinal-1.1";
 
     // ---- Quality of an exposure
     /// <summary>A muscle worked with fewer effective sets than this in a session did not get a real exposure (same limit as <c>LoadMetrics</c>).</summary>
@@ -50,6 +50,15 @@ public static class LongitudinalPolicy
     public const int MinimumFeedbackAnswers = 3;
     public const decimal LowStimulusShare = 0.5m;
     public const int DiscomfortAnswersToHold = 2;
+
+    // ---- Consolidating a change of the individual reference (product criteria, not physiological values)
+    /// <summary>
+    /// Consecutive favorable blocks needed before the weekly reference of a muscle goes up. One favorable block is a sign, two are a
+    /// repeated pattern; this only governs the learned reference. Ordinary short-term adaptation (loads, fatigue, deloads, pain) never waits for it.
+    /// </summary>
+    public const int FavorableBlocksToIncrease = 2;
+    /// <summary>Confidence an increase needs, above the medium level: about 0.55 is "some evidence", not a basis to raise the reference.</summary>
+    public const decimal IncreaseMinimumConfidence = 0.65m;
 
     // ---- Size of a change
     /// <summary>Largest change of the weekly target between two consecutive blocks.</summary>

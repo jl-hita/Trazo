@@ -1,5 +1,6 @@
 using Xunit;
 using Trazo.Application.Planning;
+using Trazo.Application.Planning.Frequency;
 using Trazo.Application.Planning.Longitudinal;
 using Trazo.Domain.Planning;
 using Trazo.Training;
@@ -35,7 +36,7 @@ internal sealed class PlanSimulator
     public static readonly IReadOnlyList<TrainingExerciseCandidate> Catalog = PlanTestCatalog.Candidates();
     private static readonly DateTimeOffset Start = new(2026, 11, 16, 9, 0, 0, TimeSpan.Zero);
 
-    public PlanProfile Profile { get; }
+    public PlanProfile Profile { get; set; }
     public int Seed { get; }
     public Guid UserId { get; } = Guid.NewGuid();
     public Guid PlanId { get; } = Guid.NewGuid();
@@ -181,6 +182,46 @@ internal sealed class PlanSimulator
 
     /// <summary>Weekly effective sets of every muscle in one week of a generated block.</summary>
     public static IReadOnlyDictionary<TrainingMuscleGroup, decimal> VolumeOfWeek(MesocycleGeneration block, int weekIndexInBlock = 2) =>
-        block.Quality!.WeeklyMuscleVolumes.First(w => w.WeekNumber == weekIndexInBlock).Muscles
+        block.Quality!.WeeklyMuscleVolumes.OrderBy(w => w.WeekNumber).Skip(weekIndexInBlock - 1).First().Muscles
             .ToDictionary(m => m.MuscleGroup, m => m.EstimatedEffectiveSets);
+
+    // ---- Frequency: the same pure pieces production runs (detector, reorganizer), fed with the workouts the simulation logged.
+
+    private DateOnly _frequencySince = DateOnly.FromDateTime(Start.UtcDateTime);
+    private IReadOnlyList<DayOfWeek>? _originalDays;
+    public IReadOnlyList<DayOfWeek>? OriginalDays => _originalDays;
+    public DateOnly Today => DateOnly.FromDateTime(Start.AddDays(7 * (NextWeek - 1)).UtcDateTime);
+
+    public IReadOnlyList<WeeklyAttendance> Weeks()
+    {
+        var deloadWeeks = Mesocycles.Where(m => m.Value.IsDeload)
+            .SelectMany(m => Sessions.Where(x => x.MesocycleId == m.Key).Select(x => x.WeekNumber)).Distinct()
+            .Select(w => DateOnly.FromDateTime(Start.AddDays(7 * (w - 1)).UtcDateTime)).ToHashSet();
+        return FrequencyPatternDetector.Weeks(
+            Logs.Select(l => l.PerformedOn), Today, _frequencySince, DateOnly.FromDateTime(Start.UtcDateTime), deloadWeeks.Contains);
+    }
+
+    public FrequencyAssessment AssessFrequency() =>
+        FrequencyPatternDetector.Assess(Profile.TrainingDays.Count, _originalDays?.Count, Weeks());
+
+    public FrequencyDraft? ProposeFrequency(FrequencyAssessment? assessment = null, IReadOnlyList<WeeklyAttendance>? weeks = null) =>
+        FrequencyReorganizer.Propose(Profile, assessment ?? AssessFrequency(), weeks ?? Weeks(), _originalDays, Seed, SlotFor(false), Catalog, _previousIds);
+
+    /// <summary>Accepting only changes the days of the blocks generated from now on; every session and workout already there stays.</summary>
+    public void AcceptFrequency(FrequencyDraft draft)
+    {
+        if (draft.Kind == FrequencyDraft.Reduce && _originalDays is null) _originalDays = Profile.TrainingDays;
+        else if (draft.Kind != FrequencyDraft.Reduce && _originalDays is not null && draft.ToDays.OrderBy(x => x).SequenceEqual(_originalDays.OrderBy(x => x))) _originalDays = null;
+        Profile = Profile with { TrainingDays = draft.ToDays, Split = draft.ToSplit is null ? Profile.Split : Enum.Parse<TrainingProgramSplit>(draft.ToSplit) };
+        _frequencySince = Today;
+    }
+
+    /// <summary>Goes back to the days before the accepted reduction, keeping everything that was logged.</summary>
+    public void RevertFrequency()
+    {
+        Assert.NotNull(_originalDays);
+        Profile = Profile with { TrainingDays = _originalDays! };
+        _originalDays = null;
+        _frequencySince = Today;
+    }
 }

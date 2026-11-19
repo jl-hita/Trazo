@@ -538,6 +538,39 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
                 .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
 
+        modelBuilder.Entity("Trazo.Domain.Planning.FrequencyProposal", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<Guid>("PlanId").HasColumnType("uuid");
+            b.Property<string>("Kind").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<string>("Status").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("FromDays").IsRequired().HasMaxLength(80).HasColumnType("character varying(80)");
+            b.Property<string>("ToDays").IsRequired().HasMaxLength(80).HasColumnType("character varying(80)");
+            b.Property<string>("FromSplit").HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("ToSplit").HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<int>("WeeksAnalysed").HasColumnType("integer");
+            b.Property<int>("LowWeeks").HasColumnType("integer");
+            b.Property<string>("Reason").IsRequired().HasMaxLength(900).HasColumnType("character varying(900)");
+            b.Property<string>("PreviewJson").IsRequired().HasMaxLength(4000).HasColumnType("character varying(4000)");
+            b.Property<string>("PolicyVersion").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("DecidedAt").HasColumnType("timestamp with time zone");
+            b.Property<int?>("AppliedFromSequence").HasColumnType("integer");
+            b.HasKey("Id");
+            b.HasIndex("PlanId").IsUnique().HasFilter("\"Status\" = 'pending'");
+            b.HasIndex("PlanId", "CreatedAt");
+            b.HasIndex("UserId", "CreatedAt");
+            b.ToTable("frequency_proposals");
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.FrequencyProposal", b =>
+        {
+            b.HasOne("Trazo.Domain.Planning.TrainingPlan", null)
+                .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+            b.HasOne("Trazo.Domain.Identity.TrazoUser", null)
+                .WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Training.ExerciseCatalogItem", b =>
         {
             b.Property<string>("Id").HasMaxLength(100).HasColumnType("character varying(100)").HasColumnName("exercise_id");

@@ -222,6 +222,37 @@ public sealed class LongitudinalScenarioTests
         var b = struggling.Decide();
         Assert.True(a.Decisions.Sum(d => d.ProposedSets) > b.Decisions.Sum(d => d.ProposedSets));
         Assert.All(a.Decisions.Concat(b.Decisions), d => Assert.False(string.IsNullOrWhiteSpace(d.Reason)));
-        Assert.Equal("longitudinal-1.0", LongitudinalPolicy.Version);
+        Assert.Equal("longitudinal-1.1", LongitudinalPolicy.Version);
+    }
+
+    // Consolidation: one favorable block is a sign, not a reason to raise the individual reference.
+    [Fact]
+    public void One_favorable_block_does_not_raise_the_reference()
+    {
+        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
+        var results = Run(s, new Behavior(), 3);
+        // results[1] is decided with one qualified block behind it, results[2] with two.
+        Assert.DoesNotContain(results[1].Decisions, d => d.Action == VolumeAction.Increase);
+        Assert.Contains(results[1].Decisions, d => d.Reason.Contains("necesitan 2"));
+        Assert.Contains(results[2].Decisions, d => d.Action == VolumeAction.Increase);
+    }
+
+    [Fact]
+    public void No_increase_is_ever_proposed_below_the_minimum_confidence()
+    {
+        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
+        var results = Run(s, new Behavior(), 6);
+        Assert.All(results.SelectMany(r => r.Decisions).Where(d => d.Action == VolumeAction.Increase),
+            d => Assert.True(d.ConfidenceScore >= LongitudinalPolicy.IncreaseMinimumConfidence));
+    }
+
+    // Short-term safety is not behind the consolidation rule: repeated fatigue still lowers the dose after a single block.
+    [Fact]
+    public void Decreases_do_not_wait_for_two_blocks()
+    {
+        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
+        var behavior = new Behavior { MuscleResponse = (_, m, _) => m == Quads ? Response.Poor : Response.Good };
+        var results = Run(s, behavior, 2);
+        Assert.Contains(Of(results, Quads), d => d.Action == VolumeAction.Decrease);
     }
 }

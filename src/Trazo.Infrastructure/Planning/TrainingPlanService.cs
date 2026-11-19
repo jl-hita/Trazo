@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Application.Localization;
 using Trazo.Application.Planning;
+using Trazo.Application.Planning.Frequency;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Billing;
@@ -38,6 +39,12 @@ public interface ITrainingPlanService
     Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct);
     /// <summary>The volume decisions longitudinal learning made for the blocks of the active plan, newest block first, with the reason of each.</summary>
     Task<VolumeDecisionsView?> GetVolumeDecisionsAsync(Guid userId, int take, CancellationToken ct);
+    /// <summary>The user's real pace against the plan, the pending reorganisation proposal (created here when the change is persistent) and the history.</summary>
+    Task<FrequencyOverviewView?> GetFrequencyAsync(Guid userId, CancellationToken ct);
+    Task<PlanResult<FrequencyOverviewView>> AcceptFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct);
+    Task<PlanResult<FrequencyOverviewView>> DismissFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct);
+    /// <summary>Goes back to the days before the last accepted reorganisation. Kept as a record; nothing is deleted.</summary>
+    Task<PlanResult<FrequencyOverviewView>> RevertFrequencyAsync(Guid userId, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
@@ -561,7 +568,17 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             FrequencyState.OnTrack => T("Tu ritmo real coincide con el del plan."),
             _ => T("Aún no hay suficientes sesiones recientes para medir tu ritmo.")
         };
-        return new FrequencyView(advice.State.ToString(), advice.Observed, advice.Nominal, advice.SuggestedSessionsPerWeek, message);
+        Guid? proposalId = null;
+        if (Applicable(plan) && !await IsLockedAsync(plan, ct))
+        {
+            var (_, pending, _) = await RefreshFrequencyAsync(plan, ct);
+            if (pending is not null)
+            {
+                proposalId = pending.Id;
+                message = T("Tu ritmo real no coincide con el del plan y no es algo puntual: tienes una propuesta de reorganización pendiente. Revísala y acéptala si te encaja; no cambia lo que ya está generado.");
+            }
+        }
+        return new FrequencyView(advice.State.ToString(), advice.Observed, advice.Nominal, advice.SuggestedSessionsPerWeek, message, proposalId);
     }
 
     /// <summary>The advisor's decision with its explanation in the request's language.</summary>
@@ -747,6 +764,252 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         });
         await db.SaveChangesAsync(ct);
         return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
+    }
+
+    // ---------------------------------------------------------------- frequency reorganisation
+
+    private static string[] SplitDays(string days) => days.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+    private FrequencyProposalView ToView(FrequencyProposal p) => new(
+        p.Id, p.Kind, p.Status, SplitDays(p.FromDays), SplitDays(p.ToDays), p.Reason, FrequencyReorganizer.ReadPreview(p.PreviewJson),
+        p.CreatedAt, p.DecidedAt, p.AppliedFromSequence, p.PolicyVersion);
+
+    /// <summary>The days the plan had before an accepted reduction that has not been undone, or null.</summary>
+    private static string[]? OriginalDaysOf(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals)
+    {
+        string[]? original = null;
+        foreach (var p in proposals.Where(p => p.Status == FrequencyProposal.Accepted).OrderBy(p => p.DecidedAt))
+        {
+            var to = SplitDays(p.ToDays);
+            var from = SplitDays(p.FromDays);
+            if (original is not null && to.OrderBy(x => x).SequenceEqual(original.OrderBy(x => x))) original = null;
+            else if (original is null && to.Length < from.Length) original = from;
+        }
+        return original is not null && original.Length > plan.TrainingDays.Length ? original : null;
+    }
+
+    private MesocycleSlot? NextSlotOf(TrainingPlan plan) =>
+        SlotsOf(plan).FirstOrDefault(s => plan.Mesocycles.All(m => m.Sequence != s.Sequence));
+
+    private async Task<IReadOnlyList<string>?> LastBlockExerciseIdsAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var previous = plan.Mesocycles.OrderByDescending(m => m.Sequence).FirstOrDefault();
+        if (previous is null) return null;
+        var lastWeek = await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == previous.Id)
+            .OrderByDescending(s => s.WeekNumber).Select(s => s.WeekNumber).FirstOrDefaultAsync(ct);
+        return (await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == previous.Id && s.WeekNumber == lastWeek)
+                .Select(s => s.PrescriptionJson).ToListAsync(ct))
+            .SelectMany(json => PrescriptionJson.Read(json).Select(e => e.ExerciseId)).Distinct().ToArray();
+    }
+
+    private static bool Applicable(TrainingPlan plan) => plan.Origin == TrainingPlanOrigin.Generated && !IsSequence(plan);
+
+    /// <summary>
+    /// Reads the weeks the user really trained and keeps the pending proposal of the plan in line with them: it creates one when the change is
+    /// persistent (never for an irregular week), keeps an equal one as it is (so asking twice changes nothing) and withdraws one that no longer
+    /// applies. It never changes the plan.
+    /// </summary>
+    private async Task<(FrequencyAssessment Assessment, FrequencyProposal? Pending, List<FrequencyProposal> All)> RefreshFrequencyAsync(
+        TrainingPlan plan, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        var anchor = plan.StartDate;
+        var since = anchor;
+        if (all.Where(p => p.Status == FrequencyProposal.Accepted && p.DecidedAt is not null).Select(p => p.DecidedAt!.Value).DefaultIfEmpty().Max() is { } decided
+            && decided != default)
+            since = DateOnly.FromDateTime(decided.UtcDateTime).AddDays(1);
+        var days = (await db.WorkoutLogs.AsNoTracking()
+                .Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted)
+                .Select(l => new { l.PerformedOn, l.PerformedAt, l.LoggedAt }).ToListAsync(ct))
+            .Where(l => (l.LoggedAt - l.PerformedAt).TotalDays <= Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays)
+            .Select(l => l.PerformedOn).ToList();
+        var deloadWeeks = plan.Mesocycles.Where(m => m.IsDeload)
+            .SelectMany(m => Enumerable.Range(m.StartWeek, m.Weeks).Select(w => PlanSchedule.WeekStart(plan.StartDate, w))).ToHashSet();
+        var weeks = FrequencyPatternDetector.Weeks(days, Today, since, anchor, deloadWeeks.Contains);
+        var original = OriginalDaysOf(plan, all);
+        var assessment = FrequencyPatternDetector.Assess(plan.TrainingDays.Length, original?.Length, weeks);
+        var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
+
+        FrequencyDraft? draft = null;
+        if (assessment.Pattern is FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn && NextSlotOf(plan) is { } slot)
+        {
+            var catalog = (await LoadCandidatesAsync(ct)).Candidates;
+            var originalDays = original?.Select(Enum.Parse<DayOfWeek>).ToList();
+            draft = FrequencyReorganizer.Propose(
+                ProfileOf(plan), assessment, weeks, originalDays, plan.Seed, slot, catalog, await LastBlockExerciseIdsAsync(plan, ct));
+        }
+
+        var draftDays = draft is null ? null : string.Join(",", draft.ToDays);
+        if (pending is not null && (draft is null || !string.Equals(pending.ToDays, draftDays, StringComparison.Ordinal)))
+        {
+            pending.Status = FrequencyProposal.Superseded;
+            pending.DecidedAt = now;
+            pending = null;
+        }
+        var cooled = draft is not null && all.Any(p => p.Status == FrequencyProposal.Dismissed && p.ToDays == draftDays
+            && p.DecidedAt > now.AddDays(-FrequencyPolicy.DismissCooldownDays));
+        if (pending is null && draft is not null && !cooled)
+        {
+            pending = new FrequencyProposal
+            {
+                Id = Guid.NewGuid(), UserId = plan.UserId, PlanId = plan.Id, Kind = draft.Kind, Status = FrequencyProposal.Pending,
+                FromDays = string.Join(",", plan.TrainingDays), ToDays = draftDays!, FromSplit = draft.ToSplit is null ? null : plan.Split, ToSplit = draft.ToSplit,
+                WeeksAnalysed = assessment.WeeksAnalysed, LowWeeks = assessment.LowWeeks, Reason = draft.Reason,
+                PreviewJson = FrequencyReorganizer.PreviewJson(draft.Preview), PolicyVersion = FrequencyPolicy.Version, CreatedAt = now
+            };
+            db.FrequencyProposals.Add(pending);
+            all.Add(pending);
+        }
+        if (db.ChangeTracker.HasChanges())
+        {
+            try { await db.SaveChangesAsync(ct); }
+            catch (DbUpdateException)
+            {
+                // Another request created the same proposal first: use theirs.
+                db.ChangeTracker.Clear();
+                all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+                pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
+            }
+        }
+        return (assessment, pending, all);
+    }
+
+    private FrequencyOverviewView FrequencyOverview(TrainingPlan plan, FrequencyAssessment assessment, FrequencyProposal? pending, IReadOnlyList<FrequencyProposal> all)
+    {
+        var canRevert = OriginalDaysOf(plan, all) is not null;
+        var message = pending is not null ? pending.Reason : assessment.Reason;
+        return new FrequencyOverviewView(
+            assessment.Pattern.ToString(), message, pending is null ? null : ToView(pending),
+            all.Where(p => p.Status != FrequencyProposal.Pending).OrderByDescending(p => p.CreatedAt).Select(ToView).ToList(), canRevert);
+    }
+
+    public async Task<FrequencyOverviewView?> GetFrequencyAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return null;
+        var all = await db.FrequencyProposals.AsNoTracking().Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        if (!Applicable(plan) || await IsLockedAsync(plan, ct))
+            return new FrequencyOverviewView(FrequencyPattern.Insufficient.ToString(),
+                T("La reorganización por frecuencia solo se ofrece en un plan generado con calendario."), null, all.Select(ToView).ToList(), false);
+        var (assessment, pending, tracked) = await RefreshFrequencyAsync(plan, ct);
+        return FrequencyOverview(plan, assessment, pending, tracked);
+    }
+
+    private async Task<PlanResult<(TrainingPlan Plan, List<FrequencyProposal> All)>> FrequencyWriteContextAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (!Applicable(plan))
+            return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Fail(PlanFailure.NotAllowed, "La reorganización solo se aplica a un plan generado con calendario.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+        var all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Ok((plan, all));
+    }
+
+    /// <summary>Applies new days to the plan for the blocks generated from now on. The sessions that already exist are not touched.</summary>
+    private async Task<PlanResult<bool>> ApplyFrequencyAsync(TrainingPlan plan, FrequencyProposal proposal, CancellationToken ct)
+    {
+        var slot = NextSlotOf(plan);
+        var toDays = SplitDays(proposal.ToDays);
+        var profile = ProfileOf(plan) with
+        {
+            TrainingDays = toDays.Select(Enum.Parse<DayOfWeek>).ToList(),
+            Split = proposal.ToSplit is null ? ProfileOf(plan).Split : Enum.Parse<TrainingProgramSplit>(proposal.ToSplit)
+        };
+        if (slot is not null)
+        {
+            // The block that will be generated must exist with these days; a plan is never left unable to continue.
+            var check = MesocycleGenerator.Generate(profile, plan.Seed, slot, (await LoadCandidatesAsync(ct)).Candidates, await LastBlockExerciseIdsAsync(plan, ct));
+            if (!check.Succeeded) return PlanResult<bool>.Fail(PlanFailure.GenerationFailed, "No se puede generar el siguiente bloque con esos días; el plan no se ha modificado.");
+        }
+        var now = clock.GetUtcNow();
+        plan.TrainingDays = toDays;
+        if (proposal.ToSplit is not null) plan.Split = proposal.ToSplit;
+        plan.UpdatedAt = now;
+        proposal.Status = FrequencyProposal.Accepted;
+        proposal.DecidedAt = now;
+        proposal.AppliedFromSequence = slot?.Sequence;
+        db.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = "frequency_reorganization", ExerciseIds = [], SessionsChanged = 0, AppliedAt = now, EvidenceAt = now,
+            Explanation = proposal.Kind == "revert"
+                ? $"Vuelves a {toDays.Length} días ({FrequencyReorganizer.DaysEs(toDays.Select(Enum.Parse<DayOfWeek>))}) desde el próximo bloque. Lo ya generado no cambia."
+                : $"Plan reorganizado a {toDays.Length} días ({FrequencyReorganizer.DaysEs(toDays.Select(Enum.Parse<DayOfWeek>))}) desde el próximo bloque. Lo ya generado no cambia."
+        });
+        await db.SaveChangesAsync(ct);
+        return PlanResult<bool>.Ok(true);
+    }
+
+    public async Task<PlanResult<FrequencyOverviewView>> AcceptFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct)
+    {
+        var context = await FrequencyWriteContextAsync(userId, ct);
+        if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
+        var (plan, all) = context.Value;
+        var proposal = all.FirstOrDefault(p => p.Id == proposalId);
+        if (proposal is null) return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta no existe.");
+        if (proposal.Status != FrequencyProposal.Pending)
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta ya no está pendiente.");
+        if (!SplitDays(proposal.FromDays).OrderBy(x => x).SequenceEqual(plan.TrainingDays.OrderBy(x => x)))
+        {
+            proposal.Status = FrequencyProposal.Superseded;
+            proposal.DecidedAt = clock.GetUtcNow();
+            await db.SaveChangesAsync(ct);
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "El plan ha cambiado desde que se hizo la propuesta.");
+        }
+        var applied = await ApplyFrequencyAsync(plan, proposal, ct);
+        if (!applied.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(applied.Failure, applied.Message!);
+        return PlanResult<FrequencyOverviewView>.Ok(await OverviewAfterWriteAsync(plan, ct));
+    }
+
+    public async Task<PlanResult<FrequencyOverviewView>> DismissFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct)
+    {
+        var context = await FrequencyWriteContextAsync(userId, ct);
+        if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
+        var (plan, all) = context.Value;
+        var proposal = all.FirstOrDefault(p => p.Id == proposalId && p.Status == FrequencyProposal.Pending);
+        if (proposal is null) return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta no existe o ya no está pendiente.");
+        proposal.Status = FrequencyProposal.Dismissed;
+        proposal.DecidedAt = clock.GetUtcNow();
+        await db.SaveChangesAsync(ct);
+        return PlanResult<FrequencyOverviewView>.Ok(await OverviewAfterWriteAsync(plan, ct));
+    }
+
+    public async Task<PlanResult<FrequencyOverviewView>> RevertFrequencyAsync(Guid userId, CancellationToken ct)
+    {
+        var context = await FrequencyWriteContextAsync(userId, ct);
+        if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
+        var (plan, all) = context.Value;
+        var original = OriginalDaysOf(plan, all);
+        var last = all.Where(p => p.Status == FrequencyProposal.Accepted).OrderByDescending(p => p.DecidedAt).FirstOrDefault();
+        if (original is null || last is null)
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "No hay ninguna reorganización que revertir.");
+        var now = clock.GetUtcNow();
+        foreach (var pending in all.Where(p => p.Status == FrequencyProposal.Pending)) { pending.Status = FrequencyProposal.Superseded; pending.DecidedAt = now; }
+        var revert = new FrequencyProposal
+        {
+            Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, Kind = "revert", Status = FrequencyProposal.Pending,
+            FromDays = string.Join(",", plan.TrainingDays), ToDays = string.Join(",", original), FromSplit = last.ToSplit is null ? null : plan.Split, ToSplit = last.ToSplit is null ? null : last.FromSplit,
+            WeeksAnalysed = 0, LowWeeks = 0, PolicyVersion = FrequencyPolicy.Version, CreatedAt = now,
+            Reason = "Vuelves a la distribución anterior por decisión tuya. Se aplica desde el próximo bloque y el historial se conserva.",
+            PreviewJson = "{}"
+        };
+        // The pending row (if any) is withdrawn first so the one-pending-per-plan rule holds when this one is added.
+        await db.SaveChangesAsync(ct);
+        db.FrequencyProposals.Add(revert);
+        all.Add(revert);
+        var applied = await ApplyFrequencyAsync(plan, revert, ct);
+        if (!applied.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(applied.Failure, applied.Message!);
+        return PlanResult<FrequencyOverviewView>.Ok(await OverviewAfterWriteAsync(plan, ct));
+    }
+
+    private async Task<FrequencyOverviewView> OverviewAfterWriteAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var all = await db.FrequencyProposals.AsNoTracking().Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
+        return FrequencyOverview(plan, new FrequencyAssessment(FrequencyPattern.OnTrack, plan.TrainingDays.Length, null, 0, 0, T("Tu ritmo se evaluará con las próximas semanas completas.")), pending, all);
     }
 
     // ---------------------------------------------------------------- omit a session on purpose
