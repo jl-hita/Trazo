@@ -52,6 +52,7 @@ public sealed class SetupFixture : IDisposable
               "FirstSeenAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL, "Status" TEXT NOT NULL);
             CREATE TABLE premium_grants (
               "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Kind" TEXT NOT NULL, "SourceKey" TEXT NOT NULL, "Days" INTEGER NOT NULL,
+              "IsPermanent" INTEGER NOT NULL DEFAULT 0, "GrantReason" TEXT NULL, "GrantedBy" TEXT NULL,
               "Status" TEXT NOT NULL, "GrantedAt" TEXT NOT NULL, "StartsAt" TEXT NULL, "EndsAt" TEXT NULL, "OriginUserId" TEXT NULL,
               "OriginSubscriptionId" TEXT NULL, "DeferredSubscriptionId" TEXT NULL, "GoogleExpiryBefore" TEXT NULL, "GoogleExpiryAfter" TEXT NULL,
               "AppliedAt" TEXT NULL, "VoidedAt" TEXT NULL, "VoidReason" TEXT NULL, "VoidedBy" TEXT NULL, "DeferAttempts" INTEGER NOT NULL,
