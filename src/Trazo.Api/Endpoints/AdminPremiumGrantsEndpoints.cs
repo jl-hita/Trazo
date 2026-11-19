@@ -22,10 +22,10 @@ public static class AdminPremiumGrantsEndpoints
         return endpoints;
     }
 
-    private static async Task<IResult> ListAsync(Guid userId, TrazoDbContext db, CancellationToken ct)
+    private static async Task<IResult> ListAsync(Guid userId, TrazoDbContext db, TimeProvider clock, CancellationToken ct)
     {
         if (!await db.Users.AsNoTracking().AnyAsync(x => x.Id == userId, ct)) return Results.NotFound();
-        var now = DateTimeOffset.UtcNow;
+        var now = clock.GetUtcNow();
         var rows = await db.PremiumGrants.AsNoTracking().Where(x => x.UserId == userId)
             .OrderByDescending(x => x.GrantedAt).ToListAsync(ct);
         return Results.Ok(rows.Select(x => new AdminPremiumGrantView(
@@ -36,7 +36,7 @@ public static class AdminPremiumGrantsEndpoints
 
     private static async Task<IResult> GrantAsync(
         Guid userId, AdminPremiumGrantRequest request, ClaimsPrincipal principal, TrazoDbContext db,
-        IPremiumGrantService grants, ILoggerFactory loggerFactory, CancellationToken ct)
+        IPremiumGrantService grants, TimeProvider clock, ILoggerFactory loggerFactory, CancellationToken ct)
     {
         if (!await db.Users.AsNoTracking().AnyAsync(x => x.Id == userId, ct)) return Results.NotFound();
         var reason = request.Reason?.Trim();
