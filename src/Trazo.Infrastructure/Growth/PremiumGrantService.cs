@@ -111,8 +111,9 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
         var end = current.Max()!.Value;
         foreach (var next in rows.Where(x => x.StartsAt > now).OrderBy(x => x.StartsAt))
         {
-            if (next.StartsAt <= end) { if (next.EndsAt > end) end = next.EndsAt!.Value; }
-            else break;
+            if (next.StartsAt > end) break;
+            if (next.IsPermanent) return null;
+            if (next.EndsAt > end) end = next.EndsAt!.Value;
         }
         return end;
     }
