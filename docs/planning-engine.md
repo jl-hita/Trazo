@@ -613,6 +613,14 @@ A review of 20 plans generated from the real exercise library (calendar and sequ
 
 Reviewed and left as they were, with the reason: the selection of exercises (Smith press, leg press, hex-bar deadlift) comes from the catalog's curated priority, which the engine corrects but does not override; shorter leg sessions are the result of reaching the weekly targets with fewer exercises; rest periods of 120 s for 8-12 repetition compounds are at the lower end of what is recommended and raising them lengthens every session estimate; the knee limitation stays an exclusion list of lunges and single-leg work because squats cannot be dropped (see decision 6).
 
+## Indirect stimulus coverage
+
+A secondary muscle counts as a set only where `TrainingExerciseStimulus` says the contribution is meaningful (an audited table, binary: it
+counts a full set or nothing; it is a planning convention, not a measurement). Every active exercise of the seed now has an explicit decision
+(`IsReviewed`), and a test fails when a new seed exercise is added without one. `inverted-row` counts biceps like its bent-knee sibling;
+`cable-reverse-fly` and `rowing-machine` have no meaningful secondary. A graded model (fractions of a set) was not introduced: there is no
+evidence base in the product to calibrate the fractions.
+
 ## Load continuity when an exercise is swapped
 
 TRAZO does not convert a load between two different exercises: a fixed ratio (dumbbell press = x% of barbell press) would be an arbitrary

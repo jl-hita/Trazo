@@ -190,4 +190,15 @@ public sealed class ExerciseSeedAuditTests
         Assert.Equal(entries.Count, entries.Select(x => x.GetProperty("nameEs").GetString()!.Trim().ToLowerInvariant()).Distinct().Count());
         Assert.Equal(entries.Count, entries.Select(x => x.GetProperty("nameEn").GetString()!.Trim().ToLowerInvariant()).Distinct().Count());
     }
+
+    [Fact]
+    public void EveryActiveSeedExerciseHasAReviewedIndirectStimulusDecision()
+    {
+        var unreviewed = Entries()
+            .Where(item => !item.TryGetProperty("isActive", out var active) || active.GetBoolean())
+            .Select(item => item.GetProperty("id").GetString()!)
+            .Where(id => !TrainingExerciseStimulus.IsReviewed(id))
+            .ToList();
+        Assert.True(unreviewed.Count == 0, "Exercises without an indirect-stimulus decision: " + string.Join(", ", unreviewed));
+    }
 }
