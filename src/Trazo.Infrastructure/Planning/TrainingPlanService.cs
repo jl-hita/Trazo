@@ -1548,7 +1548,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var ranges = new Dictionary<string, (int Min, int Max, decimal? Rir)>(StringComparer.Ordinal);
         foreach (var e in sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson)))
+        {
             ranges.TryAdd(e.ExerciseId, (e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve));
+        }
+        // The exercise a swapped one replaced: its last performance is a reference for the replacement (see SwapContinuity).
+        foreach (var s in sessions)
+            foreach (var e in PrescriptionJson.Read(s.PrescriptionJson))
+                if (PrescriptionJson.SwappedFrom(s.PrescriptionJson, e.ExerciseId) is { } original)
+                    ranges.TryAdd(original, (e.MinRepetitions, e.MaxRepetitions, e.TargetRepetitionsInReserve));
         var result = new Dictionary<string, LastPerformanceView>(StringComparer.Ordinal);
         if (ranges.Count == 0) return result;
         var ids = ranges.Keys.ToList();
@@ -1735,6 +1742,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             plan.SchedulingMode.ToString(), plan.SessionsPerPeriod);
     }
 
+    /// <summary>What the user did with the exercise a swapped one replaced, shown only while the replacement has no history of its own.</summary>
+    private static LastPerformanceView? ReplacedReference(PlannedSession session, string exerciseId, IReadOnlyDictionary<string, LastPerformanceView>? last)
+    {
+        if (last is null || PrescriptionJson.SwappedFrom(session.PrescriptionJson, exerciseId) is not { } original) return null;
+        return SwapContinuity.Reference(last.GetValueOrDefault(original), last.ContainsKey(exerciseId));
+    }
+
     private SessionView ToSessionView(PlannedSession session, WorkoutLog? log, IReadOnlyDictionary<string, LastPerformanceView>? last = null) => new(
         session.Id, session.WeekNumber, session.Date, session.Date?.DayOfWeek, TitleOf(session.Title), session.EstimatedDurationMinutes,
         session.Status.ToString(),
@@ -1745,7 +1759,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             PrescriptionJson.SwappedFrom(session.PrescriptionJson, e.ExerciseId),
             last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null,
             PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId),
-            PrescriptionJson.IsExtra(session.PrescriptionJson, e.ExerciseId))).ToList(),
+            PrescriptionJson.IsExtra(session.PrescriptionJson, e.ExerciseId),
+            ReplacedReference(session, e.ExerciseId, last))).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
             log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
