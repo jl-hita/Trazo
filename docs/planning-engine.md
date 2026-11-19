@@ -672,3 +672,32 @@ their level contradicted siblings that were already Beginner (for example `seate
 `bench-press`, `db-bench-press`, `incline-db-press`, `seated-cable-row`, `one-arm-seated-cable-row`, `hack-squat`, `cable-fly`,
 `cable-lateral-raise`, `cable-reverse-fly`, `dumbbell-reverse-fly`, `cable-overhead-tricep-extension` and `straight-arm-pulldown`.
 `ExerciseSeedAuditTests` pins the families that must share a level and the exercises that must NOT be relaxed.
+
+## Longitudinal learning (policy `longitudinal-1.0`)
+
+The history of a user can move the weekly dose of a muscle in the NEXT block. It never touches the block in progress; short-term
+adaptation (fatigue, pain, frequency) is unchanged.
+
+Precedence, highest first: pain and safety; availability and restrictions; muscle priorities (Emphasize, Grow, Maintain); recovery
+and fatigue; longitudinal learning; ordinary progression. Learning only changes the target handed to
+`TrainingMusclePriorityPlanner.Build`, which still clamps it to the baseline floor and ceiling of each muscle.
+
+Terms: "volumen de referencia" (dose of the last block that went well), "bien tolerado", "límite observado" (dose at which fatigue
+repeated). They describe what this user did, not physiological thresholds. Constants live in `LongitudinalPolicy`; changing one means
+bumping its version.
+
+Data used: sets really performed, performance of the same exercise (never across substitutions), recovery, session RPE, fatigue
+skips, post-exercise feedback when it exists, attendance. Data not used: sessions with pain, workouts logged late, the first workout
+after a long absence, duplicated logs, deload blocks, manual and non-hypertrophy plans. Missing feedback is never negative feedback.
+
+Decisions: Increase, Decrease, Hold or Abstain, one set per block at most, at most 3 sets from the baseline, Maintain never
+increases, pain abstains. An Increase needs a Favorable block with Medium or High confidence, adherence of at least 85 %, regularity
+of at least 70 % and no repeated discomfort answers; a Decrease needs repeated unfavorable periods. With insufficient data the block is
+identical to the one generated without learning (covered by `Insufficient_data_changes_nothing`).
+
+Every decision is stored in `longitudinal_decisions` (muscle, baseline, previous and proposed sets, signals, period, confidence,
+reason in Spanish, policy version). Observations in `muscle_week_observations` are rebuilt idempotently from the workouts; the profile
+is derived from them, not stored. Both tables are exported and deleted with the account.
+
+Not yet implemented: carrying learning into a new plan, exposing decisions through the API, and the reorganisation proposal for a
+persistent change of real frequency.
