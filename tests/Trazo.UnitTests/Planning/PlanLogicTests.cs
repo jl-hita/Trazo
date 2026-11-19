@@ -335,6 +335,131 @@ public sealed class AdaptationPlannerTests
         Assert.Equal(["bench-press"], reduce.ExerciseIds);
     }
 
+    // ---- P0: a pending pain report outranks every positive adaptation in its scope.
+
+    private static IReadOnlyList<ExerciseExposureRecord> TopOfRangeTwice(string id = "bench-press") =>
+        [Exposure(0, Sets(60, 10), id: id), Exposure(3, Sets(60, 10), id: id)];
+
+    [Fact]
+    public void WithoutPainTheSameHistoryStillRaisesTheLoad()
+    {
+        var outcome = Run(TopOfRangeTwice(), [Session(0), Session(3)]);
+
+        Assert.False(outcome.PainReviewPending);
+        Assert.Empty(outcome.PainExercises);
+        Assert.Equal(nameof(TrainingExerciseProgressionAction.IncreaseLoad), Assert.Single(outcome.Exercises).Action);
+    }
+
+    [Fact]
+    public void GeneralPainWithNoPainMarkedInAnySetStillBlocksIncreases()
+    {
+        // The session flag is the only pain signal: every set is clean and the performance is exactly what would progress.
+        var outcome = Run(TopOfRangeTwice(), [Session(0), Session(3, pain: true)]);
+
+        Assert.True(outcome.PainReviewPending);
+        Assert.Equal(nameof(TrainingAdaptationAction.PauseAffectedExerciseAndReview), outcome.SessionAction);
+        var advice = Assert.Single(outcome.Exercises);
+        Assert.Equal(nameof(TrainingExerciseProgressionAction.HoldAndReview), advice.Action);
+        Assert.True(advice.NextLoadKg is null or <= 60m);
+        Assert.Contains("dolor", advice.Explanation, StringComparison.OrdinalIgnoreCase);
+        Assert.Empty(outcome.Actions);
+    }
+
+    [Fact]
+    public void GeneralPainBeatsExcellentPerformance()
+    {
+        var history = new[] { 0, 3, 6 }.Select(d => Exposure(d, Sets(60, 10, rir: 4))).ToArray();
+
+        var outcome = Run(history, [Session(0), Session(3), Session(6, pain: true, rpe: 6)]);
+
+        Assert.DoesNotContain(outcome.Exercises, a => a.Action is nameof(TrainingExerciseProgressionAction.IncreaseLoad)
+            or nameof(TrainingExerciseProgressionAction.AddRepetitions) or nameof(TrainingExerciseProgressionAction.ConfirmTopOfRange));
+        Assert.Empty(outcome.Actions);
+    }
+
+    [Fact]
+    public void PainOnOneExerciseBlocksOnlyThatExercise()
+    {
+        var painful = new[] { Set(60, 10), Set(60, 10, pain: true), Set(60, 10) };
+        ExerciseExposureRecord[] history =
+        [
+            Exposure(0, Sets(60, 10), id: "bench-press"), Exposure(3, painful, id: "bench-press"),
+            Exposure(0, Sets(60, 10), id: "row"), Exposure(3, Sets(60, 10), id: "row")
+        ];
+
+        var outcome = AdaptationPlanner.Evaluate(new AdaptationInput(
+            history, [Session(0), Session(3)], ["bench-press", "row"], [], T0.AddDays(4)));
+
+        Assert.False(outcome.PainReviewPending);
+        Assert.Equal(["bench-press"], outcome.PainExercises);
+        Assert.Equal(nameof(TrainingExerciseProgressionAction.HoldAndReview), outcome.Exercises.Single(a => a.ExerciseId == "bench-press").Action);
+        Assert.Equal(nameof(TrainingExerciseProgressionAction.IncreaseLoad), outcome.Exercises.Single(a => a.ExerciseId == "row").Action);
+        Assert.True(outcome.BlocksIncreaseFor("bench-press"));
+        Assert.False(outcome.BlocksIncreaseFor("row"));
+    }
+
+    [Fact]
+    public void GeneralPainBlocksIncreasesForEveryExercise()
+    {
+        var outcome = Run(TopOfRangeTwice(), [Session(0), Session(3, pain: true)]);
+
+        Assert.True(outcome.BlocksIncreaseFor("bench-press"));
+        Assert.True(outcome.BlocksIncreaseFor("any-other-exercise"));
+    }
+
+    [Fact]
+    public void APainfulSetIsNotANormalSatisfactoryExposure()
+    {
+        // Two sessions at the top of the range, but one set of the latest hurt: it must not count as a clean top-of-range exposure.
+        var painfulSet = new[] { Set(60, 10), Set(60, 10, pain: true), Set(60, 10) };
+
+        var outcome = Run([Exposure(0, Sets(60, 10)), Exposure(3, painfulSet)], [Session(0), Session(3)]);
+
+        var advice = Assert.Single(outcome.Exercises);
+        Assert.Equal(nameof(TrainingExerciseProgressionAction.HoldAndReview), advice.Action);
+        Assert.NotEqual(62.5m, advice.NextLoadKg);
+    }
+
+    [Fact]
+    public void PainBlocksTheRestorationOfAReducedSet()
+    {
+        var clean = Sets(60, 9, count: 2, rir: 3);
+        var exposures = new[] { 0, 2, 4 }.Select(d => Exposure(d, clean, planned: 2, original: 3)).ToArray();
+
+        var outcome = Run(exposures, [Session(0), Session(2), Session(4, pain: true)]);
+
+        Assert.DoesNotContain(outcome.Actions, a => a.Kind == TrainingAutoAdaptationKind.RestoreSets);
+        Assert.Contains(outcome.Notes, n => n.Contains("dolor", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void PainOnAnotherExerciseDoesNotBlockTheRestorationOfThisOne()
+    {
+        var clean = Sets(60, 9, count: 2, rir: 3);
+        var exposures = new List<ExerciseExposureRecord>(new[] { 0, 2, 4 }.Select(d => Exposure(d, clean, planned: 2, original: 3)))
+        {
+            Exposure(4, [Set(40, 10, pain: true)], id: "row")
+        };
+
+        var outcome = AdaptationPlanner.Evaluate(new AdaptationInput(
+            exposures, [Session(0), Session(2), Session(4)], ["bench-press", "row"], [], T0.AddDays(6)));
+
+        Assert.Contains(outcome.Actions, a => a.Kind == TrainingAutoAdaptationKind.RestoreSets && a.ExerciseIds.Contains("bench-press"));
+    }
+
+    [Fact]
+    public void PainOnTheSameExerciseBlocksItsRestoration()
+    {
+        var clean = Sets(60, 9, count: 2, rir: 3);
+        var painful = new[] { Set(60, 9, rir: 3, pain: true), Set(60, 9, rir: 3) };
+        var exposures = new[] { Exposure(0, clean, planned: 2, original: 3), Exposure(2, clean, planned: 2, original: 3),
+            Exposure(4, painful, planned: 2, original: 3) };
+
+        var outcome = Run(exposures, [Session(0), Session(2), Session(4)]);
+
+        Assert.DoesNotContain(outcome.Actions, a => a.Kind == TrainingAutoAdaptationKind.RestoreSets);
+    }
+
     [Fact]
     public void AReductionIsGivenBackAfterThreeCleanSessionsAtTheReducedDose()
     {
