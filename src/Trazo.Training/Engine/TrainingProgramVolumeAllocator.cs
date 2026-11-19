@@ -362,7 +362,7 @@ public static class TrainingProgramVolumeAllocator
         // Synergists do not stop a lift at their own ceiling, but nothing goes past the absolute weekly ceiling.
         return TrainingExerciseStimulus.GetEffectiveMuscles(
                 exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
-            .Where(muscle => targets.ContainsKey(muscle) && !HasExplicitTarget(preferences, muscle))
+            .Where(muscle => targets.ContainsKey(muscle) && !HasRaisedExplicitTarget(preferences, muscle))
             .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(step, addedSets) > AbsoluteWeeklySetCeiling);
     }
 
@@ -494,14 +494,16 @@ public static class TrainingProgramVolumeAllocator
                 (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0)))
             return ExplicitHypertrophyTargetToleranceSets;
 
-        // Agreed default planning ranges: beginner 8–12, intermediate 10–16, advanced 12–20.
-        return experience switch
-        {
-            TrainingExperience.Beginner => 2m,
-            TrainingExperience.Intermediate => 3m,
-            _ => 4m
-        };
+        return DefaultTargetTolerance(experience);
     }
+
+    /// <summary>Half-width of the agreed default planning range: beginner 8–12, intermediate 10–16, advanced 12–20.</summary>
+    internal static decimal DefaultTargetTolerance(TrainingExperience experience) => experience switch
+    {
+        TrainingExperience.Beginner => 2m,
+        TrainingExperience.Intermediate => 3m,
+        _ => 4m
+    };
 
     /// <summary>
     /// Sets a muscle may receive above its central target (the weekly ceiling is target + headroom). In hypertrophy it
@@ -513,6 +515,15 @@ public static class TrainingProgramVolumeAllocator
     private static bool HasExplicitTarget(IReadOnlyList<TrainingMuscleVolumeTarget>? preferences, TrainingMuscleGroup muscle) =>
         (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
             .Any(preference => preference.MuscleGroup == muscle &&
+                (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0));
+
+    /// <summary>
+    /// An explicit target that RAISES the dose (a professional target or an emphasis) may exceed the absolute ceiling. A maintenance
+    /// target lowers the dose of a muscle, so it never lifts that ceiling: the presses that also train a maintained triceps stay bounded.
+    /// </summary>
+    private static bool HasRaisedExplicitTarget(IReadOnlyList<TrainingMuscleVolumeTarget>? preferences, TrainingMuscleGroup muscle) =>
+        (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
+            .Any(preference => preference.MuscleGroup == muscle && !preference.Maintenance &&
                 (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0));
 
     private static decimal GetUpperHeadroom(
@@ -620,7 +631,10 @@ public static class TrainingProgramVolumeAllocator
 public sealed record TrainingMuscleVolumeTarget(
     TrainingMuscleGroup MuscleGroup,
     int Priority = 0,
-    decimal? TargetWeeklyPrimarySets = null);
+    decimal? TargetWeeklyPrimarySets = null,
+    // A maintenance target LOWERS the dose of a muscle. It must not be read as a preference to favour that muscle
+    // (exercise order, hamstring slot), so those consumers ignore it.
+    bool Maintenance = false);
 
 public sealed record TrainingVolumeAllocationResult(
     IReadOnlyList<TrainingSessionPrescription> Sessions,
