@@ -549,6 +549,8 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("ToDays").IsRequired().HasMaxLength(80).HasColumnType("character varying(80)");
             b.Property<string>("FromSplit").HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<string>("ToSplit").HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<int?>("FromMaxSessionMinutes").HasColumnType("integer");
+            b.Property<int?>("ToMaxSessionMinutes").HasColumnType("integer");
             b.Property<int>("WeeksAnalysed").HasColumnType("integer");
             b.Property<int>("LowWeeks").HasColumnType("integer");
             b.Property<string>("Reason").IsRequired().HasMaxLength(900).HasColumnType("character varying(900)");

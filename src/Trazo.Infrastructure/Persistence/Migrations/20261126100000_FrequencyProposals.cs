@@ -26,6 +26,8 @@ public sealed class FrequencyProposals : Migration
                 "ToDays" character varying(80) NOT NULL,
                 "FromSplit" character varying(20) NULL,
                 "ToSplit" character varying(20) NULL,
+                "FromMaxSessionMinutes" integer NULL,
+                "ToMaxSessionMinutes" integer NULL,
                 "WeeksAnalysed" integer NOT NULL,
                 "LowWeeks" integer NOT NULL,
                 "Reason" character varying(900) NOT NULL,

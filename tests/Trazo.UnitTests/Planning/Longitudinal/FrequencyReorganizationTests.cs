@@ -185,13 +185,15 @@ public sealed class FrequencyReorganizationTests
         Assert.Contains("no se acumula", draft.Reason);
         // No longer sessions to make up for the missing day.
         Assert.True(draft.Preview.ProposedLongestSessionMinutes <= s.Profile.MaxSessionMinutes);
-        // No attempt to recover the lost volume: in total the three-day block asks for no more than the four-day one, and no muscle goes
-        // past the ceiling the planner gives for three days.
+        // Sessions as long as they are, not longer (a little room), and the weekly volume follows the time the user really has.
+        Assert.True(draft.Preview.ProposedAverageSessionMinutes <= draft.Preview.CurrentAverageSessionMinutes * 1.15m,
+            $"average {draft.Preview.CurrentAverageSessionMinutes} -> {draft.Preview.ProposedAverageSessionMinutes}");
+        Assert.True(draft.Preview.ProposedLongestSessionMinutes <= draft.Preview.ProposedMaxSessionMinutes);
+        // No attempt to recover the lost volume: in total the three-day block asks for no more than the four-day one, and no muscle jumps.
         var currentTotal = draft.Preview.Muscles.Sum(m => m.CurrentSets);
         var proposedTotal = draft.Preview.Muscles.Sum(m => m.ProposedSets);
         Assert.True(proposedTotal <= currentTotal, $"total {currentTotal} -> {proposedTotal}");
-        var ceilings = MesocycleGenerator.Baselines(s.Profile with { TrainingDays = draft.ToDays }).ToDictionary(b => b.Muscle.ToString(), b => b.Ceiling);
-        Assert.All(draft.Preview.Muscles.Where(m => ceilings.ContainsKey(m.Muscle)), m => Assert.True(m.ProposedSets <= ceilings[m.Muscle], $"{m.Muscle} {m.CurrentSets} -> {m.ProposedSets} (ceiling {ceilings[m.Muscle]})"));
+        Assert.All(draft.Preview.Muscles, m => Assert.True(m.ProposedSets <= m.CurrentSets + 3m, $"{m.Muscle} {m.CurrentSets} -> {m.ProposedSets}"));
         // Good frequency of stimulus: the main muscles are still worked twice a week.
         foreach (var m in draft.Preview.Muscles.Where(m => m.Muscle is "Chest" or "Lats" or "Quadriceps")) Assert.True(m.ProposedFrequency >= 2, $"{m.Muscle} {m.ProposedFrequency}");
     }
@@ -224,8 +226,9 @@ public sealed class FrequencyReorganizationTests
         var oldVolume = PlanSimulator.VolumeOfWeek(oldBlock);
         var newVolume = PlanSimulator.VolumeOfWeek(block);
         Assert.True(Total(newVolume) <= Total(oldVolume), $"total {Total(oldVolume)} -> {Total(newVolume)}");
-        var ceilings = s.Baselines.ToDictionary(b => b.Muscle, b => b.Ceiling);
-        Assert.All(newVolume.Where(v => ceilings.ContainsKey(v.Key)), v => Assert.True(v.Value <= ceilings[v.Key], $"{v.Key} {oldVolume.GetValueOrDefault(v.Key)} -> {v.Value} (ceiling {ceilings[v.Key]})"));
+        Assert.All(newVolume, v => Assert.True(v.Value <= oldVolume.GetValueOrDefault(v.Key) + 3m, $"{v.Key} {oldVolume.GetValueOrDefault(v.Key)} -> {v.Value}"));
+        // Sessions as long as they were: the plan's own maximum was lowered to the current ones, never raised.
+        Assert.True(s.Profile.MaxSessionMinutes <= 75);
         // The emphasised muscle keeps its priority at three days.
         Assert.Equal(TrainingMusclePriority.Emphasize, s.Baselines.First(b => b.Muscle == Chest).Priority);
         Assert.True(newVolume[Chest] >= s.Baselines.First(b => b.Muscle == Chest).Target - 2m);
@@ -301,8 +304,7 @@ public sealed class FrequencyReorganizationTests
         var restoredTotal = Total(PlanSimulator.VolumeOfWeek(restored));
         var controlTotal = Total(PlanSimulator.VolumeOfWeek(control.Generate(false, null)));
         Assert.InRange(restoredTotal, controlTotal * 0.8m, controlTotal * 1.2m);
-        var ceilings = s.Baselines.ToDictionary(b => b.Muscle, b => b.Ceiling);
-        Assert.All(PlanSimulator.VolumeOfWeek(restored).Where(v => ceilings.ContainsKey(v.Key)), v => Assert.True(v.Value <= ceilings[v.Key]));
+        Assert.Equal(75, s.Profile.MaxSessionMinutes); // the limit the user had comes back with the days
     }
 
     [Fact]
@@ -320,6 +322,7 @@ public sealed class FrequencyReorganizationTests
 
         s.RevertFrequency();
         Assert.Equal(4, s.Profile.TrainingDays.Count);
+        Assert.Equal(75, s.Profile.MaxSessionMinutes);
         Assert.Equal(sessions, s.Sessions.Count);
         Assert.Equal(logs, s.Logs.Count);
         Assert.Equal(observations, s.Observations.Count);

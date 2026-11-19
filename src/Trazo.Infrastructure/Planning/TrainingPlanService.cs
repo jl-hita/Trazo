@@ -774,19 +774,23 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         p.Id, p.Kind, p.Status, SplitDays(p.FromDays), SplitDays(p.ToDays), p.Reason, FrequencyReorganizer.ReadPreview(p.PreviewJson),
         p.CreatedAt, p.DecidedAt, p.AppliedFromSequence, p.PolicyVersion);
 
-    /// <summary>The days the plan had before an accepted reduction that has not been undone, or null.</summary>
-    private static string[]? OriginalDaysOf(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals)
+    /// <summary>The accepted reduction currently in effect (not undone by a later restore or revert), or null.</summary>
+    private static FrequencyProposal? ActiveReduction(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals)
     {
-        string[]? original = null;
+        FrequencyProposal? active = null;
         foreach (var p in proposals.Where(p => p.Status == FrequencyProposal.Accepted).OrderBy(p => p.DecidedAt))
         {
             var to = SplitDays(p.ToDays);
             var from = SplitDays(p.FromDays);
-            if (original is not null && to.OrderBy(x => x).SequenceEqual(original.OrderBy(x => x))) original = null;
-            else if (original is null && to.Length < from.Length) original = from;
+            if (active is not null && to.OrderBy(x => x).SequenceEqual(SplitDays(active.FromDays).OrderBy(x => x))) active = null;
+            else if (active is null && to.Length < from.Length) active = p;
         }
-        return original is not null && original.Length > plan.TrainingDays.Length ? original : null;
+        return active is not null && SplitDays(active.FromDays).Length > plan.TrainingDays.Length ? active : null;
     }
+
+    /// <summary>The days the plan had before the reduction in effect, or null.</summary>
+    private static string[]? OriginalDaysOf(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals) =>
+        ActiveReduction(plan, proposals) is { } reduction ? SplitDays(reduction.FromDays) : null;
 
     private MesocycleSlot? NextSlotOf(TrainingPlan plan) =>
         SlotsOf(plan).FirstOrDefault(s => plan.Mesocycles.All(m => m.Sequence != s.Sequence));
@@ -837,7 +841,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var catalog = (await LoadCandidatesAsync(ct)).Candidates;
             var originalDays = original?.Select(Enum.Parse<DayOfWeek>).ToList();
             draft = FrequencyReorganizer.Propose(
-                ProfileOf(plan), assessment, weeks, originalDays, plan.Seed, slot, catalog, await LastBlockExerciseIdsAsync(plan, ct));
+                ProfileOf(plan), assessment, weeks, originalDays, plan.Seed, slot, catalog, await LastBlockExerciseIdsAsync(plan, ct),
+                ActiveReduction(plan, all)?.FromMaxSessionMinutes);
         }
 
         var draftDays = draft is null ? null : string.Join(",", draft.ToDays);
@@ -855,6 +860,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 Id = Guid.NewGuid(), UserId = plan.UserId, PlanId = plan.Id, Kind = draft.Kind, Status = FrequencyProposal.Pending,
                 FromDays = string.Join(",", plan.TrainingDays), ToDays = draftDays!, FromSplit = draft.ToSplit is null ? null : plan.Split, ToSplit = draft.ToSplit,
+                FromMaxSessionMinutes = draft.ToMaxSessionMinutes is null ? null : plan.MaxSessionMinutes, ToMaxSessionMinutes = draft.ToMaxSessionMinutes,
                 WeeksAnalysed = assessment.WeeksAnalysed, LowWeeks = assessment.LowWeeks, Reason = draft.Reason,
                 PreviewJson = FrequencyReorganizer.PreviewJson(draft.Preview), PolicyVersion = FrequencyPolicy.Version, CreatedAt = now
             };
@@ -917,7 +923,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var profile = ProfileOf(plan) with
         {
             TrainingDays = toDays.Select(Enum.Parse<DayOfWeek>).ToList(),
-            Split = proposal.ToSplit is null ? ProfileOf(plan).Split : Enum.Parse<TrainingProgramSplit>(proposal.ToSplit)
+            Split = proposal.ToSplit is null ? ProfileOf(plan).Split : Enum.Parse<TrainingProgramSplit>(proposal.ToSplit),
+            MaxSessionMinutes = proposal.ToMaxSessionMinutes ?? plan.MaxSessionMinutes
         };
         if (slot is not null)
         {
@@ -928,6 +935,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var now = clock.GetUtcNow();
         plan.TrainingDays = toDays;
         if (proposal.ToSplit is not null) plan.Split = proposal.ToSplit;
+        if (proposal.ToMaxSessionMinutes is { } maxMinutes) plan.MaxSessionMinutes = maxMinutes;
         plan.UpdatedAt = now;
         proposal.Status = FrequencyProposal.Accepted;
         proposal.DecidedAt = now;
@@ -982,8 +990,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var context = await FrequencyWriteContextAsync(userId, ct);
         if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
         var (plan, all) = context.Value;
-        var original = OriginalDaysOf(plan, all);
-        var last = all.Where(p => p.Status == FrequencyProposal.Accepted).OrderByDescending(p => p.DecidedAt).FirstOrDefault();
+        var reduction = ActiveReduction(plan, all);
+        var original = reduction is null ? null : SplitDays(reduction.FromDays);
+        var last = reduction;
         if (original is null || last is null)
             return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "No hay ninguna reorganización que revertir.");
         var now = clock.GetUtcNow();
@@ -992,6 +1001,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, Kind = "revert", Status = FrequencyProposal.Pending,
             FromDays = string.Join(",", plan.TrainingDays), ToDays = string.Join(",", original), FromSplit = last.ToSplit is null ? null : plan.Split, ToSplit = last.ToSplit is null ? null : last.FromSplit,
+            FromMaxSessionMinutes = last.ToMaxSessionMinutes is null ? null : plan.MaxSessionMinutes, ToMaxSessionMinutes = last.ToMaxSessionMinutes is null ? null : last.FromMaxSessionMinutes,
             WeeksAnalysed = 0, LowWeeks = 0, PolicyVersion = FrequencyPolicy.Version, CreatedAt = now,
             Reason = "Vuelves a la distribución anterior por decisión tuya. Se aplica desde el próximo bloque y el historial se conserva.",
             PreviewJson = "{}"

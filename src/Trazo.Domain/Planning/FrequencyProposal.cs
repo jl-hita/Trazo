@@ -24,6 +24,9 @@ public sealed class FrequencyProposal
     /// <summary>Split the plan uses before and the one the proposal sets, when it has to change; null keeps it.</summary>
     public string? FromSplit { get; set; }
     public string? ToSplit { get; set; }
+    /// <summary>Longest session the plan allowed before and the one the proposal sets, when it changes (a reduction keeps sessions as long as they are, never longer).</summary>
+    public int? FromMaxSessionMinutes { get; set; }
+    public int? ToMaxSessionMinutes { get; set; }
     /// <summary>Weeks of evidence and how many of them were below the plan.</summary>
     public int WeeksAnalysed { get; set; }
     public int LowWeeks { get; set; }

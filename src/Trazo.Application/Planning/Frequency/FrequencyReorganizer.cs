@@ -8,10 +8,12 @@ public sealed record MusclePreview(string Muscle, decimal CurrentSets, decimal P
 /// <summary>What the next block would look like with the proposed days against the current ones, from the real generator (one typical week).</summary>
 public sealed record FrequencyPreview(
     int CurrentSessionsPerWeek, int ProposedSessionsPerWeek, int CurrentLongestSessionMinutes, int ProposedLongestSessionMinutes,
-    IReadOnlyList<MusclePreview> Muscles, IReadOnlyList<string> Warnings);
+    IReadOnlyList<MusclePreview> Muscles, IReadOnlyList<string> Warnings,
+    int CurrentAverageSessionMinutes = 0, int ProposedAverageSessionMinutes = 0, int ProposedMaxSessionMinutes = 0);
 
 public sealed record FrequencyDraft(
-    string Kind, IReadOnlyList<DayOfWeek> ToDays, string? ToSplit, FrequencyAssessment Assessment, FrequencyPreview Preview, string Reason)
+    string Kind, IReadOnlyList<DayOfWeek> ToDays, string? ToSplit, FrequencyAssessment Assessment, FrequencyPreview Preview, string Reason,
+    int? ToMaxSessionMinutes = null)
 {
     public const string Reduce = "reduce";
     public const string Restore = "restore";
@@ -26,14 +28,19 @@ public sealed record FrequencyDraft(
 /// </summary>
 public static class FrequencyReorganizer
 {
+    /// <summary>A reorganised plan may have sessions this much longer on average than the current ones (product limit; the plan's own maximum still holds).</summary>
+    public const decimal LongerSessionAllowance = 1.10m;
+
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
     /// <param name="profile">The profile the plan has now.</param>
     /// <param name="originalDays">Days before an accepted reduction (to return to them), or null.</param>
+    /// <param name="originalMaxSessionMinutes">Longest session the plan allowed before an accepted reduction, to go back to it, or null.</param>
     /// <param name="slot">The next block to generate: the one a proposal would apply to.</param>
     public static FrequencyDraft? Propose(
         PlanProfile profile, FrequencyAssessment assessment, IReadOnlyList<WeeklyAttendance> weeks, IReadOnlyList<DayOfWeek>? originalDays,
-        int seed, MesocycleSlot slot, IReadOnlyCollection<TrainingExerciseCandidate> catalog, IReadOnlyList<string>? previousIds)
+        int seed, MesocycleSlot slot, IReadOnlyCollection<TrainingExerciseCandidate> catalog, IReadOnlyList<string>? previousIds,
+        int? originalMaxSessionMinutes = null)
     {
         ArgumentNullException.ThrowIfNull(profile);
         if (assessment.TargetDays is not { } target) return null;
@@ -48,14 +55,20 @@ public static class FrequencyReorganizer
 
         foreach (var split in new[] { profile.Split, TrainingProgramSplit.Automatic }.Distinct())
         {
-            var proposed = profile with { TrainingDays = days, Split = split };
+            // The session length is kept, not stretched: fewer days never mean longer sessions. A reduction keeps the sessions about as long as
+            // the current ones (a little room), so the weekly volume follows the time the user really has; going back restores the old limit.
+            var maxMinutes = isReturn
+                ? Math.Max(profile.MaxSessionMinutes, originalMaxSessionMinutes ?? profile.MaxSessionMinutes)
+                : CappedMinutes(profile, split, seed, slot, catalog, previousIds);
+            var proposed = profile with { TrainingDays = days, Split = split, MaxSessionMinutes = maxMinutes };
             var preview = Preview(profile, proposed, seed, slot, catalog, previousIds);
             if (preview is null) continue;
-            // Never longer sessions to make up for fewer days: a block that needs more than the plan's maximum is not a proposal.
-            if (preview.ProposedLongestSessionMinutes > profile.MaxSessionMinutes) continue;
+            if (preview.ProposedLongestSessionMinutes > maxMinutes) continue;
+            if (!isReturn && preview.ProposedAverageSessionMinutes > preview.CurrentAverageSessionMinutes * LongerSessionAllowance) continue;
             return new FrequencyDraft(
                 isReturn ? FrequencyDraft.Restore : FrequencyDraft.Reduce, days, split == profile.Split ? null : split.ToString(),
-                assessment, preview, ReasonOf(assessment, profile, days, isReturn, split != profile.Split));
+                assessment, preview, ReasonOf(assessment, profile, days, isReturn, split != profile.Split, maxMinutes),
+                maxMinutes == profile.MaxSessionMinutes ? null : maxMinutes);
         }
         return null;
     }
@@ -134,6 +147,27 @@ public static class FrequencyReorganizer
         }
     }
 
+    /// <summary>The longest session the reorganised plan may have: the current average with a little room, rounded up to 5 minutes, never above the plan's maximum.</summary>
+    private static int CappedMinutes(
+        PlanProfile profile, TrainingProgramSplit split, int seed, MesocycleSlot slot,
+        IReadOnlyCollection<TrainingExerciseCandidate> catalog, IReadOnlyList<string>? previousIds)
+    {
+        var current = MesocycleGenerator.Generate(profile, seed, slot, catalog, previousIds);
+        if (!current.Succeeded) return profile.MaxSessionMinutes;
+        var (sessions, _, _, average) = WeekShape(current);
+        if (sessions == 0 || average <= 0) return profile.MaxSessionMinutes;
+        var capped = (int)(Math.Ceiling(average * LongerSessionAllowance / 5m) * 5m);
+        return Math.Min(profile.MaxSessionMinutes, Math.Max(30, capped));
+    }
+
+    private static (int Sessions, int Longest, Dictionary<TrainingMuscleGroup, (decimal Sets, int Frequency)> Volumes, int Average) WeekShape(MesocycleGeneration g)
+    {
+        var (sessions, longest, volumes) = Week(g);
+        var sessionWeeks = g.Sessions.Select(s => s.WeekNumber).Distinct().OrderBy(w => w).ToList();
+        var typical = sessionWeeks.Count == 0 ? [] : g.Sessions.Where(s => s.WeekNumber == sessionWeeks[Math.Min(1, sessionWeeks.Count - 1)]).ToList();
+        return (sessions, longest, volumes, typical.Count == 0 ? 0 : (int)Math.Round(typical.Average(s => s.EstimatedDurationMinutes)));
+    }
+
     /// <summary>The same block generated for the current and for the proposed days, read one week in; null when the proposed one cannot be generated.</summary>
     public static FrequencyPreview? Preview(
         PlanProfile current, PlanProfile proposed, int seed, MesocycleSlot slot,
@@ -142,8 +176,8 @@ public static class FrequencyReorganizer
         var now = MesocycleGenerator.Generate(current, seed, slot, catalog, previousIds);
         var next = MesocycleGenerator.Generate(proposed, seed, slot, catalog, previousIds);
         if (!next.Succeeded || next.Quality is null) return null;
-        var (nowSessions, nowMinutes, nowVolumes) = Week(now);
-        var (nextSessions, nextMinutes, nextVolumes) = Week(next);
+        var (nowSessions, nowMinutes, nowVolumes, nowAverage) = WeekShape(now);
+        var (nextSessions, nextMinutes, nextVolumes, nextAverage) = WeekShape(next);
         var muscles = nextVolumes.Keys.Union(nowVolumes.Keys).OrderBy(m => m.ToString(), StringComparer.Ordinal)
             .Select(m =>
             {
@@ -152,7 +186,7 @@ public static class FrequencyReorganizer
                 return new MusclePreview(m.ToString(), Math.Round(a.Sets, 1), Math.Round(b.Sets, 1), a.Frequency, b.Frequency);
             })
             .Where(m => m.CurrentSets > 0 || m.ProposedSets > 0).ToList();
-        return new FrequencyPreview(nowSessions, nextSessions, nowMinutes, nextMinutes, muscles, next.Quality.Warnings);
+        return new FrequencyPreview(nowSessions, nextSessions, nowMinutes, nextMinutes, muscles, next.Quality.Warnings, nowAverage, nextAverage, proposed.MaxSessionMinutes);
     }
 
     private static (int Sessions, int Longest, Dictionary<TrainingMuscleGroup, (decimal Sets, int Frequency)> Volumes) Week(MesocycleGeneration g)
@@ -175,12 +209,16 @@ public static class FrequencyReorganizer
             DayOfWeek.Friday => "viernes", DayOfWeek.Saturday => "sábado", _ => "domingo"
         }));
 
-    private static string ReasonOf(FrequencyAssessment a, PlanProfile profile, IReadOnlyList<DayOfWeek> days, bool isReturn, bool splitChanged)
+    private static string ReasonOf(FrequencyAssessment a, PlanProfile profile, IReadOnlyList<DayOfWeek> days, bool isReturn, bool splitChanged, int maxMinutes)
     {
         var text = isReturn
             ? $"{a.Reason} Se propone volver a {days.Count} días ({DaysEs(days)}) a partir del próximo bloque."
             : $"{a.Reason} Se propone un plan de {days.Count} días ({DaysEs(days)}) a partir del próximo bloque, con el volumen semanal de cada músculo ajustado a esos días.";
         text += " Lo que no se entrenó no se acumula ni se recupera, las sesiones no se alargan, se respetan tus prioridades y restricciones y el bloque actual no se modifica.";
+        if (maxMinutes != profile.MaxSessionMinutes)
+            text += isReturn
+                ? $" La duración máxima de sesión vuelve a {maxMinutes} min."
+                : $" Las sesiones no se alargan: la duración máxima pasa de {profile.MaxSessionMinutes} a {maxMinutes} min, como tus sesiones actuales, y el volumen semanal se ajusta al tiempo real que tienes.";
         if (splitChanged) text += " La distribución pasa a automática porque la que tenías no admite esos días.";
         return text;
     }

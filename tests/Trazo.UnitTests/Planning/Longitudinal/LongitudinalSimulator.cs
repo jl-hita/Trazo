@@ -189,6 +189,8 @@ internal sealed class PlanSimulator
 
     private DateOnly _frequencySince = DateOnly.FromDateTime(Start.UtcDateTime);
     private IReadOnlyList<DayOfWeek>? _originalDays;
+    private int? _originalMaxMinutes;
+    public int? OriginalMaxMinutes => _originalMaxMinutes;
     public IReadOnlyList<DayOfWeek>? OriginalDays => _originalDays;
     public DateOnly Today => DateOnly.FromDateTime(Start.AddDays(7 * (NextWeek - 1)).UtcDateTime);
 
@@ -205,14 +207,18 @@ internal sealed class PlanSimulator
         FrequencyPatternDetector.Assess(Profile.TrainingDays.Count, _originalDays?.Count, Weeks());
 
     public FrequencyDraft? ProposeFrequency(FrequencyAssessment? assessment = null, IReadOnlyList<WeeklyAttendance>? weeks = null) =>
-        FrequencyReorganizer.Propose(Profile, assessment ?? AssessFrequency(), weeks ?? Weeks(), _originalDays, Seed, SlotFor(false), Catalog, _previousIds);
+        FrequencyReorganizer.Propose(Profile, assessment ?? AssessFrequency(), weeks ?? Weeks(), _originalDays, Seed, SlotFor(false), Catalog, _previousIds, _originalMaxMinutes);
 
     /// <summary>Accepting only changes the days of the blocks generated from now on; every session and workout already there stays.</summary>
     public void AcceptFrequency(FrequencyDraft draft)
     {
-        if (draft.Kind == FrequencyDraft.Reduce && _originalDays is null) _originalDays = Profile.TrainingDays;
-        else if (draft.Kind != FrequencyDraft.Reduce && _originalDays is not null && draft.ToDays.OrderBy(x => x).SequenceEqual(_originalDays.OrderBy(x => x))) _originalDays = null;
-        Profile = Profile with { TrainingDays = draft.ToDays, Split = draft.ToSplit is null ? Profile.Split : Enum.Parse<TrainingProgramSplit>(draft.ToSplit) };
+        if (draft.Kind == FrequencyDraft.Reduce && _originalDays is null) { _originalDays = Profile.TrainingDays; _originalMaxMinutes = Profile.MaxSessionMinutes; }
+        else if (draft.Kind != FrequencyDraft.Reduce && _originalDays is not null && draft.ToDays.OrderBy(x => x).SequenceEqual(_originalDays.OrderBy(x => x))) { _originalDays = null; _originalMaxMinutes = null; }
+        Profile = Profile with
+        {
+            TrainingDays = draft.ToDays, Split = draft.ToSplit is null ? Profile.Split : Enum.Parse<TrainingProgramSplit>(draft.ToSplit),
+            MaxSessionMinutes = draft.ToMaxSessionMinutes ?? Profile.MaxSessionMinutes
+        };
         _frequencySince = Today;
     }
 
@@ -220,8 +226,9 @@ internal sealed class PlanSimulator
     public void RevertFrequency()
     {
         Assert.NotNull(_originalDays);
-        Profile = Profile with { TrainingDays = _originalDays! };
+        Profile = Profile with { TrainingDays = _originalDays!, MaxSessionMinutes = _originalMaxMinutes ?? Profile.MaxSessionMinutes };
         _originalDays = null;
+        _originalMaxMinutes = null;
         _frequencySince = Today;
     }
 }
