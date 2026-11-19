@@ -1284,6 +1284,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // Carry the load of the next exposure into the next upcoming session of each exercise (never into a deload block).
         foreach (var advice in outcome.Exercises.Where(a => a.NextLoadKg is > 0))
         {
+            // A pending pain report freezes the prescribed load: only an explicit load reduction may be written.
+            if (outcome.BlocksIncreaseFor(advice.ExerciseId) && advice.Action != nameof(TrainingExerciseProgressionAction.ReduceLoad)) continue;
             var next = upcoming.FirstOrDefault(s => PrescriptionJson.Read(s.PrescriptionJson).Any(e => e.ExerciseId == advice.ExerciseId));
             if (next is null) continue;
             if ((mesocycles.TryGetValue(next.MesocycleId, out var meso) && meso.IsDeload) || PrescriptionJson.IsAdaptationDeload(next.PrescriptionJson)) continue;
@@ -1302,7 +1304,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
         }
 
-        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, ct) : ([], []);
+        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, outcome, ct) : ([], []);
         applied.AddRange(feedback.Applied);
 
         // A session that was read and needed nothing is also a decision: the user sees that the engine looked at it and why it kept the plan.
@@ -1331,13 +1333,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// </summary>
     private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming, DateTimeOffset now,
-        DateTimeOffset evidenceNow, CancellationToken ct)
+        DateTimeOffset evidenceNow, AdaptationOutcome pain, CancellationToken ct)
     {
         var applied = new List<AppliedAdaptationView>();
         var notes = new List<string>();
         var past = await db.WorkoutLogs.AsNoTracking()
-            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id && l.ExerciseFeedbackJson != null)
-            .OrderByDescending(l => l.PerformedAt).Take(12).ToListAsync(ct);
+            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id)
+            .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(12).ToListAsync(ct);
+        // Sessions the user did NOT answer are kept on purpose: the mapper turns them into neutral exposures, so two low answers
+        // separated by unanswered sessions are not read as consecutive. Only when nothing was ever answered is there nothing to read.
         var logs = new[] { workout }.Concat(past).ToList();
         if (logs.All(l => string.IsNullOrWhiteSpace(l.ExerciseFeedbackJson))) return (applied, notes);
 
@@ -1368,6 +1372,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
             if (cooling.Contains(decision.ExerciseId)) continue;
             var delta = decision.Action == TrainingMuscleFeedbackAction.AddSet ? 1 : -1;
+            // Same precedence as the load and volume engines: a pending pain report (general, or on this exercise) blocks every
+            // automatic increase. Reductions stay allowed because they only lower the dose.
+            if (delta > 0 && pain.BlocksIncreaseFor(decision.ExerciseId))
+            {
+                notes.Add("No se añade ninguna serie por feedback muscular porque hay dolor pendiente de revisión.");
+                continue;
+            }
             var changed = 0;
             foreach (var future in upcoming.Take(MaximumFutureSessionsToAdapt))
                 if (TrainingAdaptationPrescriptionAdjuster.TryAdjustSets(future.PrescriptionJson, decision.ExerciseId, delta, out var updated, out _))
