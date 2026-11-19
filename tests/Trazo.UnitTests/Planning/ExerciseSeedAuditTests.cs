@@ -111,4 +111,83 @@ public sealed class ExerciseSeedAuditTests
             Assert.NotEmpty(Names(entry, "primaryMuscles"));
         }
     }
+
+    // ---- Experience classification. The level is DATA about the exercise (technical demand, prerequisite strength or mobility,
+    // consequence of failure), never an engine exception: the generator only compares it with the user's level.
+
+    private static string Level(string id) =>
+        Entries().Single(x => x.GetProperty("id").GetString() == id).GetProperty("minimumExperience").GetString()!;
+
+    [Fact]
+    public void FundamentalLiftsWithAGuidedOrSupportedPathAreOpenToBeginners()
+    {
+        // bench-press and db-bench-press were Intermediate in production, so beginners never received them.
+        foreach (var id in new[] { "bench-press", "db-bench-press", "incline-db-press", "seated-cable-row", "one-arm-seated-cable-row", "hack-squat" })
+            Assert.True(Level(id) == "Beginner", $"{id} must be open to beginners");
+        foreach (var id in new[] { "bench-press", "db-bench-press" })
+            Assert.Contains("Hypertrophy", Names(Entries().Single(x => x.GetProperty("id").GetString() == id), "suitableGoals"));
+    }
+
+    [Fact]
+    public void SiblingVariantsOfTheSameMovementShareTheirLevel()
+    {
+        string[][] families =
+        [
+            ["seated-cable-row", "one-arm-seated-cable-row", "wide-grip-seated-cable-row", "kneeling-cable-row"],
+            ["cable-lateral-raise", "lateral-raise", "seated-dumbbell-lateral-raise"],
+            ["cable-overhead-tricep-extension", "overhead-tricep-extension"],
+            ["bench-press", "db-bench-press", "smith-machine-bench-press"],
+            ["hack-squat", "leg-press", "horizontal-leg-press"]
+        ];
+        foreach (var family in families)
+            Assert.True(family.Select(Level).Distinct().Count() == 1, "Inconsistent levels in " + string.Join(", ", family.Select(id => $"{id}={Level(id)}")));
+    }
+
+    [Fact]
+    public void TheLevelsWereNotRelaxedIndiscriminately()
+    {
+        // Loaded spinal patterns, balance-limited or strength-gated exercises keep their minimum level.
+        foreach (var id in new[] { "squat", "front-squat", "deadlift", "sumo-deadlift", "romanian-deadlift", "barbell-row", "t-bar-row", "ohp", "pull-up", "chin-ups", "parallel-bar-dips", "bulgarian-split-squat", "incline-bench-press", "close-grip-bench-press" })
+            Assert.True(Level(id) == "Intermediate", $"{id} must stay Intermediate");
+        foreach (var id in new[] { "pendlay-row", "rack-pull", "weighted-pull-up", "weighted-dip", "paused-bench-press", "push-press", "pistol-squat" })
+            Assert.True(Level(id) == "Advanced", $"{id} must stay Advanced");
+
+        var counts = Entries().GroupBy(x => x.GetProperty("minimumExperience").GetString()!).ToDictionary(g => g.Key, g => g.Count());
+        Assert.Equal(100, counts["Beginner"]);
+        Assert.Equal(30, counts["Intermediate"]);
+        Assert.Equal(18, counts["Advanced"]);
+    }
+
+    [Fact]
+    public void BeginnersHaveSeveralCompoundOptionsForEveryMainPattern()
+    {
+        foreach (var pattern in new[] { "Squat", "HorizontalPush", "HorizontalPull", "VerticalPull", "VerticalPush" })
+        {
+            var options = Entries().Count(x => x.GetProperty("movementPattern").GetString() == pattern
+                && x.GetProperty("minimumExperience").GetString() == "Beginner" && x.GetProperty("mechanic").GetString() == "compound");
+            Assert.True(options >= 3, $"{pattern} has only {options} beginner compound options");
+        }
+    }
+
+    [Fact]
+    public void ChangedSeedRowsCarryANewVersionSoUntouchedProductionRowsAreRefreshed()
+    {
+        // The seeder only refreshes untouched rows whose SeedVersion is lower than the seed's.
+        foreach (var id in new[] { "bench-press", "db-bench-press", "incline-db-press", "seated-cable-row", "one-arm-seated-cable-row", "hack-squat",
+                     "cable-fly", "cable-lateral-raise", "cable-reverse-fly", "dumbbell-reverse-fly", "cable-overhead-tricep-extension", "straight-arm-pulldown" })
+            Assert.True(Entries().Single(x => x.GetProperty("id").GetString() == id).GetProperty("version").GetInt32() >= 3, id);
+    }
+
+    [Fact]
+    public void EveryExerciseNameIsUniqueAndPresentInBothLanguages()
+    {
+        var entries = Entries();
+        Assert.All(entries, x =>
+        {
+            Assert.False(string.IsNullOrWhiteSpace(x.GetProperty("nameEs").GetString()), x.GetProperty("id").GetString());
+            Assert.False(string.IsNullOrWhiteSpace(x.GetProperty("nameEn").GetString()), x.GetProperty("id").GetString());
+        });
+        Assert.Equal(entries.Count, entries.Select(x => x.GetProperty("nameEs").GetString()!.Trim().ToLowerInvariant()).Distinct().Count());
+        Assert.Equal(entries.Count, entries.Select(x => x.GetProperty("nameEn").GetString()!.Trim().ToLowerInvariant()).Distinct().Count());
+    }
 }

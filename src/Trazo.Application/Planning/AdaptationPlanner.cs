@@ -44,7 +44,20 @@ public sealed record AdaptationOutcome(
     string SessionAction,
     string SessionExplanation,
     IReadOnlyList<AutoAction> Actions,
-    IReadOnlyList<string> Notes);
+    IReadOnlyList<string> Notes,
+    bool PainReviewPending = false,
+    IReadOnlyCollection<string>? PainExerciseIds = null)
+{
+    /// <summary>Exercises whose recent exposures carry a pain signal; empty when none.</summary>
+    public IReadOnlyCollection<string> PainExercises => PainExerciseIds ?? [];
+
+    /// <summary>
+    /// True when no automatic INCREASE (load, repetitions or sets) may be applied to <paramref name="exerciseId"/>:
+    /// either a pain report is pending review for the whole plan (general pain) or the exercise itself carries pain.
+    /// </summary>
+    public bool BlocksIncreaseFor(string exerciseId) =>
+        PainReviewPending || PainExercises.Contains(exerciseId, StringComparer.Ordinal);
+}
 
 /// <summary>
 /// Reads what the user logged and decides what changes in the upcoming sessions. Pure: it wires the engine's pieces
@@ -83,6 +96,15 @@ public static class AdaptationPlanner
 
         var actions = new List<AutoAction>();
         var holdNow = false;
+
+        // Pain precedence. Pain is a safety signal, never a performance signal. While a pain report is pending review
+        // (general pain declared in the recent session window), nothing may increase automatically: not loads, not
+        // repetitions, not sets. Pain on a specific exercise (any of its last three exposures) blocks that exercise.
+        var painPending = sessionDecision.Action == TrainingAdaptationAction.PauseAffectedExerciseAndReview;
+        var painExercises = input.ExerciseHistory
+            .GroupBy(e => e.ExerciseId, StringComparer.Ordinal)
+            .Where(group => group.OrderBy(e => e.At).TakeLast(3).Any(HasPain))
+            .Select(group => group.Key).OrderBy(id => id, StringComparer.Ordinal).ToArray();
 
         void TryDecide(string proposalAction, IReadOnlyList<string> targets, string explanation)
         {
@@ -125,10 +147,17 @@ public static class AdaptationPlanner
         if (reduceTargets.Length > 0 && actions.All(a => a.Kind != TrainingAutoAdaptationKind.ReduceSets))
             TryDecide("review_and_reduce_training_stress", reduceTargets, "Una serie menos en los ejercicios con fatiga repetida, en las próximas sesiones.");
         if (restoreTargets.Length > 0)
-            TryDecide("restore_volume", restoreTargets, "Se recupera una serie reducida antes, sin superar la dosis original.");
+        {
+            // Restoring a set is a volume increase: it must not coexist with a pain report in the affected scope.
+            var allowedRestores = painPending ? Array.Empty<string>() : restoreTargets.Where(id => !painExercises.Contains(id, StringComparer.Ordinal)).ToArray();
+            if (allowedRestores.Length > 0)
+                TryDecide("restore_volume", allowedRestores, "Se recupera una serie reducida antes, sin superar la dosis original.");
+            else
+                notes.Add("No se recupera ninguna serie porque hay dolor pendiente de revisión.");
+        }
 
         // Exercise-level progression.
-        var holdActive = holdNow || input.RecentlyApplied.Any(a => a.Kind == TrainingAutoAdaptationKind.HoldProgression
+        var holdActive = holdNow || painPending || input.RecentlyApplied.Any(a => a.Kind == TrainingAutoAdaptationKind.HoldProgression
             && input.Now - a.AppliedAt < TimeSpan.FromDays(ProgressionHoldDays));
         var advice = new List<ExerciseAdvice>();
         foreach (var exerciseId in input.ExercisesInLoggedSession.OrderBy(id => id, StringComparer.Ordinal))
@@ -136,13 +165,13 @@ public static class AdaptationPlanner
             var history = input.ExerciseHistory.Where(e => string.Equals(e.ExerciseId, exerciseId, StringComparison.Ordinal))
                 .OrderBy(e => e.At).ToArray();
             if (history.Length == 0) continue;
-            advice.Add(AdviseExercise(history, holdActive));
+            advice.Add(AdviseExercise(history, holdActive, painPending));
         }
 
-        return new AdaptationOutcome(advice, sessionDecision.Action.ToString(), sessionDecision.Explanation, actions, notes);
+        return new AdaptationOutcome(advice, sessionDecision.Action.ToString(), sessionDecision.Explanation, actions, notes, painPending, painExercises);
     }
 
-    private static ExerciseAdvice AdviseExercise(IReadOnlyList<ExerciseExposureRecord> history, bool holdActive)
+    private static ExerciseAdvice AdviseExercise(IReadOnlyList<ExerciseExposureRecord> history, bool holdActive, bool painPending)
     {
         var latest = history[^1];
         var lastLoad = WorkingLoad(latest);
@@ -152,13 +181,24 @@ public static class AdaptationPlanner
             latest.Rule, lastLoad is null ? null : increment);
         var exposures = history.TakeLast(3).Select(ToExposure).ToArray();
 
-        var result = TrainingProgressionHold.Apply(TrainingExerciseProgressionEngine.Evaluate(prescription, exposures), holdActive);
-        var painNow = latest.Sets.Any(s => s.Pain || string.Equals(s.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase));
+        var raw = TrainingExerciseProgressionEngine.Evaluate(prescription, exposures);
+        var result = TrainingProgressionHold.Apply(raw, holdActive);
+        // Say WHY the increase was withheld: a pain report is a different reason from a routine progression pause.
+        if (painPending && !ReferenceEquals(result, raw) && result.Action == TrainingExerciseProgressionAction.HoldAndReview)
+            result = result with
+            {
+                Explanation = "No se incrementa la carga ni las repeticiones porque se ha declarado dolor. La progresión automática queda en pausa hasta revisarlo."
+            };
+        var painNow = HasPain(latest);
 
         // The next session shows the suggested load; otherwise the load that was actually used, unless pain was reported.
         decimal? next = result.SuggestedLoadKg ?? (painNow ? null : lastLoad);
         return new ExerciseAdvice(latest.ExerciseId, result.Action.ToString(), result.Explanation, next, result.SuggestedRepetitionsBySet);
     }
+
+    /// <summary>A set-level pain signal: the pain flag or a set skipped because of pain.</summary>
+    private static bool HasPain(ExerciseExposureRecord e) =>
+        e.Sets.Any(s => s.Pain || string.Equals(s.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase));
 
     /// <summary>The heaviest completed load of the exposure, the reference the engine progresses from.</summary>
     internal static decimal? WorkingLoad(ExerciseExposureRecord exposure) =>
@@ -168,7 +208,7 @@ public static class AdaptationPlanner
         new(e.Sets.Select(s => new TrainingExecutedSet("working", s.WeightKg, s.Repetitions, s.Rir, s.Completed)).ToArray(),
             SessionCompleted: e.Outcome == WorkoutOutcome.Completed,
             RecoveryInsufficient: string.Equals(e.Recovery, "Insufficient", StringComparison.OrdinalIgnoreCase),
-            PainReported: e.Sets.Any(s => s.Pain || string.Equals(s.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase)),
+            PainReported: HasPain(e),
             ProgressionEligible: e.ProgressionEligible,
             HistoricalPrescription: new TrainingExerciseProgressionPrescriptionSnapshot(e.PlannedSets, e.MinRepetitions, e.MaxRepetitions, e.TargetRir),
             SkippedSetReason: e.Sets.Select(s => s.SkippedReason).FirstOrDefault(r => !string.IsNullOrEmpty(r)));
@@ -181,7 +221,7 @@ public static class AdaptationPlanner
             e.ExerciseId, e.PlannedSets, completed.Length,
             e.Sets.Select(s => s.SkippedReason).FirstOrDefault(r => !string.IsNullOrEmpty(r)),
             SessionCompleted: e.Outcome == WorkoutOutcome.Completed,
-            PainReported: e.Sets.Any(s => s.Pain || string.Equals(s.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase)),
+            PainReported: HasPain(e),
             TargetRir: e.TargetRir,
             ActualAverageRir: completed.Length > 0 && rirs.Length == completed.Length ? rirs.Average() : null,
             OriginalPlannedSets: e.OriginalPlannedSets);
