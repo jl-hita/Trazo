@@ -14,7 +14,7 @@ export interface AdminUserSession { deviceName: string | null; createdAt: string
 
 export interface AdminPremiumGrant {
   id: string; kind: string; status: string; days: number; permanent: boolean;
-  startsAt: string | null; endsAt: string | null; reason: string | null; grantedAt: string;
+  startsAt: string | null; endsAt: string | null; reason: string | null; grantedBy: string | null; grantedAt: string;
   revokedAt: string | null; revocationReason: string | null; revokedBy: string | null; isCurrent: boolean;
 }
 
