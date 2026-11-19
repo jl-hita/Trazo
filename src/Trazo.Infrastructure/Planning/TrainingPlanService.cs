@@ -409,7 +409,44 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
-        return plan is null ? null : ToView(plan, await PositionAsync(plan, ct));
+        if (plan is null) return null;
+        var position = await PositionAsync(plan, ct);
+        return ToView(plan, position) with { PriorityDelivery = await PriorityDeliveryAsync(plan, position, ct) };
+    }
+
+    /// <summary>
+    /// What the muscle priorities asked for against what the block in progress really holds, so the app never promises volume that was not
+    /// programmed. Null when there is nothing to compare: no priority, a deload week, or priorities changed after the block was generated
+    /// (a change applies from the next block). A shortfall is explained, never fixed: the limits are not relaxed for a priority.
+    /// </summary>
+    private async Task<IReadOnlyList<PriorityDeliveryView>?> PriorityDeliveryAsync(TrainingPlan plan, PlanPosition position, CancellationToken ct)
+    {
+        if (plan.Origin != TrainingPlanOrigin.Generated || DecodePriorities(plan.MusclePriorities).Count == 0) return null;
+        var mesocycle = plan.Mesocycles.FirstOrDefault(m => !m.IsDeload && position.Week >= m.StartWeek && position.Week < m.StartWeek + m.Weeks);
+        if (mesocycle is null) return null;
+        if (await db.PlanAdaptations.AsNoTracking().AnyAsync(a => a.PlanId == plan.Id && a.Kind == "muscle_priorities" && a.AppliedAt >= mesocycle.CreatedAt, ct))
+            return null;
+        var sessions = (await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == mesocycle.Id && s.WeekNumber == position.Week)
+            .Select(s => s.PrescriptionJson).ToListAsync(ct)).Select(PrescriptionJson.Read).ToList();
+        if (sessions.Count == 0) return null;
+        var targets = (await db.LongitudinalDecisions.AsNoTracking().Where(d => d.PlanId == plan.Id && d.MesocycleSequence == mesocycle.Sequence).ToListAsync(ct))
+            .Where(d => Enum.TryParse<TrainingMuscleGroup>(d.Muscle, out _))
+            .ToDictionary(d => Enum.Parse<TrainingMuscleGroup>(d.Muscle), d => d.ProposedSets);
+        var items = PriorityDelivery.Build(MesocycleGenerator.Baselines(ProfileOf(plan)), targets, PriorityDelivery.WeeklySets(sessions));
+        return items.Select(i =>
+        {
+            var name = Lang == AppLanguage.En ? i.Muscle.ToString() : Trazo.Application.Planning.Longitudinal.MuscleNames.Es(i.Muscle.ToString());
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            string? note = i.Status switch
+            {
+                PriorityDeliveryStatus.Below => string.Format(T("Objetivo de {0} series semanales de {1}; este bloque programa {2}. El tiempo de sesión y los límites de volumen no permiten más sin alargar las sesiones ni superar los topes de seguridad, y esos límites no se relajan por una prioridad."),
+                    i.TargetSets.ToString("0", inv), name, i.AssignedSets.ToString("0", inv)),
+                PriorityDeliveryStatus.Above => string.Format(T("Se mantiene {1} en unas {0} series semanales y este bloque programa {2}: otros ejercicios lo trabajan de forma indirecta."),
+                    i.TargetSets.ToString("0", inv), name, i.AssignedSets.ToString("0", inv)),
+                _ => null
+            };
+            return new PriorityDeliveryView(i.Muscle.ToString(), i.Priority.ToString(), i.TargetSets, i.AssignedSets, i.Status.ToString(), note);
+        }).ToList();
     }
 
     public async Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct)

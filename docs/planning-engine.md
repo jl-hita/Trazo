@@ -631,14 +631,14 @@ the volume adaptation already follows the muscle, not the exercise, so a swap do
 
 ## Real frequency
 
-`GET /api/v1/plans/current/next` includes `frequency`: the pace the user really keeps (sessions per seven days in the last 28 days, from
-`LoadMetrics.ObservedSessionsPerSevenDays`) against the days the plan was built for. `FrequencyAdvisor` reports `OnTrack`, `Below` or `Above`
-with a tolerance of one session a week, and `Unknown` when there are fewer than four workouts or less than five days of span, or in a
-sequence plan (a rotation has no calendar). When the pace is clearly lower it suggests the frequency a new plan could assume (the pace rounded,
-between 2 and one below the plan).
+`GET /api/v1/plans/current/next` includes `frequency`: the pace the user really keeps against the days the plan was built for. There is
+ONE reading of that pace, `FrequencyPatternDetector` (see "Frequency reorganisation" below); the `frequency` view is derived from it:
+`Below` (a persistent reduction), `Above` (after a reorganisation the user trains more days again), `OnTrack` (also an irregular week) or
+`Unknown` (too few complete weeks, or a sequence plan: a rotation has no calendar). `observed` is the average of the latest weeks that
+count; `suggestedSessionsPerWeek` is set only for `Below`. It is a read: it never creates or changes anything.
 
-It is informative: the engine does not add sets to the sessions the user does attend to compensate for the ones they do not, and it does not rewrite
-the days of the plan. The one-session tolerance is a product convention, not a physiological value.
+The engine does not add sets to the sessions the user does attend to compensate for the ones they do not. Frequency is not a physiological
+target of its own: it distributes the weekly work realistically. The thresholds are product conventions, not physiological values.
 
 ## Muscle priorities (Emphasize / Grow / Maintain)
 
@@ -655,6 +655,15 @@ A generated hypertrophy plan accepts a `musclePriorities` map at creation (`POST
   `muscle_priorities` adaptation.
 - Emphasis only has effect where accessories and set ceilings leave room: a muscle already saturated by compounds does not grow.
 - The numbers (half the dose, top of range, 18/20 sets) are internal product heuristics, not validated physiological thresholds.
+
+### What a priority asked for and what the block holds
+
+`GET /api/v1/plans/current` includes `priorityDelivery` while the block in progress was generated with the current priorities (a change
+applies from the next block, so right after a change it is null): per prioritised muscle, `targetSets` (the planner's target, or the learned
+reduction of that block), `assignedSets` (effective weekly sets the stored sessions of the current week really hold, indirect work included),
+`status` (`Met` within the allocator's own +/-2 tolerance, `Below`, or `Above` for a maintained muscle that other lifts train indirectly) and a
+`note` that explains a shortfall. Session time, the volume ceilings and the available exercises are NOT relaxed to satisfy a priority, so a
+shortfall is reported, not corrected (`PriorityDelivery`, test `ThePlanSaysWhatEachPriorityAskedForAndWhatTheBlockReallyHolds`).
 
 ## Catalog experience levels
 
@@ -673,38 +682,49 @@ their level contradicted siblings that were already Beginner (for example `seate
 `cable-lateral-raise`, `cable-reverse-fly`, `dumbbell-reverse-fly`, `cable-overhead-tricep-extension` and `straight-arm-pulldown`.
 `ExerciseSeedAuditTests` pins the families that must share a level and the exercises that must NOT be relaxed.
 
-## Longitudinal learning (policy `longitudinal-1.2`)
+## Longitudinal learning (policy `longitudinal-2.0`)
 
-The history of a user can move the weekly dose of a muscle in the NEXT block. It never touches the block in progress; short-term
-adaptation (fatigue, pain, frequency) is unchanged.
+What it is for: to notice, from the user's own workouts, that a muscle has been getting more work than that user can sustain, and to take
+one set a week off it in the NEXT block. It never touches the block in progress, and it never RAISES a weekly target above what the plan
+itself prescribes.
 
-Precedence, highest first: pain and safety; availability and restrictions; muscle priorities (Emphasize, Grow, Maintain); recovery
-and fatigue; longitudinal learning; ordinary progression. Learning only changes the target handed to
-`TrainingMusclePriorityPlanner.Build`, which still clamps it to the baseline floor and ceiling of each muscle.
+Why it cannot raise anything: a better performance on an exercise is not evidence that the muscles it trains respond to more volume
+(early strength gains are largely neural, and a lift is shared by several muscles). The first versions raised targets after two favorable
+blocks; they were removed. A target can go down and be given back; it cannot go up.
 
-Terms: "volumen de referencia" (dose of the last block that went well), "bien tolerado", "límite observado" (dose at which fatigue
-repeated). They describe what this user did, not physiological thresholds. Constants live in `LongitudinalPolicy`; changing one means
-bumping its version.
+Precedence, highest first: pain and safety; availability and restrictions; muscle priorities (Emphasize, Grow, Maintain); recovery and
+fatigue; longitudinal learning; ordinary progression. Learning only hands a LOWER target to `TrainingMusclePriorityPlanner.Build`, which
+clamps it between the floor and the target of the muscle's baseline. The target carries a `Learned` flag in the allocator, so it neither
+changes the tolerance of the muscle, nor lifts the absolute weekly ceiling, nor counts as a priority for ordering: a learned target cannot
+alter a rule the same muscle follows without learning (tests: `A_learned_target_does_not_change_the_rules_the_same_muscle_follows_without_it`).
 
-Data used: sets really performed, performance of the same exercise (never across substitutions), recovery, session RPE, fatigue
-skips, post-exercise feedback when it exists, attendance. Data not used: sessions with pain, workouts logged late, the first workout
-after a long absence, duplicated logs, deload blocks, manual and non-hypertrophy plans. Missing feedback is never negative feedback.
+What is observed (`MuscleWeekObserver`, table `muscle_week_observations`, rebuilt idempotently from the workouts): per muscle and week, what
+was prescribed and performed, the performance of the lifts the muscle trains as PRIMARY (a synergist shares the exposure and its fatigue,
+never the performance of someone else's lift), fatigue signals (insufficient recovery, very high session RPE, fatigue as the reason for not
+training, "loaded" before the exercise), sets under the prescribed range, feedback answers, pain, attendance. Not used: sessions with pain,
+workouts logged late, the first workout after a long absence, duplicated logs, deload blocks, manual and non-hypertrophy plans, other users.
+Missing feedback is never negative feedback. Observations are kept even though today only the fall-with-fatigue pattern reads them.
 
-Decisions: Increase, Decrease, Hold or Abstain, one set per block at most, at most 3 sets from the baseline, Maintain never
-increases, pain abstains. An Increase needs TWO consecutive Favorable blocks (a single good block is a hint, not a reference), confidence
-of at least 0.65 (a Medium confidence of 0.55 is not solid evidence), adherence of at least 85 %, regularity
-of at least 70 % and no repeated discomfort answers; a Decrease needs repeated unfavorable periods. With insufficient data the block is
-identical to the one generated without learning (covered by `Insufficient_data_changes_nothing`).
+The decision (`LongitudinalVolumePlanner`, one per muscle and block, reading only the blocks of THIS plan; `BlockAssessor` classifies a block):
 
-All thresholds (two blocks, 0.65, 85 %, 70 %, the 3-set band) are internal product criteria chosen to be conservative; they are not
-demonstrated physiology. They only gate changes of the longitudinal reference. Ordinary short-term adaptations (load, fatigue, safety,
-pain) never wait for them. A decrease still needs one block only, because being cautious costs little.
+| Outcome | When | Effect |
+|---|---|---|
+| `Decrease` | the last block with at least 3 valid weeks had at least 2 weeks of falling performance together with fatigue or sets under the range | one set less, never below the floor or 3 sets under the baseline |
+| `Restore` | an earlier reduction exists, the last block no longer shows that pattern and no pain is recorded in the last two blocks | one set back, never above the plan's own target |
+| `Hold` | the evidence was read and nothing changes (pain with a reduction in place, floor reached, nothing to restore) | the target stays |
+| `Abstain` | not enough valid weeks to read | the target stays EXACTLY as the previous block had it: abstaining never lowers nor raises |
 
-Every decision is stored in `longitudinal_decisions` (muscle, baseline, previous and proposed sets, signals, period, confidence,
-reason in Spanish, policy version). Observations in `muscle_week_observations` are rebuilt idempotently from the workouts; the profile
-is derived from them, not stored. Both tables are exported and deleted with the account.
+Every outcome states its cause in the stored reason, and the reason describes exactly what the algorithm did. Constants are in
+`LongitudinalPolicy` (all product criteria, none a physiological threshold or measured). Decisions are stored in `longitudinal_decisions`
+(muscle, baseline, previous and proposed sets, signals, period, reason in Spanish, policy version) and exposed through
+`GET /api/v1/plans/current/volume-decisions`. Both tables are exported and deleted with the account.
 
-Decisions are exposed through `GET /api/v1/plans/current/volume-decisions`.
+A NEW plan always starts from its own baseline: nothing decided in another plan reaches its first block. (An earlier version carried the
+offset a previous plan had earned into the next one. It was removed: it inherited inferences that had no validation, and a change of days or
+priorities made them impossible to attribute. It can be reconsidered when there is real data to calibrate it.)
+
+What the tests prove and what they do not: the scenarios run the real generator, observer and engine, but the simulated "response" is an
+input of each scenario. They prove how the engine REACTS to a signal; they cannot prove that the reaction improves anybody's hypertrophy.
 
 ### Frequency reorganisation (policy `frequency-1.0`)
 
@@ -717,37 +737,17 @@ against performed days). The proposal is a record in `frequency_proposals` (reas
 is pending per plan (partial unique index). Nothing already generated is rewritten: accepting changes the plan days from the next
 block that is generated. Skipped sessions are never accumulated and lost volume is never recovered: the new block is generated for the
 new days, and session length is capped (current average + 10 %, rounded down to 5 minutes, never below the current average) so fewer
-days do not mean longer sessions. Learning bands are clamped to each new baseline, so no volume spike follows a change of days.
-Dismissing starts a cooldown for the same days. Returning to the original days is offered when the user trains them again, and
+days do not mean longer sessions. Longitudinal targets are clamped to each new baseline, so no volume spike follows a change of days.
+A proposal is created, kept or withdrawn when a workout is registered (`RefreshFrequencyProposalAsync`), never from a read: `GET` only reports
+the pace and shows the pending proposal while the pattern that created it still holds, and accepting re-checks that. Dismissing starts a cooldown for the same days. Returning to the original days is offered when the user trains them again, and
 `POST /plans/current/frequency/revert` goes back at any time; every step stays in the history. Manual and sequence plans are excluded.
 Endpoints: `GET /plans/current/frequency`, `POST .../proposals/{id}/accept`, `.../dismiss`, `POST .../revert`.
 
-### Learning across plans (policy `longitudinal-1.2`)
+## Pain precedence in the loads a new plan starts from
 
-The history belongs to the user, not to a plan: observations and decisions are stored with `UserId`, and a new plan reads those of the
-same user only (every query filters by `UserId`; nothing is ever read for or from another user). `TrainingPlanService.CreateAsync` and
-every later block go through the same `LongitudinalLearning.ProposeAsync` and `LongitudinalEngine.Propose`; there is no second engine.
-Nothing new is stored: what is carried is derived from `muscle_week_observations` and `longitudinal_decisions`, and the new plan's first
-block leaves one `longitudinal_decisions` row per muscle (action `carry`, `hold` or `abstain`) with its signals and policy version.
-
-What is carried (`CrossPlanCarry`). Not a volume: the OFFSET (in sets) the earlier plan had earned over ITS baseline, re-applied over the
-NEW baseline, so a different frequency or priority cannot import an absolute number. The offset is the decision the earlier plan would
-have taken for its next block, with the very same rules (two favorable blocks in a row, confidence 0.65 to go up, pain abstains). Then:
-
-| Factor | Effect |
-|---|---|
-| Age of the last evidence of the muscle | Full weight up to 56 days; linear fade to nothing at 240 days (`CarryOverFullWeightDays`, `CarryOverExpiryDays`). A long break is the same as old history. The offset is multiplied by the weight and rounded; confidence is multiplied by it too. |
-| Confidence after fading | An increase needs 0.65, a reduction 0.50. Below that, nothing is carried. |
-| Weekly structure changed (days or split) or priority of the muscle changed | An increase is NOT carried (it was earned in other conditions). A reduction is, because poor tolerance is the safer thing to remember. |
-| Goal other than hypertrophy, manual plans | Not eligible: they are not in the history the plan learns from. |
-| Size | An increase starts at most 1 set over the baseline (`MaximumCarriedIncreaseSets`); reductions are limited by the usual 3-set band and floor. Maintain never goes up. |
-
-It only sets where the new plan STARTS. The evidence of the earlier plan is weighed once (to compute the offset) and is not weighed again
-as new blocks; from the second block on, the new plan's own blocks decide with the ordinary rules, starting from the carried reference.
-Earlier blocks keep joining the "favorable blocks in a row" count only while they still apply (same structure and priority, not faded), so
-data from other conditions cannot complete the two blocks a new plan needs to go up. Ordinary adaptations (load, fatigue, safety) are untouched.
-With no usable history the block is exactly the one generated before (covered by
-`A_user_without_history_gets_exactly_the_block_the_generator_made_before` and the API scenarios, which compare two users created with the
-same seed). All limits are internal product criteria, not physiology; confidence describes how much data supports an estimate, never a
-guarantee. `GET /plans/current/volume-decisions` shows the `carry` decisions of the active plan; the `action` field now has this extra
-value (additive; the Android app does not read this endpoint).
+The loads a new plan or block starts from come from the user's last workouts (`LoadReferencesAsync`) and the estimator may propose a heavier
+load than the one used, so the same pain rule applies there as in the progression: no reference is taken from an exercise with pain in any of
+its last three exposures, none at all while pain is declared in the last five workouts, and a deload workout or one registered more than 14
+days late is never a reference (its load is lighter on purpose / its order is unreliable). The exercise then has no prescribed load and the
+user chooses it. The history itself is untouched: the last performance shown to the user still reads every workout
+(`LoadReferencePainTests`).

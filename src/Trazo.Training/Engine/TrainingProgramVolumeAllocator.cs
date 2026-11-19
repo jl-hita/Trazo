@@ -29,7 +29,8 @@ public static class TrainingProgramVolumeAllocator
     // below 65 % of the baseline; explicit professional targets are never reduced.
     private const decimal WeeklyMinutesForFullDefaultVolume = 180m;
     private const decimal MinimumDefaultVolumeTimeFactor = 0.65m;
-    private const decimal ExplicitHypertrophyTargetToleranceSets = 2m;
+    /// <summary>Half-width of the range around an explicit weekly target (20 means 18-22), whatever the experience.</summary>
+    public const decimal ExplicitHypertrophyTargetToleranceSets = 2m;
 
     /// <summary>
     /// Raises each exercise's sets one at a time, always choosing the exercise whose stimulated muscles

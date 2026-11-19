@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -214,6 +216,57 @@ public sealed class MusclePriorityApiTests() : PlansApiBase(enforced: false)
         var priorities = plan.GetProperty("musclePriorities");
         Assert.Equal("Emphasize", priorities.GetProperty("Deltoids").GetString());
         Assert.Equal("Maintain", priorities.GetProperty("Chest").GetString());
+    }
+
+    private static object Tight(Dictionary<string, string> priorities) => new
+    {
+        goal = "Hypertrophy", experience = "Intermediate", totalWeeks = 12,
+        trainingDays = new[] { "Monday", "Wednesday", "Friday" }, maxSessionMinutes = 45,
+        availableEquipment = new[] { "barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar" },
+        excludedExerciseIds = Array.Empty<string>(), limitations = Array.Empty<string>(), musclePriorities = priorities
+    };
+
+    [Fact]
+    public async Task ThePlanSaysWhatEachPriorityAskedForAndWhatTheBlockReallyHolds()
+    {
+        // Three emphasised muscles in three short sessions: the generator cannot give all of them what was asked for, and must say so.
+        var (user, client, _) = await StartPlanAsync(profile: Tight(new()
+            { ["Chest"] = "Emphasize", ["Lats"] = "Emphasize", ["Quadriceps"] = "Emphasize", ["Triceps"] = "Maintain" }));
+        var plan = await JsonAsync(await client.GetAsync("/api/v1/plans/current"));
+        var report = plan.GetProperty("priorityDelivery").EnumerateArray().ToDictionary(i => i.GetProperty("muscle").GetString()!);
+        Assert.Equal(4, report.Count);
+
+        // What it reports as assigned is what the stored sessions of the week really hold.
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Persistence.TrazoDbContext>();
+        var week = plan.GetProperty("currentWeek").GetInt32();
+        var stored = (await db.PlannedSessions.Where(s => s.WeekNumber == week).ToListAsync()).Select(s => PrescriptionJson.Read(s.PrescriptionJson));
+        var real = Trazo.Application.Planning.PriorityDelivery.WeeklySets(stored);
+        foreach (var (name, item) in report)
+            Assert.Equal(real.GetValueOrDefault(Enum.Parse<TrainingMuscleGroup>(name)), item.GetProperty("assignedSets").GetDecimal());
+
+        // A muscle below its target says why; one that holds it says nothing. The target is never invented upwards to look better.
+        Assert.All(report.Values, item =>
+        {
+            var status = item.GetProperty("status").GetString();
+            var note = item.GetProperty("note");
+            if (status == "Met") Assert.Equal(System.Text.Json.JsonValueKind.Null, note.ValueKind);
+            else Assert.False(string.IsNullOrWhiteSpace(note.GetString()));
+            if (status == "Below") Assert.True(item.GetProperty("assignedSets").GetDecimal() < item.GetProperty("targetSets").GetDecimal());
+        });
+        Assert.Contains(report.Values, item => item.GetProperty("status").GetString() != "Met");
+    }
+
+    [Fact]
+    public async Task ChangingThePrioritiesPromisesNothingUntilTheNextBlockHasThem()
+    {
+        var (_, client, _) = await StartPlanAsync();
+        Assert.Equal(System.Text.Json.JsonValueKind.Null, (await JsonAsync(await client.GetAsync("/api/v1/plans/current"))).GetProperty("priorityDelivery").ValueKind);
+        var set = await client.PutAsJsonAsync("/api/v1/plans/current/muscle-priorities",
+            new { musclePriorities = new Dictionary<string, string> { ["Chest"] = "Emphasize" } });
+        Assert.Equal(HttpStatusCode.OK, set.StatusCode);
+        // The block in progress was generated before the change: it is not compared with a target it was not built for.
+        Assert.Equal(System.Text.Json.JsonValueKind.Null, (await JsonAsync(await client.GetAsync("/api/v1/plans/current"))).GetProperty("priorityDelivery").ValueKind);
     }
 
     [Fact]

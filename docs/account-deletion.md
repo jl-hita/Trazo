@@ -49,7 +49,7 @@ whole transaction is rolled back). All sessions end with it: refresh tokens are 
 | `training_plans`, `training_plan_phases`, `training_mesocycles`, `planned_sessions` | profile (limitations, equipment) and the plan |
 | `workout_logs`, `workout_set_logs` | logged sessions: loads, repetitions, RIR, recovery, **pain reported, free notes** |
 | `plan_adaptations` | changes the engine made to the plan |
-| `muscle_week_observations` | per muscle and week evidence used by longitudinal learning (deleted before the plans) |
+| `muscle_week_observations` | per muscle and week observations (kept; today only the fall-with-fatigue pattern reads them) (deleted before the plans) |
 | `longitudinal_decisions` | audit log of every volume decision of longitudinal learning (deleted before the plans) |
 | `frequency_proposals` | proposals and decisions to reorganise the training days (deleted before the plans) |
 | `waitlist_entries` | the landing waitlist row with the same email as the account (not linked by id; matched by the normalised email) |

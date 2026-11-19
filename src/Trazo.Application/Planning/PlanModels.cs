@@ -32,7 +32,15 @@ public sealed record PlanView(
     string Disclaimer,
     string SchedulingMode = "Calendar",
     int SessionsPerPeriod = 0,
-    IReadOnlyDictionary<string, string>? MusclePriorities = null);
+    IReadOnlyDictionary<string, string>? MusclePriorities = null,
+    IReadOnlyList<PriorityDeliveryView>? PriorityDelivery = null);
+
+/// <summary>
+/// What a muscle priority asked for and what the block in progress really holds, in effective weekly sets. <c>Status</c> is Met, Below or Above;
+/// <c>Note</c> explains a shortfall (or an excess in maintenance) and is null when the block holds what was asked. Present only while the
+/// block was generated with the current priorities; a change applies from the next block.
+/// </summary>
+public sealed record PriorityDeliveryView(string Muscle, string Priority, decimal TargetSets, decimal AssignedSets, string Status, string? Note);
 
 public sealed record ExerciseView(
     string ExerciseId,
