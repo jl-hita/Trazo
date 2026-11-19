@@ -313,6 +313,7 @@ app.MapExerciseCatalogEndpoints();
 app.MapSetupEndpoints();
 app.MapAuthenticationEndpoints();
 app.MapAdminUsersEndpoints();
+app.MapAdminPremiumGrantsEndpoints();
 app.MapAdminExercisesEndpoints();
 app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
