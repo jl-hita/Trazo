@@ -151,7 +151,7 @@ public sealed class PremiumGrantService(TrazoDbContext db, TimeProvider clock, I
             var activeRows = await db.PremiumGrants.Where(x => x.UserId == grant.UserId &&
                 x.Status == PremiumGrantStatuses.Active && x.Id != grant.Id).ToListAsync(ct);
             var later = (grant.IsPermanent
-                ? activeRows.Where(x => !x.IsPermanent)
+                ? activeRows.Where(x => !x.IsPermanent && x.StartsAt >= grant.StartsAt)
                 : activeRows.Where(x => x.StartsAt >= grant.StartsAt))
                 .OrderBy(x => x.StartsAt).ToList();
             foreach (var next in later)
