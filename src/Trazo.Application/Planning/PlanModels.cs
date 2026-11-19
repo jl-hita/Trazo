@@ -53,7 +53,12 @@ public sealed record ExerciseView(
     string? SwappedFromExerciseId,
     LastPerformanceView? LastPerformance = null,
     string? SupersetGroup = null,
-    bool IsExtra = false);
+    bool IsExtra = false,
+    /// <summary>
+    /// A swapped exercise the user has never done: what they did the last time with the exercise it replaced, as a reference only
+    /// (<c>SuggestionBasis</c> is <c>reference</c>, no load is proposed). Null when the exercise was not swapped or has its own history.
+    /// </summary>
+    LastPerformanceView? ReplacedPerformance = null);
 
 /// <summary>One set of the last time the user did an exercise.</summary>
 public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir);
