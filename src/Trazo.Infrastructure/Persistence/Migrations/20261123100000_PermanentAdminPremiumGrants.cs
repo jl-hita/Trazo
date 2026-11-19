@@ -17,7 +17,7 @@ public sealed class PermanentAdminPremiumGrants : Migration
             ALTER TABLE premium_grants ADD COLUMN "IsPermanent" boolean NOT NULL DEFAULT FALSE;
             ALTER TABLE premium_grants ADD COLUMN "GrantReason" character varying(300) NULL;
             ALTER TABLE premium_grants ADD CONSTRAINT "CK_premium_grants_Days"
-                CHECK (("IsPermanent" = TRUE AND "Days" = 0) OR ("IsPermanent" = FALSE AND "Days" > 0));
+                CHECK (("IsPermanent" = TRUE AND "Days" = 0 AND "Kind" = 'admin_grant') OR ("IsPermanent" = FALSE AND "Days" > 0));
         """);
     }
 
