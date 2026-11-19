@@ -517,6 +517,9 @@ export class UsersPageComponent {
     this.deleteConfirm.set('');
     this.editName.set(detail.displayName);
     this.editRole.set(detail.role);
+    this.premiumGrants.set([]);
+    this.premiumRevokeId.set(null);
+    void this.loadPremiumGrants(detail.id);
   }
 
   private async load(): Promise<void> {
