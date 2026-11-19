@@ -158,7 +158,8 @@ public static class FrequencyReorganizer
         if (!current.Succeeded) return profile.MaxSessionMinutes;
         var (sessions, _, _, average) = WeekShape(current);
         if (sessions == 0 || average <= 0) return profile.MaxSessionMinutes;
-        var capped = (int)(Math.Ceiling(average * LongerSessionAllowance / 5m) * 5m);
+        // Rounded down to five minutes (rounding up could allow more than the allowance), but never below the sessions the user has now.
+        var capped = Math.Max((int)(Math.Floor(average * LongerSessionAllowance / 5m) * 5m), average);
         return Math.Min(profile.MaxSessionMinutes, Math.Max(30, capped));
     }
 
