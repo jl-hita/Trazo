@@ -95,10 +95,21 @@ public sealed class PlannedSessionConfiguration : IEntityTypeConfiguration<Plann
 {
     public void Configure(EntityTypeBuilder<PlannedSession> builder)
     {
-        builder.ToTable("planned_sessions");
+        // The original prescription is all-or-nothing (snapshot and its layout version) and only an engine session has one.
+        builder.ToTable("planned_sessions", table =>
+        {
+            table.HasCheckConstraint("CK_planned_sessions_original_complete",
+                "(\"OriginalPrescriptionJson\" IS NULL AND \"OriginalPrescriptionSchemaVersion\" IS NULL)"
+                + " OR (\"OriginalPrescriptionJson\" IS NOT NULL AND \"OriginalPrescriptionSchemaVersion\" IS NOT NULL AND \"PrescriptionSource\" = 'engine')");
+        });
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Title).HasMaxLength(160).IsRequired();
         builder.Property(x => x.PrescriptionJson).HasColumnType("text").IsRequired();
+        // Nullable on purpose: nothing is invented for sessions created before the snapshot existed. Immutable once written.
+        builder.Property(x => x.OriginalPrescriptionJson).HasColumnType("text");
+        builder.Property(x => x.PrescriptionSource).HasMaxLength(10);
+        foreach (var original in new[] { nameof(PlannedSession.OriginalPrescriptionJson), nameof(PlannedSession.OriginalPrescriptionSchemaVersion), nameof(PlannedSession.PrescriptionSource) })
+            builder.Property(original).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Throw);
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
         builder.HasIndex(x => new { x.PlanId, x.Date });
         builder.HasIndex(x => new { x.PlanId, x.SequenceIndex }).IsUnique();
@@ -150,11 +161,19 @@ public sealed class PlanAdaptationConfiguration : IEntityTypeConfiguration<PlanA
 {
     public void Configure(EntityTypeBuilder<PlanAdaptation> builder)
     {
-        builder.ToTable("plan_adaptations");
+        builder.ToTable("plan_adaptations", table => table.HasCheckConstraint(
+            "CK_plan_adaptations_changes_versioned", "(\"ChangesJson\" IS NULL) = (\"SchemaVersion\" IS NULL)"));
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Kind).HasMaxLength(30).IsRequired();
         builder.Property(x => x.ExerciseIds).AsJsonText();
         builder.Property(x => x.Explanation).HasMaxLength(600).IsRequired();
+        // Nullable on purpose: rows written before the trace existed carry no source, version or changes, and none is invented for them.
+        builder.Property(x => x.Source).HasMaxLength(10);
+        builder.Property(x => x.EngineVersion).HasMaxLength(40);
+        builder.Property(x => x.ChangesJson).HasColumnType("text");
+        // Who and with which engine never change once the row exists.
+        foreach (var fixedColumn in new[] { nameof(PlanAdaptation.Source), nameof(PlanAdaptation.EngineVersion) })
+            builder.Property(fixedColumn).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Throw);
         builder.HasIndex(x => new { x.PlanId, x.AppliedAt });
         // One lighter first session per absence, even if two requests arrive at once: the second insert fails and changes nothing.
         builder.HasIndex(x => new { x.PlanId, x.EvidenceAt }).IsUnique().HasFilter("\"Kind\" = 'reentry'");

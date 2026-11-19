@@ -101,6 +101,7 @@ public sealed class PostgresMigrationTests : IDisposable
     }
 
     private const string BeforeTrace = "20261126100000_FrequencyProposals";
+    private const string BeforePrescriptionHistory = "20261127100000_MesocycleGenerationTrace";
 
     /// <summary>Inserts one row giving a neutral value to every NOT NULL column without a default, so the test does not depend on the table's full shape.</summary>
     private void InsertMinimalRow(string table, Dictionary<string, string> values)
@@ -158,6 +159,51 @@ public sealed class PostgresMigrationTests : IDisposable
         Assert.DoesNotContain("EngineVersion", Query(_connection,
             "SELECT column_name FROM information_schema.columns WHERE table_name = 'training_mesocycles'"));
         Assert.Equal("1", Query(_connection, "SELECT \"Sequence\"::text FROM training_mesocycles").Single());
+        using (var db = Context()) db.Database.Migrate();
+    }
+
+    [ScenarioFact]
+    public void The_prescription_history_migration_leaves_existing_sessions_and_adaptations_untouched_and_goes_down_and_up_again()
+    {
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforePrescriptionHistory);
+        var (user, plan, block) = (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+        InsertMinimalRow("users", new() { ["Id"] = $"'{user}'", ["Role"] = "'user'" });
+        InsertMinimalRow("training_plans", new()
+        {
+            ["Id"] = $"'{plan}'", ["UserId"] = $"'{user}'", ["Status"] = "'Archived'", ["Origin"] = "'Generated'", ["SchedulingMode"] = "'Calendar'"
+        });
+        InsertMinimalRow("training_mesocycles", new() { ["Id"] = $"'{block}'", ["PlanId"] = $"'{plan}'", ["Sequence"] = "1" });
+        InsertMinimalRow("planned_sessions", new()
+        {
+            ["PlanId"] = $"'{plan}'", ["MesocycleId"] = $"'{block}'", ["PrescriptionJson"] = "'{\"exercises\":[]}'", ["Status"] = "'Planned'"
+        });
+        InsertMinimalRow("plan_adaptations", new() { ["PlanId"] = $"'{plan}'", ["Kind"] = "'deload'", ["ExerciseIds"] = "'[]'" });
+
+        using (var db = Context()) db.Database.Migrate();
+        using (var db = Context()) Assert.Empty(db.Database.GetPendingMigrations());
+
+        // What existed has no original and no invented trace; the prescription and the audit row are exactly as they were.
+        Assert.Equal("{\"exercises\":[]}|t|t|t", Query(_connection,
+            "SELECT concat_ws('|', \"PrescriptionJson\", \"OriginalPrescriptionJson\" IS NULL, \"OriginalPrescriptionSchemaVersion\" IS NULL, " +
+            "\"PrescriptionSource\" IS NULL) FROM planned_sessions").Single());
+        Assert.Equal("deload|t|t|t|t", Query(_connection,
+            "SELECT concat_ws('|', \"Kind\", \"Source\" IS NULL, \"EngineVersion\" IS NULL, \"SchemaVersion\" IS NULL, \"ChangesJson\" IS NULL) FROM plan_adaptations").Single());
+
+        // The database refuses half a snapshot, a snapshot that is not the engine's, and changes without their layout version.
+        Assert.ThrowsAny<Exception>(() => Execute(_connection, "UPDATE planned_sessions SET \"OriginalPrescriptionJson\" = '{}'"));
+        Assert.ThrowsAny<Exception>(() => Execute(_connection,
+            "UPDATE planned_sessions SET \"OriginalPrescriptionJson\" = '{}', \"OriginalPrescriptionSchemaVersion\" = 1, \"PrescriptionSource\" = 'user'"));
+        Assert.ThrowsAny<Exception>(() => Execute(_connection, "UPDATE plan_adaptations SET \"ChangesJson\" = '{}'"));
+        Execute(_connection,
+            "UPDATE planned_sessions SET \"OriginalPrescriptionJson\" = '{}', \"OriginalPrescriptionSchemaVersion\" = 1, \"PrescriptionSource\" = 'engine'");
+
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforePrescriptionHistory);
+        Assert.DoesNotContain("OriginalPrescriptionJson", Query(_connection,
+            "SELECT column_name FROM information_schema.columns WHERE table_name = 'planned_sessions'"));
+        Assert.DoesNotContain("ChangesJson", Query(_connection,
+            "SELECT column_name FROM information_schema.columns WHERE table_name = 'plan_adaptations'"));
+        Assert.Equal("{\"exercises\":[]}", Query(_connection, "SELECT \"PrescriptionJson\" FROM planned_sessions").Single());
+        Assert.Equal("deload", Query(_connection, "SELECT \"Kind\" FROM plan_adaptations").Single());
         using (var db = Context()) db.Database.Migrate();
     }
 }

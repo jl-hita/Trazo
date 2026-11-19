@@ -323,9 +323,35 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240),
             PrescriptionJson = PrescriptionJson.Serialize(prescription,
                 day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!)),
-            Status = PlannedSessionStatus.Planned, UpdatedAt = now
+            // The user wrote this prescription: it is not an engine snapshot, so no original is stored for it.
+            PrescriptionSource = PrescriptionSources.User, Status = PlannedSessionStatus.Planned, UpdatedAt = now
         };
     }
+
+    // ---------------------------------------------------------------- prescription traceability
+
+    private static SessionChange Modified(PlannedSession session, string before, string after) =>
+        new(PrescriptionChangeTrace.Modified, session.Id, session.MesocycleId, session.WeekNumber, session.SequenceIndex, before, after);
+
+    /// <summary>
+    /// Stamps an adaptation row with who made the change and which sessions it touched (exact prescription before and after). It is saved in the
+    /// same <c>SaveChanges</c> as the prescription it describes, so one cannot be committed without the other.
+    /// </summary>
+    private static PlanAdaptation Traced(PlanAdaptation row, string source, IReadOnlyCollection<SessionChange> changes)
+    {
+        row.Source = source;
+        if (source == PrescriptionSources.Engine) row.EngineVersion = TrainingProgramGenerator.EngineVersion;
+        if (changes.Count > 0)
+        {
+            row.SchemaVersion = PrescriptionChangeTrace.SchemaVersion;
+            row.ChangesJson = PrescriptionChangeTrace.Serialize(changes);
+        }
+        return row;
+    }
+
+    /// <summary>The adaptation rows the user reads: the ones recording the user's own prescription edits are history for the analysis, not engine decisions.</summary>
+    private static IQueryable<PlanAdaptation> EngineVisible(IQueryable<PlanAdaptation> rows) =>
+        rows.Where(a => a.Source == null || a.Source != PrescriptionSources.User);
 
     /// <summary>
     /// Rewrites the routines of the user's own plan from today on. Sessions already logged and past days stay as they are;
@@ -367,7 +393,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var loggedPositions = sessions.Where(s => positionOf.ContainsKey(s.Id)).Select(s => (s.WeekNumber, positionOf[s.Id])).ToHashSet();
         var loggedDates = sessions.Where(s => logged.Contains(s.Id)).Select(s => s.Date).ToHashSet();
         // Calendar: pending sessions from today on are replaced. Sequence: there is no "today", every pending session is.
-        db.PlannedSessions.RemoveRange(sessions.Where(s => !logged.Contains(s.Id) && (sequence || s.Date >= Today)));
+        var removed = sessions.Where(s => !logged.Contains(s.Id) && (sequence || s.Date >= Today)).ToList();
+        db.PlannedSessions.RemoveRange(removed);
 
         plan.MacrocycleName = manual.Name;
         plan.MacrocycleNotes = manual.Notes;
@@ -381,6 +408,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         }
         // Kept sessions (logged, or past and unlogged in a calendar plan) plus the new ones, keyed to be numbered in program order.
         var ordered = new List<(int Mesocycle, int Week, int Position, PlannedSession Session)>();
+        var addedSessions = new List<PlannedSession>();
         foreach (var kept in sessions.Where(s => logged.Contains(s.Id) || (!sequence && s.Date < Today)))
             ordered.Add((plan.Mesocycles.First(m => m.Id == kept.MesocycleId).Sequence, kept.WeekNumber, positionOf.GetValueOrDefault(kept.Id), kept));
         foreach (var mesocycle in plan.Mesocycles)
@@ -393,6 +421,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                         continue;
                     var created = BuildManualSession(plan, mesocycle.Id, week, day, catalog, now);
                     db.PlannedSessions.Add(created);
+                    addedSessions.Add(created);
                     ordered.Add((mesocycle.Sequence, week, position, created));
                 }
         // Program order: block, period, then the position in the routine (sequence) or the date (calendar).
@@ -401,8 +430,31 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                      .OrderBy(o => o.Mesocycle).ThenBy(o => o.Week).ThenBy(o => sequence ? o.Position : 0)
                      .ThenBy(o => o.Session.Date).ThenBy(o => o.Session.Title, StringComparer.Ordinal))
             item.Session.SequenceIndex = index++;
+        // Every pending session that was replaced and every one that took its place, with the exact prescription. A retry that rewrites the same
+        // routines changes no prescription at all: it is not recorded as a change.
+        var edits = removed.Select(r => new SessionChange(PrescriptionChangeTrace.Removed, r.Id, r.MesocycleId, r.WeekNumber, r.SequenceIndex, r.PrescriptionJson, null))
+            .Concat(addedSessions.Select(a => new SessionChange(PrescriptionChangeTrace.Added, a.Id, a.MesocycleId, a.WeekNumber, a.SequenceIndex, null, a.PrescriptionJson)))
+            .ToList();
+        if (!SameRoutines(removed, addedSessions))
+            db.PlanAdaptations.Add(Traced(new PlanAdaptation
+            {
+                Id = Guid.NewGuid(), PlanId = plan.Id, Kind = ManualEditKind,
+                ExerciseIds = removed.Concat(addedSessions).SelectMany(x => PrescriptionJson.Read(x.PrescriptionJson).Select(e => e.ExerciseId))
+                    .Distinct(StringComparer.Ordinal).OrderBy(id => id, StringComparer.Ordinal).ToArray(),
+                SessionsChanged = addedSessions.Count, AppliedAt = now,
+                Explanation = "El usuario editó las rutinas de su plan manual: las sesiones pendientes se sustituyeron por las nuevas."
+            }, PrescriptionSources.User, edits));
         await db.SaveChangesAsync(ct);
         return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
+    }
+
+    /// <summary>True when the sessions replaced and the ones that took their place have the same weeks, dates, titles and prescriptions.</summary>
+    private static bool SameRoutines(IEnumerable<PlannedSession> before, IEnumerable<PlannedSession> after)
+    {
+        static List<(int Week, DateOnly? Date, string Title, string Prescription)> Key(IEnumerable<PlannedSession> sessions) =>
+            sessions.Select(x => (x.WeekNumber, x.Date, x.Title, x.PrescriptionJson))
+                .OrderBy(x => x.WeekNumber).ThenBy(x => x.Date).ThenBy(x => x.Title, StringComparer.Ordinal).ThenBy(x => x.PrescriptionJson, StringComparer.Ordinal).ToList();
+        return Key(before).SequenceEqual(Key(after));
     }
 
     // ---------------------------------------------------------------- read
@@ -672,6 +724,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     public const string SkipKind = "skip";
     public const string LoadUpdateKind = "load_update";
     public const string ReviewKind = "review";
+    public const string SwapKind = "user_swap_exercise";
+    public const string AddKind = "user_add_exercise";
+    public const string ManualEditKind = "user_manual_plan_edit";
 
     /// <summary>
     /// True when the next session is (now or already) lighter for this absence; false when nothing could be lightened. Each session carries the
@@ -684,6 +739,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var already = targets.Count(t => PrescriptionJson.EasedBackFor(t.PrescriptionJson) == absence);
         var changedSessions = 0;
         var exerciseIds = new HashSet<string>(StringComparer.Ordinal);
+        var easedChanges = new List<SessionChange>();
         foreach (var target in targets)
         {
             if (PrescriptionJson.EasedBackFor(target.PrescriptionJson) == absence) continue;
@@ -699,8 +755,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             if (TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, ids, out var fewer, out _)) { json = fewer; changed = true; }
             if (TrainingAdaptationPrescriptionAdjuster.TryRaiseReserve(json, out var reserve, out _)) { json = reserve; changed = true; }
             if (!changed) continue;
+            var easedFrom = session.PrescriptionJson;
             session.PrescriptionJson = PrescriptionJson.MarkEasedBack(json, absence);
             session.UpdatedAt = clock.GetUtcNow();
+            easedChanges.Add(Modified(session, easedFrom, session.PrescriptionJson));
             changedSessions++;
             exerciseIds.UnionWith(ids);
         }
@@ -709,17 +767,20 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var now = clock.GetUtcNow();
         var row = await db.PlanAdaptations.FirstOrDefaultAsync(a => a.PlanId == plan.Id && a.Kind == ReentryKind && a.EvidenceAt == lastWorkout, ct);
         if (row is null)
-            db.PlanAdaptations.Add(new PlanAdaptation
+            db.PlanAdaptations.Add(Traced(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, Kind = ReentryKind, ExerciseIds = exerciseIds.OrderBy(id => id, StringComparer.Ordinal).ToArray(),
                 SessionsChanged = changedSessions, AppliedAt = now, EvidenceAt = lastWorkout,
                 Explanation = count > 1
                     ? "Primeras sesiones tras una ausencia larga: una serie menos en cada ejercicio y una repetición más en reserva."
                     : "Primera sesión tras una ausencia larga: una serie menos en cada ejercicio y una repetición más en reserva."
-            });
+            }, PrescriptionSources.Engine, easedChanges));
         else
         {
+            // The same absence reaching more sessions: they are appended to the record, the entries already there stay as they were.
             row.SessionsChanged += changedSessions;
+            row.SchemaVersion = PrescriptionChangeTrace.SchemaVersion;
+            row.ChangesJson = PrescriptionChangeTrace.Append(row.ChangesJson, easedChanges);
             row.ExerciseIds = row.ExerciseIds.Union(exerciseIds).OrderBy(id => id, StringComparer.Ordinal).ToArray();
         }
         try
@@ -1255,7 +1316,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
-        var planRows = db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id);
+        var planRows = EngineVisible(db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id));
         var planChanges = await planRows.CountAsync(a => a.Kind != ReviewKind && a.Kind != SkipKind && a.SessionsChanged > 0, ct);
         var planCount = await planRows.CountAsync(ct);
 
@@ -1623,7 +1684,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         }
 
         // Cooldowns run on the timeline of the evidence (EvidenceAt), so a late registration cannot start or skip one.
-        var recent = (await db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id).ToListAsync(ct))
+        var recent = (await EngineVisible(db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id)).ToListAsync(ct))
             .Where(a => (a.EvidenceAt ?? a.AppliedAt) > evidenceNow.AddDays(-30))
             .Where(a => !a.Kind.StartsWith(MuscleKindPrefix, StringComparison.Ordinal))
             .Select(a => new TrainingAutoAdaptationRecord(KindOf(a.Kind), a.EvidenceAt ?? a.AppliedAt)).ToList();
@@ -1650,6 +1711,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             var targets = action.ExerciseIds.ToHashSet(StringComparer.Ordinal);
             var changed = 0;
+            var changes = new List<SessionChange>();
             IEnumerable<PlannedSession> window = upcoming;
             if (action.Kind == TrainingAutoAdaptationKind.Deload)
                 window = IsSequence(plan)
@@ -1669,17 +1731,18 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                     _ => false
                 };
                 if (!ok) continue;
+                changes.Add(Modified(future, future.PrescriptionJson, json));
                 future.PrescriptionJson = json;
                 future.UpdatedAt = now;
                 changed++;
             }
 
-            db.PlanAdaptations.Add(new PlanAdaptation
+            db.PlanAdaptations.Add(Traced(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id,
                 Kind = TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), ExerciseIds = action.ExerciseIds.ToArray(),
                 SessionsChanged = changed, Explanation = action.Explanation, AppliedAt = now, EvidenceAt = evidenceNow
-            });
+            }, PrescriptionSources.Engine, changes));
             applied.Add(new AppliedAdaptationView(TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), action.ExerciseIds, changed, action.Explanation));
         }
 
@@ -1694,14 +1757,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             if (TrainingAdaptationPrescriptionAdjuster.TrySetLoad(next.PrescriptionJson, advice.ExerciseId, advice.NextLoadKg!.Value,
                     $"Según tu último registro: {advice.Explanation}", out var updated, out _))
             {
+                var loadChange = Modified(next, next.PrescriptionJson, updated);
                 next.PrescriptionJson = updated;
                 next.UpdatedAt = now;
                 var explanation = $"Carga objetivo de la próxima sesión: {advice.NextLoadKg.Value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} kg. {advice.Explanation}";
-                db.PlanAdaptations.Add(new PlanAdaptation
+                db.PlanAdaptations.Add(Traced(new PlanAdaptation
                 {
                     Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = LoadUpdateKind, ExerciseIds = [advice.ExerciseId],
                     SessionsChanged = 1, Explanation = explanation, AppliedAt = now, EvidenceAt = evidenceNow
-                });
+                }, PrescriptionSources.Engine, [loadChange]));
                 applied.Add(new AppliedAdaptationView(LoadUpdateKind, [advice.ExerciseId], 1, explanation));
             }
         }
@@ -1782,20 +1846,22 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 continue;
             }
             var changed = 0;
+            var changes = new List<SessionChange>();
             foreach (var future in upcoming.Take(MaximumFutureSessionsToAdapt))
                 if (TrainingAdaptationPrescriptionAdjuster.TryAdjustSets(future.PrescriptionJson, decision.ExerciseId, delta, out var updated, out _))
                 {
+                    changes.Add(Modified(future, future.PrescriptionJson, updated));
                     future.PrescriptionJson = updated;
                     future.UpdatedAt = now;
                     changed++;
                 }
             if (changed == 0) continue;
             var kind = MuscleKindPrefix + (delta > 0 ? "add_set" : "reduce_set");
-            db.PlanAdaptations.Add(new PlanAdaptation
+            db.PlanAdaptations.Add(Traced(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = kind, ExerciseIds = [decision.ExerciseId],
                 SessionsChanged = changed, Explanation = decision.Explanation, AppliedAt = now, EvidenceAt = evidenceNow
-            });
+            }, PrescriptionSources.Engine, changes));
             applied.Add(new AppliedAdaptationView(kind, [decision.ExerciseId], changed, decision.Explanation));
             // One exercise can be proposed for several of its muscles at once: change it only once.
             cooling.Add(decision.ExerciseId);
@@ -1842,15 +1908,26 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             targets.AddRange(await db.PlannedSessions.Where(s => s.PlanId == context.Plan!.Id && s.MesocycleId == context.Session.MesocycleId
                 && s.Status == PlannedSessionStatus.Planned && s.SequenceIndex > context.Session.SequenceIndex).ToListAsync(ct));
         var primarySwapped = false;
+        var swaps = new List<SessionChange>();
         foreach (var target in targets)
         {
             if (!TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(target.PrescriptionJson, exerciseId, candidate, out var updated, out _)) continue;
+            swaps.Add(Modified(target, target.PrescriptionJson, updated));
             target.PrescriptionJson = updated;
             target.UpdatedAt = now;
             primarySwapped |= ReferenceEquals(target, context.Session);
         }
         if (!primarySwapped)
             return PlanResult<SessionView>.Fail(PlanFailure.NotAllowed, "No se pudo cambiar el ejercicio: ya está en la sesión o no existe.");
+        // The user's own decision, recorded in the same save as the prescription it changes.
+        db.PlanAdaptations.Add(Traced(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = context.Plan!.Id, Kind = SwapKind, ExerciseIds = [exerciseId, candidate.ExerciseId],
+            SessionsChanged = swaps.Count, AppliedAt = now,
+            Explanation = applyToRemainingBlock
+                ? "El usuario cambió un ejercicio por otro en esta sesión y en las pendientes del bloque."
+                : "El usuario cambió un ejercicio por otro en esta sesión."
+        }, PrescriptionSources.User, swaps));
         await db.SaveChangesAsync(ct);
         return PlanResult<SessionView>.Ok(ToSessionView(context.Session, null));
     }
@@ -1903,9 +1980,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, prescribed.Count == 0 ? 1 : prescribed.Max(e => e.Order) + 1, sets,
             min, max, request.TargetRir ?? 2m, rest, TrainingProgressionRule.DoubleProgression, "Añadido por el usuario a esta sesión.",
             candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
+        var beforeAdd = session.PrescriptionJson;
         session.PrescriptionJson = PrescriptionJson.AppendExtra(session.PrescriptionJson, exercise);
         session.EstimatedDurationMinutes = Math.Clamp(session.EstimatedDurationMinutes + (int)Math.Ceiling(sets * (rest + 45) / 60.0), 10, 240);
         session.UpdatedAt = clock.GetUtcNow();
+        db.PlanAdaptations.Add(Traced(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = AddKind, ExerciseIds = [candidate.ExerciseId], SessionsChanged = 1, AppliedAt = session.UpdatedAt,
+            Explanation = "El usuario añadió un ejercicio a esta sesión."
+        }, PrescriptionSources.User, [Modified(session, beforeAdd, session.PrescriptionJson)]));
         await db.SaveChangesAsync(ct);
         return PlanResult<SessionView>.Ok(ToSessionView(session, null));
     }
@@ -2142,7 +2225,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycle.Id, WeekNumber = session.WeekNumber, Date = session.Date,
                 Title = session.Title, EstimatedDurationMinutes = session.EstimatedDurationMinutes,
-                PrescriptionJson = session.PrescriptionJson, Status = PlannedSessionStatus.Planned, UpdatedAt = now
+                PrescriptionJson = session.PrescriptionJson, Status = PlannedSessionStatus.Planned, UpdatedAt = now,
+                // The prescription as the engine produced it, copied verbatim: later edits (the engine's or the user's) never touch it.
+                OriginalPrescriptionJson = session.PrescriptionJson, OriginalPrescriptionSchemaVersion = PrescriptionChangeTrace.SnapshotSchemaVersion,
+                PrescriptionSource = PrescriptionSources.Engine
             });
         NumberSessions(mesocycle, firstIndex);
         plan.Mesocycles.Add(mesocycle);
