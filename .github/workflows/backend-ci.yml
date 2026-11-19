@@ -93,7 +93,10 @@ jobs:
       - name: Build
         run: dotnet build Trazo.sln --configuration Release --no-restore
       - name: Test
-        run: dotnet test Trazo.sln --configuration Release --no-build --filter "Category=Postgres" --logger "trx;LogFileName=trazo-postgres.trx"
+        run: |
+          dotnet test Trazo.sln --configuration Release --no-build --filter "Category=Postgres" --logger "trx;LogFileName=trazo-postgres.trx" | tee postgres-test.log
+          # The PostgreSQL scenarios must really run here: a skipped or empty run is a failure, not a pass.
+          grep -Eq "Passed!.*Failed: +0, Passed: +[1-9][0-9]*, Skipped: +0," postgres-test.log
 
   # Un único check estable para el resto del repositorio: falla si cualquier reparto falla o se cancela.
   build-and-test:

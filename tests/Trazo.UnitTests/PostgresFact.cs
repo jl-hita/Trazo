@@ -12,6 +12,10 @@ namespace Trazo.UnitTests;
 [XunitTestCaseDiscoverer("Trazo.UnitTests.ScenarioFactDiscoverer", "Trazo.UnitTests")]
 public sealed class ScenarioFactAttribute : FactAttribute;
 
+/// <summary>The theory version of <see cref="ScenarioFactAttribute"/>: the same skip rule for PostgreSQL scenarios.</summary>
+[XunitTestCaseDiscoverer("Trazo.UnitTests.ScenarioTheoryDiscoverer", "Trazo.UnitTests")]
+public sealed class ScenarioTheoryAttribute : TheoryAttribute;
+
 public static class PostgresSettings
 {
     public const string Variable = "TRAZO_TEST_POSTGRES";
@@ -35,5 +39,18 @@ public sealed class ScenarioFactDiscoverer(IMessageSink diagnosticMessageSink) :
                 diagnosticMessageSink, display, displayOptions, testMethod, $"{PostgresSettings.Variable} is not set: PostgreSQL scenarios are skipped.");
         else
             yield return new XunitTestCase(diagnosticMessageSink, display, displayOptions, testMethod);
+    }
+}
+
+public sealed class ScenarioTheoryDiscoverer(IMessageSink diagnosticMessageSink) : TheoryDiscoverer(diagnosticMessageSink)
+{
+    public override IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute)
+    {
+        var isPostgres = testMethod.TestClass.Class.Name.Split('.').Last().StartsWith("Postgres", StringComparison.Ordinal);
+        if (isPostgres && !PostgresSettings.Configured)
+            return [new XunitSkippedDataRowTestCase(
+                DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod,
+                $"{PostgresSettings.Variable} is not set: PostgreSQL scenarios are skipped.")];
+        return base.Discover(discoveryOptions, testMethod, theoryAttribute);
     }
 }

@@ -29,7 +29,7 @@ public abstract class LoadReferencePainScenarios(string? postgres) : PlansApiBas
 
     private async Task<Seeded> LogAsync(
         Guid userId, int dayOffset, decimal weightKg, bool generalPain = false, bool setPain = false, int registeredDaysLater = 0,
-        string? exerciseId = null, int occurrence = 0)
+        string? exerciseId = null, int occurrence = 0, bool adaptationDeload = false, bool blockIsDeload = false)
     {
         return await InDbAsync(async db =>
         {
@@ -37,6 +37,13 @@ public abstract class LoadReferencePainScenarios(string? postgres) : PlansApiBas
             var sessions = (await db.PlannedSessions.Where(s => s.PlanId == plan.Id).OrderBy(s => s.SequenceIndex).ToListAsync())
                 .Where(s => exerciseId is null || PrescriptionJson.Read(s.PrescriptionJson).Any(e => e.ExerciseId == exerciseId)).ToList();
             var session = sessions[occurrence];
+            if (adaptationDeload)
+            {
+                var node = System.Text.Json.Nodes.JsonNode.Parse(session.PrescriptionJson)!.AsObject();
+                node["adaptationDeload"] = true;
+                session.PrescriptionJson = node.ToJsonString();
+            }
+            if (blockIsDeload) (await db.TrainingMesocycles.SingleAsync(m => m.Id == session.MesocycleId)).IsDeload = true;
             var exercise = PrescriptionJson.Read(session.PrescriptionJson).First(e => exerciseId is null || e.ExerciseId == exerciseId);
             var at = Now.AddDays(dayOffset);
             var log = new WorkoutLog
@@ -119,6 +126,84 @@ public abstract class LoadReferencePainScenarios(string? postgres) : PlansApiBas
         var fromClean = await NewPlanLoadAsync(control, exercise);
         var fromLate = await NewPlanLoadAsync(late, exercise);
         Assert.Equal(fromClean, fromLate);
+    }
+
+    [ScenarioFact]
+    public async Task A_deload_session_does_not_seed_a_load()
+    {
+        var (control, exercise) = await UserWithCleanHistoryAsync("clean4@example.com");
+        var (deload, _) = await UserWithCleanHistoryAsync("deload4@example.com", exercise);
+        await LogAsync(deload.Id, -3, 60m, exerciseId: exercise, occurrence: 1, adaptationDeload: true);
+
+        var fromClean = await NewPlanLoadAsync(control, exercise);
+        Assert.NotNull(fromClean);
+        Assert.Equal(fromClean, await NewPlanLoadAsync(deload, exercise)); // the clean exposure still seeds; the deload one is ignored
+    }
+
+    [ScenarioFact]
+    public async Task A_history_made_only_of_a_deload_block_leaves_the_exercise_without_a_load()
+    {
+        var (user, exercise) = await UserWithCleanHistoryAsync("onlydeload@example.com");
+        await LogAsync(user.Id, -3, 60m, exerciseId: exercise, occurrence: 1, blockIsDeload: true);
+        Assert.Null(await NewPlanLoadAsync(user, exercise));
+    }
+
+    [ScenarioFact]
+    public async Task Without_a_safe_reference_the_exercise_has_no_prescribed_load_and_the_history_is_untouched()
+    {
+        var (user, _, _) = await StartPlanAsync("nosafe@example.com");
+        var exercise = (await LogAsync(user.Id, -3, 60m, setPain: true)).ExerciseId;
+        var before = await InDbAsync(async db => string.Join("|", (await db.WorkoutSetLogs.Where(x => x.ExerciseId == exercise).OrderBy(x => x.SetNumber).ToListAsync())
+            .Select(x => $"{x.Id}:{x.WeightKg}:{x.Repetitions}:{x.PainReported}")));
+        Assert.Null(await NewPlanLoadAsync(user, exercise));
+        var after = await InDbAsync(async db => string.Join("|", (await db.WorkoutSetLogs.Where(x => x.ExerciseId == exercise).OrderBy(x => x.SetNumber).ToListAsync())
+            .Select(x => $"{x.Id}:{x.WeightKg}:{x.Repetitions}:{x.PainReported}")));
+        Assert.Equal(before, after);
+        Assert.Equal(1, await InDbAsync(db => db.WorkoutLogs.CountAsync(l => l.UserId == user.Id)));
+    }
+
+    [ScenarioTheory]
+    [InlineData(1, true)]   // pain in the most recent exposure
+    [InlineData(2, true)]
+    [InlineData(3, true)]   // the third most recent still counts
+    [InlineData(4, false)]  // the fourth is outside the window of three exposures
+    public async Task Pain_in_any_of_the_last_three_exposures_of_the_exercise_blocks_the_reference(int painfulExposureFromLatest, bool blocked)
+    {
+        var (user, exercise) = await UserWithCleanHistoryAsync($"window{painfulExposureFromLatest}@example.com");
+        // Four exposures, oldest first: the first one (50 kg, clean) is already there; add three more.
+        for (var n = 1; n <= 3; n++)
+        {
+            var fromLatest = 4 - n; // exposure n (1 = second oldest) is this far from the latest
+            await LogAsync(user.Id, -14 + n * 3, 52m + n, setPain: fromLatest == painfulExposureFromLatest, exerciseId: exercise, occurrence: n);
+        }
+        if (painfulExposureFromLatest == 4) await InDbAsync(async db =>
+        {
+            var oldest = (await db.WorkoutLogs.Include(l => l.Sets).ToListAsync()).Where(l => l.Sets.Any(x => x.ExerciseId == exercise)).OrderBy(l => l.PerformedAt).First().Id;
+            foreach (var set in await db.WorkoutSetLogs.Where(x => x.WorkoutLogId == oldest).ToListAsync()) set.PainReported = set.SetNumber == 1;
+            await db.SaveChangesAsync();
+            return 0;
+        });
+        var load = await NewPlanLoadAsync(user, exercise);
+        if (blocked) Assert.Null(load);
+        else Assert.NotNull(load);
+    }
+
+    [ScenarioTheory]
+    [InlineData(1, true)]   // pain declared in the most recent workout
+    [InlineData(5, true)]   // the fifth most recent still counts
+    [InlineData(6, false)]  // the sixth is outside the window of five
+    public async Task Pain_declared_in_the_last_five_workouts_blocks_every_reference(int painfulWorkoutFromLatest, bool blocked)
+    {
+        var (user, _, _) = await StartPlanAsync($"five{painfulWorkoutFromLatest}@example.com");
+        string? latest = null;
+        for (var i = 0; i < 6; i++)
+        {
+            var fromLatest = 6 - i;
+            latest = (await LogAsync(user.Id, -20 + i * 3, 50m, generalPain: fromLatest == painfulWorkoutFromLatest, occurrence: i)).ExerciseId;
+        }
+        var load = await NewPlanLoadAsync(user, latest!);
+        if (blocked) Assert.Null(load);
+        else Assert.NotNull(load);
     }
 
     [ScenarioFact]

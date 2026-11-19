@@ -82,7 +82,7 @@ internal sealed class PlanSimulator
     /// <summary>Generates the next block (with the decision's targets), stores the decisions as applied and trains it.</summary>
     public (MesocycleGeneration Block, LongitudinalResult Result) RunBlock(Behavior behavior, bool deload = false, bool learn = true)
     {
-        var result = learn && !deload ? Decide() : LongitudinalResult.None;
+        var result = learn && !deload ? Decide() : new LongitudinalResult(new Dictionary<TrainingMuscleGroup, decimal>(), []);
         var block = Generate(deload, result.LearnedTargets);
         foreach (var d in result.Decisions) Applied.Add(new AppliedTarget(NextSequence, d.Muscle, d.ProposedSets));
         Train(block, behavior, deload);

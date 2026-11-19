@@ -7,10 +7,7 @@ namespace Trazo.Application.Planning.Longitudinal;
 public sealed record AppliedTarget(int MesocycleSequence, string Muscle, decimal Sets);
 
 public sealed record LongitudinalResult(
-    IReadOnlyDictionary<TrainingMuscleGroup, decimal> LearnedTargets, IReadOnlyList<VolumeDecision> Decisions)
-{
-    public static readonly LongitudinalResult None = new(new Dictionary<TrainingMuscleGroup, decimal>(), []);
-}
+    IReadOnlyDictionary<TrainingMuscleGroup, decimal> LearnedTargets, IReadOnlyList<VolumeDecision> Decisions);
 
 /// <summary>
 /// The whole longitudinal decision for one new block, as a pure function of data already loaded. It reads only the finished blocks of
