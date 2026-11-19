@@ -7,6 +7,22 @@ using Trazo.Training;
 
 namespace Trazo.Application.Planning;
 
+/// <summary>Where one load reference given to the generator came from: the exposure workout log and top set, and the values used.</summary>
+public sealed record LoadReferenceSource(
+    string ExerciseId, Guid WorkoutLogId, int SetNumber, DateOnly PerformedOn, decimal WeightKg, int Repetitions, decimal? Rir, int CompletedSets);
+
+/// <summary>
+/// The load references the generator received, with their provenance and the criteria that selected them. <see cref="References"/> is
+/// exactly what the generator consumes; the rest only explains it.
+/// </summary>
+public sealed record LoadReferenceSelection(
+    IReadOnlyList<TrainingLoadReference> References, IReadOnlyList<LoadReferenceSource> Sources, bool SuppressedByPain,
+    IReadOnlyList<string> WithheldForPain, int LogsConsidered, int LogsLimit, int PainSessionWindow, int PainExposureWindow, int LateRegistrationDays)
+{
+    /// <summary>No history: nothing was available to reference.</summary>
+    public static LoadReferenceSelection None { get; } = new([], [], false, [], 0, 0, 0, 0, 0);
+}
+
 /// <summary>What is stored on a mesocycle to explain, later, how it was generated. See <see cref="MesocycleGenerationTrace.Capture"/>.</summary>
 public sealed record GenerationTrace(
     string SnapshotJson, int SnapshotSchemaVersion, string EngineVersion, string CatalogFingerprint, DateTimeOffset GeneratedAt);
@@ -29,13 +45,14 @@ public static class MesocycleGenerationTrace
     public static GenerationTrace Capture(
         PlanProfile profile, int seed, MesocycleSlot slot, IReadOnlyCollection<TrainingExerciseCandidate> catalog,
         MesocycleGeneration generation, int rotationPosition, bool continuesPreviousBlock,
-        IReadOnlyList<string>? previousBlockExerciseIds, int loadReferenceCount,
+        IReadOnlyList<string>? previousBlockExerciseIds, LoadReferenceSelection loadReferences,
         IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets, DateTimeOffset now)
     {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(slot);
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentNullException.ThrowIfNull(generation);
+        ArgumentNullException.ThrowIfNull(loadReferences);
         if (string.IsNullOrWhiteSpace(generation.EngineVersion))
             throw new InvalidOperationException("A generated block always carries the version of the engine that generated it.");
 
@@ -74,8 +91,7 @@ public static class MesocycleGenerationTrace
                 rotationPosition,
                 continuesPreviousBlock,
                 previousBlockExerciseIds = Sorted(previousBlockExerciseIds ?? []),
-                // The load references come from the user's history; only how many were used is kept, not the values.
-                loadReferenceCount
+                loadReferences = LoadReferencesOf(loadReferences)
             },
             learning = new
             {
@@ -92,6 +108,30 @@ public static class MesocycleGenerationTrace
             JsonSerializer.Serialize(snapshot, Json), SnapshotSchemaVersion, generation.EngineVersion, CatalogFingerprint.Compute(catalog), now);
     }
 
+    /// <summary>
+    /// The load references the generator received: for each one the exercise, the workout log (and set) it was read from, the date, and the
+    /// effective values given to the generator, so it stays interpretable if the log is later edited or deleted. No notes, no other sets,
+    /// no feedback: only what the generator consumed plus the criteria that chose it.
+    /// </summary>
+    private static object LoadReferencesOf(LoadReferenceSelection selection) => new
+    {
+        suppressedByPain = selection.SuppressedByPain,
+        withheldForPain = selection.WithheldForPain.Order(StringComparer.Ordinal).ToArray(),
+        criteria = new
+        {
+            rule = "latest eligible exposure per exercise; heaviest completed set (ties: lowest set number); late and deload exposures skipped",
+            logsConsidered = selection.LogsConsidered, logsLimit = selection.LogsLimit,
+            painSessionWindow = selection.PainSessionWindow, painExposureWindow = selection.PainExposureWindow,
+            lateRegistrationDays = selection.LateRegistrationDays
+        },
+        items = selection.Sources.OrderBy(r => r.ExerciseId, StringComparer.Ordinal).Select(r => new
+        {
+            exerciseId = r.ExerciseId, workoutLogId = r.WorkoutLogId, setNumber = r.SetNumber,
+            performedOn = r.PerformedOn.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            weightKg = r.WeightKg, repetitions = r.Repetitions, rir = r.Rir, completedSets = r.CompletedSets
+        }).ToArray()
+    };
+
     private static string[] Sorted(IEnumerable<string> values) => values.OrderBy(v => v, StringComparer.Ordinal).ToArray();
 }
 
@@ -104,21 +144,36 @@ public static class MesocycleGenerationTrace
 /// </summary>
 public static class CatalogFingerprint
 {
-    public static string Compute(IEnumerable<TrainingExerciseCandidate> catalog)
+    private static readonly JsonSerializerOptions Canonical = new()
+    {
+        WriteIndented = false, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+
+    /// <summary>
+    /// The canonical form: a JSON object with explicit, typed fields, exercises in ordinal id order and every inner collection sorted.
+    /// JSON quoting makes the representation unambiguous: no character in a value can be mistaken for a separator.
+    /// </summary>
+    public static string Canonicalize(IEnumerable<TrainingExerciseCandidate> catalog)
     {
         ArgumentNullException.ThrowIfNull(catalog);
-        var text = new StringBuilder();
-        foreach (var c in catalog.OrderBy(c => c.ExerciseId, StringComparer.Ordinal))
+        var exercises = catalog.OrderBy(c => c.ExerciseId, StringComparer.Ordinal).Select(c => new
         {
-            text.Append(c.ExerciseId).Append('|').Append(c.CatalogVersion).Append('|')
-                .Append(c.MovementPattern).Append('|').Append(c.MinimumExperience).Append('|')
-                .Append(c.SelectionPriority.ToString(CultureInfo.InvariantCulture)).Append('|').Append(c.IsReviewed ? '1' : '0').Append('|')
-                .Append(Join(c.RequiredEquipment)).Append('|').Append(Join(c.SuitableGoals.Select(g => g.ToString()))).Append('|')
-                .Append(Join(c.PrimaryMuscleGroups.Select(m => m.ToString()))).Append('|')
-                .Append(Join(c.SecondaryMuscleGroups.Select(m => m.ToString()))).Append('\n');
-        }
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text.ToString()))).ToLowerInvariant();
+            id = c.ExerciseId,
+            catalogVersion = c.CatalogVersion,
+            movementPattern = c.MovementPattern.ToString(),
+            minimumExperience = c.MinimumExperience.ToString(),
+            selectionPriority = c.SelectionPriority,
+            isReviewed = c.IsReviewed,
+            requiredEquipment = Sorted(c.RequiredEquipment),
+            suitableGoals = Sorted(c.SuitableGoals.Select(g => g.ToString())),
+            primaryMuscles = Sorted(c.PrimaryMuscleGroups.Select(m => m.ToString())),
+            secondaryMuscles = Sorted(c.SecondaryMuscleGroups.Select(m => m.ToString()))
+        }).ToArray();
+        return JsonSerializer.Serialize(new { fingerprintVersion = 1, exercises }, Canonical);
     }
 
-    private static string Join(IEnumerable<string> values) => string.Join(',', values.OrderBy(v => v, StringComparer.Ordinal));
+    public static string Compute(IEnumerable<TrainingExerciseCandidate> catalog) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Canonicalize(catalog)))).ToLowerInvariant();
+
+    private static string[] Sorted(IEnumerable<string> values) => values.OrderBy(v => v, StringComparer.Ordinal).ToArray();
 }

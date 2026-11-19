@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Trazo.Application.Planning;
 using Trazo.Domain.Planning;
+using Trazo.Domain.Identity;
 using Trazo.Domain.Training;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Training;
@@ -237,6 +238,148 @@ public abstract class MesocycleTraceabilityScenarios(string? postgres) : PlansAp
         Assert.Equal(TrainingProgramGenerator.EngineVersion, (await BlocksAsync()).Single().EngineVersion);
     }
 
+    private static readonly string[] AllEquipment = ["barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar"];
+
+    /// <summary>A completed workout of the first exercise of the first session: three sets at the given loads (set 1, 2, 3).</summary>
+    private async Task<(Guid LogId, string ExerciseId)> LogWorkoutAsync(
+        Guid userId, int dayOffset, decimal[] weights, bool generalPain = false, bool setPain = false)
+    {
+        return await InDbAsync(async db =>
+        {
+            var plan = await db.TrainingPlans.SingleAsync(p => p.UserId == userId);
+            var session = (await db.PlannedSessions.Where(s => s.PlanId == plan.Id).OrderBy(s => s.SequenceIndex).ToListAsync())[0];
+            var exercise = PrescriptionJson.Read(session.PrescriptionJson).First();
+            var at = Now.AddDays(dayOffset);
+            var log = new WorkoutLog
+            {
+                Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, PlannedSessionId = session.Id, LoggedAt = at.AddHours(1),
+                PerformedAt = at, PerformedOn = DateOnly.FromDateTime(at.UtcDateTime), TimeZoneId = "UTC", Outcome = WorkoutOutcome.Completed,
+                Recovery = "Good", PainReported = generalPain, Notes = "private note"
+            };
+            for (var set = 1; set <= weights.Length; set++)
+                log.Sets.Add(new WorkoutSetLog
+                {
+                    Id = Guid.NewGuid(), WorkoutLogId = log.Id, ExerciseId = exercise.ExerciseId, SetNumber = set, WeightKg = weights[set - 1],
+                    Repetitions = 8, Rir = 2m, Completed = true, PainReported = setPain && set == 1
+                });
+            db.WorkoutLogs.Add(log);
+            await db.SaveChangesAsync();
+            return (log.Id, exercise.ExerciseId);
+        });
+    }
+
+    /// <summary>Archives the user's plan and creates a new one, whose first block reads the load references from the history.</summary>
+    private async Task StartNewPlanAsync(TrazoUser user)
+    {
+        await ClientFor(user).PostAsync("/api/v1/plans/current/archive", null);
+        using var scope = _factory.Services.CreateScope();
+        var result = await scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Planning.ITrainingPlanService>()
+            .CreateAsync(user.Id, PlanTestCatalog.Profile(days: 4, equipment: AllEquipment), 42, CancellationToken.None);
+        Assert.True(result.Succeeded, result.Message);
+    }
+
+    private async Task<JsonElement> ActivePlanFirstBlockLoadReferencesAsync(Guid userId)
+    {
+        var block = await InDbAsync(async db =>
+        {
+            var plan = await db.TrainingPlans.SingleAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active);
+            return await db.TrainingMesocycles.AsNoTracking().SingleAsync(m => m.PlanId == plan.Id && m.Sequence == 1);
+        });
+        return Snapshot(block).GetProperty("inputs").GetProperty("loadReferences");
+    }
+
+    [ScenarioFact]
+    public async Task The_load_references_the_generator_used_are_kept_with_their_source_log_and_values()
+    {
+        var (user, _, _) = await StartPlanAsync("trace10@example.com");
+        var (logId, exercise) = await LogWorkoutAsync(user.Id, -10, [50m, 55m, 52m]);
+        await StartNewPlanAsync(user);
+
+        var references = await ActivePlanFirstBlockLoadReferencesAsync(user.Id);
+        var item = references.GetProperty("items").EnumerateArray().Single(i => i.GetProperty("exerciseId").GetString() == exercise);
+        Assert.Equal(logId, item.GetProperty("workoutLogId").GetGuid());       // relates to the original record
+        Assert.Equal(2, item.GetProperty("setNumber").GetInt32());              // the heaviest completed set
+        Assert.Equal(55m, item.GetProperty("weightKg").GetDecimal());           // the effective value the generator received
+        Assert.Equal(8, item.GetProperty("repetitions").GetInt32());
+        Assert.Equal(2m, item.GetProperty("rir").GetDecimal());
+        Assert.Equal(3, item.GetProperty("completedSets").GetInt32());
+        Assert.Equal(DateOnly.FromDateTime(Now.AddDays(-10).UtcDateTime).ToString("yyyy-MM-dd"), item.GetProperty("performedOn").GetString());
+        Assert.False(references.GetProperty("suppressedByPain").GetBoolean());
+        var criteria = references.GetProperty("criteria");
+        Assert.Equal(40, criteria.GetProperty("logsLimit").GetInt32());
+        Assert.Equal(5, criteria.GetProperty("painSessionWindow").GetInt32());
+        Assert.Equal(3, criteria.GetProperty("painExposureWindow").GetInt32());
+        // Only what the generator consumed: no notes, no other sets.
+        Assert.DoesNotContain("private note", (await BlocksAsync()).Last().GenerationSnapshotJson);
+        Assert.Equal(["exerciseId", "workoutLogId", "setNumber", "performedOn", "weightKg", "repetitions", "rir", "completedSets"],
+            item.EnumerateObject().Select(p => p.Name).ToArray());
+    }
+
+    [ScenarioFact]
+    public async Task The_references_stay_interpretable_when_the_original_log_is_edited_or_deleted_later()
+    {
+        var (user, _, _) = await StartPlanAsync("trace11@example.com");
+        var (logId, exercise) = await LogWorkoutAsync(user.Id, -10, [50m, 55m, 52m]);
+        await StartNewPlanAsync(user);
+        var block = await InDbAsync(async db => await db.TrainingMesocycles.AsNoTracking()
+            .SingleAsync(m => m.Sequence == 1 && m.GenerationSnapshotJson!.Contains(logId.ToString())));
+        var before = block.GenerationSnapshotJson;
+
+        await InDbAsync(async db =>
+        {
+            foreach (var set in await db.WorkoutSetLogs.Where(s => s.WorkoutLogId == logId).ToListAsync()) set.WeightKg = 99m;
+            await db.SaveChangesAsync();
+            return 0;
+        });
+        Assert.Equal(before, (await InDbAsync(db => db.TrainingMesocycles.AsNoTracking().SingleAsync(m => m.Id == block.Id))).GenerationSnapshotJson);
+
+        await InDbAsync(async db =>
+        {
+            db.WorkoutLogs.Remove(await db.WorkoutLogs.SingleAsync(l => l.Id == logId));
+            await db.SaveChangesAsync();
+            return 0;
+        });
+        var after = await InDbAsync(db => db.TrainingMesocycles.AsNoTracking().SingleAsync(m => m.Id == block.Id));
+        Assert.Equal(before, after.GenerationSnapshotJson);
+        var item = Snapshot(after).GetProperty("inputs").GetProperty("loadReferences").GetProperty("items").EnumerateArray()
+            .Single(i => i.GetProperty("exerciseId").GetString() == exercise);
+        Assert.Equal(55m, item.GetProperty("weightKg").GetDecimal()); // still readable with the log gone
+    }
+
+    [ScenarioFact]
+    public async Task Pain_that_stops_the_references_is_recorded_as_the_reason_there_are_none()
+    {
+        var (general, _, _) = await StartPlanAsync("trace12@example.com");
+        await LogWorkoutAsync(general.Id, -3, [50m, 50m, 50m], generalPain: true);
+        await StartNewPlanAsync(general);
+        var suppressed = await ActivePlanFirstBlockLoadReferencesAsync(general.Id);
+        Assert.True(suppressed.GetProperty("suppressedByPain").GetBoolean());
+        Assert.Equal(0, suppressed.GetProperty("items").GetArrayLength());
+
+        var (local, _, _) = await StartPlanAsync("trace13@example.com");
+        var (_, exercise) = await LogWorkoutAsync(local.Id, -3, [50m, 50m, 50m], setPain: true);
+        await StartNewPlanAsync(local);
+        var withheld = await ActivePlanFirstBlockLoadReferencesAsync(local.Id);
+        Assert.Contains(exercise, withheld.GetProperty("withheldForPain").EnumerateArray().Select(e => e.GetString()));
+        Assert.DoesNotContain(withheld.GetProperty("items").EnumerateArray(), i => i.GetProperty("exerciseId").GetString() == exercise);
+    }
+
+    [ScenarioFact]
+    public async Task A_block_generated_later_records_the_references_that_existed_then_not_the_ones_of_the_first_block()
+    {
+        var (user, client, _) = await StartPlanAsync("trace14@example.com");
+        Assert.Equal(0, Snapshot((await BlocksAsync()).Single()).GetProperty("inputs").GetProperty("loadReferences").GetProperty("items").GetArrayLength());
+
+        var (logId, exercise) = await LogWorkoutAsync(user.Id, -5, [60m, 60m, 60m]);
+        await AdvanceToWeekSixAsync(client);
+
+        var blocks = await BlocksAsync();
+        var later = blocks.Last();
+        var items = Snapshot(later).GetProperty("inputs").GetProperty("loadReferences").GetProperty("items").EnumerateArray().ToList();
+        Assert.Contains(items, i => i.GetProperty("workoutLogId").GetGuid() == logId && i.GetProperty("exerciseId").GetString() == exercise);
+        Assert.Equal(0, Snapshot(blocks[0]).GetProperty("inputs").GetProperty("loadReferences").GetProperty("items").GetArrayLength());
+    }
+
     [ScenarioFact]
     public async Task The_trace_is_not_exposed_to_the_client()
     {
@@ -282,6 +425,69 @@ public sealed class MesocycleTraceUnitTests
         Assert.NotEqual(baseline, CatalogFingerprint.Compute(catalog.Select((c, i) => i == 0 ? c with { CatalogVersion = "2-202701010000" } : c)));
     }
 
+    private static TrainingExerciseCandidate Candidate(
+        string id = "squat", string version = "1-202601010000", string[]? equipment = null, TrainingGoal[]? goals = null,
+        TrainingMuscleGroup[]? primary = null, TrainingMuscleGroup[]? secondary = null) =>
+        new(id, version, "Squat", TrainingMovementPattern.Squat, equipment ?? ["barbell"], goals ?? [TrainingGoal.Hypertrophy],
+            TrainingExperience.Beginner, 50, true, primary ?? [TrainingMuscleGroup.Quadriceps], secondary ?? []);
+
+    [Fact]
+    public void The_canonical_form_is_unambiguous_whatever_characters_the_values_contain()
+    {
+        // With separators, these pairs of different catalogs would produce the same text; with typed JSON they cannot.
+        var pairs = new (TrainingExerciseCandidate[] A, TrainingExerciseCandidate[] B)[]
+        {
+            ([Candidate(equipment: ["a,b"])], [Candidate(equipment: ["a", "b"])]),
+            ([Candidate(equipment: ["a|b"])], [Candidate(equipment: ["a"], version: "b")]),
+            ([Candidate(id: "a|b")], [Candidate(id: "a", version: "b|" + "1-202601010000")]),
+            ([Candidate(id: "a\n")], [Candidate(id: "a")]),
+            ([Candidate(id: "x\"y")], [Candidate(id: "x", version: "y\"")]),
+            ([Candidate(equipment: ["a\\", "b"])], [Candidate(equipment: ["a", "\\b"])]),
+            ([Candidate(id: "a"), Candidate(id: "b")], [Candidate(id: "a\",\"b")]),
+        };
+        foreach (var (a, b) in pairs)
+        {
+            Assert.NotEqual(CatalogFingerprint.Canonicalize(a), CatalogFingerprint.Canonicalize(b));
+            Assert.NotEqual(CatalogFingerprint.Compute(a), CatalogFingerprint.Compute(b));
+        }
+    }
+
+    [Fact]
+    public void The_canonical_form_is_a_typed_json_document_sorted_by_id_with_sorted_collections()
+    {
+        var text = CatalogFingerprint.Canonicalize([Candidate(id: "b", equipment: ["z", "a"]), Candidate(id: "a")]);
+        using var json = JsonDocument.Parse(text);
+        var exercises = json.RootElement.GetProperty("exercises").EnumerateArray().ToList();
+        Assert.Equal(["a", "b"], exercises.Select(e => e.GetProperty("id").GetString()).ToArray());
+        Assert.Equal(["a", "z"], exercises[1].GetProperty("requiredEquipment").EnumerateArray().Select(e => e.GetString()).ToArray());
+        Assert.Equal(JsonValueKind.Number, exercises[0].GetProperty("selectionPriority").ValueKind);
+        Assert.Equal(JsonValueKind.True, exercises[0].GetProperty("isReviewed").ValueKind);
+        Assert.Equal(1, json.RootElement.GetProperty("fingerprintVersion").GetInt32());
+    }
+
+    [Fact]
+    public void Every_field_the_generator_selects_on_changes_the_fingerprint()
+    {
+        var baseline = Candidate();
+        var variants = new Dictionary<string, TrainingExerciseCandidate>
+        {
+            ["id"] = baseline with { ExerciseId = "squat2" },
+            ["catalogVersion"] = baseline with { CatalogVersion = "2-202701010000" },
+            ["movementPattern"] = baseline with { MovementPattern = TrainingMovementPattern.Hinge },
+            ["minimumExperience"] = baseline with { MinimumExperience = TrainingExperience.Advanced },
+            ["selectionPriority"] = baseline with { SelectionPriority = 51 },
+            ["isReviewed"] = baseline with { IsReviewed = false },
+            ["requiredEquipment"] = baseline with { RequiredEquipment = ["barbell", "bench"] },
+            ["suitableGoals"] = baseline with { SuitableGoals = [TrainingGoal.Hypertrophy, TrainingGoal.Strength] },
+            ["primaryMuscles"] = baseline with { PrimaryMuscleGroups = [TrainingMuscleGroup.Glutes] },
+            ["secondaryMuscles"] = baseline with { SecondaryMuscleGroups = [TrainingMuscleGroup.Glutes] }
+        };
+        var reference = CatalogFingerprint.Compute([baseline]);
+        foreach (var (field, changed) in variants)
+            Assert.NotEqual(reference, CatalogFingerprint.Compute([changed]));
+        Assert.Equal(variants.Count, variants.Select(v => CatalogFingerprint.Compute([v.Value])).Distinct().Count());
+    }
+
     [Fact]
     public void The_trace_records_the_version_of_the_generation_it_describes_and_refuses_one_without_a_version()
     {
@@ -291,15 +497,15 @@ public sealed class MesocycleTraceUnitTests
         var now = new DateTimeOffset(2026, 11, 16, 8, 0, 0, TimeSpan.Zero);
         MesocycleGeneration By(string version) => new([new GeneratedSession(1, null, null, "A", 60, "{}")], [], null, version);
 
-        var older = MesocycleGenerationTrace.Capture(profile, 7, slot, catalog, By("0.10.0"), 0, false, null, 0, null, now);
-        var newer = MesocycleGenerationTrace.Capture(profile, 7, slot, catalog, By("0.11.1"), 0, false, null, 0, null, now);
+        var older = MesocycleGenerationTrace.Capture(profile, 7, slot, catalog, By("0.10.0"), 0, false, null, LoadReferenceSelection.None, null, now);
+        var newer = MesocycleGenerationTrace.Capture(profile, 7, slot, catalog, By("0.11.1"), 0, false, null, LoadReferenceSelection.None, null, now);
 
         Assert.Equal("0.10.0", older.EngineVersion);
         Assert.Equal("0.11.1", newer.EngineVersion);
         Assert.Contains("\"engineVersion\":\"0.10.0\"", older.SnapshotJson);
         Assert.Equal(older.CatalogFingerprint, newer.CatalogFingerprint);
         Assert.Throws<InvalidOperationException>(() =>
-            MesocycleGenerationTrace.Capture(profile, 7, slot, catalog, By(""), 0, false, null, 0, null, now));
+            MesocycleGenerationTrace.Capture(profile, 7, slot, catalog, By(""), 0, false, null, LoadReferenceSelection.None, null, now));
     }
 
     [Fact]
@@ -313,7 +519,7 @@ public sealed class MesocycleTraceUnitTests
         var other = one with { AvailableEquipment = ["bench", "dumbbell"], Limitations = ["shoulder", "knee"], TrainingDays = one.TrainingDays.Reverse().ToList() };
 
         Assert.Equal(
-            MesocycleGenerationTrace.Capture(one, 7, slot, catalog, generation, 0, false, null, 0, null, now).SnapshotJson,
-            MesocycleGenerationTrace.Capture(other, 7, slot, catalog, generation, 0, false, null, 0, null, now).SnapshotJson);
+            MesocycleGenerationTrace.Capture(one, 7, slot, catalog, generation, 0, false, null, LoadReferenceSelection.None, null, now).SnapshotJson,
+            MesocycleGenerationTrace.Capture(other, 7, slot, catalog, generation, 0, false, null, LoadReferenceSelection.None, null, now).SnapshotJson);
     }
 }
