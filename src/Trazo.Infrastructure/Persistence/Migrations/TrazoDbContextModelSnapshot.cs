@@ -517,8 +517,6 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<decimal>("BaselineSets").HasPrecision(5, 1).HasColumnType("numeric(5,1)");
             b.Property<decimal>("PreviousSets").HasPrecision(5, 1).HasColumnType("numeric(5,1)");
             b.Property<decimal>("ProposedSets").HasPrecision(5, 1).HasColumnType("numeric(5,1)");
-            b.Property<string>("Confidence").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
-            b.Property<decimal>("ConfidenceScore").HasPrecision(3, 2).HasColumnType("numeric(3,2)");
             b.Property<int>("AnalyzedFromPeriod").HasColumnType("integer");
             b.Property<int>("AnalyzedToPeriod").HasColumnType("integer");
             b.Property<string>("SignalsJson").IsRequired().HasMaxLength(2000).HasColumnType("character varying(2000)");

@@ -23,109 +23,80 @@ public static class MuscleNames
 }
 
 /// <summary>
-/// Decides, for one muscle and one new block, whether the weekly target stays, goes up one set or goes down one set. It never
-/// invents a volume: it moves the target the priority planner already chose by at most <see cref="LongitudinalPolicy.StepSets"/>
-/// per block, inside the limits of <see cref="TrainingMuscleBaseline"/>, and only with enough evidence. When it cannot tell, it
-/// abstains and the block uses the plan's own target (never more than the previous block used). It reads, it does not touch the database.
+/// Decides, for one muscle and one new block, whether its weekly target stays, goes down one set or comes back one set towards the
+/// plan's own target. Each outcome has one cause and says it:
+/// - <b>Decrease</b>: the last block with enough weeks showed a repeated pattern of falling performance with fatigue.
+/// - <b>Restore</b>: an earlier reduction is given back one step because the last block no longer shows that pattern; never above the
+///   plan's own target, and never while pain is recorded in the recent blocks.
+/// - <b>Hold</b>: the evidence was read and the target stays (pain, floor reached, nothing to restore).
+/// - <b>Abstain</b>: there is not enough evidence to read; the target stays EXACTLY as the previous block had it. Abstaining never lowers
+///   a target and never raises one.
+/// The target can never go above the baseline: nothing here infers from a better performance that a muscle wants more volume.
 /// </summary>
 public static class LongitudinalVolumePlanner
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
     /// <param name="previousApplied">The weekly target the previous block of this plan used for the muscle, or null when none.</param>
-    public static VolumeDecision Decide(TrainingMuscleBaseline baseline, decimal? previousApplied, MuscleResponseProfile? profile)
+    /// <param name="blocks">Summaries of the finished non-deload blocks of this plan for the muscle, oldest first.</param>
+    public static VolumeDecision Decide(TrainingMuscleBaseline baseline, decimal? previousApplied, IReadOnlyList<BlockSummary> blocks)
     {
         ArgumentNullException.ThrowIfNull(baseline);
+        ArgumentNullException.ThrowIfNull(blocks);
         var muscle = baseline.Muscle.ToString();
         var name = MuscleNames.Es(muscle);
-        // The previous dose is held inside the band this baseline allows. When the baseline moved (for example after the user
-        // trains fewer days and the plan was reorganised) a reference earned under the old baseline cannot carry the dose over it.
-        var previous = Math.Clamp(previousApplied ?? baseline.Target,
-            Math.Max(baseline.Floor, baseline.Target - LongitudinalPolicy.MaximumBelowBaselineSets),
-            Math.Min(baseline.Ceiling, baseline.Target + LongitudinalPolicy.MaximumAboveBaselineSets));
-        // Without evidence the block never uses more than the previous one did, and never more than the plan's own target.
-        var cautious = Math.Min(previous, baseline.Target);
-        var last = profile?.LastQualifiedBlock;
-        var signals = Signals(baseline, previous, profile, last);
+        var floor = Math.Min(baseline.Target, Math.Max(baseline.Floor, baseline.Target - LongitudinalPolicy.MaximumBelowBaselineSets));
+        // The previous dose, held inside the band this baseline allows (the baseline may have moved since: priorities, days).
+        var previous = Math.Clamp(previousApplied ?? baseline.Target, floor, baseline.Target);
+        var last = blocks.LastOrDefault(b => b.Verdict != BlockVerdict.Insufficient);
+        var pain = blocks.TakeLast(2).Any(b => b.Pain);
 
         VolumeDecision Make(VolumeAction action, decimal proposed, string reason) => new(
-            muscle, action, baseline.Target, previous, proposed, profile?.Confidence ?? ConfidenceLevel.Low, profile?.ConfidenceScore ?? 0m,
-            last?.FirstPeriod ?? 0, last?.LastPeriod ?? 0, reason, signals);
+            muscle, action, baseline.Target, previous, proposed, last?.FirstPeriod ?? 0, last?.LastPeriod ?? 0, reason, Signals(baseline, floor, previous, last, pain));
 
-        if (profile is null || profile.ValidBlocks == 0 || last is null)
-            return Make(VolumeAction.Abstain, cautious,
-                $"No se modifica el volumen de {name} porque hay pocas exposiciones válidas para conocer tu respuesta.");
-        if (profile.PainInRecentBlocks)
-            return Make(VolumeAction.Abstain, cautious,
-                $"No se modifica el volumen de {name} porque se registró dolor; el dolor tiene siempre prioridad sobre el ajuste de volumen y no se aprende de esas sesiones.");
-        if (profile.Confidence == ConfidenceLevel.Low)
-            return Make(VolumeAction.Abstain, cautious,
-                $"La confianza de la estimación para {name} es baja (pocas semanas válidas o entrenamientos irregulares); no se modifica el volumen.");
+        if (last is null)
+            return Make(VolumeAction.Abstain, previous,
+                $"No hay semanas válidas suficientes para leer cómo va {name}: el volumen se queda como estaba ({previous:0} series semanales).");
 
         if (last.Verdict == BlockVerdict.Unfavorable)
         {
-            var floor = Math.Max(baseline.Floor, baseline.Target - LongitudinalPolicy.MaximumBelowBaselineSets);
             var lowered = Math.Max(previous - LongitudinalPolicy.StepSets, floor);
             return lowered < previous
                 ? Make(VolumeAction.Decrease, lowered,
-                    $"Se reduce ligeramente el volumen de {name} (de {previous:0} a {lowered:0} series semanales) porque se repiten señales de fatiga y deterioro del rendimiento.")
+                    $"Se baja una serie semanal de {name} (de {previous:0} a {lowered:0}) porque en {last.UnfavorablePeriods} semanas del bloque anterior el rendimiento bajó junto con señales de fatiga o series por debajo del rango.")
                 : Make(VolumeAction.Hold, previous,
-                    $"Se mantiene el volumen de {name} en su mínimo ({previous:0} series semanales) aunque se repiten señales de fatiga: no se baja más de forma automática.");
+                    $"Se mantiene {name} en su mínimo ({previous:0} series semanales) aunque se repiten señales de fatiga: no se baja más de forma automática.");
         }
 
-        if (last.Verdict == BlockVerdict.Favorable)
+        if (previous < baseline.Target)
         {
-            var next = previous + LongitudinalPolicy.StepSets;
-            var cap = Math.Min(baseline.Ceiling, baseline.Target + LongitudinalPolicy.MaximumAboveBaselineSets);
-            var blocker =
-                baseline.Priority == TrainingMusclePriority.Maintain ? $"{name} está en mantenimiento, así que no se aumenta."
-                : profile.FavorableBlocksInARow < LongitudinalPolicy.FavorableBlocksToIncrease
-                    ? $"solo hay {profile.FavorableBlocksInARow} bloque favorable seguido y se necesitan {LongitudinalPolicy.FavorableBlocksToIncrease} para consolidar un aumento."
-                : profile.ConfidenceScore < LongitudinalPolicy.IncreaseMinimumConfidence
-                    ? $"la confianza de la estimación ({profile.ConfidenceScore.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}) no llega al mínimo para subir la referencia."
-                : last.Adherence < LongitudinalPolicy.MinimumDoseAdherence ? $"no llegaste a completar el volumen prescrito de {name}."
-                : last.Regularity < LongitudinalPolicy.MinimumRegularity ? "los entrenamientos han sido irregulares."
-                : last.DiscomfortAnswers >= LongitudinalPolicy.DiscomfortAnswersToHold ? $"has indicado molestias en ejercicios de {name}."
-                : next > cap ? $"{name} ya está en el máximo que se aumenta automáticamente ({previous:0} series)."
-                : profile.ObservedLimitSets is { } limit && next >= limit ? $"con {limit:0} series semanales ya se vio fatiga repetida."
-                : null;
-            if (blocker is not null)
-                return Make(VolumeAction.Hold, previous, $"Se mantiene el volumen de {name} ({previous:0} series semanales): {blocker}");
-            return Make(VolumeAction.Increase, next,
-                $"Se propone aumentar una serie semanal de {name} (de {previous:0} a {next:0}) porque el rendimiento ha progresado de forma sostenida y la recuperación ha sido favorable.");
+            if (pain)
+                return Make(VolumeAction.Hold, previous,
+                    $"Se mantiene {name} en {previous:0} series semanales: se registró dolor en los últimos bloques y el dolor impide devolver volumen automáticamente.");
+            var restored = Math.Min(previous + LongitudinalPolicy.StepSets, baseline.Target);
+            return Make(VolumeAction.Restore, restored,
+                $"Se devuelve una serie semanal de {name} (de {previous:0} a {restored:0}, sin pasar de las {baseline.Target:0} de tu plan) porque el último bloque ya no muestra fatiga con bajada de rendimiento.");
         }
 
         return Make(VolumeAction.Hold, previous,
-            $"Se mantiene el volumen de {name} porque los datos actuales no justifican un cambio.");
+            $"Se mantiene el volumen de {name} ({previous:0} series semanales): no hay señales que lo cambien. El volumen no sube por una mejora de rendimiento.");
     }
 
-    private static string Signals(TrainingMuscleBaseline baseline, decimal previous, MuscleResponseProfile? profile, BlockSummary? last) =>
+    private static string Signals(TrainingMuscleBaseline baseline, decimal floor, decimal previous, BlockSummary? last, bool pain) =>
         JsonSerializer.Serialize(new
         {
             priority = baseline.Priority.ToString(),
-            floor = baseline.Floor,
-            ceiling = baseline.Ceiling,
+            floor,
             previous,
             verdict = last?.Verdict.ToString(),
             validPeriods = last?.ValidPeriods,
             partialPeriods = last?.PartialPeriods,
-            favorablePeriods = last?.FavorablePeriods,
+            decliningPeriods = last?.DecliningPeriods,
             unfavorablePeriods = last?.UnfavorablePeriods,
             fatiguedPeriods = last?.FatiguedPeriods,
             performedSets = last?.PerformedSets,
             prescribedSets = last?.PrescribedSets,
-            regularity = last?.Regularity,
-            feedbackAnswers = last?.FeedbackAnswers,
-            discomfortAnswers = last?.DiscomfortAnswers,
-            trend = profile?.Trend.ToString(),
-            referenceSets = profile?.ReferenceSets,
-            toleratedSets = profile?.ToleratedSets,
-            observedLimitSets = profile?.ObservedLimitSets,
-            volumeChangeResponse = profile?.VolumeChangeResponse.ToString(),
-            deloadResponse = profile?.DeloadResponse.ToString(),
-            painInRecentBlocks = profile?.PainInRecentBlocks,
-            validBlocks = profile?.ValidBlocks,
-            confidenceScore = profile?.ConfidenceScore,
+            painInRecentBlocks = pain,
             policy = LongitudinalPolicy.Version
         }, Json);
 }

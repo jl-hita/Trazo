@@ -51,7 +51,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         return await query(scope.ServiceProvider.GetRequiredService<TrazoDbContext>()).CountAsync();
     }
 
-    [Fact]
+    [ScenarioFact]
     public async Task A_regular_user_gets_no_proposal()
     {
         var (_, client, _) = await StartPlanAsync();
@@ -61,7 +61,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         Assert.Equal(0, await CountAsync(db => db.FrequencyProposals));
     }
 
-    [Fact]
+    [ScenarioFact]
     public async Task A_persistent_change_creates_one_proposal_and_asking_again_keeps_it()
     {
         var (_, client) = await ThreeDaysForFiveWeeksAsync();
@@ -85,7 +85,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         Assert.Equal(1, await CountAsync(db => db.FrequencyProposals));
     }
 
-    [Fact]
+    [ScenarioFact]
     public async Task Declining_a_proposal_does_not_offer_the_same_days_again_for_a_while()
     {
         var (_, client) = await ThreeDaysForFiveWeeksAsync();
@@ -100,7 +100,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         Assert.Equal(4, plan.GetProperty("trainingDays").GetArrayLength());
     }
 
-    [Fact]
+    [ScenarioFact]
     public async Task Accepting_changes_the_next_block_only_and_reverting_goes_back_keeping_the_history()
     {
         var (_, client) = await ThreeDaysForFiveWeeksAsync();
@@ -147,7 +147,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync($"{Url}/revert", null)).StatusCode);
     }
 
-    [Fact]
+    [ScenarioFact]
     public async Task The_export_and_the_deletion_cover_the_new_tables()
     {
         var (user, client) = await ThreeDaysForFiveWeeksAsync();
@@ -165,7 +165,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         Assert.True(await db.FrequencyProposals.AnyAsync(p => p.UserId == user.Id));
     }
 
-    [Fact]
+    [ScenarioFact]
     public async Task Nobody_sees_or_decides_another_users_proposal()
     {
         var (_, owner) = await ThreeDaysForFiveWeeksAsync();
@@ -190,4 +190,4 @@ public sealed class FrequencyReorganizationApiTests() : FrequencyReorganizationA
 /// <summary>The same scenarios on a real PostgreSQL with the real migrations (CI job "postgres"; needs TRAZO_TEST_POSTGRES).</summary>
 [Trait("Category", "Postgres")]
 public sealed class PostgresFrequencyReorganizationApiTests() : FrequencyReorganizationApiScenarios(
-    Environment.GetEnvironmentVariable("TRAZO_TEST_POSTGRES") ?? throw new InvalidOperationException("TRAZO_TEST_POSTGRES is not set."));
+    PostgresSettings.ConnectionString);

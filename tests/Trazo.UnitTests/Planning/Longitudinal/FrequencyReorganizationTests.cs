@@ -233,7 +233,7 @@ public sealed class FrequencyReorganizationTests
         Assert.Equal(TrainingMusclePriority.Emphasize, s.Baselines.First(b => b.Muscle == Chest).Priority);
         Assert.True(newVolume[Chest] >= s.Baselines.First(b => b.Muscle == Chest).Target - 2m);
         // The learned doses stay inside the band of the NEW baselines: a reference earned at four days cannot carry over.
-        Assert.All(next.Decisions, d => Assert.InRange(d.ProposedSets, d.BaselineSets - LongitudinalPolicy.MaximumBelowBaselineSets, d.BaselineSets + LongitudinalPolicy.MaximumAboveBaselineSets));
+        Assert.All(next.Decisions, d => Assert.InRange(d.ProposedSets, d.BaselineSets - LongitudinalPolicy.MaximumBelowBaselineSets, d.BaselineSets));
     }
 
     [Fact]

@@ -238,7 +238,7 @@ public sealed class AccountApiTests : IDisposable
         db.LongitudinalDecisions.Add(new LongitudinalDecision
         {
             Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, MesocycleSequence = 1, Muscle = "Chest", Action = "carry", BaselineSets = 12,
-            PreviousSets = 12, ProposedSets = 13, Confidence = "high", ConfidenceScore = 0.8m, SignalsJson = "{}", Reason = "test",
+            PreviousSets = 12, ProposedSets = 13, SignalsJson = "{}", Reason = "test",
             PolicyVersion = "longitudinal-1.2", CreatedAt = Now
         });
         await db.SaveChangesAsync();

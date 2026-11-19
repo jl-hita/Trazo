@@ -70,7 +70,7 @@ public sealed class LongitudinalDecision
     /// <summary>The block the decision was applied to.</summary>
     public int MesocycleSequence { get; set; }
     public required string Muscle { get; set; }
-    /// <summary>increase, decrease, hold, abstain or carry (the first block of a new plan, from the history of earlier plans).</summary>
+    /// <summary>decrease, restore, hold or abstain (see LongitudinalPolicy).</summary>
     public required string Action { get; set; }
     /// <summary>The weekly target the engine would use without learning (level and priority only).</summary>
     public decimal BaselineSets { get; set; }
@@ -78,9 +78,6 @@ public sealed class LongitudinalDecision
     public decimal PreviousSets { get; set; }
     /// <summary>The target used in this block.</summary>
     public decimal ProposedSets { get; set; }
-    /// <summary>low, medium or high.</summary>
-    public required string Confidence { get; set; }
-    public decimal ConfidenceScore { get; set; }
     /// <summary>First and last period analysed (0 when no period was analysed).</summary>
     public int AnalyzedFromPeriod { get; set; }
     public int AnalyzedToPeriod { get; set; }

@@ -59,8 +59,6 @@ public sealed class LongitudinalLearning : Migration
                 "BaselineSets" numeric(5,1) NOT NULL,
                 "PreviousSets" numeric(5,1) NOT NULL,
                 "ProposedSets" numeric(5,1) NOT NULL,
-                "Confidence" character varying(10) NOT NULL,
-                "ConfidenceScore" numeric(3,2) NOT NULL,
                 "AnalyzedFromPeriod" integer NOT NULL,
                 "AnalyzedToPeriod" integer NOT NULL,
                 "SignalsJson" character varying(2000) NOT NULL,

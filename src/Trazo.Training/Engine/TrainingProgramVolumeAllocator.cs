@@ -489,9 +489,7 @@ public static class TrainingProgramVolumeAllocator
 
         // Explicit professional targets use a narrow +/-2 range (e.g. 20 means 18–22),
         // regardless of experience; defaults use the broader experience-specific ranges.
-        if ((preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
-            .Any(preference => preference.MuscleGroup == muscle &&
-                (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0)))
+        if (HasExplicitTarget(preferences, muscle))
             return ExplicitHypertrophyTargetToleranceSets;
 
         return DefaultTargetTolerance(experience);
@@ -514,7 +512,7 @@ public static class TrainingProgramVolumeAllocator
     /// </summary>
     private static bool HasExplicitTarget(IReadOnlyList<TrainingMuscleVolumeTarget>? preferences, TrainingMuscleGroup muscle) =>
         (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
-            .Any(preference => preference.MuscleGroup == muscle &&
+            .Any(preference => preference.MuscleGroup == muscle && !preference.Learned &&
                 (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0));
 
     /// <summary>
@@ -523,7 +521,7 @@ public static class TrainingProgramVolumeAllocator
     /// </summary>
     private static bool HasRaisedExplicitTarget(IReadOnlyList<TrainingMuscleVolumeTarget>? preferences, TrainingMuscleGroup muscle) =>
         (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
-            .Any(preference => preference.MuscleGroup == muscle && !preference.Maintenance &&
+            .Any(preference => preference.MuscleGroup == muscle && !preference.Maintenance && !preference.Learned &&
                 (preference.TargetWeeklyPrimarySets is not null || preference.Priority > 0));
 
     private static decimal GetUpperHeadroom(
@@ -634,7 +632,10 @@ public sealed record TrainingMuscleVolumeTarget(
     decimal? TargetWeeklyPrimarySets = null,
     // A maintenance target LOWERS the dose of a muscle. It must not be read as a preference to favour that muscle
     // (exercise order, hamstring slot), so those consumers ignore it.
-    bool Maintenance = false);
+    bool Maintenance = false,
+    // A target learned from the user's history only LOWERS the dose of a muscle that has the default priority. It is a lower weekly
+    // target, not an explicit professional or user target, so it must not change the tolerance of the muscle nor lift any ceiling.
+    bool Learned = false);
 
 public sealed record TrainingVolumeAllocationResult(
     IReadOnlyList<TrainingSessionPrescription> Sessions,

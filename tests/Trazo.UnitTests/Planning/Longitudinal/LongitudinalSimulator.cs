@@ -76,7 +76,7 @@ internal sealed class PlanSimulator
     {
         RefreshObservations(now ?? Start.AddDays(7 * NextWeek));
         return LongitudinalEngine.Propose(
-            PlanId, NextSequence, Baselines, Observations, new Dictionary<Guid, int> { [PlanId] = 0 }, Applied);
+            PlanId, NextSequence, Baselines, Observations, Applied);
     }
 
     /// <summary>Generates the next block (with the decision's targets), stores the decisions as applied and trains it.</summary>

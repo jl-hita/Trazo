@@ -204,16 +204,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var candidates = await LoadCandidatesAsync(ct);
         var firstSlot = SlotsOf(plan).First(slot => slot.Contains(1));
         var loads = await LoadReferencesAsync(userId, ct);
-        // What this user's earlier plans showed about each muscle sets where this plan starts (see LongitudinalLearning); with no usable
-        // history nothing is learned and the block is the one the generator always made. The plan is not stored yet, so it is passed whole.
-        var learning = await LongitudinalLearning.ProposeAsync(db, plan, firstSlot, profile, now, ct);
-        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads, learnedTargets: learning.LearnedTargets);
-        var decisions = learning.Decisions;
-        if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
-        {
-            generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
-            decisions = [];
-        }
+        // A new plan always starts from its own baseline: nothing decided in another plan reaches its first block.
+        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
         if (!generation.Succeeded)
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
                 "No se pudo generar un plan con ese perfil.", new Dictionary<string, string[]> { ["plan"] = generation.Errors.ToArray() });
@@ -221,7 +213,6 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         AddMesocycle(plan, firstSlot, generation, now, 1);
 
         db.TrainingPlans.Add(plan);
-        db.LongitudinalDecisions.AddRange(decisions);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -1169,7 +1160,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             .Where(d => d.UserId == userId && d.PlanId == plan.Id)
             .OrderByDescending(d => d.MesocycleSequence).ThenBy(d => d.Muscle).Take(take).ToListAsync(ct);
         return new VolumeDecisionsView(rows.Select(d => new VolumeDecisionView(
-            d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, d.Confidence, d.Reason, d.PolicyVersion)).ToList());
+            d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, d.Reason, d.PolicyVersion)).ToList());
     }
 
     public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct)

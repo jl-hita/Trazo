@@ -109,6 +109,7 @@ public static class MuscleWeekObserver
                     feedback.TryGetValue(exercise.ExerciseId, out var answer);
                     var change = previousOf.TryGetValue((log.Id, exercise.ExerciseId.ToLowerInvariant()), out var previous)
                         ? Change(IndicatorOf(sets), previous, log.PerformedAt) : null;
+                    var primary = exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToHashSet(StringComparer.Ordinal);
                     foreach (var muscle in muscles[exercise.ExerciseId])
                     {
                         if (!perMuscle.TryGetValue(muscle, out var s)) perMuscle[muscle] = s = new SessionAcc();
@@ -122,7 +123,9 @@ public static class MuscleWeekObserver
                             if (string.Equals(answer.Stimulus, "low", StringComparison.OrdinalIgnoreCase)) s.LowStimulus++;
                             if (string.Equals(answer.Discomfort, "mild", StringComparison.OrdinalIgnoreCase)
                                 || string.Equals(answer.Discomfort, "strong", StringComparison.OrdinalIgnoreCase)) s.Discomfort++;
-                            if (change is { } c) { s.PerformanceSum += c * done.Count; s.PerformanceWeight += done.Count; s.Samples++; }
+                            // Performance is a signal of the lift it was measured on: only the muscles the exercise trains as PRIMARY receive it.
+                            // A synergist is exposed to the work (and to its fatigue) but never inherits the performance of someone else's lift.
+                            if (change is { } c && primary.Contains(muscle)) { s.PerformanceSum += c * done.Count; s.PerformanceWeight += done.Count; s.Samples++; }
                         }
                     }
                 }

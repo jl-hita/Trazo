@@ -6,8 +6,11 @@ using Xunit;
 namespace Trazo.UnitTests.Planning.Longitudinal;
 
 /// <summary>
-/// End-to-end scenarios of the longitudinal layer on the real generator, observer and engine (no database). Each one answers the
-/// acceptance question: does history move the next block's dose prudently, and does it leave it alone when the data does not justify it?
+/// End-to-end scenarios of the longitudinal layer on the real generator, observer and engine (no database). What they check is the
+/// behaviour the product wants, not a model of physiology: a better performance never raises a dose, repeated fatigue with falling
+/// performance lowers it a little, a reduction is given back, pain always prevails and not knowing changes nothing.
+/// The simulated "response" is an input of each scenario, so these tests prove how the engine REACTS to a signal, not that the reaction
+/// improves anybody's hypertrophy: that needs real data and is not claimed here.
 /// </summary>
 public sealed class LongitudinalScenarioTests
 {
@@ -18,9 +21,6 @@ public sealed class LongitudinalScenarioTests
     private static PlanProfile With(PlanProfile p, params (TrainingMuscleGroup, TrainingMusclePriority)[] priorities) =>
         p with { MusclePriorities = priorities.ToDictionary(x => x.Item1, x => x.Item2) };
 
-    private static decimal Dose(LongitudinalResult r, PlanSimulator s, TrainingMuscleGroup m) =>
-        r.LearnedTargets.TryGetValue(m, out var v) ? v : s.Baselines.First(b => b.Muscle == m).Target;
-
     private static decimal Base(PlanSimulator s, TrainingMuscleGroup m) => s.Baselines.First(b => b.Muscle == m).Target;
 
     private static List<LongitudinalResult> Run(PlanSimulator s, Behavior b, int blocks)
@@ -30,229 +30,233 @@ public sealed class LongitudinalScenarioTests
         return results;
     }
 
-    private static VolumeDecision? DecisionFor(LongitudinalResult r, TrainingMuscleGroup m) => r.Decisions.FirstOrDefault(d => d.Muscle == m.ToString());
-
     private static List<VolumeDecision> Of(IEnumerable<LongitudinalResult> results, TrainingMuscleGroup m) =>
-        results.Select(r => DecisionFor(r, m)).OfType<VolumeDecision>().ToList();
+        results.SelectMany(r => r.Decisions).Where(d => d.Muscle == m.ToString()).ToList();
 
-    private static int Increases(IEnumerable<LongitudinalResult> results) =>
-        results.SelectMany(r => r.Decisions).Count(d => d.Action == VolumeAction.Increase);
+    private static readonly Behavior ChestFatigues = new()
+    {
+        MuscleResponse = (_, muscle, _) => muscle == Chest ? Response.Poor : Response.Good
+    };
 
-    // 1-3: the engine works for each level and never leaves the policy limits.
     [Theory]
     [InlineData(TrainingExperience.Beginner, 3)]
     [InlineData(TrainingExperience.Intermediate, 4)]
     [InlineData(TrainingExperience.Advanced, 4)]
-    public void Regular_users_of_every_level_stay_inside_the_policy_limits(TrainingExperience level, int days)
+    public void A_regular_user_with_good_performance_never_gets_more_than_the_plain_baseline(TrainingExperience level, int days)
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(experience: level, days: days));
-        var results = Run(s, new Behavior(), 4);
-        foreach (var d in results.SelectMany(r => r.Decisions))
+        var results = Run(s, new Behavior(), 5);
+        Assert.All(results.SelectMany(r => r.Decisions), d =>
         {
-            var b = s.Baselines.First(x => x.Muscle.ToString() == d.Muscle);
-            Assert.InRange(d.ProposedSets, b.Floor, b.Ceiling);
-            Assert.InRange(d.ProposedSets, d.BaselineSets - LongitudinalPolicy.MaximumBelowBaselineSets, d.BaselineSets + LongitudinalPolicy.MaximumAboveBaselineSets);
-            Assert.True(Math.Abs(d.ProposedSets - d.PreviousSets) <= LongitudinalPolicy.StepSets);
+            Assert.True(d.ProposedSets <= d.BaselineSets, $"{d.Muscle}: {d.ProposedSets} over the baseline {d.BaselineSets}");
+            Assert.NotEqual(VolumeAction.Decrease, d.Action);
+        });
+        Assert.All(results, r => Assert.Empty(r.LearnedTargets));
+    }
+
+    [Fact]
+    public void A_learned_reduction_lowers_that_muscle_and_no_muscle_exceeds_the_absolute_ceiling()
+    {
+        // The allocator is greedy: lowering the target of one muscle can change which exercises get sets first, so another muscle may
+        // land somewhere else INSIDE its own range (it is not a spill-over of volume). What a learned target must never do is raise
+        // the muscle it is about, or take any muscle past the absolute weekly ceiling the same plan without learning respects.
+        var learning = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
+        var control = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
+        var lowered = false;
+        for (var block = 0; block < 5; block++)
+        {
+            var (learnedBlock, result) = learning.RunBlock(ChestFatigues);
+            var plain = PlanSimulator.VolumeOfWeek(control.RunBlock(ChestFatigues, learn: false).Block);
+            var learnedVolume = PlanSimulator.VolumeOfWeek(learnedBlock);
+            foreach (var muscle in result.LearnedTargets.Keys)
+            {
+                lowered = true;
+                Assert.True(learnedVolume.GetValueOrDefault(muscle) <= plain.GetValueOrDefault(muscle) + 0.01m,
+                    $"block {block + 1}, {muscle}: {learnedVolume.GetValueOrDefault(muscle)} with a lowered target against {plain.GetValueOrDefault(muscle)} without");
+            }
+            Assert.All(learnedVolume, p => Assert.True(p.Value <= 20m, $"{p.Key}: {p.Value}"));
+        }
+        Assert.True(lowered, "the scenario must actually lower something");
+    }
+
+    [Theory]
+    [InlineData(TrainingExperience.Beginner, 3)]
+    [InlineData(TrainingExperience.Intermediate, 4)]
+    [InlineData(TrainingExperience.Advanced, 4)]
+    [InlineData(TrainingExperience.Intermediate, 3)]
+    public void A_learned_target_does_not_change_the_rules_the_same_muscle_follows_without_it(TrainingExperience level, int days)
+    {
+        // The generator is run directly: every configurable muscle gets a learned target at its floor (the largest reduction possible).
+        var profile = PlanTestCatalog.Profile(experience: level, days: days);
+        var baselines = MesocycleGenerator.Baselines(profile);
+        var learned = baselines.ToDictionary(b => b.Muscle, b => b.Floor);
+        var slot = new MesocycleSlot(1, 1, "accumulation", 1, 4);
+        var plain = MesocycleGenerator.Generate(profile, 7, slot, PlanSimulator.Catalog);
+        var lowered = MesocycleGenerator.Generate(profile, 7, slot, PlanSimulator.Catalog, learnedTargets: learned);
+        Assert.True(plain.Succeeded, string.Join("; ", plain.Errors));
+        Assert.True(lowered.Succeeded, string.Join("; ", lowered.Errors));
+        for (var week = 1; week <= 4; week++)
+        {
+            var before = PlanSimulator.VolumeOfWeek(plain, week);
+            var after = PlanSimulator.VolumeOfWeek(lowered, week);
+            // The greedy allocator may land a muscle one or two sets elsewhere inside its own range when another target changes, so the
+            // total is what must go down; what must never happen is a muscle past the ceiling the plain plan respects.
+            Assert.True(baselines.Sum(b => after.GetValueOrDefault(b.Muscle)) <= baselines.Sum(b => before.GetValueOrDefault(b.Muscle)),
+                $"{level} {days}d week {week}: lowering every target must not add volume overall");
+            foreach (var b in baselines)
+                Assert.True(after.GetValueOrDefault(b.Muscle) <= Math.Max(20m, before.GetValueOrDefault(b.Muscle)),
+                    $"{level} {days}d week {week} {b.Muscle}: {after.GetValueOrDefault(b.Muscle)} lowered, {before.GetValueOrDefault(b.Muscle)} plain: over the ceiling");
         }
     }
 
-    // 4: emphasized chest keeps its priority over the learned dose of the other muscles.
     [Fact]
-    public void Emphasized_chest_stays_at_least_as_high_as_a_plain_muscle()
-    {
-        var s = new PlanSimulator(With(PlanTestCatalog.Profile(days: 4), (Chest, TrainingMusclePriority.Emphasize)));
-        Run(s, new Behavior(), 3);
-        var next = s.Decide();
-        Assert.True(Dose(next, s, Chest) >= Base(s, Chest) - LongitudinalPolicy.MaximumBelowBaselineSets);
-        Assert.Equal(TrainingMusclePriority.Emphasize, s.Baselines.First(b => b.Muscle == Chest).Priority);
-    }
-
-    // 5: maintenance never grows however well it goes.
-    [Fact]
-    public void Maintained_triceps_never_increase()
-    {
-        var s = new PlanSimulator(With(PlanTestCatalog.Profile(days: 4), (Triceps, TrainingMusclePriority.Maintain)));
-        var results = Run(s, new Behavior(), 4);
-        Assert.All(Of(results, Triceps), d => Assert.NotEqual(VolumeAction.Increase, d.Action));
-        Assert.True(Dose(s.Decide(), s, Triceps) <= Base(s, Triceps));
-    }
-
-    // 6: several emphasized muscles share exercises; the learned doses stay within each muscle's own limits.
-    [Fact]
-    public void Several_emphasized_muscles_respect_their_own_limits()
-    {
-        var s = new PlanSimulator(With(PlanTestCatalog.Profile(days: 4),
-            (Chest, TrainingMusclePriority.Emphasize), (Triceps, TrainingMusclePriority.Emphasize), (TrainingMuscleGroup.Deltoids, TrainingMusclePriority.Emphasize)));
-        var results = Run(s, new Behavior(), 4);
-        foreach (var d in results.SelectMany(r => r.Decisions))
-        {
-            var b = s.Baselines.First(x => x.Muscle.ToString() == d.Muscle);
-            Assert.InRange(d.ProposedSets, b.Floor, b.Ceiling);
-        }
-    }
-
-    // 7: good response at moderate volume lets the dose rise, one set at a time.
-    [Fact]
-    public void Good_response_raises_the_dose_gradually()
+    public void Repeated_fatigue_with_falling_performance_lowers_that_muscle_by_one_set_per_block_inside_the_band()
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var results = Run(s, new Behavior(), 5);
+        var results = Run(s, ChestFatigues, 6);
         var chest = Of(results, Chest);
-        Assert.Contains(chest, d => d.Action == VolumeAction.Increase);
-        Assert.True(chest.Max(d => d.ProposedSets) <= Base(s, Chest) + LongitudinalPolicy.MaximumAboveBaselineSets);
-        Assert.All(chest, d => Assert.True(Math.Abs(d.ProposedSets - d.PreviousSets) <= LongitudinalPolicy.StepSets));
+        Assert.Contains(chest, d => d.Action == VolumeAction.Decrease);
+        var baseline = s.Baselines.First(b => b.Muscle == Chest);
+        Assert.All(chest, d =>
+        {
+            Assert.InRange(d.ProposedSets, Math.Max(baseline.Floor, baseline.Target - LongitudinalPolicy.MaximumBelowBaselineSets), baseline.Target);
+            Assert.True(Math.Abs(d.ProposedSets - d.PreviousSets) <= LongitudinalPolicy.StepSets);
+            Assert.False(string.IsNullOrWhiteSpace(d.Reason));
+        });
+        Assert.True(Of(results, Chest).Last().ProposedSets < Base(s, Chest));
     }
 
-    // 8: repeated fatigue at high volume lowers the dose.
     [Fact]
-    public void Repeated_fatigue_lowers_the_dose()
+    public void A_synergist_does_not_inherit_the_decline_of_a_lift_it_only_assists()
+    {
+        // Chest performance falls and the sessions are tiring, but the triceps' own lifts keep improving: the bench press is not
+        // evidence about the triceps, so the triceps are not lowered because of it.
+        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
+        var results = Run(s, ChestFatigues, 5);
+        Assert.Contains(Of(results, Chest), d => d.Action == VolumeAction.Decrease);
+        Assert.DoesNotContain(Of(results, Triceps), d => d.Action == VolumeAction.Decrease);
+    }
+
+    [Fact]
+    public void A_reduction_is_given_back_one_set_at_a_time_and_never_above_the_baseline()
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var behavior = new Behavior { MuscleResponse = (_, m, _) => m == Quads ? Response.Poor : Response.Good };
-        var results = Run(s, behavior, 5);
-        var quads = Of(results, Quads);
-        Assert.Contains(quads, d => d.Action == VolumeAction.Decrease);
-        Assert.All(quads, d => Assert.True(d.ProposedSets <= Base(s, Quads)));
-        Assert.All(quads, d => Assert.False(string.IsNullOrWhiteSpace(d.Reason)));
+        Run(s, ChestFatigues, 4);
+        var lowered = s.Applied.Where(a => a.Muscle == nameof(Chest)).Max(a => a.MesocycleSequence);
+        Assert.True(s.Applied.First(a => a.Muscle == nameof(Chest) && a.MesocycleSequence == lowered).Sets < Base(s, Chest));
+        var recovered = Run(s, new Behavior(), 6);
+        var chest = Of(recovered, Chest);
+        Assert.Contains(chest, d => d.Action == VolumeAction.Restore);
+        Assert.All(chest, d => Assert.True(d.ProposedSets <= d.BaselineSets));
+        Assert.Equal(Base(s, Chest), chest.Last().ProposedSets);
     }
 
-    // 9: negative feedback on one muscle stops its increase without touching the others.
     [Fact]
-    public void Negative_muscle_feedback_stops_that_muscle_only()
+    public void Pain_is_not_learned_from_and_prevents_giving_a_reduction_back()
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var behavior = new Behavior { Feedback = (_, m) => m == Chest ? ("low", "strong", "loaded") : null };
-        var results = Run(s, behavior, 5);
-        Assert.All(Of(results, Chest), d => Assert.NotEqual(VolumeAction.Increase, d.Action));
-        Assert.Contains(results.SelectMany(r => r.Decisions).Where(d => d.Muscle != Chest.ToString()), d => d.Action == VolumeAction.Increase);
+        Run(s, ChestFatigues, 3);
+        var painful = new Behavior { Pain = (period, index) => index == 0 && period % 2 == 0 };
+        var results = Run(s, painful, 3);
+        Assert.All(results.SelectMany(r => r.Decisions), d => Assert.NotEqual(VolumeAction.Restore, d.Action));
+        Assert.All(results.SelectMany(r => r.Decisions), d => Assert.True(d.ProposedSets <= d.BaselineSets));
     }
 
-    // 10: not answering is not a negative answer: the same behaviour with and without answers (all good) must not lower the dose.
-    [Fact]
-    public void No_feedback_never_counts_as_bad_feedback()
-    {
-        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var results = Run(s, new Behavior(), 5);
-        Assert.All(results.SelectMany(r => r.Decisions), d => Assert.NotEqual(VolumeAction.Decrease, d.Action));
-    }
-
-    // 11: pain is never learned from and blocks any increase.
-    [Fact]
-    public void Pain_blocks_increases_and_is_not_learned_from()
-    {
-        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var behavior = new Behavior { Pain = (period, _) => period is >= 3 and <= 4 };
-        var results = Run(s, behavior, 4);
-        // The block right after the pain: no increase anywhere. Later blocks may recover once the pain is out of the window.
-        Assert.All(results[1].Decisions, d => Assert.NotEqual(VolumeAction.Increase, d.Action));
-    }
-
-    // 12: occasional skips do not move the dose.
-    [Fact]
-    public void Occasional_skips_do_not_change_the_dose()
-    {
-        var regular = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var skipper = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var skips = new Behavior { Attends = (period, index) => !(index == 1 && period % 4 == 3) };
-        Run(regular, new Behavior(), 3);
-        Run(skipper, skips, 3);
-        var a = regular.Decide();
-        var b = skipper.Decide();
-        Assert.DoesNotContain(b.Decisions, d => d.Action == VolumeAction.Decrease);
-        Assert.True(b.Decisions.Sum(d => d.ProposedSets) <= a.Decisions.Sum(d => d.ProposedSets));
-    }
-
-    // 13: a persistent drop from 4 to 3 real days is data, a one-off is not (reorganisation lives in the frequency layer).
-    [Fact]
-    public void A_persistent_drop_in_attendance_does_not_raise_the_dose()
-    {
-        var regular = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var fewer = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var regularResults = Run(regular, new Behavior(), 4);
-        var fewerResults = Run(fewer, new Behavior { Attends = (period, index) => index != period % 4 }, 4);
-        Assert.True(Increases(fewerResults) < Increases(regularResults));
-    }
-
-    // 14: a deload block is skipped and does not by itself change the dose.
-    [Fact]
-    public void A_deload_block_makes_no_decisions()
-    {
-        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        Run(s, new Behavior(), 2);
-        var deload = s.RunBlock(new Behavior(), deload: true);
-        Assert.Empty(deload.Result.Decisions);
-        var after = s.Decide();
-        Assert.All(after.Decisions, d => Assert.InRange(d.ProposedSets, d.BaselineSets - LongitudinalPolicy.MaximumBelowBaselineSets, d.BaselineSets + LongitudinalPolicy.MaximumAboveBaselineSets));
-    }
-
-    // 15: substituting an exercise starts a new performance history instead of reading a fake drop.
-    [Fact]
-    public void Exercise_substitution_is_not_read_as_a_decline()
-    {
-        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4), seed: 7);
-        var other = new PlanSimulator(PlanTestCatalog.Profile(days: 4), seed: 11);
-        Run(s, new Behavior(), 3);
-        Run(other, new Behavior(), 3);
-        Assert.All(other.Decide().Decisions, d => Assert.NotEqual(VolumeAction.Decrease, d.Action));
-    }
-
-    // Acceptance: insufficient data leaves the block exactly as the plain engine would generate it.
     [Fact]
     public void Insufficient_data_changes_nothing()
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var first = s.Decide();
-        Assert.Empty(first.LearnedTargets);
-        Assert.All(first.Decisions, d => Assert.Equal(VolumeAction.Abstain, d.Action));
-        var plain = s.Generate(false, null);
-        var learned = s.Generate(false, first.LearnedTargets);
-        Assert.Equal(plain.Sessions.Select(x => x.PrescriptionJson), learned.Sessions.Select(x => x.PrescriptionJson));
+        var results = Run(s, new Behavior { Attends = (period, _) => period % 4 == 1 }, 3);
+        Assert.All(results.SelectMany(r => r.Decisions), d => Assert.Equal(d.BaselineSets, d.ProposedSets));
+        Assert.All(results, r => Assert.Empty(r.LearnedTargets));
     }
 
-    // Acceptance: two users with the same level and priorities but different histories get different volumes, with reasons.
     [Fact]
-    public void Two_similar_users_with_different_history_get_different_volumes()
-    {
-        var profile = PlanTestCatalog.Profile(days: 4);
-        var thriving = new PlanSimulator(profile);
-        var struggling = new PlanSimulator(profile);
-        Run(thriving, new Behavior(), 4);
-        Run(struggling, new Behavior { MuscleResponse = (_, _, _) => Response.Poor }, 4);
-        var a = thriving.Decide();
-        var b = struggling.Decide();
-        Assert.True(a.Decisions.Sum(d => d.ProposedSets) > b.Decisions.Sum(d => d.ProposedSets));
-        Assert.All(a.Decisions.Concat(b.Decisions), d => Assert.False(string.IsNullOrWhiteSpace(d.Reason)));
-        Assert.Equal("longitudinal-1.2", LongitudinalPolicy.Version);
-    }
-
-    // Consolidation: one favorable block is a sign, not a reason to raise the individual reference.
-    [Fact]
-    public void One_favorable_block_does_not_raise_the_reference()
+    public void A_deload_block_makes_no_decisions()
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var results = Run(s, new Behavior(), 3);
-        // results[1] is decided with one qualified block behind it, results[2] with two.
-        Assert.DoesNotContain(results[1].Decisions, d => d.Action == VolumeAction.Increase);
-        Assert.Contains(results[1].Decisions, d => d.Reason.Contains("necesitan 2"));
-        Assert.Contains(results[2].Decisions, d => d.Action == VolumeAction.Increase);
+        Run(s, ChestFatigues, 2);
+        var deload = s.RunBlock(new Behavior(), deload: true);
+        Assert.Empty(deload.Result.Decisions);
     }
 
     [Fact]
-    public void No_increase_is_ever_proposed_below_the_minimum_confidence()
+    public void A_maintained_muscle_never_goes_above_its_maintenance_target_and_an_emphasised_one_never_under_its_normal_dose()
     {
-        var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var results = Run(s, new Behavior(), 6);
-        Assert.All(results.SelectMany(r => r.Decisions).Where(d => d.Action == VolumeAction.Increase),
-            d => Assert.True(d.ConfidenceScore >= LongitudinalPolicy.IncreaseMinimumConfidence));
+        var profile = With(PlanTestCatalog.Profile(days: 4), (Triceps, TrainingMusclePriority.Maintain), (Chest, TrainingMusclePriority.Emphasize));
+        var s = new PlanSimulator(profile);
+        var results = Run(s, ChestFatigues, 6);
+        Assert.All(Of(results, Triceps), d => Assert.True(d.ProposedSets <= Base(s, Triceps)));
+        var chest = s.Baselines.First(b => b.Muscle == Chest);
+        Assert.All(Of(results, Chest), d => Assert.InRange(d.ProposedSets, chest.Floor, chest.Target));
     }
 
-    // Short-term safety is not behind the consolidation rule: repeated fatigue still lowers the dose after a single block.
     [Fact]
-    public void Decreases_do_not_wait_for_two_blocks()
+    public void Missing_feedback_is_never_read_as_a_bad_answer()
     {
         var s = new PlanSimulator(PlanTestCatalog.Profile(days: 4));
-        var behavior = new Behavior { MuscleResponse = (_, m, _) => m == Quads ? Response.Poor : Response.Good };
-        var results = Run(s, behavior, 2);
-        Assert.Contains(Of(results, Quads), d => d.Action == VolumeAction.Decrease);
+        var results = Run(s, new Behavior { Feedback = (_, _) => null }, 4);
+        Assert.All(results.SelectMany(r => r.Decisions), d => Assert.Equal(d.BaselineSets, d.ProposedSets));
+    }
+
+    // ---- The decision itself, without the simulator: what each outcome says and does.
+
+    private static TrainingMuscleBaseline Baseline(decimal target = 12m, decimal floor = 7m) => new(Quads, TrainingMusclePriority.Grow, target, floor);
+
+    private static BlockSummary Block(BlockVerdict verdict, bool pain = false, int unfavorable = 0) =>
+        new(Guid.Empty, 1, 4, 0, unfavorable, unfavorable, unfavorable, 10m, 12m, 1, 4, pain, verdict);
+
+    [Fact]
+    public void Abstaining_keeps_the_previous_target_exactly_and_says_so()
+    {
+        // A muscle that was lowered to 10 and now has no readable block keeps 10: it is neither restored to 12 nor lowered further.
+        var decision = LongitudinalVolumePlanner.Decide(Baseline(), 10m, []);
+        Assert.Equal(VolumeAction.Abstain, decision.Action);
+        Assert.Equal(10m, decision.ProposedSets);
+        Assert.Contains("como estaba (10", decision.Reason);
+        var insufficient = LongitudinalVolumePlanner.Decide(Baseline(), 10m, [Block(BlockVerdict.Insufficient)]);
+        Assert.Equal(VolumeAction.Abstain, insufficient.Action);
+        Assert.Equal(10m, insufficient.ProposedSets);
+    }
+
+    [Fact]
+    public void Pain_in_the_recent_blocks_holds_a_reduction_instead_of_restoring_it()
+    {
+        var stable = LongitudinalVolumePlanner.Decide(Baseline(), 10m, [Block(BlockVerdict.Stable)]);
+        Assert.Equal(VolumeAction.Restore, stable.Action);
+        Assert.Equal(11m, stable.ProposedSets);
+        var withPain = LongitudinalVolumePlanner.Decide(Baseline(), 10m, [Block(BlockVerdict.Stable, pain: true)]);
+        Assert.Equal(VolumeAction.Hold, withPain.Action);
+        Assert.Equal(10m, withPain.ProposedSets);
+        Assert.Contains("dolor", withPain.Reason);
+    }
+
+    [Fact]
+    public void A_reduction_has_its_own_reason_and_stops_at_the_floor()
+    {
+        var down = LongitudinalVolumePlanner.Decide(Baseline(), 12m, [Block(BlockVerdict.Unfavorable, unfavorable: 2)]);
+        Assert.Equal(VolumeAction.Decrease, down.Action);
+        Assert.Equal(11m, down.ProposedSets);
+        Assert.Contains("fatiga", down.Reason);
+        var atFloor = LongitudinalVolumePlanner.Decide(Baseline(floor: 9m), 9m, [Block(BlockVerdict.Unfavorable, unfavorable: 2)]);
+        Assert.Equal(VolumeAction.Hold, atFloor.Action);
+        Assert.Equal(9m, atFloor.ProposedSets);
+    }
+
+    [Fact]
+    public void A_stable_block_at_the_baseline_holds_and_never_raises()
+    {
+        var decision = LongitudinalVolumePlanner.Decide(Baseline(), 12m, [Block(BlockVerdict.Stable)]);
+        Assert.Equal(VolumeAction.Hold, decision.Action);
+        Assert.Equal(12m, decision.ProposedSets);
+        Assert.Null(decision.LearnedTarget);
+    }
+
+    [Fact]
+    public void A_baseline_that_moved_down_pulls_a_stale_previous_target_inside_the_new_band()
+    {
+        // The plan was reorganised and its baseline fell to 8: a previous target of 12 cannot carry over it.
+        var decision = LongitudinalVolumePlanner.Decide(Baseline(target: 8m, floor: 5m), 12m, [Block(BlockVerdict.Stable)]);
+        Assert.Equal(8m, decision.ProposedSets);
     }
 }

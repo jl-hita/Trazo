@@ -16,7 +16,7 @@ namespace Trazo.UnitTests.Planning;
 public sealed class PostgresMigrationTests : IDisposable
 {
     private const string BeforeLearning = "20261124100000_PlanMusclePriorities";
-    private readonly string _admin = Environment.GetEnvironmentVariable("TRAZO_TEST_POSTGRES") ?? throw new InvalidOperationException("TRAZO_TEST_POSTGRES is not set.");
+    private readonly string _admin = PostgresSettings.ConnectionString;
     private readonly string _name = $"trazo_mig_{Guid.NewGuid():N}";
     private readonly string _connection;
 
@@ -57,7 +57,7 @@ public sealed class PostgresMigrationTests : IDisposable
 
     private static readonly string[] LearningTables = ["muscle_week_observations", "longitudinal_decisions", "frequency_proposals"];
 
-    [Fact]
+    [ScenarioFact]
     public void The_migrations_apply_on_an_empty_database_with_the_expected_indexes_and_cascades()
     {
         using (var db = Context()) db.Database.Migrate();
@@ -81,7 +81,7 @@ public sealed class PostgresMigrationTests : IDisposable
         }
     }
 
-    [Fact]
+    [ScenarioFact]
     public void The_learning_migrations_go_down_and_up_again_without_touching_the_rest()
     {
         using (var db = Context()) db.Database.Migrate();

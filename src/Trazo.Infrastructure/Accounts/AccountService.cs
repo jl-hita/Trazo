@@ -283,7 +283,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
             devices.Select(d => new ExportDevice(d.DeviceName, d.CreatedAt, d.ExpiresAt, d.RevokedAt)).ToList(),
             premiumGrants.Select(g => new ExportPremiumGrant(g.Kind, g.Days, g.Status, g.GrantedAt, g.StartsAt, g.EndsAt)).ToList(),
             decisions.Select(d => new ExportLongitudinalDecision(
-                d.PlanId, d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, d.Confidence,
+                d.PlanId, d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets,
                 d.AnalyzedFromPeriod, d.AnalyzedToPeriod, d.Reason, d.PolicyVersion, d.CreatedAt)).ToList(),
             observations.Select(o => new ExportMuscleObservation(
                 o.PlanId, o.Period, o.Muscle, o.Quality, o.Reason, o.PrescribedSets, o.PerformedSets, o.Exposures, o.PerformanceChangePercent,
@@ -316,7 +316,7 @@ public sealed record ExportFrequencyProposal(
 
 public sealed record ExportLongitudinalDecision(
     Guid PlanId, int MesocycleSequence, string Muscle, string Action, decimal BaselineSets, decimal PreviousSets, decimal ProposedSets,
-    string Confidence, int AnalyzedFromPeriod, int AnalyzedToPeriod, string Reason, string PolicyVersion, DateTimeOffset CreatedAt);
+    int AnalyzedFromPeriod, int AnalyzedToPeriod, string Reason, string PolicyVersion, DateTimeOffset CreatedAt);
 
 public sealed record ExportMuscleObservation(
     Guid PlanId, int Period, string Muscle, string Quality, string? Reason, decimal PrescribedSets, decimal PerformedSets, int Exposures,

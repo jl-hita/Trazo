@@ -33,8 +33,6 @@ public sealed class LongitudinalDecisionConfiguration : IEntityTypeConfiguration
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Muscle).HasMaxLength(30).IsRequired();
         builder.Property(x => x.Action).HasMaxLength(10).IsRequired();
-        builder.Property(x => x.Confidence).HasMaxLength(10).IsRequired();
-        builder.Property(x => x.ConfidenceScore).HasPrecision(3, 2);
         builder.Property(x => x.BaselineSets).HasPrecision(5, 1);
         builder.Property(x => x.PreviousSets).HasPrecision(5, 1);
         builder.Property(x => x.ProposedSets).HasPrecision(5, 1);
