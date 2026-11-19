@@ -25,7 +25,7 @@ public sealed class PermanentAdminPremiumGrants : Migration
     {
         migrationBuilder.Sql("""
             ALTER TABLE premium_grants DROP CONSTRAINT IF EXISTS "CK_premium_grants_Days";
-            DELETE FROM premium_grants WHERE "IsPermanent" = TRUE;
+            UPDATE premium_grants SET "Days" = 1, "EndsAt" = "StartsAt" + INTERVAL '1 day' WHERE "IsPermanent" = TRUE;
             ALTER TABLE premium_grants DROP COLUMN IF EXISTS "GrantReason";
             ALTER TABLE premium_grants DROP COLUMN IF EXISTS "IsPermanent";
             ALTER TABLE premium_grants ADD CONSTRAINT "CK_premium_grants_Days" CHECK ("Days" > 0);
