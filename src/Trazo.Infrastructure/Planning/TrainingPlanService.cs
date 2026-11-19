@@ -841,16 +841,17 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
 
         FrequencyDraft? draft = null;
+        var diag = "";
         if (assessment.Pattern is FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn && NextTrainingSlotOf(plan) is { } slot)
         {
             var catalog = (await LoadCandidatesAsync(ct)).Candidates;
             var originalDays = original?.Select(Enum.Parse<DayOfWeek>).ToList();
             draft = FrequencyReorganizer.Propose(
                 ProfileOf(plan), assessment, weeks, originalDays, plan.Seed, slot, catalog, await LastBlockExerciseIdsAsync(plan, ct),
-                ActiveReduction(plan, all)?.FromMaxSessionMinutes);
+                ActiveReduction(plan, all)?.FromMaxSessionMinutes, t => diag += t + ";");
         }
 
-        DIAG = (assessment.Pattern is FrequencyPattern.PersistentReduction ? $"slot={(NextTrainingSlotOf(plan) is null ? "null" : "ok")} mes={plan.Mesocycles.Count} draft={(draft is null ? "null" : "ok")} " : "");
+        DIAG = diag + (assessment.Pattern is FrequencyPattern.PersistentReduction ? $"slot={(NextTrainingSlotOf(plan) is null ? "null" : "ok")} mes={plan.Mesocycles.Count} draft={(draft is null ? "null" : "ok")} " : "");
         var draftDays = draft is null ? null : string.Join(",", draft.ToDays);
         if (pending is not null && (draft is null || !string.Equals(pending.ToDays, draftDays, StringComparison.Ordinal)))
         {
