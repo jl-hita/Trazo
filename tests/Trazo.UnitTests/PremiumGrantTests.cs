@@ -144,6 +144,48 @@ public sealed class PremiumGrantTests : IDisposable
     }
 
     [Fact]
+    public async Task PermanentAdminGrant_GivesAccessWithoutAnExpiry_AndRequiresAReason()
+    {
+        using var db = _fixture.NewContext();
+        var user = await AddUserAsync(db, "permanent@example.com");
+        var service = Grants(db);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => service.GrantAsync(
+            new GrantRequest(user.Id, PremiumGrantKinds.AdminGrant, "missing-reason", 0, IsPermanent: true), default));
+
+        var result = await service.GrantAsync(new GrantRequest(
+            user.Id, PremiumGrantKinds.AdminGrant, "permanent-admin", 0, IsPermanent: true, Reason: "Internal test account"), default);
+
+        Assert.True(result.Grant.IsPermanent);
+        Assert.Null(result.Grant.EndsAt);
+        Assert.Equal(0, result.Grant.Days);
+        Assert.Equal("Internal test account", result.Grant.GrantReason);
+        Assert.True(await service.HasPromoAsync(user.Id, default));
+        Assert.Null(await service.PromoEndAsync(user.Id, default));
+    }
+
+    [Fact]
+    public async Task RevokingPermanentAdminGrant_RestartsFiniteGrantWindows_AndRemovesOnlyItsAccess()
+    {
+        using var db = _fixture.NewContext();
+        var user = await AddUserAsync(db, "permanent-chain@example.com");
+        var service = Grants(db);
+        var permanent = (await service.GrantAsync(new GrantRequest(
+            user.Id, PremiumGrantKinds.AdminGrant, "permanent-overlay", 0, IsPermanent: true, Reason: "Partner access"), default)).Grant;
+        var reward = (await service.GrantAsync(new GrantRequest(
+            user.Id, PremiumGrantKinds.ReferralReward, "after-permanent", 20), default)).Grant;
+
+        Assert.True(await service.HasPromoAsync(user.Id, default));
+        Assert.Equal(VoidOutcome.Voided, await service.VoidAsync(permanent.Id, "Access period finished", "admin-id", default));
+
+        await db.Entry(reward).ReloadAsync();
+        Assert.Equal(Now, reward.StartsAt);
+        Assert.Equal(Now.AddDays(20), reward.EndsAt);
+        Assert.True(await service.HasPromoAsync(user.Id, default));
+        Assert.Equal(Now.AddDays(20), await service.PromoEndAsync(user.Id, default));
+    }
+
+    [Fact]
     public async Task Grant_RequiresPositiveDays()
     {
         using var db = _fixture.NewContext();
