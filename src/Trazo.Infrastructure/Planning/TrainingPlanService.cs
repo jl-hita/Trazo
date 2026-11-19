@@ -29,6 +29,8 @@ public interface ITrainingPlanService
     Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct);
     /// <summary>Moves the pending program of a calendar plan forward, by whole weeks, so its first pending week is the current one.</summary>
     Task<PlanResult<RescheduleResult>> RescheduleAsync(Guid userId, CancellationToken ct);
+    /// <summary>Replaces the muscle priorities of the generated plan. They shape the blocks generated from now on; a block that already exists is not rewritten.</summary>
+    Task<PlanResult<PlanView>> UpdateMusclePrioritiesAsync(Guid userId, IReadOnlyDictionary<string, string>? priorities, CancellationToken ct);
     /// <summary>Omits a pending session on purpose: resolved without being training, no progression, no volume adaptation unless the reason is physical (Premium).</summary>
     Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
@@ -171,6 +173,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             TrainingDays = profile.SchedulingMode == PlanSchedulingMode.Sequence ? [] : profile.TrainingDays.Select(d => d.ToString()).ToArray(),
             MaxSessionMinutes = profile.MaxSessionMinutes, AvailableEquipment = profile.AvailableEquipment.ToArray(),
             ExcludedExerciseIds = profile.ExcludedExerciseIds.ToArray(), Limitations = profile.Limitations.ToArray(),
+            MusclePriorities = EncodePriorities(profile.MusclePriorities),
             IncludeDeloadPhases = profile.IncludeDeloadPhases, DeloadEveryTrainingWeeks = profile.DeloadEveryTrainingWeeks,
             Seed = planSeed, EngineVersion = string.Empty, MacrocycleName = macrocycle.Draft.Name,
             MacrocycleNotes = macrocycle.Draft.Notes, CreatedAt = now, UpdatedAt = now
@@ -693,6 +696,36 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return PlanResult<RescheduleResult>.Ok(new(behind, moving.Count, plan.StartDate, plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1)));
     }
 
+    public async Task<PlanResult<PlanView>> UpdateMusclePrioritiesAsync(Guid userId, IReadOnlyDictionary<string, string>? priorities, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<PlanView>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (plan.Origin != TrainingPlanOrigin.Generated)
+            return PlanResult<PlanView>.Fail(PlanFailure.NotAllowed, "Las prioridades musculares solo se aplican a un plan generado por TRAZO.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<PlanView>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+
+        var errors = new Dictionary<string, List<string>>();
+        var parsed = PlanProfileParser.ParseMusclePriorities(
+            priorities, Enum.Parse<TrainingGoal>(plan.Goal), Enum.Parse<TrainingExperience>(plan.Experience),
+            plan.SchedulingMode == PlanSchedulingMode.Sequence ? plan.SessionsPerPeriod : plan.TrainingDays.Length,
+            plan.MaxSessionMinutes, (field, message) => { if (!errors.TryAdd(field, [message])) errors[field].Add(message); });
+        if (errors.Count > 0)
+            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Las prioridades musculares no son válidas.",
+                errors.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray()));
+
+        var now = clock.GetUtcNow();
+        plan.MusclePriorities = EncodePriorities(parsed);
+        plan.UpdatedAt = now;
+        db.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = "muscle_priorities", ExerciseIds = [], SessionsChanged = 0, AppliedAt = now, EvidenceAt = now,
+            Explanation = "Prioridades musculares actualizadas: se aplican a los bloques que se generen a partir de ahora."
+        });
+        await db.SaveChangesAsync(ct);
+        return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
+    }
+
     // ---------------------------------------------------------------- omit a session on purpose
 
     /// <summary>Reasons that say something about the body: only these let the engine adapt the plan after an omission (Premium).</summary>
@@ -889,6 +922,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             "hold_progression" => T("Progresión de cargas en pausa durante 7 días."),
             LoadUpdateKind => string.Format(T("Nueva carga objetivo en {0}."), names),
             ReentryKind => string.Format(T("Vuelta tras una ausencia: {0} sesión(es) más ligeras."), sessions),
+            "muscle_priorities" => T("Prioridades musculares actualizadas: se aplican a los bloques que se generen a partir de ahora."),
             "reschedule" => string.Format(T("Programa movido: {0} sesiones cambian de fecha."), sessions),
             SkipKind => T("Sesión omitida a propósito: el plan sigue con la siguiente."),
             ReviewKind => T("Sesión revisada: no hacía falta cambiar el plan."),
@@ -1250,6 +1284,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // Carry the load of the next exposure into the next upcoming session of each exercise (never into a deload block).
         foreach (var advice in outcome.Exercises.Where(a => a.NextLoadKg is > 0))
         {
+            // A pending pain report freezes the prescribed load: only an explicit load reduction may be written.
+            if (outcome.BlocksIncreaseFor(advice.ExerciseId) && advice.Action != nameof(TrainingExerciseProgressionAction.ReduceLoad)) continue;
             var next = upcoming.FirstOrDefault(s => PrescriptionJson.Read(s.PrescriptionJson).Any(e => e.ExerciseId == advice.ExerciseId));
             if (next is null) continue;
             if ((mesocycles.TryGetValue(next.MesocycleId, out var meso) && meso.IsDeload) || PrescriptionJson.IsAdaptationDeload(next.PrescriptionJson)) continue;
@@ -1268,7 +1304,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
         }
 
-        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, ct) : ([], []);
+        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, outcome, ct) : ([], []);
         applied.AddRange(feedback.Applied);
 
         // A session that was read and needed nothing is also a decision: the user sees that the engine looked at it and why it kept the plan.
@@ -1297,13 +1333,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// </summary>
     private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming, DateTimeOffset now,
-        DateTimeOffset evidenceNow, CancellationToken ct)
+        DateTimeOffset evidenceNow, AdaptationOutcome pain, CancellationToken ct)
     {
         var applied = new List<AppliedAdaptationView>();
         var notes = new List<string>();
         var past = await db.WorkoutLogs.AsNoTracking()
-            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id && l.ExerciseFeedbackJson != null)
-            .OrderByDescending(l => l.PerformedAt).Take(12).ToListAsync(ct);
+            .Where(l => l.PlanId == plan.Id && l.Id != workout.Id)
+            .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(12).ToListAsync(ct);
+        // Sessions the user did NOT answer are kept on purpose: the mapper turns them into neutral exposures, so two low answers
+        // separated by unanswered sessions are not read as consecutive. Only when nothing was ever answered is there nothing to read.
         var logs = new[] { workout }.Concat(past).ToList();
         if (logs.All(l => string.IsNullOrWhiteSpace(l.ExerciseFeedbackJson))) return (applied, notes);
 
@@ -1334,6 +1372,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
             if (cooling.Contains(decision.ExerciseId)) continue;
             var delta = decision.Action == TrainingMuscleFeedbackAction.AddSet ? 1 : -1;
+            // Same precedence as the load and volume engines: a pending pain report (general, or on this exercise) blocks every
+            // automatic increase. Reductions stay allowed because they only lower the dose.
+            if (delta > 0 && pain.BlocksIncreaseFor(decision.ExerciseId))
+            {
+                notes.Add("No se añade ninguna serie por feedback muscular porque hay dolor pendiente de revisión.");
+                continue;
+            }
             var changed = 0;
             foreach (var future in upcoming.Take(MaximumFutureSessionsToAdapt))
                 if (TrainingAdaptationPrescriptionAdjuster.TryAdjustSets(future.PrescriptionJson, decision.ExerciseId, delta, out var updated, out _))
@@ -1687,7 +1732,25 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         IsSequence(plan) ? [] : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
         plan.MaxSessionMinutes, plan.AvailableEquipment,
         plan.ExcludedExerciseIds, plan.Limitations, Enum.Parse<TrainingProgramSplit>(plan.Split), plan.IncludeDeloadPhases,
-        plan.DeloadEveryTrainingWeeks, plan.SchedulingMode, plan.SessionsPerPeriod);
+        plan.DeloadEveryTrainingWeeks, plan.SchedulingMode, plan.SessionsPerPeriod, DecodePriorities(plan.MusclePriorities));
+
+    /// <summary>"Muscle:Priority" entries for the plan row; Grow is the default and is never stored.</summary>
+    private static string[] EncodePriorities(IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? priorities) =>
+        (priorities ?? new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>())
+            .Where(pair => pair.Value != TrainingMusclePriority.Grow)
+            .OrderBy(pair => pair.Key).Select(pair => $"{pair.Key}:{pair.Value}").ToArray();
+
+    private static IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority> DecodePriorities(IEnumerable<string> stored)
+    {
+        var result = new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>();
+        foreach (var entry in stored)
+        {
+            var parts = entry.Split(':');
+            if (parts.Length == 2 && Enum.TryParse<TrainingMuscleGroup>(parts[0], out var muscle) && Enum.TryParse<TrainingMusclePriority>(parts[1], out var priority))
+                result[muscle] = priority;
+        }
+        return result;
+    }
 
     /// <summary>The most recent completed performance of each exercise, so a new block starts from real loads.</summary>
     private async Task<IReadOnlyList<TrainingLoadReference>> LoadReferencesAsync(Guid userId, CancellationToken ct)
@@ -1739,7 +1802,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                         p.SequenceNumber, plan.Origin == TrainingPlanOrigin.Generated ? T(p.Name) : p.Name, p.PhaseType, p.StartDate, p.EndDate,
                         T(p.Objective), p.StartPeriod, p.EndPeriod)).ToList()),
             T(plan.Origin == TrainingPlanOrigin.Manual ? ManualDisclaimer : Disclaimer),
-            plan.SchedulingMode.ToString(), plan.SessionsPerPeriod);
+            plan.SchedulingMode.ToString(), plan.SessionsPerPeriod,
+            DecodePriorities(plan.MusclePriorities).ToDictionary(pair => pair.Key.ToString(), pair => pair.Value.ToString()));
     }
 
     /// <summary>What the user did with the exercise a swapped one replaced, shown only while the replacement has no history of its own.</summary>
