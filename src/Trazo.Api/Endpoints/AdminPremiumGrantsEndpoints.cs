@@ -29,7 +29,7 @@ public static class AdminPremiumGrantsEndpoints
         var rows = await db.PremiumGrants.AsNoTracking().Where(x => x.UserId == userId)
             .OrderByDescending(x => x.GrantedAt).ToListAsync(ct);
         return Results.Ok(rows.Select(x => new AdminPremiumGrantView(
-            x.Id, x.Kind, x.Status, x.Days, x.IsPermanent, x.StartsAt, x.EndsAt, x.GrantReason,
+            x.Id, x.Kind, x.Status, x.Days, x.IsPermanent, x.StartsAt, x.EndsAt, x.GrantReason, x.GrantedBy,
             x.GrantedAt, x.VoidedAt, x.VoidReason, x.VoidedBy,
             x.Status == PremiumGrantStatuses.Active && x.StartsAt <= now && (x.IsPermanent || x.EndsAt > now))));
     }
@@ -55,7 +55,7 @@ public static class AdminPremiumGrantsEndpoints
         var actor = ActorId(principal);
         var result = await grants.GrantAsync(new GrantRequest(
             userId, PremiumGrantKinds.AdminGrant, $"admin:{grantId:N}", request.Permanent ? 0 : request.Days!.Value,
-            Status: PremiumGrantStatuses.Active, IsPermanent: request.Permanent, Reason: reason), ct);
+            Status: PremiumGrantStatuses.Active, IsPermanent: request.Permanent, Reason: reason, GrantedBy: actor?.ToString()), ct);
 
         loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
             "Superadmin {Actor} granted {Days} days (permanent: {Permanent}) of Premium to user {Target}. Reason: {Reason}",
@@ -65,7 +65,7 @@ public static class AdminPremiumGrantsEndpoints
         var now = clock.GetUtcNow();
         return Results.Created($"/api/v1/admin/users/{userId}/premium-grants",
             new AdminPremiumGrantView(row.Id, row.Kind, row.Status, row.Days, row.IsPermanent, row.StartsAt,
-                row.EndsAt, row.GrantReason, row.GrantedAt, row.VoidedAt, row.VoidReason, row.VoidedBy,
+                row.EndsAt, row.GrantReason, row.GrantedBy, row.GrantedAt, row.VoidedAt, row.VoidReason, row.VoidedBy,
                 row.Status == PremiumGrantStatuses.Active && row.StartsAt <= now &&
                 (row.IsPermanent || row.EndsAt > now)));
     }
@@ -103,5 +103,5 @@ public sealed record AdminPremiumGrantRequest(int? Days, bool Permanent, string?
 public sealed record AdminPremiumGrantRevokeRequest(string? Reason);
 public sealed record AdminPremiumGrantView(
     Guid Id, string Kind, string Status, int Days, bool Permanent, DateTimeOffset? StartsAt, DateTimeOffset? EndsAt,
-    string? Reason, DateTimeOffset GrantedAt, DateTimeOffset? RevokedAt, string? RevocationReason, string? RevokedBy,
+    string? Reason, string? GrantedBy, DateTimeOffset GrantedAt, DateTimeOffset? RevokedAt, string? RevocationReason, string? RevokedBy,
     bool IsCurrent);
