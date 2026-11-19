@@ -194,6 +194,8 @@ internal static class EnglishCatalog
          "You train about {0} times a week and the plan is built for {1}: the plan does not add sets on its own; watch your recovery."),
         ("Tu ritmo real coincide con el del plan.", "Your real pace matches the plan's."),
         ("Aún no hay suficientes sesiones recientes para medir tu ritmo.", "There are not enough recent sessions yet to measure your pace."),
+        ("Alguna semana has entrenado menos días que el plan, pero no es un cambio persistente: el plan se mantiene.",
+         "In some weeks you trained fewer days than the plan, but it is not a persistent change: the plan stays as it is."),
         ("Vas al día: sigue con la siguiente sesión.",
          "You are on track: carry on with the next session."),
         ("Sesión omitida.",

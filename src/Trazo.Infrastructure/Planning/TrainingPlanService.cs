@@ -41,6 +41,8 @@ public interface ITrainingPlanService
     Task<VolumeDecisionsView?> GetVolumeDecisionsAsync(Guid userId, int take, CancellationToken ct);
     /// <summary>The user's real pace against the plan, the pending reorganisation proposal (created here when the change is persistent) and the history.</summary>
     Task<FrequencyOverviewView?> GetFrequencyAsync(Guid userId, CancellationToken ct);
+    /// <summary>Keeps the pending frequency proposal in line with the user's real pace. A write: it runs when a workout is registered and never from a read.</summary>
+    Task RefreshFrequencyProposalAsync(Guid userId, CancellationToken ct);
     Task<PlanResult<FrequencyOverviewView>> AcceptFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct);
     Task<PlanResult<FrequencyOverviewView>> DismissFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct);
     /// <summary>Goes back to the days before the last accepted reorganisation. Kept as a record; nothing is deleted.</summary>
@@ -556,34 +558,36 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Frequency: await FrequencyAsync(plan, ct));
     }
 
-    /// <summary>The pace of the last weeks (workouts really done, not omitted) against the days the plan was built for. Informative only.</summary>
+    /// <summary>
+    /// The user's real pace against the plan, from the one detector (<see cref="FrequencyPatternDetector"/>). It is a read: it never creates,
+    /// changes or withdraws a proposal (that happens when a workout is registered); it shows the pending one only while it still applies.
+    /// </summary>
     private async Task<FrequencyView> FrequencyAsync(TrainingPlan plan, CancellationToken ct)
     {
-        var now = clock.GetUtcNow();
-        var performed = await db.WorkoutLogs.AsNoTracking()
-            .Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted && l.PerformedAt > now.AddDays(-LoadMetrics.PaceWindowDays))
-            .Select(l => l.PerformedAt).ToListAsync(ct);
-        var advice = FrequencyAdvisor.Advise(IsSequence(plan), plan.TrainingDays.Length, LoadMetrics.ObservedSessionsPerSevenDays(performed, now));
-        var message = advice.State switch
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        if (IsSequence(plan))
+            return new FrequencyView("Unknown", null, Math.Max(0, plan.TrainingDays.Length), null, T("Aún no hay suficientes sesiones recientes para medir tu ritmo."));
+        var reading = await ReadFrequencyAsync(plan, track: false, ct);
+        var a = reading.Assessment;
+        var (state, message) = a.Pattern switch
         {
-            FrequencyState.Below => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: recibes menos trabajo por semana del previsto. Si es tu ritmo habitual, crea un plan para {2} días y se repartirá bien."),
-                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal, advice.SuggestedSessionsPerWeek),
-            FrequencyState.Above => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: el plan no añade series por su cuenta; vigila la recuperación."),
-                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal),
-            FrequencyState.OnTrack => T("Tu ritmo real coincide con el del plan."),
-            _ => T("Aún no hay suficientes sesiones recientes para medir tu ritmo.")
+            FrequencyPattern.PersistentReduction => ("Below", string.Format(
+                T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: recibes menos trabajo por semana del previsto. Si es tu ritmo habitual, crea un plan para {2} días y se repartirá bien."),
+                a.Observed?.ToString("0.#", inv), a.NominalDays, a.TargetDays)),
+            FrequencyPattern.PersistentReturn => ("Above", string.Format(
+                T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: el plan no añade series por su cuenta; vigila la recuperación."),
+                a.Observed?.ToString("0.#", inv), a.NominalDays)),
+            FrequencyPattern.OnTrack => ("OnTrack", T("Tu ritmo real coincide con el del plan.")),
+            FrequencyPattern.Transient => ("OnTrack", T("Alguna semana has entrenado menos días que el plan, pero no es un cambio persistente: el plan se mantiene.")),
+            _ => ("Unknown", T("Aún no hay suficientes sesiones recientes para medir tu ritmo."))
         };
         Guid? proposalId = null;
-        if (Applicable(plan) && !await IsLockedAsync(plan, ct))
+        if (Applicable(plan) && !await IsLockedAsync(plan, ct) && CurrentPending(reading) is { } pending)
         {
-            var (_, pending, _) = await RefreshFrequencyAsync(plan, ct);
-            if (pending is not null)
-            {
-                proposalId = pending.Id;
-                message = T("Tu ritmo real no coincide con el del plan y no es algo puntual: tienes una propuesta de reorganización pendiente. Revísala y acéptala si te encaja; no cambia lo que ya está generado.");
-            }
+            proposalId = pending.Id;
+            message = T("Tu ritmo real no coincide con el del plan y no es algo puntual: tienes una propuesta de reorganización pendiente. Revísala y acéptala si te encaja; no cambia lo que ya está generado.");
         }
-        return new FrequencyView(advice.State.ToString(), advice.Observed, advice.Nominal, advice.SuggestedSessionsPerWeek, message, proposalId);
+        return new FrequencyView(state, a.Observed, a.NominalDays, a.Pattern == FrequencyPattern.PersistentReduction ? a.TargetDays : null, message, proposalId);
     }
 
     /// <summary>The advisor's decision with its explanation in the request's language.</summary>
@@ -818,16 +822,24 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
     private static bool Applicable(TrainingPlan plan) => plan.Origin == TrainingPlanOrigin.Generated && !IsSequence(plan);
 
-    /// <summary>
-    /// Reads the weeks the user really trained and keeps the pending proposal of the plan in line with them: it creates one when the change is
-    /// persistent (never for an irregular week), keeps an equal one as it is (so asking twice changes nothing) and withdraws one that no longer
-    /// applies. It never changes the plan.
-    /// </summary>
-    private async Task<(FrequencyAssessment Assessment, FrequencyProposal? Pending, List<FrequencyProposal> All)> RefreshFrequencyAsync(
-        TrainingPlan plan, CancellationToken ct)
+    public async Task RefreshFrequencyProposalAsync(Guid userId, CancellationToken ct)
     {
-        var now = clock.GetUtcNow();
-        var all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        await UseUserClockAsync(userId, ct);
+        if (await ActivePlanAsync(userId, ct) is { } plan && Applicable(plan) && !await IsLockedAsync(plan, ct))
+            await SyncFrequencyProposalAsync(plan, ct);
+    }
+
+    private sealed record FrequencyReading(FrequencyAssessment Assessment, IReadOnlyList<WeeklyAttendance> Weeks, List<FrequencyProposal> All);
+
+    /// <summary>
+    /// The single reading of the user's real pace: the complete weeks of the plan, the pattern they show (one detector, see
+    /// <see cref="FrequencyPatternDetector"/>) and the proposals of the plan. It writes nothing; <paramref name="track"/> only says whether
+    /// the proposal rows are tracked, for the callers that go on to change them.
+    /// </summary>
+    private async Task<FrequencyReading> ReadFrequencyAsync(TrainingPlan plan, bool track, CancellationToken ct)
+    {
+        var proposals = track ? db.FrequencyProposals.Where(p => p.PlanId == plan.Id) : db.FrequencyProposals.AsNoTracking().Where(p => p.PlanId == plan.Id);
+        var all = await proposals.OrderBy(p => p.CreatedAt).ToListAsync(ct);
         var anchor = plan.StartDate;
         var since = anchor;
         if (all.Where(p => p.Status == FrequencyProposal.Accepted && p.DecidedAt is not null).Select(p => p.DecidedAt!.Value).DefaultIfEmpty().Max() is { } decided
@@ -841,8 +853,28 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var deloadWeeks = plan.Mesocycles.Where(m => m.IsDeload)
             .SelectMany(m => Enumerable.Range(m.StartWeek, m.Weeks).Select(w => PlanSchedule.WeekStart(plan.StartDate, w))).ToHashSet();
         var weeks = FrequencyPatternDetector.Weeks(days, Today, since, anchor, deloadWeeks.Contains);
+        var assessment = FrequencyPatternDetector.Assess(plan.TrainingDays.Length, OriginalDaysOf(plan, all)?.Length, weeks);
+        return new FrequencyReading(assessment, weeks, all);
+    }
+
+    /// <summary>The pending proposal, only while the pattern that created it still holds (the same number of days); a stale one is never shown nor accepted.</summary>
+    private static FrequencyProposal? CurrentPending(FrequencyReading reading) =>
+        reading.Assessment is { Pattern: FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn, TargetDays: { } target }
+            ? reading.All.FirstOrDefault(p => p.Status == FrequencyProposal.Pending && SplitDays(p.ToDays).Length == target)
+            : null;
+
+    /// <summary>
+    /// Keeps the pending proposal of the plan in line with the weeks the user really trained: it creates one when the change is persistent
+    /// (never for an irregular week), keeps an equal one as it is (so doing it twice changes nothing) and withdraws one that no longer
+    /// applies. It never changes the plan. It is called when a workout is registered, never from a read.
+    /// </summary>
+    private async Task<(FrequencyAssessment Assessment, FrequencyProposal? Pending, List<FrequencyProposal> All)> SyncFrequencyProposalAsync(
+        TrainingPlan plan, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var reading = await ReadFrequencyAsync(plan, track: true, ct);
+        var (assessment, weeks, all) = (reading.Assessment, reading.Weeks, reading.All);
         var original = OriginalDaysOf(plan, all);
-        var assessment = FrequencyPatternDetector.Assess(plan.TrainingDays.Length, original?.Length, weeks);
         var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
 
         FrequencyDraft? draft = null;
@@ -909,8 +941,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         if (!Applicable(plan) || await IsLockedAsync(plan, ct))
             return new FrequencyOverviewView(FrequencyPattern.Insufficient.ToString(),
                 T("La reorganización por frecuencia solo se ofrece en un plan generado con calendario."), null, all.Select(ToView).ToList(), false);
-        var (assessment, pending, tracked) = await RefreshFrequencyAsync(plan, ct);
-        return FrequencyOverview(plan, assessment, pending, tracked);
+        var reading = await ReadFrequencyAsync(plan, track: false, ct);
+        return FrequencyOverview(plan, reading.Assessment, CurrentPending(reading), reading.All);
     }
 
     private async Task<PlanResult<(TrainingPlan Plan, List<FrequencyProposal> All)>> FrequencyWriteContextAsync(Guid userId, CancellationToken ct)
@@ -976,6 +1008,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             proposal.DecidedAt = clock.GetUtcNow();
             await db.SaveChangesAsync(ct);
             return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "El plan ha cambiado desde que se hizo la propuesta.");
+        }
+        // The pattern that created the proposal must still hold: a user whose weeks went back to normal is not reorganised by an old offer.
+        if (CurrentPending(await ReadFrequencyAsync(plan, track: true, ct))?.Id != proposal.Id)
+        {
+            proposal.Status = FrequencyProposal.Superseded;
+            proposal.DecidedAt = clock.GetUtcNow();
+            await db.SaveChangesAsync(ct);
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta ya no aplica: tu ritmo reciente ha cambiado.");
         }
         var applied = await ApplyFrequencyAsync(plan, proposal, ct);
         if (!applied.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(applied.Failure, applied.Message!);
@@ -1462,6 +1502,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var stored = await db.PlannedSessions.AsNoTracking().FirstAsync(s => s.Id == session.Id, ct);
             return await ReplayOrConflictAsync(stored, concurrent, log, ct);
         }
+        // The user's pace may have just become a persistent change: this is the write that keeps the frequency proposal in line with it.
+        await RefreshFrequencyProposalAsync(userId, ct);
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, workout), report));
     }
 

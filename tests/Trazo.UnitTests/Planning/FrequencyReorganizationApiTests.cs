@@ -20,7 +20,7 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
     private const string Url = "/api/v1/plans/current/frequency";
 
     /// <summary>A four-day plan whose user has trained Monday, Wednesday and Friday for five complete weeks.</summary>
-    private async Task<(TrazoUser User, HttpClient Client)> ThreeDaysForFiveWeeksAsync()
+    private async Task<(TrazoUser User, HttpClient Client)> ThreeDaysForFiveWeeksAsync(bool registered = true)
     {
         var (user, client, _) = await StartPlanAsync();
         using var scope = _factory.Services.CreateScope();
@@ -40,7 +40,16 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
             sessions[i].Status = PlannedSessionStatus.Completed;
         }
         await db.SaveChangesAsync();
+        if (registered) await RegisteredAsync(user);
         return (user, client);
+    }
+
+    /// <summary>What happens when the user registers a workout: the write that keeps the proposal in line with the pace. A GET never does it.</summary>
+    private async Task RegisteredAsync(TrazoUser user)
+    {
+        using var scope = _factory.Services.CreateScope();
+        await scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Planning.ITrainingPlanService>()
+            .RefreshFrequencyProposalAsync(user.Id, CancellationToken.None);
     }
 
     private static string[] Days(JsonElement element) => element.EnumerateArray().Select(d => d.GetString()!).ToArray();
@@ -83,6 +92,46 @@ public abstract class FrequencyReorganizationApiScenarios(string? postgres) : Pl
         var next = await JsonAsync(await client.GetAsync("/api/v1/plans/current/next"));
         Assert.Equal(pending.GetProperty("id").GetGuid(), next.GetProperty("frequency").GetProperty("proposalId").GetGuid());
         Assert.Equal(1, await CountAsync(db => db.FrequencyProposals));
+    }
+
+    [ScenarioFact]
+    public async Task Reading_the_pace_never_writes_a_proposal_only_registering_a_workout_does()
+    {
+        var (user, client) = await ThreeDaysForFiveWeeksAsync(registered: false);
+        for (var i = 0; i < 3; i++)
+        {
+            var overview = await JsonAsync(await client.GetAsync(Url));
+            Assert.Equal("PersistentReduction", overview.GetProperty("pattern").GetString()); // the pace is reported...
+            Assert.Equal(JsonValueKind.Null, overview.GetProperty("pending").ValueKind);       // ...but nothing is created by reading
+            var next = await JsonAsync(await client.GetAsync("/api/v1/plans/current/next"));
+            Assert.Equal("Below", next.GetProperty("frequency").GetProperty("state").GetString());
+            Assert.Equal(JsonValueKind.Null, next.GetProperty("frequency").GetProperty("proposalId").ValueKind);
+        }
+        Assert.Equal(0, await CountAsync(db => db.FrequencyProposals));
+
+        await RegisteredAsync(user);
+        await RegisteredAsync(user); // doing it again creates no second proposal
+        Assert.Equal(1, await CountAsync(db => db.FrequencyProposals));
+        var shown = await JsonAsync(await client.GetAsync(Url));
+        Assert.NotEqual(JsonValueKind.Null, shown.GetProperty("pending").ValueKind);
+        Assert.Equal(1, await CountAsync(db => db.FrequencyProposals));
+    }
+
+    [ScenarioFact]
+    public async Task A_proposal_whose_pattern_no_longer_holds_is_neither_shown_nor_accepted()
+    {
+        var (_, client) = await ThreeDaysForFiveWeeksAsync();
+        var id = (await JsonAsync(await client.GetAsync(Url))).GetProperty("pending").GetProperty("id").GetGuid();
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            (await db.FrequencyProposals.SingleAsync(p => p.Id == id)).ToDays = "Monday,Friday"; // the pace the proposal was for has changed
+            await db.SaveChangesAsync();
+        }
+        Assert.Equal(JsonValueKind.Null, (await JsonAsync(await client.GetAsync(Url))).GetProperty("pending").ValueKind);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync($"{Url}/proposals/{id}/accept", null)).StatusCode);
+        var plan = await JsonAsync(await client.GetAsync("/api/v1/plans/current"));
+        Assert.Equal(4, plan.GetProperty("trainingDays").GetArrayLength());
     }
 
     [ScenarioFact]

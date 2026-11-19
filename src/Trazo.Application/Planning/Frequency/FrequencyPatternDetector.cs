@@ -19,9 +19,10 @@ public enum FrequencyPattern
     PersistentReturn
 }
 
+/// <param name="Observed">Sessions per week of the latest weeks that count (not absent, not deload); null when there are none.</param>
 /// <param name="TargetDays">Days per week a proposal would use (reduction or return); null otherwise.</param>
 public sealed record FrequencyAssessment(
-    FrequencyPattern Pattern, int NominalDays, int? TargetDays, int WeeksAnalysed, int LowWeeks, string Reason);
+    FrequencyPattern Pattern, int NominalDays, int? TargetDays, int WeeksAnalysed, int LowWeeks, string Reason, decimal? Observed = null);
 
 /// <summary>
 /// Tells a one-off irregular week from a persistent change of the days the user really trains. Pure and deterministic.
@@ -58,7 +59,8 @@ public static class FrequencyPatternDetector
         var absent = window.Count(w => !w.Deload && w.Sessions == 0);
         var eligible = window.Where(w => !w.Deload && w.Sessions > 0).ToList();
         FrequencyAssessment Result(FrequencyPattern pattern, int? target, int low, string reason) =>
-            new(pattern, nominalDays, target, eligible.Count, low, reason);
+            new(pattern, nominalDays, target, eligible.Count, low, reason,
+                eligible.Count == 0 ? null : Math.Round((decimal)eligible.TakeLast(FrequencyPolicy.RecentWeeks).Average(w => w.Sessions), 1));
 
         if (nominalDays <= 0) return Result(FrequencyPattern.Insufficient, null, 0, "El plan no tiene días fijos.");
         if (absent > FrequencyPolicy.MaximumAbsentWeeks)
