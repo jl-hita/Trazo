@@ -62,11 +62,12 @@ public static class AdminPremiumGrantsEndpoints
             actor, request.Permanent ? null : request.Days, request.Permanent, userId, reason);
 
         var row = result.Grant;
+        var now = clock.GetUtcNow();
         return Results.Created($"/api/v1/admin/users/{userId}/premium-grants",
             new AdminPremiumGrantView(row.Id, row.Kind, row.Status, row.Days, row.IsPermanent, row.StartsAt,
                 row.EndsAt, row.GrantReason, row.GrantedAt, row.VoidedAt, row.VoidReason, row.VoidedBy,
-                row.Status == PremiumGrantStatuses.Active && row.StartsAt <= DateTimeOffset.UtcNow &&
-                (row.IsPermanent || row.EndsAt > DateTimeOffset.UtcNow)));
+                row.Status == PremiumGrantStatuses.Active && row.StartsAt <= now &&
+                (row.IsPermanent || row.EndsAt > now)));
     }
 
     private static async Task<IResult> RevokeAsync(
