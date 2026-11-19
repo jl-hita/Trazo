@@ -187,9 +187,10 @@ public sealed class SubscriptionService(
         var best = rows.Where(x => SubscriptionAccess.Grants(x.Status, x.ExpiresAt, now))
                        .OrderByDescending(x => x.ExpiresAt).FirstOrDefault()
                    ?? rows.OrderByDescending(x => x.UpdatedAt).FirstOrDefault();
-        var promoEnd = await grants.PromoEndAsync(userId, ct);
+        var hasPromo = await grants.HasPromoAsync(userId, ct);
+        var promoEnd = hasPromo ? await grants.PromoEndAsync(userId, ct) : null;
         if (best is null)
-            return promoEnd is null
+            return !hasPromo
                 ? new SubscriptionStatusView(false, "none", null, null, null, false, SubscriptionSources.GooglePlay)
                 : new SubscriptionStatusView(true, "none", null, null, null, false, SubscriptionSources.Promo, PromoExpiresAt: promoEnd);
         var access = SubscriptionAccess.Grants(best.Status, best.ExpiresAt, now);
