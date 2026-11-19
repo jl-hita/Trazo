@@ -24,6 +24,7 @@ public static class AccountData
         typeof(TrazoUser), typeof(RefreshToken), typeof(AuthChallenge), typeof(AuthRecoveryCode), typeof(EmailActionToken),
         typeof(Subscription), typeof(TrainingPlan), typeof(TrainingPlanPhase), typeof(TrainingMesocycle), typeof(PlannedSession),
         typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation), typeof(PlanReviewRequest), typeof(PlanReviewMessage),
+        typeof(MuscleWeekObservation), typeof(LongitudinalDecision), typeof(FrequencyProposal),
         typeof(Trazo.Domain.Push.DeviceToken),
         // The Premium-time ledger is deleted; funnel events are anonymised (their user id is cleared, the rest holds no personal data).
         typeof(Trazo.Domain.Growth.PremiumGrant), typeof(Trazo.Domain.Growth.GrowthEvent),
@@ -170,6 +171,9 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         rows += await StepAsync(db.PlanReviewRequests.Where(r => r.UserId == userId), ct);
         rows += await StepAsync(db.WorkoutSetLogs.Where(s => db.WorkoutLogs.Any(l => l.Id == s.WorkoutLogId && l.UserId == userId)), ct);
         rows += await StepAsync(db.WorkoutLogs.Where(l => l.UserId == userId), ct);
+        rows += await StepAsync(db.FrequencyProposals.Where(p => p.UserId == userId), ct);
+        rows += await StepAsync(db.LongitudinalDecisions.Where(d => d.UserId == userId), ct);
+        rows += await StepAsync(db.MuscleWeekObservations.Where(o => o.UserId == userId), ct);
         rows += await StepAsync(db.PlanAdaptations.Where(a => plans.Contains(a.PlanId)), ct);
         rows += await StepAsync(db.PlannedSessions.Where(s => plans.Contains(s.PlanId)), ct);
         rows += await StepAsync(db.TrainingMesocycles.Where(m => plans.Contains(m.PlanId)), ct);
@@ -245,6 +249,11 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => planIds.Contains(s.PlanId)).OrderBy(s => s.Date).ToListAsync(ct);
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.UserId == userId).OrderBy(l => l.LoggedAt).ToListAsync(ct);
         var adaptations = await db.PlanAdaptations.AsNoTracking().Where(a => planIds.Contains(a.PlanId)).OrderBy(a => a.AppliedAt).ToListAsync(ct);
+        var decisions = (await db.LongitudinalDecisions.AsNoTracking().Where(d => d.UserId == userId).ToListAsync(ct))
+            .OrderBy(d => d.CreatedAt).ThenBy(d => d.Muscle, StringComparer.Ordinal).ToList();
+        var observations = (await db.MuscleWeekObservations.AsNoTracking().Where(o => o.UserId == userId).ToListAsync(ct))
+            .OrderBy(o => o.PlanId).ThenBy(o => o.Period).ThenBy(o => o.Muscle, StringComparer.Ordinal).ToList();
+        var proposals = (await db.FrequencyProposals.AsNoTracking().Where(p => p.UserId == userId).ToListAsync(ct)).OrderBy(p => p.CreatedAt).ToList();
         var subscriptions = await db.Subscriptions.AsNoTracking().Where(s => s.UserId == userId).OrderBy(s => s.StartedAt).ToListAsync(ct);
         var devices = await db.RefreshTokens.AsNoTracking().Where(t => t.UserId == userId).OrderBy(t => t.CreatedAt).ToListAsync(ct);
         var premiumGrants = await db.PremiumGrants.AsNoTracking().Where(g => g.UserId == userId).OrderBy(g => g.GrantedAt).ToListAsync(ct);
@@ -272,7 +281,15 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
             subscriptions.Select(s => new ExportSubscription(
                 s.Source, s.ProductId, s.Status.ToString(), s.StartedAt, s.ExpiresAt, s.AutoRenewing, s.LatestOrderId, s.IsTestPurchase)).ToList(),
             devices.Select(d => new ExportDevice(d.DeviceName, d.CreatedAt, d.ExpiresAt, d.RevokedAt)).ToList(),
-            premiumGrants.Select(g => new ExportPremiumGrant(g.Kind, g.Days, g.Status, g.GrantedAt, g.StartsAt, g.EndsAt)).ToList());
+            premiumGrants.Select(g => new ExportPremiumGrant(g.Kind, g.Days, g.Status, g.GrantedAt, g.StartsAt, g.EndsAt)).ToList(),
+            decisions.Select(d => new ExportLongitudinalDecision(
+                d.PlanId, d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets,
+                d.AnalyzedFromPeriod, d.AnalyzedToPeriod, d.Reason, d.PolicyVersion, d.CreatedAt)).ToList(),
+            observations.Select(o => new ExportMuscleObservation(
+                o.PlanId, o.Period, o.Muscle, o.Quality, o.Reason, o.PrescribedSets, o.PerformedSets, o.Exposures, o.PerformanceChangePercent,
+                o.FatigueSignals, o.PainSessions)).ToList(),
+            proposals.Select(p => new ExportFrequencyProposal(
+                p.PlanId, p.Kind, p.Status, p.FromDays, p.ToDays, p.WeeksAnalysed, p.LowWeeks, p.Reason, p.PolicyVersion, p.CreatedAt, p.DecidedAt)).ToList());
     }
 
     private static JsonElement ParseJson(string json)
@@ -288,7 +305,22 @@ public sealed record AccountExport(
     DateTimeOffset GeneratedAt, string Version, ExportAccount Account, IReadOnlyList<ExportPlan> Plans,
     IReadOnlyList<ExportWorkoutLog> WorkoutLogs, IReadOnlyList<ExportAdaptation> Adaptations,
     IReadOnlyList<ExportSubscription> Subscriptions, IReadOnlyList<ExportDevice> Devices,
-    IReadOnlyList<ExportPremiumGrant> PremiumGrants);
+    IReadOnlyList<ExportPremiumGrant> PremiumGrants,
+    IReadOnlyList<ExportLongitudinalDecision>? LongitudinalDecisions = null,
+    IReadOnlyList<ExportMuscleObservation>? MuscleObservations = null,
+    IReadOnlyList<ExportFrequencyProposal>? FrequencyProposals = null);
+
+public sealed record ExportFrequencyProposal(
+    Guid PlanId, string Kind, string Status, string FromDays, string ToDays, int WeeksAnalysed, int LowWeeks, string Reason,
+    string PolicyVersion, DateTimeOffset CreatedAt, DateTimeOffset? DecidedAt);
+
+public sealed record ExportLongitudinalDecision(
+    Guid PlanId, int MesocycleSequence, string Muscle, string Action, decimal BaselineSets, decimal PreviousSets, decimal ProposedSets,
+    int AnalyzedFromPeriod, int AnalyzedToPeriod, string Reason, string PolicyVersion, DateTimeOffset CreatedAt);
+
+public sealed record ExportMuscleObservation(
+    Guid PlanId, int Period, string Muscle, string Quality, string? Reason, decimal PrescribedSets, decimal PerformedSets, int Exposures,
+    decimal? PerformanceChangePercent, int FatigueSignals, int PainSessions);
 
 public sealed record ExportPremiumGrant(string Kind, int Days, string Status, DateTimeOffset GrantedAt, DateTimeOffset? StartsAt, DateTimeOffset? EndsAt);
 

@@ -20,7 +20,7 @@ internal static class TrainingSessionExerciseOrderer
 
         var candidates = catalog.ToDictionary(x => x.ExerciseId, StringComparer.OrdinalIgnoreCase);
         var preferenceWeights = (preferences ?? Array.Empty<TrainingMuscleVolumeTarget>())
-            .Where(x => !x.Maintenance && (x.Priority > 0 || x.TargetWeeklyPrimarySets.HasValue))
+            .Where(x => !x.Maintenance && !x.Learned && (x.Priority > 0 || x.TargetWeeklyPrimarySets.HasValue))
             .GroupBy(x => x.MuscleGroup)
             .ToDictionary(
                 group => group.Key,

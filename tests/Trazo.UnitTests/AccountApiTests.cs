@@ -224,6 +224,26 @@ public sealed class AccountApiTests : IDisposable
         }
     }
 
+    /// <summary>Reusable learning history of a user: what a new plan reads to start from (observations) and what was decided with it.</summary>
+    private async Task SeedLearningAsync(Guid userId)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var plan = await db.TrainingPlans.FirstAsync(p => p.UserId == userId);
+        db.MuscleWeekObservations.Add(new MuscleWeekObservation
+        {
+            Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, Period = 1, MesocycleSequence = 1, Muscle = "Chest", Quality = "valid",
+            PrescribedSets = 12, PerformedSets = 12, ProcessedThrough = Now, UpdatedAt = Now
+        });
+        db.LongitudinalDecisions.Add(new LongitudinalDecision
+        {
+            Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, MesocycleSequence = 1, Muscle = "Chest", Action = "hold", BaselineSets = 12,
+            PreviousSets = 12, ProposedSets = 13, SignalsJson = "{}", Reason = "test",
+            PolicyVersion = "longitudinal-2.0", CreatedAt = Now
+        });
+        await db.SaveChangesAsync();
+    }
+
     private async Task<Dictionary<string, int>> RowsOfAsync(Guid userId)
     {
         using var scope = _factory.Services.CreateScope();
@@ -237,6 +257,8 @@ public sealed class AccountApiTests : IDisposable
             ["tokens"] = await db.EmailActionTokens.CountAsync(x => x.UserId == userId),
             ["plans"] = await db.TrainingPlans.CountAsync(x => x.UserId == userId),
             ["logs"] = await db.WorkoutLogs.CountAsync(x => x.UserId == userId),
+            ["observations"] = await db.MuscleWeekObservations.CountAsync(x => x.UserId == userId),
+            ["decisions"] = await db.LongitudinalDecisions.CountAsync(x => x.UserId == userId),
             ["phases"] = await db.TrainingPlanPhases.CountAsync(p => db.TrainingPlans.Any(t => t.Id == p.PlanId && t.UserId == userId)),
             ["sessions"] = await db.PlannedSessions.CountAsync(p => db.TrainingPlans.Any(t => t.Id == p.PlanId && t.UserId == userId))
         };
@@ -306,8 +328,10 @@ public sealed class AccountApiTests : IDisposable
         var anaClient = ClientFor(ana);
         await StartPlanAndLogAsync(anaClient);
         await StartPlanAndLogAsync(ClientFor(eve));
+        await SeedLearningAsync(ana.Id);
+        await SeedLearningAsync(eve.Id);
         var before = await RowsOfAsync(ana.Id);
-        Assert.All(new[] { "users", "refresh", "subs", "plans", "logs", "phases", "sessions" }, k => Assert.True(before[k] > 0, k));
+        Assert.All(new[] { "users", "refresh", "subs", "plans", "logs", "phases", "sessions", "observations", "decisions" }, k => Assert.True(before[k] > 0, k));
         var eveBefore = await RowsOfAsync(eve.Id);
         using (var seed = _factory.Services.CreateScope())
         {

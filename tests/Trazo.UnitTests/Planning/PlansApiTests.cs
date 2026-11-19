@@ -38,7 +38,7 @@ public sealed class PlanSqliteCustomizer(ModelCustomizerDependencies dependencie
 /// <summary>SQLite stand-ins for the planning tables, generated from the EF model.</summary>
 internal static class PlanTestSchema
 {
-    private static readonly string[] Tables = ["training_plans", "training_plan_phases", "training_mesocycles", "planned_sessions", "workout_logs", "workout_set_logs", "plan_adaptations", "plan_review_requests", "plan_review_messages"];
+    private static readonly string[] Tables = ["training_plans", "training_plan_phases", "training_mesocycles", "planned_sessions", "workout_logs", "workout_set_logs", "plan_adaptations", "muscle_week_observations", "longitudinal_decisions", "frequency_proposals", "plan_review_requests", "plan_review_messages"];
 
     public static void Create(SetupFixture fixture)
     {
@@ -64,15 +64,41 @@ public abstract class PlansApiBase : IDisposable
     private readonly string _keys = Path.Combine(Path.GetTempPath(), $"trazo-keys-{Guid.NewGuid():N}");
     protected readonly WebApplicationFactory<Program> _factory;
 
-    protected PlansApiBase(bool enforced)
+    private readonly string? _postgresDatabase;
+    private readonly string? _postgresAdmin;
+
+    /// <param name="postgres">A PostgreSQL connection string: the host then runs on a fresh database with the real migrations instead of SQLite.</param>
+    protected PlansApiBase(bool enforced, string? postgres = null)
     {
-        using (var db = _fixture.NewContext())
+        string? databaseConnection = null;
+        if (postgres is null)
         {
-            ExerciseTestSchema.Create(db);
+            using (var db = _fixture.NewContext())
+            {
+                ExerciseTestSchema.Create(db);
+                db.ExerciseCatalog.AddRange(PlanTestCatalog.Items());
+                db.SaveChanges();
+            }
+            PlanTestSchema.Create(_fixture);
+        }
+        else
+        {
+            _postgresAdmin = postgres;
+            _postgresDatabase = $"trazo_test_{Guid.NewGuid():N}";
+            using (var admin = new Npgsql.NpgsqlConnection(postgres))
+            {
+                admin.Open();
+                using var create = admin.CreateCommand();
+                create.CommandText = $"CREATE DATABASE \"{_postgresDatabase}\"";
+                create.ExecuteNonQuery();
+            }
+            databaseConnection = new Npgsql.NpgsqlConnectionStringBuilder(postgres) { Database = _postgresDatabase }.ConnectionString;
+            var options = new DbContextOptionsBuilder<TrazoDbContext>().UseNpgsql(databaseConnection).Options;
+            using var db = new TrazoDbContext(options);
+            db.Database.Migrate();
             db.ExerciseCatalog.AddRange(PlanTestCatalog.Items());
             db.SaveChanges();
         }
-        PlanTestSchema.Create(_fixture);
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Testing");
@@ -86,8 +112,11 @@ public abstract class PlansApiBase : IDisposable
             {
                 services.RemoveAll<DbContextOptions<TrazoDbContext>>();
                 services.RemoveAll(typeof(IDbContextOptionsConfiguration<TrazoDbContext>));
-                services.AddDbContext<TrazoDbContext>(o => o.UseSqlite(_fixture.ConnectionString)
-                    .ReplaceService<IModelCustomizer, PlanSqliteCustomizer>());
+                if (databaseConnection is null)
+                    services.AddDbContext<TrazoDbContext>(o => o.UseSqlite(_fixture.ConnectionString)
+                        .ReplaceService<IModelCustomizer, PlanSqliteCustomizer>());
+                else
+                    services.AddDbContext<TrazoDbContext>(o => o.UseNpgsql(databaseConnection));
                 services.RemoveAll<TimeProvider>();
                 services.AddSingleton<TimeProvider>(new FixedClock(Now));
             });
@@ -98,6 +127,15 @@ public abstract class PlansApiBase : IDisposable
     {
         _factory.Dispose();
         _fixture.Dispose();
+        if (_postgresDatabase is not null)
+        {
+            Npgsql.NpgsqlConnection.ClearAllPools();
+            using var admin = new Npgsql.NpgsqlConnection(_postgresAdmin);
+            admin.Open();
+            using var drop = admin.CreateCommand();
+            drop.CommandText = $"DROP DATABASE IF EXISTS \"{_postgresDatabase}\" WITH (FORCE)";
+            drop.ExecuteNonQuery();
+        }
         try { Directory.Delete(_keys, true); } catch (IOException) { } catch (UnauthorizedAccessException) { }
     }
 

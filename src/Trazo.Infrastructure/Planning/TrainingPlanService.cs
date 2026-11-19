@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Application.Localization;
 using Trazo.Application.Planning;
+using Trazo.Application.Planning.Frequency;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Billing;
@@ -36,6 +37,16 @@ public interface ITrainingPlanService
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
     /// <summary>The active plan's adjustment history, newest first; by default only the block in progress, or every block when <paramref name="wholePlan"/> is true.</summary>
     Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct);
+    /// <summary>The volume decisions longitudinal learning made for the blocks of the active plan, newest block first, with the reason of each.</summary>
+    Task<VolumeDecisionsView?> GetVolumeDecisionsAsync(Guid userId, int take, CancellationToken ct);
+    /// <summary>The user's real pace against the plan, the pending reorganisation proposal (created here when the change is persistent) and the history.</summary>
+    Task<FrequencyOverviewView?> GetFrequencyAsync(Guid userId, CancellationToken ct);
+    /// <summary>Keeps the pending frequency proposal in line with the user's real pace. A write: it runs when a workout is registered and never from a read.</summary>
+    Task RefreshFrequencyProposalAsync(Guid userId, CancellationToken ct);
+    Task<PlanResult<FrequencyOverviewView>> AcceptFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct);
+    Task<PlanResult<FrequencyOverviewView>> DismissFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct);
+    /// <summary>Goes back to the days before the last accepted reorganisation. Kept as a record; nothing is deleted.</summary>
+    Task<PlanResult<FrequencyOverviewView>> RevertFrequencyAsync(Guid userId, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
@@ -63,6 +74,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private const int FutureToleranceMinutes = 5;
     private const int RecentLogsForHistory = 60;
     private const int LoadReferenceLogs = 40;
+    /// <summary>Exposures of an exercise whose pain blocks increases (the window <see cref="AdaptationPlanner"/> uses).</summary>
+    private const int PainExposureWindow = 3;
+    /// <summary>Sessions in which a pain report blocks every automatic increase (the window of <c>TrainingAdaptationPolicy.Evaluate</c>).</summary>
+    private const int PainSessionWindow = 5;
     private const int MaximumFutureSessionsToAdapt = TrainingAutoAdaptationPolicy.MaximumFutureSessions;
 
     // "Today" follows the user's time zone, not the server's. It is resolved once per request by the methods that take a
@@ -195,6 +210,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var candidates = await LoadCandidatesAsync(ct);
         var firstSlot = SlotsOf(plan).First(slot => slot.Contains(1));
         var loads = await LoadReferencesAsync(userId, ct);
+        // A new plan always starts from its own baseline: nothing decided in another plan reaches its first block.
         var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads);
         if (!generation.Succeeded)
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
@@ -393,7 +409,44 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
-        return plan is null ? null : ToView(plan, await PositionAsync(plan, ct));
+        if (plan is null) return null;
+        var position = await PositionAsync(plan, ct);
+        return ToView(plan, position) with { PriorityDelivery = await PriorityDeliveryAsync(plan, position, ct) };
+    }
+
+    /// <summary>
+    /// What the muscle priorities asked for against what the block in progress really holds, so the app never promises volume that was not
+    /// programmed. Null when there is nothing to compare: no priority, a deload week, or priorities changed after the block was generated
+    /// (a change applies from the next block). A shortfall is explained, never fixed: the limits are not relaxed for a priority.
+    /// </summary>
+    private async Task<IReadOnlyList<PriorityDeliveryView>?> PriorityDeliveryAsync(TrainingPlan plan, PlanPosition position, CancellationToken ct)
+    {
+        if (plan.Origin != TrainingPlanOrigin.Generated || DecodePriorities(plan.MusclePriorities).Count == 0) return null;
+        var mesocycle = plan.Mesocycles.FirstOrDefault(m => !m.IsDeload && position.Week >= m.StartWeek && position.Week < m.StartWeek + m.Weeks);
+        if (mesocycle is null) return null;
+        if (await db.PlanAdaptations.AsNoTracking().AnyAsync(a => a.PlanId == plan.Id && a.Kind == "muscle_priorities" && a.AppliedAt >= mesocycle.CreatedAt, ct))
+            return null;
+        var sessions = (await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == mesocycle.Id && s.WeekNumber == position.Week)
+            .Select(s => s.PrescriptionJson).ToListAsync(ct)).Select(PrescriptionJson.Read).ToList();
+        if (sessions.Count == 0) return null;
+        var targets = (await db.LongitudinalDecisions.AsNoTracking().Where(d => d.PlanId == plan.Id && d.MesocycleSequence == mesocycle.Sequence).ToListAsync(ct))
+            .Where(d => Enum.TryParse<TrainingMuscleGroup>(d.Muscle, out _))
+            .ToDictionary(d => Enum.Parse<TrainingMuscleGroup>(d.Muscle), d => d.ProposedSets);
+        var items = PriorityDelivery.Build(MesocycleGenerator.Baselines(ProfileOf(plan)), targets, PriorityDelivery.WeeklySets(sessions));
+        return items.Select(i =>
+        {
+            var name = Lang == AppLanguage.En ? i.Muscle.ToString() : Trazo.Application.Planning.Longitudinal.MuscleNames.Es(i.Muscle.ToString());
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            string? note = i.Status switch
+            {
+                PriorityDeliveryStatus.Below => string.Format(T("Objetivo de {0} series semanales de {1}; este bloque programa {2}. El tiempo de sesión y los límites de volumen no permiten más sin alargar las sesiones ni superar los topes de seguridad, y esos límites no se relajan por una prioridad."),
+                    i.TargetSets.ToString("0", inv), name, i.AssignedSets.ToString("0", inv)),
+                PriorityDeliveryStatus.Above => string.Format(T("Se mantiene {1} en unas {0} series semanales y este bloque programa {2}: otros ejercicios lo trabajan de forma indirecta."),
+                    i.TargetSets.ToString("0", inv), name, i.AssignedSets.ToString("0", inv)),
+                _ => null
+            };
+            return new PriorityDeliveryView(i.Muscle.ToString(), i.Priority.ToString(), i.TargetSets, i.AssignedSets, i.Status.ToString(), note);
+        }).ToList();
     }
 
     public async Task<WeekView?> GetCurrentWeekAsync(Guid userId, CancellationToken ct)
@@ -542,24 +595,36 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Frequency: await FrequencyAsync(plan, ct));
     }
 
-    /// <summary>The pace of the last weeks (workouts really done, not omitted) against the days the plan was built for. Informative only.</summary>
+    /// <summary>
+    /// The user's real pace against the plan, from the one detector (<see cref="FrequencyPatternDetector"/>). It is a read: it never creates,
+    /// changes or withdraws a proposal (that happens when a workout is registered); it shows the pending one only while it still applies.
+    /// </summary>
     private async Task<FrequencyView> FrequencyAsync(TrainingPlan plan, CancellationToken ct)
     {
-        var now = clock.GetUtcNow();
-        var performed = await db.WorkoutLogs.AsNoTracking()
-            .Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted && l.PerformedAt > now.AddDays(-LoadMetrics.PaceWindowDays))
-            .Select(l => l.PerformedAt).ToListAsync(ct);
-        var advice = FrequencyAdvisor.Advise(IsSequence(plan), plan.TrainingDays.Length, LoadMetrics.ObservedSessionsPerSevenDays(performed, now));
-        var message = advice.State switch
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        if (IsSequence(plan))
+            return new FrequencyView("Unknown", null, Math.Max(0, plan.TrainingDays.Length), null, T("Aún no hay suficientes sesiones recientes para medir tu ritmo."));
+        var reading = await ReadFrequencyAsync(plan, track: false, ct);
+        var a = reading.Assessment;
+        var (state, message) = a.Pattern switch
         {
-            FrequencyState.Below => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: recibes menos trabajo por semana del previsto. Si es tu ritmo habitual, crea un plan para {2} días y se repartirá bien."),
-                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal, advice.SuggestedSessionsPerWeek),
-            FrequencyState.Above => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: el plan no añade series por su cuenta; vigila la recuperación."),
-                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal),
-            FrequencyState.OnTrack => T("Tu ritmo real coincide con el del plan."),
-            _ => T("Aún no hay suficientes sesiones recientes para medir tu ritmo.")
+            FrequencyPattern.PersistentReduction => ("Below", string.Format(
+                T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: recibes menos trabajo por semana del previsto. Si es tu ritmo habitual, crea un plan para {2} días y se repartirá bien."),
+                a.Observed?.ToString("0.#", inv), a.NominalDays, a.TargetDays)),
+            FrequencyPattern.PersistentReturn => ("Above", string.Format(
+                T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: el plan no añade series por su cuenta; vigila la recuperación."),
+                a.Observed?.ToString("0.#", inv), a.NominalDays)),
+            FrequencyPattern.OnTrack => ("OnTrack", T("Tu ritmo real coincide con el del plan.")),
+            FrequencyPattern.Transient => ("OnTrack", T("Alguna semana has entrenado menos días que el plan, pero no es un cambio persistente: el plan se mantiene.")),
+            _ => ("Unknown", T("Aún no hay suficientes sesiones recientes para medir tu ritmo."))
         };
-        return new FrequencyView(advice.State.ToString(), advice.Observed, advice.Nominal, advice.SuggestedSessionsPerWeek, message);
+        Guid? proposalId = null;
+        if (Applicable(plan) && !await IsLockedAsync(plan, ct) && CurrentPending(reading) is { } pending)
+        {
+            proposalId = pending.Id;
+            message = T("Tu ritmo real no coincide con el del plan y no es algo puntual: tienes una propuesta de reorganización pendiente. Revísala y acéptala si te encaja; no cambia lo que ya está generado.");
+        }
+        return new FrequencyView(state, a.Observed, a.NominalDays, a.Pattern == FrequencyPattern.PersistentReduction ? a.TargetDays : null, message, proposalId);
     }
 
     /// <summary>The advisor's decision with its explanation in the request's language.</summary>
@@ -747,6 +812,307 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
     }
 
+    // ---------------------------------------------------------------- frequency reorganisation
+
+    private static string[] SplitDays(string days) => days.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+    private FrequencyProposalView ToView(FrequencyProposal p) => new(
+        p.Id, p.Kind, p.Status, SplitDays(p.FromDays), SplitDays(p.ToDays), Tn(p.Reason) ?? p.Reason, TranslatedPreview(p.PreviewJson),
+        p.CreatedAt, p.DecidedAt, p.AppliedFromSequence, p.PolicyVersion);
+
+    /// <summary>The stored preview with its warnings (engine messages, stored in Spanish) in the language of the request.</summary>
+    private FrequencyPreview? TranslatedPreview(string json) =>
+        FrequencyReorganizer.ReadPreview(json) is { } preview ? preview with { Warnings = (preview.Warnings ?? []).Select(w => Tn(w) ?? w).ToList() } : null;
+
+    /// <summary>The accepted reduction currently in effect (not undone by a later restore or revert), or null.</summary>
+    private static FrequencyProposal? ActiveReduction(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals)
+    {
+        FrequencyProposal? active = null;
+        foreach (var p in proposals.Where(p => p.Status == FrequencyProposal.Accepted).OrderBy(p => p.DecidedAt))
+        {
+            var to = SplitDays(p.ToDays);
+            var from = SplitDays(p.FromDays);
+            if (active is not null && to.OrderBy(x => x).SequenceEqual(SplitDays(active.FromDays).OrderBy(x => x))) active = null;
+            else if (active is null && to.Length < from.Length) active = p;
+        }
+        return active is not null && SplitDays(active.FromDays).Length > plan.TrainingDays.Length ? active : null;
+    }
+
+    /// <summary>The days the plan had before the reduction in effect, or null.</summary>
+    private static string[]? OriginalDaysOf(TrainingPlan plan, IReadOnlyList<FrequencyProposal> proposals) =>
+        ActiveReduction(plan, proposals) is { } reduction ? SplitDays(reduction.FromDays) : null;
+
+    /// <summary>The first block not generated yet: where a reorganisation starts to apply (it may be a deload).</summary>
+    private MesocycleSlot? NextSlotOf(TrainingPlan plan) =>
+        SlotsOf(plan).FirstOrDefault(s => plan.Mesocycles.All(m => m.Sequence != s.Sequence));
+
+    /// <summary>The first block not generated yet that is not a deload: the one a proposal is previewed and validated against.</summary>
+    private MesocycleSlot? NextTrainingSlotOf(TrainingPlan plan) =>
+        SlotsOf(plan).FirstOrDefault(s => !s.IsDeload && plan.Mesocycles.All(m => m.Sequence != s.Sequence));
+
+    private async Task<IReadOnlyList<string>?> LastBlockExerciseIdsAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var previous = plan.Mesocycles.OrderByDescending(m => m.Sequence).FirstOrDefault();
+        if (previous is null) return null;
+        var lastWeek = await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == previous.Id)
+            .OrderByDescending(s => s.WeekNumber).Select(s => s.WeekNumber).FirstOrDefaultAsync(ct);
+        return (await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == previous.Id && s.WeekNumber == lastWeek)
+                .Select(s => s.PrescriptionJson).ToListAsync(ct))
+            .SelectMany(json => PrescriptionJson.Read(json).Select(e => e.ExerciseId)).Distinct().ToArray();
+    }
+
+    private static bool Applicable(TrainingPlan plan) => plan.Origin == TrainingPlanOrigin.Generated && !IsSequence(plan);
+
+    public async Task RefreshFrequencyProposalAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        if (await ActivePlanAsync(userId, ct) is { } plan && Applicable(plan) && !await IsLockedAsync(plan, ct))
+            await SyncFrequencyProposalAsync(plan, ct);
+    }
+
+    private sealed record FrequencyReading(FrequencyAssessment Assessment, IReadOnlyList<WeeklyAttendance> Weeks, List<FrequencyProposal> All);
+
+    /// <summary>
+    /// The single reading of the user's real pace: the complete weeks of the plan, the pattern they show (one detector, see
+    /// <see cref="FrequencyPatternDetector"/>) and the proposals of the plan. It writes nothing; <paramref name="track"/> only says whether
+    /// the proposal rows are tracked, for the callers that go on to change them.
+    /// </summary>
+    private async Task<FrequencyReading> ReadFrequencyAsync(TrainingPlan plan, bool track, CancellationToken ct)
+    {
+        var proposals = track ? db.FrequencyProposals.Where(p => p.PlanId == plan.Id) : db.FrequencyProposals.AsNoTracking().Where(p => p.PlanId == plan.Id);
+        var all = await proposals.OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        var anchor = plan.StartDate;
+        var since = anchor;
+        if (all.Where(p => p.Status == FrequencyProposal.Accepted && p.DecidedAt is not null).Select(p => p.DecidedAt!.Value).DefaultIfEmpty().Max() is { } decided
+            && decided != default)
+            since = DateOnly.FromDateTime(decided.UtcDateTime).AddDays(1);
+        var days = (await db.WorkoutLogs.AsNoTracking()
+                .Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted)
+                .Select(l => new { l.PerformedOn, l.PerformedAt, l.LoggedAt }).ToListAsync(ct))
+            .Where(l => (l.LoggedAt - l.PerformedAt).TotalDays <= Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays)
+            .Select(l => l.PerformedOn).ToList();
+        var deloadWeeks = plan.Mesocycles.Where(m => m.IsDeload)
+            .SelectMany(m => Enumerable.Range(m.StartWeek, m.Weeks).Select(w => PlanSchedule.WeekStart(plan.StartDate, w))).ToHashSet();
+        var weeks = FrequencyPatternDetector.Weeks(days, Today, since, anchor, deloadWeeks.Contains);
+        var assessment = FrequencyPatternDetector.Assess(plan.TrainingDays.Length, OriginalDaysOf(plan, all)?.Length, weeks);
+        return new FrequencyReading(assessment, weeks, all);
+    }
+
+    /// <summary>The pending proposal, only while the pattern that created it still holds (the same number of days); a stale one is never shown nor accepted.</summary>
+    private static FrequencyProposal? CurrentPending(FrequencyReading reading) =>
+        reading.Assessment is { Pattern: FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn, TargetDays: { } target }
+            ? reading.All.FirstOrDefault(p => p.Status == FrequencyProposal.Pending && SplitDays(p.ToDays).Length == target)
+            : null;
+
+    /// <summary>
+    /// Keeps the pending proposal of the plan in line with the weeks the user really trained: it creates one when the change is persistent
+    /// (never for an irregular week), keeps an equal one as it is (so doing it twice changes nothing) and withdraws one that no longer
+    /// applies. It never changes the plan. It is called when a workout is registered, never from a read.
+    /// </summary>
+    private async Task<(FrequencyAssessment Assessment, FrequencyProposal? Pending, List<FrequencyProposal> All)> SyncFrequencyProposalAsync(
+        TrainingPlan plan, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var reading = await ReadFrequencyAsync(plan, track: true, ct);
+        var (assessment, weeks, all) = (reading.Assessment, reading.Weeks, reading.All);
+        var original = OriginalDaysOf(plan, all);
+        var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
+
+        FrequencyDraft? draft = null;
+        if (assessment.Pattern is FrequencyPattern.PersistentReduction or FrequencyPattern.PersistentReturn && NextTrainingSlotOf(plan) is { } slot)
+        {
+            var catalog = (await LoadCandidatesAsync(ct)).Candidates;
+            var originalDays = original?.Select(Enum.Parse<DayOfWeek>).ToList();
+            draft = FrequencyReorganizer.Propose(
+                ProfileOf(plan), assessment, weeks, originalDays, plan.Seed, slot, catalog, await LastBlockExerciseIdsAsync(plan, ct),
+                ActiveReduction(plan, all)?.FromMaxSessionMinutes);
+        }
+
+        var draftDays = draft is null ? null : string.Join(",", draft.ToDays);
+        if (pending is not null && (draft is null || !string.Equals(pending.ToDays, draftDays, StringComparison.Ordinal)))
+        {
+            pending.Status = FrequencyProposal.Superseded;
+            pending.DecidedAt = now;
+            pending = null;
+        }
+        var cooled = draft is not null && all.Any(p => p.Status == FrequencyProposal.Dismissed && p.ToDays == draftDays
+            && p.DecidedAt > now.AddDays(-FrequencyPolicy.DismissCooldownDays));
+        if (pending is null && draft is not null && !cooled)
+        {
+            pending = new FrequencyProposal
+            {
+                Id = Guid.NewGuid(), UserId = plan.UserId, PlanId = plan.Id, Kind = draft.Kind, Status = FrequencyProposal.Pending,
+                FromDays = string.Join(",", plan.TrainingDays), ToDays = draftDays!, FromSplit = draft.ToSplit is null ? null : plan.Split, ToSplit = draft.ToSplit,
+                FromMaxSessionMinutes = draft.ToMaxSessionMinutes is null ? null : plan.MaxSessionMinutes, ToMaxSessionMinutes = draft.ToMaxSessionMinutes,
+                WeeksAnalysed = assessment.WeeksAnalysed, LowWeeks = assessment.LowWeeks, Reason = draft.Reason,
+                PreviewJson = FrequencyReorganizer.PreviewJson(draft.Preview), PolicyVersion = FrequencyPolicy.Version, CreatedAt = now
+            };
+            db.FrequencyProposals.Add(pending);
+            all.Add(pending);
+        }
+        if (db.ChangeTracker.HasChanges())
+        {
+            try { await db.SaveChangesAsync(ct); }
+            catch (DbUpdateException)
+            {
+                // Another request created the same proposal first: use theirs.
+                db.ChangeTracker.Clear();
+                all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+                pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
+            }
+        }
+        return (assessment, pending, all);
+    }
+
+    private FrequencyOverviewView FrequencyOverview(TrainingPlan plan, FrequencyAssessment assessment, FrequencyProposal? pending, IReadOnlyList<FrequencyProposal> all)
+    {
+        var canRevert = OriginalDaysOf(plan, all) is not null;
+        var message = Tn(pending is not null ? pending.Reason : assessment.Reason) ?? string.Empty;
+        return new FrequencyOverviewView(
+            assessment.Pattern.ToString(), message, pending is null ? null : ToView(pending),
+            all.Where(p => p.Status != FrequencyProposal.Pending).OrderByDescending(p => p.CreatedAt).Select(ToView).ToList(), canRevert);
+    }
+
+    public async Task<FrequencyOverviewView?> GetFrequencyAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return null;
+        var all = await db.FrequencyProposals.AsNoTracking().Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        if (!Applicable(plan) || await IsLockedAsync(plan, ct))
+            return new FrequencyOverviewView(FrequencyPattern.Insufficient.ToString(),
+                T("La reorganización por frecuencia solo se ofrece en un plan generado con calendario."), null, all.Select(ToView).ToList(), false);
+        var reading = await ReadFrequencyAsync(plan, track: false, ct);
+        return FrequencyOverview(plan, reading.Assessment, CurrentPending(reading), reading.All);
+    }
+
+    private async Task<PlanResult<(TrainingPlan Plan, List<FrequencyProposal> All)>> FrequencyWriteContextAsync(Guid userId, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (!Applicable(plan))
+            return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Fail(PlanFailure.NotAllowed, "La reorganización solo se aplica a un plan generado con calendario.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+        var all = await db.FrequencyProposals.Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        return PlanResult<(TrainingPlan, List<FrequencyProposal>)>.Ok((plan, all));
+    }
+
+    /// <summary>Applies new days to the plan for the blocks generated from now on. The sessions that already exist are not touched.</summary>
+    private async Task<PlanResult<bool>> ApplyFrequencyAsync(TrainingPlan plan, FrequencyProposal proposal, CancellationToken ct)
+    {
+        var slot = NextTrainingSlotOf(plan);
+        var toDays = SplitDays(proposal.ToDays);
+        var profile = ProfileOf(plan) with
+        {
+            TrainingDays = toDays.Select(Enum.Parse<DayOfWeek>).ToList(),
+            Split = proposal.ToSplit is null ? ProfileOf(plan).Split : Enum.Parse<TrainingProgramSplit>(proposal.ToSplit),
+            MaxSessionMinutes = proposal.ToMaxSessionMinutes ?? plan.MaxSessionMinutes
+        };
+        if (slot is not null)
+        {
+            // The block that will be generated must exist with these days; a plan is never left unable to continue.
+            var check = MesocycleGenerator.Generate(profile, plan.Seed, slot, (await LoadCandidatesAsync(ct)).Candidates, await LastBlockExerciseIdsAsync(plan, ct));
+            if (!check.Succeeded) return PlanResult<bool>.Fail(PlanFailure.GenerationFailed, "No se puede generar el siguiente bloque con esos días; el plan no se ha modificado.");
+        }
+        var now = clock.GetUtcNow();
+        plan.TrainingDays = toDays;
+        if (proposal.ToSplit is not null) plan.Split = proposal.ToSplit;
+        if (proposal.ToMaxSessionMinutes is { } maxMinutes) plan.MaxSessionMinutes = maxMinutes;
+        plan.UpdatedAt = now;
+        proposal.Status = FrequencyProposal.Accepted;
+        proposal.DecidedAt = now;
+        proposal.AppliedFromSequence = NextSlotOf(plan)?.Sequence;
+        db.PlanAdaptations.Add(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = "frequency_reorganization", ExerciseIds = [], SessionsChanged = 0, AppliedAt = now, EvidenceAt = now,
+            Explanation = proposal.Kind == "revert"
+                ? $"Vuelves a {toDays.Length} días ({FrequencyReorganizer.DaysEs(toDays.Select(Enum.Parse<DayOfWeek>))}) desde el próximo bloque. Lo ya generado no cambia."
+                : $"Plan reorganizado a {toDays.Length} días ({FrequencyReorganizer.DaysEs(toDays.Select(Enum.Parse<DayOfWeek>))}) desde el próximo bloque. Lo ya generado no cambia."
+        });
+        await db.SaveChangesAsync(ct);
+        return PlanResult<bool>.Ok(true);
+    }
+
+    public async Task<PlanResult<FrequencyOverviewView>> AcceptFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct)
+    {
+        var context = await FrequencyWriteContextAsync(userId, ct);
+        if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
+        var (plan, all) = context.Value;
+        var proposal = all.FirstOrDefault(p => p.Id == proposalId);
+        if (proposal is null) return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta no existe.");
+        if (proposal.Status != FrequencyProposal.Pending)
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta ya no está pendiente.");
+        if (!SplitDays(proposal.FromDays).OrderBy(x => x).SequenceEqual(plan.TrainingDays.OrderBy(x => x)))
+        {
+            proposal.Status = FrequencyProposal.Superseded;
+            proposal.DecidedAt = clock.GetUtcNow();
+            await db.SaveChangesAsync(ct);
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "El plan ha cambiado desde que se hizo la propuesta.");
+        }
+        // The pattern that created the proposal must still hold: a user whose weeks went back to normal is not reorganised by an old offer.
+        if (CurrentPending(await ReadFrequencyAsync(plan, track: true, ct))?.Id != proposal.Id)
+        {
+            proposal.Status = FrequencyProposal.Superseded;
+            proposal.DecidedAt = clock.GetUtcNow();
+            await db.SaveChangesAsync(ct);
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta ya no aplica: tu ritmo reciente ha cambiado.");
+        }
+        var applied = await ApplyFrequencyAsync(plan, proposal, ct);
+        if (!applied.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(applied.Failure, applied.Message!);
+        return PlanResult<FrequencyOverviewView>.Ok(await OverviewAfterWriteAsync(plan, ct));
+    }
+
+    public async Task<PlanResult<FrequencyOverviewView>> DismissFrequencyProposalAsync(Guid userId, Guid proposalId, CancellationToken ct)
+    {
+        var context = await FrequencyWriteContextAsync(userId, ct);
+        if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
+        var (plan, all) = context.Value;
+        var proposal = all.FirstOrDefault(p => p.Id == proposalId && p.Status == FrequencyProposal.Pending);
+        if (proposal is null) return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "La propuesta no existe o ya no está pendiente.");
+        proposal.Status = FrequencyProposal.Dismissed;
+        proposal.DecidedAt = clock.GetUtcNow();
+        await db.SaveChangesAsync(ct);
+        return PlanResult<FrequencyOverviewView>.Ok(await OverviewAfterWriteAsync(plan, ct));
+    }
+
+    public async Task<PlanResult<FrequencyOverviewView>> RevertFrequencyAsync(Guid userId, CancellationToken ct)
+    {
+        var context = await FrequencyWriteContextAsync(userId, ct);
+        if (!context.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(context.Failure, context.Message!);
+        var (plan, all) = context.Value;
+        var reduction = ActiveReduction(plan, all);
+        var original = reduction is null ? null : SplitDays(reduction.FromDays);
+        var last = reduction;
+        if (original is null || last is null)
+            return PlanResult<FrequencyOverviewView>.Fail(PlanFailure.NotAllowed, "No hay ninguna reorganización que revertir.");
+        var now = clock.GetUtcNow();
+        foreach (var pending in all.Where(p => p.Status == FrequencyProposal.Pending)) { pending.Status = FrequencyProposal.Superseded; pending.DecidedAt = now; }
+        var revert = new FrequencyProposal
+        {
+            Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, Kind = "revert", Status = FrequencyProposal.Pending,
+            FromDays = string.Join(",", plan.TrainingDays), ToDays = string.Join(",", original), FromSplit = last.ToSplit is null ? null : plan.Split, ToSplit = last.ToSplit is null ? null : last.FromSplit,
+            FromMaxSessionMinutes = last.ToMaxSessionMinutes is null ? null : plan.MaxSessionMinutes, ToMaxSessionMinutes = last.ToMaxSessionMinutes is null ? null : last.FromMaxSessionMinutes,
+            WeeksAnalysed = 0, LowWeeks = 0, PolicyVersion = FrequencyPolicy.Version, CreatedAt = now,
+            Reason = "Vuelves a la distribución anterior por decisión tuya. Se aplica desde el próximo bloque y el historial se conserva.",
+            PreviewJson = "{}"
+        };
+        // The pending row (if any) is withdrawn first so the one-pending-per-plan rule holds when this one is added.
+        await db.SaveChangesAsync(ct);
+        db.FrequencyProposals.Add(revert);
+        all.Add(revert);
+        var applied = await ApplyFrequencyAsync(plan, revert, ct);
+        if (!applied.Succeeded) return PlanResult<FrequencyOverviewView>.Fail(applied.Failure, applied.Message!);
+        return PlanResult<FrequencyOverviewView>.Ok(await OverviewAfterWriteAsync(plan, ct));
+    }
+
+    private async Task<FrequencyOverviewView> OverviewAfterWriteAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var all = await db.FrequencyProposals.AsNoTracking().Where(p => p.PlanId == plan.Id).OrderBy(p => p.CreatedAt).ToListAsync(ct);
+        var pending = all.FirstOrDefault(p => p.Status == FrequencyProposal.Pending);
+        return FrequencyOverview(plan, new FrequencyAssessment(FrequencyPattern.OnTrack, plan.TrainingDays.Length, null, 0, 0, T("Tu ritmo se evaluará con las próximas semanas completas.")), pending, all);
+    }
+
     // ---------------------------------------------------------------- omit a session on purpose
 
     /// <summary>Reasons that say something about the body: only these let the engine adapt the plan after an omission (Premium).</summary>
@@ -871,6 +1237,17 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// progress: the one of the first pending session (the last one when everything is resolved). An adjustment is in a block when the workout that
     /// caused it is; the ones with no workout (absences, moves) belong to the block when they happened after the last workout of an earlier block.
     /// </summary>
+    public async Task<VolumeDecisionsView?> GetVolumeDecisionsAsync(Guid userId, int take, CancellationToken ct)
+    {
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return null;
+        var rows = await db.LongitudinalDecisions.AsNoTracking()
+            .Where(d => d.UserId == userId && d.PlanId == plan.Id)
+            .OrderByDescending(d => d.MesocycleSequence).ThenBy(d => d.Muscle).Take(take).ToListAsync(ct);
+        return new VolumeDecisionsView(rows.Select(d => new VolumeDecisionView(
+            d.MesocycleSequence, d.Muscle, d.Action, d.BaselineSets, d.PreviousSets, d.ProposedSets, Tn(d.Reason) ?? d.Reason, d.PolicyVersion)).ToList());
+    }
+
     public async Task<AdaptationHistoryView?> GetAdaptationsAsync(Guid userId, int take, bool wholePlan, CancellationToken ct)
     {
         await UseUserClockAsync(userId, ct);
@@ -1166,6 +1543,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var stored = await db.PlannedSessions.AsNoTracking().FirstAsync(s => s.Id == session.Id, ct);
             return await ReplayOrConflictAsync(stored, concurrent, log, ct);
         }
+        // The user's pace may have just become a persistent change: this is the write that keeps the frequency proposal in line with it.
+        await RefreshFrequencyProposalAsync(userId, ct);
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, workout), report));
     }
 
@@ -1695,17 +2074,30 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var existingSessions = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => (int?)s.SequenceIndex).MaxAsync(ct) ?? 0;
         var firstIndex = existingSessions + 1;
         var profile = ProfileOf(plan);
+        var loadReferences = await LoadReferencesAsync(plan.UserId, ct);
+        var continues = previous is { IsDeload: false } && previous.Sequence == slot.Sequence - 1;
+        // What this user's own history says about the weekly dose of each muscle (see LongitudinalLearning). It only moves the targets the
+        // priority planner already chose, by one set at most, and only with enough evidence; without it the block is generated as before.
+        var learning = await LongitudinalLearning.ProposeAsync(db, plan, slot, profile, clock.GetUtcNow(), ct);
         var generation = MesocycleGenerator.Generate(
-            profile, plan.Seed, slot, candidates, previousIds,
-            continuesPreviousBlock: previous is { IsDeload: false } && previous.Sequence == slot.Sequence - 1,
-            loadReferences: await LoadReferencesAsync(plan.UserId, ct),
-            rotationPosition: existingSessions);
+            profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
+            loadReferences: loadReferences, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets);
+        var decisions = learning.Decisions;
+        if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
+        {
+            // A learned target must never make a block impossible: fall back to the plan's own targets and keep no decisions.
+            generation = MesocycleGenerator.Generate(
+                profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
+                loadReferences: loadReferences, rotationPosition: existingSessions);
+            decisions = [];
+        }
         if (!generation.Succeeded) return null;
 
         var mesocycle = AddMesocycle(plan, slot, generation, clock.GetUtcNow(), firstIndex);
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
+        db.LongitudinalDecisions.AddRange(decisions);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -1748,7 +2140,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return mesocycle;
     }
 
-    private static PlanProfile ProfileOf(TrainingPlan plan) => new(
+    internal static PlanProfile ProfileOf(TrainingPlan plan) => new(
         Enum.Parse<TrainingGoal>(plan.Goal), Enum.Parse<TrainingExperience>(plan.Experience), plan.StartDate, plan.TotalWeeks,
         IsSequence(plan) ? [] : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
         plan.MaxSessionMinutes, plan.AvailableEquipment,
@@ -1761,7 +2153,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             .Where(pair => pair.Value != TrainingMusclePriority.Grow)
             .OrderBy(pair => pair.Key).Select(pair => $"{pair.Key}:{pair.Value}").ToArray();
 
-    private static IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority> DecodePriorities(IEnumerable<string> stored)
+    internal static IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority> DecodePriorities(IEnumerable<string> stored)
     {
         var result = new Dictionary<TrainingMuscleGroup, TrainingMusclePriority>();
         foreach (var entry in stored)
@@ -1773,20 +2165,53 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return result;
     }
 
-    /// <summary>The most recent completed performance of each exercise, so a new block starts from real loads.</summary>
+    /// <summary>
+    /// The most recent completed performance of each exercise, so a new block starts from real loads. Pain precedence holds here as it does
+    /// in the progression: the estimator can propose a heavier load than the one used, so a reference is never taken from
+    /// - a session with a pain report, nor from an exercise with pain in any of its last three exposures
+    ///   (<see cref="PainExposureWindow"/>, the window the adaptation uses), nor at all while pain is declared in the last
+    ///   <see cref="PainSessionWindow"/> sessions (the window of the general pain report): the new block then prescribes no load and the
+    ///   user chooses it, as for an exercise without history;
+    /// - a deload session (its loads are lighter on purpose) or a workout registered long after it happened (its order is unreliable).
+    /// The history itself is not touched: the last performance the user sees is read elsewhere and still shows every workout.
+    /// </summary>
     private async Task<IReadOnlyList<TrainingLoadReference>> LoadReferencesAsync(Guid userId, CancellationToken ct)
     {
         var logs = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.UserId == userId)
-            .OrderByDescending(l => l.PerformedAt).Take(LoadReferenceLogs).ToListAsync(ct);
+            .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(LoadReferenceLogs).ToListAsync(ct);
+        if (logs.Take(PainSessionWindow).Any(l => l.PainReported)) return [];
+
+        var sessionIds = logs.Select(l => l.PlannedSessionId).Distinct().ToList();
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => sessionIds.Contains(s.Id))
+            .Select(s => new { s.Id, s.MesocycleId, s.PrescriptionJson }).ToListAsync(ct);
+        var deloadBlocks = (await db.TrainingMesocycles.AsNoTracking()
+            .Where(m => m.IsDeload && sessions.Select(x => x.MesocycleId).Contains(m.Id)).Select(m => m.Id).ToListAsync(ct)).ToHashSet();
+        var deloadSessions = sessions.Where(s => deloadBlocks.Contains(s.MesocycleId) || PrescriptionJson.IsAdaptationDeload(s.PrescriptionJson))
+            .Select(s => s.Id).ToHashSet();
+
+        static bool HasPain(WorkoutSetLog set) =>
+            set.PainReported || string.Equals(set.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase);
+
         var references = new List<TrainingLoadReference>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var log in logs)
-            foreach (var group in log.Sets.Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).GroupBy(s => s.ExerciseId))
+        // Exposures of each exercise, most recent first.
+        var byExercise = logs.SelectMany(l => l.Sets.GroupBy(s => s.ExerciseId).Select(g => (Log: l, Exercise: g.Key, Sets: g.ToList())))
+            .GroupBy(x => x.Exercise);
+        foreach (var exercise in byExercise)
+        {
+            var exposures = exercise.ToList();
+            // Pain is read on every recent exposure, also a late or deload one: the safety signal never depends on data quality.
+            if (exposures.Take(PainExposureWindow).Any(e => e.Sets.Any(HasPain))) continue;
+            foreach (var exposure in exposures)
             {
-                if (!seen.Add(group.Key)) continue;
-                var top = group.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
-                references.Add(new TrainingLoadReference(group.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, group.Count()));
+                var late = (exposure.Log.LoggedAt - exposure.Log.PerformedAt).TotalDays > Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays;
+                if (late || deloadSessions.Contains(exposure.Log.PlannedSessionId)) continue;
+                var done = exposure.Sets.Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).ToList();
+                if (done.Count == 0) continue;
+                var top = done.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
+                references.Add(new TrainingLoadReference(exercise.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
+                break;
             }
+        }
         return references;
     }
 

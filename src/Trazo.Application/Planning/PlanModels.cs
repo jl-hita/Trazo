@@ -32,7 +32,15 @@ public sealed record PlanView(
     string Disclaimer,
     string SchedulingMode = "Calendar",
     int SessionsPerPeriod = 0,
-    IReadOnlyDictionary<string, string>? MusclePriorities = null);
+    IReadOnlyDictionary<string, string>? MusclePriorities = null,
+    IReadOnlyList<PriorityDeliveryView>? PriorityDelivery = null);
+
+/// <summary>
+/// What a muscle priority asked for and what the block in progress really holds, in effective weekly sets. <c>Status</c> is Met, Below or Above;
+/// <c>Note</c> explains a shortfall (or an excess in maintenance) and is null when the block holds what was asked. Present only while the
+/// block was generated with the current priorities; a change applies from the next block.
+/// </summary>
+public sealed record PriorityDeliveryView(string Muscle, string Priority, decimal TargetSets, decimal AssignedSets, string Status, string? Note);
 
 public sealed record ExerciseView(
     string ExerciseId,
@@ -114,6 +122,13 @@ public sealed record AdaptationHistoryView(
     int Reviews, int Changes, int SessionsAdjusted, bool Automatic, IReadOnlyList<AdaptationEntryView> Entries,
     string Scope = "block", int PlanChanges = 0, bool HasEarlier = false);
 
+/// <summary>One decision of longitudinal learning: how the weekly sets of a muscle changed for a block and why. Action is decrease, restore, hold or abstain.</summary>
+public sealed record VolumeDecisionView(
+    int BlockSequence, string Muscle, string Action, decimal BaselineSets, decimal PreviousSets, decimal ProposedSets,
+    string Reason, string PolicyVersion);
+
+public sealed record VolumeDecisionsView(IReadOnlyList<VolumeDecisionView> Decisions);
+
 public sealed record AppliedAdaptationView(string Kind, IReadOnlyList<string> ExerciseIds, int SessionsChanged, string Explanation);
 
 public sealed record ExerciseAdviceView(string ExerciseId, string Action, string Explanation, decimal? NextLoadKg, IReadOnlyList<int>? SuggestedRepetitions);
@@ -188,7 +203,8 @@ public sealed record NextSessionView(
 /// The pace the user really keeps against the plan's: <c>State</c> is Unknown, OnTrack, Below or Above; <c>Observed</c> and <c>Nominal</c> are sessions
 /// per seven days; <c>SuggestedSessionsPerWeek</c> is only set when the pace is clearly lower. Informative: it changes nothing in the plan.
 /// </summary>
-public sealed record FrequencyView(string State, decimal? Observed, int Nominal, int? SuggestedSessionsPerWeek, string Message);
+public sealed record FrequencyView(
+    string State, decimal? Observed, int Nominal, int? SuggestedSessionsPerWeek, string Message, Guid? ProposalId = null);
 
 /// <summary>
 /// What to do about the sessions not done, decided by <c>AdjustmentAdvisor</c> from the real state: <c>Strategy</c> is Continue, Shift, EaseBack
@@ -263,3 +279,17 @@ public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseIn
 public sealed record ManualExerciseInput(
     string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds,
     string? SupersetGroup = null);
+
+/// <summary>
+/// A proposal to reorganise the training days because the user persistently trains a different number of days. <c>Preview</c> is the next block
+/// as the engine would generate it with the new days against the current ones. Nothing changes until it is accepted, and then only the blocks
+/// generated afterwards: the block in progress is never rewritten.
+/// </summary>
+public sealed record FrequencyProposalView(
+    Guid Id, string Kind, string Status, IReadOnlyList<string> FromDays, IReadOnlyList<string> ToDays, string Reason,
+    Trazo.Application.Planning.Frequency.FrequencyPreview? Preview, DateTimeOffset CreatedAt, DateTimeOffset? DecidedAt,
+    int? AppliedFromSequence, string PolicyVersion);
+
+/// <summary>Where the user's real pace stands (Insufficient, OnTrack, Transient, PersistentReduction, PersistentReturn), the pending proposal if any, and the history.</summary>
+public sealed record FrequencyOverviewView(
+    string Pattern, string Message, FrequencyProposalView? Pending, IReadOnlyList<FrequencyProposalView> History, bool CanRevert);

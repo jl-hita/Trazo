@@ -78,7 +78,7 @@ public static partial class Localizer
         }
     }
 
-    private static readonly Direction ToEnglish = new(EnglishCatalog.Entries.Concat(AccountCatalog.SpanishToEnglish));
+    private static readonly Direction ToEnglish = new(EnglishCatalog.Entries.Concat(EnglishCatalog.DayLists).Concat(AccountCatalog.SpanishToEnglish));
     private static readonly Direction ToSpanish = new(AccountCatalog.EnglishToSpanish);
 
     [GeneratedRegex(@"\{(\d+)\}")]

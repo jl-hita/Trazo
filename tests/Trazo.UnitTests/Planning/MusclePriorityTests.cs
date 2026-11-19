@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -214,6 +216,131 @@ public sealed class MusclePriorityApiTests() : PlansApiBase(enforced: false)
         var priorities = plan.GetProperty("musclePriorities");
         Assert.Equal("Emphasize", priorities.GetProperty("Deltoids").GetString());
         Assert.Equal("Maintain", priorities.GetProperty("Chest").GetString());
+    }
+
+    private static object Tight(Dictionary<string, string> priorities) => new
+    {
+        goal = "Hypertrophy", experience = "Intermediate", totalWeeks = 12,
+        trainingDays = new[] { "Monday", "Wednesday", "Friday" }, maxSessionMinutes = 45,
+        availableEquipment = new[] { "barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar" },
+        excludedExerciseIds = Array.Empty<string>(), limitations = Array.Empty<string>(), musclePriorities = priorities
+    };
+
+    [Fact]
+    public async Task ThePlanSaysWhatEachPriorityAskedForAndWhatTheBlockReallyHolds()
+    {
+        // Three emphasised muscles in three short sessions: the generator cannot give all of them what was asked for, and must say so.
+        var (user, client, _) = await StartPlanAsync(profile: Tight(new()
+            { ["Chest"] = "Emphasize", ["Lats"] = "Emphasize", ["Quadriceps"] = "Emphasize", ["Triceps"] = "Maintain" }));
+        var plan = await JsonAsync(await client.GetAsync("/api/v1/plans/current"));
+        var report = plan.GetProperty("priorityDelivery").EnumerateArray().ToDictionary(i => i.GetProperty("muscle").GetString()!);
+        Assert.Equal(4, report.Count);
+
+        // What it reports as assigned is what the stored sessions of the week really hold.
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Persistence.TrazoDbContext>();
+        var week = plan.GetProperty("currentWeek").GetInt32();
+        var stored = (await db.PlannedSessions.Where(s => s.WeekNumber == week).ToListAsync()).Select(s => PrescriptionJson.Read(s.PrescriptionJson));
+        var real = Trazo.Application.Planning.PriorityDelivery.WeeklySets(stored);
+        foreach (var (name, item) in report)
+            Assert.Equal(real.GetValueOrDefault(Enum.Parse<TrainingMuscleGroup>(name)), item.GetProperty("assignedSets").GetDecimal());
+
+        // A muscle below its target says why; one that holds it says nothing. The target is never invented upwards to look better.
+        Assert.All(report.Values, item =>
+        {
+            var status = item.GetProperty("status").GetString();
+            var note = item.GetProperty("note");
+            if (status == "Met") Assert.Equal(System.Text.Json.JsonValueKind.Null, note.ValueKind);
+            else Assert.False(string.IsNullOrWhiteSpace(note.GetString()));
+            if (status == "Below") Assert.True(item.GetProperty("assignedSets").GetDecimal() < item.GetProperty("targetSets").GetDecimal());
+        });
+        Assert.Contains(report.Values, item => item.GetProperty("status").GetString() != "Met");
+    }
+
+    [Fact]
+    public async Task WithThreeShortSessionsTheAllocatorSharesWhatFitsAndSaysWhatDidNotFit()
+    {
+        // Three emphasised and three maintained muscles in three sessions of 45 minutes, with every normal limit in force.
+        var priorities = new Dictionary<string, string>
+        {
+            ["Chest"] = "Emphasize", ["Lats"] = "Emphasize", ["Quadriceps"] = "Emphasize",
+            ["Biceps"] = "Maintain", ["Triceps"] = "Maintain", ["Calves"] = "Maintain"
+        };
+        // Both plans are created with the SAME seed, so the only difference between them is the priorities.
+        var equipment = new[] { "barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar" };
+        var typed = priorities.ToDictionary(p => Enum.Parse<TrainingMuscleGroup>(p.Key), p => Enum.Parse<TrainingMusclePriority>(p.Value));
+        async Task<HttpClient> CreateAsync(string email, PlanProfile profile)
+        {
+            var u = await AddUserAsync(email);
+            using var scope = _factory.Services.CreateScope();
+            var created = await scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Planning.ITrainingPlanService>().CreateAsync(u.Id, profile, 42, CancellationToken.None);
+            Assert.True(created.Succeeded, created.Message);
+            return ClientFor(u);
+        }
+        var baseProfile = PlanTestCatalog.Profile(days: 3, minutes: 45, equipment: equipment);
+        var client = await CreateAsync("tight@example.com", baseProfile with { MusclePriorities = typed });
+        var plainClient = await CreateAsync("plain@example.com", baseProfile);
+
+        async Task<(JsonElement Plan, Dictionary<TrainingMuscleGroup, decimal> Sets, List<(int Minutes, int Sets)> Sessions)> ReadAsync(HttpClient c)
+        {
+            var plan = await JsonAsync(await c.GetAsync("/api/v1/plans/current"));
+            using var scope = _factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<Trazo.Infrastructure.Persistence.TrazoDbContext>();
+            var week = plan.GetProperty("currentWeek").GetInt32();
+            var sessions = await db.PlannedSessions.Where(s => s.WeekNumber == week && s.PlanId == Guid.Parse(plan.GetProperty("id").GetString()!)).ToListAsync();
+            var prescribed = sessions.Select(s => PrescriptionJson.Read(s.PrescriptionJson)).ToList();
+            return (plan, PriorityDelivery.WeeklySets(prescribed).ToDictionary(p => p.Key, p => p.Value),
+                sessions.Select(s => (s.EstimatedDurationMinutes, PrescriptionJson.Read(s.PrescriptionJson).Sum(e => e.Sets))).ToList());
+        }
+
+        var (plan, sets, sessions) = await ReadAsync(client);
+        var (_, plainSets, _) = await ReadAsync(plainClient);
+        var report = plan.GetProperty("priorityDelivery").EnumerateArray().ToDictionary(i => Enum.Parse<TrainingMuscleGroup>(i.GetProperty("muscle").GetString()!));
+        Assert.Equal(6, report.Count);
+
+        // 1. It shares the volume: the emphasised muscles get at least what they get without any priority, and none is starved.
+        foreach (var m in new[] { TrainingMuscleGroup.Chest, TrainingMuscleGroup.Lats, TrainingMuscleGroup.Quadriceps })
+            Assert.True(sets.GetValueOrDefault(m) >= plainSets.GetValueOrDefault(m), $"{m}: {sets.GetValueOrDefault(m)} emphasised against {plainSets.GetValueOrDefault(m)} plain");
+        // 2. Maintenance is a lower dose, not a sacrifice: a maintained muscle is "Below" only where the same plan without priorities gives it
+        //    no more (calves do not fit three 45-minute sessions at all), and it can hold MORE than its target when an emphasised lift trains
+        //    it indirectly: that is counted and the report says so (status Above) instead of hiding it.
+        foreach (var m in new[] { TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Triceps, TrainingMuscleGroup.Calves })
+        {
+            var status = report[m].GetProperty("status").GetString();
+            if (status == "Below") Assert.True(plainSets.GetValueOrDefault(m) <= sets.GetValueOrDefault(m), $"{m} was sacrificed: {sets.GetValueOrDefault(m)} against {plainSets.GetValueOrDefault(m)} without priorities");
+            if (sets.GetValueOrDefault(m) > report[m].GetProperty("targetSets").GetDecimal() + 2m) Assert.Equal("Above", status);
+        }
+        // 3. No unreal session and no volume past the limits: sessions fit the 45 minutes, no muscle passes the absolute weekly ceiling.
+        Assert.Equal(3, sessions.Count);
+        Assert.All(sessions, s => Assert.True(s.Minutes <= 45, $"a session of {s.Minutes} minutes"));
+        Assert.All(sets, p => Assert.True(p.Value <= 20m, $"{p.Key}: {p.Value}"));
+        // 4 and 5. It does not promise what it did not schedule: every item reports the real assigned sets and explains anything not met.
+        foreach (var (muscle, item) in report)
+        {
+            Assert.Equal(sets.GetValueOrDefault(muscle), item.GetProperty("assignedSets").GetDecimal());   // 6. indirect work counted as everywhere else
+            var status = item.GetProperty("status").GetString();
+            var target = item.GetProperty("targetSets").GetDecimal();
+            var assigned = item.GetProperty("assignedSets").GetDecimal();
+            if (status == "Below") Assert.True(assigned < target - 2m);
+            if (status == "Met") Assert.InRange(assigned, target - 2m, target + 2m);
+            Assert.Equal(status == "Met", item.GetProperty("note").ValueKind == JsonValueKind.Null);
+        }
+        // The targets themselves are the planner's, not inflated to look reachable.
+        var baselines = MesocycleGenerator.Baselines(baseProfile with { MusclePriorities = typed });
+        foreach (var b in baselines.Where(b => b.Priority != TrainingMusclePriority.Grow))
+            Assert.Equal(b.Target, report[b.Muscle].GetProperty("targetSets").GetDecimal());
+    }
+
+    [Fact]
+    public async Task ChangingThePrioritiesPromisesNothingUntilTheNextBlockHasThem()
+    {
+        var (_, client, _) = await StartPlanAsync();
+        Assert.Equal(System.Text.Json.JsonValueKind.Null, (await JsonAsync(await client.GetAsync("/api/v1/plans/current"))).GetProperty("priorityDelivery").ValueKind);
+        var set = await client.PutAsJsonAsync("/api/v1/plans/current/muscle-priorities",
+            new { musclePriorities = new Dictionary<string, string> { ["Chest"] = "Emphasize" } });
+        Assert.Equal(HttpStatusCode.OK, set.StatusCode);
+        // The block in progress was generated before the change: it is not compared with a target it was not built for.
+        Assert.Equal(System.Text.Json.JsonValueKind.Null, (await JsonAsync(await client.GetAsync("/api/v1/plans/current"))).GetProperty("priorityDelivery").ValueKind);
     }
 
     [Fact]
