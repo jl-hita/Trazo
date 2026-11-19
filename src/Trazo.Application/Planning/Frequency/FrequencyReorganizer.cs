@@ -159,9 +159,11 @@ public static class FrequencyReorganizer
     {
         var volumes = new Dictionary<TrainingMuscleGroup, (decimal, int)>();
         if (!g.Succeeded || g.Quality is null) return (0, 0, volumes);
-        var weekNumber = g.Sessions.Select(s => s.WeekNumber).Distinct().OrderBy(w => w).Skip(1).FirstOrDefault(g.Sessions.Min(s => s.WeekNumber));
-        var sessions = g.Sessions.Where(s => s.WeekNumber == weekNumber).ToList();
-        foreach (var m in g.Quality.WeeklyMuscleVolumes.First(w => w.WeekNumber == weekNumber).Muscles)
+        // The quality report numbers weeks inside the block and the sessions carry the plan's absolute week: both are read by position (the second week).
+        var sessionWeeks = g.Sessions.Select(s => s.WeekNumber).Distinct().OrderBy(w => w).ToList();
+        var sessions = g.Sessions.Where(s => s.WeekNumber == sessionWeeks[Math.Min(1, sessionWeeks.Count - 1)]).ToList();
+        var qualityWeeks = g.Quality.WeeklyMuscleVolumes.OrderBy(w => w.WeekNumber).ToList();
+        foreach (var m in qualityWeeks[Math.Min(1, qualityWeeks.Count - 1)].Muscles)
             volumes[m.MuscleGroup] = (m.EstimatedEffectiveSets, m.PrimaryFrequencySessions);
         return (sessions.Count, sessions.Count == 0 ? 0 : sessions.Max(s => s.EstimatedDurationMinutes), volumes);
     }
