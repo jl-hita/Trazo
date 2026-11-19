@@ -176,7 +176,13 @@ public sealed record NextPositionView(int Period, int SessionInPeriod, int Sessi
 public sealed record NextSessionView(
     Guid PlanId, string SchedulingMode, string Timeline, SessionView? Session, NextPositionView? Position,
     AvailabilityView? Availability, bool AvailabilityLocked, IReadOnlyList<OverdueSessionView> Overdue, bool Locked = false,
-    ReentryView? Reentry = null, RescheduleOfferView? Reschedule = null, AdjustmentView? Adjustment = null);
+    ReentryView? Reentry = null, RescheduleOfferView? Reschedule = null, AdjustmentView? Adjustment = null, FrequencyView? Frequency = null);
+
+/// <summary>
+/// The pace the user really keeps against the plan's: <c>State</c> is Unknown, OnTrack, Below or Above; <c>Observed</c> and <c>Nominal</c> are sessions
+/// per seven days; <c>SuggestedSessionsPerWeek</c> is only set when the pace is clearly lower. Informative: it changes nothing in the plan.
+/// </summary>
+public sealed record FrequencyView(string State, decimal? Observed, int Nominal, int? SuggestedSessionsPerWeek, string Message);
 
 /// <summary>
 /// What to do about the sessions not done, decided by <c>AdjustmentAdvisor</c> from the real state: <c>Strategy</c> is Continue, Shift, EaseBack

@@ -535,7 +535,28 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         return new NextSessionView(plan.Id, timeline.Mode, current.Timeline, ToSessionView(session, logs.FirstOrDefault(), last), position,
             availability, AvailabilityLocked: !premium, overdue, Reentry: reentry,
-            Reschedule: behind >= 1 ? new RescheduleOfferView(behind) : null, Adjustment: AdjustmentOf(advice, daysAway, behind, overdue.Count));
+            Reschedule: behind >= 1 ? new RescheduleOfferView(behind) : null, Adjustment: AdjustmentOf(advice, daysAway, behind, overdue.Count),
+            Frequency: await FrequencyAsync(plan, ct));
+    }
+
+    /// <summary>The pace of the last weeks (workouts really done, not omitted) against the days the plan was built for. Informative only.</summary>
+    private async Task<FrequencyView> FrequencyAsync(TrainingPlan plan, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var performed = await db.WorkoutLogs.AsNoTracking()
+            .Where(l => l.PlanId == plan.Id && l.Outcome != WorkoutOutcome.NotCompleted && l.PerformedAt > now.AddDays(-LoadMetrics.PaceWindowDays))
+            .Select(l => l.PerformedAt).ToListAsync(ct);
+        var advice = FrequencyAdvisor.Advise(IsSequence(plan), plan.TrainingDays.Length, LoadMetrics.ObservedSessionsPerSevenDays(performed, now));
+        var message = advice.State switch
+        {
+            FrequencyState.Below => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: recibes menos trabajo por semana del previsto. Si es tu ritmo habitual, crea un plan para {2} días y se repartirá bien."),
+                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal, advice.SuggestedSessionsPerWeek),
+            FrequencyState.Above => string.Format(T("Entrenas unas {0} veces por semana y el plan está hecho para {1}: el plan no añade series por su cuenta; vigila la recuperación."),
+                advice.Observed?.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), advice.Nominal),
+            FrequencyState.OnTrack => T("Tu ritmo real coincide con el del plan."),
+            _ => T("Aún no hay suficientes sesiones recientes para medir tu ritmo.")
+        };
+        return new FrequencyView(advice.State.ToString(), advice.Observed, advice.Nominal, advice.SuggestedSessionsPerWeek, message);
     }
 
     /// <summary>The advisor's decision with its explanation in the request's language.</summary>
