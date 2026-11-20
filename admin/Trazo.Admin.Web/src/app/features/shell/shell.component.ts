@@ -3,11 +3,12 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { AuthService } from '../../core/auth.service';
 import type { SystemInfo } from '../../core/admin.models';
 import { OverviewApi } from '../overview/overview.api';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 
 @Component({
   selector: 'trazo-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, UiButtonComponent],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
   // Shared page styles (headings, cards, forms) apply to the routed child pages.
