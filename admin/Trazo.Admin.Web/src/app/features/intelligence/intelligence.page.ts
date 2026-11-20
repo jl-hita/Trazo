@@ -19,7 +19,7 @@ interface IntelligenceSummary {
   selector: 'trazo-intelligence-page',
   standalone: true,
   encapsulation: ViewEncapsulation.None,
-  styles: [\`
+  styles: [`
     .ti { max-width: 1440px; color: #dbe5f2; }
     .ti-toolbar { display:flex; flex-wrap:wrap; align-items:end; gap:10px; margin:18px 0 20px; }
     .ti-field { display:grid; gap:5px; color:#91a1b6; font-size:11px; }
@@ -54,8 +54,8 @@ interface IntelligenceSummary {
     .ti button:focus-visible,.ti input:focus-visible { outline:2px solid #9cc0ea; outline-offset:2px; }
     @media(max-width:950px) { .ti-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
     @media(max-width:640px) { .ti-grid,.ti-columns { grid-template-columns:1fr; } }
-  \`],
-  template: \`
+  `],
+  template: `
     <div class="page-heading">
       <div><p class="eyebrow">INVESTIGACIÓN Y DATOS</p><h1>Trazo Intelligence</h1>
         <p class="subtitle">Analiza qué prescribe el motor, qué hacen realmente los deportistas y qué señales utiliza para adaptarse.</p></div>
@@ -137,7 +137,7 @@ interface IntelligenceSummary {
         </section>
       }
     </div>
-  \`
+  `
 })
 export class IntelligencePageComponent {
   private readonly http = inject(HttpClient);
