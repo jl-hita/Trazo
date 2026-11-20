@@ -5,6 +5,7 @@ import { PlayBillingFormComponent } from './play-billing-form.component';
 import { OperationsFormComponent } from './operations-form.component';
 import { PushFormComponent } from './push-form.component';
 import { PromotionsFormComponent } from './promotions-form.component';
+import { SETTINGS_PAGE_COPY } from './settings.page.copy';
 
 @Component({
   selector: 'trazo-settings-page',
@@ -13,6 +14,7 @@ import { PromotionsFormComponent } from './promotions-form.component';
   templateUrl: './settings.page.html'
 })
 export class SettingsPageComponent {
+  protected readonly copy = SETTINGS_PAGE_COPY;
   protected readonly settings = signal<SettingsView | null>(null);
   protected readonly error = signal('');
 
