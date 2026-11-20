@@ -44,6 +44,9 @@ async function loadComponent(api) {
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
     if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
     if (request === '../../shared/ui/ui-table.component') return { UiTableComponent: class UiTableComponent {} };
+    if (request === '../../core/api-error') return {
+      errorMessage: (_error, fallback = 'No se ha podido completar la operación.') => fallback
+    };
     if (request === '../../core/ui-format') return {
       formatUiDate: value => String(value),
       formatUiDateTime: value => String(value),
@@ -165,7 +168,7 @@ test('Intelligence page reports API failures and allows a later successful retry
   const page = new Component();
   await new Promise(resolve => setImmediate(resolve));
 
-  assert.equal(page.loadError(), 'Servicio temporalmente no disponible');
+  assert.equal(page.loadError(), 'No se han podido cargar los datos de Intelligence.');
   assert.equal(page.loading(), false);
 
   shouldFail = false;

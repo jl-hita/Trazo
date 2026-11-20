@@ -7,7 +7,7 @@ import type {
   CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse, PlanSession
 } from '../../core/admin.models';
 import { PlanningApi } from './planning.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

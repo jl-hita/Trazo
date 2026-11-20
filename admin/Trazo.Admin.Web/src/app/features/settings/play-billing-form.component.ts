@@ -5,7 +5,7 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import type { PlayBillingView } from '../../core/admin.models';
 import { SettingsApi } from './settings.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 
 /** Google Play Billing configuration: package name, service-account key and notification (RTDN) authentication. */
 @Component({

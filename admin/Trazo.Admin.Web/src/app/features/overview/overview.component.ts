@@ -4,7 +4,7 @@ import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } fr
 import { Router, RouterLink } from '@angular/router';
 import type { AlertSeverity, Overview } from '../../core/admin.models';
 import { OverviewApi } from './overview.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UiBadgeComponent, type UiBadgeTone } from '../../shared/ui/ui-badge.component';
 import { UiCardComponent } from '../../shared/ui/ui-card.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
@@ -195,8 +195,7 @@ export class OverviewComponent {
       if (announce) this.announcement.set(`${OVERVIEW_COPY.announcements.refreshed} ${result.alerts.length === 0 ? OVERVIEW_COPY.announcements.noAlerts : `${result.alerts.length} ${OVERVIEW_COPY.alertsSuffix}.`}`);
     } catch (e) {
       if (request !== this.requestId) return;
-      const status = (e as { status?: number })?.status;
-      this.error.set(status === 503 ? OVERVIEW_COPY.unavailable + '.' : errorMessage(e));
+      this.error.set(errorMessage(e, OVERVIEW_COPY.refreshError));
       if (announce) this.announcement.set(OVERVIEW_COPY.announcements.failed);
     } finally {
       if (request === this.requestId) this.loading.set(false);

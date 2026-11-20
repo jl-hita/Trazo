@@ -5,9 +5,9 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { FiscalApi } from './fiscal.api';
 import type { FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.models';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
-import { formatUiDate } from '../../core/ui-format';
+import { formatUiCurrency, formatUiDate } from '../../core/ui-format';
 
 const EMPTY_ENTRY = () => ({
   id: null as string | null, kind: 'expense', date: '', concept: '', counterparty: '', counterpartyTaxId: '', counterpartyCountry: 'ES',
@@ -29,7 +29,6 @@ const EMPTY_ENTRY = () => ({
 })
 export class FiscalPageComponent {
   private readonly api = inject(FiscalApi);
-  private readonly money = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
   protected readonly copy = UI_COPY.fiscal;
   protected readonly years = (() => { const y = new Date().getFullYear(); return [y - 2, y - 1, y, y + 1]; })();
   protected readonly yearNumber = signal(new Date().getFullYear());
@@ -51,7 +50,7 @@ export class FiscalPageComponent {
 
   constructor() { void this.init(); }
 
-  protected eur(value: number | null | undefined): string { return this.money.format(value ?? 0); }
+  protected eur(value: number | null | undefined): string { return formatUiCurrency(value ?? 0); }
 
   protected date(value: string): string { return formatUiDate(value); }
 
@@ -64,8 +63,7 @@ export class FiscalPageComponent {
   }
 
   private fail(e: unknown): void {
-    const body = (e as { error?: { message?: string; errors?: unknown } })?.error;
-    this.error.set(body?.errors ? errorMessage(e) : (body?.message ?? errorMessage(e)));
+    this.error.set(errorMessage(e));
     this.message.set('');
   }
 

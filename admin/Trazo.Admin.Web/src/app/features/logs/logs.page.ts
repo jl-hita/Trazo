@@ -5,7 +5,7 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { ActivatedRoute } from '@angular/router';
 import type { LogEntry, LogLevelGroup, LogPage } from '../../core/admin.models';
 import { LogsApi } from './logs.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 import { formatUiDateTime } from '../../core/ui-format';
 

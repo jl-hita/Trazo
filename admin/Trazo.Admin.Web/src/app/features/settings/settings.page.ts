@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { SetupApi, SettingsView, errorMessage } from '../../core/setup.api';
+import { SetupApi, SettingsView } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { ConfigFormComponent } from '../setup/config-form.component';
 import { PlayBillingFormComponent } from './play-billing-form.component';
 import { OperationsFormComponent } from './operations-form.component';

@@ -5,7 +5,7 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import type { OperationsView } from '../../core/admin.models';
 import { SettingsApi } from './settings.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 
 const LOG_LEVELS = ['Debug', 'Information', 'Warning', 'Error', 'Critical'];
 

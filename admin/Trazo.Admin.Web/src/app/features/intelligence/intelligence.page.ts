@@ -5,6 +5,7 @@ import { IntelligenceSummary } from './intelligence.models';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { INTELLIGENCE_COPY } from './intelligence.copy';
 import { formatUiDate, formatUiDateTime, formatUiNumber, formatUiPercent } from '../../core/ui-format';
+import { errorMessage } from '../../core/api-error';
 
 @Component({
   selector: 'trazo-intelligence-page',
@@ -41,7 +42,7 @@ export class IntelligencePageComponent {
       const result = await this.api.summary(this.from(), this.to());
       if (requestVersion === this.loadVersion) this.data.set(result);
     }
-    catch (e) { if (requestVersion === this.loadVersion) this.loadError.set((e as {error?:{message?:string}})?.error?.message ?? INTELLIGENCE_COPY.loadError); }
+    catch (e) { if (requestVersion === this.loadVersion) this.loadError.set(errorMessage(e, INTELLIGENCE_COPY.loadError)); }
     finally { if (requestVersion === this.loadVersion) this.loading.set(false); }
   }
   protected async export(): Promise<void> {
@@ -53,10 +54,8 @@ export class IntelligencePageComponent {
       const hasZipSignature = signature.length === 4 && signature[0] === 0x50 && signature[1] === 0x4b
         && ((signature[2] === 0x03 && signature[3] === 0x04) || (signature[2] === 0x05 && signature[3] === 0x06));
       if (!blob.size || !hasZipSignature) {
-        const message = await blob.text();
-        let detail = INTELLIGENCE_COPY.invalidZip;
-        try { detail = JSON.parse(message)?.message ?? detail; } catch { /* The response was not a JSON error. */ }
-        throw new Error(detail);
+        this.exportError.set(INTELLIGENCE_COPY.invalidZip);
+        return;
       }
       const url = URL.createObjectURL(blob); const a = document.createElement('a');
       a.href = url; a.download = 'trazo-intelligence-' + this.from().replaceAll('-','') + '-' + this.to().replaceAll('-','') + '.zip';
@@ -64,7 +63,7 @@ export class IntelligencePageComponent {
       // Revoke after the browser has had time to start consuming the download.
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (e) {
-      this.exportError.set(e instanceof Error ? e.message : INTELLIGENCE_COPY.exportError);
+      this.exportError.set(errorMessage(e, INTELLIGENCE_COPY.exportError));
     }
     finally { this.exporting.set(false); }
   }

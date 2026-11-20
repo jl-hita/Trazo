@@ -9,7 +9,7 @@ import { formatUiDateTime } from '../../core/ui-format';
 import type { AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.models';
 import { UsersApi } from './users.api';
 import { AuthService } from '../../core/auth.service';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 
 const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
 

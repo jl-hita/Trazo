@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiHttpClient } from '../../core/api-http.client';
 import { HttpParams } from '@angular/common/http';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
+import { formatUiCurrency, formatUiNumber, formatUiPercent } from '../../core/ui-format';
 
 import type {
   Range,
@@ -32,10 +33,9 @@ import type {
 
 const API = '/api/v1/admin/marketing';
 
-/** The message the server gave for a rejected request, or a generic one. */
+/** Shared, localized presentation for API failures in all marketing tabs. */
 export function marketingError(error: unknown): string {
-  const e = error as { error?: { message?: string } };
-  return e?.error?.message ?? errorMessage(error);
+  return errorMessage(error);
 }
 
 /** Calls to the marketing panel (superadmin and commercial roles). Everything it returns is an aggregate. */
@@ -85,11 +85,11 @@ export function daysAgo(n: number): string { const d = new Date(); d.setUTCDate(
 
 /** Formatting shared by the panel tabs. */
 export const fmt = {
-  pct: (v: number | null | undefined, digits = 1): string => (v === null || v === undefined ? '—' : `${(v * 100).toFixed(digits).replace(/\.0+$/, '')}%`),
-  eur: (v: number | null | undefined): string => (v === null || v === undefined ? '—' : `${v.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`),
-  int: (v: number | null | undefined): string => (v === null || v === undefined ? '—' : v.toLocaleString('en-GB')),
+  pct: (v: number | null | undefined, digits = 1): string => formatUiPercent(v, digits),
+  eur: (v: number | null | undefined): string => v === null || v === undefined ? '—' : formatUiCurrency(v),
+  int: (v: number | null | undefined): string => v === null || v === undefined ? '—' : formatUiNumber(v, 0),
   delta: (current: number, previous: number): string => {
-    if (previous === 0) return current === 0 ? '—' : 'new';
+    if (previous === 0) return current === 0 ? '—' : 'nuevo';
     const change = (current - previous) / previous;
     return `${change >= 0 ? '+' : ''}${(change * 100).toFixed(0)}%`;
   }

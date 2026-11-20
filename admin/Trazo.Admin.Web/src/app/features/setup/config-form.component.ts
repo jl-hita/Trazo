@@ -3,7 +3,8 @@ import { Component, ViewEncapsulation, computed, effect, inject, input, output, 
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
-import { EmailSettings, SetupApi, SettingsView, TestResult, errorMessage } from '../../core/setup.api';
+import { EmailSettings, SetupApi, SettingsView, TestResult } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 
 type Mode = 'setup' | 'settings';
 
