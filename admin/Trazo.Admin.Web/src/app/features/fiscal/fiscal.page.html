@@ -15,29 +15,29 @@
           <summary>Fiscal profile and rules</summary>
           <div class="box">
             <div class="grid">
-              <label>Legal name<input [(ngModel)]="profile.legalName" name="legalName"></label>
-              <label>Tax id (NIF)<input [(ngModel)]="profile.taxId" name="taxId"></label>
-              <label>Address<input [(ngModel)]="profile.address" name="address"></label>
-              <label>Accountant's email (optional)<input [(ngModel)]="profile.gestorEmail" name="gestorEmail"></label>
-              <label>Default VAT %<input type="number" step="0.01" [(ngModel)]="profile.defaultVatPct" name="defaultVatPct"></label>
-              <label>Income-tax instalment % (modelo 130)<input type="number" step="0.01" [(ngModel)]="profile.irpfAdvancePct" name="irpfAdvancePct"></label>
+              <trazo-form-field label="Legal name" controlId="field-fiscal-legalName"><input [(ngModel)]="profile.legalName" name="legalName" id="field-fiscal-legalName"></trazo-form-field>
+              <trazo-form-field label="Tax id (NIF)" controlId="field-fiscal-taxId"><input [(ngModel)]="profile.taxId" name="taxId" id="field-fiscal-taxId"></trazo-form-field>
+              <trazo-form-field label="Address" controlId="field-fiscal-address"><input [(ngModel)]="profile.address" name="address" id="field-fiscal-address"></trazo-form-field>
+              <trazo-form-field label="Accountant's email (optional)" controlId="field-fiscal-gestorEmail"><input [(ngModel)]="profile.gestorEmail" name="gestorEmail" id="field-fiscal-gestorEmail"></trazo-form-field>
+              <trazo-form-field label="Default VAT %" controlId="field-fiscal-defaultVatPct"><input type="number" step="0.01" [(ngModel)]="profile.defaultVatPct" name="defaultVatPct" id="field-fiscal-defaultVatPct"></trazo-form-field>
+              <trazo-form-field label="Income-tax instalment % (modelo 130)" controlId="field-fiscal-irpfAdvancePct"><input type="number" step="0.01" [(ngModel)]="profile.irpfAdvancePct" name="irpfAdvancePct" id="field-fiscal-irpfAdvancePct"></trazo-form-field>
               <label><span><input type="checkbox" [(ngModel)]="profile.filesModelo130" name="filesModelo130"> I file modelo 130</span></label>
             </div>
             <p class="muted">Used to estimate Google Play income from verified purchases (an estimate: what counts is Google's monthly earnings report).</p>
             <div class="grid">
-              <label>Monthly price (€, with VAT)<input type="number" step="0.01" [(ngModel)]="profile.playMonthlyPrice" name="playMonthlyPrice"></label>
-              <label>Annual price (€, with VAT)<input type="number" step="0.01" [(ngModel)]="profile.playAnnualPrice" name="playAnnualPrice"></label>
-              <label>VAT included in the consumer price %<input type="number" step="0.01" [(ngModel)]="profile.consumerVatPct" name="consumerVatPct"></label>
-              <label>Google service fee %<input type="number" step="0.01" [(ngModel)]="profile.googleFeePct" name="googleFeePct"></label>
+              <trazo-form-field label="Monthly price (€, with VAT)" controlId="field-fiscal-playMonthlyPrice"><input type="number" step="0.01" [(ngModel)]="profile.playMonthlyPrice" name="playMonthlyPrice" id="field-fiscal-playMonthlyPrice"></trazo-form-field>
+              <trazo-form-field label="Annual price (€, with VAT)" controlId="field-fiscal-playAnnualPrice"><input type="number" step="0.01" [(ngModel)]="profile.playAnnualPrice" name="playAnnualPrice" id="field-fiscal-playAnnualPrice"></trazo-form-field>
+              <trazo-form-field label="VAT included in the consumer price %" controlId="field-fiscal-consumerVatPct"><input type="number" step="0.01" [(ngModel)]="profile.consumerVatPct" name="consumerVatPct" id="field-fiscal-consumerVatPct"></trazo-form-field>
+              <trazo-form-field label="Google service fee %" controlId="field-fiscal-googleFeePct"><input type="number" step="0.01" [(ngModel)]="profile.googleFeePct" name="googleFeePct" id="field-fiscal-googleFeePct"></trazo-form-field>
             </div>
             <trazo-button variant="primary" type="button" (pressed)="saveProfile()">Save profile</trazo-button>
           </div>
         </details>
 
         <div class="toolbar">
-          <label>Year <select [ngModel]="yearNumber()" (ngModelChange)="changeYear($event)" name="year">
+          <trazo-form-field label="Year" controlId="field-fiscal-year"><select [ngModel]="yearNumber()" (ngModelChange)="changeYear($event)" name="year" id="field-fiscal-year">
             @for (v of years; track v) { <option [ngValue]="v">{{ v }}</option> }
-          </select></label>
+          </select></trazo-form-field>
           <span class="muted">Current month: {{ y.currentPeriod }}</span>
         </div>
         <div class="cards">
@@ -138,29 +138,29 @@
           <h2>{{ form.id ? 'Edit entry' : 'Add entry' }}</h2>
           <div class="box">
             <div class="grid">
-              <label>Kind<select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind"><option value="expense">Expense</option><option value="income">Income</option></select></label>
-              <label>Date<input type="date" [(ngModel)]="form.date" name="date"></label>
-              <label>Concept<input [(ngModel)]="form.concept" name="concept" maxlength="200"></label>
-              <label>Category<select [(ngModel)]="form.category" name="category">
-                @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }</select></label>
-              <label>Base amount (€, negative for a credit note)<input type="number" step="0.01" [(ngModel)]="form.base" name="base"></label>
-              <label>VAT treatment<select [(ngModel)]="form.vatTreatment" name="vatTreatment">
+              <trazo-form-field label="Kind" controlId="field-fiscal-kind"><select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind" id="field-fiscal-kind"><option value="expense">Expense</option><option value="income">Income</option></select></trazo-form-field>
+              <trazo-form-field label="Date" controlId="field-fiscal-date"><input type="date" [(ngModel)]="form.date" name="date" id="field-fiscal-date"></trazo-form-field>
+              <trazo-form-field label="Concept" controlId="field-fiscal-concept"><input [(ngModel)]="form.concept" name="concept" maxlength="200" id="field-fiscal-concept"></trazo-form-field>
+              <trazo-form-field label="Category" controlId="field-fiscal-category"><select [(ngModel)]="form.category" name="category" id="field-fiscal-category">
+                @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }</select></trazo-form-field>
+              <trazo-form-field label="Base amount (€, negative for a credit note)" controlId="field-fiscal-base"><input type="number" step="0.01" [(ngModel)]="form.base" name="base" id="field-fiscal-base"></trazo-form-field>
+              <trazo-form-field label="VAT treatment" controlId="field-fiscal-vatTreatment"><select [(ngModel)]="form.vatTreatment" name="vatTreatment" id="field-fiscal-vatTreatment">
                 <option value="domestic">Spanish VAT</option>
                 <option value="eu_reverse_charge">EU business (reverse charge)</option>
-                <option value="no_vat">No VAT / exempt</option></select></label>
+                <option value="no_vat">No VAT / exempt</option></select></trazo-form-field>
               @if (form.vatTreatment === 'domestic' || (form.kind === 'expense' && form.vatTreatment === 'eu_reverse_charge')) {
-                <label>VAT %<input type="number" step="0.01" [(ngModel)]="form.vatRatePct" name="vatRatePct"></label>
+                <trazo-form-field label="VAT %" controlId="field-fiscal-vatRatePct"><input type="number" step="0.01" [(ngModel)]="form.vatRatePct" name="vatRatePct" id="field-fiscal-vatRatePct"></trazo-form-field>
               }
               @if (form.kind === 'income') {
-                <label>IRPF withholding %<input type="number" step="0.01" [(ngModel)]="form.withholdingPct" name="withholdingPct"></label>
+                <trazo-form-field label="IRPF withholding %" controlId="field-fiscal-withholdingPct"><input type="number" step="0.01" [(ngModel)]="form.withholdingPct" name="withholdingPct" id="field-fiscal-withholdingPct"></trazo-form-field>
               } @else {
-                <label>Deductible %<input type="number" step="1" [(ngModel)]="form.deductiblePct" name="deductiblePct"></label>
+                <trazo-form-field label="Deductible %" controlId="field-fiscal-deductiblePct"><input type="number" step="1" [(ngModel)]="form.deductiblePct" name="deductiblePct" id="field-fiscal-deductiblePct"></trazo-form-field>
               }
-              <label>{{ form.kind === 'income' ? 'Customer' : 'Supplier' }}<input [(ngModel)]="form.counterparty" name="counterparty"></label>
-              <label>Tax id / EU VAT number<input [(ngModel)]="form.counterpartyTaxId" name="counterpartyTaxId"></label>
-              <label>Country (2 letters)<input [(ngModel)]="form.counterpartyCountry" name="counterpartyCountry" maxlength="2"></label>
-              <label>Invoice number<input [(ngModel)]="form.invoiceNumber" name="invoiceNumber"></label>
-              <label>Notes<input [(ngModel)]="form.notes" name="notes" maxlength="500"></label>
+              <trazo-form-field label="{{ form.kind === 'income' ? 'Customer' : 'Supplier' }}" controlId="field-fiscal-counterparty"><input [(ngModel)]="form.counterparty" name="counterparty" id="field-fiscal-counterparty"></trazo-form-field>
+              <trazo-form-field label="Tax id / EU VAT number" controlId="field-fiscal-counterpartyTaxId"><input [(ngModel)]="form.counterpartyTaxId" name="counterpartyTaxId" id="field-fiscal-counterpartyTaxId"></trazo-form-field>
+              <trazo-form-field label="Country (2 letters)" controlId="field-fiscal-counterpartyCountry"><input [(ngModel)]="form.counterpartyCountry" name="counterpartyCountry" maxlength="2" id="field-fiscal-counterpartyCountry"></trazo-form-field>
+              <trazo-form-field label="Invoice number" controlId="field-fiscal-invoiceNumber"><input [(ngModel)]="form.invoiceNumber" name="invoiceNumber" id="field-fiscal-invoiceNumber"></trazo-form-field>
+              <trazo-form-field label="Notes" controlId="field-fiscal-notes"><input [(ngModel)]="form.notes" name="notes" maxlength="500" id="field-fiscal-notes"></trazo-form-field>
             </div>
             <trazo-button variant="primary" type="button" (pressed)="saveEntry()">{{ form.id ? 'Save changes' : 'Add entry' }}</trazo-button>
             @if (form.id) { <trazo-button variant="secondary" type="button" (pressed)="resetForm()">Cancel</trazo-button> }
