@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { Meta, Title } from '@angular/platform-browser';
 import { LANDING, LandingContent, LandingLang, PRIVACY_URL, TERMS_URL } from './landing.content';
 
@@ -10,7 +12,7 @@ type FormState = 'idle' | 'sending' | 'ok' | 'invalid' | 'later' | 'fail';
 @Component({
   selector: 'trazo-landing',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, UiButtonComponent, UiFormFieldComponent],
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
