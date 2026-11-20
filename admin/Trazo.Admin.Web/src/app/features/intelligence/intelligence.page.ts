@@ -25,10 +25,10 @@ export class IntelligencePageComponent {
   protected readonly exportError = signal('');
 
   protected usePreset(days: number): void {
-    this.preset.set(days); this.from.set(this.daysAgo(days - 1)); this.to.set(this.today()); void this.load();
+    this.preset.set(days); this.from.set(this.daysAgo(days - 1)); this.to.set(this.today()); this.loadError.set(''); this.exportError.set(''); void this.load();
   }
-  protected setFrom(value: string): void { this.from.set(value); this.preset.set(null); }
-  protected setTo(value: string): void { this.to.set(value); this.preset.set(null); }
+  protected setFrom(value: string): void { this.from.set(value); this.preset.set(null); this.loadError.set(''); this.exportError.set(''); }
+  protected setTo(value: string): void { this.to.set(value); this.preset.set(null); this.loadError.set(''); this.exportError.set(''); }
   protected async load(): Promise<void> {
     if (!this.from() || !this.to() || this.from() > this.to()) { this.loadError.set('El periodo no es válido.'); return; }
     const requestVersion = ++this.loadVersion;
