@@ -69,9 +69,9 @@ export class CampaignsTabComponent {
       this.detail.set(d);
       this.dayLabels.set(d.days.map(x => x.day));
       this.daySeries.set([
-        { name: 'Clicks', color: '#5b8fcb', values: d.days.map(x => x.clicks) },
-        { name: 'Installs', color: '#d6a83e', values: d.days.map(x => x.installs) },
-        { name: 'Signups', color: '#4fae78', values: d.days.map(x => x.signups) }
+        { name: this.labels.clicks, color: '#5b8fcb', values: d.days.map(x => x.clicks) },
+        { name: this.labels.installs, color: '#d6a83e', values: d.days.map(x => x.installs) },
+        { name: this.labels.signups, color: '#4fae78', values: d.days.map(x => x.signups) }
       ]);
     } catch (e) { this.error.set(marketingError(e)); }
   }
@@ -94,7 +94,7 @@ export class CampaignsTabComponent {
     try {
       const id = this.editing();
       const result = id ? await this.api.updateCampaign(id, this.input()) : await this.api.createCampaign(this.input());
-      this.message.set(id ? 'Campaign saved.' : `Campaign created. Its link is ${result.link}`);
+      this.message.set(id ? this.labels.campaignSaved : `${this.labels.campaignCreated} ${result.link}`);
       this.cancel();
       await this.reload();
       await this.open(result);
