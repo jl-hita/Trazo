@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { EmailSettings, SetupApi, SettingsView, TestResult, errorMessage } from '../../core/setup.api';
 
 type Mode = 'setup' | 'settings';
@@ -11,7 +12,7 @@ type Mode = 'setup' | 'settings';
 @Component({
   selector: 'trazo-config-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiFormFieldComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './config-form.component.scss',
   templateUrl: './config-form.component.html'
