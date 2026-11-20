@@ -1,7 +1,6 @@
 import { Component, DestroyRef, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
-import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type { AdminPlanReview, AdminPlanReviewDetail, Page } from '../../core/admin.models';
 import { PlanReviewsApi } from './reviews.api';
 import { errorMessage } from '../../core/setup.api';
@@ -18,7 +17,7 @@ const FILTERS: { value: string; label: string }[] = [
 @Component({
   selector: 'trazo-reviews-page',
   standalone: true,
-  imports: [FormsModule, UiButtonComponent, UiTableComponent],
+  imports: [FormsModule, UiButtonComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './reviews.page.scss',
   templateUrl: './reviews.page.html'
