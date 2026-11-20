@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { INTELLIGENCE_COPY } from './intelligence.copy';
 
 export interface IntelligencePeriodPreset {
   days: number;
@@ -12,6 +13,7 @@ export interface IntelligencePeriodPreset {
   templateUrl: './intelligence-period-toolbar.component.html'
 })
 export class IntelligencePeriodToolbarComponent {
+  readonly copy = INTELLIGENCE_COPY.toolbar;
   readonly presets = input.required<IntelligencePeriodPreset[]>();
   readonly preset = input.required<number | null>();
   readonly from = input.required<string>();
