@@ -172,10 +172,14 @@ export class IntelligencePageComponent {
     this.exporting.set(true); this.error.set('');
     try {
       const blob = await firstValueFrom(this.http.get('/api/v1/admin/intelligence/export', {params:this.params(), responseType:'blob'}));
-      if (!blob.size || (blob.type && blob.type !== 'application/zip' && blob.type !== 'application/octet-stream')) {
+      const signature = new Uint8Array(await blob.slice(0, 4).arrayBuffer());
+      const hasZipSignature = signature.length === 4 && signature[0] === 0x50 && signature[1] === 0x4b
+        && ((signature[2] === 0x03 && signature[3] === 0x04) || (signature[2] === 0x05 && signature[3] === 0x06));
+      if (!blob.size || !hasZipSignature) {
         const message = await blob.text();
-        try { throw new Error(JSON.parse(message)?.message ?? 'La API no ha devuelto un ZIP válido.'); }
-        catch (e) { if (e instanceof SyntaxError) throw new Error('La API no ha devuelto un ZIP válido.'); throw e; }
+        let detail = 'La API no ha devuelto un ZIP válido.';
+        try { detail = JSON.parse(message)?.message ?? detail; } catch { /* The response was not a JSON error. */ }
+        throw new Error(detail);
       }
       const url = URL.createObjectURL(blob); const a = document.createElement('a');
       a.href = url; a.download = 'trazo-intelligence-' + this.from().replaceAll('-','') + '-' + this.to().replaceAll('-','') + '.zip';
