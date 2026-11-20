@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { UiBadgeComponent } from '../../shared/ui/ui-badge.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UI_COPY } from '../../core/ui-copy';
 import type {
   AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
