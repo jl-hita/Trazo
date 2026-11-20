@@ -40,7 +40,8 @@ export const UI_COPY = {
     signIn: 'Iniciar sesión',
     tooManyAttempts: 'Demasiados intentos. Espera un minuto antes de volver a intentarlo.',
     verifyEmailFirst: 'Verifica tu correo electrónico antes de iniciar sesión.',
-    invalidCredentials: 'Correo electrónico o contraseña incorrectos.'
+    invalidCredentials: 'Correo electrónico o contraseña incorrectos.',
+    roleNotAllowed: 'Esta consola solo está disponible para cuentas con permisos de administración.'
   },
   users: {
     eyebrow: 'ADMINISTRACIÓN',
