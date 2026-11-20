@@ -31,6 +31,14 @@ jobs:
         with:
           node-version: "22"
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Build
         run: npm run build
+      - name: Upload Angular coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-angular-coverage
+          path: admin/Trazo.Admin.Web/coverage
+          if-no-files-found: warn
+          retention-days: 14
