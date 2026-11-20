@@ -1,12 +1,13 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { IntelligencePeriodToolbarComponent } from './intelligence-period-toolbar.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { IntelligenceApi } from './intelligence.api';
 import { IntelligenceSummary } from './intelligence.models';
 
 @Component({
   selector: 'trazo-intelligence-page',
   standalone: true,
-  imports: [IntelligencePeriodToolbarComponent],
+  imports: [IntelligencePeriodToolbarComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './intelligence.page.scss',
   templateUrl: './intelligence.page.html'
