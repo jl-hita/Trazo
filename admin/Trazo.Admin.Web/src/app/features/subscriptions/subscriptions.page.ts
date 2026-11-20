@@ -5,7 +5,7 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { RouterLink } from '@angular/router';
 import type { AdminSubscriptionDetail, AdminSubscriptionSummary } from '../../core/admin.models';
 import { SubscriptionsApi } from './subscriptions.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 import { formatUiDateTime } from '../../core/ui-format';
 
