@@ -5,7 +5,7 @@ import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type { WaitlistEntry, WaitlistPage, WaitlistStatus } from '../../core/admin.models';
 import { WaitlistApi } from './waitlist.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 
 /**
