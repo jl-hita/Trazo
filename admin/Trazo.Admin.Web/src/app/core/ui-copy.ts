@@ -42,6 +42,8 @@ export const UI_COPY = {
   users: {
     eyebrow: 'ADMINISTRACIÓN',
     title: 'Usuarios',
+    userList: 'Lista de usuarios',
+    userDetails: 'Detalles del usuario',
     subtitle: 'Buscar cuentas, cambiar roles y gestionar accesos.',
     createUser: 'Crear usuario',
     searchPlaceholder: 'Buscar por nombre o correo',
@@ -89,6 +91,7 @@ export const UI_COPY = {
     activeSessions: 'Sesiones activas:',
     since: 'desde',
     premiumAccess: 'Acceso Premium',
+    pending: 'Pendiente',
     loadingPremium: 'Cargando historial Premium…',
     premiumActive: 'El acceso Premium está activo mediante una concesión.',
     reason: 'Motivo:',
