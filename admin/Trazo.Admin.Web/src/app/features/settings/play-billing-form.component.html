@@ -40,8 +40,8 @@
       </fieldset>
 
       <div class="actions">
-        <button class="primary" type="submit" [disabled]="busy()">Save Play Billing</button>
-        <button type="button" (click)="test()" [disabled]="busy() || !view()?.configured">Test connection</button>
+        <trazo-button variant="primary" type="submit" [disabled]="busy()">Save Play Billing</trazo-button>
+        <trazo-button variant="secondary" type="button" (pressed)="test()" [disabled]="busy() || !view()?.configured">Test connection</trazo-button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
       </div>
