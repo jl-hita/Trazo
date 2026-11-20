@@ -201,9 +201,11 @@ test('Intelligence page template exposes accessible loading, error, and export s
   const combinedTemplate = `${template}\\n${toolbar}`;
   assert.match(template, /role="alert"/);
   assert.match(template, /role="status"/);
-  assert.match(template, /{{ copy\\.loading }}/);
+    assert.match(template, /{{ copy\.loading }}/);
   assert.match(copy, /loading: 'Cargando datos de investigación/);
-  assert.match(combinedTemplate, /aria-label="Periodo"/);
+    assert.match(combinedTemplate, /copy\.period/);
+  assert.match(copy, /period: 'Periodo'/);
   assert.match(combinedTemplate, /\[disabled\]="exporting\(\) \|\| loading\(\)"/);
-  assert.match(combinedTemplate, /Exportar investigación \(ZIP\)/);
+    assert.match(combinedTemplate, /copy\.exportZip/);
+  assert.match(copy, /exportZip: '↓ Exportar investigación \(ZIP\)'/);
 });
