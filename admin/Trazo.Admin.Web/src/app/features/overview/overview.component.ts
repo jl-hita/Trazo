@@ -196,7 +196,7 @@ export class OverviewComponent {
     } catch (e) {
       if (request !== this.requestId) return;
       const status = (e as { status?: number })?.status;
-      this.error.set(status === 503 ? OVERVIEW_COPY.unavailable + '.' : errorMessage(e));
+      this.error.set(errorMessage(e, OVERVIEW_COPY.refreshError));
       if (announce) this.announcement.set(OVERVIEW_COPY.announcements.failed);
     } finally {
       if (request === this.requestId) this.loading.set(false);
