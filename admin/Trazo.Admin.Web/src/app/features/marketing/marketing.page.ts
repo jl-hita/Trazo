@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth.service';
@@ -27,6 +28,8 @@ type Tab = 'overview' | 'strategies' | 'economics' | 'campaigns' | 'funnel' | 'l
   templateUrl: './marketing.page.html'
 })
 export class MarketingPageComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   protected readonly auth = inject(AuthService);
   protected readonly presets = [{ days: 7, label: '7 days' }, { days: 30, label: '30 days' }, { days: 90, label: '90 days' }, { days: 365, label: '12 months' }];
   protected readonly tabs: { key: Tab; label: string }[] = [
