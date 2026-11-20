@@ -10,7 +10,7 @@ import type {
   AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
 } from '../../core/admin.models';
 import { ExercisesApi } from './exercises.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 
 interface Draft {
   id: string; nameEs: string; nameEn: string; descriptionEs: string; instructionsEs: string; tipsEs: string;
