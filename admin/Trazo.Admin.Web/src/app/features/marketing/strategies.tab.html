@@ -14,14 +14,14 @@
             @for (m of metrics; track m.key) { <option [value]="m.key">{{ m.label }}</option> }
           </select></label>
         <label><span><input type="checkbox" [ngModel]="onlyReliable()" (ngModelChange)="onlyReliable.set($event)" name="reliable"> Only strategies with {{ d.minReliable }}+ signups</span></label>
-        <button type="button" class="mk-btn" (click)="download()">Download CSV</button>
+        <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="download()">Download CSV</trazo-button>
       </div>
       @if (ranking().length) {
         <div class="mk-panel"><mk-bars [rows]="ranking()" /></div>
         @if (metric() === 'signupToPaid') { <p class="mk-muted">The thin white line is the 95% confidence range: the wider it is, the less the figure can be trusted.</p> }
       } @else { <p class="mk-empty">Nothing to rank yet for this metric in the period.</p> }
 
-      <ng-template #tbl let-rows><div class="mk-scroll"><table class="mk-table">
+      <ng-template #tbl let-rows><div class="mk-scroll"><trazo-table tableClass="mk-table">
     <thead><tr><th>Strategy</th><th>Clicks</th><th>Installs</th><th>Signups</th><th>Trial</th><th>Paid</th><th>Signup → paid</th><th>Trial → paid</th>
       <th>Renewed</th><th>Still training (30 d)</th><th>Spend</th><th>€ / signup</th><th>€ / payer</th><th>Est. revenue</th><th>Return</th></tr></thead>
     <tbody>
@@ -45,7 +45,7 @@
           <td [class.mk-up]="(r.returnOnSpend ?? 0) > 0" [class.mk-down]="r.returnOnSpend !== null && r.returnOnSpend < 0">{{ fmt.pct(r.returnOnSpend, 0) }}</td>
         </tr>
       }
-    </tbody></table></div></ng-template>
+    </tbody></trazo-table></div></ng-template>
 
       <h2>Channels</h2>
       <p class="mk-note">A channel type groups all its campaigns. Organic is everybody who arrived without a campaign link or an invitation code; referral is the invitation programme.</p>
