@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {
+import type {
   AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
 } from '../../core/admin.api';
 import { ExercisesApi } from './exercises.api';
