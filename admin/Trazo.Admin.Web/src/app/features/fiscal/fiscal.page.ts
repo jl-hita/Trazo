@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, computed, inject, signal } from '@angular
 import { FormsModule } from '@angular/forms';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { FiscalApi } from './fiscal.api';
 import type { FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.models';
 import { errorMessage } from '../../core/setup.api';
@@ -19,7 +20,7 @@ const EMPTY_ENTRY = () => ({
 @Component({
   selector: 'trazo-fiscal-page',
   standalone: true,
-  imports: [FormsModule, UiButtonComponent, UiTableComponent],
+  imports: [FormsModule, UiButtonComponent, UiTableComponent, UiFormFieldComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './fiscal.page.scss',
   templateUrl: './fiscal.page.html'
