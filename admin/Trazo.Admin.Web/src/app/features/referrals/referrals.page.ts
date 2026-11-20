@@ -4,7 +4,7 @@ import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { ReferralsApi } from './referrals.api';
 import type { ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from './referrals.models';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 import { formatUiDate, formatUiPercent } from '../../core/ui-format';
 
