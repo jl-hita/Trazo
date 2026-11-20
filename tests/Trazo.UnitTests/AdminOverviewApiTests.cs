@@ -643,7 +643,8 @@ public sealed class AdminOverviewApiTests : IDisposable
     [Fact]
     public async Task IntelligenceSnapshotCoverageUsesOnlyTheSelectedPeriodCohort()
     {
-        var user = await AddUserAsync($"intelligence-{Guid.NewGuid():N}@trazo.test");
+        var recentUser = await AddUserAsync($"intelligence-recent-{Guid.NewGuid():N}@trazo.test");
+        var oldUser = await AddUserAsync($"intelligence-old-{Guid.NewGuid():N}@trazo.test");
         var recentPlanId = Guid.NewGuid();
         var oldPlanId = Guid.NewGuid();
         var recentMesoId = Guid.NewGuid();
@@ -655,8 +656,8 @@ public sealed class AdminOverviewApiTests : IDisposable
         await using (var db = Db())
         {
             db.TrainingPlans.AddRange(
-                new TrainingPlan { Id = recentPlanId, UserId = user.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-3), UpdatedAt = Start },
-                new TrainingPlan { Id = oldPlanId, UserId = user.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-60), UpdatedAt = Start });
+                new TrainingPlan { Id = recentPlanId, UserId = recentUser.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-3), UpdatedAt = Start },
+                new TrainingPlan { Id = oldPlanId, UserId = oldUser.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-60), UpdatedAt = Start });
             db.TrainingMesocycles.AddRange(
                 new TrainingMesocycle { Id = recentMesoId, PlanId = recentPlanId, PhaseType = "Build", CreatedAt = Start },
                 new TrainingMesocycle { Id = oldMesoId, PlanId = oldPlanId, PhaseType = "Build", CreatedAt = Start.AddDays(-60) });
@@ -666,7 +667,7 @@ public sealed class AdminOverviewApiTests : IDisposable
                 new PlannedSession { Id = futureOldSessionId, PlanId = oldPlanId, MesocycleId = oldMesoId, SequenceIndex = 2, Title = "Future", PrescriptionJson = "{}", UpdatedAt = Start });
             db.WorkoutLogs.Add(new WorkoutLog
             {
-                Id = Guid.NewGuid(), UserId = user.Id, PlanId = oldPlanId, PlannedSessionId = trainedOldSessionId,
+                Id = Guid.NewGuid(), UserId = oldUser.Id, PlanId = oldPlanId, PlannedSessionId = trainedOldSessionId,
                 LoggedAt = Start.AddDays(-1), PerformedAt = Start.AddDays(-1), PerformedOn = DateOnly.FromDateTime(Start.AddDays(-1).UtcDateTime),
                 Outcome = WorkoutOutcome.Completed
             });
@@ -720,7 +721,7 @@ public sealed class AdminOverviewApiTests : IDisposable
             db.PlanAdaptations.Add(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = planId, WorkoutLogId = workoutId, Kind = "reduction_sets",
-                Explanation = "structured reason", AppliedAt = Start.AddDays(-1),
+                Explanation = "structured reason", AppliedAt = Start.AddDays(-1), SchemaVersion = 1,
                 ChangesJson = """{"sessions":[{"sessionId":"SESSION_GUID","mesocycleId":"MESOCYCLE_GUID","before":{},"after":{}}]}"""
                     .Replace("SESSION_GUID", sessionId.ToString()).Replace("MESOCYCLE_GUID", mesocycleId.ToString())
             });
