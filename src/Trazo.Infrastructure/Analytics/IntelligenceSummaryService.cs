@@ -22,7 +22,7 @@ public sealed record IntelligencePrescriptionSummary(int Sessions, int WithOrigi
 public sealed record IntelligenceWorkoutSummary(int Total, int Completed, int Partial, int NotCompleted);
 public sealed record IntelligenceAdaptationSummary(string Kind, string? Source, int Count);
 public sealed record IntelligenceObservationSummary(
-    string Muscle, string Quality, int Count, int PrescribedSets, int PerformedSets,
+    string Muscle, string Quality, int Count, decimal PrescribedSets, decimal PerformedSets,
     int PerformanceSamples, int FatigueSignals, double? AveragePerformanceChange);
 public sealed record IntelligenceDecisionSummary(string Action, string PolicyVersion, int Count);
 
