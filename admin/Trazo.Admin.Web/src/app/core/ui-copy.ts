@@ -563,6 +563,7 @@ export const UI_COPY = {
     date: 'Fecha',
     kind: 'Tipo',
     concept: 'Concepto',
+    category: 'Categoría',
     counterparty: 'Contraparte',
     base: 'Base',
     vat: 'IVA',
