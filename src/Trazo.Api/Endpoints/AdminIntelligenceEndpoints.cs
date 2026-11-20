@@ -96,12 +96,16 @@ public static class AdminIntelligenceEndpoints
                 x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, x.SignalsJson, x.Reason,
                 x.PolicyVersion, x.CreatedAt }).ToListAsync(ct);
 
-        var planIds = workouts.Select(x => x.PlanId).Concat(adaptations.Select(x => x.PlanId))
+        var createdPlanIds = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
+            .Select(x => x.Id).ToListAsync(ct);
+        var planIds = createdPlanIds.Concat(workouts.Select(x => x.PlanId)).Concat(adaptations.Select(x => x.PlanId))
             .Concat(observations.Select(x => x.PlanId)).Concat(decisions.Select(x => x.PlanId)).Distinct().ToArray();
         var plans = await db.TrainingPlans.AsNoTracking().Where(x => planIds.Contains(x.Id))
             .Select(x => new { x.Id, x.UserId, x.Status, x.Origin, x.Goal, x.Experience, x.Split, x.StartDate,
                 x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
                 x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.MacrocycleName, x.CreatedAt, x.UpdatedAt }).ToListAsync(ct);
+        var phases = await db.TrainingPlanPhases.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
+            .Select(x => new { x.Id, x.PlanId, x.SequenceNumber, x.Name, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate, x.Objective }).ToListAsync(ct);
         var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.Sequence, x.PhaseSequenceNumber, x.PhaseType, x.IsDeload,
                 x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion, x.EngineVersion,
@@ -127,6 +131,7 @@ public static class AdminIntelligenceEndpoints
             plans = plans.Select(x => new { id = Key(x.Id), user = Key(x.UserId), x.Status, x.Origin, x.Goal, x.Experience, x.Split,
                 x.StartDate, x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
                 x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.MacrocycleName, x.CreatedAt, x.UpdatedAt }).ToArray(),
+            phases = phases.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.SequenceNumber, x.Name, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate, x.Objective }).ToArray(),
             mesocycles = mesocycles.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.Sequence, x.PhaseSequenceNumber,
                 x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion,
                 x.EngineVersion, x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToArray(),
@@ -153,9 +158,10 @@ public static class AdminIntelligenceEndpoints
         using (var archive = new ZipArchive(memory, ZipArchiveMode.Create, true))
         {
             AddJson(archive, "manifest.json", new { package.schemaVersion, package.generatedAt, package.period, package.privacy,
-                tables = new[] { "plans", "mesocycles", "sessions", "adaptations", "workouts", "sets", "observations", "decisions" } });
+                tables = new[] { "plans", "phases", "mesocycles", "sessions", "adaptations", "workouts", "sets", "observations", "decisions" } });
             AddJson(archive, "research.json", package);
             AddCsv(archive, "plans.csv", package.plans);
+            AddCsv(archive, "phases.csv", package.phases);
             AddCsv(archive, "mesocycles.csv", package.mesocycles);
             AddCsv(archive, "sessions.csv", package.sessions);
             AddCsv(archive, "adaptations.csv", package.adaptations);
