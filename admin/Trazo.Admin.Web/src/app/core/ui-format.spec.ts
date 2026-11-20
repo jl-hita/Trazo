@@ -4,7 +4,8 @@ import {
   formatUiDate,
   formatUiDateTime,
   formatUiNumber,
-  formatUiPercent
+  formatUiPercent,
+  formatUiShortDate
 } from './ui-format';
 
 describe('shared es-ES formatters', () => {
@@ -15,6 +16,11 @@ describe('shared es-ES formatters', () => {
   it('returns a stable placeholder for missing or invalid dates', () => {
     expect(formatUiDate(null)).toBe('—');
     expect(formatUiDate('not-a-date')).toBe('—');
+  });
+
+  it('formats compact date labels using the shared Spanish locale', () => {
+    expect(formatUiShortDate('2026-11-05')).toBe('5 nov');
+    expect(formatUiShortDate(null)).toBe('—');
   });
 
   it('formats date and time using the shared Spanish locale', () => {
