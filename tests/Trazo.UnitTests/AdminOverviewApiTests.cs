@@ -704,7 +704,7 @@ public sealed class AdminOverviewApiTests : IDisposable
             db.TrainingMesocycles.Add(new TrainingMesocycle
             {
                 Id = mesocycleId, PlanId = planId, PhaseType = "Build", CreatedAt = Start,
-                GenerationSnapshotJson = $"""{"profile":{"limitations":["Shoulder"]},"inputs":{"loadReferences":{"items":[{"workoutLogId":"{{privateGuid}}"}]}}}"""
+                GenerationSnapshotJson = """{"profile":{"limitations":["Shoulder"]},"inputs":{"loadReferences":{"items":[{"workoutLogId":"PRIVATE_GUID"}]}}}""".Replace("PRIVATE_GUID", privateGuid.ToString())
             });
             db.PlannedSessions.Add(new PlannedSession
             {
@@ -721,7 +721,8 @@ public sealed class AdminOverviewApiTests : IDisposable
             {
                 Id = Guid.NewGuid(), PlanId = planId, WorkoutLogId = workoutId, Kind = "reduction_sets",
                 Explanation = "structured reason", AppliedAt = Start.AddDays(-1),
-                ChangesJson = $"""{"sessions":[{"sessionId":"{{sessionId}}","mesocycleId":"{{mesocycleId}}","before":{},"after":{}}]}"""
+                ChangesJson = """{"sessions":[{"sessionId":"SESSION_GUID","mesocycleId":"MESOCYCLE_GUID","before":{},"after":{}}]}"""
+                    .Replace("SESSION_GUID", sessionId.ToString()).Replace("MESOCYCLE_GUID", mesocycleId.ToString())
             });
             await db.SaveChangesAsync();
         }
