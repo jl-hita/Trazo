@@ -20,14 +20,14 @@
       <select aria-label="Source" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
         <option value="">API and app</option><option value="backend">API</option><option value="android">Android app</option>
       </select>
-      <button type="button" class="et-btn" (click)="load()" [disabled]="loading()">Refresh</button>
-      <button type="button" class="et-btn" (click)="triggerTest()" [disabled]="testing()" title="Makes the API throw an exception on purpose to check this system">Trigger test error</button>
+      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="load()" [disabled]="loading()">Refresh</trazo-button>
+      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="triggerTest()" [disabled]="testing()" title="Makes the API throw an exception on purpose to check this system">Trigger test error</trazo-button>
     </div>
 
     @if (info()) { <p class="et-info" role="status">{{ info() }}</p> }
     @if (error()) { <p class="et-error" role="alert">{{ error() }}</p> }
 
-    <table class="et-table">
+    <trazo-table tableClass="et-table">
       <thead><tr><th>Error</th><th>Source</th><th>Version</th><th>Times</th><th>Last seen</th><th>Status</th></tr></thead>
       <tbody>
         @for (t of tickets(); track t.id) {
@@ -49,22 +49,22 @@
                     <span>{{ d.occurrences }} {{ d.occurrences === 1 ? 'time' : 'times' }}</span>
                   </div>
                   @if (d.originalStackTrace) {
-                    <button type="button" class="et-btn" (click)="toggleOriginalTrace()">
+                    <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="toggleOriginalTrace()">
                       {{ showOriginalTrace() ? 'Show retraced trace' : 'Show original obfuscated trace' }}
-                    </button>
+                    </trazo-button>
                   }
                   <pre class="et-trace" tabindex="0">{{ showOriginalTrace() && d.originalStackTrace ? d.originalStackTrace : d.stackTrace }}</pre>
                   <div class="et-actions">
-                    @if (d.status !== 'resolved') { <button type="button" class="et-btn" (click)="setStatus(d, 'resolved')">Mark as resolved</button> }
-                    @if (d.status === 'resolved') { <button type="button" class="et-btn" (click)="setStatus(d, 'new')">Reopen</button> }
-                    @if (d.status === 'new') { <button type="button" class="et-btn" (click)="setStatus(d, 'seen')">Mark as seen</button> }
-                    <button type="button" class="et-btn" (click)="copy(d)">Copy stack trace</button>
+                    @if (d.status !== 'resolved') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'resolved')">Mark as resolved</trazo-button> }
+                    @if (d.status === 'resolved') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'new')">Reopen</trazo-button> }
+                    @if (d.status === 'new') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'seen')">Mark as seen</trazo-button> }
+                    <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="copy(d)">Copy stack trace</trazo-button>
                     @if (confirmId() === d.id) {
                       <span class="et-confirm">Delete permanently?</span>
-                      <button type="button" class="et-btn danger" (click)="remove(d)">Delete</button>
-                      <button type="button" class="et-btn" (click)="confirmId.set(null)">Cancel</button>
+                      <trazo-button variant="danger" buttonClass="et-btn" type="button" (pressed)="remove(d)">Delete</trazo-button>
+                      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="confirmId.set(null)">Cancel</trazo-button>
                     } @else {
-                      <button type="button" class="et-btn" (click)="confirmId.set(d.id)">Delete</button>
+                      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="confirmId.set(d.id)">Delete</trazo-button>
                     }
                   </div>
                 } @else { Loading… }
@@ -75,13 +75,13 @@
           <tr><td colspan="6" class="et-empty">{{ loading() ? 'Loading…' : 'No error tickets match.' }}</td></tr>
         }
       </tbody>
-    </table>
+    </trazo-table>
 
     <div class="et-pager">
       <span>{{ data()?.totalCount ?? 0 }} tickets</span>
       <span>
-        <button type="button" class="et-btn" (click)="go(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
+        <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="go(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
         Page {{ page() }} of {{ totalPages() }}
-        <button type="button" class="et-btn" (click)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+        <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
       </span>
     </div>

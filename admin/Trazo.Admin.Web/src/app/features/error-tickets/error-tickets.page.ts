@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus, ErrorTicketSummary } from '../../core/admin.models';
 import { ErrorTicketsApi } from './error-tickets.api';
 import { errorMessage } from '../../core/setup.api';
@@ -12,7 +14,7 @@ import { errorMessage } from '../../core/setup.api';
 @Component({
   selector: 'trazo-error-tickets-page',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, UiButtonComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './error-tickets.page.scss',
   templateUrl: './error-tickets.page.html'

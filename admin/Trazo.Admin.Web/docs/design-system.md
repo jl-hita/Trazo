@@ -27,6 +27,8 @@ Import only the primitives a standalone feature uses from `src/app/shared/ui`:
 
 ## Usage rules
 
+- Feature-specific styling may use the explicit modifier inputs `contentClass`, `buttonClass`, `badgeClass` and `tableClass`; keep semantic variants/tones in the shared component and use modifier classes only for page-specific layout or legacy styling during migration.
+- `UiCardComponent` renders a semantic `article`; use `ariaLabelledBy` when the card has a visible heading that labels it.
 - Prefer tokens over introducing new literal colors, spacing and radii.
 - Use `primary` for the main action, `secondary` for neutral actions, `danger` for destructive actions and `ghost` for low-emphasis actions.
 - Always associate a form label with the projected control using `controlId`.
