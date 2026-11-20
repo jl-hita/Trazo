@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import type { PlayBillingView } from '../../core/admin.models';
 import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
@@ -8,7 +9,7 @@ import { errorMessage } from '../../core/setup.api';
 @Component({
   selector: 'trazo-play-billing-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiFormFieldComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './play-billing-form.component.scss',
   templateUrl: './play-billing-form.component.html'
