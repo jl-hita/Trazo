@@ -9,7 +9,7 @@
     <div class="users-layout">
       <section aria-label="User list">
         <div class="users-toolbar">
-          <button type="button" (click)="startCreate()">Create user</button>
+          <trazo-button variant="secondary" type="button" (pressed)="startCreate()">Create user</trazo-button>
           <input type="search" placeholder="Search by name or email" aria-label="Search users"
                  [ngModel]="q()" (ngModelChange)="onSearch($event)">
           <select aria-label="Filter by role" [ngModel]="role()" (ngModelChange)="setFilter('role', $event)">
@@ -30,20 +30,20 @@
 
         @if (error()) { <p class="users-error" role="alert">{{ error() }}</p> }
 
-        <table class="users-table">
+        <trazo-table tableClass="users-table">
           <thead><tr><th>User</th><th>Role</th><th>Status</th><th>Last sign-in</th></tr></thead>
           <tbody>
             @for (u of users(); track u.id) {
               <tr class="row" [class.selected]="selected()?.id === u.id" (click)="select(u)" tabindex="0" (keydown.enter)="select(u)">
                 <td><div class="name">{{ u.displayName }}</div><div class="sub">{{ u.email }}</div></td>
-                <td><span class="badge" [class]="'badge role-' + u.role">{{ u.role }}</span></td>
+                <td><trazo-badge badgeClass="'badge role-' + u.role" tone="neutral" >{{ u.role }}</trazo-badge></td>
                 <td>
-                  @if (u.disabled) { <span class="badge bad">disabled</span> }
-                  @if (u.lockedOut) { <span class="badge warn">locked</span> }
-                  @if (!u.emailVerified) { <span class="badge warn">unverified</span> }
-                  @if (u.twoFactorEnabled) { <span class="badge good">2FA</span> }
-                  @if (u.hasGoogle) { <span class="badge">Google</span> }
-                  @if (!u.disabled && !u.lockedOut && u.emailVerified && !u.twoFactorEnabled && !u.hasGoogle) { <span class="badge">active</span> }
+                  @if (u.disabled) { <trazo-badge badgeClass="badge bad" tone="danger">disabled</trazo-badge> }
+                  @if (u.lockedOut) { <trazo-badge badgeClass="badge warn" tone="warning">locked</trazo-badge> }
+                  @if (!u.emailVerified) { <trazo-badge badgeClass="badge warn" tone="warning">unverified</trazo-badge> }
+                  @if (u.twoFactorEnabled) { <trazo-badge badgeClass="badge good" tone="success">2FA</trazo-badge> }
+                  @if (u.hasGoogle) { <trazo-badge badgeClass="badge" tone="neutral">Google</trazo-badge> }
+                  @if (!u.disabled && !u.lockedOut && u.emailVerified && !u.twoFactorEnabled && !u.hasGoogle) { <trazo-badge badgeClass="badge" tone="neutral">active</trazo-badge> }
                 </td>
                 <td>{{ u.lastLoginAt ? formatDate(u.lastLoginAt) : 'Never' }}</td>
               </tr>
@@ -51,13 +51,13 @@
               <tr><td colspan="4" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Loading…' : 'No users match these filters.' }}</td></tr>
             }
           </tbody>
-        </table>
+        </trazo-table>
 
         <div class="users-pager">
           <span>{{ totalCount() }} user{{ totalCount() === 1 ? '' : 's' }} · page {{ page() }} of {{ totalPages() || 1 }}</span>
           <span>
-            <button type="button" (click)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
-            <button type="button" (click)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
           </span>
         </div>
       </section>
@@ -80,8 +80,8 @@
             </select>
           </label>
           <div class="actions">
-            <button class="primary" type="button" (click)="createUser()" [disabled]="busy() || newName().trim().length < 2 || !newEmail().trim()">Send invitation</button>
-            <button type="button" (click)="cancelCreate()" [disabled]="busy()">Cancel</button>
+            <trazo-button variant="primary" type="button" (pressed)="createUser()" [disabled]="busy() || newName().trim().length < 2 || !newEmail().trim()">Send invitation</trazo-button>
+            <trazo-button variant="secondary" type="button" (pressed)="cancelCreate()" [disabled]="busy()">Cancel</trazo-button>
           </div>
           @if (panelError()) { <p class="err" role="alert">{{ panelError() }}</p> }
         } @else if (selected(); as u) {
@@ -101,7 +101,7 @@
             </select>
           </label>
           <div class="actions">
-            <button class="primary" type="button" (click)="save()" [disabled]="busy() || !dirty()">Save changes</button>
+            <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy() || !dirty()">Save changes</trazo-button>
           </div>
 
           <ul class="facts">
@@ -136,11 +136,11 @@
                     <input type="text" maxlength="300" placeholder="Reason for revocation" aria-label="Reason for revocation"
                       [ngModel]="premiumRevokeReason()" (ngModelChange)="premiumRevokeReason.set($event)">
                     <div class="actions">
-                      <button class="danger" type="button" (click)="revokePremium(g.id)" [disabled]="busy() || premiumRevokeReason().trim().length < 5">Confirm revocation</button>
-                      <button type="button" (click)="premiumRevokeId.set(null)">Cancel</button>
+                      <trazo-button variant="danger" type="button" (pressed)="revokePremium(g.id)" [disabled]="busy() || premiumRevokeReason().trim().length < 5">Confirm revocation</trazo-button>
+                      <trazo-button variant="secondary" type="button" (pressed)="premiumRevokeId.set(null)">Cancel</trazo-button>
                     </div>
                   } @else {
-                    <button class="danger" type="button" (click)="premiumRevokeId.set(g.id); premiumRevokeReason.set('')" [disabled]="busy()">Revoke this grant</button>
+                    <trazo-button variant="danger" type="button" (pressed)="premiumRevokeId.set(g.id); premiumRevokeReason.set('')" [disabled]="busy()">Revoke this grant</trazo-button>
                   }
                 }
               </div>
@@ -161,26 +161,26 @@
                 <input type="text" maxlength="300" placeholder="e.g. compensation, collaborator, test account"
                   [ngModel]="premiumReason()" (ngModelChange)="premiumReason.set($event)">
               </label>
-              <button class="primary" type="button" (click)="grantPremium()" [disabled]="busy() || premiumReason().trim().length < 5">
+              <trazo-button variant="primary" type="button" (pressed)="grantPremium()" [disabled]="busy() || premiumReason().trim().length < 5">
                 Grant Premium
-              </button>
+              </trazo-button>
             </div>
           </section>
 
           <div class="actions">
-            @if (!u.hasPassword && !u.disabled) { <button type="button" (click)="sendPasswordInvitation()" [disabled]="busy()">Send password setup link</button> }
-            @if (!u.emailVerified) { <button type="button" (click)="run('verify-email')" [disabled]="busy()">Mark email verified</button> }
-            @if (u.lockedOut) { <button type="button" (click)="run('unlock')" [disabled]="busy()">Unlock</button> }
-            <button type="button" (click)="run('revoke-sessions')" [disabled]="busy() || u.activeSessionCount === 0" [class.danger]="confirming() === 'revoke-sessions'">
+            @if (!u.hasPassword && !u.disabled) { <trazo-button variant="secondary" type="button" (pressed)="sendPasswordInvitation()" [disabled]="busy()">Send password setup link</trazo-button> }
+            @if (!u.emailVerified) { <trazo-button variant="secondary" type="button" (pressed)="run('verify-email')" [disabled]="busy()">Mark email verified</trazo-button> }
+            @if (u.lockedOut) { <trazo-button variant="secondary" type="button" (pressed)="run('unlock')" [disabled]="busy()">Unlock</trazo-button> }
+            <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="run('revoke-sessions')" [disabled]="busy() || u.activeSessionCount === 0">
               {{ confirming() === 'revoke-sessions' ? 'Confirm: sign out everywhere' : 'Revoke sessions' }}
-            </button>
+            </trazo-button>
             @if (!isSelf()) {
               @if (u.disabled) {
-                <button type="button" (click)="run('enable')" [disabled]="busy()">Enable account</button>
+                <trazo-button variant="secondary" type="button" (pressed)="run('enable')" [disabled]="busy()">Enable account</trazo-button>
               } @else {
-                <button type="button" (click)="run('disable')" [disabled]="busy()" [class.danger]="confirming() === 'disable'">
+                <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="run('disable')" [disabled]="busy()">
                   {{ confirming() === 'disable' ? 'Confirm: disable account' : 'Disable account' }}
-                </button>
+                </trazo-button>
               }
             }
           </div>
@@ -189,7 +189,7 @@
             <div class="danger-zone">
               <p class="hint">Delete account: permanently erases the account and all its data (plans, logs, subscriptions). It cannot be undone. Type the email to confirm.</p>
               <input type="email" aria-label="Type the account email to confirm deletion" [ngModel]="deleteConfirm()" (ngModelChange)="deleteConfirm.set($event)" placeholder="{{ u.email }}">
-              <button type="button" class="danger" (click)="deleteAccount()" [disabled]="busy() || deleteConfirm().trim().toLowerCase() !== u.email.toLowerCase()">Delete account permanently</button>
+              <trazo-button variant="danger" type="button" (pressed)="deleteAccount()" [disabled]="busy() || deleteConfirm().trim().toLowerCase() !== u.email.toLowerCase()">Delete account permanently</trazo-button>
             </div>
           }
 
