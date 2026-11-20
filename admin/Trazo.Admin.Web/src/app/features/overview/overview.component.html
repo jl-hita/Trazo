@@ -64,7 +64,7 @@
 
   <div class="ov-cards">
     <!-- Health -->
-    <article class="ov-card">
+    <trazo-card contentClass="ov-card">
       <header>
         <h3>Salud del sistema</h3>
         <span class="ov-status" [class]="'ov-status tone-' + health().tone"><span aria-hidden="true">{{ glyph(health().tone) }}</span> {{ health().label }}</span>
@@ -75,10 +75,10 @@
         <dt>Versión</dt><dd>{{ d.health.version }}@if (d.health.commit) { <span class="muted"> · {{ d.health.commit }}</span> }</dd>
         <dt>Entorno</dt><dd>{{ d.health.environment }}</dd>
       </dl>
-    </article>
+    </trazo-card>
 
     <!-- Logs -->
-    <article class="ov-card ov-card-link">
+    <trazo-card contentClass="ov-card ov-card-link">
       <header>
         <h3><a class="ov-card-anchor" [routerLink]="tree(d.logs.errorsLink)">Registros<span class="ov-sr-only">: {{ logsStatus().label }}. Ver errores de las últimas 24 horas</span></a></h3>
         <span class="ov-status" [class]="'ov-status tone-' + logsStatus().tone"><span aria-hidden="true">{{ glyph(logsStatus().tone) }}</span> {{ logsStatus().label }}</span>
@@ -98,10 +98,10 @@
         <p class="ov-empty">Sin errores en las últimas 24 horas.</p>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
 
     <!-- Configuration -->
-    <article class="ov-card ov-card-link">
+    <trazo-card contentClass="ov-card ov-card-link">
       <header>
         <h3><a class="ov-card-anchor" [routerLink]="'/settings'">Configuración<span class="ov-sr-only">: ir a los ajustes</span></a></h3>
         @if (d.configuration.missing.length === 0 && smtp().tone === 'ok') {
@@ -125,10 +125,10 @@
         </ul>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
 
     <!-- Users -->
-    <article class="ov-card ov-card-link">
+    <trazo-card contentClass="ov-card ov-card-link">
       <header>
         <h3><a class="ov-card-anchor" routerLink="/users">Usuarios<span class="ov-sr-only">: ver la lista de usuarios</span></a></h3>
       </header>
@@ -138,10 +138,10 @@
         <dt>Altas (7 días)</dt><dd>{{ format(d.summary.usersNew7d) }}</dd>
       </dl>
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
 
     <!-- Activity -->
-    <article class="ov-card">
+    <trazo-card contentClass="ov-card">
       <header><h3>Actividad (7 días)</h3></header>
       <dl>
         <dt>Planes creados</dt><dd>{{ format(d.summary.plansCreated7d) }}</dd>
@@ -150,10 +150,10 @@
       @if (d.summary.plansCreated7d === 0 && d.summary.workoutsLogged7d === 0) {
         <p class="ov-empty">Sin actividad en los últimos 7 días.</p>
       }
-    </article>
+    </trazo-card>
 
     <!-- Subscriptions -->
-    <article class="ov-card ov-card-link">
+    <trazo-card contentClass="ov-card ov-card-link">
       <header>
         <h3><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
         @if (!d.summary.subscriptionsEnforced) {
@@ -173,10 +173,10 @@
         <p class="ov-empty">Todavía no hay suscripciones.</p>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
 
     <!-- Catalog -->
-    <article class="ov-card ov-card-link">
+    <trazo-card contentClass="ov-card ov-card-link">
       <header>
         <h3><a class="ov-card-anchor" routerLink="/exercises">Catálogo de ejercicios<span class="ov-sr-only">: {{ catalog().label }}. Ver la biblioteca</span></a></h3>
         <span class="ov-status" [class]="'ov-status tone-' + catalog().tone"><span aria-hidden="true">{{ glyph(catalog().tone) }}</span> {{ catalog().label }}</span>
@@ -189,7 +189,7 @@
       </dl>
       <p class="ov-subtitle"><a class="ov-inner-link" routerLink="/planning">Ver preparación del motor</a></p>
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
   </div>
 
   <!-- Product insights: aggregates only -->
@@ -199,7 +199,7 @@
   </div>
 
   <div class="ov-cards ov-cards-wide">
-    <article class="ov-card ov-span-2" aria-labelledby="ov-activity-title">
+    <trazo-card class="ov-span-2" contentClass="ov-card" aria-labelledby="ov-activity-title">
       <header><h3 id="ov-activity-title">Actividad de los últimos 14 días</h3></header>
       @if (chart().empty) {
         <p class="ov-empty">Todavía no hay actividad en estos 14 días.</p>
@@ -227,9 +227,9 @@
         <dt>Usuarios activos (7 días)</dt><dd>{{ format(d.insights.activity.activeUsers7d) }}</dd>
         <dt>Usuarios activos (30 días)</dt><dd>{{ format(d.insights.activity.activeUsers30d) }}</dd>
       </dl>
-    </article>
+    </trazo-card>
 
-    <article class="ov-card" aria-labelledby="ov-funnel-title">
+    <trazo-card contentClass="ov-card" aria-labelledby="ov-funnel-title">
       <header><h3 id="ov-funnel-title">Embudo de activación</h3></header>
       @if (d.insights.funnel.registered === 0) {
         <p class="ov-empty">Todavía no hay usuarios registrados.</p>
@@ -244,9 +244,9 @@
           }
         </ol>
       }
-    </article>
+    </trazo-card>
 
-    <article class="ov-card" aria-labelledby="ov-conv-title">
+    <trazo-card contentClass="ov-card" aria-labelledby="ov-conv-title">
       <header><h3 id="ov-conv-title">Conversión a Premium por semana de alta</h3></header>
       @if (cohorts().length === 0) {
         <p class="ov-empty">Todavía no hay altas.</p>
@@ -267,9 +267,9 @@
         </trazo-table>
         <p class="ov-empty">Con suscripción: prueba o pago. Han pagado: se ha cobrado alguna vez. Sin compras de prueba. Las cohortes recientes aún no han tenido tiempo de convertir.</p>
       }
-    </article>
+    </trazo-card>
 
-    <article class="ov-card" aria-labelledby="ov-paywall-title">
+    <trazo-card contentClass="ov-card" aria-labelledby="ov-paywall-title">
       <header><h3 id="ov-paywall-title">Oferta Premium abierta ({{ paywall().days }} días)</h3></header>
       @if (paywall().views === 0) {
         <p class="ov-empty">Nadie ha abierto la oferta todavía.</p>
@@ -280,9 +280,9 @@
         </dl>
         <p class="ov-empty">Aperturas anónimas, sin usuario: dicen desde dónde se llega al paywall, no quién.</p>
       }
-    </article>
+    </trazo-card>
 
-    <article class="ov-card ov-card-link" aria-labelledby="ov-watch-title">
+    <trazo-card contentClass="ov-card ov-card-link" aria-labelledby="ov-watch-title">
       <header>
         <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones a vigilar<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
       </header>
@@ -294,9 +294,9 @@
       </dl>
       @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">Todavía no hay suscripciones.</p> }
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
 
-    <article class="ov-card ov-card-link" aria-labelledby="ov-engine-title">
+    <trazo-card contentClass="ov-card ov-card-link" aria-labelledby="ov-engine-title">
       <header>
         <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">Motor y entrenamientos (30 días)<span class="ov-sr-only">: ver el motor de planificación</span></a></h3>
       </header>
@@ -323,6 +323,6 @@
         <p class="ov-empty">El motor no ha ajustado ningún plan.</p>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
-    </article>
+    </trazo-card>
   </div>
 }
