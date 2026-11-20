@@ -1,6 +1,7 @@
 import { Component, DestroyRef, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, AdminPlanReview, AdminPlanReviewDetail, Page } from '../../core/admin.api';
+import type { AdminPlanReview, AdminPlanReviewDetail, Page } from '../../core/admin.models';
+import { PlanReviewsApi } from './reviews.api';
 import { errorMessage } from '../../core/setup.api';
 
 const FILTERS: { value: string; label: string }[] = [
@@ -21,7 +22,7 @@ const FILTERS: { value: string; label: string }[] = [
   templateUrl: './reviews.page.html'
 })
 export class ReviewsPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(PlanReviewsApi);
   protected readonly filters = FILTERS;
   protected readonly status = signal('pending');
   protected readonly data = signal<Page<AdminPlanReview> | null>(null);
@@ -46,11 +47,11 @@ export class ReviewsPageComponent {
   protected async refresh(quiet = false): Promise<void> {
     if (!quiet) this.loading.set(true);
     try {
-      const [list, counts] = await Promise.all([this.api.listPlanReviews(this.status(), 1), this.api.planReviewsCounts()]);
+      const [list, counts] = await Promise.all([this.api.list(this.status(), 1), this.api.counts()]);
       this.data.set(list);
       this.counts.set(counts);
       const open = this.selected()?.review.id;
-      if (open) this.selected.set(await this.api.planReview(open));
+      if (open) this.selected.set(await this.api.get(open));
       if (!quiet) this.error.set('');
     } catch (e) { if (!quiet) this.error.set(errorMessage(e)); }
     finally { this.loading.set(false); }
@@ -77,12 +78,12 @@ export class ReviewsPageComponent {
     } finally { this.busy.set(false); }
   }
 
-  protected claim(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.claimPlanReview(d.review.id), false); }
-  protected send(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.messagePlanReview(d.review.id, this.draft.trim()), true); }
-  protected close(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.closePlanReview(d.review.id, this.draft), true); }
+  protected claim(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.claim(d.review.id), false); }
+  protected send(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.message(d.review.id, this.draft.trim()), true); }
+  protected close(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.close(d.review.id, this.draft), true); }
 
   protected release(d: AdminPlanReviewDetail): Promise<void> {
     const reason = window.prompt('Why are you giving it back? (optional, the next reviewer will see it)', '');
-    return reason === null ? Promise.resolve() : this.act(d, () => this.api.releasePlanReview(d.review.id, reason), false);
+    return reason === null ? Promise.resolve() : this.act(d, () => this.api.release(d.review.id, reason), false);
   }
 }
