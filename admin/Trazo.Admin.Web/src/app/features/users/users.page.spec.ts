@@ -57,7 +57,7 @@ describe('UsersPageComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const createButton = [...fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>]
+    const createButton = Array.from(fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)
       .find(button => button.textContent?.includes('Crear usuario'));
     expect(createButton).toBeDefined();
     createButton!.click();
