@@ -1,34 +1,34 @@
     <div class="page-heading">
       <div>
-        <p class="eyebrow">ADMINISTRATION</p>
-        <h1>Error tickets</h1>
-        <p class="subtitle">Anonymous reports of unexpected errors in the API and the Android app, grouped by error, with the complete stack trace. Superadmin only.</p>
+        <p class="eyebrow">{{ labels.eyebrow }}</p>
+        <h1>{{ labels.title }}</h1>
+        <p class="subtitle">{{ labels.subtitle }}</p>
       </div>
     </div>
 
     <div class="et-stats">
-      <div class="et-stat"><b>{{ data()?.overall?.new ?? '—' }}</b><span>New</span></div>
-      <div class="et-stat"><b>{{ data()?.overall?.seen ?? '—' }}</b><span>Seen</span></div>
-      <div class="et-stat"><b>{{ data()?.overall?.resolved ?? '—' }}</b><span>Resolved</span></div>
+      <div class="et-stat"><b>{{ data()?.overall?.new ?? '—' }}</b><span>{{ labels.new }}</span></div>
+      <div class="et-stat"><b>{{ data()?.overall?.seen ?? '—' }}</b><span>{{ labels.seen }}</span></div>
+      <div class="et-stat"><b>{{ data()?.overall?.resolved ?? '—' }}</b><span>{{ labels.resolved }}</span></div>
     </div>
 
     <div class="et-toolbar">
-      <input type="search" placeholder="Search the type or the stack trace" aria-label="Search error tickets" [ngModel]="q()" (ngModelChange)="onSearch($event)">
-      <select aria-label="Status" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
-        <option value="">All statuses</option><option value="new">New</option><option value="seen">Seen</option><option value="resolved">Resolved</option>
+      <input type="search" [placeholder]="labels.searchPlaceholder" [attr.aria-label]="labels.searchAria" [ngModel]="q()" (ngModelChange)="onSearch($event)">
+      <select [attr.aria-label]="labels.statusFilter" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
+        <option value="">{{ labels.allStatuses }}</option><option value="new">{{ labels.new }}</option><option value="seen">{{ labels.seen }}</option><option value="resolved">{{ labels.resolved }}</option>
       </select>
-      <select aria-label="Source" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
-        <option value="">API and app</option><option value="backend">API</option><option value="android">Android app</option>
+      <select [attr.aria-label]="labels.sourceFilter" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
+        <option value="">{{ labels.allSources }}</option><option value="backend">{{ labels.api }}</option><option value="android">{{ labels.android }}</option>
       </select>
-      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="load()" [disabled]="loading()">Refresh</trazo-button>
-      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="triggerTest()" [disabled]="testing()" title="Makes the API throw an exception on purpose to check this system">Trigger test error</trazo-button>
+      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="load()" [disabled]="loading()">{{ labels.refresh }}</trazo-button>
+      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="triggerTest()" [disabled]="testing()" [attr.title]="labels.triggerTestTitle">{{ labels.triggerTest }}</trazo-button>
     </div>
 
     @if (info()) { <p class="et-info" role="status">{{ info() }}</p> }
     @if (error()) { <p class="et-error" role="alert">{{ error() }}</p> }
 
     <trazo-table tableClass="et-table">
-      <thead><tr><th>Error</th><th>Source</th><th>Version</th><th>Times</th><th>Last seen</th><th>Status</th></tr></thead>
+      <thead><tr><th>{{ labels.error }}</th><th>{{ labels.source }}</th><th>{{ labels.version }}</th><th>{{ labels.occurrences }}</th><th>{{ labels.lastSeen }}</th><th>{{ labels.status }}</th></tr></thead>
       <tbody>
         @for (t of tickets(); track t.id) {
           <tr class="row" [class.open]="openId() === t.id" (click)="toggle(t)" tabindex="0" (keydown.enter)="toggle(t)">
@@ -36,52 +36,52 @@
             <td>{{ t.source === 'backend' ? 'API' : 'Android' }}</td>
             <td>{{ t.appVersion ?? '—' }}</td>
             <td>{{ t.occurrences }}</td>
-            <td>{{ t.lastSeenAt | date: 'yyyy-MM-dd HH:mm' }}</td>
-            <td><span class="et-badge" [class]="'et-badge ' + t.status">{{ t.status }}</span></td>
+            <td>{{ t.lastSeenAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td><span class="et-badge" [class]="'et-badge ' + t.status">{{ labelStatus(t.status) }}</span></td>
           </tr>
           @if (openId() === t.id) {
             <tr class="et-detail">
               <td colspan="6">
                 @if (detail(); as d) {
                   <div class="et-meta">
-                    <span>First seen {{ d.firstSeenAt | date: 'yyyy-MM-dd HH:mm' }}</span>
-                    <span>Last seen {{ d.lastSeenAt | date: 'yyyy-MM-dd HH:mm' }}</span>
-                    <span>{{ d.occurrences }} {{ d.occurrences === 1 ? 'time' : 'times' }}</span>
+                    <span>{{ labels.firstSeen }} {{ d.firstSeenAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                    <span>{{ labels.lastSeen }} {{ d.lastSeenAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                    <span>{{ d.occurrences }} {{ d.occurrences === 1 ? labels.timeSingular : labels.timePlural }}</span>
                   </div>
                   @if (d.originalStackTrace) {
                     <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="toggleOriginalTrace()">
-                      {{ showOriginalTrace() ? 'Show retraced trace' : 'Show original obfuscated trace' }}
+                      {{ showOriginalTrace() ? labels.showRetraced : labels.showOriginal }}
                     </trazo-button>
                   }
                   <pre class="et-trace" tabindex="0">{{ showOriginalTrace() && d.originalStackTrace ? d.originalStackTrace : d.stackTrace }}</pre>
                   <div class="et-actions">
-                    @if (d.status !== 'resolved') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'resolved')">Mark as resolved</trazo-button> }
-                    @if (d.status === 'resolved') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'new')">Reopen</trazo-button> }
-                    @if (d.status === 'new') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'seen')">Mark as seen</trazo-button> }
-                    <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="copy(d)">Copy stack trace</trazo-button>
+                    @if (d.status !== 'resolved') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'resolved')">{{ labels.markResolved }}</trazo-button> }
+                    @if (d.status === 'resolved') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'new')">{{ labels.reopen }}</trazo-button> }
+                    @if (d.status === 'new') { <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="setStatus(d, 'seen')">{{ labels.markSeen }}</trazo-button> }
+                    <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="copy(d)">{{ labels.copyTrace }}</trazo-button>
                     @if (confirmId() === d.id) {
-                      <span class="et-confirm">Delete permanently?</span>
-                      <trazo-button variant="danger" buttonClass="et-btn" type="button" (pressed)="remove(d)">Delete</trazo-button>
-                      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="confirmId.set(null)">Cancel</trazo-button>
+                      <span class="et-confirm">{{ labels.deletePermanently }}</span>
+                      <trazo-button variant="danger" buttonClass="et-btn" type="button" (pressed)="remove(d)">{{ labels.delete }}</trazo-button>
+                      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="confirmId.set(null)">{{ labels.cancel }}</trazo-button>
                     } @else {
-                      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="confirmId.set(d.id)">Delete</trazo-button>
+                      <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="confirmId.set(d.id)">{{ labels.delete }}</trazo-button>
                     }
                   </div>
-                } @else { Loading… }
+                } @else { {{ labels.loadingDetail }} }
               </td>
             </tr>
           }
         } @empty {
-          <tr><td colspan="6" class="et-empty">{{ loading() ? 'Loading…' : 'No error tickets match.' }}</td></tr>
+          <tr><td colspan="6" class="et-empty">{{ loading() ? labels.loading : labels.noMatches }}</td></tr>
         }
       </tbody>
     </trazo-table>
 
     <div class="et-pager">
-      <span>{{ data()?.totalCount ?? 0 }} tickets</span>
+      <span>{{ data()?.totalCount ?? 0 }} {{ labels.tickets }}</span>
       <span>
-        <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="go(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
-        Page {{ page() }} of {{ totalPages() }}
-        <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
+        <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="go(page() - 1)" [disabled]="page() <= 1 || loading()">{{ labels.previous }}</trazo-button>
+        {{ labels.page }} {{ page() }} {{ labels.of }} {{ totalPages() }}
+        <trazo-button variant="secondary" buttonClass="et-btn" type="button" (pressed)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">{{ labels.next }}</trazo-button>
       </span>
     </div>

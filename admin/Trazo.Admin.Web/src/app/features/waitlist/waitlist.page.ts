@@ -6,6 +6,7 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type { WaitlistEntry, WaitlistPage, WaitlistStatus } from '../../core/admin.models';
 import { WaitlistApi } from './waitlist.api';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
 
 /**
  * People who asked, from the public landing page, to be told when the app opens and to try the closed test. Personal data:
@@ -29,6 +30,7 @@ export class WaitlistPageComponent {
   /** The API sends at most this many invitations per call. */
   private static readonly InviteChunk = 50;
 
+  protected readonly copy = UI_COPY.waitlist;
   protected readonly data = signal<WaitlistPage | null>(null);
   protected readonly q = signal('');
   protected readonly status = signal<WaitlistStatus>('');
@@ -95,12 +97,12 @@ export class WaitlistPageComponent {
         all.push(...result.items);
         if (page >= result.totalPages) break;
       }
-      if (!all.length) { this.notice.set('There are no confirmed addresses waiting for an invitation.'); return; }
+      if (!all.length) { this.notice.set(this.copy.noPendingInvitations); return; }
       await navigator.clipboard.writeText(all.map(x => x.email).join(', '));
       this.copied.set(all);
       this.confirmSend.set(false);
       this.error.set('');
-      this.notice.set(`${all.length} address(es) copied. Paste them in Play Console (closed test, testers), save, and then send the invitations.`);
+      this.notice.set(`${all.length} ${this.copy.copied}`);
     } catch (e) { this.error.set(errorMessage(e)); }
     finally { this.busy.set(false); }
   }
@@ -119,7 +121,7 @@ export class WaitlistPageComponent {
       }
       this.copied.set([]);
       this.error.set('');
-      this.notice.set(failed ? `${invited} invitation(s) sent, ${failed} failed (check the email settings). The failed ones are still listed as confirmed.` : `${invited} invitation(s) sent.`);
+      this.notice.set(failed ? `${invited} ${this.copy.sentFailed} ${failed} ${this.copy.failed}` : `${invited} ${this.copy.sent}`);
       await this.load();
     } catch (e) { this.error.set(errorMessage(e)); }
     finally { this.busy.set(false); }

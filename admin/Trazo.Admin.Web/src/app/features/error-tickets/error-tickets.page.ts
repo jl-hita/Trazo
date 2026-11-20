@@ -6,6 +6,7 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus, ErrorTicketSummary } from '../../core/admin.models';
 import { ErrorTicketsApi } from './error-tickets.api';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
 
 /**
  * Anonymous error tickets: the unexpected errors of the API and the crashes of the Android app, one ticket per distinct error,
@@ -24,6 +25,7 @@ export class ErrorTicketsPageComponent {
   private searchTimer?: ReturnType<typeof setTimeout>;
   private static readonly PageSize = 25;
 
+  protected readonly labels = UI_COPY.errorTickets;
   protected readonly data = signal<ErrorTicketPage | null>(null);
   protected readonly q = signal('');
   protected readonly status = signal('');
@@ -101,15 +103,17 @@ export class ErrorTicketsPageComponent {
     try {
       const status = await this.api.triggerTestException();
       if (status === 500) {
-        this.info.set('The API threw the test exception (HTTP 500). The ticket appears in a moment.');
+        this.info.set(this.labels.testExceptionTriggered);
         await new Promise(resolve => setTimeout(resolve, 1500)); // the ticket is stored by a background writer
         this.page.set(1);
         await this.load();
       } else {
-        this.error.set(status === 0 ? 'The API did not answer.' : `Unexpected answer (HTTP ${status}); the test exception was not thrown.`);
+        this.error.set(status === 0 ? this.labels.noApiResponse : `${this.labels.unexpectedResponse} ${status}${this.labels.testNotThrown}`);
       }
     } finally { this.testing.set(false); }
   }
+
+  protected labelStatus(status: ErrorTicketStatus): string { return this.labels.statuses[status]; }
 
   protected toggleOriginalTrace(): void { this.showOriginalTrace.update(value => !value); }
 
@@ -119,7 +123,7 @@ export class ErrorTicketsPageComponent {
       await navigator.clipboard.writeText(trace);
       this.error.set('');
     }
-    catch { this.error.set('The browser did not allow copying; select the text and copy it by hand.'); }
+    catch { this.error.set(this.labels.copyDenied); }
   }
 
   protected async remove(ticket: ErrorTicketDetail): Promise<void> {
