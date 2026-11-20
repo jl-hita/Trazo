@@ -42,6 +42,7 @@ async function loadComponent(api) {
       };
     }
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
+    if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
     return originalLoad.call(this, request, parent, isMain);
   };
 
@@ -87,7 +88,7 @@ test('Intelligence page starts loading the default period and exposes a successf
 
   assert.equal(page.loading(), false);
   assert.equal(page.data(), sample);
-  assert.equal(page.error(), '');
+  assert.equal(page.loadError(), '');
   assert.equal(page.adaptationTotal(), 2);
   assert.equal(page.pct(15, 20), '75 %');
   assert.equal(page.pct(0, 0), '—');
@@ -106,7 +107,7 @@ test('Intelligence page rejects an invalid date range without calling the API', 
   await page.load();
 
   assert.equal(calls, 0);
-  assert.equal(page.error(), 'El periodo no es válido.');
+  assert.equal(page.loadError(), 'El periodo no es válido.');
 });
 
 test('Intelligence page ignores an older response when a newer request completes first', async () => {
@@ -149,12 +150,12 @@ test('Intelligence page reports API failures and allows a later successful retry
   const page = new Component();
   await new Promise(resolve => setImmediate(resolve));
 
-  assert.equal(page.error(), 'Servicio temporalmente no disponible');
+  assert.equal(page.loadError(), 'Servicio temporalmente no disponible');
   assert.equal(page.loading(), false);
 
   shouldFail = false;
   await page.load();
-  assert.equal(page.error(), '');
+  assert.equal(page.loadError(), '');
   assert.equal(page.data(), sample);
   assert.equal(page.loading(), false);
 });
@@ -180,9 +181,12 @@ test('Intelligence page changes the date preset and marks manual date edits as a
 
 test('Intelligence page template exposes accessible loading, error, and export states', async () => {
   const template = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence.page.html'), 'utf8');
+  const toolbar = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence-period-toolbar.component.html'), 'utf8');
+  const combinedTemplate = `${template}\\n${toolbar}`;
   assert.match(template, /role="alert"/);
+  assert.match(template, /role="status"/);
   assert.match(template, /Cargando datos de investigación/);
-  assert.match(template, /aria-label="Periodo"/);
-  assert.match(template, /\[disabled\]="exporting\(\) \|\| loading\(\)"/);
-  assert.match(template, /Exportar investigación \(ZIP\)/);
+  assert.match(combinedTemplate, /aria-label="Periodo"/);
+  assert.match(combinedTemplate, /\[disabled\]="exporting\(\) \|\| loading\(\)"/);
+  assert.match(combinedTemplate, /Exportar investigación \(ZIP\)/);
 });
