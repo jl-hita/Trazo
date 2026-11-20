@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { Range, SummaryReport } from './marketing.models';
@@ -12,6 +13,8 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
   templateUrl: './overview.tab.html'
 })
 export class OverviewTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
@@ -22,24 +25,24 @@ export class OverviewTabComponent {
     const s = this.data();
     if (!s) return [];
     return [
-      { label: 'Started a free trial', value: s.signupToTrial ?? 0, text: fmt.pct(s.signupToTrial) },
-      { label: 'Paid (signup → payer)', value: s.signupToPaid ?? 0, text: fmt.pct(s.signupToPaid) },
-      { label: 'Trial → payer', value: s.trialToPaid ?? 0, text: fmt.pct(s.trialToPaid) }
+      { label: this.labels.startedFreeTrial, value: s.signupToTrial ?? 0, text: fmt.pct(s.signupToTrial) },
+      { label: this.labels.signupToPayer, value: s.signupToPaid ?? 0, text: fmt.pct(s.signupToPaid) },
+      { label: this.labels.trialToPayer, value: s.trialToPaid ?? 0, text: fmt.pct(s.trialToPaid) }
     ];
   });
   protected readonly mix = computed<BarRow[]>(() => {
     const s = this.data();
     if (!s) return [];
     const total = s.mix.reduce((n, m) => n + m.signups, 0) || 1;
-    return s.mix.map(m => ({ label: m.name, value: m.signups / total, text: `${m.signups} · ${m.paid} paid`, hint: `${m.signups} signups, ${m.paid} became paying customers` }));
+    return s.mix.map(m => ({ label: this.labels.channelNames[m.name as keyof typeof this.labels.channelNames] ?? m.name, value: m.signups / total, text: `${m.signups} · ${m.paid} ${this.labels.paid}`, hint: `${m.signups} ${this.labels.signups}, ${m.paid} ${this.labels.payingCustomersShort}` }));
   });
   protected readonly weekLabels = computed(() => this.data()?.weeks.map(w => w.week) ?? []);
   protected readonly weekSeries = computed<Series[]>(() => {
     const w = this.data()?.weeks ?? [];
     return [
-      { name: 'Signups', color: '#5b8fcb', values: w.map(x => x.signups) },
-      { name: 'Trials', color: '#d6a83e', values: w.map(x => x.trials) },
-      { name: 'New payers', color: '#4fae78', values: w.map(x => x.firstPurchases) }
+      { name: this.labels.signups, color: '#5b8fcb', values: w.map(x => x.signups) },
+      { name: this.labels.trials, color: '#d6a83e', values: w.map(x => x.trials) },
+      { name: this.labels.newPayers, color: '#4fae78', values: w.map(x => x.firstPurchases) }
     ];
   });
 

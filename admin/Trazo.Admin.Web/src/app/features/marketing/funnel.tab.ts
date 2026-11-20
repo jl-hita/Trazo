@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
@@ -5,11 +6,7 @@ import type { MarketingFunnel, Range, RetentionReport } from './marketing.models
 import { BarRow, BarsComponent } from './marketing.charts';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
-const STAGE_LABELS: Record<string, string> = {
-  signup: 'Created an account', email_verified: 'Verified the e-mail', onboarding_completed: 'Finished onboarding', first_plan: 'Got a training plan',
-  first_workout: 'Logged a first workout', trial_started: 'Started a free trial', first_purchase: 'Paid (first real payment)', renewed: 'Renewed at least once',
-  canceled: 'Cancelled', refunded: 'Was refunded'
-};
+const STAGE_LABELS: Record<string, string> = { ...UI_COPY.marketing.stageLabels };
 
 /** The path of one strategy (or of everybody) from signup to renewal, and how many keep training week after week. */
 @Component({
@@ -19,6 +16,8 @@ const STAGE_LABELS: Record<string, string> = {
   templateUrl: './funnel.tab.html'
 })
 export class FunnelTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;

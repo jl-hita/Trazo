@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,13 +12,13 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 type Metric = 'signupToPaid' | 'signupToTrial' | 'signupToActivated' | 'd30' | 'paidRenewed' | 'costPerPaid' | 'returnOnSpend';
 
 const METRICS: { key: Metric; label: string; lowerIsBetter?: boolean; money?: boolean }[] = [
-  { key: 'signupToPaid', label: 'Signup → paying customer' },
-  { key: 'signupToTrial', label: 'Signup → free trial' },
-  { key: 'signupToActivated', label: 'Signup → first workout' },
-  { key: 'd30', label: 'Still training 30 days later' },
-  { key: 'paidRenewed', label: 'Payers who renewed' },
-  { key: 'costPerPaid', label: 'Cost per paying customer', lowerIsBetter: true, money: true },
-  { key: 'returnOnSpend', label: 'Estimated return on spend' }
+  { key: 'signupToPaid', label: UI_COPY.marketing.metricLabels.signupToPaid },
+  { key: 'signupToTrial', label: UI_COPY.marketing.metricLabels.signupToTrial },
+  { key: 'signupToActivated', label: UI_COPY.marketing.metricLabels.signupToActivated },
+  { key: 'd30', label: UI_COPY.marketing.metricLabels.d30 },
+  { key: 'paidRenewed', label: UI_COPY.marketing.metricLabels.paidRenewed },
+  { key: 'costPerPaid', label: UI_COPY.marketing.metricLabels.costPerPaid, lowerIsBetter: true, money: true },
+  { key: 'returnOnSpend', label: UI_COPY.marketing.metricLabels.returnOnSpend }
 ];
 
 /**
@@ -31,6 +32,8 @@ const METRICS: { key: Metric; label: string; lowerIsBetter?: boolean; money?: bo
   templateUrl: './strategies.tab.html'
 })
 export class StrategiesTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   readonly openCampaign = output<string>();
@@ -56,12 +59,21 @@ export class StrategiesTabComponent {
       label: r.name, value: Math.max(0, v), dim: !r.reliable,
       text: m.money ? fmt.eur(v) : m.key === 'returnOnSpend' ? fmt.pct(v, 0) : fmt.pct(v),
       low: m.key === 'signupToPaid' ? r.signupToPaidLow : null, high: m.key === 'signupToPaid' ? r.signupToPaidHigh : null,
-      hint: `${r.signups} signups${r.reliable ? '' : ' (small sample)'}`
+      hint: `${r.signups} ${this.labels.signups}${r.reliable ? '' : ` (${this.labels.smallSample})`}`
     }));
   });
 
   constructor() {
     effect(() => { const r = this.range(); void this.load(r); });
+  }
+
+  protected channelLabel(channel: string): string {
+    return this.labels.channelNames[channel as keyof typeof this.labels.channelNames]
+      ?? this.labels.channelHelp[channel as keyof typeof this.labels.channelHelp] ?? channel;
+  }
+
+  protected campaignStatusLabel(status: string): string {
+    return this.labels.campaignStatuses[status as keyof typeof this.labels.campaignStatuses] ?? status;
   }
 
   private value(r: SegmentRow, key: Metric): number | null {

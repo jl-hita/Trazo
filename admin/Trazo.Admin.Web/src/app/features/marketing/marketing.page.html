@@ -1,20 +1,20 @@
     <div class="page-heading">
       <div>
-        <p class="eyebrow">MARKETING</p>
-        <h1>Marketing panel</h1>
-        <p class="subtitle">Which strategies bring people who sign up, train, pay and stay. Aggregated data only: no person can be identified from anything shown here.</p>
+        <p class="eyebrow">{{ labels.eyebrow }}</p>
+        <h1>{{ labels.title }}</h1>
+        <p class="subtitle">{{ labels.subtitle }}</p>
       </div>
     </div>
     <div class="mk">
       <div class="mk-toolbar">
-        <div class="mk-presets" role="group" aria-label="Period presets">
+        <div class="mk-presets" role="group" [attr.aria-label]="labels.periodPresets">
           @for (p of presets; track p.days) {
             <trazo-button [variant]="preset() === p.days ? 'primary' : 'secondary'" buttonClass="mk-btn" type="button" (pressed)="usePreset(p.days)">{{ p.label }}</trazo-button>
           }
         </div>
-        <trazo-form-field label="From" controlId="field-marketing-from"><input type="date" [ngModel]="from()" (ngModelChange)="custom($event, to())" name="from" id="field-marketing-from"></trazo-form-field>
-        <trazo-form-field label="To (included)" controlId="field-marketing-to"><input type="date" [ngModel]="to()" (ngModelChange)="custom(from(), $event)" name="to" id="field-marketing-to"></trazo-form-field>
-        @if (invalid()) { <span class="mk-err" role="alert">The start must be before the end.</span> }
+        <trazo-form-field [label]="labels.from" controlId="field-marketing-from"><input type="date" [ngModel]="from()" (ngModelChange)="custom($event, to())" name="from" id="field-marketing-from"></trazo-form-field>
+        <trazo-form-field [label]="labels.toIncluded" controlId="field-marketing-to"><input type="date" [ngModel]="to()" (ngModelChange)="custom(from(), $event)" name="to" id="field-marketing-to"></trazo-form-field>
+        @if (invalid()) { <span class="mk-err" role="alert">{{ labels.invalidRange }}</span> }
       </div>
       <div class="mk-tabs" role="tablist">
         @for (t of tabs; track t.key) {

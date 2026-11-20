@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { EconomicsReport, Range } from './marketing.models';
@@ -15,6 +16,8 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
   templateUrl: './economics.tab.html'
 })
 export class EconomicsTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
@@ -22,7 +25,7 @@ export class EconomicsTabComponent {
   protected readonly error = signal('');
   protected readonly survival = computed<BarRow[]>(() =>
     (this.data()?.survival ?? []).filter(p => p.retained !== null)
-      .map(p => ({ label: p.months === 0 ? 'First month' : `After ${p.months} month${p.months === 1 ? '' : 's'}`, value: p.retained ?? 0, text: `${fmt.pct(p.retained, 0)} of ${p.eligible}` })));
+      .map(p => ({ label: p.months === 0 ? this.labels.firstMonth : `${this.labels.after} ${p.months} ${p.months === 1 ? this.labels.monthSingular : this.labels.monthPlural}`, value: p.retained ?? 0, text: `${fmt.pct(p.retained, 0)} of ${p.eligible}` })));
 
   constructor() {
     effect(() => { const r = this.range(); void this.load(r); });

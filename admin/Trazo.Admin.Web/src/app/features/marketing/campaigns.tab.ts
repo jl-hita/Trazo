@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, isoDay, marketingError } from './marketing.api';
@@ -9,10 +10,7 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 
 interface Draft { slug: string; name: string; channel: string; status: string; startsOn: string; endsOn: string; notes: string; }
 
-const CHANNEL_HELP: Record<string, string> = {
-  ads: 'Paid ads', social: 'Social media posts', influencer: 'Influencers and creators', email: 'E-mail', partner: 'Partners and communities',
-  content: 'Blog, SEO, video', press: 'Press and reviews', event: 'Events and talks', other: 'Other'
-};
+const CHANNEL_HELP: Record<string, string> = { ...UI_COPY.marketing.channelHelp };
 
 /**
  * Campaign links. Each campaign has a permanent tracking link; whoever opens it is sent to Google Play and, if they install and sign up,
@@ -25,6 +23,8 @@ const CHANNEL_HELP: Record<string, string> = {
   templateUrl: './campaigns.tab.html'
 })
 export class CampaignsTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
@@ -48,6 +48,9 @@ export class CampaignsTabComponent {
   }
 
   protected help(channel: string): string { return CHANNEL_HELP[channel] ?? channel; }
+  protected campaignStatusLabel(status: string): string {
+    return this.labels.campaignStatuses[status as keyof typeof this.labels.campaignStatuses] ?? status;
+  }
 
   private emptyDraft(): Draft { return { slug: '', name: '', channel: 'ads', status: 'active', startsOn: '', endsOn: '', notes: '' }; }
 
@@ -66,9 +69,9 @@ export class CampaignsTabComponent {
       this.detail.set(d);
       this.dayLabels.set(d.days.map(x => x.day));
       this.daySeries.set([
-        { name: 'Clicks', color: '#5b8fcb', values: d.days.map(x => x.clicks) },
-        { name: 'Installs', color: '#d6a83e', values: d.days.map(x => x.installs) },
-        { name: 'Signups', color: '#4fae78', values: d.days.map(x => x.signups) }
+        { name: this.labels.clicks, color: '#5b8fcb', values: d.days.map(x => x.clicks) },
+        { name: this.labels.installs, color: '#d6a83e', values: d.days.map(x => x.installs) },
+        { name: this.labels.signups, color: '#4fae78', values: d.days.map(x => x.signups) }
       ]);
     } catch (e) { this.error.set(marketingError(e)); }
   }
@@ -91,7 +94,7 @@ export class CampaignsTabComponent {
     try {
       const id = this.editing();
       const result = id ? await this.api.updateCampaign(id, this.input()) : await this.api.createCampaign(this.input());
-      this.message.set(id ? 'Campaign saved.' : `Campaign created. Its link is ${result.link}`);
+      this.message.set(id ? this.labels.campaignSaved : `${this.labels.campaignCreated} ${result.link}`);
       this.cancel();
       await this.reload();
       await this.open(result);
@@ -130,6 +133,6 @@ export class CampaignsTabComponent {
   }
 
   protected async copy(text: string): Promise<void> {
-    try { await navigator.clipboard.writeText(text); this.message.set('Link copied.'); } catch { this.message.set(`Copy it by hand: ${text}`); }
+    try { await navigator.clipboard.writeText(text); this.message.set(this.labels.linkCopied); } catch { this.message.set(`${this.labels.copyManually} ${text}`); }
   }
 }
