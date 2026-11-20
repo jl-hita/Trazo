@@ -738,8 +738,6 @@ export const UI_COPY = {
     campaigns: 'Campañas',
     editCampaign: 'Editar campaña',
     newCampaign: 'Nueva campaña',
-    saveCampaign: 'Guardar cambios',
-    createCampaign: 'Crear campaña',
     pause: 'Pausar',
     resume: 'Reanudar',
     putLinkInstructions: 'Coloca este enlace donde se publique la campaña. Quien lo abra llegará a Google Play; si instala TRAZO y crea una cuenta, se atribuirá a esta campaña.',
