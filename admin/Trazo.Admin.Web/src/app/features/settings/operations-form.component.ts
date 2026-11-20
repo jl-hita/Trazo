@@ -23,6 +23,9 @@ const LOG_LEVELS = ['Debug', 'Information', 'Warning', 'Error', 'Critical'];
 })
 export class OperationsFormComponent {
   protected readonly labels = UI_COPY.settings.operations;
+  protected logLevelLabel(level: string): string {
+    return this.labels.logLevels[level as keyof typeof this.labels.logLevels] ?? level;
+  }
 
   private readonly api = inject(SettingsApi);
 
