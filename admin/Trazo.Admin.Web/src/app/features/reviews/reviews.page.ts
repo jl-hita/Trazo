@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import type { AdminPlanReview, AdminPlanReviewDetail, Page } from '../../core/admin.models';
 import { PlanReviewsApi } from './reviews.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 import { formatUiDateTime } from '../../core/ui-format';
 
