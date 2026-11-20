@@ -1,6 +1,6 @@
     <div class="page-heading">
-      <div><p class="eyebrow">FINANCE</p><h1>Tax management</h1>
-        <p class="subtitle">Books of income and expenses, VAT and income-tax figures per quarter, and a one-click month close that prepares everything the accountant needs.</p></div>
+      <div><p class="eyebrow">{{ copy.eyebrow }}</p><h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p></div>
     </div>
     <div class="fs">
       @if (message()) { <p class="ok" role="status">{{ message() }}</p> }
@@ -8,43 +8,43 @@
 
       @if (year(); as y) {
         @if (!y.profileComplete) {
-          <div class="box alert">Fill in your <b>legal name and tax id (NIF)</b> in the fiscal profile below. Months cannot be closed without them.</div>
+          <div class="box alert">{{ copy.incompleteProfile }}</div>
         }
 
         <details [open]="!y.profileComplete">
-          <summary>Fiscal profile and rules</summary>
+          <summary>{{ copy.profileAndRules }}</summary>
           <div class="box">
             <div class="grid">
-              <trazo-form-field label="Legal name" controlId="field-fiscal-legalName"><input [(ngModel)]="profile.legalName" name="legalName" id="field-fiscal-legalName"></trazo-form-field>
-              <trazo-form-field label="Tax id (NIF)" controlId="field-fiscal-taxId"><input [(ngModel)]="profile.taxId" name="taxId" id="field-fiscal-taxId"></trazo-form-field>
-              <trazo-form-field label="Address" controlId="field-fiscal-address"><input [(ngModel)]="profile.address" name="address" id="field-fiscal-address"></trazo-form-field>
-              <trazo-form-field label="Accountant's email (optional)" controlId="field-fiscal-gestorEmail"><input [(ngModel)]="profile.gestorEmail" name="gestorEmail" id="field-fiscal-gestorEmail"></trazo-form-field>
-              <trazo-form-field label="Default VAT %" controlId="field-fiscal-defaultVatPct"><input type="number" step="0.01" [(ngModel)]="profile.defaultVatPct" name="defaultVatPct" id="field-fiscal-defaultVatPct"></trazo-form-field>
-              <trazo-form-field label="Income-tax instalment % (modelo 130)" controlId="field-fiscal-irpfAdvancePct"><input type="number" step="0.01" [(ngModel)]="profile.irpfAdvancePct" name="irpfAdvancePct" id="field-fiscal-irpfAdvancePct"></trazo-form-field>
-              <label><span><input type="checkbox" [(ngModel)]="profile.filesModelo130" name="filesModelo130"> I file modelo 130</span></label>
+              <trazo-form-field [label]="copy.legalName" controlId="field-fiscal-legalName"><input [(ngModel)]="profile.legalName" name="legalName" id="field-fiscal-legalName"></trazo-form-field>
+              <trazo-form-field [label]="copy.taxId" controlId="field-fiscal-taxId"><input [(ngModel)]="profile.taxId" name="taxId" id="field-fiscal-taxId"></trazo-form-field>
+              <trazo-form-field [label]="copy.address" controlId="field-fiscal-address"><input [(ngModel)]="profile.address" name="address" id="field-fiscal-address"></trazo-form-field>
+              <trazo-form-field [label]="copy.accountantEmail" controlId="field-fiscal-gestorEmail"><input [(ngModel)]="profile.gestorEmail" name="gestorEmail" id="field-fiscal-gestorEmail"></trazo-form-field>
+              <trazo-form-field [label]="copy.defaultVat" controlId="field-fiscal-defaultVatPct"><input type="number" step="0.01" [(ngModel)]="profile.defaultVatPct" name="defaultVatPct" id="field-fiscal-defaultVatPct"></trazo-form-field>
+              <trazo-form-field [label]="copy.irpfAdvance" controlId="field-fiscal-irpfAdvancePct"><input type="number" step="0.01" [(ngModel)]="profile.irpfAdvancePct" name="irpfAdvancePct" id="field-fiscal-irpfAdvancePct"></trazo-form-field>
+              <label><span><input type="checkbox" [(ngModel)]="profile.filesModelo130" name="filesModelo130"> {{ copy.filesModelo130 }}</span></label>
             </div>
-            <p class="muted">Used to estimate Google Play income from verified purchases (an estimate: what counts is Google's monthly earnings report).</p>
+            <p class="muted">{{ copy.estimateNote }}</p>
             <div class="grid">
-              <trazo-form-field label="Monthly price (€, with VAT)" controlId="field-fiscal-playMonthlyPrice"><input type="number" step="0.01" [(ngModel)]="profile.playMonthlyPrice" name="playMonthlyPrice" id="field-fiscal-playMonthlyPrice"></trazo-form-field>
-              <trazo-form-field label="Annual price (€, with VAT)" controlId="field-fiscal-playAnnualPrice"><input type="number" step="0.01" [(ngModel)]="profile.playAnnualPrice" name="playAnnualPrice" id="field-fiscal-playAnnualPrice"></trazo-form-field>
-              <trazo-form-field label="VAT included in the consumer price %" controlId="field-fiscal-consumerVatPct"><input type="number" step="0.01" [(ngModel)]="profile.consumerVatPct" name="consumerVatPct" id="field-fiscal-consumerVatPct"></trazo-form-field>
-              <trazo-form-field label="Google service fee %" controlId="field-fiscal-googleFeePct"><input type="number" step="0.01" [(ngModel)]="profile.googleFeePct" name="googleFeePct" id="field-fiscal-googleFeePct"></trazo-form-field>
+              <trazo-form-field [label]="copy.monthlyPrice" controlId="field-fiscal-playMonthlyPrice"><input type="number" step="0.01" [(ngModel)]="profile.playMonthlyPrice" name="playMonthlyPrice" id="field-fiscal-playMonthlyPrice"></trazo-form-field>
+              <trazo-form-field [label]="copy.annualPrice" controlId="field-fiscal-playAnnualPrice"><input type="number" step="0.01" [(ngModel)]="profile.playAnnualPrice" name="playAnnualPrice" id="field-fiscal-playAnnualPrice"></trazo-form-field>
+              <trazo-form-field [label]="copy.consumerVat" controlId="field-fiscal-consumerVatPct"><input type="number" step="0.01" [(ngModel)]="profile.consumerVatPct" name="consumerVatPct" id="field-fiscal-consumerVatPct"></trazo-form-field>
+              <trazo-form-field [label]="copy.googleFee" controlId="field-fiscal-googleFeePct"><input type="number" step="0.01" [(ngModel)]="profile.googleFeePct" name="googleFeePct" id="field-fiscal-googleFeePct"></trazo-form-field>
             </div>
-            <trazo-button variant="primary" type="button" (pressed)="saveProfile()">Save profile</trazo-button>
+            <trazo-button variant="primary" type="button" (pressed)="saveProfile()">{{ copy.saveProfile }}</trazo-button>
           </div>
         </details>
 
         <div class="toolbar">
-          <trazo-form-field label="Year" controlId="field-fiscal-year"><select [ngModel]="yearNumber()" (ngModelChange)="changeYear($event)" name="year" id="field-fiscal-year">
+          <trazo-form-field [label]="copy.year" controlId="field-fiscal-year"><select [ngModel]="yearNumber()" (ngModelChange)="changeYear($event)" name="year" id="field-fiscal-year">
             @for (v of years; track v) { <option [ngValue]="v">{{ v }}</option> }
           </select></trazo-form-field>
-          <span class="muted">Current month: {{ y.currentPeriod }}</span>
+          <span class="muted">{{ copy.currentMonth }}: {{ y.currentPeriod }}</span>
         </div>
         <div class="cards">
-          <div class="card"><b>{{ eur(y.totals.incomeBase) }}</b><span>Income (base)</span></div>
-          <div class="card"><b>{{ eur(y.totals.deductibleCost) }}</b><span>Deductible costs</span></div>
-          <div class="card"><b>{{ eur(y.totals.netResult) }}</b><span>Net result</span></div>
-          <div class="card"><b>{{ eur(y.totals.vatBalance) }}</b><span>VAT balance (output − input)</span></div>
+          <div class="card"><b>{{ eur(y.totals.incomeBase) }}</b><span>{{ copy.incomeBase }}</span></div>
+          <div class="card"><b>{{ eur(y.totals.deductibleCost) }}</b><span>{{ copy.deductibleCosts }}</span></div>
+          <div class="card"><b>{{ eur(y.totals.netResult) }}</b><span>{{ copy.netResult }}</span></div>
+          <div class="card"><b>{{ eur(y.totals.vatBalance) }}</b><span>{{ copy.vatOutputInput }}</span></div>
         </div>
 
         <h2>Quarters — returns 303, 130 and 349</h2>
@@ -89,12 +89,12 @@
           <p class="muted">Closed on {{ m.closure.closedAt.slice(0, 10) }} by {{ m.closure.closedBy }} ({{ m.closure.entryCount }} entries). Reopen it to make changes.</p>
         }
         <div class="cards">
-          <div class="card"><b>{{ eur(m.totals.incomeBase) }}</b><span>Income (base)</span></div>
-          <div class="card"><b>{{ eur(m.totals.deductibleCost) }}</b><span>Deductible costs</span></div>
+          <div class="card"><b>{{ eur(m.totals.incomeBase) }}</b><span>{{ copy.incomeBase }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.deductibleCost) }}</b><span>{{ copy.deductibleCosts }}</span></div>
           <div class="card"><b>{{ eur(m.totals.vatOutput) }}</b><span>VAT charged / self-assessed</span></div>
           <div class="card"><b>{{ eur(m.totals.vatInput) }}</b><span>VAT deductible</span></div>
           <div class="card"><b>{{ eur(m.totals.vatBalance) }}</b><span>VAT balance</span></div>
-          <div class="card"><b>{{ eur(m.totals.netResult) }}</b><span>Net result</span></div>
+          <div class="card"><b>{{ eur(m.totals.netResult) }}</b><span>{{ copy.netResult }}</span></div>
         </div>
 
         @if (m.estimate.available) {
