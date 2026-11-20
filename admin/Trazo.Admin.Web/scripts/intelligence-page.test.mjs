@@ -79,8 +79,8 @@ test('Intelligence page starts loading the default period and exposes a successf
   const page = new Component();
 
   assert.equal(page.loading(), true);
-  assert.match(page.from(), /^\\d{4}-\\d{2}-\\d{2}$/);
-  assert.match(page.to(), /^\\d{4}-\\d{2}-\\d{2}$/);
+  assert.match(page.from(), /^\d{4}-\d{2}-\d{2}$/);
+  assert.match(page.to(), /^\d{4}-\d{2}-\d{2}$/);
 
   pending.resolve(sample);
   await new Promise(resolve => setImmediate(resolve));
