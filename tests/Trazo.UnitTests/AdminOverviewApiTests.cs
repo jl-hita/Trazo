@@ -1,4 +1,5 @@
 using System.Net;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -634,6 +635,131 @@ public sealed class AdminOverviewApiTests : IDisposable
 
         Assert.Equal(["warning", "info", "info", "info"], alerts.Select(a => a.Severity));
         Assert.Equal("play-rtdn-missing", alerts[0].Id);
+    }
+
+
+    // ------------------------------------------------------------------ Trazo Intelligence
+
+    [Fact]
+    public async Task IntelligenceSnapshotCoverageUsesOnlyTheSelectedPeriodCohort()
+    {
+        var user = await AddUserAsync($"intelligence-{Guid.NewGuid():N}@trazo.test");
+        var recentPlanId = Guid.NewGuid();
+        var oldPlanId = Guid.NewGuid();
+        var recentMesoId = Guid.NewGuid();
+        var oldMesoId = Guid.NewGuid();
+        var recentSessionId = Guid.NewGuid();
+        var trainedOldSessionId = Guid.NewGuid();
+        var futureOldSessionId = Guid.NewGuid();
+
+        await using (var db = Db())
+        {
+            db.TrainingPlans.AddRange(
+                new TrainingPlan { Id = recentPlanId, UserId = user.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-3), UpdatedAt = Start },
+                new TrainingPlan { Id = oldPlanId, UserId = user.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic", CreatedAt = Start.AddDays(-60), UpdatedAt = Start });
+            db.TrainingMesocycles.AddRange(
+                new TrainingMesocycle { Id = recentMesoId, PlanId = recentPlanId, PhaseType = "Build", CreatedAt = Start },
+                new TrainingMesocycle { Id = oldMesoId, PlanId = oldPlanId, PhaseType = "Build", CreatedAt = Start.AddDays(-60) });
+            db.PlannedSessions.AddRange(
+                new PlannedSession { Id = recentSessionId, PlanId = recentPlanId, MesocycleId = recentMesoId, SequenceIndex = 1, Title = "Recent", PrescriptionJson = "{}", OriginalPrescriptionJson = "{}", UpdatedAt = Start },
+                new PlannedSession { Id = trainedOldSessionId, PlanId = oldPlanId, MesocycleId = oldMesoId, SequenceIndex = 1, Title = "Trained", PrescriptionJson = "{}", UpdatedAt = Start },
+                new PlannedSession { Id = futureOldSessionId, PlanId = oldPlanId, MesocycleId = oldMesoId, SequenceIndex = 2, Title = "Future", PrescriptionJson = "{}", UpdatedAt = Start });
+            db.WorkoutLogs.Add(new WorkoutLog
+            {
+                Id = Guid.NewGuid(), UserId = user.Id, PlanId = oldPlanId, PlannedSessionId = trainedOldSessionId,
+                LoggedAt = Start.AddDays(-1), PerformedAt = Start.AddDays(-1), PerformedOn = DateOnly.FromDateTime(Start.AddDays(-1).UtcDateTime),
+                Outcome = WorkoutOutcome.Completed
+            });
+            await db.SaveChangesAsync();
+        }
+
+        var url = $"/api/v1/admin/intelligence/summary?from={Uri.EscapeDataString(Start.AddDays(-7).ToString("O"))}&to={Uri.EscapeDataString(Start.ToString("O"))}";
+        var body = await ReadAsync(await (await SuperadminAsync()).GetAsync(url));
+        var coverage = body.GetProperty("prescriptions");
+
+        // Recent-plan sessions plus the older session actually trained in-range; not every future
+        // session from the older plan merely because one session was trained.
+        Assert.Equal(2, coverage.GetProperty("sessions").GetInt32());
+        Assert.Equal(1, coverage.GetProperty("withOriginalSnapshot").GetInt32());
+        Assert.Equal(1, coverage.GetProperty("withoutOriginalSnapshot").GetInt32());
+    }
+
+    [Fact]
+    public async Task IntelligenceExportOpensAsZipAndSanitizesNestedTraceabilityJson()
+    {
+        var user = await AddUserAsync($"intelligence-export-{Guid.NewGuid():N}@trazo.test");
+        var planId = Guid.NewGuid();
+        var mesocycleId = Guid.NewGuid();
+        var sessionId = Guid.NewGuid();
+        var workoutId = Guid.NewGuid();
+        var privateGuid = Guid.NewGuid();
+
+        await using (var db = Db())
+        {
+            db.TrainingPlans.Add(new TrainingPlan
+            {
+                Id = planId, UserId = user.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic",
+                Limitations = ["Shoulder"], CreatedAt = Start.AddDays(-2), UpdatedAt = Start
+            });
+            db.TrainingMesocycles.Add(new TrainingMesocycle
+            {
+                Id = mesocycleId, PlanId = planId, PhaseType = "Build", CreatedAt = Start,
+                GenerationSnapshotJson = $"""{"profile":{"limitations":["Shoulder"]},"inputs":{"loadReferences":{"items":[{"workoutLogId":"{{privateGuid}}"}]}}}"""
+            });
+            db.PlannedSessions.Add(new PlannedSession
+            {
+                Id = sessionId, PlanId = planId, MesocycleId = mesocycleId, SequenceIndex = 1, Title = "A",
+                PrescriptionJson = "{}", OriginalPrescriptionJson = "{}", UpdatedAt = Start
+            });
+            db.WorkoutLogs.Add(new WorkoutLog
+            {
+                Id = workoutId, UserId = user.Id, PlanId = planId, PlannedSessionId = sessionId,
+                LoggedAt = Start.AddDays(-1), PerformedAt = Start.AddDays(-1), PerformedOn = DateOnly.FromDateTime(Start.AddDays(-1).UtcDateTime),
+                Outcome = WorkoutOutcome.Completed
+            });
+            db.PlanAdaptations.Add(new PlanAdaptation
+            {
+                Id = Guid.NewGuid(), PlanId = planId, WorkoutLogId = workoutId, Kind = "reduction_sets",
+                Explanation = "structured reason", AppliedAt = Start.AddDays(-1),
+                ChangesJson = $"""{"sessions":[{"sessionId":"{{sessionId}}","mesocycleId":"{{mesocycleId}}","before":{},"after":{}}]}"""
+            });
+            await db.SaveChangesAsync();
+        }
+
+        var url = $"/api/v1/admin/intelligence/export?from={Uri.EscapeDataString(Start.AddDays(-7).ToString("O"))}&to={Uri.EscapeDataString(Start.ToString("O"))}";
+        using var response = await (await SuperadminAsync()).GetAsync(url);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/zip", response.Content.Headers.ContentType?.MediaType);
+
+        await using var download = await response.Content.ReadAsStreamAsync();
+        using var memory = new MemoryStream();
+        await download.CopyToAsync(memory);
+        memory.Position = 0;
+        using var archive = new ZipArchive(memory, ZipArchiveMode.Read);
+        Assert.Contains(archive.Entries, entry => entry.FullName == "manifest.json");
+        Assert.Contains(archive.Entries, entry => entry.FullName == "research.json");
+        Assert.Equal(11, archive.Entries.Count);
+
+        string research;
+        using (var reader = new StreamReader(archive.GetEntry("research.json")!.Open()))
+            research = await reader.ReadToEndAsync();
+
+        Assert.DoesNotContain(privateGuid.ToString(), research, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(sessionId.ToString(), research, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(mesocycleId.ToString(), research, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(workoutId.ToString(), research, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("limitations", research, StringComparison.OrdinalIgnoreCase);
+
+        using var json = JsonDocument.Parse(research);
+        var planKey = json.RootElement.GetProperty("plans")[0].GetProperty("id").GetString();
+        Assert.Equal(planKey, json.RootElement.GetProperty("mesocycles")[0].GetProperty("plan").GetString());
+
+        // Read every entry to force decompression/CRC validation, not just the JSON payload.
+        foreach (var entry in archive.Entries)
+        {
+            using var reader = new StreamReader(entry.Open());
+            _ = await reader.ReadToEndAsync();
+        }
     }
 
     private sealed class FailingTransport : ISmtpTransport
