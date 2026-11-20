@@ -98,7 +98,7 @@ export const OVERVIEW_COPY = {
   days: 'días',
   noPaywallViews: 'Nadie ha abierto la oferta todavía.',
   total: 'Total',
-  anonymousPaywall: 'Aperturas anónimas, sin usuario: dicen desde dónde se llega al paywall, no quién.',
+  anonymousPaywall: 'Aperturas anónimas, sin usuario: indican desde dónde se llega a la oferta Premium, no quién la abre.',
   subscriptionsToWatch: 'Suscripciones a vigilar',
   trialsEnding: 'Pruebas que terminan en 7 días',
   cancellationsEnding: 'Cancelaciones que caducan en 7 días',
