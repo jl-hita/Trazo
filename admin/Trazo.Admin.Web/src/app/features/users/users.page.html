@@ -36,7 +36,7 @@
             @for (u of users(); track u.id) {
               <tr class="row" [class.selected]="selected()?.id === u.id" (click)="select(u)" tabindex="0" (keydown.enter)="select(u)">
                 <td><div class="name">{{ u.displayName }}</div><div class="sub">{{ u.email }}</div></td>
-                <td><trazo-badge badgeClass="'badge role-' + u.role" tone="neutral" >{{ u.role }}</trazo-badge></td>
+                <td><trazo-badge [badgeClass]="'badge role-' + u.role" tone="neutral" >{{ u.role }}</trazo-badge></td>
                 <td>
                   @if (u.disabled) { <trazo-badge badgeClass="badge bad" tone="danger">disabled</trazo-badge> }
                   @if (u.lockedOut) { <trazo-badge badgeClass="badge warn" tone="warning">locked</trazo-badge> }
@@ -171,14 +171,14 @@
             @if (!u.hasPassword && !u.disabled) { <trazo-button variant="secondary" type="button" (pressed)="sendPasswordInvitation()" [disabled]="busy()">Send password setup link</trazo-button> }
             @if (!u.emailVerified) { <trazo-button variant="secondary" type="button" (pressed)="run('verify-email')" [disabled]="busy()">Mark email verified</trazo-button> }
             @if (u.lockedOut) { <trazo-button variant="secondary" type="button" (pressed)="run('unlock')" [disabled]="busy()">Unlock</trazo-button> }
-            <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="run('revoke-sessions')" [disabled]="busy() || u.activeSessionCount === 0">
+            <trazo-button [variant]="confirming() === 'revoke-sessions' ? 'danger' : 'secondary'" type="button" (pressed)="run('revoke-sessions')" [disabled]="busy() || u.activeSessionCount === 0">
               {{ confirming() === 'revoke-sessions' ? 'Confirm: sign out everywhere' : 'Revoke sessions' }}
             </trazo-button>
             @if (!isSelf()) {
               @if (u.disabled) {
                 <trazo-button variant="secondary" type="button" (pressed)="run('enable')" [disabled]="busy()">Enable account</trazo-button>
               } @else {
-                <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="run('disable')" [disabled]="busy()">
+                <trazo-button [variant]="confirming() === 'disable' ? 'danger' : 'secondary'" type="button" (pressed)="run('disable')" [disabled]="busy()">
                   {{ confirming() === 'disable' ? 'Confirm: disable account' : 'Disable account' }}
                 </trazo-button>
               }
