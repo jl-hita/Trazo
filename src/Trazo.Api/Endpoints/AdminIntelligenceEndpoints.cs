@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Analytics;
 
 namespace Trazo.Api.Endpoints;
 
@@ -22,61 +23,17 @@ public static class AdminIntelligenceEndpoints
         return endpoints;
     }
 
-    private static (DateTimeOffset From, DateTimeOffset To) Period(DateTimeOffset? from, DateTimeOffset? to, TimeProvider clock)
-    {
-        var end = to ?? clock.GetUtcNow();
-        var start = from ?? end.AddDays(-90);
-        if (start >= end || end - start > TimeSpan.FromDays(731))
-            throw new ArgumentException("El periodo debe ser válido y no superar dos años.");
-        return (start, end);
-    }
-
     private static async Task<IResult> SummaryAsync(
-        TrazoDbContext db, TimeProvider clock, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct)
+        IIntelligenceSummaryService intelligence, DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct)
     {
-        (DateTimeOffset start, DateTimeOffset end) range;
-        try { range = Period(from, to, clock); }
-        catch (ArgumentException e) { return Results.BadRequest(new { message = e.Message }); }
-
-        var (start, end) = range;
-        var plans = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
-            .Select(x => new { x.Id, x.Origin, x.EngineVersion }).ToListAsync(ct);
-        // PlannedSession has no immutable creation timestamp. Use a defensible period cohort:
-        // sessions from plans created in-range, plus sessions actually trained in-range.
-        var createdPlanIds = plans.Select(x => x.Id).ToArray();
-        var trainedSessionIds = await db.WorkoutLogs.AsNoTracking()
-            .Where(x => x.PerformedAt >= start && x.PerformedAt < end)
-            .Select(x => x.PlannedSessionId).Distinct().ToListAsync(ct);
-        var sessions = await db.PlannedSessions.AsNoTracking()
-            .Where(x => createdPlanIds.Contains(x.PlanId) || trainedSessionIds.Contains(x.Id))
-            .Select(x => new { x.Id, x.OriginalPrescriptionJson, x.PrescriptionSource }).ToListAsync(ct);
-        var workouts = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end)
-            .Select(x => new { x.Id, x.PlanId, x.Outcome }).ToListAsync(ct);
-        var adaptations = await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= start && x.AppliedAt < end)
-            .GroupBy(x => new { x.Kind, x.Source }).Select(g => new { g.Key.Kind, g.Key.Source, Count = g.Count() }).ToListAsync(ct);
-        var observations = await db.MuscleWeekObservations.AsNoTracking().Where(x => x.UpdatedAt >= start && x.UpdatedAt < end)
-            .GroupBy(x => new { x.Muscle, x.Quality }).Select(g => new
-            {
-                g.Key.Muscle, g.Key.Quality, Count = g.Count(),
-                PrescribedSets = g.Sum(x => x.PrescribedSets), PerformedSets = g.Sum(x => x.PerformedSets),
-                PerformanceSamples = g.Sum(x => x.PerformanceSamples), FatigueSignals = g.Sum(x => x.FatigueSignals),
-                AveragePerformanceChange = g.Where(x => x.PerformanceChangePercent != null).Average(x => (double?)x.PerformanceChangePercent)
-            }).ToListAsync(ct);
-        var decisions = await db.LongitudinalDecisions.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
-            .GroupBy(x => new { x.Action, x.PolicyVersion }).Select(g => new { g.Key.Action, g.Key.PolicyVersion, Count = g.Count() }).ToListAsync(ct);
-
-        return Results.Ok(new
+        try
         {
-            from = start, to = end, generatedAt = clock.GetUtcNow(),
-            plans = new { total = plans.Count, generated = plans.Count(x => x.Origin == TrainingPlanOrigin.Generated),
-                manual = plans.Count(x => x.Origin == TrainingPlanOrigin.Manual),
-                engineVersions = plans.Select(x => x.EngineVersion).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().Order().ToArray() },
-            prescriptions = new { sessions = sessions.Count, withOriginalSnapshot = sessions.Count(x => x.OriginalPrescriptionJson != null),
-                withoutOriginalSnapshot = sessions.Count(x => x.OriginalPrescriptionJson == null) },
-            workouts = new { total = workouts.Count, completed = workouts.Count(x => x.Outcome == WorkoutOutcome.Completed),
-                partial = workouts.Count(x => x.Outcome == WorkoutOutcome.Partial), notCompleted = workouts.Count(x => x.Outcome == WorkoutOutcome.NotCompleted) },
-            adaptations, observations, decisions
-        });
+            return Results.Ok(await intelligence.GetSummaryAsync(from, to, ct));
+        }
+        catch (ArgumentException exception)
+        {
+            return Results.BadRequest(new { message = exception.Message });
+        }
     }
 
     private static async Task<IResult> ExportAsync(
