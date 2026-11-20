@@ -1,11 +1,11 @@
 <div class="shell">
   <aside class="sidebar">
-    <a class="brand" [routerLink]="auth.home" aria-label="TRAZO administration home">
+    <a class="brand" [routerLink]="auth.home" [attr.aria-label]="copy.home">
       <img class="brand-logo" src="logo-dark.svg" alt="TRAZO" height="34">
-      <small>ADMINISTRATION</small>
+      <small>{{ copy.administration }}</small>
     </a>
-    <div class="workspace-label">WORKSPACE</div>
-    <nav aria-label="Main navigation">
+    <div class="workspace-label">{{ copy.workspace }}</div>
+    <nav [attr.aria-label]="copy.mainNavigation">
       @for (item of navigation; track item.label) {
         @if (item.link) {
           <a class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="item.link">
@@ -15,20 +15,20 @@
         } @else {
           <span class="nav-item disabled" aria-disabled="true">
             <span class="nav-icon" aria-hidden="true">{{ item.icon }}</span>
-            <span>{{ item.label }}<small class="nav-note">No disponible</small></span>
+            <span>{{ item.label }}<small class="nav-note">{{ copy.unavailable }}</small></span>
           </span>
         }
       }
     </nav>
     <div class="sidebar-footer">
-      <span class="status-dot" aria-hidden="true"></span><span>System workspace</span>
+      <span class="status-dot" aria-hidden="true"></span><span>{{ copy.systemWorkspace }}</span>
       <span class="environment" [attr.title]="versionTitle()">{{ environmentLabel() }}@if (system(); as s) { · v{{ s.version }}@if (s.commit) { ({{ s.commit }}) } }</span>
     </div>
   </aside>
   <main class="main">
     <header class="topbar">
-      <span class="breadcrumb">Workspace</span>
-      <div class="admin-chip"><span class="avatar">{{ initial() }}</span> {{ auth.user()?.displayName }} <trazo-button variant="ghost" buttonClass="link" type="button" (pressed)="logout()">Sign out</trazo-button></div>
+      <span class="breadcrumb">{{ copy.workspace }}</span>
+      <div class="admin-chip"><span class="avatar">{{ initial() }}</span> {{ auth.user()?.displayName }} <trazo-button variant="ghost" buttonClass="link" type="button" (pressed)="logout()">{{ copy.signOut }}</trazo-button></div>
     </header>
     <section class="content"><router-outlet /></section>
   </main>

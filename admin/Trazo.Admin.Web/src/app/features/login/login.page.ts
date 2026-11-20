@@ -6,6 +6,7 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UiStateComponent } from '../../shared/ui/ui-state.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { UI_COPY } from '../../core/ui-copy';
 
 @Component({
   selector: 'trazo-login-page',
@@ -15,6 +16,7 @@ import { AuthService } from '../../core/auth.service';
   templateUrl: './login.page.html'
 })
 export class LoginPageComponent {
+  protected readonly copy = UI_COPY.login;
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   protected readonly email = signal('');
