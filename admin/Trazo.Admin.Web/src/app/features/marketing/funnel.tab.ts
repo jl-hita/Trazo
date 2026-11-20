@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { MarketingFunnel, Range, RetentionReport } from './marketing.models';
 import { BarRow, BarsComponent } from './marketing.charts';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 const STAGE_LABELS: Record<string, string> = {
   signup: 'Created an account', email_verified: 'Verified the e-mail', onboarding_completed: 'Finished onboarding', first_plan: 'Got a training plan',
@@ -14,7 +15,7 @@ const STAGE_LABELS: Record<string, string> = {
 @Component({
   selector: 'mk-funnel',
   standalone: true,
-  imports: [FormsModule, BarsComponent],
+  imports: [FormsModule, BarsComponent, UiTableComponent],
   templateUrl: './funnel.tab.html'
 })
 export class FunnelTabComponent {
