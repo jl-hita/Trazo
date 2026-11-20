@@ -60,7 +60,7 @@ export class ReviewsPageComponent {
   protected async open(id: string): Promise<void> {
     this.error.set('');
     this.draft = '';
-    try { this.selected.set(await this.api.planReview(id)); }
+    try { this.selected.set(await this.api.get(id)); }
     catch (e) { this.error.set(errorMessage(e)); }
   }
 
@@ -70,7 +70,7 @@ export class ReviewsPageComponent {
     try {
       await action();
       if (clearDraft) this.draft = '';
-      this.selected.set(await this.api.planReview(d.review.id));
+      this.selected.set(await this.api.get(d.review.id));
       await this.refresh(true);
     } catch (e) {
       this.error.set(errorMessage(e));
