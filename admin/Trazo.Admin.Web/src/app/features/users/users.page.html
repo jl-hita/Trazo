@@ -68,17 +68,11 @@
             <h2>{{ copy.createTitle }}</h2>
             <p class="hint">{{ copy.createHint }}</p>
           </div>
-          <label>Display name
-            <input type="text" maxlength="100" autocomplete="name" [ngModel]="newName()" (ngModelChange)="newName.set($event)">
-          </label>
-          <label>Email
-            <input type="email" maxlength="320" autocomplete="email" [ngModel]="newEmail()" (ngModelChange)="newEmail.set($event)">
-          </label>
-          <label>Role
-            <select [ngModel]="newRole()" (ngModelChange)="newRole.set($event)">
+          <trazo-form-field [label]="copy.displayName" controlId="new-user-name"><input type="text" maxlength="100" autocomplete="name" [ngModel]="newName()" (ngModelChange)="newName.set($event)" id="new-user-name"></trazo-form-field>
+          <trazo-form-field [label]="copy.email" controlId="new-user-email"><input type="email" maxlength="320" autocomplete="email" [ngModel]="newEmail()" (ngModelChange)="newEmail.set($event)" id="new-user-email"></trazo-form-field>
+          <trazo-form-field [label]="copy.role" controlId="new-user-role"><select id="new-user-role" [ngModel]="newRole()" (ngModelChange)="newRole.set($event)">
               @for (r of roles; track r) { <option [value]="r">{{ roleLabel(r) }}</option> }
-            </select>
-          </label>
+            </select></trazo-form-field>
           <div class="actions">
             <trazo-button variant="primary" type="button" (pressed)="createUser()" [disabled]="busy() || newName().trim().length < 2 || !newEmail().trim()">{{ copy.sendInvitation }}</trazo-button>
             <trazo-button variant="secondary" type="button" (pressed)="cancelCreate()" [disabled]="busy()">{{ copy.cancel }}</trazo-button>
@@ -92,14 +86,10 @@
 
           @if (isSelf()) { <p class="hint">{{ copy.selfHint }}</p> }
 
-          <label>Display name
-            <input type="text" maxlength="100" [ngModel]="editName()" (ngModelChange)="editName.set($event)">
-          </label>
-          <label>Role
-            <select [ngModel]="editRole()" (ngModelChange)="editRole.set($event)" [disabled]="isSelf()">
+          <trazo-form-field [label]="copy.displayName" controlId="edit-user-name"><input type="text" maxlength="100" [ngModel]="editName()" (ngModelChange)="editName.set($event)" id="edit-user-name"></trazo-form-field>
+          <trazo-form-field [label]="copy.role" controlId="edit-user-role"><select id="edit-user-role" [ngModel]="editRole()" (ngModelChange)="editRole.set($event)" [disabled]="isSelf()">
               @for (r of roles; track r) { <option [value]="r">{{ roleLabel(r) }}</option> }
-            </select>
-          </label>
+            </select></trazo-form-field>
           <div class="actions">
             <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy() || !dirty()">{{ copy.saveChanges }}</trazo-button>
           </div>
@@ -116,7 +106,7 @@
           </ul>
           @if (u.sessions.length) {
             <ul class="sessions">
-              @for (s of u.sessions; track s.createdAt) { <li>{{ s.deviceName || copy.unknownDevice }} · since {{ formatDate(s.createdAt) }}</li> }
+              @for (s of u.sessions; track s.createdAt) { <li>{{ s.deviceName || copy.unknownDevice }} · {{ copy.since }} {{ formatDate(s.createdAt) }}</li> }
             </ul>
           }
 
@@ -126,15 +116,15 @@
             @if (premiumCurrent()) { <p class="premium-current">{{ copy.premiumActive }}</p> }
             @for (g of premiumGrants(); track g.id) {
               <div class="premium-grant">
-                <strong>{{ g.permanent ? copy.permanentPremium : g.days + ' días de Premium' }} · {{ g.status }}</strong>
+                <strong>{{ g.permanent ? copy.permanentPremium : g.days + ' días de Premium' }} · {{ premiumStatusLabel(g.status) }}</strong>
                 <span>{{ g.startsAt ? copy.starts + ' ' + formatDate(g.startsAt) : copy.notScheduled }}{{ g.permanent ? '' : (g.endsAt ? ' · ' + copy.ends + ' ' + formatDate(g.endsAt) : '') }}</span>
                 @if (g.reason) { <span>{{ copy.reason }} {{ g.reason }}</span> }
                 @if (g.grantedBy) { <span>{{ copy.grantedBy }} {{ g.grantedBy }}</span> }
                 @if (g.revokedAt) { <span>{{ copy.revoked }} {{ formatDate(g.revokedAt) }}{{ g.revocationReason ? ' · ' + g.revocationReason : '' }}</span> }
                 @if (g.kind === 'admin_grant' && g.status === 'active') {
                   @if (premiumRevokeId() === g.id) {
-                    <input type="text" maxlength="300" [placeholder]="copy.reasonForRevocation" [attr.aria-label]="copy.reasonForRevocation"
-                      [ngModel]="premiumRevokeReason()" (ngModelChange)="premiumRevokeReason.set($event)">
+                    <trazo-form-field [label]="copy.reasonForRevocation" controlId="premium-revoke-reason"><input type="text" maxlength="300" [placeholder]="copy.reasonForRevocation" [attr.aria-label]="copy.reasonForRevocation"
+                      [ngModel]="premiumRevokeReason()" (ngModelChange)="premiumRevokeReason.set($event)" id="premium-revoke-reason"></trazo-form-field>
                     <div class="actions">
                       <trazo-button variant="danger" type="button" (pressed)="revokePremium(g.id)" [disabled]="busy() || premiumRevokeReason().trim().length < 5">{{ copy.confirmRevocation }}</trazo-button>
                       <trazo-button variant="secondary" type="button" (pressed)="premiumRevokeId.set(null)">{{ copy.cancel }}</trazo-button>
@@ -145,22 +135,18 @@
                 }
               </div>
             } @empty {
-              @if (!premiumLoading()) { <p class="hint">No Premium grants recorded.</p> }
+              @if (!premiumLoading()) { <p class="hint">{{ copy.noGrants }}</p> }
             }
             <div class="premium-form">
-              <label>{{ copy.grantDuration }}
-                <select [ngModel]="premiumDuration()" (ngModelChange)="premiumDuration.set($event)" [disabled]="busy()">
+              <trazo-form-field [label]="copy.grantDuration" controlId="premium-duration"><select id="premium-duration" [ngModel]="premiumDuration()" (ngModelChange)="premiumDuration.set($event)" [disabled]="busy()">
                   <option value="30">{{ copy.days30 }}</option>
                   <option value="90">{{ copy.days90 }}</option>
                   <option value="180">{{ copy.days180 }}</option>
                   <option value="365">{{ copy.year }}</option>
                   <option value="permanent">{{ copy.permanent }}</option>
-                </select>
-              </label>
-              <label>{{ copy.reasonRequired }}
-                <input type="text" maxlength="300" placeholder="p. ej., compensación, colaborador o cuenta de prueba"
-                  [ngModel]="premiumReason()" (ngModelChange)="premiumReason.set($event)">
-              </label>
+                </select></trazo-form-field>
+              <trazo-form-field [label]="copy.reasonRequired" controlId="premium-reason"><input type="text" maxlength="300" placeholder="p. ej., compensación, colaborador o cuenta de prueba"
+                  [ngModel]="premiumReason()" (ngModelChange)="premiumReason.set($event)" id="premium-reason"></trazo-form-field>
               <trazo-button variant="primary" type="button" (pressed)="grantPremium()" [disabled]="busy() || premiumReason().trim().length < 5">
                 {{ copy.grantPremium }}
               </trazo-button>
@@ -188,7 +174,7 @@
           @if (!isSelf()) {
             <div class="danger-zone">
               <p class="hint">{{ copy.deleteAccount }}: {{ copy.deleteWarning }} {{ copy.confirmEmail }}</p>
-              <input type="email" [attr.aria-label]="copy.typeEmailToConfirmDeletion" [ngModel]="deleteConfirm()" (ngModelChange)="deleteConfirm.set($event)" placeholder="{{ u.email }}">
+              <trazo-form-field [label]="copy.typeEmailToConfirmDeletion" controlId="delete-account-email"><input type="email" [attr.aria-label]="copy.typeEmailToConfirmDeletion" [ngModel]="deleteConfirm()" (ngModelChange)="deleteConfirm.set($event)" placeholder="{{ u.email }}" id="delete-account-email"></trazo-form-field>
               <trazo-button variant="danger" type="button" (pressed)="deleteAccount()" [disabled]="busy() || deleteConfirm().trim().toLowerCase() !== u.email.toLowerCase()">{{ copy.deletePermanently }}</trazo-button>
             </div>
           }
