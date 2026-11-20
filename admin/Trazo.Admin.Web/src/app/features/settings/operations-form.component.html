@@ -1,86 +1,86 @@
     <form class="op" (ngSubmit)="save()" autocomplete="off">
       <fieldset>
-        <legend>Acceso web (CORS)</legend>
-        <p class="hint">Orígenes desde los que un navegador puede llamar a la API. Los del archivo de entorno siempre están permitidos; aquí solo se <strong>añaden</strong> otros, así que un error nunca te deja sin acceso a esta pantalla.</p>
+        <legend>{{ labels.cors }}</legend>
+        <p class="hint">{{ labels.corsDescription }}</p>
         @if (view()?.environmentCorsOrigins?.length) {
-          <p class="hint">Fijos (entorno, solo lectura):</p>
+          <p class="hint">{{ labels.fixedOrigins }}</p>
           <ul>@for (o of view()!.environmentCorsOrigins; track o) { <li><code>{{ o }}</code></li> }</ul>
         }
-        <trazo-form-field label="Orígenes adicionales (uno por línea)" controlId="origins"><textarea name="origins" spellcheck="false" placeholder="https://admin.ejemplo.com" [ngModel]="origins()" (ngModelChange)="origins.set($event)" id="origins"></textarea>
+        <trazo-form-field [label]="labels.extraOrigins" controlId="origins"><textarea name="origins" spellcheck="false" placeholder="https://admin.ejemplo.com" [ngModel]="origins()" (ngModelChange)="origins.set($event)" id="origins"></textarea>
         </trazo-form-field>
-        <p class="hint">Formato <code>https://dominio[:puerto]</code>, sin ruta. Se admite <code>http</code> solo para localhost. Máximo 20.</p>
+        <p class="hint">{{ labels.corsFormat }}</p>
         @if (fieldError('additionalCorsOrigins')) { <span class="fielderr" role="alert">{{ fieldError('additionalCorsOrigins') }}</span> }
       </fieldset>
 
       <fieldset>
-        <legend>Límites de peticiones</legend>
-        <p class="hint">Peticiones por minuto y por IP (o usuario). El límite del inicio de sesión es fijo y no se puede cambiar.</p>
+        <legend>{{ labels.rateLimits }}</legend>
+        <p class="hint">{{ labels.rateLimitsHint }}</p>
         <div class="row">
-          <trazo-form-field label="Ajustes y asistente (10–600)" controlId="setup"><input type="number" name="setup" min="10" max="600" [ngModel]="setupPerMinute()" (ngModelChange)="setupPerMinute.set($event)" id="setup">
+          <trazo-form-field [label]="labels.setupAssistant" controlId="setup"><input type="number" name="setup" min="10" max="600" [ngModel]="setupPerMinute()" (ngModelChange)="setupPerMinute.set($event)" id="setup">
             @if (fieldError('setupPerMinute')) { <span class="fielderr" role="alert">{{ fieldError('setupPerMinute') }}</span> }
           </trazo-form-field>
-          <trazo-form-field label="Pruebas de conexión (3–60)" controlId="setupTest"><input type="number" name="setupTest" min="3" max="60" [ngModel]="setupTestPerMinute()" (ngModelChange)="setupTestPerMinute.set($event)" id="setupTest">
+          <trazo-form-field [label]="labels.connectionTests" controlId="setupTest"><input type="number" name="setupTest" min="3" max="60" [ngModel]="setupTestPerMinute()" (ngModelChange)="setupTestPerMinute.set($event)" id="setupTest">
             @if (fieldError('setupTestPerMinute')) { <span class="fielderr" role="alert">{{ fieldError('setupTestPerMinute') }}</span> }
           </trazo-form-field>
-          <trazo-form-field label="Suscripciones (5–600)" controlId="subscription"><input type="number" name="subscription" min="5" max="600" [ngModel]="subscriptionPerMinute()" (ngModelChange)="subscriptionPerMinute.set($event)" id="subscription">
+          <trazo-form-field [label]="labels.subscriptions" controlId="subscription"><input type="number" name="subscription" min="5" max="600" [ngModel]="subscriptionPerMinute()" (ngModelChange)="subscriptionPerMinute.set($event)" id="subscription">
             @if (fieldError('subscriptionPerMinute')) { <span class="fielderr" role="alert">{{ fieldError('subscriptionPerMinute') }}</span> }
           </trazo-form-field>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>Registros</legend>
+        <legend>{{ labels.logs }}</legend>
         <div class="row">
-          <trazo-form-field label="Nivel mínimo" controlId="logLevel"><select name="logLevel" [ngModel]="logLevel()" (ngModelChange)="logLevel.set($event)" id="logLevel">
-              @for (l of levels; track l) { <option [value]="l">{{ l }}</option> }
+          <trazo-form-field [label]="labels.minLevel" controlId="logLevel"><select name="logLevel" [ngModel]="logLevel()" (ngModelChange)="logLevel.set($event)" id="logLevel">
+              @for (l of levels; track l) { <option [value]="l">{{ logLevelLabel(l) }}</option> }
             </select>
             @if (fieldError('logLevel')) { <span class="fielderr" role="alert">{{ fieldError('logLevel') }}</span> }
           </trazo-form-field>
-          <trazo-form-field label="Conservar (días, 0 = siempre)" controlId="retention"><input type="number" name="retention" min="0" max="3650" [ngModel]="logRetentionDays()" (ngModelChange)="logRetentionDays.set($event)" id="retention">
+          <trazo-form-field [label]="labels.retention" controlId="retention"><input type="number" name="retention" min="0" max="3650" [ngModel]="logRetentionDays()" (ngModelChange)="logRetentionDays.set($event)" id="retention">
             @if (fieldError('logRetentionDays')) { <span class="fielderr" role="alert">{{ fieldError('logRetentionDays') }}</span> }
           </trazo-form-field>
         </div>
-        <p class="hint">Con «Warning» o superior se dejan de guardar los mensajes informativos, pero los cambios de administración se siguen registrando.</p>
+        <p class="hint">{{ labels.warningHint }}</p>
       </fieldset>
 
       <fieldset>
-        <legend>DietoExpress</legend>
-        <p class="hint">Destino al que se envían los ejercicios creados en TRAZO. La misma clave autentica la importación que recibe TRAZO.</p>
-        <trazo-form-field label="Dirección de DietoExpress" controlId="dietoEndpoint"><input type="text" name="dietoEndpoint" placeholder="https://dietoexpress.ejemplo.com" [ngModel]="dietoEndpoint()" (ngModelChange)="dietoEndpoint.set($event)" id="dietoEndpoint">
+        <legend>{{ labels.dietoExpress }}</legend>
+        <p class="hint">{{ labels.dietoHint }}</p>
+        <trazo-form-field [label]="labels.endpoint" controlId="dietoEndpoint"><input type="text" name="dietoEndpoint" placeholder="https://dietoexpress.ejemplo.com" [ngModel]="dietoEndpoint()" (ngModelChange)="dietoEndpoint.set($event)" id="dietoEndpoint">
           @if (fieldError('dietoExpressEndpoint')) { <span class="fielderr" role="alert">{{ fieldError('dietoExpressEndpoint') }}</span> }
         </trazo-form-field>
-        <trazo-form-field label="Clave compartida" controlId="dietoKey"><input type="password" name="dietoKey" autocomplete="new-password" [placeholder]="keyPlaceholder()" [ngModel]="dietoKey()" (ngModelChange)="dietoKey.set($event)" id="dietoKey">
+        <trazo-form-field [label]="labels.sharedKey" controlId="dietoKey"><input type="password" name="dietoKey" autocomplete="new-password" [placeholder]="keyPlaceholder()" [ngModel]="dietoKey()" (ngModelChange)="dietoKey.set($event)" id="dietoKey">
           @if (fieldError('dietoExpressApiKey')) { <span class="fielderr" role="alert">{{ fieldError('dietoExpressApiKey') }}</span> }
         </trazo-form-field>
         @if (view(); as v) {
           <p class="hint">
             @switch (v.dietoExpressApiKeySource) {
-              @case ('database') { <span class="stored">Clave guardada (cifrada) en la base de datos.</span> No se puede volver a mostrar. }
-              @case ('environment') { Se está usando la clave del archivo de entorno. Si guardas una aquí, tendrá prioridad. }
-              @default { Sin clave configurada: la transferencia y la importación están desactivadas. }
+              @case ('database') { {{ labels.keyDatabase }} }
+              @case ('environment') { {{ labels.keyEnvironment }} }
+              @default { {{ labels.noKey }} }
             }
           </p>
         }
         <div class="actions">
-          <trazo-button variant="secondary" type="button" (pressed)="testDieto()" [disabled]="busy() || !dietoEndpoint().trim()">Probar conexión</trazo-button>
+          <trazo-button variant="secondary" type="button" (pressed)="testDieto()" [disabled]="busy() || !dietoEndpoint().trim()">{{ labels.testConnection }}</trazo-button>
         </div>
       </fieldset>
 
       <div class="actions">
-        <trazo-button variant="primary" type="submit" [disabled]="busy()">Guardar ajustes</trazo-button>
+        <trazo-button variant="primary" type="submit" [disabled]="busy()">{{ labels.save }}</trazo-button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
       </div>
 
       <fieldset>
-        <legend>Solo en el archivo de entorno</legend>
-        <p class="hint">Estos valores no se editan aquí porque un error impediría arrancar la API o iniciar sesión. Cambiarlos exige editar <code>/etc/trazo/trazo.env</code> y <strong>reiniciar</strong> el servicio:</p>
+        <legend>{{ labels.environmentOnly }}</legend>
+        <p class="hint">{{ labels.environmentOnlyHint }}</p>
         <ul>
-          <li>Cadena de conexión a PostgreSQL y claves de Data Protection.</li>
-          <li>Emisor, audiencia y clave de firma del JWT.</li>
-          <li><code>AllowedHosts</code>, URL de escucha y orígenes CORS base.</li>
-          <li>Activar o desactivar el almacenamiento de logs en base de datos.</li>
+          <li>{{ labels.postgresDataProtection }}</li>
+          <li>{{ labels.jwt }}</li>
+          <li>{{ labels.allowedHosts }}</li>
+          <li>{{ labels.databaseLogs }}</li>
         </ul>
-        <p class="hint">Más detalle en <code>docs/configuration.md</code>.</p>
+        <p class="hint">{{ labels.moreDetails }}</p>
       </fieldset>
     </form>
