@@ -252,6 +252,10 @@ export class UsersPageComponent {
     return this.copy.roles[role as keyof typeof this.copy.roles] ?? role;
   }
 
+  protected premiumStatusLabel(status: string): string {
+    return status === 'active' ? this.copy.active : status === 'revoked' ? this.copy.revoked : status === 'pending' ? this.copy.pending : status;
+  }
+
   protected formatDate(value: string): string {
     return formatUiDateTime(value);
   }
