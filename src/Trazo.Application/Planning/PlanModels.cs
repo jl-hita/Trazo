@@ -239,7 +239,13 @@ public sealed record PlanOptions(
     int MinimumTotalWeeks, int MaximumTotalWeeks, int DefaultTotalWeeks,
     IReadOnlyList<DayOption> DayOptions, string WeekStartsOn, string DefaultTimeZone,
     IReadOnlyList<string>? SchedulingModes = null, int MinimumSessionsPerPeriod = 2, int MaximumSessionsPerPeriod = 6,
-    IReadOnlyList<SplitSupportOption>? SplitSupport = null);
+    IReadOnlyList<SplitSupportOption>? SplitSupport = null,
+    PreparationOptions? Preparation = null);
+
+/// <summary>The starting points a plan can declare and the weeks of preparation each one suggests (the user may change them within the limits).</summary>
+public sealed record PreparationOptions(
+    IReadOnlyList<string> Readiness, int MinimumWeeks, int MaximumWeeks, int NewWeeks, int ReturningShortBreakWeeks,
+    int ReturningLongBreakWeeks, int LongBreakMonths, int MinimumWeeksAfter);
 
 /// <summary>
 /// What a split supports: the numbers of training days it accepts in a calendar plan and the numbers of sessions per period it accepts

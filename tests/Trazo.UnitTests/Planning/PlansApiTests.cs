@@ -341,6 +341,33 @@ public sealed class PlansApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task ANewUserStartsWithAPreparationPhase_OfFewerSetsAndMoreRepsInReserve()
+    {
+        object WithPreparation(string readiness, int? weeks) => new
+        {
+            goal = "Hypertrophy", experience = "Beginner", totalWeeks = 12, trainingDays = new[] { "Monday", "Wednesday", "Friday" }, maxSessionMinutes = 75,
+            availableEquipment = new[] { "barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar" },
+            excludedExerciseIds = Array.Empty<string>(), limitations = Array.Empty<string>(), readiness, preparationWeeks = weeks
+        };
+        var regular = await StartPlanAsync("regular@example.com", WithPreparation("Regular", null));
+        var newcomer = await StartPlanAsync("new@example.com", WithPreparation("New", 2));
+
+        int Sets(JsonElement week) => week.GetProperty("sessions").EnumerateArray()
+            .Sum(s => s.GetProperty("exercises").EnumerateArray().Sum(e => e.GetProperty("sets").GetInt32()));
+        Assert.True(Sets(newcomer.Week) < Sets(regular.Week), "the first week of a preparation has fewer sets");
+
+        var plan = await JsonAsync(await newcomer.Client.GetAsync("/api/v1/plans/current"));
+        var phases = plan.GetProperty("macrocycle").GetProperty("phases").EnumerateArray().ToList();
+        Assert.Equal("preparation", phases[0].GetProperty("type").GetString());
+        Assert.Equal(12, plan.GetProperty("totalWeeks").GetInt32());
+        Assert.DoesNotContain(phases.Skip(1), p => p.GetProperty("type").GetString() == "preparation");
+
+        var invalid = await ClientFor(await AddUserAsync("third@example.com")).PostAsJsonAsync("/api/v1/plans", WithPreparation("New", 9));
+        Assert.True(invalid.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.UnprocessableEntity, await invalid.Content.ReadAsStringAsync());
+        Assert.Contains("preparationWeeks", await invalid.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
     public async Task OnlyTheCurrentWeekIsServed_WithTheFullPrescription()
     {
         var (_, _, week) = await StartPlanAsync();

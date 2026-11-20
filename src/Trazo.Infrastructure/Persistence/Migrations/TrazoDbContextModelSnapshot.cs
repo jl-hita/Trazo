@@ -291,6 +291,8 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("SchedulingMode").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<int>("SessionsPerPeriod").HasColumnType("integer");
             b.Property<int>("ScheduleShiftDays").HasColumnType("integer");
+            b.Property<string>("Readiness").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<int>("PreparationWeeks").HasColumnType("integer");
             b.Property<string[]>("TrainingDays").IsRequired().HasColumnType("text");
             b.Property<int>("MaxSessionMinutes").HasColumnType("integer");
             b.Property<string[]>("AvailableEquipment").IsRequired().HasColumnType("text");
