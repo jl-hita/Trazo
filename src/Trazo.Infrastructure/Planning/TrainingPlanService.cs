@@ -444,7 +444,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 SessionsChanged = addedSessions.Count, AppliedAt = now,
                 Explanation = "El usuario editó las rutinas de su plan manual: las sesiones pendientes se sustituyeron por las nuevas."
             }, PrescriptionSources.User, edits));
-        if (!await SaveUnlessConflictAsync(ct)) return PlanResult<PlanView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
+        if (!await SaveUnlessConflictAsync(ct, plan.Id, sessions))
+            return PlanResult<PlanView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
     }
 
@@ -735,8 +736,15 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     /// whole save (the prescription and the history row that describes it alike): nothing is stored, the tracker is cleared so no stale copy is reused,
     /// and the caller answers with a conflict. It never retries: the same edit on a different state is a different edit.
     /// </summary>
-    private async Task<bool> SaveUnlessConflictAsync(CancellationToken ct)
+    /// <param name="planId">With <paramref name="read"/>: the sessions the operation was built from, for an operation that also inserts sessions.</param>
+    /// <param name="read">
+    /// PostgreSQL runs the statements of one save in order and reports a stale DELETE or UPDATE (0 rows) only afterwards, so an INSERT that follows it can hit
+    /// a unique index (the program order) before the stale statement is reported, and the failure is not a concurrency exception. The transaction is rolled back
+    /// either way; it is still a conflict when the plan's sessions are no longer the ones (and versions) that were read, and a real error when they are.
+    /// </param>
+    private async Task<bool> SaveUnlessConflictAsync(CancellationToken ct, Guid? planId = null, IReadOnlyCollection<PlannedSession>? read = null)
     {
+        var readVersions = read?.ToDictionary(x => x.Id, x => x.Version);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -745,6 +753,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         catch (DbUpdateConcurrencyException)
         {
             db.ChangeTracker.Clear();
+            return false;
+        }
+        catch (DbUpdateException) when (planId is not null && readVersions is not null)
+        {
+            db.ChangeTracker.Clear();
+            var now = await db.PlannedSessions.AsNoTracking().Where(x => x.PlanId == planId).Select(x => new { x.Id, x.Version }).ToListAsync(ct);
+            if (now.Count == readVersions.Count && now.All(x => readVersions.TryGetValue(x.Id, out var v) && v == x.Version)) throw;
             return false;
         }
     }
