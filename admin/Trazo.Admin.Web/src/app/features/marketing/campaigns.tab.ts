@@ -48,6 +48,9 @@ export class CampaignsTabComponent {
   }
 
   protected help(channel: string): string { return CHANNEL_HELP[channel] ?? channel; }
+  protected campaignStatusLabel(status: string): string {
+    return this.labels.campaignStatuses[status as keyof typeof this.labels.campaignStatuses] ?? status;
+  }
 
   private emptyDraft(): Draft { return { slug: '', name: '', channel: 'ads', status: 'active', startsOn: '', endsOn: '', notes: '' }; }
 
