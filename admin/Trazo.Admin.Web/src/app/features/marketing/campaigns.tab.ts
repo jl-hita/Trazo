@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, isoDay, marketingError } from './marketing.api';
@@ -25,6 +26,8 @@ const CHANNEL_HELP: Record<string, string> = {
   templateUrl: './campaigns.tab.html'
 })
 export class CampaignsTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
