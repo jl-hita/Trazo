@@ -1049,6 +1049,7 @@ export const UI_COPY = {
       connectionTests: 'Pruebas de conexión (3–60)',
       subscriptions: 'Suscripciones (5–600)',
       logs: 'Registros',
+      logLevels: { Trace: 'Traza', Debug: 'Depuración', Information: 'Información', Warning: 'Advertencia', Error: 'Error', Critical: 'Crítico', None: 'Ninguno' },
       minLevel: 'Nivel mínimo',
       retention: 'Conservar (días, 0 = siempre)',
       warningHint: 'Con Warning o superior se dejan de guardar los mensajes informativos, pero los cambios de administración se siguen registrando.',
