@@ -23,9 +23,9 @@
             Registered devices: {{ v.deviceCount }}.</p>
         }
         <div class="actions">
-          <button class="primary" type="submit" [disabled]="busy()">Save push settings</button>
-          <button type="button" (click)="check()" [disabled]="busy() || !view()?.configured">Check connection</button>
-          <button type="button" (click)="test()" [disabled]="busy() || !view()?.configured">Send test to my devices</button>
+          <trazo-button variant="primary" type="submit" [disabled]="busy()">Save push settings</trazo-button>
+          <trazo-button variant="secondary" type="button" (pressed)="check()" [disabled]="busy() || !view()?.configured">Check connection</trazo-button>
+          <trazo-button variant="secondary" type="button" (pressed)="test()" [disabled]="busy() || !view()?.configured">Send test to my devices</trazo-button>
           @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
           @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
         </div>
@@ -41,7 +41,7 @@
         <trazo-form-field label="Text (max 240)" controlId="body"><textarea class="short" name="body" maxlength="240" [ngModel]="body()" (ngModelChange)="body.set($event)" id="body"></textarea>
         </trazo-form-field>
         <div class="actions">
-          <button class="primary" type="submit" [disabled]="busy() || !view()?.configured || !title().trim() || !body().trim()">Send announcement</button>
+          <trazo-button variant="primary" type="submit" [disabled]="busy() || !view()?.configured || !title().trim() || !body().trim()">Send announcement</trazo-button>
           @if (broadcastMessage()) { <span class="ok" role="status">{{ broadcastMessage() }}</span> }
           @if (broadcastError()) { <span class="err" role="alert">{{ broadcastError() }}</span> }
         </div>
