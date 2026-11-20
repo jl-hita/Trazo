@@ -450,6 +450,29 @@ shared engine) rewrites the generated prescription: lifts worked in 6 repetition
 target RIR drops by one (never below 1), rest grows 30 s (max 300 s) and the target load, when there is one, follows the range with the Epley ratio (capped at +8 %,
 rounded to the load increment). Accessories keep their volume and range. Double progression and the adaptation work on the new range unchanged.
 
+## Preparation for newcomers and returners (`readiness`, `preparationWeeks`)
+
+`POST /api/v1/plans` accepts `readiness` (`Regular` by default, `New` or `Returning`) and `preparationWeeks` (1 to 4). `GET /api/v1/plans/options` announces
+them in `preparation` (the starting points, the limits, the suggestions and `minimumWeeksAfter`). The first weeks of the plan are then a phase of type
+`preparation`, named "Preparación"; the plan proper (accumulation, intensification, deloads) follows it.
+
+- **Weeks.** `New` suggests 2. `Returning` suggests 2, or 3 after a long break (the client tells the break from its answer and sends the weeks; the server
+  default for `Returning` is 2). The user may change it within 1 to 4. The preparation is part of `totalWeeks`, and at least `minimumWeeksAfter` (4) weeks
+  must remain after it, or the request is rejected with a `preparationWeeks` error. `Regular` with `preparationWeeks > 0` is rejected too.
+- **Macrocycle.** `MacrocyclePlanner` builds the plan proper as if it started when the preparation ends (deloads, and the intensification half of a strength plan,
+  are laid over the remaining weeks only) and puts the preparation phase in front. Phase numbers are renumbered; the end date does not change.
+- **Prescription.** The engine generates the block as accumulation and `PreparationPhase.Apply` lowers it (the same pattern as `IntensificationPhase`; the shared
+  engine is untouched). Sets are scaled from 50 % in the first week to 75 % in the last (linear, rounded, never below one set), and the reserve is at least 4
+  repetitions (3 in the last week of a preparation longer than one week). It never makes an exercise harder than the engine asked.
+- **Learning.** The preparation is a deliberate low volume, so the longitudinal layer learns nothing from it: no proposal is made for a preparation block and its weeks
+  are observed as `excluded` with reason `preparation`.
+- **Storage.** `training_plans.Readiness` and `PreparationWeeks` (migration `PreparationPhase`, additive with defaults).
+
+**None of the figures is a guideline.** What the literature supports is the direction (little volume at the start, whole-body work two or three days a week,
+moderate loads and a gentle return: ACSM 2009 position stand; reviews of minimal dose in beginners; detraining reviews). It does not give a number of weeks, a percentage of
+volume or a rest interval; those are product decisions. The 48 hours between sessions of the same muscle that the design asks for are not enforced: the days are the user's.
+Known limits: the session duration estimate is that of the unscaled block, and the automatic adaptation may still add volume if the user finds the sessions easy.
+
 ## Next session and recovery (`GET /api/v1/plans/current/next`)
 
 The backend decides which session the user should do next; clients only show it.

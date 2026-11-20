@@ -87,7 +87,9 @@ public static class MesocycleGenerator
         var generated = result.Prescription!.Sessions.Select(session =>
         {
             var week = slot.StartWeek + session.WeekNumber - 1;
-            var exercises = slot.PhaseType == IntensificationPhase.PhaseType ? IntensificationPhase.Apply(session.Exercises) : session.Exercises;
+            var exercises = slot.PhaseType == IntensificationPhase.PhaseType ? IntensificationPhase.Apply(session.Exercises)
+                : slot.IsPreparation ? PreparationPhase.Apply(session.Exercises, session.WeekNumber, slot.Weeks)
+                : session.Exercises;
             return new GeneratedSession(
                 week, sequence ? null : PlanSchedule.DateFor(profile.StartDate, week, session.Day), sequence ? null : session.Day,
                 session.Title, session.EstimatedDurationMinutes, PrescriptionJson.Serialize(exercises));

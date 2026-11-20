@@ -41,6 +41,7 @@ public sealed class TrainingPlanConfiguration : IEntityTypeConfiguration<Trainin
         builder.Property(x => x.ExcludedExerciseIds).AsJsonText();
         builder.Property(x => x.Limitations).AsJsonText();
         builder.Property(x => x.MusclePriorities).AsJsonText();
+        builder.Property(x => x.Readiness).HasMaxLength(20).IsRequired();
         builder.Property(x => x.EngineVersion).HasMaxLength(40).IsRequired();
         builder.Property(x => x.MacrocycleName).HasMaxLength(160).IsRequired();
         builder.Property(x => x.MacrocycleNotes).HasMaxLength(1000).IsRequired();

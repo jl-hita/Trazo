@@ -21,7 +21,11 @@ public sealed record PlanProfileInput(
     string? SchedulingMode = null,
     int? SessionsPerPeriod = null,
     /// <summary>Muscle name -> "emphasize" | "maintain" | "grow". Anything not listed (or "grow") keeps the default dose.</summary>
-    IReadOnlyDictionary<string, string>? MusclePriorities = null);
+    IReadOnlyDictionary<string, string>? MusclePriorities = null,
+    /// <summary>"Regular" (default), "New" or "Returning": the last two start the plan with a preparation (see <see cref="PreparationPhase"/>).</summary>
+    string? Readiness = null,
+    /// <summary>Weeks of preparation (1-4, counted inside <c>TotalWeeks</c>); when absent the readiness gives its default.</summary>
+    int? PreparationWeeks = null);
 
 /// <summary>A validated, typed profile the engine can use.</summary>
 public sealed record PlanProfile(
@@ -39,7 +43,10 @@ public sealed record PlanProfile(
     int DeloadEveryTrainingWeeks,
     Trazo.Domain.Planning.PlanSchedulingMode SchedulingMode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar,
     int SessionsPerPeriod = 0,
-    IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? MusclePriorities = null);
+    IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? MusclePriorities = null,
+    TrainingReadiness Readiness = TrainingReadiness.Regular,
+    /// <summary>Weeks at the start of the plan that are preparation; they are part of <see cref="TotalWeeks"/>. Zero for a regular plan.</summary>
+    int PreparationWeeks = 0);
 
 public sealed record PlanProfileResult(PlanProfile? Profile, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -115,6 +122,23 @@ public static partial class PlanProfileParser
         if (totalWeeks is < MinimumTotalWeeks or > MaximumTotalWeeks)
             Fail("totalWeeks", $"La duración del plan debe estar entre {MinimumTotalWeeks} y {MaximumTotalWeeks} semanas.");
 
+        var readiness = TrainingReadiness.Regular;
+        if (!string.IsNullOrWhiteSpace(input.Readiness) && !TryEnum(input.Readiness, out readiness))
+            Fail("readiness", $"El punto de partida debe ser uno de: {string.Join(", ", Enum.GetNames<TrainingReadiness>())}.");
+        var preparationWeeks = 0;
+        if (readiness == TrainingReadiness.Regular)
+        {
+            if (input.PreparationWeeks is > 0) Fail("preparationWeeks", "Un plan sin preparación no puede indicar semanas de preparación.");
+        }
+        else
+        {
+            preparationWeeks = input.PreparationWeeks ?? PreparationPhase.DefaultWeeks(readiness);
+            if (preparationWeeks is < PreparationPhase.MinimumWeeks or > PreparationPhase.MaximumWeeks)
+                Fail("preparationWeeks", $"La preparación debe durar entre {PreparationPhase.MinimumWeeks} y {PreparationPhase.MaximumWeeks} semanas.");
+            else if (totalWeeks - preparationWeeks < PreparationPhase.MinimumWeeksAfter)
+                Fail("preparationWeeks", $"Tras la preparación deben quedar al menos {PreparationPhase.MinimumWeeksAfter} semanas de plan.");
+        }
+
         var includeDeload = input.IncludeDeloadPhases ?? true;
         var deloadEvery = input.DeloadEveryTrainingWeeks ?? AutomaticDeload;
         if (includeDeload && input.DeloadEveryTrainingWeeks is not null && deloadEvery is < TrainingMacrocycleDraftBuilder.MinimumDeloadInterval or > TrainingMacrocycleDraftBuilder.MaximumDeloadInterval)
@@ -158,7 +182,7 @@ public static partial class PlanProfileParser
         if (errors.Count > 0)
             return new(null, errors.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray()));
         return new(new PlanProfile(goal, experience, start, totalWeeks, days.Distinct().ToList(), minutes, equipment,
-            excluded, limitations, split, includeDeload, deloadEvery, mode, perPeriod, priorities), new Dictionary<string, string[]>());
+            excluded, limitations, split, includeDeload, deloadEvery, mode, perPeriod, priorities, readiness, preparationWeeks), new Dictionary<string, string[]>());
     }
 
     /// <summary>

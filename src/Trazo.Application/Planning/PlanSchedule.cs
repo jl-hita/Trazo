@@ -6,6 +6,7 @@ namespace Trazo.Application.Planning;
 public sealed record MesocycleSlot(int Sequence, int PhaseSequenceNumber, string PhaseType, int StartWeek, int Weeks)
 {
     public bool IsDeload => PhaseType == "deload";
+    public bool IsPreparation => PhaseType == PreparationPhase.PhaseType;
     public int EndWeek => StartWeek + Weeks - 1;
     public bool Contains(int week) => week >= StartWeek && week <= EndWeek;
 }

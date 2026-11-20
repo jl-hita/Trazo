@@ -28,8 +28,8 @@ public static class LongitudinalLearning
     public static async Task<LongitudinalProposal> ProposeAsync(
         TrazoDbContext db, TrainingPlan plan, MesocycleSlot slot, PlanProfile profile, DateTimeOffset now, CancellationToken ct)
     {
-        // Only generated hypertrophy plans learn, and a deload block is a pause: nothing is learned or changed for it.
-        if (plan.Origin != TrainingPlanOrigin.Generated || profile.Goal != TrainingGoal.Hypertrophy || slot.IsDeload)
+        // Only generated hypertrophy plans learn, and a deload block is a pause and a preparation block is a deliberate low volume: nothing is learned or changed for them.
+        if (plan.Origin != TrainingPlanOrigin.Generated || profile.Goal != TrainingGoal.Hypertrophy || slot.IsDeload || slot.IsPreparation)
             return LongitudinalProposal.None;
         var baselines = MesocycleGenerator.Baselines(profile);
         if (baselines.Count == 0) return LongitudinalProposal.None;
@@ -91,7 +91,9 @@ public static class LongitudinalLearning
             allLogs ??= await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).Where(l => l.UserId == userId).ToListAsync(ct);
             var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(m => m.PlanId == planId)
                 .ToDictionaryAsync(m => m.Id, m => (m.Sequence, m.IsDeload), ct);
-            var built = MuscleWeekObserver.Build(new ObserverInput(userId, planId, sessions, allLogs, mesocycles, periods, now));
+            var preparation = (await db.TrainingMesocycles.AsNoTracking().Where(m => m.PlanId == planId && m.PhaseType == PreparationPhase.PhaseType)
+                .Select(m => m.Sequence).ToListAsync(ct)).ToHashSet();
+            var built = MuscleWeekObserver.Build(new ObserverInput(userId, planId, sessions, allLogs, mesocycles, periods, now, preparation));
             foreach (var row in built)
             {
                 var existing = stored.FirstOrDefault(o => o.PlanId == row.PlanId && o.Period == row.Period && o.Muscle == row.Muscle);

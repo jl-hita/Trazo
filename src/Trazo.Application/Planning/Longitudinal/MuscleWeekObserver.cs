@@ -13,7 +13,9 @@ public sealed record ObserverInput(
     IReadOnlyList<WorkoutLog> Logs,
     IReadOnlyDictionary<Guid, (int Sequence, bool IsDeload)> Mesocycles,
     IReadOnlyCollection<int> Periods,
-    DateTimeOffset Now);
+    DateTimeOffset Now,
+    /// <summary>Sequences of the preparation blocks (a deliberate low volume, so nothing is learned from them). Null when the plan has none.</summary>
+    IReadOnlySet<int>? PreparationSequences = null);
 
 /// <summary>
 /// Turns the workouts of a plan into one observation per muscle and period (<see cref="MuscleWeekObservation"/>). Pure and deterministic.
@@ -162,6 +164,7 @@ public static class MuscleWeekObserver
                 string quality;
                 string? reason = null;
                 if (block.IsDeload) { quality = "excluded"; reason = "deload"; }
+                else if (input.PreparationSequences?.Contains(block.Sequence) == true) { quality = "excluded"; reason = "preparation"; }
                 else if (a.Exposures == 0)
                 {
                     quality = "excluded";

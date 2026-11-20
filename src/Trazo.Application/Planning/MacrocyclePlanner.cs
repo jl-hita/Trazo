@@ -36,6 +36,28 @@ public static class MacrocyclePlanner
 {
     public static TrainingMacrocycleDraftResult Build(PlanProfile profile)
     {
+        if (profile.PreparationWeeks <= 0) return BuildPlan(profile);
+        // The preparation comes first and is not part of the plan proper: accumulation, intensification and deloads are laid over
+        // the weeks that remain, as if the plan started when the preparation ends.
+        var preparation = profile.PreparationWeeks;
+        var rest = BuildPlan(profile with { StartDate = profile.StartDate.AddDays(7 * preparation), TotalWeeks = profile.TotalWeeks - preparation });
+        if (rest.Draft is null) return rest;
+        var first = new TrainingMacrocycleDraftPhase(
+            "Preparación", 1, profile.StartDate, profile.StartDate.AddDays(7 * preparation - 1), PreparationPhase.Objective, PreparationPhase.PhaseType);
+        var phases = new List<TrainingMacrocycleDraftPhase> { first };
+        phases.AddRange(rest.Draft.Phases.Select(phase => phase with { SequenceNumber = phase.SequenceNumber + 1 }));
+        var draft = rest.Draft with
+        {
+            StartDate = profile.StartDate,
+            Notes = $"Las primeras {preparation} semanas son de preparación (pocas series, lejos del fallo); el plan empieza después. " +
+                "Las cifras son una decisión de producto, no una pauta de ACSM. " + rest.Draft.Notes,
+            Phases = phases
+        };
+        return new(draft, []);
+    }
+
+    private static TrainingMacrocycleDraftResult BuildPlan(PlanProfile profile)
+    {
         var automatic = profile.IncludeDeloadPhases && profile.DeloadEveryTrainingWeeks == PlanProfileParser.AutomaticDeload;
         var interval = profile.DeloadEveryTrainingWeeks == PlanProfileParser.AutomaticDeload
             ? TrainingMacrocycleDraftBuilder.MinimumDeloadInterval : profile.DeloadEveryTrainingWeeks;

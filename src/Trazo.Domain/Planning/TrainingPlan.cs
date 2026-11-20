@@ -78,6 +78,10 @@ public sealed class TrainingPlan
     public bool IncludeDeloadPhases { get; set; }
     /// <summary>Training weeks between deloads (4-8), or 0 when TRAZO places them automatically.</summary>
     public int DeloadEveryTrainingWeeks { get; set; } = 4;
+    /// <summary>What the user said about their starting point: Regular, New or Returning.</summary>
+    public string Readiness { get; set; } = "Regular";
+    /// <summary>Weeks at the start of the plan that are preparation (part of <see cref="TotalWeeks"/>); zero when there is none.</summary>
+    public int PreparationWeeks { get; set; }
     /// <summary>Makes selection reproducible: the same profile and seed always give the same plan.</summary>
     public int Seed { get; set; }
     public string EngineVersion { get; set; } = string.Empty;

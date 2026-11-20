@@ -157,7 +157,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 split.ToString(),
                 Enumerable.Range(2, 5).Where(days => TrainingSessionRotation.IsSupportedWeekly(split, days)).ToArray(),
                 Enumerable.Range(TrainingSessionRotation.MinimumSessionsPerPeriod, TrainingSessionRotation.MaximumSessionsPerPeriod)
-                    .Where(sessions => TrainingSessionRotation.IsSupportedSequence(split, sessions)).ToArray())).ToArray());
+                    .Where(sessions => TrainingSessionRotation.IsSupportedSequence(split, sessions)).ToArray())).ToArray(),
+            new PreparationOptions(
+                Names<TrainingReadiness>(), PreparationPhase.MinimumWeeks, PreparationPhase.MaximumWeeks, PreparationPhase.NewWeeks,
+                PreparationPhase.ReturningShortBreakWeeks, PreparationPhase.ReturningLongBreakWeeks, PreparationPhase.LongBreakMonths,
+                PreparationPhase.MinimumWeeksAfter));
     }
 
     private static string[] Names<T>() where T : struct, Enum => Enum.GetNames<T>();
@@ -190,6 +194,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             ExcludedExerciseIds = profile.ExcludedExerciseIds.ToArray(), Limitations = profile.Limitations.ToArray(),
             MusclePriorities = EncodePriorities(profile.MusclePriorities),
             IncludeDeloadPhases = profile.IncludeDeloadPhases, DeloadEveryTrainingWeeks = profile.DeloadEveryTrainingWeeks,
+            Readiness = profile.Readiness.ToString(), PreparationWeeks = profile.PreparationWeeks,
             Seed = planSeed, EngineVersion = string.Empty, MacrocycleName = macrocycle.Draft.Name,
             MacrocycleNotes = macrocycle.Draft.Notes, CreatedAt = now, UpdatedAt = now
         };
@@ -2293,7 +2298,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         IsSequence(plan) ? [] : plan.TrainingDays.Select(Enum.Parse<DayOfWeek>).ToList(),
         plan.MaxSessionMinutes, plan.AvailableEquipment,
         plan.ExcludedExerciseIds, plan.Limitations, Enum.Parse<TrainingProgramSplit>(plan.Split), plan.IncludeDeloadPhases,
-        plan.DeloadEveryTrainingWeeks, plan.SchedulingMode, plan.SessionsPerPeriod, DecodePriorities(plan.MusclePriorities));
+        plan.DeloadEveryTrainingWeeks, plan.SchedulingMode, plan.SessionsPerPeriod, DecodePriorities(plan.MusclePriorities),
+        Enum.Parse<TrainingReadiness>(plan.Readiness), plan.PreparationWeeks);
 
     /// <summary>"Muscle:Priority" entries for the plan row; Grow is the default and is never stored.</summary>
     private static string[] EncodePriorities(IReadOnlyDictionary<TrainingMuscleGroup, TrainingMusclePriority>? priorities) =>
