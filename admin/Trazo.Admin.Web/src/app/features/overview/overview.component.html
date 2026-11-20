@@ -39,7 +39,7 @@
       <div><p class="eyebrow">{{ labels.attention }}</p><h2 id="ov-alerts-title">{{ labels.alerts }} <span class="ov-count">{{ alertSummary() }}</span></h2></div>
     </div>
     @if (alerts().length === 0) {
-      <trazo-state kind="success" [title]="labels.statuses.allGood" [description]="labels.noErrors24h" />
+      <trazo-state kind="success" [title]="labels.statuses.allGood" [description]="labels.allClearDescription" />
     } @else {
       <ul class="ov-alerts">
         @for (a of alerts(); track a.id) {
