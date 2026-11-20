@@ -9,6 +9,7 @@ import { CampaignsTabComponent } from './campaigns.tab';
 import { FunnelTabComponent } from './funnel.tab';
 import { LeversTabComponent } from './levers.tab';
 import { EconomicsTabComponent } from './economics.tab';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 
 type Tab = 'overview' | 'strategies' | 'economics' | 'campaigns' | 'funnel' | 'levers';
 
@@ -19,7 +20,7 @@ type Tab = 'overview' | 'strategies' | 'economics' | 'campaigns' | 'funnel' | 'l
 @Component({
   selector: 'trazo-marketing-page',
   standalone: true,
-  imports: [FormsModule, OverviewTabComponent, StrategiesTabComponent, CampaignsTabComponent, FunnelTabComponent, LeversTabComponent, EconomicsTabComponent],
+  imports: [FormsModule, OverviewTabComponent, StrategiesTabComponent, CampaignsTabComponent, FunnelTabComponent, LeversTabComponent, EconomicsTabComponent, UiButtonComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './marketing.page.scss',
   templateUrl: './marketing.page.html'
