@@ -443,6 +443,7 @@ export const UI_COPY = {
     noApiResponse: 'La API no ha respondido.',
     unexpectedResponse: 'Respuesta inesperada (HTTP',
     testNotThrown: '); no se ha provocado la excepción de prueba.',
+    statuses: { new: 'Nueva', seen: 'Vista', resolved: 'Resuelta' },
     copyDenied: 'El navegador no ha permitido copiar; selecciona el texto y cópialo manualmente.'
   },
   waitlist: {
