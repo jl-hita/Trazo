@@ -4,10 +4,13 @@ import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import type { AdminPlanReview, AdminPlanReviewDetail, Page } from '../../core/admin.models';
 import { PlanReviewsApi } from './reviews.api';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
+import { formatUiDateTime } from '../../core/ui-format';
 
 const FILTERS: { value: string; label: string }[] = [
-  { value: 'pending', label: 'Pending' }, { value: 'mine', label: 'Mine' }, { value: 'in_progress', label: 'In progress' },
-  { value: 'reviewed', label: 'Reviewed' }, { value: '', label: 'All' }
+  { value: 'pending', label: UI_COPY.reviews.statuses.pending }, { value: 'mine', label: UI_COPY.reviews.statuses.mine },
+  { value: 'in_progress', label: UI_COPY.reviews.statuses.in_progress }, { value: 'reviewed', label: UI_COPY.reviews.statuses.reviewed },
+  { value: '', label: UI_COPY.reviews.statuses[''] }
 ];
 
 /**
@@ -24,6 +27,7 @@ const FILTERS: { value: string; label: string }[] = [
 })
 export class ReviewsPageComponent {
   private readonly api = inject(PlanReviewsApi);
+  protected readonly copy = UI_COPY.reviews;
   protected readonly filters = FILTERS;
   protected readonly status = signal('pending');
   protected readonly data = signal<Page<AdminPlanReview> | null>(null);
@@ -41,7 +45,7 @@ export class ReviewsPageComponent {
     inject(DestroyRef).onDestroy(() => clearInterval(timer));
   }
 
-  protected when(value: string | null): string { return value ? value.slice(0, 16).replace('T', ' ') : ''; }
+  protected when(value: string | null): string { return value ? formatUiDateTime(value) : ''; }
 
   protected setStatus(value: string): void { this.status.set(value); void this.refresh(); }
 
@@ -84,7 +88,7 @@ export class ReviewsPageComponent {
   protected close(d: AdminPlanReviewDetail): Promise<void> { return this.act(d, () => this.api.close(d.review.id, this.draft), true); }
 
   protected release(d: AdminPlanReviewDetail): Promise<void> {
-    const reason = window.prompt('Why are you giving it back? (optional, the next reviewer will see it)', '');
+    const reason = window.prompt(this.copy.releasePrompt, '');
     return reason === null ? Promise.resolve() : this.act(d, () => this.api.release(d.review.id, reason), false);
   }
 }

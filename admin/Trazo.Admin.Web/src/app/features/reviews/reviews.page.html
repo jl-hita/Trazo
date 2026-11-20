@@ -1,72 +1,72 @@
     <div class="page-heading">
       <div>
-        <p class="eyebrow">ADMINISTRATION</p>
-        <h1>Plan reviews</h1>
-        <p class="subtitle">Users who asked for a manual review of their routine. Take a request to talk with the user; give it back to the queue if somebody else should continue.</p>
+        <p class="eyebrow">{{ copy.eyebrow }}</p>
+        <h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p>
       </div>
     </div>
     @if (error()) { <p class="rv-error" role="alert">{{ error() }}</p> }
     <div class="rv-layout">
-      <section aria-label="Requests">
+      <section [attr.aria-label]="copy.requests">
         <div class="rv-toolbar">
-          <select aria-label="Filter by status" [ngModel]="status()" (ngModelChange)="setStatus($event)">
+          <select [attr.aria-label]="copy.statusFilter" [ngModel]="status()" (ngModelChange)="setStatus($event)">
             @for (f of filters; track f.value) { <option [value]="f.value">{{ f.label }}</option> }
           </select>
-          <trazo-button variant="secondary" type="button" (pressed)="refresh()">Refresh</trazo-button>
-          @if (counts(); as c) { <span class="rv-count">{{ c.pending }} pending · {{ c.mine }} mine@if (c.mineAwaitingReply > 0) { ({{ c.mineAwaitingReply }} awaiting your reply) }</span> }
+          <trazo-button variant="secondary" type="button" (pressed)="refresh()">{{ copy.refresh }}</trazo-button>
+          @if (counts(); as c) { <span class="rv-count">{{ c.pending }} {{ copy.pending }} · {{ c.mine }} {{ copy.mine }}@if (c.mineAwaitingReply > 0) { ({{ c.mineAwaitingReply }} {{ copy.awaitingYourReply }}) }</span> }
         </div>
         <div class="rv-list">
           @for (r of data()?.items ?? []; track r.id) {
             <button type="button" class="rv-item" [class.selected]="selected()?.review?.id === r.id" (click)="open(r.id)">
               <b>{{ r.userName }}
                 @switch (r.status) {
-                  @case ('pending') { <span class="rv-badge">Pending</span> }
-                  @case ('in_progress') { <span class="rv-badge progress">{{ r.assignedToMe ? 'Mine' : 'With ' + (r.assignedToName ?? 'someone') }}</span> }
-                  @default { <span class="rv-badge done">Reviewed</span> }
+                  @case ('pending') { <span class="rv-badge">{{ copy.statuses.pending }}</span> }
+                  @case ('in_progress') { <span class="rv-badge progress">{{ r.assignedToMe ? copy.you : copy.with + ' ' + (r.assignedToName ?? copy.someone) }}</span> }
+                  @default { <span class="rv-badge done">{{ copy.statuses.reviewed }}</span> }
                 }
-                @if (r.awaitingReply) { <span class="rv-badge reply">Awaiting reply</span> }
+                @if (r.awaitingReply) { <span class="rv-badge reply">{{ copy.awaitingReply }}</span> }
               </b>
-              <span class="meta">{{ r.goal }} · {{ r.experience }} · {{ r.split }} · {{ r.totalWeeks }} weeks · {{ r.messageCount }} messages · {{ when(r.updatedAt) }}</span>
+              <span class="meta">{{ r.goal }} · {{ r.experience }} · {{ r.split }} · {{ r.totalWeeks }} {{ copy.weeks }} · {{ r.messageCount }} {{ copy.messages }} · {{ when(r.updatedAt) }}</span>
               @if (r.preview) { <span class="preview">{{ r.preview }}</span> }
             </button>
           } @empty {
-            @if (!loading()) { <p class="rv-empty">No requests.</p> }
+            @if (!loading()) { <p class="rv-empty">{{ copy.noRequests }}</p> }
           }
         </div>
       </section>
 
-      <section class="rv-panel" aria-label="Conversation">
+      <section class="rv-panel" [attr.aria-label]="copy.conversation">
         @if (selected(); as d) {
           <div>
             <h2>{{ d.review.userName }}</h2>
             <p class="meta">{{ d.review.userEmail }} · {{ d.review.goal }} · {{ d.review.experience }} · {{ d.review.split }} · {{ d.review.totalWeeks }} weeks from {{ d.startDate }}</p>
-            @if (d.review.status === 'in_progress') { <p class="meta">Held by {{ d.review.assignedToMe ? 'you' : d.review.assignedToName }}</p> }
+            @if (d.review.status === 'in_progress') { <p class="meta">{{ copy.heldBy }} {{ d.review.assignedToMe ? copy.you : d.review.assignedToName }}</p> }
           </div>
-          <div class="rv-thread" role="log" aria-label="Messages">
+          <div class="rv-thread" role="log" [attr.aria-label]="copy.threadMessages">
             @for (m of d.messages; track m.id) {
               <div class="rv-msg" [class.user]="m.author === 'user'" [class.staff]="m.author === 'staff'" [class.system]="m.author === 'system'">
-                @if (m.author !== 'system') { <small>{{ m.author === 'user' ? d.review.userName : (m.authorName ?? 'Team') }} · {{ when(m.createdAt) }}</small> }
+                @if (m.author !== 'system') { <small>{{ m.author === 'user' ? d.review.userName : (m.authorName ?? copy.team) }} · {{ when(m.createdAt) }}</small> }
                 {{ m.body }}
               </div>
-            } @empty { <p class="rv-note">The user did not write a message.</p> }
+            } @empty { <p class="rv-note">{{ copy.noMessage }}</p> }
           </div>
           @if (d.canReply) {
-            <textarea placeholder="Reply to the user (they see it as coming from the team)" maxlength="2000" [(ngModel)]="draft" aria-label="Reply"></textarea>
+            <textarea [placeholder]="copy.replyPlaceholder" maxlength="2000" [(ngModel)]="draft" [attr.aria-label]="copy.replyAria"></textarea>
           } @else if (d.review.status === 'in_progress') {
-            <p class="rv-note">Only {{ d.review.assignedToName }} can reply while they hold this request.</p>
+            <p class="rv-note">{{ copy.onlyAssignedCanReply }} {{ d.review.assignedToName }}.</p>
           } @else if (d.review.status === 'reviewed') {
-            <p class="rv-note">Closed {{ when(d.review.reviewedAt) }}. The user can open a new request to continue.</p>
+            <p class="rv-note">{{ copy.closed }} {{ when(d.review.reviewedAt) }}. {{ copy.userCanOpenNew }}</p>
           }
           <div class="rv-actions">
-            @if (d.canTake) { <trazo-button variant="primary" type="button" [disabled]="busy()" (pressed)="claim(d)">Take it</trazo-button> }
+            @if (d.canTake) { <trazo-button variant="primary" type="button" [disabled]="busy()" (pressed)="claim(d)">{{ copy.take }}</trazo-button> }
             @if (d.canReply) {
-              <trazo-button variant="primary" type="button" [disabled]="busy() || !draft.trim()" (pressed)="send(d)">Send reply</trazo-button>
-              <trazo-button variant="secondary" type="button" [disabled]="busy()" (pressed)="close(d)">Mark as reviewed{{ draft.trim() ? ' with this message' : '' }}</trazo-button>
+              <trazo-button variant="primary" type="button" [disabled]="busy() || !draft.trim()" (pressed)="send(d)">{{ copy.sendReply }}</trazo-button>
+              <trazo-button variant="secondary" type="button" [disabled]="busy()" (pressed)="close(d)">{{ copy.markReviewed }}{{ draft.trim() ? ' ' + copy.withThisMessage : '' }}</trazo-button>
             }
-            @if (d.canRelease) { <trazo-button variant="secondary" type="button" [disabled]="busy()" (pressed)="release(d)">Give back to the queue</trazo-button> }
+            @if (d.canRelease) { <trazo-button variant="secondary" type="button" [disabled]="busy()" (pressed)="release(d)">{{ copy.release }}</trazo-button> }
           </div>
         } @else {
-          <p class="rv-empty">Select a request.</p>
+          <p class="rv-empty">{{ copy.selectRequest }}</p>
         }
       </section>
     </div>

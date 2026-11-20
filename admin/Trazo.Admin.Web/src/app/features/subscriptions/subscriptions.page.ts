@@ -6,11 +6,14 @@ import { RouterLink } from '@angular/router';
 import type { AdminSubscriptionDetail, AdminSubscriptionSummary } from '../../core/admin.models';
 import { SubscriptionsApi } from './subscriptions.api';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
+import { formatUiDateTime } from '../../core/ui-format';
 
 const STATUSES: { value: string; label: string }[] = [
-  { value: 'trial', label: 'Trial' }, { value: 'active', label: 'Active' }, { value: 'grace_period', label: 'Grace period' },
-  { value: 'on_hold', label: 'On hold' }, { value: 'canceled', label: 'Canceled' }, { value: 'expired', label: 'Expired' },
-  { value: 'revoked', label: 'Revoked' }, { value: 'pending', label: 'Pending' }
+  { value: 'trial', label: UI_COPY.subscriptions.statuses.trial }, { value: 'active', label: UI_COPY.subscriptions.statuses.active },
+  { value: 'grace_period', label: UI_COPY.subscriptions.statuses.grace_period }, { value: 'on_hold', label: UI_COPY.subscriptions.statuses.on_hold },
+  { value: 'canceled', label: UI_COPY.subscriptions.statuses.canceled }, { value: 'expired', label: UI_COPY.subscriptions.statuses.expired },
+  { value: 'revoked', label: UI_COPY.subscriptions.statuses.revoked }, { value: 'pending', label: UI_COPY.subscriptions.statuses.pending }
 ];
 
 /** Subscriptions bought through Google Play: filter, inspect and re-sync with the store. */
@@ -27,6 +30,7 @@ export class SubscriptionsPageComponent {
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
 
+  protected readonly copy = UI_COPY.subscriptions;
   protected readonly statuses = STATUSES;
   protected readonly items = signal<AdminSubscriptionSummary[]>([]);
   protected readonly q = signal('');
@@ -78,7 +82,7 @@ export class SubscriptionsPageComponent {
     this.busy.set(true); this.message.set(''); this.panelError.set('');
     try {
       this.selected.set(await this.api.refresh(current.subscription.id));
-      this.message.set('Refreshed from Google Play.');
+      this.message.set(this.copy.messages.refreshed);
       await this.load();
     } catch (e) {
       this.panelError.set(errorMessage(e));
@@ -97,7 +101,7 @@ export class SubscriptionsPageComponent {
   }
 
   protected formatDate(value: string): string {
-    return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    return formatUiDateTime(value);
   }
 
   private async load(): Promise<void> {

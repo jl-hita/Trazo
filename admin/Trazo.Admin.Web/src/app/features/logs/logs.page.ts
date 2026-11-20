@@ -6,11 +6,13 @@ import { ActivatedRoute } from '@angular/router';
 import type { LogEntry, LogLevelGroup, LogPage } from '../../core/admin.models';
 import { LogsApi } from './logs.api';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
+import { formatUiDateTime } from '../../core/ui-format';
 
 const LEVELS: { id: LogLevelGroup; label: string }[] = [
-  { id: 'info', label: 'Info' },
-  { id: 'warning', label: 'Warning' },
-  { id: 'error', label: 'Error' }
+  { id: 'info', label: UI_COPY.logs.levels.info },
+  { id: 'warning', label: UI_COPY.logs.levels.warning },
+  { id: 'error', label: UI_COPY.logs.levels.error }
 ];
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -41,6 +43,7 @@ export class LogsPageComponent {
   /** Cursor that opens each page already visited; the first page has none. */
   private readonly cursors = signal<(string | null)[]>([null]);
 
+  protected readonly copy = UI_COPY.logs;
   protected readonly levels = LEVELS;
   protected readonly selectedLevels = signal<LogLevelGroup[]>(['info', 'warning', 'error']);
   protected readonly q = signal('');
@@ -57,7 +60,7 @@ export class LogsPageComponent {
   protected readonly openId = signal<number | null>(null);
   protected readonly pageNumber = computed(() => this.cursors().length);
   protected readonly emptyText = computed(() =>
-    this.selectedLevels().length === 0 ? 'Select at least one level.' : 'No log entries match these filters.');
+    this.selectedLevels().length === 0 ? this.copy.selectLevel : this.copy.noMatches);
 
   constructor() {
     this.applyQueryParams();
@@ -148,7 +151,7 @@ export class LogsPageComponent {
 
   protected formatTime(iso: string): string {
     const d = new Date(iso);
-    return Number.isNaN(d.getTime()) ? iso : d.toLocaleString('sv-SE');
+    return Number.isNaN(d.getTime()) ? iso : formatUiDateTime(iso);
   }
 
   protected shortCategory(category: string): string {
