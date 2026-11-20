@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type {
   CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse, PlanSession
 } from '../../core/admin.models';
@@ -19,7 +21,7 @@ function nextMonday(): string {
 @Component({
   selector: 'trazo-planning-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiButtonComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './planning.page.scss',
   templateUrl: './planning.page.html'
