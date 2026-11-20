@@ -1,31 +1,28 @@
     <form class="pf" (ngSubmit)="save()" autocomplete="off">
       <fieldset>
-        <legend>Push notifications (Firebase)</legend>
-        <p class="hint">Create a Firebase project, add an Android app with the package <code>com.trazo.android</code> and copy these values from
-          <code>google-services.json</code>. The app asks the API for them after sign-in, so no file is built into it. Leave everything empty to turn push off.</p>
-        <trazo-form-field label="Project ID (project_info.project_id)" controlId="projectId"><input type="text" name="projectId" placeholder="trazo-app" [ngModel]="projectId()" (ngModelChange)="projectId.set($event)" id="projectId">
+        <legend>{{ labels.title }}</legend>
+        <p class="hint">{{ labels.setup }}</p>
+        <trazo-form-field [label]="labels.projectId" controlId="projectId"><input type="text" name="projectId" placeholder="trazo-app" [ngModel]="projectId()" (ngModelChange)="projectId.set($event)" id="projectId">
         </trazo-form-field>
-        <trazo-form-field label="Android app ID (client_info.mobilesdk_app_id)" controlId="applicationId"><input type="text" name="applicationId" placeholder="1:123456789012:android:0123456789abcdef" [ngModel]="applicationId()" (ngModelChange)="applicationId.set($event)" id="applicationId">
+        <trazo-form-field [label]="labels.androidAppId" controlId="applicationId"><input type="text" name="applicationId" placeholder="1:123456789012:android:0123456789abcdef" [ngModel]="applicationId()" (ngModelChange)="applicationId.set($event)" id="applicationId">
         </trazo-form-field>
-        <trazo-form-field label="Android API key (api_key.current_key)" controlId="apiKey"><input type="text" name="apiKey" placeholder="AIza…" [ngModel]="apiKey()" (ngModelChange)="apiKey.set($event)" id="apiKey">
+        <trazo-form-field [label]="labels.apiKey" controlId="apiKey"><input type="text" name="apiKey" placeholder="AIza…" [ngModel]="apiKey()" (ngModelChange)="apiKey.set($event)" id="apiKey">
         </trazo-form-field>
-        <trazo-form-field label="Sender ID (project_info.project_number, optional)" controlId="senderId"><input type="text" name="senderId" placeholder="123456789012" [ngModel]="senderId()" (ngModelChange)="senderId.set($event)" id="senderId">
+        <trazo-form-field [label]="labels.senderId" controlId="senderId"><input type="text" name="senderId" placeholder="123456789012" [ngModel]="senderId()" (ngModelChange)="senderId.set($event)" id="senderId">
         </trazo-form-field>
-        <trazo-form-field label="Service-account key (JSON)" controlId="serviceAccountJson"><textarea name="serviceAccountJson" spellcheck="false" autocomplete="off"
-                    [placeholder]="view()?.serviceAccountSet ? 'Stored (leave blank to keep it)' : 'Paste the whole JSON key file'"
+        <trazo-form-field [label]="labels.serviceAccountKey" controlId="serviceAccountJson"><textarea name="serviceAccountJson" spellcheck="false" autocomplete="off"
+                    [placeholder]="view()?.serviceAccountSet ? labels.storedKeyPlaceholder : labels.pasteJson"
                     [ngModel]="serviceAccountJson()" (ngModelChange)="serviceAccountJson.set($event)" id="serviceAccountJson"></textarea>
         </trazo-form-field>
-        @if (view()?.serviceAccountEmail; as email) { <p class="hint">Stored key for <span class="stored">{{ email }}</span>. The key itself is encrypted and cannot be shown again.</p> }
-        <p class="hint">Firebase console → Project settings → Service accounts → Generate new private key. The Firebase Cloud Messaging API (V1) must be enabled.
-          Nothing secret is ever sent to the app.</p>
+        @if (view()?.serviceAccountEmail; as email) { <p class="hint">{{ labels.storedKeyFor }} <span class="stored">{{ email }}</span>. {{ labels.keyEncrypted }}</p> }
+        <p class="hint">{{ labels.firebaseSteps }}</p>
         @if (view(); as v) {
-          <p class="hint">{{ v.configured ? 'Push is active.' : 'Push is not active: the client values and the service-account key are all needed.' }}
-            Registered devices: {{ v.deviceCount }}.</p>
+          <p class="hint">{{ v.configured ? labels.pushActive : labels.pushInactive }} {{ labels.registeredDevices }}: {{ v.deviceCount }}.</p>
         }
         <div class="actions">
-          <trazo-button variant="primary" type="submit" [disabled]="busy()">Save push settings</trazo-button>
-          <trazo-button variant="secondary" type="button" (pressed)="check()" [disabled]="busy() || !view()?.configured">Check connection</trazo-button>
-          <trazo-button variant="secondary" type="button" (pressed)="test()" [disabled]="busy() || !view()?.configured">Send test to my devices</trazo-button>
+          <trazo-button variant="primary" type="submit" [disabled]="busy()">{{ labels.save }}</trazo-button>
+          <trazo-button variant="secondary" type="button" (pressed)="check()" [disabled]="busy() || !view()?.configured">{{ labels.checkConnection }}</trazo-button>
+          <trazo-button variant="secondary" type="button" (pressed)="test()" [disabled]="busy() || !view()?.configured">{{ labels.testMyDevices }}</trazo-button>
           @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
           @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
         </div>
@@ -34,14 +31,14 @@
 
     <form class="pf" style="margin-top:22px" (ngSubmit)="broadcast()" autocomplete="off">
       <fieldset>
-        <legend>Announcement to all devices</legend>
-        <p class="hint">Sent to every registered phone. Do not include personal data: it travels through Google's servers.</p>
-        <trazo-form-field label="Title (max 65)" controlId="title"><input type="text" name="title" maxlength="65" [ngModel]="title()" (ngModelChange)="title.set($event)" id="title">
+        <legend>{{ labels.announcement }}</legend>
+        <p class="hint">{{ labels.announcementHint }}</p>
+        <trazo-form-field [label]="labels.announcementTitle" controlId="title"><input type="text" name="title" maxlength="65" [ngModel]="title()" (ngModelChange)="title.set($event)" id="title">
         </trazo-form-field>
-        <trazo-form-field label="Text (max 240)" controlId="body"><textarea class="short" name="body" maxlength="240" [ngModel]="body()" (ngModelChange)="body.set($event)" id="body"></textarea>
+        <trazo-form-field [label]="labels.announcementText" controlId="body"><textarea class="short" name="body" maxlength="240" [ngModel]="body()" (ngModelChange)="body.set($event)" id="body"></textarea>
         </trazo-form-field>
         <div class="actions">
-          <trazo-button variant="primary" type="submit" [disabled]="busy() || !view()?.configured || !title().trim() || !body().trim()">Send announcement</trazo-button>
+          <trazo-button variant="primary" type="submit" [disabled]="busy() || !view()?.configured || !title().trim() || !body().trim()">{{ labels.sendAnnouncement }}</trazo-button>
           @if (broadcastMessage()) { <span class="ok" role="status">{{ broadcastMessage() }}</span> }
           @if (broadcastError()) { <span class="err" role="alert">{{ broadcastError() }}</span> }
         </div>
