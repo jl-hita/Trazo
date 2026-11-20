@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { EconomicsReport, Range } from './marketing.models';
 import { BarRow, BarsComponent } from './marketing.charts';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 /**
  * Unit economics: what winning a paying customer costs, what that customer brings per month, how long they keep paying and whether the
@@ -10,7 +11,7 @@ import { BarRow, BarsComponent } from './marketing.charts';
 @Component({
   selector: 'mk-economics',
   standalone: true,
-  imports: [BarsComponent],
+  imports: [BarsComponent, UiTableComponent],
   templateUrl: './economics.tab.html'
 })
 export class EconomicsTabComponent {
