@@ -28,7 +28,7 @@
           @for (it of items(); track it.campaign.id) {
             <tr class="clickable" (click)="open(it)">
               <td><span class="name">{{ it.campaign.name }}</span><span class="sub">{{ help(it.campaign.channel) }} · {{ it.campaign.slug }}</span></td>
-              <td><span class="mk-badge" [class]="'mk-badge ' + it.campaign.status">{{ labels.campaignStatuses[it.campaign.status] }}</span></td>
+              <td><span class="mk-badge" [class]="'mk-badge ' + it.campaign.status">{{ campaignStatusLabel(it.campaign.status) }}</span></td>
               <td>{{ fmt.int(it.campaign.clicks) }}</td><td>{{ fmt.int(it.campaign.installs) }}</td><td>{{ fmt.int(it.campaign.signups) }}</td>
               <td>{{ it.campaign.spend ? fmt.eur(it.campaign.spend) : '—' }}</td>
               <td><trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="copy(it.link); $event.stopPropagation()">{{ labels.copyLink }}</trazo-button></td>
