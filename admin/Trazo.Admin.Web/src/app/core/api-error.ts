@@ -19,7 +19,7 @@ function hasValidationErrors(body: unknown): boolean {
  * The original HttpErrorResponse is deliberately left untouched by ApiHttpClient,
  * so callers can still inspect status and headers when a flow needs them.
  */
-export function errorMessage(error: unknown, fallback = UI_COPY.apiErrors.unexpected): string {
+export function errorMessage(error: unknown, fallback: string = UI_COPY.apiErrors.unexpected): string {
   const response = isRecord(error) ? error as ErrorResponseLike : null;
   const status = typeof response?.status === 'number' ? response.status : null;
   const body = response?.error;
