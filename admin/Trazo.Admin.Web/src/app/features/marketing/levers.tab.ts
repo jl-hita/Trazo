@@ -35,10 +35,10 @@ export class LeversTabComponent {
   protected readonly sourceRows = computed<BarRow[]>(() =>
     (this.paywall()?.sources ?? []).filter(s => s.views > 0).map(s => ({ label: SOURCE_LABELS[s.source] ?? s.source, value: s.share, text: `${s.views} · ${fmt.pct(s.share, 0)}` })));
   protected readonly paywallLabels = computed(() => this.paywall()?.weeks.map(w => w.week) ?? []);
-  protected readonly paywallSeries = computed<Series[]>(() => [{ name: 'Openings', color: '#5b8fcb', values: this.paywall()?.weeks.map(w => w.total) ?? [] }]);
+  protected readonly paywallSeries = computed<Series[]>(() => [{ name: this.labels.timesOpened, color: '#5b8fcb', values: this.paywall()?.weeks.map(w => w.total) ?? [] }]);
   protected readonly languages = computed(() => Object.entries(this.waitlist()?.byLanguage ?? {}));
   protected readonly waitLabels = computed(() => this.waitlist()?.weeks.map(w => w.week) ?? []);
-  protected readonly waitSeries = computed<Series[]>(() => [{ name: 'Signups', color: '#4fae78', values: this.waitlist()?.weeks.map(w => w.joined) ?? [] }]);
+  protected readonly waitSeries = computed<Series[]>(() => [{ name: this.labels.signups, color: '#4fae78', values: this.waitlist()?.weeks.map(w => w.joined) ?? [] }]);
 
   constructor() {
     effect(() => { const r = this.range(); void this.load(r); });
