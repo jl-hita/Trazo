@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { ApiHttpClient } from './api-http.client';
 
 export interface SetupStatus {
   setupRequired: boolean;
@@ -45,30 +44,30 @@ const API = '/api/v1';
 
 @Injectable({ providedIn: 'root' })
 export class SetupApi {
-  private readonly http = inject(HttpClient);
+  private readonly http = inject(ApiHttpClient);
 
   status(): Promise<SetupStatus> {
-    return firstValueFrom(this.http.get<SetupStatus>(`${API}/setup/status`));
+    return this.http.get<SetupStatus>(`${API}/setup/status`);
   }
 
   testGoogle(clientId: string, admin = false): Promise<TestResult> {
-    return firstValueFrom(this.http.post<TestResult>(this.base(admin) + '/test/google', { clientId }));
+    return this.http.post<TestResult>(this.base(admin) + '/test/google', { clientId });
   }
 
   testSmtp(email: EmailSettings, recipient: string, admin = false): Promise<TestResult> {
-    return firstValueFrom(this.http.post<TestResult>(this.base(admin) + '/test/smtp', { email, recipient }));
+    return this.http.post<TestResult>(this.base(admin) + '/test/smtp', { email, recipient });
   }
 
   complete(google: GoogleSettings, email: EmailSettings, admin: AdminAccount): Promise<{ completed: boolean }> {
-    return firstValueFrom(this.http.post<{ completed: boolean }>(`${API}/setup/complete`, { google, email, admin }));
+    return this.http.post<{ completed: boolean }>(`${API}/setup/complete`, { google, email, admin });
   }
 
   getSettings(): Promise<SettingsView> {
-    return firstValueFrom(this.http.get<SettingsView>(`${API}/admin/settings`));
+    return this.http.get<SettingsView>(`${API}/admin/settings`);
   }
 
   saveSettings(google: GoogleSettings, email: EmailSettings): Promise<{ saved: boolean }> {
-    return firstValueFrom(this.http.put<{ saved: boolean }>(`${API}/admin/settings`, { google, email }));
+    return this.http.put<{ saved: boolean }>(`${API}/admin/settings`, { google, email });
   }
 
   private base(admin: boolean): string {
