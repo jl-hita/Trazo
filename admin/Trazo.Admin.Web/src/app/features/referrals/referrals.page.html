@@ -22,7 +22,7 @@
         <label>Reward for a successful referral (days)
           <input type="number" min="1" [max]="maxRewardDays()" [ngModel]="rewardDays()" (ngModelChange)="rewardDays.set($event)" name="rewardDays">
         </label>
-        <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (click)="saveProgramme()">Save settings</trazo-button>
+        <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (pressed)="saveProgramme()">Save settings</trazo-button>
         <span class="muted">Maximum {{ maxRewardDays() }} days. Changes affect new rewards, not grants already issued.</span>
       </div>
 
@@ -108,7 +108,7 @@
         <span>Page {{ page() }} of {{ pageCount() }}</span>
         <div class="controls">
           <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() <= 1" (pressed)="changePage(-1)">Previous</trazo-button>
-          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() >= pageCount()" (click)="changePage(1)">Next</trazo-button>
+          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() >= pageCount()" (pressed)="changePage(1)">Next</trazo-button>
         </div>
       </div>
 
