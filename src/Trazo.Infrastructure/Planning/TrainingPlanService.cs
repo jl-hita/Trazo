@@ -444,7 +444,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 SessionsChanged = addedSessions.Count, AppliedAt = now,
                 Explanation = "El usuario editó las rutinas de su plan manual: las sesiones pendientes se sustituyeron por las nuevas."
             }, PrescriptionSources.User, edits));
-        await db.SaveChangesAsync(ct);
+        if (!await SaveUnlessConflictAsync(ct)) return PlanResult<PlanView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
     }
 
@@ -728,6 +728,27 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     public const string AddKind = "user_add_exercise";
     public const string ManualEditKind = "user_manual_plan_edit";
 
+    public const string ConcurrentModificationMessage = "Tu plan cambió mientras se guardaba esta modificación y no se ha aplicado nada. Recarga el plan y vuelve a intentarlo.";
+
+    /// <summary>
+    /// Saves everything tracked in one transaction. When a session was modified by another request after this one read it, the database rejects the
+    /// whole save (the prescription and the history row that describes it alike): nothing is stored, the tracker is cleared so no stale copy is reused,
+    /// and the caller answers with a conflict. It never retries: the same edit on a different state is a different edit.
+    /// </summary>
+    private async Task<bool> SaveUnlessConflictAsync(CancellationToken ct)
+    {
+        try
+        {
+            await db.SaveChangesAsync(ct);
+            return true;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            db.ChangeTracker.Clear();
+            return false;
+        }
+    }
+
     /// <summary>
     /// True when the next session is (now or already) lighter for this absence; false when nothing could be lightened. Each session carries the
     /// instant of the absence it was lightened for, so nothing is done twice, however many times the next session is read or whatever was omitted meanwhile.
@@ -787,6 +808,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             await db.SaveChangesAsync(ct);
         }
+        catch (DbUpdateConcurrencyException)
+        {
+            // Another write reached one of these sessions between our read and our save. Nothing of ours was stored (neither the sessions nor the
+            // record). The easing is not claimed: the next read of the next session reloads the sessions and, if the absence is still not eased
+            // there, applies it on top of what is stored now.
+            db.ChangeTracker.Clear();
+            return false;
+        }
         catch (DbUpdateException)
         {
             // Another request lightened it first (the unique index lets only one): nothing is changed twice.
@@ -841,7 +870,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Id = Guid.NewGuid(), PlanId = plan.Id, Kind = "reschedule", ExerciseIds = [], SessionsChanged = moving.Count, AppliedAt = now, EvidenceAt = now,
             Explanation = $"El programa pendiente se movió {behind} semana(s) para continuar desde esta semana."
         });
-        await db.SaveChangesAsync(ct);
+        if (!await SaveUnlessConflictAsync(ct)) return PlanResult<RescheduleResult>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<RescheduleResult>.Ok(new(behind, moving.Count, plan.StartDate, plan.StartDate.AddDays(plan.TotalWeeks * 7 - 1)));
     }
 
@@ -1239,10 +1268,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             await db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex)
         {
             // Two identical requests at once: the second one finds the session already resolved.
             db.ChangeTracker.Clear();
+            if (ex is DbUpdateConcurrencyException
+                && await db.PlannedSessions.AsNoTracking().AnyAsync(s => s.Id == sessionId && s.Status == PlannedSessionStatus.Planned, ct))
+                // Still pending: what changed under us was a prescription or a date, not this same request. Say so instead of claiming it was resolved.
+                return PlanResult<SkipResult>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
             return PlanResult<SkipResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está resuelta.");
         }
         var message = physical
@@ -1597,10 +1630,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             await db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex)
         {
             db.ChangeTracker.Clear();
             var concurrent = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
+            // The session, or a future one it adapts, was changed by another request and this session has no log: nothing was stored.
+            if (concurrent is null && ex is DbUpdateConcurrencyException)
+                return PlanResult<LogResult>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
             if (concurrent is null) throw;
             // Two identical requests at once: the second one gets the first one's result.
             var stored = await db.PlannedSessions.AsNoTracking().FirstAsync(s => s.Id == session.Id, ct);
@@ -1928,7 +1964,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 ? "El usuario cambió un ejercicio por otro en esta sesión y en las pendientes del bloque."
                 : "El usuario cambió un ejercicio por otro en esta sesión."
         }, PrescriptionSources.User, swaps));
-        await db.SaveChangesAsync(ct);
+        if (!await SaveUnlessConflictAsync(ct)) return PlanResult<SessionView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<SessionView>.Ok(ToSessionView(context.Session, null));
     }
 
@@ -1989,7 +2025,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Id = Guid.NewGuid(), PlanId = plan.Id, Kind = AddKind, ExerciseIds = [candidate.ExerciseId], SessionsChanged = 1, AppliedAt = session.UpdatedAt,
             Explanation = "El usuario añadió un ejercicio a esta sesión."
         }, PrescriptionSources.User, [Modified(session, beforeAdd, session.PrescriptionJson)]));
-        await db.SaveChangesAsync(ct);
+        if (!await SaveUnlessConflictAsync(ct)) return PlanResult<SessionView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<SessionView>.Ok(ToSessionView(session, null));
     }
 

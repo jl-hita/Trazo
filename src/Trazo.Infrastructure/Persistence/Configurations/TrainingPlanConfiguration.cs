@@ -111,6 +111,8 @@ public sealed class PlannedSessionConfiguration : IEntityTypeConfiguration<Plann
         foreach (var original in new[] { nameof(PlannedSession.OriginalPrescriptionJson), nameof(PlannedSession.OriginalPrescriptionSchemaVersion), nameof(PlannedSession.PrescriptionSource) })
             builder.Property(original).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Throw);
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+        // Portable optimistic concurrency (no provider-specific xmin/rowversion): an explicit counter that the context advances on every UPDATE.
+        builder.Property(x => x.Version).IsConcurrencyToken();
         builder.HasIndex(x => new { x.PlanId, x.Date });
         builder.HasIndex(x => new { x.PlanId, x.SequenceIndex }).IsUnique();
         // NoAction: the block's cascade removes the sessions; a second cascade path from the plan is not needed.

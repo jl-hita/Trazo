@@ -50,6 +50,33 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Fiscal.FiscalClosure> FiscalClosures => Set<Trazo.Domain.Fiscal.FiscalClosure>();
     public DbSet<Trazo.Domain.Fiscal.FiscalAuditEntry> FiscalAudit => Set<Trazo.Domain.Fiscal.FiscalAuditEntry>();
 
+    // Marking a property as a concurrency token only makes EF compare it; it never advances it. The counter of a planned session is advanced here,
+    // in the one place every save goes through (every SaveChanges overload ends in one of these two), so no write
+    // path can modify a session without bumping it, and nothing has to remember to do it.
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        AdvanceSessionVersions();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        AdvanceSessionVersions();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void AdvanceSessionVersions()
+    {
+        ChangeTracker.DetectChanges();
+        foreach (var entry in ChangeTracker.Entries<Trazo.Domain.Planning.PlannedSession>().Where(e => e.State == EntityState.Modified))
+        {
+            var version = entry.Property(s => s.Version);
+            // The next value is derived from the one EF will compare against (the one read from the database), never from the current value, so
+            // saving twice with the same instance, or a value assigned by mistake, cannot skip or repeat a number.
+            version.CurrentValue = version.OriginalValue + 1;
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrazoDbContext).Assembly);

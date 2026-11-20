@@ -14,7 +14,9 @@ public enum PlanFailure
     ExerciseNotInSession,
     NotAllowed,
     /// <summary>The plan was generated automatically and the account has no Premium access.</summary>
-    PremiumRequired
+    PremiumRequired,
+    /// <summary>A session was changed by another request after this one read it; nothing of this request was stored.</summary>
+    ConcurrentModification
 }
 
 public sealed record PlanResult<T>(

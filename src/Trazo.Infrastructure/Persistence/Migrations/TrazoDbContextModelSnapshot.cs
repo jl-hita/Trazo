@@ -381,6 +381,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("PrescriptionSource").HasMaxLength(10).HasColumnType("character varying(10)");
             b.Property<string>("Status").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.Property<int>("Version").IsConcurrencyToken().HasColumnType("integer");
             b.HasKey("Id");
             b.HasIndex("PlanId", "Date");
             b.HasIndex("PlanId", "SequenceIndex").IsUnique();

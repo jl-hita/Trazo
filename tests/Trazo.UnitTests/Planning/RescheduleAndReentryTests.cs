@@ -182,6 +182,46 @@ public sealed class RescheduleAndReentryTests() : PlansApiBase(enforced: true)
     }
 
     [Fact]
+    public async Task ARescheduleThatLosesTheRaceAnswers409_MovesNothing_AndWorksWhenRepeated()
+    {
+        var client = await StartAsync("res-race@example.com", premium: false, StartedLastWeek);
+        var before = (await BlockAsync(client)).Select(s => s.GetProperty("date").GetString()).ToList();
+
+        RaceOn(q => q);
+        var response = await client.PostAsync("/api/v1/plans/current/reschedule", null);
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.Equal("plan_modified_concurrently", (await JsonAsync(response)).GetProperty("title").GetString());
+
+        Assert.Equal(before, (await BlockAsync(client)).Select(s => s.GetProperty("date").GetString()).ToList()); // nothing moved
+        Assert.DoesNotContain(await AuditAsync(), a => a.Kind == "reschedule");                                  // and nothing was recorded
+
+        var again = await client.PostAsync("/api/v1/plans/current/reschedule", null);
+        Assert.Equal(HttpStatusCode.OK, again.StatusCode);
+        Assert.Equal(1, (await JsonAsync(again)).GetProperty("weeksShifted").GetInt32());
+        Assert.Single(await AuditAsync(), a => a.Kind == "reschedule");
+    }
+
+    [Fact]
+    public async Task AReentryThatLosesTheRaceLightensNothing_ReportsItAsNotApplied_AndAppliesOnTheNextRead()
+    {
+        var client = await StartAsync("re-race@example.com", premium: true, StartedLastWeek, "Sequence");
+        var sessions = await BlockAsync(client);
+        Assert.Equal(HttpStatusCode.OK, (await LogAsync(client, sessions[0], Now.AddHours(-1))).StatusCode);
+        await MakeLastWorkoutOldAsync(30);
+
+        RaceOn(q => q.Where(s => s.Status == PlannedSessionStatus.Planned));
+        var lost = await NextAsync(client); // the read itself never fails: the easing is simply not claimed
+        Assert.False(lost.GetProperty("reentry").GetProperty("applied").GetBoolean());
+        Assert.Equal(4, lost.GetProperty("session").GetProperty("exercises")[0].GetProperty("sets").GetInt32());
+        Assert.DoesNotContain(await AuditAsync(), a => a.Kind == "reentry");
+
+        var next = await NextAsync(client);
+        Assert.True(next.GetProperty("reentry").GetProperty("applied").GetBoolean());
+        Assert.Equal(3, next.GetProperty("session").GetProperty("exercises")[0].GetProperty("sets").GetInt32());
+        Assert.Single(await AuditAsync(), a => a.Kind == "reentry");
+    }
+
+    [Fact]
     public async Task TwoReadsAtOnceLightenTheSessionOnlyOnce()
     {
         var client = await StartAsync("re-race@example.com", premium: true, StartedLastWeek, "Sequence");

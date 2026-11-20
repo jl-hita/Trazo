@@ -173,6 +173,13 @@ public sealed class PlannedSession
     public string? PrescriptionSource { get; set; }
     public PlannedSessionStatus Status { get; set; } = PlannedSessionStatus.Planned;
     public DateTimeOffset UpdatedAt { get; set; }
+    /// <summary>
+    /// Optimistic-concurrency token: how many times the row has been modified (0 when created and on sessions that existed before the column).
+    /// EF puts the value it read in the WHERE of every UPDATE and DELETE, and <c>TrazoDbContext</c> advances it on every UPDATE, so a write built on
+    /// a stale copy of the session affects no row and fails with <c>DbUpdateConcurrencyException</c> instead of silently overwriting the winner.
+    /// Never set it by hand.
+    /// </summary>
+    public int Version { get; set; }
 }
 
 /// <summary>What the user did in one planned session, and how it felt.</summary>

@@ -102,6 +102,7 @@ public sealed class PostgresMigrationTests : IDisposable
 
     private const string BeforeTrace = "20261126100000_FrequencyProposals";
     private const string BeforePrescriptionHistory = "20261127100000_MesocycleGenerationTrace";
+    private const string BeforeSessionVersion = "20261128100000_PrescriptionAdaptationHistory";
 
     /// <summary>Inserts one row giving a neutral value to every NOT NULL column without a default, so the test does not depend on the table's full shape.</summary>
     private void InsertMinimalRow(string table, Dictionary<string, string> values)
@@ -205,5 +206,52 @@ public sealed class PostgresMigrationTests : IDisposable
         Assert.Equal("{\"exercises\":[]}", Query(_connection, "SELECT \"PrescriptionJson\" FROM planned_sessions").Single());
         Assert.Equal("deload", Query(_connection, "SELECT \"Kind\" FROM plan_adaptations").Single());
         using (var db = Context()) db.Database.Migrate();
+    }
+
+    [ScenarioFact]
+    public void The_session_version_migration_starts_existing_sessions_at_zero_keeps_a_default_for_older_instances_and_goes_down_and_up_again()
+    {
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeSessionVersion);
+        var (user, plan, block) = (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+        InsertMinimalRow("users", new() { ["Id"] = $"'{user}'", ["Role"] = "'user'" });
+        InsertMinimalRow("training_plans", new()
+        {
+            ["Id"] = $"'{plan}'", ["UserId"] = $"'{user}'", ["Status"] = "'Archived'", ["Origin"] = "'Generated'", ["SchedulingMode"] = "'Calendar'"
+        });
+        InsertMinimalRow("training_mesocycles", new() { ["Id"] = $"'{block}'", ["PlanId"] = $"'{plan}'", ["Sequence"] = "1" });
+        InsertMinimalRow("planned_sessions", new()
+        {
+            ["PlanId"] = $"'{plan}'", ["MesocycleId"] = $"'{block}'", ["PrescriptionJson"] = "'{\"exercises\":[]}'", ["Status"] = "'Planned'"
+        });
+        Assert.DoesNotContain("Version", Query(_connection, "SELECT column_name FROM information_schema.columns WHERE table_name = 'planned_sessions'"));
+
+        using (var db = Context()) db.Database.Migrate();
+        using (var db = Context()) Assert.Empty(db.Database.GetPendingMigrations());
+
+        // The session that existed keeps everything it had and starts at 0, like one created now; the column cannot be null.
+        Assert.Equal("{\"exercises\":[]}|0", Query(_connection, "SELECT concat_ws('|', \"PrescriptionJson\", \"Version\") FROM planned_sessions").Single());
+        Assert.Equal("NO|0", Query(_connection,
+            "SELECT is_nullable || '|' || column_default FROM information_schema.columns WHERE table_name = 'planned_sessions' AND column_name = 'Version'").Single());
+
+        // The real context uses the column as the guard: a stale write is refused and a current one advances it.
+        using (var first = Context())
+        using (var second = Context())
+        {
+            var a = first.PlannedSessions.Single();
+            var b = second.PlannedSessions.Single();
+            Assert.Equal(0, a.Version);
+            a.Title = "first";
+            first.SaveChanges();
+            Assert.Equal(1, a.Version);
+            b.Title = "second";
+            Assert.Throws<DbUpdateConcurrencyException>(() => second.SaveChanges());
+        }
+        Assert.Equal("first|1", Query(_connection, "SELECT concat_ws('|', \"Title\", \"Version\") FROM planned_sessions").Single());
+
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeSessionVersion);
+        Assert.DoesNotContain("Version", Query(_connection, "SELECT column_name FROM information_schema.columns WHERE table_name = 'planned_sessions'"));
+        Assert.Equal("first", Query(_connection, "SELECT \"Title\" FROM planned_sessions").Single());
+        using (var db = Context()) db.Database.Migrate();
+        Assert.Equal("0", Query(_connection, "SELECT \"Version\"::text FROM planned_sessions").Single()); // coming back up starts every session at 0 again
     }
 }
