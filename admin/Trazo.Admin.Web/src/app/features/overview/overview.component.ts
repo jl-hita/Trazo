@@ -1,6 +1,7 @@
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AdminApi, AlertSeverity, Overview } from '../../core/admin.api';
+import type { AlertSeverity, Overview } from '../../core/admin.models';
+import { OverviewApi } from './overview.api';
 import { errorMessage } from '../../core/setup.api';
 
 type Tone = 'ok' | 'warn' | 'crit' | 'info';
@@ -43,7 +44,7 @@ const REASON_LABEL: Record<string, string> = {
   encapsulation: ViewEncapsulation.None
 })
 export class OverviewComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(OverviewApi);
   private readonly router = inject(Router);
   private requestId = 0;
 
