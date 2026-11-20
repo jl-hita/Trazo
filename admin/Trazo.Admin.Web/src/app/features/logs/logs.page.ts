@@ -1,5 +1,7 @@
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { ActivatedRoute } from '@angular/router';
 import type { LogEntry, LogLevelGroup, LogPage } from '../../core/admin.models';
 import { LogsApi } from './logs.api';
@@ -26,7 +28,7 @@ const startOfDay = (value: string, addDays = 0): string => {
 @Component({
   selector: 'trazo-logs-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiButtonComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './logs.page.scss',
   templateUrl: './logs.page.html'
