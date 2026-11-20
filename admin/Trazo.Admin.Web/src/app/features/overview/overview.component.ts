@@ -1,4 +1,5 @@
 import { OVERVIEW_COPY } from './overview.copy';
+import { formatUiDateTime, formatUiNumber, formatUiShortDate } from '../../core/ui-format';
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import type { AlertSeverity, Overview } from '../../core/admin.models';
@@ -111,7 +112,7 @@ export class OverviewComponent {
       totals: { signups: total(d => d.signups), plans: total(d => d.plans), workouts: total(d => d.workouts) },
       days: days.map(d => ({
         ...d,
-        label: new Date(d.date + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+        label: formatUiShortDate(d.date),
         signupsH: (d.signups / max) * 100, plansH: (d.plans / max) * 100, workoutsH: (d.workouts / max) * 100
       }))
     };
@@ -134,7 +135,7 @@ export class OverviewComponent {
   protected readonly cohorts = computed(() =>
     (this.data()?.insights.conversion.cohorts ?? []).map(c => ({
       ...c,
-      label: new Date(c.weekStart + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+      label: formatUiShortDate(c.weekStart),
       subscribedPercent: c.signups === 0 ? null : Math.round((100 * c.subscribed) / c.signups),
       paidPercent: c.signups === 0 ? null : Math.round((100 * c.paid) / c.signups)
     })).reverse());
@@ -181,10 +182,10 @@ export class OverviewComponent {
 
   protected when(iso: string): string {
     const d = new Date(iso);
-    return Number.isNaN(d.getTime()) ? iso : d.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+    return formatUiDateTime(iso);
   }
 
-  protected format(n: number): string { return n.toLocaleString('es-ES'); }
+  protected format(n: number): string { return formatUiNumber(n, 0); }
 
   private async load(refresh: boolean, announce: boolean): Promise<void> {
     const request = ++this.requestId;
