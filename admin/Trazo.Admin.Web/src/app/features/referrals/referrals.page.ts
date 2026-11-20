@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from '../../core/admin.api';
+import { ReferralsApi, ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from './referrals.api';
 import { errorMessage } from '../../core/setup.api';
 
 /** Referral programme operations: aggregate performance, invitation audit, reward recovery and audited reward cancellation. */
@@ -13,7 +13,7 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './referrals.page.html'
 })
 export class ReferralsPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(ReferralsApi);
   protected readonly from = signal(new Date(Date.now() - 90 * 86_400_000).toISOString().slice(0, 10));
   protected readonly to = signal(new Date().toISOString().slice(0, 10));
   protected readonly channel = signal('');
