@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -31,6 +32,8 @@ const METRICS: { key: Metric; label: string; lowerIsBetter?: boolean; money?: bo
   templateUrl: './strategies.tab.html'
 })
 export class StrategiesTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   readonly openCampaign = output<string>();
