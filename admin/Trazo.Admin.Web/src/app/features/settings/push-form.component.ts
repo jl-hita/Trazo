@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
@@ -16,6 +17,8 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './push-form.component.html'
 })
 export class PushFormComponent {
+  protected readonly labels = UI_COPY.settings.push;
+
   private readonly api = inject(SettingsApi);
 
   protected readonly view = signal<PushView | null>(null);
@@ -47,7 +50,7 @@ export class PushFormComponent {
       });
       this.serviceAccountJson.set('');
       await this.load();
-      this.message.set('Push settings saved.');
+      this.message.set(this.labels.saved);
     } catch (e) {
       this.error.set(errorMessage(e));
     } finally {

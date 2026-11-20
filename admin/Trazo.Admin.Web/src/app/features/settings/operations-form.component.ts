@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
@@ -21,6 +22,11 @@ const LOG_LEVELS = ['Debug', 'Information', 'Warning', 'Error', 'Critical'];
   templateUrl: './operations-form.component.html'
 })
 export class OperationsFormComponent {
+  protected readonly labels = UI_COPY.settings.operations;
+  protected logLevelLabel(level: string): string {
+    return this.labels.logLevels[level as keyof typeof this.labels.logLevels] ?? level;
+  }
+
   private readonly api = inject(SettingsApi);
 
   protected readonly levels = LOG_LEVELS;
@@ -61,7 +67,7 @@ export class OperationsFormComponent {
         dietoExpressApiKey: this.dietoKey() || null
       });
       this.apply(saved);
-      this.message.set('Ajustes guardados y aplicados.');
+      this.message.set(this.labels.saved);
     } catch (e) {
       this.fieldErrors.set(validationErrors(e));
       this.error.set(errorMessage(e));

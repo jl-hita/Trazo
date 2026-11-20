@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, ViewEncapsulation, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
@@ -19,6 +20,8 @@ type Mode = 'setup' | 'settings';
   templateUrl: './config-form.component.html'
 })
 export class ConfigFormComponent {
+  protected readonly labels = UI_COPY.setup;
+
   private readonly api = inject(SetupApi);
 
   readonly mode = input<Mode>('setup');

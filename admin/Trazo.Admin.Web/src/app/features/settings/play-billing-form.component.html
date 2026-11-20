@@ -1,47 +1,46 @@
     <div class="pb" style="margin-bottom:22px">
       <fieldset>
-        <legend>Access</legend>
+        <legend>{{ labels.access }}</legend>
         <label style="display:flex;align-items:center;gap:8px">
           <input type="checkbox" name="enforced" [ngModel]="enforced()" (ngModelChange)="setEnforced($event)" [disabled]="busy()">
-          Require a subscription
+          {{ labels.requireSubscription }}
         </label>
-        <p class="hint"><strong>Off (default): everything is free</strong> and every signed-in user has full access; the app shows no plans.
-          On: only users with a trial or active subscription (and administrators) get paid content. Play Billing does not need to be configured while this is off.</p>
+        <p class="hint">{{ labels.offDescription }} {{ labels.onDescription }}</p>
         @if (accessMessage()) { <span class="ok" role="status">{{ accessMessage() }}</span> }
       </fieldset>
     </div>
     <form class="pb" (ngSubmit)="save()" autocomplete="off">
       <fieldset>
-        <legend>Google Play Billing</legend>
-        <p class="hint">Subscriptions are verified on the server with the Google Play Developer API. Nothing here is ever sent to the Android app.</p>
-        <trazo-form-field label="Package name" controlId="packageName"><input type="text" name="packageName" required placeholder="com.trazo.android" [ngModel]="packageName()" (ngModelChange)="packageName.set($event)" id="packageName">
+        <legend>{{ labels.googlePlay }}</legend>
+        <p class="hint">{{ labels.verification }}</p>
+        <trazo-form-field [label]="labels.packageName" controlId="packageName"><input type="text" name="packageName" required placeholder="com.trazo.android" [ngModel]="packageName()" (ngModelChange)="packageName.set($event)" id="packageName">
         </trazo-form-field>
-        <trazo-form-field label="Service-account key (JSON)" controlId="serviceAccountJson"><textarea name="serviceAccountJson" spellcheck="false" autocomplete="off"
-                    [placeholder]="view()?.serviceAccountSet ? 'Stored (leave blank to keep it)' : 'Paste the whole JSON key file'"
+        <trazo-form-field [label]="labels.serviceAccountKey" controlId="serviceAccountJson"><textarea name="serviceAccountJson" spellcheck="false" autocomplete="off"
+                    [placeholder]="view()?.serviceAccountSet ? labels.storedKeyPlaceholder : labels.pasteJson"
                     [ngModel]="serviceAccountJson()" (ngModelChange)="serviceAccountJson.set($event)" id="serviceAccountJson"></textarea>
         </trazo-form-field>
-        @if (view()?.serviceAccountEmail; as email) { <p class="hint">Stored key for <span class="stored">{{ email }}</span>. The key itself is encrypted and cannot be shown again.</p> }
-        <p class="hint">Link this service account in Play Console (Users and permissions) with access to financial data and orders.</p>
+        @if (view()?.serviceAccountEmail; as email) { <p class="hint">{{ labels.storedKeyFor }} <span class="stored">{{ email }}</span>. {{ labels.keyEncrypted }}</p> }
+        <p class="hint">{{ labels.linkServiceAccount }}</p>
       </fieldset>
 
       <fieldset>
-        <legend>Real-time notifications (Pub/Sub push)</legend>
-        <p class="hint">Push endpoint: <code>/api/v1/subscription/notifications</code>. Use an OIDC token (recommended) or a secret appended as <code>?secret=…</code>.</p>
-        <trazo-form-field label="OIDC audience" controlId="rtdnAudience"><input type="text" name="rtdnAudience" placeholder="https://your-api.example/api/v1/subscription/notifications" [ngModel]="rtdnAudience()" (ngModelChange)="rtdnAudience.set($event)" id="rtdnAudience">
+        <legend>{{ labels.realtime }}</legend>
+        <p class="hint">{{ labels.pushEndpoint }} <code>/api/v1/subscription/notifications</code>. {{ labels.oidc }}</p>
+        <trazo-form-field [label]="labels.oidcAudience" controlId="rtdnAudience"><input type="text" name="rtdnAudience" placeholder="https://your-api.example/api/v1/subscription/notifications" [ngModel]="rtdnAudience()" (ngModelChange)="rtdnAudience.set($event)" id="rtdnAudience">
         </trazo-form-field>
-        <trazo-form-field label="Pub/Sub service-account email (optional, pins the sender)" controlId="rtdnEmail"><input type="text" name="rtdnEmail" placeholder="pubsub-push@project.iam.gserviceaccount.com" [ngModel]="rtdnEmail()" (ngModelChange)="rtdnEmail.set($event)" id="rtdnEmail">
+        <trazo-form-field [label]="labels.pubsubEmail" controlId="rtdnEmail"><input type="text" name="rtdnEmail" placeholder="pubsub-push@project.iam.gserviceaccount.com" [ngModel]="rtdnEmail()" (ngModelChange)="rtdnEmail.set($event)" id="rtdnEmail">
         </trazo-form-field>
-        <trazo-form-field label="Shared secret (alternative, at least 16 characters)" controlId="rtdnSecret"><input type="password" name="rtdnSecret" autocomplete="new-password"
-                 [placeholder]="view()?.rtdnSecretSet ? 'Stored (leave blank to keep it)' : ''" [ngModel]="rtdnSecret()" (ngModelChange)="rtdnSecret.set($event)" id="rtdnSecret">
+        <trazo-form-field [label]="labels.sharedSecret" controlId="rtdnSecret"><input type="password" name="rtdnSecret" autocomplete="new-password"
+                 [placeholder]="view()?.rtdnSecretSet ? labels.storedKeyPlaceholder : ''" [ngModel]="rtdnSecret()" (ngModelChange)="rtdnSecret.set($event)" id="rtdnSecret">
         </trazo-form-field>
         @if (view(); as v) {
-          <p class="hint">{{ v.rtdnConfigured ? 'Notifications are accepted.' : 'Notifications are rejected until an audience with its service account, or a secret, is saved.' }}</p>
+          <p class="hint">{{ v.rtdnConfigured ? labels.notificationsAccepted : labels.notificationsRejected }}</p>
         }
       </fieldset>
 
       <div class="actions">
-        <trazo-button variant="primary" type="submit" [disabled]="busy()">Save Play Billing</trazo-button>
-        <trazo-button variant="secondary" type="button" (pressed)="test()" [disabled]="busy() || !view()?.configured">Test connection</trazo-button>
+        <trazo-button variant="primary" type="submit" [disabled]="busy()">{{ labels.save }}</trazo-button>
+        <trazo-button variant="secondary" type="button" (pressed)="test()" [disabled]="busy() || !view()?.configured">{{ labels.testConnection }}</trazo-button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
       </div>
