@@ -65,7 +65,7 @@
             <input type="number" name="deload" min="4" max="8" placeholder="none" [ngModel]="deloadEvery()" (ngModelChange)="deloadEvery.set($event)">
           </label>
         </div>
-        <button class="primary" type="submit" [disabled]="busy()">{{ busy() ? 'Generating…' : 'Generate preview' }}</button>
+        <trazo-button variant="primary" type="submit" [disabled]="busy()">{{ busy() ? 'Generating…' : 'Generate preview' }}</trazo-button>
         @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
       </form>
 
@@ -101,12 +101,12 @@
           <section class="pl-card" aria-label="Program">
             <h2>Program · {{ res.program.sessions.length }} sessions over {{ res.program.durationWeeks }} weeks</h2>
             <div class="pl-weeks">
-              @for (w of weekNumbers(); track w) { <button type="button" [class.on]="week() === w" (click)="week.set(w)">Week {{ w }}</button> }
+              @for (w of weekNumbers(); track w) { <trazo-button [variant]="week() === w ? 'primary' : 'secondary'" type="button" (pressed)="week.set(w)">Week {{ w }}</trazo-button> }
             </div>
             @for (s of weekSessions(); track s.day) {
               <article class="pl-session">
                 <header><strong>{{ s.title }}</strong><span>{{ s.day }} · ~{{ s.estimatedDurationMinutes }} min</span></header>
-                <table class="pl-table">
+                <trazo-table tableClass="pl-table">
                   <thead><tr><th>#</th><th>Exercise</th><th>Sets × reps</th><th>RIR</th><th>Rest</th><th>Progression</th></tr></thead>
                   <tbody>
                     @for (e of s.exercises; track e.order) {
@@ -120,7 +120,7 @@
                       </tr>
                     }
                   </tbody>
-                </table>
+                </trazo-table>
               </article>
             }
           </section>
@@ -128,14 +128,14 @@
           @if (weekVolume().length) {
             <section class="pl-card" aria-label="Weekly volume">
               <h2>Week {{ week() }} volume by muscle</h2>
-              <table class="pl-table">
+              <trazo-table tableClass="pl-table">
                 <thead><tr><th>Muscle</th><th>Primary sets</th><th>Secondary sets</th><th>Effective sets</th><th>Sessions</th></tr></thead>
                 <tbody>
                   @for (m of weekVolume(); track m.muscleGroup) {
                     <tr><td>{{ m.muscleGroup }}</td><td>{{ m.primarySets }}</td><td>{{ m.secondarySets }}</td><td>{{ m.estimatedEffectiveSets }}</td><td>{{ m.primaryFrequencySessions }}</td></tr>
                   }
                 </tbody>
-              </table>
+              </trazo-table>
             </section>
           }
 
