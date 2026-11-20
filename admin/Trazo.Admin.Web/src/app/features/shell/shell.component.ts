@@ -4,6 +4,7 @@ import { AuthService } from '../../core/auth.service';
 import type { SystemInfo } from '../../core/admin.models';
 import { OverviewApi } from '../overview/overview.api';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UI_COPY } from '../../core/ui-copy';
 
 @Component({
   selector: 'trazo-shell',
@@ -15,6 +16,7 @@ import { UiButtonComponent } from '../../shared/ui/ui-button.component';
   encapsulation: ViewEncapsulation.None
 })
 export class ShellComponent {
+  protected readonly copy = UI_COPY.shell;
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly api = inject(OverviewApi);
@@ -36,21 +38,21 @@ export class ShellComponent {
     return this.allNavigation.filter(item => item.link === (this.auth.isAccountant ? '/fiscal' : '/reviews'));
   }
   private readonly allNavigation: { label: string; icon: string; link?: string }[] = [
-    { label: 'Overview', icon: '◫', link: '/overview' },
-    { label: 'Trazo Intelligence', icon: '⌁', link: '/intelligence' },
-    { label: 'Users', icon: '◎', link: '/users' },
-    { label: 'Subscriptions', icon: '◇', link: '/subscriptions' },
-    { label: 'Marketing', icon: '◉', link: '/marketing' },
-    { label: 'Referrals & funnel', icon: '⇄', link: '/referrals' },
-    { label: 'Tax management', icon: '€', link: '/fiscal' },
-    { label: 'Training library', icon: '▤', link: '/exercises' },
-    { label: 'Plan reviews', icon: '✎', link: '/reviews' },
-    { label: 'Planning engine', icon: '⌘', link: '/planning' },
-    { label: 'Logs', icon: '≋', link: '/logs' },
-    { label: 'Error tickets', icon: '⚠', link: '/error-tickets' },
-    { label: 'Waitlist', icon: '✉', link: '/waitlist' },
-    { label: 'Backups', icon: '▣' },
-    { label: 'Settings', icon: '⚙', link: '/settings' }
+    { label: UI_COPY.navigation.overview, icon: '◫', link: '/overview' },
+    { label: UI_COPY.navigation.intelligence, icon: '⌁', link: '/intelligence' },
+    { label: UI_COPY.navigation.users, icon: '◎', link: '/users' },
+    { label: UI_COPY.navigation.subscriptions, icon: '◇', link: '/subscriptions' },
+    { label: UI_COPY.navigation.marketing, icon: '◉', link: '/marketing' },
+    { label: UI_COPY.navigation.referrals, icon: '⇄', link: '/referrals' },
+    { label: UI_COPY.navigation.fiscal, icon: '€', link: '/fiscal' },
+    { label: UI_COPY.navigation.exercises, icon: '▤', link: '/exercises' },
+    { label: UI_COPY.navigation.reviews, icon: '✎', link: '/reviews' },
+    { label: UI_COPY.navigation.planning, icon: '⌘', link: '/planning' },
+    { label: UI_COPY.navigation.logs, icon: '≋', link: '/logs' },
+    { label: UI_COPY.navigation.errorTickets, icon: '⚠', link: '/error-tickets' },
+    { label: UI_COPY.navigation.waitlist, icon: '✉', link: '/waitlist' },
+    { label: UI_COPY.navigation.backups, icon: '▣' },
+    { label: UI_COPY.navigation.settings, icon: '⚙', link: '/settings' }
   ];
 
   constructor() {
