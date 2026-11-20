@@ -1,6 +1,5 @@
 using System.IO.Compression;
 using System.Net;
-using Trazo.Domain.Identity;
 using Xunit;
 
 namespace Trazo.UnitTests.Planning;
@@ -30,7 +29,7 @@ public sealed class AdminIntelligenceApiTests() : PlansApiBase(enforced: true)
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var body = await JsonAsync(response);
 
-        Assert.Equal("2026-11-01T00:00:00+00:00", body.GetProperty("from").GetDateTimeOffset().ToString("yyyy-MM-dd'T'HH:mm:sszzz"));
+        Assert.Equal(new DateTimeOffset(2026, 11, 1, 0, 0, 0, TimeSpan.Zero), body.GetProperty("from").GetDateTimeOffset());
         Assert.Equal(0, body.GetProperty("plans").GetProperty("total").GetInt32());
         Assert.Equal(0, body.GetProperty("prescriptions").GetProperty("sessions").GetInt32());
         Assert.Equal(0, body.GetProperty("workouts").GetProperty("total").GetInt32());
