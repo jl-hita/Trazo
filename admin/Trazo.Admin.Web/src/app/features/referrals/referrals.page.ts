@@ -50,7 +50,10 @@ export class ReferralsPageComponent {
 
   protected stageLabel(value: string): string { return this.labels.stages[value as keyof typeof this.labels.stages] ?? value; }
   protected sourceLabel(value: string): string { return this.labels.sources[value as keyof typeof this.labels.sources] ?? value; }
-  protected statusLabel(value: string): string { return this.labels.statuses[value as keyof typeof this.labels.statuses] ?? value; }
+  protected statusLabel(value: string | null | undefined): string {
+    if (!value) return '—';
+    return this.labels.statuses[value as keyof typeof this.labels.statuses] ?? value;
+  }
   protected grantKindLabel(value: string): string { return this.labels.grantKinds[value as keyof typeof this.labels.grantKinds] ?? value; }
   protected planLabel(value: string): string { return this.labels.plans[value as keyof typeof this.labels.plans] ?? value; }
 
