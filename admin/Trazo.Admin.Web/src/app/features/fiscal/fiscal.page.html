@@ -119,7 +119,7 @@
           <tbody>
             @for (e of m.entries; track e.id) {
               <tr>
-                <td>{{ date(e.date) }}</td><td>{{ e.kind }}<div class="muted">{{ e.category }}</div></td>
+                <td>{{ date(e.date) }}</td><td>{{ kindLabel(e.kind) }}<div class="muted">{{ e.category }}</div></td>
                 <td>{{ e.concept }}@if (e.invoiceNumber) { <div class="muted">{{ e.invoiceNumber }}</div> }@if (e.source === 'google_estimate') { <div class="warn muted">{{ copy.estimate }}</div> }</td>
                 <td>{{ e.counterparty }}<div class="muted">{{ e.counterpartyTaxId }}</div></td>
                 <td class="num">{{ eur(e.base) }}</td>
