@@ -24,8 +24,11 @@ describe('errorMessage', () => {
 
   it('normalizes missing resources, rate limits and server failures', () => {
     expect(errorMessage({ status: 404 })).toBe(UI_COPY.apiErrors.notFound);
+    expect(errorMessage({ status: 413 })).toBe(UI_COPY.apiErrors.tooLarge);
     expect(errorMessage({ status: 429 })).toBe(UI_COPY.apiErrors.rateLimited);
+    expect(errorMessage({ status: 502 })).toBe(UI_COPY.apiErrors.unavailable);
     expect(errorMessage({ status: 503 })).toBe(UI_COPY.apiErrors.unavailable);
+    expect(errorMessage({ status: 504 })).toBe(UI_COPY.apiErrors.unavailable);
     expect(errorMessage({ status: 500 })).toBe(UI_COPY.apiErrors.server);
   });
 
