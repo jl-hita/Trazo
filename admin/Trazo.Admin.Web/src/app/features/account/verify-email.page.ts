@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { ACCOUNT_COPY } from './account.copy';
 
 @Component({
   selector: 'trazo-verify-email-page',
@@ -13,15 +14,16 @@ import { firstValueFrom } from 'rxjs';
 export class VerifyEmailPageComponent {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
-  protected readonly title = signal('Verifying your email');
-  protected readonly message = signal('Please wait while we verify your email address.');
+  protected readonly copy = ACCOUNT_COPY.verifyEmail;
+  protected readonly title = signal(this.copy.verifyingTitle);
+  protected readonly message = signal(this.copy.waitingMessage);
   protected readonly done = signal(false);
 
   constructor() {
     const token = this.route.snapshot.queryParamMap.get('token');
     if (!token) {
-      this.title.set('Invalid verification link');
-      this.message.set('The link is missing its security token. Request a new verification email.');
+      this.title.set(this.copy.invalidTitle);
+      this.message.set(this.copy.missingToken);
       return;
     }
     // The token stays in memory only: out of the address bar and the browser history.
@@ -32,12 +34,12 @@ export class VerifyEmailPageComponent {
   private async verify(token: string): Promise<void> {
     try {
       await firstValueFrom(this.http.post('/api/v1/auth/email/verify', { token }));
-      this.title.set('Email verified');
-      this.message.set('Your email address has been verified. You can now sign in.');
+      this.title.set(this.copy.verifiedTitle);
+      this.message.set(this.copy.verifiedMessage);
       this.done.set(true);
     } catch {
-      this.title.set('Link invalid or expired');
-      this.message.set('This verification link is invalid, expired or has already been used. Request a new one.');
+      this.title.set(this.copy.expiredTitle);
+      this.message.set(this.copy.expiredMessage);
     }
   }
 }
