@@ -1,9 +1,10 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import {
-  AdminApi, AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
+import type {
+  AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
 } from '../../core/admin.api';
+import { ExercisesApi } from './exercises.api';
 import { errorMessage } from '../../core/setup.api';
 
 interface Draft {
@@ -61,7 +62,7 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
   templateUrl: './exercises.page.html'
 })
 export class ExercisesPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(ExercisesApi);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
 
@@ -99,7 +100,7 @@ export class ExercisesPageComponent {
 
   constructor() {
     void this.load();
-    void this.api.exerciseOptions().then(o => this.options.set(o), () => undefined);
+    void this.api.options().then(o => this.options.set(o), () => undefined);
   }
 
   protected onSearch(value: string): void {
@@ -137,7 +138,7 @@ export class ExercisesPageComponent {
   protected async select(summary: AdminExerciseSummary): Promise<void> {
     this.reset();
     try {
-      this.show(await this.api.getExercise(summary.id));
+      this.show(await this.api.get(summary.id));
     } catch (e) {
       this.editing.set(true);
       this.panelError.set(errorMessage(e));
@@ -148,7 +149,7 @@ export class ExercisesPageComponent {
     const input = this.toInput();
     const current = this.detail();
     await this.perform(
-      () => current ? this.api.updateExercise(current.id, input) : this.api.createExercise(input),
+      () => current ? this.api.update(current.id, input) : this.api.create(input),
       current ? 'Changes saved.' : 'Exercise created.');
   }
 
@@ -159,7 +160,7 @@ export class ExercisesPageComponent {
     this.transferBusy.set(true);
     this.transferSkipped.set([]);
     try {
-      const r: TransferResult = await this.api.sendLibraryToDietoExpress();
+      const r: TransferResult = await this.api.transferToDietoExpress();
       const remote = r.remote;
       this.transferMessage.set(`Sent ${r.exercises} exercise(s) and ${r.images} image(s) to DietoExpress.` +
         (remote ? ` Added: ${remote.exercisesInserted ?? 0}, updated: ${remote.exercisesUpdated ?? 0}, already there: ${remote.exercisesSkipped ?? 0}.` : ''));
@@ -183,12 +184,12 @@ export class ExercisesPageComponent {
     if (!file || !current) return;
     if (!['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) { this.panelError.set('Use a WebP, PNG or JPEG image.'); return; }
     if (file.size > 1024 * 1024) { this.panelError.set('The image is larger than 1 MB.'); return; }
-    await this.imageOperation(() => this.api.uploadExerciseImage(current.id, slot, file), 'Image uploaded.');
+    await this.imageOperation(() => this.api.uploadImage(current.id, slot, file), 'Image uploaded.');
   }
 
   protected async removeImage(slot: number): Promise<void> {
     const current = this.detail();
-    if (current) await this.imageOperation(() => this.api.deleteExerciseImage(current.id, slot), 'Image removed.');
+    if (current) await this.imageOperation(() => this.api.deleteImage(current.id, slot), 'Image removed.');
   }
 
   /** Updates only the image state, so unsaved edits in the form are kept. */
@@ -220,7 +221,7 @@ export class ExercisesPageComponent {
       activate: 'The exercise is visible again.', deactivate: 'The exercise is hidden from the catalog.',
       'release-curation': 'Future imports may overwrite this exercise.'
     };
-    await this.perform(() => this.api.exerciseAction(current.id, action), messages[action]);
+    await this.perform(() => this.api.action(current.id, action), messages[action]);
   }
 
   private async perform(call: () => Promise<AdminExerciseDetail>, success: string): Promise<void> {
@@ -232,7 +233,7 @@ export class ExercisesPageComponent {
       this.show(await call());
       this.message.set(success);
       await this.load();
-      void this.api.exerciseOptions().then(o => this.options.set(o), () => undefined);
+      void this.api.options().then(o => this.options.set(o), () => undefined);
     } catch (e) {
       this.fieldErrors.set(this.collectFieldErrors(e));
       this.panelError.set(errorMessage(e));
@@ -286,7 +287,7 @@ export class ExercisesPageComponent {
     this.loading.set(true);
     this.error.set('');
     try {
-      const result = await this.api.listExercises({
+      const result = await this.api.list({
         q: this.q(), movementPattern: this.pattern(), status: this.status(), source: this.source(),
         sort: this.sort(), page: this.page(), pageSize: 25
       });

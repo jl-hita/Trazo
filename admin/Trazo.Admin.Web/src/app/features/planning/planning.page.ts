@@ -1,8 +1,9 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  AdminApi, CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse, PlanSession
+import type {
+  CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse, PlanSession
 } from '../../core/admin.api';
+import { PlanningApi } from './planning.api';
 import { errorMessage } from '../../core/setup.api';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -24,7 +25,7 @@ function nextMonday(): string {
   templateUrl: './planning.page.html'
 })
 export class PlanningPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(PlanningApi);
 
   protected readonly days = DAYS;
   protected readonly goal = signal('Hypertrophy');
@@ -73,7 +74,7 @@ export class PlanningPageComponent {
       if (this.deloadEvery()) { request.includeDeloadPhases = true; request.deloadEveryTrainingWeeks = Number(this.deloadEvery()); }
     }
     try {
-      this.result.set(await this.api.previewPlan(request));
+      this.result.set(await this.api.preview(request));
       this.week.set(1);
     } catch (e) {
       this.result.set(null);
