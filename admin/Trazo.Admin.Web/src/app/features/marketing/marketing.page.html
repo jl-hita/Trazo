@@ -9,7 +9,7 @@
       <div class="mk-toolbar">
         <div class="mk-presets" role="group" aria-label="Period presets">
           @for (p of presets; track p.days) {
-            <button type="button" class="mk-btn" [class.on]="preset() === p.days" (click)="usePreset(p.days)">{{ p.label }}</button>
+            <trazo-button [variant]="preset() === p.days ? 'primary' : 'secondary'" buttonClass="mk-btn" type="button" (pressed)="usePreset(p.days)">{{ p.label }}</trazo-button>
           }
         </div>
         <label>From <input type="date" [ngModel]="from()" (ngModelChange)="custom($event, to())" name="from"></label>
