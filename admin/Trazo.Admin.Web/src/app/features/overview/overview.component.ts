@@ -4,7 +4,7 @@ import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } fr
 import { Router, RouterLink } from '@angular/router';
 import type { AlertSeverity, Overview } from '../../core/admin.models';
 import { OverviewApi } from './overview.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UiBadgeComponent, type UiBadgeTone } from '../../shared/ui/ui-badge.component';
 import { UiCardComponent } from '../../shared/ui/ui-card.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
