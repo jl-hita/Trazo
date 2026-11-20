@@ -3,7 +3,7 @@
       <h1>{{ title() }}</h1>
       <p role="status">{{ message() }}</p>
       @if (phase() === 'ready' || phase() === 'working') {
-        <trazo-button variant="primary" type="button" (pressed)="run()" [disabled]="phase() === 'working'>{{ phase() === 'working' ? t.wait : t[action].button }}</trazo-button>
+        <trazo-button variant="primary" type="button" (pressed)="run()" [disabled]="phase() === 'working'">{{ phase() === 'working' ? t.wait : t[action].button }}</trazo-button>
       } @else {
         <a href="/">{{ t.home }}</a>
       }
