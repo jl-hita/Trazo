@@ -24,7 +24,7 @@ const METRICS: { key: Metric; label: string; lowerIsBetter?: boolean; money?: bo
 @Component({
   selector: 'mk-strategies',
   standalone: true,
-  imports: [FormsModule, NgTemplateOutlet, BarsComponent],
+  imports: [FormsModule, NgTemplateOutlet, BarsComponent, UiButtonComponent, UiTableComponent],
   templateUrl: './strategies.tab.html'
 })
 export class StrategiesTabComponent {
