@@ -3,19 +3,19 @@
         <p class="subtitle">Analiza qué prescribe el motor, qué hacen realmente los deportistas y qué señales utiliza para adaptarse.</p></div>
     </div>
     <div class="ti">
-      <div class="ti-toolbar">
-        <div class="ti-presets" role="group" aria-label="Periodo">
-          @for (p of presets; track p.days) {
-            <button class="ti-btn" [class.active]="preset() === p.days" type="button" (click)="usePreset(p.days)">{{p.label}}</button>
-          }
-        </div>
-        <label class="ti-field">Desde <input type="date" #fromInput [value]="from()" (change)="setFrom(fromInput.value)"></label>
-        <label class="ti-field">Hasta (incluido) <input type="date" #toInput [value]="to()" (change)="setTo(toInput.value)"></label>
-        <button class="ti-btn" type="button" (click)="load()" [disabled]="loading()">Actualizar</button>
-        <button class="ti-btn primary" type="button" (click)="export()" [disabled]="exporting() || loading()">
-          {{ exporting() ? 'Preparando paquete…' : '↓ Exportar investigación (ZIP)' }}
-        </button>
-      </div>
+      <trazo-intelligence-period-toolbar
+        [presets]="presets"
+        [preset]="preset()"
+        [from]="from()"
+        [to]="to()"
+        [loading]="loading()"
+        [exporting]="exporting()"
+        (presetSelected)="usePreset($event)"
+        (fromChanged)="setFrom($event)"
+        (toChanged)="setTo($event)"
+        (refreshRequested)="load()"
+        (exportRequested)="export()"
+      />
       <p class="ti-note"><strong>Qué contiene la exportación:</strong> CSV y JSON relacionados de planes, mesociclos, prescripciones originales y actuales, adaptaciones, entrenamientos, series realizadas, observaciones longitudinales y decisiones del motor. Los identificadores se seudonimizan también dentro de los JSON de trazabilidad. Se excluyen nombres, correos, notas libres, etiquetas de planes y limitaciones personales. El archivo sigue siendo información seudonimizada y debe tratarse como privada.</p>
       @if (error()) { <p class="ti-error" role="alert">{{error()}}</p> }
       @if (loading() && !data()) { <p class="empty">Cargando datos de investigación…</p> }
