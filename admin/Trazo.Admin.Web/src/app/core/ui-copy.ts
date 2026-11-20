@@ -724,6 +724,7 @@ export const UI_COPY = {
     signupsTrialsPayers: 'Altas, pruebas y nuevos clientes de pago por semana',
     weekStarting: 'Semana de inicio',
     signups: 'Altas',
+    signupsTrialsPayers: 'Altas, pruebas y nuevos clientes de pago por semana',
     trials: 'Pruebas',
     startedFreeTrial: 'Inició una prueba gratuita',
     signupToPayer: 'Alta → cliente de pago',
