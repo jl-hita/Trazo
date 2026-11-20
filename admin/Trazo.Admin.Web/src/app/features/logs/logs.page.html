@@ -8,7 +8,7 @@
 
     <div class="logs-toolbar" role="group" aria-label="Level filter">
       @for (l of levels; track l.id) {
-        <trazo-button variant="secondary" buttonClass="'level-chip lv-' + l.id" [buttonClass]="'level-chip lv-' + l.id" type="button" [attr.aria-pressed]="isOn(l.id)" (pressed)="toggle(l.id)">
+        <trazo-button variant="secondary" [buttonClass]="'level-chip lv-' + l.id" type="button" [attr.aria-pressed]="isOn(l.id)" (pressed)="toggle(l.id)">
           {{ l.label }} <span class="count">{{ counts()[l.id] }}</span>
         </trazo-button>
       }
