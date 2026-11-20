@@ -270,7 +270,7 @@
     </trazo-card>
 
     <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-paywall-title'">
-      <header><h3 id="ov-paywall-title">{{ labels.premiumOffer }} ({{ paywall().days }} días)</h3></header>
+      <header><h3 id="ov-paywall-title">{{ labels.premiumOffer }} ({{ paywall().days }} {{ labels.days }})</h3></header>
       @if (paywall().views === 0) {
         <p class="ov-empty">{{ labels.noPaywallViews }}</p>
       } @else {
