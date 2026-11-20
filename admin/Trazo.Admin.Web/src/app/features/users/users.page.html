@@ -123,7 +123,7 @@
                 @if (g.revokedAt) { <span>{{ copy.revoked }} {{ formatDate(g.revokedAt) }}{{ g.revocationReason ? ' · ' + g.revocationReason : '' }}</span> }
                 @if (g.kind === 'admin_grant' && g.status === 'active') {
                   @if (premiumRevokeId() === g.id) {
-                    <trazo-form-field [label]="copy.reasonForRevocation" controlId="premium-revoke-reason"><trazo-form-field [label]="copy.reasonForRevocation" controlId="premium-revoke-reason"><input type="text" maxlength="300" [placeholder]="copy.reasonForRevocation" [attr.aria-label]="copy.reasonForRevocation"
+                    <trazo-form-field [label]="copy.reasonForRevocation" controlId="premium-revoke-reason"><input type="text" maxlength="300" [placeholder]="copy.reasonForRevocation" [attr.aria-label]="copy.reasonForRevocation"
                       [ngModel]="premiumRevokeReason()" (ngModelChange)="premiumRevokeReason.set($event)" id="premium-revoke-reason" id="premium-revoke-reason"></trazo-form-field></trazo-form-field>
                     <div class="actions">
                       <trazo-button variant="danger" type="button" (pressed)="revokePremium(g.id)" [disabled]="busy() || premiumRevokeReason().trim().length < 5">{{ copy.confirmRevocation }}</trazo-button>
@@ -174,7 +174,7 @@
           @if (!isSelf()) {
             <div class="danger-zone">
               <p class="hint">{{ copy.deleteAccount }}: {{ copy.deleteWarning }} {{ copy.confirmEmail }}</p>
-              <trazo-form-field [label]="copy.typeEmailToConfirmDeletion" controlId="delete-account-email"><trazo-form-field [label]="copy.typeEmailToConfirmDeletion" controlId="delete-account-email"><input type="email" [attr.aria-label]="copy.typeEmailToConfirmDeletion" [ngModel]="deleteConfirm()" (ngModelChange)="deleteConfirm.set($event)" placeholder="{{ u.email }}" id="delete-account-email" id="delete-account-email"></trazo-form-field></trazo-form-field>
+              <trazo-form-field [label]="copy.typeEmailToConfirmDeletion" controlId="delete-account-email"><input type="email" [attr.aria-label]="copy.typeEmailToConfirmDeletion" [ngModel]="deleteConfirm()" (ngModelChange)="deleteConfirm.set($event)" placeholder="{{ u.email }}" id="delete-account-email"></trazo-form-field></trazo-form-field>
               <trazo-button variant="danger" type="button" (pressed)="deleteAccount()" [disabled]="busy() || deleteConfirm().trim().toLowerCase() !== u.email.toLowerCase()">{{ copy.deletePermanently }}</trazo-button>
             </div>
           }
