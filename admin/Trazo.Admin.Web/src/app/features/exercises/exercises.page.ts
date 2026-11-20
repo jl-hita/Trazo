@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { UiBadgeComponent } from '../../shared/ui/ui-badge.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
+import { UI_COPY } from '../../core/ui-copy';
 import type {
   AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
 } from '../../core/admin.models';
@@ -26,26 +28,27 @@ const EMPTY: Draft = {
   secondaryMuscles: '', suitableGoals: '', met: 3.5, selectionPriority: 50, isUnilateral: false, isBodyweight: false
 };
 
+const F = UI_COPY.exercises.fields;
 const FIELDS: Field[] = [
-  { key: 'id', label: 'Identifier', kind: 'text', hint: 'Optional. Leave empty to generate it from the English name.', newOnly: true },
-  { key: 'nameEs', label: 'Name (Spanish)', kind: 'text', required: true },
-  { key: 'nameEn', label: 'Name (English)', kind: 'text', required: true },
-  { key: 'descriptionEs', label: 'Description (Spanish)', kind: 'textarea', required: true },
-  { key: 'instructionsEs', label: 'Instructions', kind: 'lines', required: true, hint: 'One step per line.' },
-  { key: 'tipsEs', label: 'Tips', kind: 'lines', hint: 'One tip per line.' },
-  { key: 'movementPattern', label: 'Movement pattern', kind: 'text', options: 'movementPatterns', required: true },
-  { key: 'difficulty', label: 'Difficulty', kind: 'text', options: 'difficulties', required: true },
-  { key: 'minimumExperience', label: 'Minimum experience', kind: 'text', options: 'experiences', required: true },
-  { key: 'primaryMuscles', label: 'Primary muscles', kind: 'tags', options: 'muscles', required: true, hint: 'Separated by commas.' },
-  { key: 'secondaryMuscles', label: 'Secondary muscles', kind: 'tags', options: 'muscles', hint: 'Separated by commas.' },
-  { key: 'equipment', label: 'Main equipment', kind: 'text', options: 'equipment' },
-  { key: 'requiredEquipment', label: 'Required equipment', kind: 'tags', options: 'equipment', hint: 'Separated by commas.' },
-  { key: 'suitableGoals', label: 'Suitable goals', kind: 'tags', options: 'goals', required: true, hint: 'Separated by commas.' },
-  { key: 'forceType', label: 'Force type', kind: 'text', options: 'forceTypes' },
-  { key: 'mechanic', label: 'Mechanic', kind: 'text', options: 'mechanics' },
-  { key: 'bodyPart', label: 'Body part', kind: 'text', options: 'bodyParts' },
-  { key: 'met', label: 'MET (energy cost)', kind: 'number' },
-  { key: 'selectionPriority', label: 'Selection priority (0-100)', kind: 'number', hint: 'Higher values are preferred when plans are generated.' }
+  { key: 'id', label: F.identifier, kind: 'text', hint: F.identifierHint, newOnly: true },
+  { key: 'nameEs', label: F.nameEs, kind: 'text', required: true },
+  { key: 'nameEn', label: F.nameEn, kind: 'text', required: true },
+  { key: 'descriptionEs', label: F.descriptionEs, kind: 'textarea', required: true },
+  { key: 'instructionsEs', label: F.instructions, kind: 'lines', required: true, hint: F.instructionsHint },
+  { key: 'tipsEs', label: F.tips, kind: 'lines', hint: F.tipsHint },
+  { key: 'movementPattern', label: F.movementPattern, kind: 'text', options: 'movementPatterns', required: true },
+  { key: 'difficulty', label: F.difficulty, kind: 'text', options: 'difficulties', required: true },
+  { key: 'minimumExperience', label: F.minimumExperience, kind: 'text', options: 'experiences', required: true },
+  { key: 'primaryMuscles', label: F.primaryMuscles, kind: 'tags', options: 'muscles', required: true, hint: F.primaryMusclesHint },
+  { key: 'secondaryMuscles', label: F.secondaryMuscles, kind: 'tags', options: 'muscles', hint: F.secondaryMusclesHint },
+  { key: 'equipment', label: F.equipment, kind: 'text', options: 'equipment' },
+  { key: 'requiredEquipment', label: F.requiredEquipment, kind: 'tags', options: 'equipment', hint: F.requiredEquipmentHint },
+  { key: 'suitableGoals', label: F.suitableGoals, kind: 'tags', options: 'goals', required: true, hint: F.suitableGoalsHint },
+  { key: 'forceType', label: F.forceType, kind: 'text', options: 'forceTypes' },
+  { key: 'mechanic', label: F.mechanic, kind: 'text', options: 'mechanics' },
+  { key: 'bodyPart', label: F.bodyPart, kind: 'text', options: 'bodyParts' },
+  { key: 'met', label: F.met, kind: 'number' },
+  { key: 'selectionPriority', label: F.selectionPriority, kind: 'number', hint: F.selectionPriorityHint }
 ];
 
 const OPTION_LISTS: (keyof AdminExerciseOptions)[] = [
@@ -59,12 +62,13 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
 @Component({
   selector: 'trazo-exercises-page',
   standalone: true,
-  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent],
+  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent, UiFormFieldComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './exercises.page.scss',
   templateUrl: './exercises.page.html'
 })
 export class ExercisesPageComponent {
+  protected readonly copy = UI_COPY.exercises;
   private readonly api = inject(ExercisesApi);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
@@ -153,7 +157,7 @@ export class ExercisesPageComponent {
     const current = this.detail();
     await this.perform(
       () => current ? this.api.update(current.id, input) : this.api.create(input),
-      current ? 'Changes saved.' : 'Exercise created.');
+      current ? 'Cambios guardados.' : 'Ejercicio creado.');
   }
 
   /** Sends the exercises created in TRAZO (with their images) to DietoExpress, after a second click. */
@@ -165,8 +169,8 @@ export class ExercisesPageComponent {
     try {
       const r: TransferResult = await this.api.transferToDietoExpress();
       const remote = r.remote;
-      this.transferMessage.set(`Sent ${r.exercises} exercise(s) and ${r.images} image(s) to DietoExpress.` +
-        (remote ? ` Added: ${remote.exercisesInserted ?? 0}, updated: ${remote.exercisesUpdated ?? 0}, already there: ${remote.exercisesSkipped ?? 0}.` : ''));
+      this.transferMessage.set(`${r.exercises} ${r.exercises === 1 ? 'ejercicio enviado' : 'ejercicios enviados'} y ${r.images} ${r.images === 1 ? 'imagen enviada' : 'imágenes enviadas'} a DietoExpress.` +
+        (remote ? ` Añadidos: ${remote.exercisesInserted ?? 0}, actualizados: ${remote.exercisesUpdated ?? 0}, ya existentes: ${remote.exercisesSkipped ?? 0}.` : ''));
       this.transferSkipped.set(r.skipped);
     } catch (e) {
       this.transferMessage.set(errorMessage(e));
@@ -185,14 +189,14 @@ export class ExercisesPageComponent {
     input.value = '';
     const current = this.detail();
     if (!file || !current) return;
-    if (!['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) { this.panelError.set('Use a WebP, PNG or JPEG image.'); return; }
-    if (file.size > 1024 * 1024) { this.panelError.set('The image is larger than 1 MB.'); return; }
-    await this.imageOperation(() => this.api.uploadImage(current.id, slot, file), 'Image uploaded.');
+    if (!['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) { this.panelError.set(this.copy.messages.validImage); return; }
+    if (file.size > 1024 * 1024) { this.panelError.set(this.copy.messages.imageTooLarge); return; }
+    await this.imageOperation(() => this.api.uploadImage(current.id, slot, file), this.copy.messages.imageUploaded);
   }
 
   protected async removeImage(slot: number): Promise<void> {
     const current = this.detail();
-    if (current) await this.imageOperation(() => this.api.deleteImage(current.id, slot), 'Image removed.');
+    if (current) await this.imageOperation(() => this.api.deleteImage(current.id, slot), this.copy.messages.imageRemoved);
   }
 
   /** Updates only the image state, so unsaved edits in the form are kept. */
@@ -221,8 +225,8 @@ export class ExercisesPageComponent {
       return;
     }
     const messages: Record<ExerciseAction, string> = {
-      activate: 'The exercise is visible again.', deactivate: 'The exercise is hidden from the catalog.',
-      'release-curation': 'Future imports may overwrite this exercise.'
+      activate: this.copy.messages.exerciseVisible, deactivate: this.copy.messages.exerciseHidden,
+      'release-curation': this.copy.messages.importsMayOverwrite
     };
     await this.perform(() => this.api.action(current.id, action), messages[action]);
   }
