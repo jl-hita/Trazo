@@ -25,7 +25,7 @@ export class ErrorTicketsPageComponent {
   private searchTimer?: ReturnType<typeof setTimeout>;
   private static readonly PageSize = 25;
 
-  protected readonly copy = UI_COPY.errorTickets;
+  protected readonly labels = UI_COPY.errorTickets;
   protected readonly data = signal<ErrorTicketPage | null>(null);
   protected readonly q = signal('');
   protected readonly status = signal('');
@@ -103,17 +103,17 @@ export class ErrorTicketsPageComponent {
     try {
       const status = await this.api.triggerTestException();
       if (status === 500) {
-        this.info.set(this.copy.testExceptionTriggered);
+        this.info.set(this.labels.testExceptionTriggered);
         await new Promise(resolve => setTimeout(resolve, 1500)); // the ticket is stored by a background writer
         this.page.set(1);
         await this.load();
       } else {
-        this.error.set(status === 0 ? this.copy.noApiResponse : `${this.copy.unexpectedResponse} ${status}${this.copy.testNotThrown}`);
+        this.error.set(status === 0 ? this.labels.noApiResponse : `${this.labels.unexpectedResponse} ${status}${this.labels.testNotThrown}`);
       }
     } finally { this.testing.set(false); }
   }
 
-  protected labelStatus(status: ErrorTicketStatus): string { return this.copy.statuses[status]; }
+  protected labelStatus(status: ErrorTicketStatus): string { return this.labels.statuses[status]; }
 
   protected toggleOriginalTrace(): void { this.showOriginalTrace.update(value => !value); }
 
@@ -123,7 +123,7 @@ export class ErrorTicketsPageComponent {
       await navigator.clipboard.writeText(trace);
       this.error.set('');
     }
-    catch { this.error.set(this.copy.copyDenied); }
+    catch { this.error.set(this.labels.copyDenied); }
   }
 
   protected async remove(ticket: ErrorTicketDetail): Promise<void> {
