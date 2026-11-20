@@ -138,33 +138,33 @@
           <h2>{{ form.id ? copy.editEntry : copy.addEntry }}</h2>
           <div class="box">
             <div class="grid">
-              <trazo-form-field label="Kind" controlId="field-fiscal-kind"><select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind" id="field-fiscal-kind"><option value="expense">Expense</option><option value="income">Income</option></select></trazo-form-field>
-              <trazo-form-field label="Date" controlId="field-fiscal-date"><input type="date" [(ngModel)]="form.date" name="date" id="field-fiscal-date"></trazo-form-field>
-              <trazo-form-field label="Concept" controlId="field-fiscal-concept"><input [(ngModel)]="form.concept" name="concept" maxlength="200" id="field-fiscal-concept"></trazo-form-field>
-              <trazo-form-field label="Category" controlId="field-fiscal-category"><select [(ngModel)]="form.category" name="category" id="field-fiscal-category">
+              <trazo-form-field [label]="copy.kind" controlId="field-fiscal-kind"><select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind" id="field-fiscal-kind"><option value="expense">{{ copy.expense }}</option><option value="income">{{ copy.incomeKind }}</option></select></trazo-form-field>
+              <trazo-form-field [label]="copy.date" controlId="field-fiscal-date"><input type="date" [(ngModel)]="form.date" name="date" id="field-fiscal-date"></trazo-form-field>
+              <trazo-form-field [label]="copy.concept" controlId="field-fiscal-concept"><input [(ngModel)]="form.concept" name="concept" maxlength="200" id="field-fiscal-concept"></trazo-form-field>
+              <trazo-form-field [label]="copy.kind" controlId="field-fiscal-category"><select [(ngModel)]="form.category" name="category" id="field-fiscal-category">
                 @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }</select></trazo-form-field>
-              <trazo-form-field label="Base amount (€, negative for a credit note)" controlId="field-fiscal-base"><input type="number" step="0.01" [(ngModel)]="form.base" name="base" id="field-fiscal-base"></trazo-form-field>
-              <trazo-form-field label="VAT treatment" controlId="field-fiscal-vatTreatment"><select [(ngModel)]="form.vatTreatment" name="vatTreatment" id="field-fiscal-vatTreatment">
-                <option value="domestic">Spanish VAT</option>
-                <option value="eu_reverse_charge">EU business (reverse charge)</option>
-                <option value="no_vat">No VAT / exempt</option></select></trazo-form-field>
+              <trazo-form-field [label]="copy.baseAmount" controlId="field-fiscal-base"><input type="number" step="0.01" [(ngModel)]="form.base" name="base" id="field-fiscal-base"></trazo-form-field>
+              <trazo-form-field [label]="copy.vatTreatment" controlId="field-fiscal-vatTreatment"><select [(ngModel)]="form.vatTreatment" name="vatTreatment" id="field-fiscal-vatTreatment">
+                <option value="domestic">{{ copy.spanishVat }}</option>
+                <option value="eu_reverse_charge">{{ copy.euReverseCharge }}</option>
+                <option value="no_vat">{{ copy.noVatExempt }}</option></select></trazo-form-field>
               @if (form.vatTreatment === 'domestic' || (form.kind === 'expense' && form.vatTreatment === 'eu_reverse_charge')) {
-                <trazo-form-field label="VAT %" controlId="field-fiscal-vatRatePct"><input type="number" step="0.01" [(ngModel)]="form.vatRatePct" name="vatRatePct" id="field-fiscal-vatRatePct"></trazo-form-field>
+                <trazo-form-field [label]="copy.vatRate" controlId="field-fiscal-vatRatePct"><input type="number" step="0.01" [(ngModel)]="form.vatRatePct" name="vatRatePct" id="field-fiscal-vatRatePct"></trazo-form-field>
               }
               @if (form.kind === 'income') {
-                <trazo-form-field label="IRPF withholding %" controlId="field-fiscal-withholdingPct"><input type="number" step="0.01" [(ngModel)]="form.withholdingPct" name="withholdingPct" id="field-fiscal-withholdingPct"></trazo-form-field>
+                <trazo-form-field [label]="copy.withholding" controlId="field-fiscal-withholdingPct"><input type="number" step="0.01" [(ngModel)]="form.withholdingPct" name="withholdingPct" id="field-fiscal-withholdingPct"></trazo-form-field>
               } @else {
-                <trazo-form-field label="Deductible %" controlId="field-fiscal-deductiblePct"><input type="number" step="1" [(ngModel)]="form.deductiblePct" name="deductiblePct" id="field-fiscal-deductiblePct"></trazo-form-field>
+                <trazo-form-field [label]="copy.deductible" controlId="field-fiscal-deductiblePct"><input type="number" step="1" [(ngModel)]="form.deductiblePct" name="deductiblePct" id="field-fiscal-deductiblePct"></trazo-form-field>
               }
-              <trazo-form-field label="{{ form.kind === 'income' ? 'Customer' : 'Supplier' }}" controlId="field-fiscal-counterparty"><input [(ngModel)]="form.counterparty" name="counterparty" id="field-fiscal-counterparty"></trazo-form-field>
-              <trazo-form-field label="Tax id / EU VAT number" controlId="field-fiscal-counterpartyTaxId"><input [(ngModel)]="form.counterpartyTaxId" name="counterpartyTaxId" id="field-fiscal-counterpartyTaxId"></trazo-form-field>
-              <trazo-form-field label="Country (2 letters)" controlId="field-fiscal-counterpartyCountry"><input [(ngModel)]="form.counterpartyCountry" name="counterpartyCountry" maxlength="2" id="field-fiscal-counterpartyCountry"></trazo-form-field>
-              <trazo-form-field label="Invoice number" controlId="field-fiscal-invoiceNumber"><input [(ngModel)]="form.invoiceNumber" name="invoiceNumber" id="field-fiscal-invoiceNumber"></trazo-form-field>
-              <trazo-form-field label="Notes" controlId="field-fiscal-notes"><input [(ngModel)]="form.notes" name="notes" maxlength="500" id="field-fiscal-notes"></trazo-form-field>
+              <trazo-form-field [label]="form.kind === 'income' ? copy.customer : copy.supplier" controlId="field-fiscal-counterparty"><input [(ngModel)]="form.counterparty" name="counterparty" id="field-fiscal-counterparty"></trazo-form-field>
+              <trazo-form-field [label]="copy.taxIdEuVat" controlId="field-fiscal-counterpartyTaxId"><input [(ngModel)]="form.counterpartyTaxId" name="counterpartyTaxId" id="field-fiscal-counterpartyTaxId"></trazo-form-field>
+              <trazo-form-field [label]="copy.country" controlId="field-fiscal-counterpartyCountry"><input [(ngModel)]="form.counterpartyCountry" name="counterpartyCountry" maxlength="2" id="field-fiscal-counterpartyCountry"></trazo-form-field>
+              <trazo-form-field [label]="copy.invoiceNumber" controlId="field-fiscal-invoiceNumber"><input [(ngModel)]="form.invoiceNumber" name="invoiceNumber" id="field-fiscal-invoiceNumber"></trazo-form-field>
+              <trazo-form-field [label]="copy.notes" controlId="field-fiscal-notes"><input [(ngModel)]="form.notes" name="notes" maxlength="500" id="field-fiscal-notes"></trazo-form-field>
             </div>
-            <trazo-button variant="primary" type="button" (pressed)="saveEntry()">{{ form.id ? 'Save changes' : 'Add entry' }}</trazo-button>
-            @if (form.id) { <trazo-button variant="secondary" type="button" (pressed)="resetForm()">Cancel</trazo-button> }
-            <p class="muted">Tip: services billed by an EU company (hosting, Google Cloud…) carry no Spanish VAT — use "EU business (reverse charge)": TRAZO self-assesses the VAT and deducts it. Social-security fee and bank charges: "No VAT".</p>
+            <trazo-button variant="primary" type="button" (pressed)="saveEntry()">{{ form.id ? copy.saveChanges : copy.addEntry }}</trazo-button>
+            @if (form.id) { <trazo-button variant="secondary" type="button" (pressed)="resetForm()">{{ copy.cancel }}</trazo-button> }
+            <p class="muted">{{ copy.euServicesTip }}</p>
           </div>
         }
 
