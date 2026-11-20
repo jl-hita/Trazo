@@ -827,9 +827,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             // Another write reached one of these sessions between our read and our save. Nothing of ours was stored (neither the sessions nor the
             // record). The easing is not claimed: the next read of the next session reloads the sessions and, if the absence is still not eased
-            // there, applies it on top of what is stored now.
+            // there, applies it on top of what is stored now. If the other write was the same easing (two reads at once), it is already done.
             db.ChangeTracker.Clear();
-            return false;
+            var ids = targets.Select(t => t.Id).ToList();
+            var stored = await db.PlannedSessions.AsNoTracking().Where(x => ids.Contains(x.Id)).Select(x => x.PrescriptionJson).ToListAsync(ct);
+            return stored.Any(json => PrescriptionJson.EasedBackFor(json) == absence);
         }
         catch (DbUpdateException)
         {
