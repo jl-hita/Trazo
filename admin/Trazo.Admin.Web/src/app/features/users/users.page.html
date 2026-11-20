@@ -14,7 +14,7 @@
                  [ngModel]="q()" (ngModelChange)="onSearch($event)">
           <select [attr.aria-label]="copy.roleFilter" [ngModel]="role()" (ngModelChange)="setFilter('role', $event)">
             <option value="">{{ copy.allRoles }}</option>
-            @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+            @for (r of roles; track r) { <option [value]="r">{{ roleLabel(r) }}</option> }
           </select>
           <select [attr.aria-label]="copy.statusFilter" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
             <option value="">{{ copy.anyStatus }}</option>
@@ -76,7 +76,7 @@
           </label>
           <label>Role
             <select [ngModel]="newRole()" (ngModelChange)="newRole.set($event)">
-              @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+              @for (r of roles; track r) { <option [value]="r">{{ roleLabel(r) }}</option> }
             </select>
           </label>
           <div class="actions">
@@ -97,7 +97,7 @@
           </label>
           <label>Role
             <select [ngModel]="editRole()" (ngModelChange)="editRole.set($event)" [disabled]="isSelf()">
-              @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+              @for (r of roles; track r) { <option [value]="r">{{ roleLabel(r) }}</option> }
             </select>
           </label>
           <div class="actions">
