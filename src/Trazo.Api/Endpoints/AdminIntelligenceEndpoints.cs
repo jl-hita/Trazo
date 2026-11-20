@@ -40,7 +40,11 @@ public static class AdminIntelligenceEndpoints
         var (start, end) = range;
         var plans = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
             .Select(x => new { x.Id, x.Origin, x.EngineVersion }).ToListAsync(ct);
-        var planIds = plans.Select(x => x.Id).ToArray();
+        var workoutPlanIds = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end)
+            .Select(x => x.PlanId).Distinct().ToListAsync(ct);
+        var adaptationPlanIds = await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= start && x.AppliedAt < end)
+            .Select(x => x.PlanId).Distinct().ToListAsync(ct);
+        var planIds = plans.Select(x => x.Id).Concat(workoutPlanIds).Concat(adaptationPlanIds).Distinct().ToArray();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.OriginalPrescriptionJson, x.PrescriptionSource }).ToListAsync(ct);
         var workouts = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end)
