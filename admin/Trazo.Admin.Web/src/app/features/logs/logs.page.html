@@ -1,0 +1,78 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Logs</h1>
+        <p class="subtitle">Application events from the API, newest first. Logs are kept for a limited time.</p>
+      </div>
+    </div>
+
+    <div class="logs-toolbar" role="group" aria-label="Level filter">
+      @for (l of levels; track l.id) {
+        <button type="button" class="level-chip" [class]="'level-chip lv-' + l.id" [attr.aria-pressed]="isOn(l.id)" (click)="toggle(l.id)">
+          {{ l.label }} <span class="count">{{ counts()[l.id] }}</span>
+        </button>
+      }
+      <input type="search" placeholder="Search message, category or exception" aria-label="Search logs"
+             [ngModel]="q()" (ngModelChange)="onSearch($event)">
+    </div>
+
+    <div class="logs-toolbar" role="group" aria-label="Date filter">
+      <span class="label">Date</span>
+      <button type="button" class="logs-btn small" (click)="shiftDay(-1)" aria-label="Previous day">◀</button>
+      <input type="date" aria-label="From date" [ngModel]="from()" (ngModelChange)="setDate('from', $event)">
+      <span class="label">to</span>
+      <input type="date" aria-label="To date" [ngModel]="to()" (ngModelChange)="setDate('to', $event)">
+      <button type="button" class="logs-btn small" (click)="shiftDay(1)" aria-label="Next day">▶</button>
+      <button type="button" class="logs-btn small" (click)="preset('today')">Today</button>
+      <button type="button" class="logs-btn small" (click)="preset('yesterday')">Yesterday</button>
+      <button type="button" class="logs-btn small" (click)="preset('week')">Last 7 days</button>
+      <button type="button" class="logs-btn small" (click)="preset('all')" [disabled]="!from() && !to()">All dates</button>
+      <span style="flex:1"></span>
+      <select aria-label="Entries per page" [ngModel]="pageSize()" (ngModelChange)="setPageSize($event)">
+        <option [ngValue]="25">25 per page</option>
+        <option [ngValue]="50">50 per page</option>
+        <option [ngValue]="100">100 per page</option>
+      </select>
+      <label class="auto-refresh"><input type="checkbox" [ngModel]="auto()" (ngModelChange)="setAuto($event)"> Auto-refresh</label>
+      <button type="button" class="logs-btn" (click)="refresh()" [disabled]="loading()">Refresh</button>
+    </div>
+
+    @if (error()) { <p class="logs-error" role="alert">{{ error() }}</p> }
+
+    <table class="logs-table">
+      <thead><tr><th class="c-time">Time</th><th class="c-level">Level</th><th class="c-cat">Category</th><th>Message</th></tr></thead>
+      <tbody>
+        @for (e of entries(); track e.id) {
+          <tr class="entry" [class]="'entry lv-' + e.level" [class.open]="openId() === e.id" tabindex="0" role="button"
+              [attr.aria-expanded]="openId() === e.id" (click)="open(e)" (keydown.enter)="open(e)">
+            <td class="c-time">{{ formatTime(e.timestamp) }}</td>
+            <td class="c-level"><span class="log-badge" [class]="'log-badge lv-' + e.level">{{ e.level }}</span></td>
+            <td class="c-cat" [title]="e.category">{{ shortCategory(e.category) }}</td>
+            <td class="c-msg">{{ firstLine(e.message) }}</td>
+          </tr>
+          @if (openId() === e.id) {
+            <tr class="detail"><td colspan="4">
+              <div class="log-detail">
+                <dl>
+                  <dt>Time</dt><dd>{{ formatTime(e.timestamp) }} (local) · {{ e.timestamp }}</dd>
+                  <dt>Category</dt><dd>{{ e.category }}</dd>
+                  @if (e.traceId) { <dt>Trace</dt><dd>{{ e.traceId }}</dd> }
+                  <dt>Message</dt><dd><pre>{{ e.message }}</pre></dd>
+                  @if (e.exception) { <dt>Exception</dt><dd><pre>{{ e.exception }}</pre></dd> }
+                </dl>
+              </div>
+            </td></tr>
+          }
+        } @empty {
+          <tr><td colspan="4" class="logs-empty">{{ loading() ? 'Loading…' : emptyText() }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="logs-pager">
+      <span>{{ entries().length }} entr{{ entries().length === 1 ? 'y' : 'ies' }} shown · page {{ pageNumber() }}</span>
+      <span>
+        <button type="button" class="logs-btn" (click)="newer()" [disabled]="pageNumber() <= 1 || loading()">◀ Newer</button>
+        <button type="button" class="logs-btn" (click)="older()" [disabled]="!nextCursor() || loading()">Older ▶</button>
+      </span>
+    </div>

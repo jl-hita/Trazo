@@ -1,0 +1,27 @@
+    <form class="pr" (ngSubmit)="save()" autocomplete="off">
+      <fieldset>
+        <legend>Promotions: free Premium time</legend>
+        <label class="check">
+          <input type="checkbox" name="trialOn" [ngModel]="trialEnabled()" (ngModelChange)="trialEnabled.set($event)" [disabled]="busy()">
+          New accounts get a free Premium period
+        </label>
+        <label>Welcome period (days)
+          <input type="number" name="trialDays" min="1" [max]="maxDays()" [ngModel]="trialDays()" (ngModelChange)="trialDays.set(+$event)" [disabled]="busy()">
+        </label>
+        <p class="hint">Given when the account is activated (e-mail verified, or first Google sign-in). Accounts that already exist are not affected, and a change never
+          alters periods already granted: each grant records the days it was given with.</p>
+        <label class="check">
+          <input type="checkbox" name="refOn" [ngModel]="referralsEnabled()" (ngModelChange)="referralsEnabled.set($event)" [disabled]="busy()">
+          Referral programme active (invite codes and rewards)
+        </label>
+        <label>Referral reward (days of Premium per referred user who pays)
+          <input type="number" name="refDays" min="1" [max]="maxDays()" [ngModel]="rewardDays()" (ngModelChange)="rewardDays.set(+$event)" [disabled]="busy()">
+        </label>
+        <p class="hint">Switching the programme off stops new codes, attributions and rewards; what was already earned is kept.</p>
+        <div class="actions">
+          <button type="submit" [disabled]="busy()">Save promotions</button>
+          @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
+          @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
+        </div>
+      </fieldset>
+    </form>

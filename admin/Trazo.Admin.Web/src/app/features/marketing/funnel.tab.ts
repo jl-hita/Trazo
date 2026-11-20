@@ -14,51 +14,7 @@ const STAGE_LABELS: Record<string, string> = {
   selector: 'mk-funnel',
   standalone: true,
   imports: [FormsModule, BarsComponent],
-  template: `
-    @if (error()) { <p class="mk-err" role="alert">{{ error() }}</p> }
-    <div class="mk-toolbar">
-      <label>Strategy
-        <select [ngModel]="segment()" (ngModelChange)="segment.set($event)" name="segment">
-          <option value="all">Everybody</option>
-          <option value="organic">Organic (no campaign)</option>
-          <option value="referral">Referral programme</option>
-          @for (c of channelOptions(); track c) { <option [value]="'channel:' + c">Channel: {{ c }}</option> }
-          @for (c of campaignOptions(); track c.slug) { <option [value]="'campaign:' + c.slug">Campaign: {{ c.name }}</option> }
-        </select></label>
-    </div>
-
-    @if (funnel(); as f) {
-      <h2>Funnel: {{ f.segmentName }} · {{ f.cohort }} accounts created in the period</h2>
-      @if (f.cohort === 0) { <p class="mk-empty">No accounts were created by this strategy in the period.</p> }
-      @else {
-        <div class="mk-panel"><mk-bars [rows]="stageRows()" [max]="1" /></div>
-        <p class="mk-note" style="margin-top:10px">Signup → paying customer {{ fmt.pct(f.signupToPaid) }} (95% range {{ fmt.pct(f.signupToPaidLow) }}–{{ fmt.pct(f.signupToPaidHigh) }}) ·
-          trial → paying {{ fmt.pct(f.trialToPaid) }} · payers who renewed {{ fmt.pct(f.paidRenewed) }}. The biggest drop between two consecutive steps is where to look first.</p>
-        <div class="mk-scroll"><table class="mk-table">
-          <thead><tr><th>Step</th><th>People</th><th>of the previous step</th><th>of all signups</th></tr></thead>
-          <tbody>@for (s of f.stages; track s.name) {
-            <tr><td>{{ label(s.name) }}</td><td>{{ s.users }}</td><td>{{ fmt.pct(s.ofPrevious) }}</td><td>{{ fmt.pct(s.ofCohort) }}</td></tr>
-          }</tbody></table></div>
-      }
-    }
-
-    @if (retention(); as r) {
-      <h2>Retention: people who trained each week after signing up</h2>
-      <p class="mk-note">Each row is the group that signed up in that week. Week 0 is the week of signup, week 1 the next one, and so on. A cell is the share of that group who logged a workout in that week; only people whose week is already over are counted. Empty cells are weeks that have not ended yet.</p>
-      @if (r.cohorts.length) {
-        <div class="mk-scroll"><table class="mk-table mk-heat">
-          <thead><tr><th>Signup week</th><th>People</th><th>Paid</th><th>Renewed</th>@for (w of weekNumbers(); track w) { <th>Wk {{ w }}</th> }</tr></thead>
-          <tbody>
-            <tr><td><b>All</b></td><td>{{ r.cohort }}</td><td></td><td></td>
-              @for (v of r.average; track $index) { <td class="cell" [style.background]="color(v)">{{ fmt.pct(v, 0) }}</td> }</tr>
-            @for (c of r.cohorts; track c.week) {
-              <tr><td>{{ c.week }}</td><td>{{ c.size }}</td><td>{{ c.paid }}</td><td>{{ c.renewed }}</td>
-                @for (v of c.active; track $index) { <td class="cell" [style.background]="color(v)">{{ fmt.pct(v, 0) }}</td> }</tr>
-            }
-          </tbody></table></div>
-      } @else { <p class="mk-empty">No accounts in this period.</p> }
-    }
-  `
+  templateUrl: './funnel.tab.html'
 })
 export class FunnelTabComponent {
   private readonly api = inject(MarketingApi);

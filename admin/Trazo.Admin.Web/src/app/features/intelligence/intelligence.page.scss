@@ -1,0 +1,36 @@
+
+    .ti { max-width: 1440px; color: #dbe5f2; }
+    .ti-toolbar { display:flex; flex-wrap:wrap; align-items:end; gap:10px; margin:18px 0 20px; }
+    .ti-field { display:grid; gap:5px; color:#91a1b6; font-size:11px; }
+    .ti input { padding:9px 10px; border:1px solid #34465b; border-radius:6px; background:#0d1119; color:#e8edf5; }
+    .ti-btn { padding:9px 13px; border:1px solid #4a6585; border-radius:6px; background:#1b2a3e; color:#e4edf8; font-size:12px; cursor:pointer; }
+    .ti-btn.primary { background:#315f91; border-color:#5d8fca; color:white; }
+    .ti-btn:disabled { opacity:.5; cursor:progress; }
+    .ti-presets { display:flex; gap:5px; }
+    .ti-presets button.active { border-color:#79a9dc; background:#315f91; color:white; }
+    .ti-error,.ti-note { padding:12px 14px; border:1px solid #654044; border-radius:7px; background:#241719; color:#f0b2b2; font-size:12px; margin:12px 0; }
+    .ti-note { border-color:#3a506a; background:#152131; color:#b9cde4; line-height:1.55; }
+    .ti-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:18px 0; }
+    .ti-card,.ti-panel { border:1px solid #293444; border-radius:8px; background:#131b27; padding:16px; min-width:0; }
+    .ti-card .value { display:block; color:#f2f5fa; font-size:28px; font-weight:650; font-variant-numeric:tabular-nums; }
+    .ti-card .label { display:block; color:#91a1b6; font-size:11px; margin-top:4px; }
+    .ti-section { margin:24px 0 10px; color:#a9c2df; font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
+    .ti-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .ti-panel h2 { margin:0 0 13px; color:#e7edf6; font-size:14px; }
+    .ti-table-wrap { overflow-x:auto; }
+    .ti table { width:100%; border-collapse:collapse; font-size:12px; }
+    .ti th,.ti td { padding:9px 8px; border-bottom:1px solid #263243; text-align:right; white-space:nowrap; }
+    .ti th:first-child,.ti td:first-child { text-align:left; }
+    .ti th { color:#91a1b6; font-size:10px; text-transform:uppercase; letter-spacing:.06em; }
+    .ti .muted { color:#8291a6; }
+    .ti .empty { padding:22px 4px; color:#8291a6; text-align:center; font-size:12px; }
+    .ti .barlist { display:grid; gap:11px; }
+    .ti .barrow { display:grid; grid-template-columns:minmax(100px,150px) 1fr 48px; gap:9px; align-items:center; font-size:11px; }
+    .ti .track { height:9px; border-radius:5px; background:#0d1119; overflow:hidden; }
+    .ti .fill { height:100%; background:#6595c8; border-radius:5px; }
+    .ti .quality { display:inline-block; border:1px solid #40546d; border-radius:99px; padding:2px 7px; color:#b6cce5; font-size:10px; }
+    .ti .foot { color:#8291a6; font-size:11px; line-height:1.5; margin-top:12px; }
+    .ti button:focus-visible,.ti input:focus-visible { outline:2px solid #9cc0ea; outline-offset:2px; }
+    @media(max-width:950px) { .ti-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:640px) { .ti-grid,.ti-columns { grid-template-columns:1fr; } }
+  

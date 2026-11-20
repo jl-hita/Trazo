@@ -1,0 +1,81 @@
+    <div class="page-heading">
+      <div><p class="eyebrow">INVESTIGACIÓN Y DATOS</p><h1>Trazo Intelligence</h1>
+        <p class="subtitle">Analiza qué prescribe el motor, qué hacen realmente los deportistas y qué señales utiliza para adaptarse.</p></div>
+    </div>
+    <div class="ti">
+      <div class="ti-toolbar">
+        <div class="ti-presets" role="group" aria-label="Periodo">
+          @for (p of presets; track p.days) {
+            <button class="ti-btn" [class.active]="preset() === p.days" type="button" (click)="usePreset(p.days)">{{p.label}}</button>
+          }
+        </div>
+        <label class="ti-field">Desde <input type="date" #fromInput [value]="from()" (change)="setFrom(fromInput.value)"></label>
+        <label class="ti-field">Hasta (incluido) <input type="date" #toInput [value]="to()" (change)="setTo(toInput.value)"></label>
+        <button class="ti-btn" type="button" (click)="load()" [disabled]="loading()">Actualizar</button>
+        <button class="ti-btn primary" type="button" (click)="export()" [disabled]="exporting() || loading()">
+          {{ exporting() ? 'Preparando paquete…' : '↓ Exportar investigación (ZIP)' }}
+        </button>
+      </div>
+      <p class="ti-note"><strong>Qué contiene la exportación:</strong> CSV y JSON relacionados de planes, mesociclos, prescripciones originales y actuales, adaptaciones, entrenamientos, series realizadas, observaciones longitudinales y decisiones del motor. Los identificadores se seudonimizan también dentro de los JSON de trazabilidad. Se excluyen nombres, correos, notas libres, etiquetas de planes y limitaciones personales. El archivo sigue siendo información seudonimizada y debe tratarse como privada.</p>
+      @if (error()) { <p class="ti-error" role="alert">{{error()}}</p> }
+      @if (loading() && !data()) { <p class="empty">Cargando datos de investigación…</p> }
+      @if (data(); as d) {
+        <p class="foot">Periodo {{date(d.from)}} – {{date(to())}} · Datos actualizados {{dateTime(d.generatedAt)}}. Las observaciones se cuentan por músculo y periodo; no equivalen a deportistas independientes.</p>
+        <div class="ti-grid">
+          <article class="ti-card"><span class="value">{{n(d.plans.total)}}</span><span class="label">Planes creados · {{n(d.plans.generated)}} generados / {{n(d.plans.manual)}} manuales</span></article>
+          <article class="ti-card"><span class="value">{{n(d.prescriptions.sessions)}}</span><span class="label">Sesiones del periodo/cohorte · {{pct(d.prescriptions.withOriginalSnapshot,d.prescriptions.sessions)}} con snapshot original</span></article>
+          <article class="ti-card"><span class="value">{{n(d.workouts.total)}}</span><span class="label">Entrenamientos realizados · {{pct(d.workouts.completed,d.workouts.total)}} completados</span></article>
+          <article class="ti-card"><span class="value">{{n(adaptationTotal())}}</span><span class="label">Adaptaciones registradas en el periodo</span></article>
+        </div>
+
+        <h2 class="ti-section">Calidad y cobertura de datos</h2>
+        <div class="ti-columns">
+          <section class="ti-panel"><h2>Trazabilidad de prescripción</h2>
+            <div class="barlist">
+              <div class="barrow"><span>Con snapshot original</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.prescriptions.withOriginalSnapshot,d.prescriptions.sessions)"></span></span><b>{{n(d.prescriptions.withOriginalSnapshot)}}</b></div>
+              <div class="barrow"><span>Sin snapshot original</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.prescriptions.withoutOriginalSnapshot,d.prescriptions.sessions)"></span></span><b>{{n(d.prescriptions.withoutOriginalSnapshot)}}</b></div>
+            </div>
+            <p class="foot">Incluye sesiones de planes creados en el periodo y sesiones entrenadas en el periodo. No incorpora todas las sesiones futuras de planes antiguos. Los snapshots históricos ausentes se mantienen como desconocidos.</p>
+            <p class="foot">Versiones de motor: {{d.plans.engineVersions.length ? d.plans.engineVersions.join(', ') : 'No disponibles en este periodo'}}</p>
+          </section>
+          <section class="ti-panel"><h2>Resultado de los entrenamientos</h2>
+            <div class="barlist">
+              <div class="barrow"><span>Completados</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.workouts.completed,d.workouts.total)"></span></span><b>{{n(d.workouts.completed)}}</b></div>
+              <div class="barrow"><span>Parciales</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.workouts.partial,d.workouts.total)"></span></span><b>{{n(d.workouts.partial)}}</b></div>
+              <div class="barrow"><span>No completados</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.workouts.notCompleted,d.workouts.total)"></span></span><b>{{n(d.workouts.notCompleted)}}</b></div>
+            </div>
+            <p class="foot">El porcentaje de completitud describe registros de entrenamiento, no adherencia causal al programa.</p>
+          </section>
+        </div>
+
+        <h2 class="ti-section">Comportamiento del motor</h2>
+        <div class="ti-columns">
+          <section class="ti-panel"><h2>Adaptaciones por tipo y origen</h2>
+            @if (d.adaptations.length) {
+              <div class="ti-table-wrap"><table><thead><tr><th>Tipo</th><th>Origen</th><th>Veces</th></tr></thead><tbody>
+                @for (a of d.adaptations; track a.kind + ':' + a.source) { <tr><td>{{adaptationLabel(a.kind)}}</td><td>{{sourceLabel(a.source)}}</td><td>{{n(a.count)}}</td></tr> }
+              </tbody></table></div>
+            } @else { <p class="empty">No hay adaptaciones en el periodo.</p> }
+          </section>
+          <section class="ti-panel"><h2>Decisiones longitudinales</h2>
+            @if (d.decisions.length) {
+              <div class="ti-table-wrap"><table><thead><tr><th>Acción</th><th>Política</th><th>Decisiones</th></tr></thead><tbody>
+                @for (x of d.decisions; track x.action + x.policyVersion) { <tr><td>{{x.action}}</td><td>{{x.policyVersion}}</td><td>{{n(x.count)}}</td></tr> }
+              </tbody></table></div>
+            } @else { <p class="empty">No hay decisiones longitudinales registradas en el periodo.</p> }
+          </section>
+        </div>
+
+        <h2 class="ti-section">Respuesta por grupo muscular</h2>
+        <section class="ti-panel">
+          @if (d.observations.length) {
+            <div class="ti-table-wrap"><table><thead><tr><th>Músculo</th><th>Calidad</th><th>Periodos</th><th>Series prescritas</th><th>Series realizadas</th><th>Muestras rendimiento</th><th>Cambio medio</th><th>Señales fatiga</th></tr></thead>
+              <tbody>@for (o of d.observations; track o.muscle + o.quality) {
+                <tr><td>{{o.muscle}}</td><td><span class="quality">{{qualityLabel(o.quality)}}</span></td><td>{{n(o.count)}}</td><td>{{decimal(o.prescribedSets)}}</td><td>{{decimal(o.performedSets)}}</td><td>{{n(o.performanceSamples)}}</td><td>{{o.averagePerformanceChange === null ? '—' : decimal(o.averagePerformanceChange) + ' %'}}</td><td>{{n(o.fatigueSignals)}}</td></tr>
+              }</tbody>
+            </table></div>
+            <p class="foot">No mezcles periodos válidos, parciales y excluidos al estimar respuestas. El cambio de rendimiento es un indicador observado, no una medida directa de hipertrofia.</p>
+          } @else { <p class="empty">No hay observaciones longitudinales actualizadas en el periodo.</p> }
+        </section>
+      }
+    </div>

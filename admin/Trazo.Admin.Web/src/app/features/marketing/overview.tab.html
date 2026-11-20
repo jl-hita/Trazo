@@ -1,0 +1,56 @@
+    @if (error()) { <p class="mk-err" role="alert">{{ error() }}</p> }
+    @if (data(); as s) {
+      <h2>Flows in the period (compared with the previous period of the same length)</h2>
+      <div class="mk-cards">
+        @for (k of s.kpis; track k.key) {
+          <div class="mk-card"><b>{{ fmt.int(k.current) }}</b><span>{{ k.label }}</span>
+            <span class="delta" [class.mk-up]="good(k.key, k.current, k.previous) === 1" [class.mk-down]="good(k.key, k.current, k.previous) === -1"
+                  [class.mk-flat]="good(k.key, k.current, k.previous) === 0">{{ fmt.delta(k.current, k.previous) }} vs {{ fmt.int(k.previous) }} before</span></div>
+        }
+        <div class="mk-card"><b>{{ fmt.int(s.paywallViews) }}</b><span>Premium offer opened</span></div>
+        <div class="mk-card"><b>{{ fmt.int(s.waitlistConfirmed) }}</b><span>Confirmed on the waitlist</span></div>
+        @if (s.downloads !== null) {
+          <div class="mk-card"><b>{{ fmt.int(s.downloads) }}</b><span>Store downloads (Play Console)</span></div>
+          <div class="mk-card"><b>{{ fmt.pct(s.downloadToSignup) }}</b><span>Downloads that created an account</span></div>
+        } @else {
+          <div class="mk-card"><b>—</b><span>Store downloads: enter them in Other levers</span></div>
+        }
+      </div>
+
+      <div class="mk-grid2">
+        <div class="mk-panel">
+          <h2>Accounts created in the period: how far they got</h2>
+          <p class="mk-note">{{ fmt.int(s.cohort) }} accounts. Conversion is measured on these accounts, so recent signups may still convert.</p>
+          <mk-bars [rows]="rates()" [max]="1" />
+        </div>
+        <div class="mk-panel">
+          <h2>Subscribers right now</h2>
+          <div class="mk-cards" style="margin:0">
+            <div class="mk-card"><b>{{ s.subscribers.paying }}</b><span>Paying</span></div>
+            <div class="mk-card"><b>{{ s.subscribers.trialing }}</b><span>In a free trial</span></div>
+            <div class="mk-card"><b>{{ s.subscribers.cancelingAtPeriodEnd }}</b><span>Will not renew</span></div>
+            <div class="mk-card"><b>{{ s.subscribers.billing }}</b><span>Payment problem</span></div>
+          </div>
+          <p class="mk-muted">Test purchases and promotional time (welcome period, referral rewards) are not counted.</p>
+        </div>
+      </div>
+
+      <h2>Where the signups of the period come from</h2>
+      @if (s.mix.length) {
+        <div class="mk-grid2">
+          <div class="mk-panel"><mk-bars [rows]="mix()" /></div>
+          <div class="mk-panel"><p class="mk-note">The share of each source and how many of its signups became paying customers. Open the Strategies tab to compare quality, retention and cost per customer.
+            {{ s.activeCampaigns }} campaign link{{ s.activeCampaigns === 1 ? '' : 's' }} active.</p></div>
+        </div>
+      } @else { <p class="mk-empty">No signups in this period.</p> }
+
+      @if (s.weeks.length) {
+        <h2>Week by week</h2>
+        <div class="mk-panel"><mk-columns [labels]="weekLabels()" [series]="weekSeries()" label="Signups, trials and new paying customers per week" /></div>
+        <div class="mk-scroll"><table class="mk-table">
+          <thead><tr><th>Week starting</th><th>Signups</th><th>Trials</th><th>New payers</th><th>Renewals</th><th>Cancellations</th><th>Refunds</th><th>Offer opened</th></tr></thead>
+          <tbody>@for (w of s.weeks; track w.week) {
+            <tr><td>{{ w.week }}</td><td>{{ w.signups }}</td><td>{{ w.trials }}</td><td>{{ w.firstPurchases }}</td><td>{{ w.renewals }}</td><td>{{ w.cancellations }}</td><td>{{ w.refunds }}</td><td>{{ w.paywallViews }}</td></tr>
+          }</tbody></table></div>
+      }
+    } @else if (!error()) { <p class="mk-empty">Loading…</p> }
