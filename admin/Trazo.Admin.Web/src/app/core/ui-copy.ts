@@ -37,7 +37,10 @@ export const UI_COPY = {
     email: 'Correo electrónico',
     password: 'Contraseña',
     signInFailed: 'No se ha podido iniciar sesión',
-    signIn: 'Iniciar sesión'
+    signIn: 'Iniciar sesión',
+    tooManyAttempts: 'Demasiados intentos. Espera un minuto antes de volver a intentarlo.',
+    verifyEmailFirst: 'Verifica tu correo electrónico antes de iniciar sesión.',
+    invalidCredentials: 'Correo electrónico o contraseña incorrectos.'
   },
   users: {
     eyebrow: 'ADMINISTRACIÓN',
@@ -1169,4 +1172,18 @@ export const UI_COPY = {
     runTests: 'Ejecuta correctamente las dos pruebas antes de guardar.',
     saved: 'Ajustes guardados.'
   },
+  apiErrors: {
+    network: 'No se ha podido conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo.',
+    badRequest: 'La solicitud no es válida. Revisa los datos e inténtalo de nuevo.',
+    unauthorized: 'Tu sesión ha caducado. Inicia sesión de nuevo.',
+    forbidden: 'No tienes permisos para realizar esta acción.',
+    notFound: 'No se ha encontrado el recurso solicitado.',
+    conflict: 'La operación entra en conflicto con el estado actual. Actualiza los datos e inténtalo de nuevo.',
+    tooLarge: 'El archivo supera el tamaño permitido.',
+    validation: 'No se han podido validar los datos. Revisa los campos e inténtalo de nuevo.',
+    rateLimited: 'Has realizado demasiadas solicitudes. Espera un momento e inténtalo de nuevo.',
+    server: 'Se ha producido un error en el servidor. Inténtalo de nuevo más tarde.',
+    unavailable: 'El servicio no está disponible en este momento. Inténtalo de nuevo más tarde.',
+    unexpected: 'No se ha podido completar la operación. Inténtalo de nuevo.'
+  }
 } as const;
