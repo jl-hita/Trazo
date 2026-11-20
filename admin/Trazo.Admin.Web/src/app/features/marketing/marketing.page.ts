@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth.service';
-import { Range, daysAgo, isoDay } from './marketing.api';
+import type { Range } from './marketing.models';
+import { daysAgo, isoDay } from './marketing.api';
 import { OverviewTabComponent } from './overview.tab';
 import { StrategiesTabComponent } from './strategies.tab';
 import { CampaignsTabComponent } from './campaigns.tab';

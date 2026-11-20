@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FiscalApi, FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.api';
+import { FiscalApi } from './fiscal.api';
+import type { FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.models';
 import { errorMessage } from '../../core/setup.api';
 
 const EMPTY_ENTRY = () => ({

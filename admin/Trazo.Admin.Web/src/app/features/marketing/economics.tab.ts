@@ -1,5 +1,6 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { EconomicsReport, MarketingApi, Range, fmt, marketingError } from './marketing.api';
+import { MarketingApi, fmt, marketingError } from './marketing.api';
+import type { EconomicsReport, Range } from './marketing.models';
 import { BarRow, BarsComponent } from './marketing.charts';
 
 /**

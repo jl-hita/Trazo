@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MarketingApi, MarketingFunnel, Range, RetentionReport, fmt, marketingError } from './marketing.api';
+import { MarketingApi, fmt, marketingError } from './marketing.api';
+import type { MarketingFunnel, Range, RetentionReport } from './marketing.models';
 import { BarRow, BarsComponent } from './marketing.charts';
 
 const STAGE_LABELS: Record<string, string> = {

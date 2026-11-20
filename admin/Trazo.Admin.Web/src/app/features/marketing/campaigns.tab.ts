@@ -1,6 +1,7 @@
 import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Campaign, CampaignDetail, CampaignInput, CampaignItem, MarketingApi, Range, fmt, isoDay, marketingError } from './marketing.api';
+import { MarketingApi, fmt, isoDay, marketingError } from './marketing.api';
+import type { Campaign, CampaignDetail, CampaignInput, CampaignItem, Range } from './marketing.models';
 import { ColumnsComponent, Series } from './marketing.charts';
 
 interface Draft { slug: string; name: string; channel: string; status: string; startsOn: string; endsOn: string; notes: string; }
