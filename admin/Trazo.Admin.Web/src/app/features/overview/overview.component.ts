@@ -1,4 +1,4 @@
-import { UI_COPY } from '../../core/ui-copy';
+import { OVERVIEW_COPY } from './overview.copy';
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import type { AlertSeverity, Overview } from '../../core/admin.models';
@@ -14,28 +14,18 @@ type Tone = 'ok' | 'warn' | 'crit' | 'info';
 
 interface Status { tone: Tone; label: string; }
 
-const SEVERITY_LABEL: Record<AlertSeverity, string> = { critical: 'Crítica', warning: 'Aviso', info: 'Información' };
+const SEVERITY_LABEL: Record<AlertSeverity, string> = { critical: OVERVIEW_COPY.severity.critical, warning: OVERVIEW_COPY.severity.warning, info: OVERVIEW_COPY.severity.info };
 const SEVERITY_TONE: Record<AlertSeverity, Tone> = { critical: 'crit', warning: 'warn', info: 'info' };
 /** Glyphs are decorative (aria-hidden); the meaning is always carried by the text next to them. */
 const TONE_GLYPH: Record<Tone, string> = { ok: '✓', warn: '!', crit: '✕', info: 'i' };
 
-const SUBSCRIPTION_LABEL: Record<string, string> = {
-  pending: 'Pendientes', trial: 'En prueba', active: 'Activas', grace_period: 'En periodo de gracia',
-  on_hold: 'En espera', canceled: 'Canceladas', expired: 'Caducadas', revoked: 'Revocadas'
-};
+const SUBSCRIPTION_LABEL: Record<string, string> = OVERVIEW_COPY.subscriptionStatuses;
 
-const PAYWALL_SOURCE_LABEL: Record<string, string> = {
-  account: 'Cuenta', plan: 'Plan bloqueado', session: 'Sesión', onboarding: 'Crear plan', other: 'Otros'
-};
+const PAYWALL_SOURCE_LABEL: Record<string, string> = OVERVIEW_COPY.paywallSources;
 
-const ADAPTATION_LABEL: Record<string, string> = {
-  reduction_sets: 'Series reducidas', raise_reserve: 'Más margen (RIR)', restore_sets: 'Series restauradas',
-  deload: 'Descargas', hold_progression: 'Progresión retenida', load_update: 'Cargas actualizadas'
-};
+const ADAPTATION_LABEL: Record<string, string> = OVERVIEW_COPY.adaptations;
 
-const REASON_LABEL: Record<string, string> = {
-  Time: 'Tiempo', Fatigue: 'Fatiga', Equipment: 'Material', Motivation: 'Motivación', Illness: 'Enfermedad', Other: 'Otros'
-};
+const REASON_LABEL: Record<string, string> = OVERVIEW_COPY.reasons;
 
 /**
  * Operational overview: system health, alerts that say what to do next, and quick links to the areas that need attention.
@@ -50,7 +40,7 @@ const REASON_LABEL: Record<string, string> = {
   encapsulation: ViewEncapsulation.None
 })
 export class OverviewComponent {
-  protected readonly labels = UI_COPY.overview;
+  protected readonly labels = OVERVIEW_COPY;
   private readonly api = inject(OverviewApi);
   private readonly router = inject(Router);
   private requestId = 0;
@@ -66,16 +56,16 @@ export class OverviewComponent {
 
   protected readonly health = computed<Status>(() => {
     const h = this.data()?.health;
-    if (!h) return { tone: 'info', label: 'Sin datos' };
-    if (!h.databaseOk) return { tone: 'crit', label: 'Base de datos caída' };
-    if (h.pendingMigrations.length > 0) return { tone: 'crit', label: 'Migraciones pendientes' };
-    return { tone: 'ok', label: 'Todo correcto' };
+    if (!h) return { tone: 'info', label: OVERVIEW_COPY.statuses.noData };
+    if (!h.databaseOk) return { tone: 'crit', label: OVERVIEW_COPY.statuses.databaseDown };
+    if (h.pendingMigrations.length > 0) return { tone: 'crit', label: OVERVIEW_COPY.statuses.pendingMigrations };
+    return { tone: 'ok', label: OVERVIEW_COPY.statuses.allGood };
   });
 
   protected readonly logsStatus = computed<Status>(() => {
     const l = this.data()?.logs;
     if (!l) return { tone: 'info', label: 'Sin datos' };
-    if (l.errors24h === 0) return { tone: 'ok', label: 'Sin errores en 24 h' };
+    if (l.errors24h === 0) return { tone: 'ok', label: OVERVIEW_COPY.statuses.noErrors };
     const rising = l.errors24h >= 5 && l.errors24h >= 2 * Math.max(l.errorsPrevious24h, 1);
     return { tone: rising ? 'crit' : 'warn', label: rising ? 'Errores en aumento' : 'Hay errores' };
   });
@@ -83,27 +73,27 @@ export class OverviewComponent {
   protected readonly smtp = computed<Status>(() => {
     const c = this.data()?.configuration;
     if (!c) return { tone: 'info', label: 'Sin datos' };
-    if (!c.smtpConfigured) return { tone: 'warn', label: 'Sin configurar' };
-    if (c.lastSmtpSend && !c.lastSmtpSend.succeeded) return { tone: 'crit', label: 'Último envío fallido' };
+    if (!c.smtpConfigured) return { tone: 'warn', label: OVERVIEW_COPY.statuses.notConfigured };
+    if (c.lastSmtpSend && !c.lastSmtpSend.succeeded) return { tone: 'crit', label: OVERVIEW_COPY.statuses.lastSendFailed };
     return { tone: 'ok', label: c.lastSmtpSend ? 'Funciona' : 'Configurado' };
   });
 
   protected readonly google = computed<Status>(() =>
-    this.data()?.configuration.googleConfigured ? { tone: 'ok', label: 'Configurado' } : { tone: 'warn', label: 'Sin configurar' });
+    this.data()?.configuration.googleConfigured ? { tone: 'ok', label: OVERVIEW_COPY.statuses.configured } : { tone: 'warn', label: 'Sin configurar' });
 
   protected readonly play = computed<Status>(() => {
     const c = this.data()?.configuration;
     if (!c) return { tone: 'info', label: 'Sin datos' };
-    if (!c.playBillingConfigured) return c.subscriptionsEnforced ? { tone: 'crit', label: 'Sin configurar' } : { tone: 'info', label: 'Sin configurar (opcional)' };
-    return c.playRtdnConfigured ? { tone: 'ok', label: 'Configurado con RTDN' } : { tone: 'warn', label: 'Sin RTDN' };
+    if (!c.playBillingConfigured) return c.subscriptionsEnforced ? { tone: 'crit', label: 'Sin configurar' } : { tone: 'info', label: OVERVIEW_COPY.statuses.configuredOptional };
+    return c.playRtdnConfigured ? { tone: 'ok', label: OVERVIEW_COPY.statuses.configuredWithRtdn } : { tone: 'warn', label: OVERVIEW_COPY.statuses.withoutRtdn };
   });
 
   protected readonly catalog = computed<Status>(() => {
     const s = this.data()?.summary;
     if (!s) return { tone: 'info', label: 'Sin datos' };
-    if (s.exercisesUsable === 0) return { tone: 'crit', label: 'Sin ejercicios utilizables' };
-    if (s.exercisesUnusable > 0 || s.exercisesWithoutImages > 0) return { tone: 'warn', label: 'Requiere revisión' };
-    return { tone: 'ok', label: 'Correcto' };
+    if (s.exercisesUsable === 0) return { tone: 'crit', label: OVERVIEW_COPY.statuses.noUsableExercises };
+    if (s.exercisesUnusable > 0 || s.exercisesWithoutImages > 0) return { tone: 'warn', label: OVERVIEW_COPY.statuses.needsReview };
+    return { tone: 'ok', label: OVERVIEW_COPY.statuses.correct };
   });
 
   protected readonly subscriptions = computed(() =>
@@ -132,11 +122,11 @@ export class OverviewComponent {
     if (!f) return [];
     const base = Math.max(1, f.registered);
     return [
-      { label: 'Registrados', count: f.registered, hint: 'Cuentas creadas' },
-      { label: 'Correo verificado', count: f.emailVerified, hint: 'Correo verificado o acceso con Google' },
-      { label: 'Con un plan', count: f.withPlan, hint: 'Han generado al menos un plan' },
-      { label: 'Con una sesión registrada', count: f.withWorkout, hint: 'Han registrado al menos un entrenamiento' },
-      { label: 'Constantes', count: f.recurring, hint: 'Con 3 o más sesiones registradas' }
+      { label: OVERVIEW_COPY.funnel.registered, count: f.registered, hint: OVERVIEW_COPY.funnel.registeredHint },
+      { label: OVERVIEW_COPY.funnel.verified, count: f.emailVerified, hint: OVERVIEW_COPY.funnel.verifiedHint },
+      { label: OVERVIEW_COPY.funnel.withPlan, count: f.withPlan, hint: OVERVIEW_COPY.funnel.withPlanHint },
+      { label: OVERVIEW_COPY.funnel.withWorkout, count: f.withWorkout, hint: OVERVIEW_COPY.funnel.withWorkoutHint },
+      { label: OVERVIEW_COPY.funnel.recurring, count: f.recurring, hint: OVERVIEW_COPY.funnel.recurringHint }
     ].map(step => ({ ...step, percent: Math.round((100 * step.count) / base) }));
   });
 
@@ -166,7 +156,7 @@ export class OverviewComponent {
 
   protected readonly alertSummary = computed(() => {
     const n = this.alerts().length;
-    return n === 0 ? 'Sin alertas' : n === 1 ? '1 alerta' : `${n} alertas`;
+    return n === 0 ? OVERVIEW_COPY.noAlerts : n === 1 ? OVERVIEW_COPY.oneAlert : `${n} ${OVERVIEW_COPY.alertsSuffix}`;
   });
 
   constructor() {
@@ -204,12 +194,12 @@ export class OverviewComponent {
       const result = await this.api.overview(refresh);
       if (request !== this.requestId) return; // superseded or the page was left
       this.data.set(result);
-      if (announce) this.announcement.set(`Datos actualizados. ${result.alerts.length === 0 ? 'Sin alertas.' : `${result.alerts.length} alertas.`}`);
+      if (announce) this.announcement.set(`${OVERVIEW_COPY.announcements.refreshed} ${result.alerts.length === 0 ? OVERVIEW_COPY.announcements.noAlerts : `${result.alerts.length} ${OVERVIEW_COPY.alertsSuffix}.`}`);
     } catch (e) {
       if (request !== this.requestId) return;
       const status = (e as { status?: number })?.status;
-      this.error.set(status === 503 ? 'La base de datos no responde.' : errorMessage(e));
-      if (announce) this.announcement.set('No se han podido actualizar los datos.');
+      this.error.set(status === 503 ? OVERVIEW_COPY.unavailable + '.' : errorMessage(e));
+      if (announce) this.announcement.set(OVERVIEW_COPY.announcements.failed);
     } finally {
       if (request === this.requestId) this.loading.set(false);
     }
