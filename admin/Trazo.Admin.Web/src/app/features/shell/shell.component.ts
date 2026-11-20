@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
-import { AdminApi, SystemInfo } from '../../core/admin.api';
+import type { SystemInfo } from '../../core/admin.models';
+import { OverviewApi } from '../overview/overview.api';
 
 @Component({
   selector: 'trazo-shell',
@@ -15,7 +16,7 @@ import { AdminApi, SystemInfo } from '../../core/admin.api';
 export class ShellComponent {
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(OverviewApi);
   /** Version and environment of the deployed API; stays null when it cannot be read (the footer then shows a dash). */
   protected readonly system = signal<SystemInfo | null>(null);
   protected readonly environmentLabel = computed(() => {
