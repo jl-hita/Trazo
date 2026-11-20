@@ -1,7 +1,8 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MarketingApi, Range, SegmentRow, StrategiesReport, fmt, marketingError } from './marketing.api';
+import { MarketingApi, fmt, marketingError } from './marketing.api';
+import type { Range, SegmentRow, StrategiesReport } from './marketing.models';
 import { BarRow, BarsComponent } from './marketing.charts';
 
 type Metric = 'signupToPaid' | 'signupToTrial' | 'signupToActivated' | 'd30' | 'paidRenewed' | 'costPerPaid' | 'returnOnSpend';
