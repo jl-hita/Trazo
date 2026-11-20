@@ -44,6 +44,14 @@ async function loadComponent(api) {
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
     if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
     if (request === '../../shared/ui/ui-table.component') return { UiTableComponent: class UiTableComponent {} };
+    if (request === './intelligence.copy') return { INTELLIGENCE_COPY: {
+      presets: { days30: '30 días', days90: '90 días', months12: '12 meses' },
+      invalidPeriod: 'El periodo no es válido.',
+      loadError: 'No se han podido cargar los datos de Intelligence.',
+      invalidZip: 'La API no ha devuelto un ZIP válido.',
+      exportError: 'No se ha podido generar la exportación.',
+      adaptationLabels: {}, sourceLabels: { unknown: 'Sin dato' }, qualityLabels: {}
+    } };
     return originalLoad.call(this, request, parent, isMain);
   };
 
