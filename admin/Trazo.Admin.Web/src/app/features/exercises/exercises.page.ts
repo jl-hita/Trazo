@@ -42,8 +42,8 @@ const FIELDS: Field[] = [
   { key: 'primaryMuscles', label: F.primaryMuscles, kind: 'tags', options: 'muscles', required: true, hint: F.primaryMusclesHint },
   { key: 'secondaryMuscles', label: F.secondaryMuscles, kind: 'tags', options: 'muscles', hint: F.secondaryMusclesHint },
   { key: 'equipment', label: F.equipment, kind: 'text', options: 'equipment' },
-  { key: 'requiredEquipment', label: F.requiredEquipment, kind: 'tags', options: 'equipment', hint: 'Separated by commas.' },
-  { key: 'suitableGoals', label: F.suitableGoals, kind: 'tags', options: 'goals', required: true, hint: 'Separated by commas.' },
+  { key: 'requiredEquipment', label: F.requiredEquipment, kind: 'tags', options: 'equipment', hint: F.requiredEquipmentHint },
+  { key: 'suitableGoals', label: F.suitableGoals, kind: 'tags', options: 'goals', required: true, hint: F.suitableGoalsHint },
   { key: 'forceType', label: F.forceType, kind: 'text', options: 'forceTypes' },
   { key: 'mechanic', label: F.mechanic, kind: 'text', options: 'mechanics' },
   { key: 'bodyPart', label: F.bodyPart, kind: 'text', options: 'bodyParts' },
@@ -157,7 +157,7 @@ export class ExercisesPageComponent {
     const current = this.detail();
     await this.perform(
       () => current ? this.api.update(current.id, input) : this.api.create(input),
-      current ? 'Changes saved.' : 'Exercise created.');
+      current ? 'Cambios guardados.' : 'Ejercicio creado.');
   }
 
   /** Sends the exercises created in TRAZO (with their images) to DietoExpress, after a second click. */
