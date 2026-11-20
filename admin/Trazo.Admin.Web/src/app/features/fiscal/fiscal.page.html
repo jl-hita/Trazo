@@ -170,25 +170,23 @@
 
         <div class="box">
           @if (!m.closed) {
-            <trazo-button variant="primary" type="button" [disabled]="!m.canClose || busy()" (pressed)="close(m)">Close month and prepare the accountant's package</trazo-button>
-            @if (m.cannotCloseReason === 'month_not_finished') { <span class="muted"> A month can only be closed once it has finished.</span> }
-            @if (m.cannotCloseReason === 'profile_incomplete') { <span class="warn"> Complete the fiscal profile first.</span> }
+            <trazo-button variant="primary" type="button" [disabled]="!m.canClose || busy()" (pressed)="close(m)">{{ copy.closeMonth }}</trazo-button>
+            @if (m.cannotCloseReason === 'month_not_finished') { <span class="muted"> {{ copy.monthMustFinish }}</span> }
+            @if (m.cannotCloseReason === 'profile_incomplete') { <span class="warn"> {{ copy.completeProfile }}</span> }
           } @else {
-            <trazo-button variant="primary" type="button" (pressed)="downloadMonth(m.period)">Download the accountant's package (.zip)</trazo-button>
-            <trazo-button variant="danger" type="button" (pressed)="reopen(m.period)">Reopen…</trazo-button>
+            <trazo-button variant="primary" type="button" (pressed)="downloadMonth(m.period)">{{ copy.downloadAccountantPackage }}</trazo-button>
+            <trazo-button variant="danger" type="button" (pressed)="reopen(m.period)">{{ copy.reopen }}</trazo-button>
           }
         </div>
       }
 
       @if (audit().length) {
-        <h2>Closing history</h2>
+        <h2>{{ copy.closingHistory }}</h2>
         <trazo-table>
-          <thead><tr><th>When</th><th>Month</th><th>Action</th><th>By</th><th>Reason</th></tr></thead>
+          <thead><tr><th>{{ copy.when }}</th><th>{{ copy.month }}</th><th>{{ copy.action }}</th><th>{{ copy.by }}</th><th>{{ copy.reason }}</th></tr></thead>
           <tbody>@for (a of audit(); track a.id) { <tr><td>{{ a.at.slice(0, 16).replace('T', ' ') }}</td><td>{{ a.period }}</td><td>{{ a.action }}</td><td>{{ a.actor }}</td><td>{{ a.reason }}</td></tr> }</tbody>
         </trazo-table>
       }
 
-      <p class="notice">Orientative figures to prepare the work of your accountant. They do not file anything and do not replace professional advice:
-        have your gestor review the VAT treatments, the 303/130/349 figures and the Google Play income before filing. Google Play income is booked against
-        Google Ireland Limited as a service to an EU business (no Spanish VAT, reverse charge, modelo 349).</p>
+      <p class="notice">{{ copy.guidance }}</p>
     </div>
