@@ -8,9 +8,7 @@ import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 
-const SOURCE_LABELS: Record<string, string> = {
-  account: 'Account screen', plan: 'A locked plan', session: 'During a session', onboarding: 'Onboarding', other: 'Elsewhere'
-};
+const SOURCE_LABELS: Record<string, string> = { ...UI_COPY.marketing.sourceLabels };
 
 /** The levers that are not campaigns: the Premium offer (where people see it), the invitation programme and the landing waitlist. */
 @Component({
@@ -51,7 +49,7 @@ export class LeversTabComponent {
     this.error.set(''); this.message.set('');
     try {
       const saved = await this.api.saveDownloads({ week: this.dlWeek, downloads: this.dlCount, note: this.dlNote.trim() || null });
-      this.message.set(`Saved: ${saved.downloads} downloads for the week of ${saved.week}.`);
+      this.message.set(`${this.labels.savedDownloads}: ${saved.downloads} ${this.labels.downloadsLabel} ${this.labels.forTheWeek} ${saved.week}.`);
       this.dlCount = null; this.dlNote = '';
       await this.load(this.range());
     } catch (e) { this.error.set(marketingError(e)); }
