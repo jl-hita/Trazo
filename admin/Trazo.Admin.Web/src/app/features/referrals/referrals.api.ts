@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { ApiHttpClient } from '../../core/api-http.client';
+import { HttpParams } from '@angular/common/http';
 
 import type {
   ReferralSummary,
@@ -18,7 +18,7 @@ const API = '/api/v1/admin';
 /** API operations and contracts for referral analytics and reward administration. */
 @Injectable({ providedIn: 'root' })
 export class ReferralsApi {
-  private readonly http = inject(HttpClient);
+  private readonly http = inject(ApiHttpClient);
 
   private query(params: Record<string, string | boolean | undefined>): HttpParams {
     let p = new HttpParams();
@@ -27,39 +27,39 @@ export class ReferralsApi {
   }
 
   getReferralProgrammeSettings(): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
-    return firstValueFrom(this.http.get<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`));
+    return this.http.get<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`);
   }
 
   saveReferralProgrammeSettings(input: { enabled: boolean; rewardDays: number }): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
-    return firstValueFrom(this.http.put<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`, input));
+    return this.http.put<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`, input);
   }
 
   getReferralSummary(range: { from?: string; to?: string }): Promise<ReferralSummary> {
-    return firstValueFrom(this.http.get<ReferralSummary>(`${API}/referrals/summary`, { params: this.query(range) }));
+    return this.http.get<ReferralSummary>(`${API}/referrals/summary`, { params: this.query(range) });
   }
 
   getFunnel(params: { from?: string; to?: string; channel?: string }): Promise<ReferralFunnel> {
-    return firstValueFrom(this.http.get<ReferralFunnel>(`${API}/analytics/funnel`, { params: this.query(params) }));
+    return this.http.get<ReferralFunnel>(`${API}/analytics/funnel`, { params: this.query(params) });
   }
 
   getReferrals(params: { status?: string; incidents?: boolean; from?: string; to?: string; page?: number; pageSize?: number }): Promise<ReferralAdminPage> {
-    return firstValueFrom(this.http.get<ReferralAdminPage>(`${API}/referrals`, { params: this.query({ ...params, page: String(params.page ?? 1), pageSize: String(params.pageSize ?? 25) }) }));
+    return this.http.get<ReferralAdminPage>(`${API}/referrals`, { params: this.query({ ...params, page: String(params.page ?? 1), pageSize: String(params.pageSize ?? 25) }) });
   }
 
   getUserLedger(userId: string): Promise<{ items: PremiumGrantLedgerItem[] }> {
-    return firstValueFrom(this.http.get<{ items: PremiumGrantLedgerItem[] }>(`${API}/referrals/users/${userId}/ledger`));
+    return this.http.get<{ items: PremiumGrantLedgerItem[] }>(`${API}/referrals/users/${userId}/ledger`);
   }
 
   voidGrant(id: string, reason: string): Promise<{ outcome: string }> {
-    return firstValueFrom(this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/void`, { reason }));
+    return this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/void`, { reason });
   }
 
   retryGrant(id: string): Promise<{ outcome: string }> {
-    return firstValueFrom(this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/retry`, {}));
+    return this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/retry`, {});
   }
 
   reconcileReferrals(): Promise<{ conversions: number; pendingResolved: number; pendingWaiting: number }> {
-    return firstValueFrom(this.http.post<{ conversions: number; pendingResolved: number; pendingWaiting: number }>(`${API}/referrals/reconcile`, {}));
+    return this.http.post<{ conversions: number; pendingResolved: number; pendingWaiting: number }>(`${API}/referrals/reconcile`, {});
   }
 
 }

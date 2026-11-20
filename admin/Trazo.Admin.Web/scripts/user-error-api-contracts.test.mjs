@@ -23,6 +23,7 @@ async function loadService(relativePath, http) {
   instance.paths = Module._nodeModulePaths(path.dirname(filename));
   const originalLoad = Module._load;
   Module._load = function(request, parent, isMain) {
+    if (request.endsWith('/core/api-http.client') || request === './api-http.client') return { ApiHttpClient: class ApiHttpClient {} };
     if (request === '@angular/core') return { Injectable: () => target => target, inject: () => http };
     if (request === '@angular/common/http') return { HttpClient: class HttpClient {}, HttpParams: TestHttpParams };
     if (request === 'rxjs') return { firstValueFrom: value => Promise.resolve(value) };
