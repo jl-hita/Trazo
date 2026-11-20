@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
+import type {
   CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse, PlanSession
 } from '../../core/admin.api';
 import { PlanningApi } from './planning.api';
