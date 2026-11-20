@@ -14,11 +14,14 @@ describe('IntelligenceApi', () => {
     http = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => http.verify());
+  afterEach(() => {
+    http.verify();
+    TestBed.resetTestingModule();
+  });
 
   it('requests a summary with an inclusive start date and exclusive end date in UTC', async () => {
     const result = api.summary('2026-11-01', '2026-11-30');
-    const request = http.expectOne('/api/v1/admin/intelligence/summary');
+    const request = http.expectOne(req => req.url === '/api/v1/admin/intelligence/summary');
 
     expect(request.request.method).toBe('GET');
     expect(request.request.params.get('from')).toBe('2026-11-01T00:00:00.000Z');
@@ -29,7 +32,7 @@ describe('IntelligenceApi', () => {
 
   it('downloads the Intelligence export as a binary ZIP response', async () => {
     const result = api.export('2026-11-01', '2026-11-30');
-    const request = http.expectOne('/api/v1/admin/intelligence/export');
+    const request = http.expectOne(req => req.url === '/api/v1/admin/intelligence/export');
     const payload = new Blob(['PK\\x03\\x04'], { type: 'application/zip' });
 
     expect(request.request.method).toBe('GET');
