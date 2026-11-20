@@ -15,8 +15,8 @@ export class VerifyEmailPageComponent {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   protected readonly copy = ACCOUNT_COPY.verifyEmail;
-  protected readonly title = signal(this.copy.verifyingTitle);
-  protected readonly message = signal(this.copy.waitingMessage);
+  protected readonly title = signal<string>(this.copy.verifyingTitle);
+  protected readonly message = signal<string>(this.copy.waitingMessage);
   protected readonly done = signal(false);
 
   constructor() {
