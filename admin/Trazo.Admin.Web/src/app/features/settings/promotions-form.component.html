@@ -17,7 +17,7 @@
         </trazo-form-field>
         <p class="hint">Switching the programme off stops new codes, attributions and rewards; what was already earned is kept.</p>
         <div class="actions">
-          <button type="submit" [disabled]="busy()">Save promotions</button>
+          <trazo-button variant="secondary" type="submit" [disabled]="busy()">Save promotions</trazo-button>
           @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
           @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
         </div>
