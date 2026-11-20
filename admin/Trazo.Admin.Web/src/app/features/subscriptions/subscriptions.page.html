@@ -1,0 +1,85 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Subscriptions</h1>
+        <p class="subtitle">Google Play subscriptions and free trials. Google is the source of truth; refresh a row to re-read it.</p>
+      </div>
+    </div>
+
+    <div class="subs-layout">
+      <section aria-label="Subscription list">
+        <div class="subs-toolbar">
+          <input type="search" placeholder="Search by user name or email" aria-label="Search subscriptions"
+                 [ngModel]="q()" (ngModelChange)="onSearch($event)">
+          <select aria-label="Filter by status" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
+            <option value="">Any status</option>
+            @for (s of statuses; track s.value) { <option [value]="s.value">{{ s.label }}</option> }
+          </select>
+          <select aria-label="Filter by source" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
+            <option value="">Any source</option>
+            <option value="google_play">Google Play</option>
+          </select>
+          <label>Expires from <input type="date" [ngModel]="expiresFrom()" (ngModelChange)="setFilter('expiresFrom', $event)"></label>
+          <label>to <input type="date" [ngModel]="expiresTo()" (ngModelChange)="setFilter('expiresTo', $event)"></label>
+          <select aria-label="Sort" [ngModel]="sort()" (ngModelChange)="setFilter('sort', $event)">
+            <option value="">Sort: last change</option>
+            <option value="expires">Sort: expiry (soonest)</option>
+            <option value="started">Sort: newest</option>
+          </select>
+        </div>
+
+        @if (error()) { <p class="subs-error" role="alert">{{ error() }}</p> }
+
+        <table class="subs-table">
+          <thead><tr><th>User</th><th>Status</th><th>Expires</th><th>Source</th></tr></thead>
+          <tbody>
+            @for (s of items(); track s.id) {
+              <tr class="row" [class.selected]="selected()?.subscription?.id === s.id" (click)="select(s)" tabindex="0" (keydown.enter)="select(s)">
+                <td><div class="name">{{ s.displayName }}</div><div class="sub">{{ s.email }}</div></td>
+                <td><span class="sbadge" [class]="'sbadge ' + tone(s)">{{ label(s.status) }}</span></td>
+                <td>{{ formatDate(s.expiresAt) }}@if (s.hasAccess && !s.autoRenewing) { <div class="sub">not renewing</div> }</td>
+                <td>{{ s.source === 'google_play' ? 'Google Play' : s.source }}</td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Loading…' : 'No subscriptions match these filters.' }}</td></tr>
+            }
+          </tbody>
+        </table>
+
+        <div class="subs-pager">
+          <span>{{ totalCount() }} subscription{{ totalCount() === 1 ? '' : 's' }} · page {{ page() }} of {{ totalPages() || 1 }}</span>
+          <span>
+            <button type="button" (click)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
+            <button type="button" (click)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+          </span>
+        </div>
+      </section>
+
+      <aside class="subs-panel" aria-label="Subscription details">
+        @if (selected(); as d) {
+          <div>
+            <h2>{{ d.subscription.displayName }}</h2>
+            <p class="email">{{ d.subscription.email }}</p>
+          </div>
+          <ul class="facts">
+            <li>Status: <b>{{ label(d.subscription.status) }}</b> · access <b>{{ d.subscription.hasAccess ? 'yes' : 'no' }}</b></li>
+            <li>Product: <b>{{ d.subscription.productId }}</b></li>
+            <li>Started: <b>{{ formatDate(d.subscription.startedAt) }}</b></li>
+            <li>Expires: <b>{{ formatDate(d.subscription.expiresAt) }}</b></li>
+            <li>Auto-renewing: <b>{{ d.subscription.autoRenewing ? 'yes' : 'no' }}</b></li>
+            <li>Google state: <b>{{ d.storeState || 'unknown' }}</b></li>
+            <li>Latest order: <b>{{ d.latestOrderId || 'none' }}</b></li>
+            <li>Acknowledged: <b>{{ d.acknowledgedAt ? formatDate(d.acknowledgedAt) : 'not yet' }}</b></li>
+            <li>Test purchase: <b>{{ d.isTestPurchase ? 'yes' : 'no' }}</b></li>
+            <li>Token fingerprint: <b>{{ d.purchaseTokenFingerprint }}</b></li>
+            <li>Last change: <b>{{ formatDate(d.subscription.updatedAt) }}</b></li>
+          </ul>
+          <div><button type="button" (click)="refresh()" [disabled]="busy()">Refresh from Google Play</button></div>
+          <a routerLink="/users">Manage the user in Users</a>
+          @if (message()) { <p class="ok" role="status">{{ message() }}</p> }
+          @if (panelError()) { <p class="err" role="alert">{{ panelError() }}</p> }
+        } @else {
+          <p class="empty">Select a subscription to see its details.</p>
+        }
+      </aside>
+    </div>
