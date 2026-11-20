@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus, ErrorTicketSummary } from '../../core/admin.api';
+import { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus, ErrorTicketSummary } from '../../core/admin.api';
+import { ErrorTicketsApi } from './error-tickets.api';
 import { errorMessage } from '../../core/setup.api';
 
 /**
@@ -17,7 +18,7 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './error-tickets.page.html'
 })
 export class ErrorTicketsPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(ErrorTicketsApi);
   private searchTimer?: ReturnType<typeof setTimeout>;
   private static readonly PageSize = 25;
 
@@ -42,7 +43,7 @@ export class ErrorTicketsPageComponent {
   protected async load(): Promise<void> {
     this.loading.set(true);
     try {
-      this.data.set(await this.api.listErrorTickets(this.q(), this.status(), this.source(), this.page(), ErrorTicketsPageComponent.PageSize));
+      this.data.set(await this.api.list(this.q(), this.status(), this.source(), this.page(), ErrorTicketsPageComponent.PageSize));
       this.error.set('');
     } catch (e) { this.error.set(errorMessage(e)); }
     finally { this.loading.set(false); }
@@ -75,7 +76,7 @@ export class ErrorTicketsPageComponent {
     this.detail.set(null);
     this.showOriginalTrace.set(false);
     try {
-      const loaded = await this.api.getErrorTicket(ticket.id);
+      const loaded = await this.api.get(ticket.id);
       if (this.openId() !== ticket.id) return;
       this.detail.set(loaded);
       if (loaded.status === 'new') await this.setStatus(loaded, 'seen');
@@ -84,7 +85,7 @@ export class ErrorTicketsPageComponent {
 
   protected async setStatus(ticket: ErrorTicketDetail, status: ErrorTicketStatus): Promise<void> {
     try {
-      await this.api.setErrorTicketStatus(ticket.id, status);
+      await this.api.setStatus(ticket.id, status);
       this.detail.set({ ...ticket, status });
       await this.load();
     } catch (e) { this.error.set(errorMessage(e)); }
@@ -121,7 +122,7 @@ export class ErrorTicketsPageComponent {
 
   protected async remove(ticket: ErrorTicketDetail): Promise<void> {
     try {
-      await this.api.deleteErrorTicket(ticket.id);
+      await this.api.delete(ticket.id);
       this.confirmId.set(null);
       this.openId.set(null);
       if (this.tickets().length === 1 && this.page() > 1) this.page.update(p => p - 1);

@@ -262,15 +262,6 @@ const API = '/api/v1/admin';
 export class AdminApi {
   private readonly http = inject(HttpClient);
 
-  listUsers(filters: UserFilters): Promise<Page<AdminUserSummary>> {
-    let params = new HttpParams().set('page', filters.page).set('pageSize', filters.pageSize);
-    if (filters.q.trim()) params = params.set('q', filters.q.trim());
-    if (filters.role) params = params.set('role', filters.role);
-    if (filters.status) params = params.set('status', filters.status);
-    if (filters.sort) params = params.set('sort', filters.sort);
-    return firstValueFrom(this.http.get<Page<AdminUserSummary>>(`${API}/users`, { params }));
-  }
-
   overview(refresh = false): Promise<Overview> {
     const params = refresh ? new HttpParams().set('refresh', true) : new HttpParams();
     return firstValueFrom(this.http.get<Overview>(`${API}/overview`, { params }));
@@ -287,43 +278,6 @@ export class AdminApi {
     if (filters.q.trim()) params = params.set('q', filters.q.trim());
     if (filters.cursor) params = params.set('cursor', filters.cursor);
     return firstValueFrom(this.http.get<LogPage>(`${API}/logs`, { params }));
-  }
-
-  createUser(input: { displayName: string; email: string; role: string }): Promise<AdminUserDetail> {
-    return firstValueFrom(this.http.post<AdminUserDetail>(`${API}/users`, input));
-  }
-
-  getUser(id: string): Promise<AdminUserDetail> {
-    return firstValueFrom(this.http.get<AdminUserDetail>(`${API}/users/${id}`));
-  }
-
-  listPremiumGrants(userId: string): Promise<AdminPremiumGrant[]> {
-    return firstValueFrom(this.http.get<AdminPremiumGrant[]>(`${API}/users/${userId}/premium-grants`));
-  }
-
-  grantPremium(userId: string, input: { days?: number; permanent: boolean; reason: string }): Promise<AdminPremiumGrant> {
-    return firstValueFrom(this.http.post<AdminPremiumGrant>(`${API}/users/${userId}/premium-grants`, input));
-  }
-
-  revokePremium(userId: string, grantId: string, reason: string): Promise<{ revoked: boolean; grantId: string }> {
-    return firstValueFrom(this.http.post<{ revoked: boolean; grantId: string }>(
-      `${API}/users/${userId}/premium-grants/${grantId}/revoke`, { reason }));
-  }
-
-  updateUser(id: string, changes: { displayName?: string; role?: string }): Promise<AdminUserDetail> {
-    return firstValueFrom(this.http.patch<AdminUserDetail>(`${API}/users/${id}`, changes));
-  }
-
-  deleteUser(id: string, confirmEmail: string): Promise<{ deleted: boolean; playSubscriptionNotCancelled: boolean }> {
-    return firstValueFrom(this.http.delete<{ deleted: boolean; playSubscriptionNotCancelled: boolean }>(`${API}/users/${id}`, { body: { confirmEmail } }));
-  }
-
-  sendPasswordInvitation(id: string): Promise<void> {
-    return firstValueFrom(this.http.post<void>(`${API}/users/${id}/password-invitation`, {}));
-  }
-
-  userAction(id: string, action: UserAction): Promise<AdminUserDetail> {
-    return firstValueFrom(this.http.post<AdminUserDetail>(`${API}/users/${id}/${action}`, {}));
   }
 
   listExercises(filters: ExerciseFilters): Promise<Page<AdminExerciseSummary>> {
@@ -500,36 +454,6 @@ export class AdminApi {
 
   deleteWaitlistEntry(id: string): Promise<void> {
     return firstValueFrom(this.http.delete<void>(`${API}/waitlist/${id}`));
-  }
-
-  listErrorTickets(q: string, status: string, source: string, page: number, pageSize: number): Promise<ErrorTicketPage> {
-    let params = new HttpParams().set('page', page).set('pageSize', pageSize);
-    if (q.trim()) params = params.set('q', q.trim());
-    if (status) params = params.set('status', status);
-    if (source) params = params.set('source', source);
-    return firstValueFrom(this.http.get<ErrorTicketPage>(`${API}/error-tickets`, { params }));
-  }
-
-  getErrorTicket(id: string): Promise<ErrorTicketDetail> {
-    return firstValueFrom(this.http.get<ErrorTicketDetail>(`${API}/error-tickets/${id}`));
-  }
-
-  setErrorTicketStatus(id: string, status: ErrorTicketStatus): Promise<void> {
-    return firstValueFrom(this.http.put<void>(`${API}/error-tickets/${id}/status`, { status }));
-  }
-
-  /** Makes the API throw on purpose; resolves with the HTTP status it answered (500 when the chain works). */
-  async triggerTestException(): Promise<number> {
-    try {
-      await firstValueFrom(this.http.post<void>(`${API}/error-tickets/test-exception`, {}));
-      return 200;
-    } catch (e) {
-      return (e as { status?: number }).status ?? 0;
-    }
-  }
-
-  deleteErrorTicket(id: string): Promise<void> {
-    return firstValueFrom(this.http.delete<void>(`${API}/error-tickets/${id}`));
   }
 
   /** The CSV is fetched through HttpClient so the bearer token is sent (a plain link would not carry it). */

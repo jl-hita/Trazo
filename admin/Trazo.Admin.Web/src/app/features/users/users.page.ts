@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.api';
+import { AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.api';
+import { UsersApi } from './users.api';
 import { AuthService } from '../../core/auth.service';
 import { errorMessage } from '../../core/setup.api';
 
@@ -16,7 +17,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
   templateUrl: './users.page.html'
 })
 export class UsersPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(UsersApi);
   private readonly auth = inject(AuthService);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
