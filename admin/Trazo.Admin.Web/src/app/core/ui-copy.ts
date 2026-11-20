@@ -657,6 +657,7 @@ export const UI_COPY = {
     sessions: 'sesiones',
     over: 'durante',
     week: 'Semana',
+    weeks: 'semanas',
     exercise: 'Ejercicio',
     setsReps: 'Series × repeticiones',
     rir: 'RIR',
