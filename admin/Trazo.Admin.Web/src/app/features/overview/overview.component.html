@@ -31,7 +31,7 @@
 } @else if (data(); as d) {
   @if (error()) {
     <p class="ov-banner" role="alert">{{ labels.refreshError }} ({{ error() }}). {{ labels.lastData }}
-      <trazo-button type="button" variant="ghost" (pressed)="refresh()">Reintentar</trazo-button></p>
+      <trazo-button type="button" variant="ghost" (pressed)="refresh()">{{ labels.retry }}</trazo-button></p>
   }
 
   <section aria-labelledby="ov-alerts-title">
@@ -105,9 +105,9 @@
       <header>
         <h3><a class="ov-card-anchor" [routerLink]="'/settings'">{{ labels.configuration }}<span class="ov-sr-only">: {{ labels.goToSettings }}</span></a></h3>
         @if (d.configuration.missing.length === 0 && smtp().tone === 'ok') {
-          <span class="ov-status tone-ok"><span aria-hidden="true">✓</span> Completa</span>
+          <span class="ov-status tone-ok"><span aria-hidden="true">✓</span> {{ labels.complete }}</span>
         } @else {
-          <span class="ov-status tone-warn"><span aria-hidden="true">!</span> Requiere atención</span>
+          <span class="ov-status tone-warn"><span aria-hidden="true">!</span> {{ labels.requiresAttention }}</span>
         }
       </header>
       <dl>
@@ -155,9 +155,9 @@
     <!-- Subscriptions -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" routerLink="/subscriptions">{{ labels.subscriptions }}<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+        <h3><a class="ov-card-anchor" routerLink="/subscriptions">{{ labels.subscriptions }}<span class="ov-sr-only">: {{ labels.viewSubscriptions }}</span></a></h3>
         @if (!d.summary.subscriptionsEnforced) {
-          <span class="ov-status tone-info"><span aria-hidden="true">i</span> No obligatorias</span>
+          <span class="ov-status tone-info"><span aria-hidden="true">i</span> {{ labels.notRequired }}</span>
         }
       </header>
       @if (!d.summary.subscriptionsEnforced) {
@@ -178,7 +178,7 @@
     <!-- Catalog -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" routerLink="/exercises">{{ labels.exerciseCatalog }}<span class="ov-sr-only">: {{ catalog().label }}. Ver la biblioteca</span></a></h3>
+        <h3><a class="ov-card-anchor" routerLink="/exercises">{{ labels.exerciseCatalog }}<span class="ov-sr-only">: {{ catalog().label }}. {{ labels.viewLibrary }}</span></a></h3>
         <span class="ov-status" [class]="'ov-status tone-' + catalog().tone"><span aria-hidden="true">{{ glyph(catalog().tone) }}</span> {{ catalog().label }}</span>
       </header>
       <dl>
@@ -284,7 +284,7 @@
 
     <trazo-card contentClass="ov-card ov-card-link" [ariaLabelledBy]="'ov-watch-title'">
       <header>
-        <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">{{ labels.subscriptionsToWatch }}<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+        <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">{{ labels.subscriptionsToWatch }}<span class="ov-sr-only">: {{ labels.viewSubscriptions }}</span></a></h3>
       </header>
       <dl>
         <dt>{{ labels.trialsEnding }}</dt><dd>{{ format(d.insights.subscriptions.trialsEndingSoon) }}</dd>
@@ -292,7 +292,7 @@
         <dt>{{ labels.paymentIssues }}</dt><dd>{{ format(d.insights.subscriptions.paymentIssues) }}</dd>
         <dt>{{ labels.testPurchasesExcluded }}</dt><dd>{{ format(d.insights.subscriptions.testPurchases) }}</dd>
       </dl>
-      @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">Todavía no hay suscripciones.</p> }
+      @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">{{ labels.noSubscriptions }}</p> }
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
 
