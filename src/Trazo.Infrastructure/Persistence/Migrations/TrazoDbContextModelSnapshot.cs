@@ -376,13 +376,19 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Title").IsRequired().HasMaxLength(160).HasColumnType("character varying(160)");
             b.Property<int>("EstimatedDurationMinutes").HasColumnType("integer");
             b.Property<string>("PrescriptionJson").IsRequired().HasColumnType("text");
+            b.Property<string>("OriginalPrescriptionJson").HasColumnType("text");
+            b.Property<int?>("OriginalPrescriptionSchemaVersion").HasColumnType("integer");
+            b.Property<string>("PrescriptionSource").HasMaxLength(10).HasColumnType("character varying(10)");
             b.Property<string>("Status").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.Property<int>("Version").IsConcurrencyToken().HasColumnType("integer");
             b.HasKey("Id");
             b.HasIndex("PlanId", "Date");
             b.HasIndex("PlanId", "SequenceIndex").IsUnique();
             b.HasIndex("MesocycleId");
-            b.ToTable("planned_sessions");
+            b.ToTable("planned_sessions", t => t.HasCheckConstraint("CK_planned_sessions_original_complete",
+                "(\"OriginalPrescriptionJson\" IS NULL AND \"OriginalPrescriptionSchemaVersion\" IS NULL)"
+                + " OR (\"OriginalPrescriptionJson\" IS NOT NULL AND \"OriginalPrescriptionSchemaVersion\" IS NOT NULL AND \"PrescriptionSource\" = 'engine')"));
         });
         modelBuilder.Entity("Trazo.Domain.Planning.PlannedSession", b =>
         {
@@ -461,10 +467,15 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("Explanation").IsRequired().HasMaxLength(600).HasColumnType("character varying(600)");
             b.Property<DateTimeOffset>("AppliedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset?>("EvidenceAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("Source").HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<string>("EngineVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<int?>("SchemaVersion").HasColumnType("integer");
+            b.Property<string>("ChangesJson").HasColumnType("text");
             b.HasKey("Id");
             b.HasIndex("PlanId", "AppliedAt");
             b.HasIndex("PlanId", "EvidenceAt").IsUnique().HasFilter("\"Kind\" = 'reentry'");
-            b.ToTable("plan_adaptations");
+            b.ToTable("plan_adaptations", t => t.HasCheckConstraint("CK_plan_adaptations_changes_versioned",
+                "(\"ChangesJson\" IS NULL) = (\"SchemaVersion\" IS NULL)"));
         });
         modelBuilder.Entity("Trazo.Domain.Planning.PlanAdaptation", b =>
         {

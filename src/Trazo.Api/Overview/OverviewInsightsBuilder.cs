@@ -122,7 +122,7 @@ public sealed class OverviewInsightsBuilder(TrazoDbContext db)
         var hidden = notDone.Where(x => x.Count < MinimumGroup).Sum(x => x.Count);
         if (hidden > 0) shown.Add(new OverviewCount("Other", hidden));
 
-        var adaptations = (await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= since)
+        var adaptations = (await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= since && (x.Source == null || x.Source != Trazo.Domain.Planning.PrescriptionSources.User))
             .GroupBy(x => x.Kind).Select(g => new OverviewCount(g.Key, g.Count())).ToListAsync(ct))
             .OrderByDescending(x => x.Count).ToList();
         return new OverviewEngine(total, logs.Count(x => x.Outcome == WorkoutOutcome.Completed),

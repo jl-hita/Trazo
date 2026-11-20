@@ -159,8 +159,27 @@ public sealed class PlannedSession
     /// (sets, repetitions, RIR, rest, load target, progression rule, muscle groups).
     /// </summary>
     public required string PrescriptionJson { get; set; }
+
+    // ---- Original prescription. Written once, when the session is created, and never changed afterwards (EF refuses to). It is null on
+    // a session created before it existed, on a manual session and on a session whose original could not be recovered: "no snapshot",
+    // never rebuilt from today's catalog or engine. The three columns are null together, except PrescriptionSource, which only
+    // says who authored the first prescription.
+
+    /// <summary>The prescription exactly as the engine generated it (the same layout as <see cref="PrescriptionJson"/>). Only for engine-generated sessions.</summary>
+    public string? OriginalPrescriptionJson { get; set; }
+    /// <summary>Layout version of <see cref="OriginalPrescriptionJson"/> (see <c>PrescriptionChangeTrace.SnapshotSchemaVersion</c>).</summary>
+    public int? OriginalPrescriptionSchemaVersion { get; set; }
+    /// <summary>Who authored the first prescription: <see cref="PrescriptionSources.Engine"/> or <see cref="PrescriptionSources.User"/>. Null when it was not recorded.</summary>
+    public string? PrescriptionSource { get; set; }
     public PlannedSessionStatus Status { get; set; } = PlannedSessionStatus.Planned;
     public DateTimeOffset UpdatedAt { get; set; }
+    /// <summary>
+    /// Optimistic-concurrency token: how many times the row has been modified (0 when created and on sessions that existed before the column).
+    /// EF puts the value it read in the WHERE of every UPDATE and DELETE, and <c>TrazoDbContext</c> advances it on every UPDATE, so a write built on
+    /// a stale copy of the session affects no row and fails with <c>DbUpdateConcurrencyException</c> instead of silently overwriting the winner.
+    /// Never set it by hand.
+    /// </summary>
+    public int Version { get; set; }
 }
 
 /// <summary>What the user did in one planned session, and how it felt.</summary>
@@ -227,4 +246,26 @@ public sealed class PlanAdaptation
     public DateTimeOffset AppliedAt { get; set; }
     /// <summary>When the workout that caused the change happened (its <c>PerformedAt</c>). Cooldowns are measured from it. Null on old rows.</summary>
     public DateTimeOffset? EvidenceAt { get; set; }
+
+    // ---- Prescription traceability (see PrescriptionChangeTrace). Null on rows written before it existed: nothing is reconstructed for them.
+
+    /// <summary>Who made the change: <see cref="PrescriptionSources.Engine"/>, <see cref="PrescriptionSources.User"/> or <see cref="PrescriptionSources.Administrator"/>. Null on old rows.</summary>
+    public string? Source { get; set; }
+    /// <summary>Version of the engine that decided an automatic change. Null for user changes and for old rows.</summary>
+    public string? EngineVersion { get; set; }
+    /// <summary>Layout version of <see cref="ChangesJson"/>.</summary>
+    public int? SchemaVersion { get; set; }
+    /// <summary>
+    /// Which sessions this operation changed and how: for each one the exact prescription before and after. Null when the operation changed
+    /// no prescription, and on rows written before the trace existed.
+    /// </summary>
+    public string? ChangesJson { get; set; }
+}
+
+/// <summary>Who authored a prescription or a change to it.</summary>
+public static class PrescriptionSources
+{
+    public const string Engine = "engine";
+    public const string User = "user";
+    public const string Administrator = "admin";
 }

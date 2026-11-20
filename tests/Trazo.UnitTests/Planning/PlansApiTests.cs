@@ -56,9 +56,42 @@ internal static class PlanTestSchema
     }
 }
 
+/// <summary>
+/// Runs a competing write at the exact moment a request has read its data and is about to save it, which is the interleaving that
+/// optimistic concurrency exists for, made deterministic. It fires once, and only for a save that modifies or deletes a planned session
+/// (reads and unrelated saves before it are left alone); the competing write runs in its own context, as another request would.
+/// </summary>
+public sealed class RaceInjector : Microsoft.EntityFrameworkCore.Diagnostics.SaveChangesInterceptor
+{
+    private Func<Task>? _competingWrite;
+
+    public void Arm(Func<Task> competingWrite) => _competingWrite = competingWrite;
+
+    public override async ValueTask<Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>> SavingChangesAsync(
+        Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData eventData,
+        Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int> result, CancellationToken cancellationToken = default)
+    {
+        var writesASession = eventData.Context!.ChangeTracker.Entries<PlannedSession>()
+            .Any(e => e.State is EntityState.Modified or EntityState.Deleted);
+        if (writesASession && Interlocked.Exchange(ref _competingWrite, null) is { } write) await write();
+        return result;
+    }
+}
+
 /// <summary>Test host for the plan API on SQLite with a fixed clock (a Monday).</summary>
 public abstract class PlansApiBase : IDisposable
 {
+    protected readonly RaceInjector Race = new();
+
+    /// <summary>Another request modifies these sessions (in its own context, and committed) just before the request under test saves.</summary>
+    protected void RaceOn(Func<IQueryable<PlannedSession>, IQueryable<PlannedSession>> sessions) => Race.Arm(async () =>
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        foreach (var session in await sessions(db.PlannedSessions).ToListAsync()) session.UpdatedAt = session.UpdatedAt.AddMinutes(1);
+        await db.SaveChangesAsync();
+    });
+
     protected static readonly DateTimeOffset Now = new(2026, 11, 16, 8, 0, 0, TimeSpan.Zero); // a Monday
     protected readonly SetupFixture _fixture = new();
     private readonly string _keys = Path.Combine(Path.GetTempPath(), $"trazo-keys-{Guid.NewGuid():N}");
@@ -114,9 +147,9 @@ public abstract class PlansApiBase : IDisposable
                 services.RemoveAll(typeof(IDbContextOptionsConfiguration<TrazoDbContext>));
                 if (databaseConnection is null)
                     services.AddDbContext<TrazoDbContext>(o => o.UseSqlite(_fixture.ConnectionString)
-                        .ReplaceService<IModelCustomizer, PlanSqliteCustomizer>());
+                        .ReplaceService<IModelCustomizer, PlanSqliteCustomizer>().AddInterceptors(Race));
                 else
-                    services.AddDbContext<TrazoDbContext>(o => o.UseNpgsql(databaseConnection));
+                    services.AddDbContext<TrazoDbContext>(o => o.UseNpgsql(databaseConnection).AddInterceptors(Race));
                 services.RemoveAll<TimeProvider>();
                 services.AddSingleton<TimeProvider>(new FixedClock(Now));
             });

@@ -13,6 +13,7 @@ namespace Trazo.Api.Endpoints;
 public static class PlansEndpoints
 {
     public const string RateLimitPolicy = "plans";
+    public const string ConcurrentModificationCode = "plan_modified_concurrently";
 
     public static IEndpointRouteBuilder MapPlansEndpoints(this IEndpointRouteBuilder endpoints)
     {
@@ -25,7 +26,16 @@ public static class PlansEndpoints
                 // The app sends its IANA zone with each request (X-Time-Zone); an invalid value is ignored.
                 context.HttpContext.RequestServices.GetRequiredService<IUserTimeZone>().RequestOverride =
                     context.HttpContext.Request.Headers["X-Time-Zone"].ToString();
-                return await next(context);
+                try
+                {
+                    return await next(context);
+                }
+                catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+                {
+                    // Safety net: a write that lost a race on a session and was not translated by the service. Nothing was stored (one transaction);
+                    // the client gets the same conflict as everywhere else, never the exception or the database detail.
+                    return Problem(StatusCodes.Status409Conflict, TrainingPlanService.ConcurrentModificationMessage, ConcurrentModificationCode);
+                }
             });
 
         group.MapGet("/options", OptionsAsync).WithName("GetPlanOptions")
@@ -346,6 +356,7 @@ public static class PlansEndpoints
             PlanFailure.ActivePlanExists => Problem(StatusCodes.Status409Conflict, result.Message!, "active_plan_exists"),
             PlanFailure.AlreadyLogged => Problem(StatusCodes.Status409Conflict, result.Message!, "session_already_logged"),
             PlanFailure.SessionOutOfWindow => Problem(StatusCodes.Status409Conflict, result.Message!, "session_out_of_window"),
+            PlanFailure.ConcurrentModification => Problem(StatusCodes.Status409Conflict, result.Message!, ConcurrentModificationCode),
             PlanFailure.GenerationFailed => Problem(StatusCodes.Status422UnprocessableEntity, result.Message!, "plan_generation_failed", errors),
             PlanFailure.ExerciseNotInSession when errors is not null => Problem(StatusCodes.Status400BadRequest, result.Message!, "invalid_log", errors),
             PlanFailure.ExerciseNotInSession => Problem(StatusCodes.Status404NotFound, result.Message!, "exercise_not_in_session"),
