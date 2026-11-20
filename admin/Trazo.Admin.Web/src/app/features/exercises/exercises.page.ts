@@ -233,7 +233,7 @@ export class ExercisesPageComponent {
       this.show(await call());
       this.message.set(success);
       await this.load();
-      void this.api.exerciseOptions().then(o => this.options.set(o), () => undefined);
+      void this.api.options().then(o => this.options.set(o), () => undefined);
     } catch (e) {
       this.fieldErrors.set(this.collectFieldErrors(e));
       this.panelError.set(errorMessage(e));
