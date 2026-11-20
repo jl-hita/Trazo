@@ -1,4 +1,5 @@
 export const OVERVIEW_COPY = {
+  title: 'Resumen',
   eyebrow: 'ADMINISTRACIÓN',
   subtitle: 'Estado del sistema y lo que requiere tu atención.',
   generatedAt: 'Datos de',
