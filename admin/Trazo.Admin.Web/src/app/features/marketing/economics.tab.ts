@@ -25,7 +25,7 @@ export class EconomicsTabComponent {
   protected readonly error = signal('');
   protected readonly survival = computed<BarRow[]>(() =>
     (this.data()?.survival ?? []).filter(p => p.retained !== null)
-      .map(p => ({ label: p.months === 0 ? 'First month' : `After ${p.months} month${p.months === 1 ? '' : 's'}`, value: p.retained ?? 0, text: `${fmt.pct(p.retained, 0)} of ${p.eligible}` })));
+      .map(p => ({ label: p.months === 0 ? this.labels.firstMonth : `${this.labels.after} ${p.months} ${p.months === 1 ? this.labels.monthSingular : this.labels.monthPlural}`, value: p.retained ?? 0, text: `${fmt.pct(p.retained, 0)} of ${p.eligible}` })));
 
   constructor() {
     effect(() => { const r = this.range(); void this.load(r); });
