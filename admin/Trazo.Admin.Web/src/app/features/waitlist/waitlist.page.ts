@@ -89,7 +89,7 @@ export class WaitlistPageComponent {
     try {
       const all: WaitlistEntry[] = [];
       for (let page = 1; ; page++) {
-        const result = await this.api.listWaitlist('', page, WaitlistPageComponent.CopyPageSize, 'confirmed');
+        const result = await this.api.list('', page, WaitlistPageComponent.CopyPageSize, 'confirmed');
         all.push(...result.items);
         if (page >= result.totalPages) break;
       }
