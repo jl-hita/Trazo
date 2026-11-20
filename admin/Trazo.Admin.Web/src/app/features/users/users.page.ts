@@ -17,7 +17,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
 @Component({
   selector: 'trazo-users-page',
   standalone: true,
-  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent],
+  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent, UiFormFieldComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './users.page.scss',
   templateUrl: './users.page.html'
