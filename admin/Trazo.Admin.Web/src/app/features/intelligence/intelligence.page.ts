@@ -74,7 +74,7 @@ interface IntelligenceSummary {
           {{ exporting() ? 'Preparando paquete…' : '↓ Exportar investigación (ZIP)' }}
         </button>
       </div>
-      <p class="ti-note"><strong>Qué contiene la exportación:</strong> CSV y JSON relacionados de planes, mesociclos, prescripciones originales y actuales, adaptaciones, entrenamientos, series realizadas, observaciones longitudinales y decisiones del motor. Los identificadores se seudonimizan también dentro de los JSON de trazabilidad. Se excluyen nombres, correos, notas libres y limitaciones personales. El archivo sigue siendo información seudonimizada y debe tratarse como privada.</p>
+      <p class="ti-note"><strong>Qué contiene la exportación:</strong> CSV y JSON relacionados de planes, mesociclos, prescripciones originales y actuales, adaptaciones, entrenamientos, series realizadas, observaciones longitudinales y decisiones del motor. Los identificadores se seudonimizan también dentro de los JSON de trazabilidad. Se excluyen nombres, correos, notas libres, etiquetas de planes y limitaciones personales. El archivo sigue siendo información seudonimizada y debe tratarse como privada.</p>
       @if (error()) { <p class="ti-error" role="alert">{{error()}}</p> }
       @if (loading() && !data()) { <p class="empty">Cargando datos de investigación…</p> }
       @if (data(); as d) {
