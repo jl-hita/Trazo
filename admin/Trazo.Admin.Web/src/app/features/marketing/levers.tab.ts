@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DownloadsReport, MarketingApi, PaywallReport, Range, WaitlistReport, fmt, marketingError } from './marketing.api';
+import { MarketingApi, fmt, marketingError } from './marketing.api';
+import type { DownloadsReport, PaywallReport, Range, WaitlistReport } from './marketing.models';
 import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.charts';
 
 const SOURCE_LABELS: Record<string, string> = {
