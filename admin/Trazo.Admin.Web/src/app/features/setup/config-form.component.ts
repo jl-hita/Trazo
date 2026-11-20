@@ -13,87 +13,8 @@ type Mode = 'setup' | 'settings';
   standalone: true,
   imports: [FormsModule],
   encapsulation: ViewEncapsulation.None,
-  styles: [`
-    .cfg { display: grid; gap: 22px; max-width: 760px; }
-    .cfg fieldset { margin: 0; padding: 22px; border: 1px solid #293444; border-radius: 8px; background: #131b27; display: grid; gap: 14px; }
-    .cfg legend { padding: 0 8px; color: #a9c2df; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
-    .cfg label { display: grid; gap: 6px; color: #aab6c7; font-size: 12px; }
-    .cfg input[type=text], .cfg input[type=email], .cfg input[type=password], .cfg input[type=number], .cfg input[type=url] {
-      padding: 10px 12px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; }
-    .cfg input:focus { outline: 2px solid #6d8eb5; outline-offset: 1px; }
-    .cfg .row { display: grid; grid-template-columns: 1fr 120px; gap: 14px; }
-    .cfg .check { display: flex; align-items: center; gap: 8px; }
-    .cfg .hint { color: #7f8da0; font-size: 11px; margin: 0; }
-    .cfg .actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .cfg button { padding: 10px 16px; border: 1px solid #4a6585; border-radius: 6px; background: #1b2a3e; color: #e4edf8; cursor: pointer; }
-    .cfg button.primary { background: #3b6ea8; border-color: #6d9bd2; }
-    .cfg button:disabled { opacity: .45; cursor: not-allowed; }
-    .cfg .ok { color: #7fd3a0; font-size: 12px; }
-    .cfg .err { color: #f0a3a3; font-size: 12px; }
-    .cfg .banner { padding: 14px 16px; border: 1px solid #6b5a2e; border-radius: 8px; background: #2a2412; color: #e6d39b; font-size: 12px; line-height: 1.6; }
-  `],
-  template: `
-    <form class="cfg" (ngSubmit)="submit()" autocomplete="off">
-      @if (mode() === 'setup') {
-        <div class="banner" role="note">
-          Whoever completes this form first becomes the <strong>superadmin</strong> of this installation.
-          Complete it right after the first deployment, and only from a network you trust.
-        </div>
-        <fieldset>
-          <legend>Superadmin account</legend>
-          <label>Email <input type="email" name="adminEmail" required autocomplete="username" [ngModel]="adminEmail()" (ngModelChange)="adminEmail.set($event)"></label>
-          <label>Display name <input type="text" name="adminName" required minlength="2" maxlength="100" [ngModel]="adminName()" (ngModelChange)="adminName.set($event)"></label>
-          <label>Password <input type="password" name="adminPassword" required minlength="12" autocomplete="new-password" [ngModel]="adminPassword()" (ngModelChange)="adminPassword.set($event)"></label>
-          <label>Repeat password <input type="password" name="adminPassword2" required autocomplete="new-password" [ngModel]="adminPassword2()" (ngModelChange)="adminPassword2.set($event)"></label>
-          <p class="hint">At least 12 characters with uppercase, lowercase and a number.</p>
-        </fieldset>
-      }
-
-      <fieldset>
-        <legend>Google sign-in</legend>
-        <label>Web client ID
-          <input type="text" name="clientId" required placeholder="1234567890-abc.apps.googleusercontent.com" [ngModel]="clientId()" (ngModelChange)="clientId.set($event)">
-        </label>
-        <div class="actions">
-          <button type="button" (click)="testGoogle()" [disabled]="busy() || !clientId().trim()">Test</button>
-          @if (googleResult(); as r) { <span [class]="r.ok ? 'ok' : 'err'" role="status">{{ r.message }}</span> }
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Transactional email (SMTP)</legend>
-        <label class="check"><input type="checkbox" name="emailEnabled" [ngModel]="emailEnabled()" (ngModelChange)="emailEnabled.set($event)"> Send emails</label>
-        @if (!emailEnabled()) {
-          <p class="hint">Email is off: verification, password-reset and notification messages are silently dropped. Use only on test installations.</p>
-        }
-        <div class="row">
-          <label>Host <input type="text" name="host" required [ngModel]="host()" (ngModelChange)="host.set($event)"></label>
-          <label>Port <input type="number" name="port" required min="1" max="65535" [ngModel]="port()" (ngModelChange)="port.set($event)"></label>
-        </div>
-        <label class="check"><input type="checkbox" name="ssl" [ngModel]="ssl()" (ngModelChange)="ssl.set($event)"> Use SSL/TLS</label>
-        <label>Username (optional) <input type="text" name="smtpUser" autocomplete="off" [ngModel]="username()" (ngModelChange)="username.set($event)"></label>
-        <label>Password (optional)
-          <input type="password" name="smtpPass" autocomplete="new-password" [placeholder]="passwordSet() && password() === null ? 'Stored (leave blank to keep)' : ''"
-                 [ngModel]="password() ?? ''" (ngModelChange)="password.set($event === '' && passwordSet() ? null : $event)">
-        </label>
-        <label>Sender (From) <input type="text" name="from" required placeholder="TRAZO &lt;no-reply@example.com&gt;" [ngModel]="from()" (ngModelChange)="from.set($event)"></label>
-        <label>Action base URL <input type="text" name="actionBaseUrl" required placeholder="https://your-domain.example" [ngModel]="actionBaseUrl()" (ngModelChange)="actionBaseUrl.set($event)"></label>
-        <p class="hint">Links in verification and password-reset emails are built from this URL (the public https address of this site; app schemes such as trazo:// are not accepted).</p>
-        <label>Send test email to <input type="email" name="recipient" [ngModel]="recipient()" (ngModelChange)="recipient.set($event)"></label>
-        <div class="actions">
-          <button type="button" (click)="testSmtp()" [disabled]="busy() || !recipient().trim()">Send test email</button>
-          @if (smtpResult(); as r) { <span [class]="r.ok ? 'ok' : 'err'" role="status">{{ r.message }}</span> }
-        </div>
-      </fieldset>
-
-      <div class="actions">
-        <button class="primary" type="submit" [disabled]="busy() || !canSave()">{{ mode() === 'setup' ? 'Finish setup' : 'Save settings' }}</button>
-        @if (!testsPassed()) { <span class="hint">Run both tests successfully before saving.</span> }
-        @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
-        @if (saved()) { <span class="ok" role="status">Settings saved.</span> }
-      </div>
-    </form>
-  `
+  styleUrl: './config-form.component.scss',
+  templateUrl: './config-form.component.html'
 })
 export class ConfigFormComponent {
   private readonly api = inject(SetupApi);
