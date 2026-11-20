@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from '../../core/admin.api';
+import { FiscalApi, FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.api';
 import { errorMessage } from '../../core/setup.api';
 
 const EMPTY_ENTRY = () => ({
@@ -22,7 +22,7 @@ const EMPTY_ENTRY = () => ({
   templateUrl: './fiscal.page.html'
 })
 export class FiscalPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(FiscalApi);
   private readonly money = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
   protected readonly years = (() => { const y = new Date().getFullYear(); return [y - 2, y - 1, y, y + 1]; })();
   protected readonly yearNumber = signal(new Date().getFullYear());

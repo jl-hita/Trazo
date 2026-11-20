@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test"
+    "build": "npm run check:types && npm test && ng build",
+    "test": "node --test scripts/*.test.mjs",
+    "check:types": "node scripts/check-no-explicit-any.mjs"
   },
   "dependencies": {
     "@angular/common": "^21.0.0",
