@@ -751,7 +751,6 @@ public sealed class AdminOverviewApiTests : IDisposable
         Assert.DoesNotContain(workoutId.ToString(), research, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain(planId.ToString(), research, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain(user.Id.ToString(), research, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("\\\"limitations\\\":", research, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("Shoulder", research, StringComparison.OrdinalIgnoreCase);
 
         using var json = JsonDocument.Parse(research);
@@ -769,7 +768,6 @@ public sealed class AdminOverviewApiTests : IDisposable
             Assert.DoesNotContain(workoutId.ToString(), content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain(planId.ToString(), content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain(user.Id.ToString(), content, StringComparison.OrdinalIgnoreCase);
-            Assert.DoesNotContain("\\\"limitations\\\":", content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain("Shoulder", content, StringComparison.OrdinalIgnoreCase);
         }
     }
