@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
@@ -15,6 +16,8 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './promotions-form.component.html'
 })
 export class PromotionsFormComponent {
+  protected readonly labels = UI_COPY.settings.promotions;
+
   private readonly api = inject(SettingsApi);
   protected readonly trialEnabled = signal(true);
   protected readonly trialDays = signal(30);
@@ -39,7 +42,7 @@ export class PromotionsFormComponent {
         signupTrialEnabled: this.trialEnabled(), signupTrialDays: this.trialDays(),
         referralsEnabled: this.referralsEnabled(), referralRewardDays: this.rewardDays()
       });
-      this.message.set('Promotions saved.');
+      this.message.set(this.labels.saved);
     } catch (e) {
       this.error.set(errorMessage(e));
     } finally {
