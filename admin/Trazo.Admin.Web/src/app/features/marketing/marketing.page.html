@@ -1,0 +1,34 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">MARKETING</p>
+        <h1>Marketing panel</h1>
+        <p class="subtitle">Which strategies bring people who sign up, train, pay and stay. Aggregated data only: no person can be identified from anything shown here.</p>
+      </div>
+    </div>
+    <div class="mk">
+      <div class="mk-toolbar">
+        <div class="mk-presets" role="group" aria-label="Period presets">
+          @for (p of presets; track p.days) {
+            <button type="button" class="mk-btn" [class.on]="preset() === p.days" (click)="usePreset(p.days)">{{ p.label }}</button>
+          }
+        </div>
+        <label>From <input type="date" [ngModel]="from()" (ngModelChange)="custom($event, to())" name="from"></label>
+        <label>To (included) <input type="date" [ngModel]="to()" (ngModelChange)="custom(from(), $event)" name="to"></label>
+        @if (invalid()) { <span class="mk-err" role="alert">The start must be before the end.</span> }
+      </div>
+      <div class="mk-tabs" role="tablist">
+        @for (t of tabs; track t.key) {
+          <button type="button" role="tab" class="mk-tab" [class.on]="tab() === t.key" [attr.aria-selected]="tab() === t.key" (click)="tab.set(t.key)">{{ t.label }}</button>
+        }
+      </div>
+      @if (!invalid()) {
+        @switch (tab()) {
+          @case ('overview') { <mk-overview [range]="range()" /> }
+          @case ('strategies') { <mk-strategies [range]="range()" (openCampaign)="tab.set('campaigns')" /> }
+          @case ('economics') { <mk-economics [range]="range()" /> }
+          @case ('campaigns') { <mk-campaigns [range]="range()" /> }
+          @case ('funnel') { <mk-funnel [range]="range()" /> }
+          @case ('levers') { <mk-levers [range]="range()" /> }
+        }
+      }
+    </div>
