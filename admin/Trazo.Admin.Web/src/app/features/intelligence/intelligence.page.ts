@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
+import { IntelligenceApi } from './intelligence.api';
 import { IntelligenceSummary } from './intelligence.models';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'trazo-intelligence-page',
@@ -11,7 +10,8 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './intelligence.page.html'
 })
 export class IntelligencePageComponent {
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(IntelligenceApi);
+  private loadVersion = 0;
   protected readonly presets = [{days:30,label:'30 días'},{days:90,label:'90 días'},{days:365,label:'12 meses'}];
   protected readonly preset = signal<number | null>(90);
   protected readonly from = signal(this.daysAgo(89));
@@ -26,23 +26,19 @@ export class IntelligencePageComponent {
   }
   protected setFrom(value: string): void { this.from.set(value); this.preset.set(null); }
   protected setTo(value: string): void { this.to.set(value); this.preset.set(null); }
-  private params(): HttpParams {
-    const from = new Date(this.from() + 'T00:00:00.000Z').toISOString();
-    const end = new Date(this.to() + 'T00:00:00.000Z'); end.setUTCDate(end.getUTCDate() + 1);
-    return new HttpParams().set('from', from).set('to', end.toISOString());
-  }
   protected async load(): Promise<void> {
     if (!this.from() || !this.to() || this.from() > this.to()) { this.error.set('El periodo no es válido.'); return; }
+    const requestVersion = ++this.loadVersion;
     this.loading.set(true); this.error.set('');
-    try { this.data.set(await firstValueFrom(this.http.get<IntelligenceSummary>('/api/v1/admin/intelligence/summary', {params:this.params()}))); }
-    catch (e) { this.error.set((e as {error?:{message?:string}})?.error?.message ?? 'No se han podido cargar los datos de Intelligence.'); }
-    finally { this.loading.set(false); }
+    try { this.data.set(await this.api.summary(this.from(), this.to())); }
+    catch (e) { if (requestVersion === this.loadVersion) this.error.set((e as {error?:{message?:string}})?.error?.message ?? 'No se han podido cargar los datos de Intelligence.'); }
+    finally { if (requestVersion === this.loadVersion) this.loading.set(false); }
   }
   protected async export(): Promise<void> {
     if (!this.from() || !this.to() || this.from() > this.to()) { this.error.set('El periodo no es válido.'); return; }
     this.exporting.set(true); this.error.set('');
     try {
-      const blob = await firstValueFrom(this.http.get('/api/v1/admin/intelligence/export', {params:this.params(), responseType:'blob'}));
+      const blob = await this.api.export(this.from(), this.to());
       const signature = new Uint8Array(await blob.slice(0, 4).arrayBuffer());
       const hasZipSignature = signature.length === 4 && signature[0] === 0x50 && signature[1] === 0x4b
         && ((signature[2] === 0x03 && signature[3] === 0x04) || (signature[2] === 0x05 && signature[3] === 0x06));
@@ -74,7 +70,13 @@ export class IntelligencePageComponent {
   }
   protected sourceLabel(value: string | null): string { return value === 'engine' ? 'Automática' : value === 'user' ? 'Usuario' : value === 'admin' ? 'Administrador' : 'Sin dato'; }
   protected qualityLabel(value: string): string { return ({valid:'Válida',partial:'Parcial',excluded:'Excluida'} as Record<string,string>)[value] ?? value; }
-  private today(): string { return new Date().toISOString().slice(0,10); }
-  private daysAgo(days: number): string { const d=new Date(); d.setDate(d.getDate()-days); return d.toISOString().slice(0,10); }
+  private today(): string { return this.localDate(new Date()); }
+  private daysAgo(days: number): string { const date = new Date(); date.setDate(date.getDate() - days); return this.localDate(date); }
+  private localDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
   constructor() { void this.load(); }
 }

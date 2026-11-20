@@ -1,4 +1,4 @@
-interface IntelligenceSummary {
+export interface IntelligenceSummary {
   from: string; to: string; generatedAt: string;
   plans: { total: number; generated: number; manual: number; engineVersions: string[] };
   prescriptions: { sessions: number; withOriginalSnapshot: number; withoutOriginalSnapshot: number };

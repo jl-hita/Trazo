@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, FunnelGroup, ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from '../../core/admin.api';
+import { AdminApi, ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
 /** Referral programme operations: aggregate performance, invitation audit, reward recovery and audited reward cancellation. */
