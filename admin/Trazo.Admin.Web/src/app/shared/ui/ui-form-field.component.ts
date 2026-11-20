@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'trazo-form-field',
   standalone: true,
   template: `
-    <div class="trazo-field">
+    <div [class]="'trazo-field ' + fieldClass">
       <label [for]="controlId">{{ label }}</label>
       <ng-content />
       @if (error) { <small class="trazo-field__error" role="alert">{{ error }}</small> }
@@ -17,4 +17,5 @@ export class UiFormFieldComponent {
   @Input({ required: true }) label = '';
   @Input() hint = '';
   @Input() error = '';
+  @Input() fieldClass = '';
 }
