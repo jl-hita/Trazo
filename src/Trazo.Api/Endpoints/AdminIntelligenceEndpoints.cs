@@ -172,7 +172,7 @@ public static class AdminIntelligenceEndpoints
         {
             x.Id, x.UserId, x.PlanId, x.MesocycleSequence, x.Muscle, x.Action, x.BaselineSets, x.PreviousSets,
             x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, SignalsJson = SafeJson(x.SignalsJson),
-            x.Reason, x.PolicyVersion, x.CreatedAt
+            x.PolicyVersion, x.CreatedAt
         }).ToArray();
         var package = new
         {
@@ -203,7 +203,7 @@ public static class AdminIntelligenceEndpoints
                 x.PainSessions, x.ReturnFromAbsence, x.ProcessedThrough, x.UpdatedAt }).ToArray(),
             decisions = decisionData.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.MesocycleSequence,
                 x.Muscle, x.Action, x.BaselineSets, x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod,
-                signals = x.SignalsJson, x.Reason, x.PolicyVersion, x.CreatedAt }).ToArray()
+                signals = x.SignalsJson, x.PolicyVersion, x.CreatedAt }).ToArray()
         };
 
         using var memory = new MemoryStream();
