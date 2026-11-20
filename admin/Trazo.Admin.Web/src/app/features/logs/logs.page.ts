@@ -1,7 +1,8 @@
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AdminApi, LogEntry, LogLevelGroup, LogPage } from '../../core/admin.api';
+import type { LogEntry, LogLevelGroup, LogPage } from '../../core/admin.models';
+import { LogsApi } from './logs.api';
 import { errorMessage } from '../../core/setup.api';
 
 const LEVELS: { id: LogLevelGroup; label: string }[] = [
@@ -31,7 +32,7 @@ const startOfDay = (value: string, addDays = 0): string => {
   templateUrl: './logs.page.html'
 })
 export class LogsPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(LogsApi);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private refreshTimer: ReturnType<typeof setInterval> | undefined;
   private requestId = 0;
@@ -171,7 +172,7 @@ export class LogsPageComponent {
     if (!quiet) this.loading.set(true);
     this.error.set('');
     try {
-      const page = await this.api.listLogs({
+      const page = await this.api.list({
         levels: this.selectedLevels(),
         from: this.from() ? startOfDay(this.from()) : null,
         // The end date is inclusive in the UI and exclusive in the API: up to the start of the next day.
