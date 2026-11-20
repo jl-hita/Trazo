@@ -12,13 +12,13 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 type Metric = 'signupToPaid' | 'signupToTrial' | 'signupToActivated' | 'd30' | 'paidRenewed' | 'costPerPaid' | 'returnOnSpend';
 
 const METRICS: { key: Metric; label: string; lowerIsBetter?: boolean; money?: boolean }[] = [
-  { key: 'signupToPaid', label: 'Signup → paying customer' },
-  { key: 'signupToTrial', label: 'Signup → free trial' },
-  { key: 'signupToActivated', label: 'Signup → first workout' },
-  { key: 'd30', label: 'Still training 30 days later' },
-  { key: 'paidRenewed', label: 'Payers who renewed' },
-  { key: 'costPerPaid', label: 'Cost per paying customer', lowerIsBetter: true, money: true },
-  { key: 'returnOnSpend', label: 'Estimated return on spend' }
+  { key: 'signupToPaid', label: UI_COPY.marketing.metricLabels.signupToPaid },
+  { key: 'signupToTrial', label: UI_COPY.marketing.metricLabels.signupToTrial },
+  { key: 'signupToActivated', label: UI_COPY.marketing.metricLabels.signupToActivated },
+  { key: 'd30', label: UI_COPY.marketing.metricLabels.d30 },
+  { key: 'paidRenewed', label: UI_COPY.marketing.metricLabels.paidRenewed },
+  { key: 'costPerPaid', label: UI_COPY.marketing.metricLabels.costPerPaid, lowerIsBetter: true, money: true },
+  { key: 'returnOnSpend', label: UI_COPY.marketing.metricLabels.returnOnSpend }
 ];
 
 /**
