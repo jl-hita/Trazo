@@ -44,6 +44,9 @@ async function loadComponent(api) {
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
     if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
     if (request === '../../shared/ui/ui-table.component') return { UiTableComponent: class UiTableComponent {} };
+    if (request === '../../core/api-error') return {
+      errorMessage: (_error, fallback = 'No se ha podido completar la operación.') => fallback
+    };
     if (request === '../../core/ui-format') return {
       formatUiDate: value => String(value),
       formatUiDateTime: value => String(value),
