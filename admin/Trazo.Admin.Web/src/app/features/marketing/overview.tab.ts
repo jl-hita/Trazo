@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { Range, SummaryReport } from './marketing.models';
@@ -12,6 +13,8 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
   templateUrl: './overview.tab.html'
 })
 export class OverviewTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
