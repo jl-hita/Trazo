@@ -7,7 +7,7 @@
     </div>
 
     <div class="ex-layout">
-      <section aria-label="Exercise list">
+      <section [attr.aria-label]="copy.exerciseList">
         <div class="ex-toolbar">
           <input type="search" placeholder="Buscar por nombre o identificador" aria-label="Buscar ejercicios" [ngModel]="q()" (ngModelChange)="onSearch($event)">
           <select aria-label="Patrón de movimiento" [ngModel]="pattern()" (ngModelChange)="setFilter('pattern', $event)">
@@ -55,7 +55,7 @@
                 <td>
                   @if (!e.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">{{ copy.hidden }}</trazo-badge> }
                   @if (e.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.edited }}</trazo-badge> }
-                  <trazo-badge badgeClass="badge" tone="neutral">{{ e.source === 'trazo' ? 'TRAZO' : 'imported' }}</trazo-badge>
+                  <trazo-badge badgeClass="badge" tone="neutral">{{ e.source === 'trazo' ? 'TRAZO' : copy.importedLabel }}</trazo-badge>
                   @if (e.imageCount === 0) { <trazo-badge badgeClass="badge warn" tone="warning">{{ copy.noImages }}</trazo-badge> }
                 </td>
               </tr>
@@ -87,12 +87,12 @@
             @if (d.locallyCurated) {
               <p class="notice">{{ copy.curatedNotice }}</p>
             }
-            <div class="images" aria-label="Images">
+            <div class="images" [attr.aria-label]="copy.images">
               @for (slot of imageSlots; track slot) {
                 <div class="img-slot">
                   @if (d.imageSlots.includes(slot)) {
                     <img [src]="imageUrl(d.id, slot)" [alt]="d.nameEs + ' ' + (slot + 1)">
-                  } @else { <div class="img-empty">Image {{ slot + 1 }}</div> }
+                  } @else { <div class="img-empty">{{ copy.imageNumber }} {{ slot + 1 }}</div> }
                   <label class="img-btn">{{ d.imageSlots.includes(slot) ? copy.replaceImage : copy.uploadImage }}
                     <input type="file" accept="image/webp,image/png,image/jpeg" hidden (change)="upload(slot, $event)" [disabled]="busy()">
                   </label>
@@ -107,17 +107,16 @@
 
           @for (f of fields; track f.key) {
             @if (!f.newOnly || isNew()) {
-              <label>
-                <span>{{ f.label }}@if (f.required) { <span aria-hidden="true"> *</span> }</span>
+              <trazo-form-field [label]="f.required ? f.label + ' *' : f.label" [controlId]="'exercise-field-' + f.key">
                 @switch (f.kind) {
-                  @case ('textarea') { <textarea rows="3" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"></textarea> }
-                  @case ('lines') { <textarea rows="4" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"></textarea> }
-                  @case ('number') { <input type="number" step="any" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"> }
-                  @default { <input type="text" [attr.list]="f.options ? 'list-' + f.options : null" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"> }
+                  @case ('textarea') { <textarea rows="3" [id]="'exercise-field-' + f.key" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"></textarea> }
+                  @case ('lines') { <textarea rows="4" [id]="'exercise-field-' + f.key" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"></textarea> }
+                  @case ('number') { <input type="number" step="any" [id]="'exercise-field-' + f.key" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"> }
+                  @default { <input type="text" [id]="'exercise-field-' + f.key" [attr.list]="f.options ? 'list-' + f.options : null" [ngModel]="text(f.key)" (ngModelChange)="patch(f.key, $event)"> }
                 }
                 @if (f.hint) { <span class="hint">{{ f.hint }}</span> }
                 @if (fieldErrors()[f.key]) { <span class="err">{{ fieldErrors()[f.key] }}</span> }
-              </label>
+              </trazo-form-field>
             }
           }
           <label class="check"><input type="checkbox" [ngModel]="draft().isUnilateral" (ngModelChange)="patch('isUnilateral', $event)"> {{ copy.unilateral }}</label>
