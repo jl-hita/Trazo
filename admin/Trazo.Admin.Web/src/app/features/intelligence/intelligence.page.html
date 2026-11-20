@@ -9,8 +9,8 @@
             <button class="ti-btn" [class.active]="preset() === p.days" type="button" (click)="usePreset(p.days)">{{p.label}}</button>
           }
         </div>
-        <label class="ti-field">Desde <input type="date" [value]="from()" (change)="setFrom(fromInput.value)"></label>
-        <label class="ti-field">Hasta (incluido) <input type="date" [value]="to()" (change)="setTo(toInput.value)"></label>
+        <label class="ti-field">Desde <input type="date" #fromInput [value]="from()" (change)="setFrom(fromInput.value)"></label>
+        <label class="ti-field">Hasta (incluido) <input type="date" #toInput [value]="to()" (change)="setTo(toInput.value)"></label>
         <button class="ti-btn" type="button" (click)="load()" [disabled]="loading()">Actualizar</button>
         <button class="ti-btn primary" type="button" (click)="export()" [disabled]="exporting() || loading()">
           {{ exporting() ? 'Preparando paquete…' : '↓ Exportar investigación (ZIP)' }}
