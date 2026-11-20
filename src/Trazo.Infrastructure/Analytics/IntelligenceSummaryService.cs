@@ -54,28 +54,37 @@ public sealed class IntelligenceSummaryService(TrazoDbContext db, TimeProvider c
         var start = period.From;
         var end = period.To;
 
-        var plans = await db.TrainingPlans.AsNoTracking()
+        var planOriginCounts = await db.TrainingPlans.AsNoTracking()
             .Where(x => x.CreatedAt >= start && x.CreatedAt < end)
-            .Select(x => new { x.Id, x.Origin, x.EngineVersion })
+            .GroupBy(x => x.Origin)
+            .Select(g => new { Origin = g.Key, Count = g.Count() })
             .ToListAsync(cancellationToken);
+        var engineVersions = await db.TrainingPlans.AsNoTracking()
+            .Where(x => x.CreatedAt >= start && x.CreatedAt < end && x.EngineVersion != null && x.EngineVersion != "")
+            .Select(x => x.EngineVersion!)
+            .Distinct()
+            .OrderBy(x => x)
+            .ToArrayAsync(cancellationToken);
 
         // PlannedSession has no immutable creation timestamp. Use a defensible period cohort:
         // sessions from plans created in-range, plus sessions actually trained in-range.
-        var createdPlanIds = plans.Select(x => x.Id).ToArray();
-        var trainedSessionIds = await db.WorkoutLogs.AsNoTracking()
+        var createdPlanIds = db.TrainingPlans.AsNoTracking()
+            .Where(x => x.CreatedAt >= start && x.CreatedAt < end)
+            .Select(x => x.Id);
+        var trainedSessionIds = db.WorkoutLogs.AsNoTracking()
             .Where(x => x.PerformedAt >= start && x.PerformedAt < end)
             .Select(x => x.PlannedSessionId)
-            .Distinct()
-            .ToListAsync(cancellationToken);
-
-        var sessions = await db.PlannedSessions.AsNoTracking()
+            .Distinct();
+        var prescriptionCounts = await db.PlannedSessions.AsNoTracking()
             .Where(x => createdPlanIds.Contains(x.PlanId) || trainedSessionIds.Contains(x.Id))
-            .Select(x => new { x.Id, x.OriginalPrescriptionJson })
+            .GroupBy(x => x.OriginalPrescriptionJson != null)
+            .Select(g => new { HasOriginalSnapshot = g.Key, Count = g.Count() })
             .ToListAsync(cancellationToken);
 
-        var workouts = await db.WorkoutLogs.AsNoTracking()
+        var workoutCounts = await db.WorkoutLogs.AsNoTracking()
             .Where(x => x.PerformedAt >= start && x.PerformedAt < end)
-            .Select(x => new { x.Outcome })
+            .GroupBy(x => x.Outcome)
+            .Select(g => new { Outcome = g.Key, Count = g.Count() })
             .ToListAsync(cancellationToken);
 
         var adaptations = await db.PlanAdaptations.AsNoTracking()
@@ -110,24 +119,19 @@ public sealed class IntelligenceSummaryService(TrazoDbContext db, TimeProvider c
             end,
             clock.GetUtcNow(),
             new IntelligencePlanSummary(
-                plans.Count,
-                plans.Count(x => x.Origin == TrainingPlanOrigin.Generated),
-                plans.Count(x => x.Origin == TrainingPlanOrigin.Manual),
-                plans.Select(x => x.EngineVersion)
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Select(x => x!)
-                    .Distinct()
-                    .OrderBy(x => x)
-                    .ToArray()!),
+                planOriginCounts.Sum(x => x.Count),
+                planOriginCounts.Where(x => x.Origin == TrainingPlanOrigin.Generated).Sum(x => x.Count),
+                planOriginCounts.Where(x => x.Origin == TrainingPlanOrigin.Manual).Sum(x => x.Count),
+                engineVersions),
             new IntelligencePrescriptionSummary(
-                sessions.Count,
-                sessions.Count(x => x.OriginalPrescriptionJson != null),
-                sessions.Count(x => x.OriginalPrescriptionJson == null)),
+                prescriptionCounts.Sum(x => x.Count),
+                prescriptionCounts.Where(x => x.HasOriginalSnapshot).Sum(x => x.Count),
+                prescriptionCounts.Where(x => !x.HasOriginalSnapshot).Sum(x => x.Count)),
             new IntelligenceWorkoutSummary(
-                workouts.Count,
-                workouts.Count(x => x.Outcome == WorkoutOutcome.Completed),
-                workouts.Count(x => x.Outcome == WorkoutOutcome.Partial),
-                workouts.Count(x => x.Outcome == WorkoutOutcome.NotCompleted)),
+                workoutCounts.Sum(x => x.Count),
+                workoutCounts.Where(x => x.Outcome == WorkoutOutcome.Completed).Sum(x => x.Count),
+                workoutCounts.Where(x => x.Outcome == WorkoutOutcome.Partial).Sum(x => x.Count),
+                workoutCounts.Where(x => x.Outcome == WorkoutOutcome.NotCompleted).Sum(x => x.Count)),
             adaptations,
             observations,
             decisions);
