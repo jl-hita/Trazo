@@ -4,6 +4,7 @@ import { IntelligenceApi } from './intelligence.api';
 import { IntelligenceSummary } from './intelligence.models';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { INTELLIGENCE_COPY } from './intelligence.copy';
+import { formatUiDate, formatUiDateTime, formatUiNumber, formatUiPercent } from '../../core/ui-format';
 
 @Component({
   selector: 'trazo-intelligence-page',
@@ -44,7 +45,7 @@ export class IntelligencePageComponent {
     finally { if (requestVersion === this.loadVersion) this.loading.set(false); }
   }
   protected async export(): Promise<void> {
-    if (!this.from() || !this.to() || this.from() > this.to()) { this.exportError.set('El periodo no es válido.'); return; }
+    if (!this.from() || !this.to() || this.from() > this.to()) { this.exportError.set(INTELLIGENCE_COPY.invalidPeriod); return; }
     this.exporting.set(true); this.exportError.set('');
     try {
       const blob = await this.api.export(this.from(), this.to());
@@ -68,12 +69,12 @@ export class IntelligencePageComponent {
     finally { this.exporting.set(false); }
   }
   protected adaptationTotal(): number { return this.data()?.adaptations.reduce((s,x)=>s+x.count,0) ?? 0; }
-  protected n(value: number): string { return value.toLocaleString('es-ES'); }
-  protected decimal(value: number): string { return value.toLocaleString('es-ES',{maximumFractionDigits:1}); }
-  protected pct(a: number,b: number): string { return b ? Math.round(a*100/b)+' %' : '—'; }
+  protected n(value: number): string { return formatUiNumber(value, 0); }
+  protected decimal(value: number): string { return formatUiNumber(value, 1); }
+  protected pct(a: number,b: number): string { return b ? formatUiPercent(a / b, 0) : '—'; }
   protected pctValue(a: number,b: number): number { return b ? Math.min(100,Math.max(0,a*100/b)) : 0; }
-  protected date(value: string): string { return new Date(value).toLocaleDateString('es-ES'); }
-  protected dateTime(value: string): string { return new Date(value).toLocaleString('es-ES'); }
+  protected date(value: string): string { return formatUiDate(value); }
+  protected dateTime(value: string): string { return formatUiDateTime(value); }
   protected adaptationLabel(value: string): string {
     return (INTELLIGENCE_COPY.adaptationLabels as Record<string, string>)[value] ?? value;
   }
