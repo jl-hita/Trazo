@@ -47,10 +47,10 @@
       @if (s.weeks.length) {
         <h2>Week by week</h2>
         <div class="mk-panel"><mk-columns [labels]="weekLabels()" [series]="weekSeries()" label="Signups, trials and new paying customers per week" /></div>
-        <div class="mk-scroll"><table class="mk-table">
+        <div class="mk-scroll"><trazo-table tableClass="mk-table">
           <thead><tr><th>Week starting</th><th>Signups</th><th>Trials</th><th>New payers</th><th>Renewals</th><th>Cancellations</th><th>Refunds</th><th>Offer opened</th></tr></thead>
           <tbody>@for (w of s.weeks; track w.week) {
             <tr><td>{{ w.week }}</td><td>{{ w.signups }}</td><td>{{ w.trials }}</td><td>{{ w.firstPurchases }}</td><td>{{ w.renewals }}</td><td>{{ w.cancellations }}</td><td>{{ w.refunds }}</td><td>{{ w.paywallViews }}</td></tr>
-          }</tbody></table></div>
+          }</tbody></trazo-table></div>
       }
     } @else if (!error()) { <p class="mk-empty">Loading…</p> }

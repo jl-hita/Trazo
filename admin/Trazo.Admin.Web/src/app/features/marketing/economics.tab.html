@@ -23,7 +23,7 @@
       <div class="mk-panel"><mk-bars [rows]="survival()" [max]="1" /></div>
 
       <h2>By strategy</h2>
-      <div class="mk-scroll"><table class="mk-table">
+      <div class="mk-scroll"><trazo-table tableClass="mk-table">
         <thead><tr><th>Strategy</th><th>Signups</th><th>Payers</th><th>Spend</th><th>Cost / payer</th><th>Net / month</th><th>Churn / month</th><th>Months paying</th>
           <th>Lifetime value</th><th>Value ÷ cost</th><th>Payback (months)</th></tr></thead>
         <tbody>
@@ -34,7 +34,7 @@
               <td [class.mk-up]="(r.ltvToCac ?? 0) >= 3" [class.mk-down]="r.ltvToCac !== null && r.ltvToCac < 1">{{ r.ltvToCac === null ? '—' : r.ltvToCac + '×' }}</td>
               <td>{{ r.paybackMonths ?? '—' }}</td></tr>
           }
-        </tbody></table></div>
+        </tbody></trazo-table></div>
       <details class="mk-help mk-panel" style="margin-top:18px">
         <summary>How these figures are worked out</summary>
         <ul>

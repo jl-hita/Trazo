@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { DownloadsReport, PaywallReport, Range, WaitlistReport } from './marketing.models';
 import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.charts';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 const SOURCE_LABELS: Record<string, string> = {
   account: 'Account screen', plan: 'A locked plan', session: 'During a session', onboarding: 'Onboarding', other: 'Elsewhere'
@@ -12,7 +14,7 @@ const SOURCE_LABELS: Record<string, string> = {
 @Component({
   selector: 'mk-levers',
   standalone: true,
-  imports: [FormsModule, BarsComponent, ColumnsComponent],
+  imports: [FormsModule, BarsComponent, ColumnsComponent, UiButtonComponent, UiTableComponent],
   templateUrl: './levers.tab.html'
 })
 export class LeversTabComponent {

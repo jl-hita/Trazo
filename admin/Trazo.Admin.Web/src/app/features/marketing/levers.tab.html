@@ -9,7 +9,7 @@
         <label class="mk-field">Any day of the week <input type="date" name="week" [(ngModel)]="dlWeek" required></label>
         <label class="mk-field">New downloads that week <input type="number" name="dl" [(ngModel)]="dlCount" required min="0" step="1"></label>
         <label class="mk-field">Note <input name="note" [(ngModel)]="dlNote" maxlength="200" placeholder="Launch week"></label>
-        <div><button class="mk-btn on" type="submit" [disabled]="df.invalid">Save week</button></div>
+        <div><trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="!!df.invalid">Save week</trazo-button></div>
       </form>
       <div class="mk-cards" style="margin-top:14px">
         <div class="mk-card"><b>{{ fmt.int(dl.downloads) }}</b><span>Downloads in {{ dl.weeksWithData }} weeks entered</span></div>
@@ -18,12 +18,12 @@
         <div class="mk-card"><b [class.mk-down]="dl.weeksMissing > 0">{{ dl.weeksMissing }}</b><span>Weeks of the period without a figure</span></div>
       </div>
       @if (dl.weeks.length) {
-        <div class="mk-scroll"><table class="mk-table">
+        <div class="mk-scroll"><trazo-table tableClass="mk-table">
           <thead><tr><th>Week starting</th><th>Downloads</th><th>Accounts created</th><th>Download → account</th><th>Note</th><th></th></tr></thead>
           <tbody>@for (w of dl.weeks; track w.week) {
             <tr><td>{{ w.week }}</td><td>{{ w.downloads === null ? 'missing' : w.downloads }}</td><td>{{ w.signups }}</td><td>{{ fmt.pct(w.downloadToSignup) }}</td><td>{{ w.note ?? '' }}</td>
-              <td>@if (w.downloads !== null) { <button class="mk-btn danger" type="button" (click)="removeDownloads(w.week)">Remove</button> }</td></tr>
-          }</tbody></table></div>
+              <td>@if (w.downloads !== null) { <trazo-button variant="danger" buttonClass="mk-btn" type="button" (pressed)="removeDownloads(w.week)">Remove</trazo-button> }</td></tr>
+          }</tbody></trazo-table></div>
       }
     }
 

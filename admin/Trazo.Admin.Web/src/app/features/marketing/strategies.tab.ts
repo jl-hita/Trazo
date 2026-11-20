@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { Range, SegmentRow, StrategiesReport } from './marketing.models';
 import { BarRow, BarsComponent } from './marketing.charts';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 type Metric = 'signupToPaid' | 'signupToTrial' | 'signupToActivated' | 'd30' | 'paidRenewed' | 'costPerPaid' | 'returnOnSpend';
 
@@ -24,7 +26,7 @@ const METRICS: { key: Metric; label: string; lowerIsBetter?: boolean; money?: bo
 @Component({
   selector: 'mk-strategies',
   standalone: true,
-  imports: [FormsModule, NgTemplateOutlet, BarsComponent],
+  imports: [FormsModule, NgTemplateOutlet, BarsComponent, UiButtonComponent, UiTableComponent],
   templateUrl: './strategies.tab.html'
 })
 export class StrategiesTabComponent {

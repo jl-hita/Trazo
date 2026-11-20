@@ -16,8 +16,8 @@
         <label class="mk-field wide">Notes (what you did and why: creative, audience, offer…)
           <textarea name="notes" [(ngModel)]="draft.notes" maxlength="500"></textarea></label>
         <div class="wide">
-          <button class="mk-btn on" type="submit" [disabled]="busy() || f.invalid">{{ editing() ? 'Save changes' : 'Create campaign' }}</button>
-          @if (editing()) { <button class="mk-btn" type="button" (click)="cancel()">Cancel</button> }
+          <trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="busy() || !!f.invalid">{{ editing() ? 'Save changes' : 'Create campaign' }}</trazo-button>
+          @if (editing()) { <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="cancel()">Cancel</trazo-button> }
           @if (!editing()) { <span class="mk-muted"> The link name cannot be changed later: the link will already be out in the world.</span> }
         </div>
       </form>
@@ -25,7 +25,7 @@
 
     <h2>Your campaigns</h2>
     @if (items().length) {
-      <div class="mk-scroll"><table class="mk-table">
+      <div class="mk-scroll"><trazo-table tableClass="mk-table">
         <thead><tr><th>Campaign</th><th>Status</th><th>Clicks</th><th>Installs</th><th>Signups</th><th>Spend (all time)</th><th></th></tr></thead>
         <tbody>
           @for (it of items(); track it.campaign.id) {
@@ -34,20 +34,20 @@
               <td><span class="mk-badge" [class]="'mk-badge ' + it.campaign.status">{{ it.campaign.status }}</span></td>
               <td>{{ fmt.int(it.campaign.clicks) }}</td><td>{{ fmt.int(it.campaign.installs) }}</td><td>{{ fmt.int(it.campaign.signups) }}</td>
               <td>{{ it.campaign.spend ? fmt.eur(it.campaign.spend) : '—' }}</td>
-              <td><button class="mk-btn" type="button" (click)="copy(it.link); $event.stopPropagation()">Copy link</button></td>
+              <td><trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="copy(it.link); $event.stopPropagation()">Copy link</trazo-button></td>
             </tr>
           }
-        </tbody></table></div>
+        </tbody></trazo-table></div>
     } @else { <p class="mk-empty">No campaigns yet. Create the first one above and use its link in your ad, bio or post.</p> }
 
     @if (detail(); as d) {
       <h2>{{ d.campaign.name }}</h2>
       <div class="mk-panel">
         <div class="mk-link"><span class="mk-muted">Tracking link</span><code>{{ link() }}</code>
-          <button class="mk-btn" type="button" (click)="copy(link())">Copy</button>
-          <button class="mk-btn" type="button" (click)="edit(d.campaign)">Edit</button>
-          @if (d.campaign.status !== 'archived') { <button class="mk-btn" type="button" (click)="setStatus(d.campaign, d.campaign.status === 'active' ? 'paused' : 'active')">{{ d.campaign.status === 'active' ? 'Pause' : 'Resume' }}</button> }
-          @if (d.campaign.status !== 'archived') { <button class="mk-btn danger" type="button" (click)="setStatus(d.campaign, 'archived')">Archive</button> }
+          <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="copy(link())">Copy</trazo-button>
+          <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="edit(d.campaign)">Edit</trazo-button>
+          @if (d.campaign.status !== 'archived') { <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="setStatus(d.campaign, d.campaign.status === 'active' ? 'paused' : 'active')">{{ d.campaign.status === 'active' ? 'Pause' : 'Resume' }}</trazo-button> }
+          @if (d.campaign.status !== 'archived') { <trazo-button variant="danger" buttonClass="mk-btn" type="button" (pressed)="setStatus(d.campaign, 'archived')">Archive</trazo-button> }
         </div>
         <p class="mk-note" style="margin-top:10px">Put this link wherever the campaign runs. A person who opens it lands on Google Play; if they install TRAZO and create an account, it is attributed to this campaign.
           @if (d.campaign.notes) { <br><b>Notes:</b> {{ d.campaign.notes }} }</p>
@@ -71,14 +71,14 @@
         <label class="mk-field">Day <input type="date" name="day" [(ngModel)]="spend.day" required></label>
         <label class="mk-field">Amount (€) <input type="number" name="amount" [(ngModel)]="spend.amount" required min="0.01" step="0.01"></label>
         <label class="mk-field">Note <input name="note" [(ngModel)]="spend.note" maxlength="200" placeholder="Week 3 of the ad set"></label>
-        <div><button class="mk-btn on" type="submit" [disabled]="busy() || sf.invalid">Add spend</button></div>
+        <div><trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="busy() || !!sf.invalid">Add spend</trazo-button></div>
       </form>
       @if (d.spend.length) {
-        <div class="mk-scroll" style="margin-top:12px"><table class="mk-table">
+        <div class="mk-scroll" style="margin-top:12px"><trazo-table tableClass="mk-table">
           <thead><tr><th>Day</th><th>Amount</th><th>Note</th><th></th></tr></thead>
           <tbody>@for (s of d.spend; track s.id) {
             <tr><td>{{ s.day }}</td><td>{{ fmt.eur(s.amount) }}</td><td>{{ s.note ?? '' }}</td>
-              <td><button class="mk-btn danger" type="button" (click)="removeSpend(d.campaign.id, s.id)">Remove</button></td></tr>
-          }</tbody></table></div>
+              <td><trazo-button variant="danger" buttonClass="mk-btn" type="button" (pressed)="removeSpend(d.campaign.id, s.id)">Remove</trazo-button></td></tr>
+          }</tbody></trazo-table></div>
       }
     }

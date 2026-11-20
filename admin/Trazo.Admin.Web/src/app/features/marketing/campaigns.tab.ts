@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, isoDay, marketingError } from './marketing.api';
 import type { Campaign, CampaignDetail, CampaignInput, CampaignItem, Range } from './marketing.models';
 import { ColumnsComponent, Series } from './marketing.charts';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 interface Draft { slug: string; name: string; channel: string; status: string; startsOn: string; endsOn: string; notes: string; }
 
@@ -18,7 +20,7 @@ const CHANNEL_HELP: Record<string, string> = {
 @Component({
   selector: 'mk-campaigns',
   standalone: true,
-  imports: [FormsModule, ColumnsComponent],
+  imports: [FormsModule, ColumnsComponent, UiButtonComponent, UiTableComponent],
   templateUrl: './campaigns.tab.html'
 })
 export class CampaignsTabComponent {
