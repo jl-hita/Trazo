@@ -27,7 +27,7 @@ jobs:
           node-version: 22
       - name: Generate the reproducible npm lockfile
         working-directory: admin/Trazo.Admin.Web
-        run: npm install --package-lock-only --legacy-peer-deps --ignore-scripts --no-audit --no-fund
+        run: npm install --package-lock-only --legacy-peer-deps --include=optional --ignore-scripts --no-audit --no-fund
       - name: Commit lockfile
         run: |
           if ! git diff --quiet -- admin/Trazo.Admin.Web/package-lock.json; then
