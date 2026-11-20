@@ -191,10 +191,12 @@ test('Intelligence page changes the date preset and marks manual date edits as a
 test('Intelligence page template exposes accessible loading, error, and export states', async () => {
   const template = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence.page.html'), 'utf8');
   const toolbar = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence-period-toolbar.component.html'), 'utf8');
+  const copy = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence.copy.ts'), 'utf8');
   const combinedTemplate = `${template}\\n${toolbar}`;
   assert.match(template, /role="alert"/);
   assert.match(template, /role="status"/);
-  assert.match(template, /Cargando datos de investigación/);
+  assert.match(template, /{{ copy\\.loading }}/);
+  assert.match(copy, /loading: 'Cargando datos de investigación/);
   assert.match(combinedTemplate, /aria-label="Periodo"/);
   assert.match(combinedTemplate, /\[disabled\]="exporting\(\) \|\| loading\(\)"/);
   assert.match(combinedTemplate, /Exportar investigación \(ZIP\)/);
