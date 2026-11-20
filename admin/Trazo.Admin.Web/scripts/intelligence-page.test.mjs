@@ -79,8 +79,8 @@ test('Intelligence page starts loading the default period and exposes a successf
   const page = new Component();
 
   assert.equal(page.loading(), true);
-  assert.equal(page.from(), page.from());
-  assert.ok(page.to() >= page.from());
+  assert.match(page.from(), /^\\d{4}-\\d{2}-\\d{2}$/);
+  assert.match(page.to(), /^\\d{4}-\\d{2}-\\d{2}$/);
 
   pending.resolve(sample);
   await new Promise(resolve => setImmediate(resolve));
@@ -114,7 +114,11 @@ test('Intelligence page ignores an older response when a newer request completes
   const second = deferred();
   let calls = 0;
   const api = {
-    summary: () => (++calls === 1 ? first.promise : second.promise),
+    summary: () => {
+      calls++;
+      if (calls === 1) return Promise.resolve(sample);
+      return calls === 2 ? first.promise : second.promise;
+    },
     export: async () => new Blob()
   };
   const Component = await loadComponent(api);
