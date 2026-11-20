@@ -7,20 +7,8 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'trazo-verify-email-page',
   standalone: true,
-  styles: [`
-    :host { display:grid; place-items:center; min-height:100vh; padding:24px; background:#0d1119; color:#e8edf5; }
-    section { display:grid; gap:14px; width:min(420px,100%); padding:30px; border:1px solid #293444; border-radius:12px; background:#131b27; }
-    img { width:130px; } h1 { margin:0; font-size:22px; } p { margin:0; color:#aab6c7; line-height:1.55; }
-    a { display:inline-block; padding:11px 16px; border:1px solid #6d9bd2; border-radius:7px; background:#3b6ea8; color:#fff; text-align:center; text-decoration:none; }
-  `],
-  template: `
-    <section>
-      <img src="logo-dark.svg" alt="TRAZO">
-      <h1>{{ title() }}</h1>
-      <p>{{ message() }}</p>
-      @if (done()) { <a href="/login">Continue to sign in</a> }
-    </section>
-  `
+  styleUrl: './verify-email.page.scss',
+  templateUrl: './verify-email.page.html'
 })
 export class VerifyEmailPageComponent {
   private readonly http = inject(HttpClient);
