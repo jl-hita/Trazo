@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +10,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'trazo-reset-password-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiButtonComponent, UiFormFieldComponent],
   styleUrl: './reset-password.page.scss',
   templateUrl: './reset-password.page.html'
 })
