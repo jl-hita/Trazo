@@ -72,6 +72,7 @@ public static class DependencyInjection
         services.AddScoped<ExerciseLibraryImportService>();
         services.AddScoped<AppLogReader>();
         services.AddScoped<IIntelligenceSummaryService, IntelligenceSummaryService>();
+        services.AddScoped<IIntelligenceExportService, IntelligenceExportService>();
 
         return services;
     }
