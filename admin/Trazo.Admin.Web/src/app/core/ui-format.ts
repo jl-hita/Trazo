@@ -30,3 +30,8 @@ export function formatUiNumber(value: number, maximumFractionDigits = 2): string
 export function formatUiCurrency(value: number, currency = 'EUR'): string {
   return new Intl.NumberFormat(UI_LOCALE, { style: 'currency', currency }).format(value);
 }
+
+export function formatUiPercent(value: number | null | undefined, maximumFractionDigits = 1): string {
+  if (value == null || !Number.isFinite(value)) return '—';
+  return new Intl.NumberFormat(UI_LOCALE, { style: 'percent', maximumFractionDigits }).format(value);
+}
