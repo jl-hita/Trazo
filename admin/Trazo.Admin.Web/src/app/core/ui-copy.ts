@@ -869,6 +869,9 @@ export const UI_COPY = {
     savedWeek: 'Descargas guardadas para la semana de',
     channelNames: { ads: 'Anuncios', social: 'Redes sociales', content: 'Contenido', partnerships: 'Colaboraciones', referral: 'Invitaciones', organic: 'Orgánico' },
     campaignStatuses: { active: 'Activa', paused: 'Pausada', archived: 'Archivada' },
+    channelHelp: { ads: 'Anuncios de pago', social: 'Publicaciones en redes sociales', influencer: 'Influencers y creadores', email: 'Correo electrónico', partner: 'Socios y comunidades', content: 'Blog, SEO y vídeo', press: 'Prensa y reseñas', event: 'Eventos y charlas', other: 'Otros' },
+    sourceLabels: { account: 'Pantalla de cuenta', plan: 'Plan bloqueado', session: 'Durante una sesión', onboarding: 'Configuración inicial', other: 'Otros lugares' },
+    stageLabels: { signup: 'Creó una cuenta', email_verified: 'Verificó el correo', onboarding_completed: 'Completó la configuración inicial', first_plan: 'Creó un plan de entrenamiento', first_workout: 'Registró el primer entrenamiento', trial_started: 'Inició una prueba gratuita', first_purchase: 'Realizó el primer pago real', renewed: 'Renovó al menos una vez', canceled: 'Canceló', refunded: 'Recibió un reembolso' },
     metricLabels: {
       signupToPaid: 'Alta → cliente de pago', signupToTrial: 'Alta → prueba gratuita',
       signupToActivated: 'Alta → primer entrenamiento', d30: 'Siguen entrenando 30 días después',
