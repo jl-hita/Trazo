@@ -5,6 +5,7 @@ import type { Campaign, CampaignDetail, CampaignInput, CampaignItem, Range } fro
 import { ColumnsComponent, Series } from './marketing.charts';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 
 interface Draft { slug: string; name: string; channel: string; status: string; startsOn: string; endsOn: string; notes: string; }
 
@@ -20,7 +21,7 @@ const CHANNEL_HELP: Record<string, string> = {
 @Component({
   selector: 'mk-campaigns',
   standalone: true,
-  imports: [FormsModule, ColumnsComponent, UiButtonComponent, UiTableComponent],
+  imports: [FormsModule, ColumnsComponent, UiButtonComponent, UiTableComponent, UiFormFieldComponent],
   templateUrl: './campaigns.tab.html'
 })
 export class CampaignsTabComponent {
