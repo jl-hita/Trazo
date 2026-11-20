@@ -115,6 +115,7 @@ public sealed class IntelligenceSummaryService(TrazoDbContext db, TimeProvider c
                 plans.Count(x => x.Origin == TrainingPlanOrigin.Manual),
                 plans.Select(x => x.EngineVersion)
                     .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(x => x!)
                     .Distinct()
                     .OrderBy(x => x)
                     .ToArray()!),
