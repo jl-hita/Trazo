@@ -115,7 +115,7 @@ public static class AdminIntelligenceEndpoints
             .Select(x => new { x.Id, x.PlanId, x.SequenceNumber, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate }).ToListAsync(ct);
         var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.Sequence, x.PhaseSequenceNumber, x.PhaseType, x.IsDeload,
-                x.StartWeek, x.Weeks, generationSnapshot = SafeJson(x.GenerationSnapshotJson), x.SnapshotSchemaVersion, x.EngineVersion,
+                x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion, x.EngineVersion,
                 x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToListAsync(ct);
         var sessions = await db.PlannedSessions.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.MesocycleId, x.WeekNumber, x.Date, x.SequenceIndex, x.Title,
@@ -182,13 +182,13 @@ public static class AdminIntelligenceEndpoints
                 warning = "Pseudonymised research data, not anonymous data. Keep the package private." },
             plans = plans.Select(x => new { id = Key(x.Id), user = Key(x.UserId), x.Status, x.Origin, x.Goal, x.Experience, x.Split,
                 x.StartDate, x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
-                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.MacrocycleName, x.CreatedAt, x.UpdatedAt }).ToArray(),
-            phases = phases.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.SequenceNumber, x.Name, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate, x.Objective }).ToArray(),
-            mesocycles = mesocycles.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.Sequence, x.PhaseSequenceNumber,
-                x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion,
+                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.CreatedAt, x.UpdatedAt }).ToArray(),
+            phases = phases.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.SequenceNumber, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate }).ToArray(),
+            mesocycles = mesocycleData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.Sequence, x.PhaseSequenceNumber,
+                x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks, generationSnapshot = x.GenerationSnapshotJson, x.SnapshotSchemaVersion,
                 x.EngineVersion, x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToArray(),
             sessions = sessionData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), mesocycle = Key(x.MesocycleId),
-                x.WeekNumber, x.Date, x.SequenceIndex, x.Title, x.EstimatedDurationMinutes, prescription = x.PrescriptionJson,
+                x.WeekNumber, x.Date, x.SequenceIndex, x.EstimatedDurationMinutes, prescription = x.PrescriptionJson,
                 originalPrescription = x.OriginalPrescriptionJson, x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToArray(),
             adaptations = adaptationData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), workout = x.WorkoutLogId is null ? null : Key(x.WorkoutLogId.Value),
                 x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, changes = x.ChangesJson }).ToArray(),
