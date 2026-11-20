@@ -9,7 +9,7 @@
         <label class="mk-field">Any day of the week <input type="date" name="week" [(ngModel)]="dlWeek" required></label>
         <label class="mk-field">New downloads that week <input type="number" name="dl" [(ngModel)]="dlCount" required min="0" step="1"></label>
         <label class="mk-field">Note <input name="note" [(ngModel)]="dlNote" maxlength="200" placeholder="Launch week"></label>
-        <div><trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="df.invalid">Save week</trazo-button></div>
+        <div><trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="!!df.invalid">Save week</trazo-button></div>
       </form>
       <div class="mk-cards" style="margin-top:14px">
         <div class="mk-card"><b>{{ fmt.int(dl.downloads) }}</b><span>Downloads in {{ dl.weeksWithData }} weeks entered</span></div>
