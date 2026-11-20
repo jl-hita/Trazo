@@ -19,7 +19,7 @@
         <trazo-form-field label="Web client ID" controlId="clientId"><input type="text" name="clientId" required placeholder="1234567890-abc.apps.googleusercontent.com" [ngModel]="clientId()" (ngModelChange)="clientId.set($event)" id="clientId">
         </trazo-form-field>
         <div class="actions">
-          <button type="button" (click)="testGoogle()" [disabled]="busy() || !clientId().trim()">Test</button>
+          <trazo-button variant="secondary" type="button" (pressed)="testGoogle()" [disabled]="busy() || !clientId().trim()">Test</trazo-button>
           @if (googleResult(); as r) { <span [class]="r.ok ? 'ok' : 'err'" role="status">{{ r.message }}</span> }
         </div>
       </fieldset>
@@ -44,13 +44,13 @@
         <p class="hint">Links in verification and password-reset emails are built from this URL (the public https address of this site; app schemes such as trazo:// are not accepted).</p>
         <trazo-form-field label="Send test email to" controlId="recipient"><input type="email" name="recipient" [ngModel]="recipient()" (ngModelChange)="recipient.set($event)" id="recipient"></trazo-form-field>
         <div class="actions">
-          <button type="button" (click)="testSmtp()" [disabled]="busy() || !recipient().trim()">Send test email</button>
+          <trazo-button variant="secondary" type="button" (pressed)="testSmtp()" [disabled]="busy() || !recipient().trim()">Send test email</trazo-button>
           @if (smtpResult(); as r) { <span [class]="r.ok ? 'ok' : 'err'" role="status">{{ r.message }}</span> }
         </div>
       </fieldset>
 
       <div class="actions">
-        <button class="primary" type="submit" [disabled]="busy() || !canSave()">{{ mode() === 'setup' ? 'Finish setup' : 'Save settings' }}</button>
+        <trazo-button variant="primary" type="submit" [disabled]="busy() || !canSave()">{{ mode() === 'setup' ? 'Finish setup' : 'Save settings' }}</trazo-button>
         @if (!testsPassed()) { <span class="hint">Run both tests successfully before saving.</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
         @if (saved()) { <span class="ok" role="status">Settings saved.</span> }
