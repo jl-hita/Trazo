@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
@@ -40,12 +41,14 @@ public static class AdminIntelligenceEndpoints
         var (start, end) = range;
         var plans = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
             .Select(x => new { x.Id, x.Origin, x.EngineVersion }).ToListAsync(ct);
-        var workoutPlanIds = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end)
-            .Select(x => x.PlanId).Distinct().ToListAsync(ct);
-        var adaptationPlanIds = await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= start && x.AppliedAt < end)
-            .Select(x => x.PlanId).Distinct().ToListAsync(ct);
-        var planIds = plans.Select(x => x.Id).Concat(workoutPlanIds).Concat(adaptationPlanIds).Distinct().ToArray();
-        var sessions = await db.PlannedSessions.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
+        // PlannedSession has no immutable creation timestamp. Use a defensible period cohort:
+        // sessions from plans created in-range, plus sessions actually trained in-range.
+        var createdPlanIds = plans.Select(x => x.Id).ToArray();
+        var trainedSessionIds = await db.WorkoutLogs.AsNoTracking()
+            .Where(x => x.PerformedAt >= start && x.PerformedAt < end)
+            .Select(x => x.PlannedSessionId).Distinct().ToListAsync(ct);
+        var sessions = await db.PlannedSessions.AsNoTracking()
+            .Where(x => createdPlanIds.Contains(x.PlanId) || trainedSessionIds.Contains(x.Id))
             .Select(x => new { x.Id, x.OriginalPrescriptionJson, x.PrescriptionSource }).ToListAsync(ct);
         var workouts = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end)
             .Select(x => new { x.Id, x.PlanId, x.Outcome }).ToListAsync(ct);
@@ -112,7 +115,7 @@ public static class AdminIntelligenceEndpoints
             .Select(x => new { x.Id, x.PlanId, x.SequenceNumber, x.Name, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate, x.Objective }).ToListAsync(ct);
         var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.Sequence, x.PhaseSequenceNumber, x.PhaseType, x.IsDeload,
-                x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion, x.EngineVersion,
+                x.StartWeek, x.Weeks, generationSnapshot = SafeJson(x.GenerationSnapshotJson), x.SnapshotSchemaVersion, x.EngineVersion,
                 x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToListAsync(ct);
         var sessions = await db.PlannedSessions.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.MesocycleId, x.WeekNumber, x.Date, x.SequenceIndex, x.Title,
@@ -126,6 +129,21 @@ public static class AdminIntelligenceEndpoints
         // A fresh secret per package makes keys joinable inside this export, but not across exports or back to account IDs.
         var salt = RandomNumberGenerator.GetBytes(32);
         string Key(Guid id) => Convert.ToHexString(HMACSHA256.HashData(salt, id.ToByteArray()))[..24].ToLowerInvariant();
+        string? SafeJson(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return json;
+            try
+            {
+                var node = JsonNode.Parse(json);
+                SanitizeNode(node, Key);
+                return node?.ToJsonString();
+            }
+            catch (JsonException)
+            {
+                // Never fall back to exporting a raw payload that could contain identifiers or personal data.
+                return null;
+            }
+        }
         var package = new
         {
             schemaVersion = 1, generatedAt = clock.GetUtcNow(), period = new { from = start, to = end },
@@ -140,12 +158,12 @@ public static class AdminIntelligenceEndpoints
                 x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion,
                 x.EngineVersion, x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToArray(),
             sessions = sessions.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), mesocycle = Key(x.MesocycleId),
-                x.WeekNumber, x.Date, x.SequenceIndex, x.Title, x.EstimatedDurationMinutes, x.PrescriptionJson,
-                x.OriginalPrescriptionJson, x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToArray(),
+                x.WeekNumber, x.Date, x.SequenceIndex, x.Title, x.EstimatedDurationMinutes, prescription = SafeJson(x.PrescriptionJson),
+                originalPrescription = SafeJson(x.OriginalPrescriptionJson), x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToArray(),
             adaptations = adaptations.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), workout = x.WorkoutLogId is null ? null : Key(x.WorkoutLogId.Value),
-                x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, x.ChangesJson }).ToArray(),
+                x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, changes = SafeJson(x.ChangesJson) }).ToArray(),
             workouts = workouts.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), session = Key(x.PlannedSessionId),
-                x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, x.ExerciseFeedbackJson }).ToArray(),
+                x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = SafeJson(x.ExerciseFeedbackJson) }).ToArray(),
             sets = sets.Select(x => new { id = Key(x.Id), workout = Key(x.WorkoutLogId), x.ExerciseId, x.SetNumber, x.WeightKg,
                 x.Repetitions, x.Rir, x.Completed, x.SkippedReason, x.PainReported }).ToArray(),
             observations = observations.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.Period,
@@ -155,7 +173,7 @@ public static class AdminIntelligenceEndpoints
                 x.PainSessions, x.ReturnFromAbsence, x.ProcessedThrough, x.UpdatedAt }).ToArray(),
             decisions = decisions.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.MesocycleSequence,
                 x.Muscle, x.Action, x.BaselineSets, x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod,
-                x.SignalsJson, x.Reason, x.PolicyVersion, x.CreatedAt }).ToArray()
+                signals = SafeJson(x.SignalsJson), x.Reason, x.PolicyVersion, x.CreatedAt }).ToArray()
         };
 
         using var memory = new MemoryStream();
@@ -175,6 +193,32 @@ public static class AdminIntelligenceEndpoints
             AddCsv(archive, "decisions.csv", package.decisions);
         }
         return Results.File(memory.ToArray(), "application/zip", $"trazo-intelligence-{start:yyyyMMdd}-{end:yyyyMMdd}.zip");
+    }
+
+
+    private static void SanitizeNode(JsonNode? node, Func<Guid, string> pseudonymize)
+    {
+        switch (node)
+        {
+            case JsonObject obj:
+                foreach (var pair in obj.ToArray())
+                {
+                    if (string.Equals(pair.Key, "limitations", StringComparison.OrdinalIgnoreCase))
+                    {
+                        obj.Remove(pair.Key);
+                        continue;
+                    }
+                    SanitizeNode(pair.Value, pseudonymize);
+                }
+                break;
+            case JsonArray array:
+                foreach (var item in array) SanitizeNode(item, pseudonymize);
+                break;
+            case JsonValue value:
+                if (value.TryGetValue<string>(out var text) && Guid.TryParse(text, out var id))
+                    value.ReplaceWith(JsonValue.Create(pseudonymize(id)));
+                break;
+        }
     }
 
     private static void AddJson<T>(ZipArchive archive, string name, T value)
