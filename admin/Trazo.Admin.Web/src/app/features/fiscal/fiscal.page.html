@@ -47,36 +47,36 @@
           <div class="card"><b>{{ eur(y.totals.vatBalance) }}</b><span>{{ copy.vatOutputInput }}</span></div>
         </div>
 
-        <h2>Quarters — returns 303, 130 and 349</h2>
+        <h2>{{ copy.quarters }}</h2>
         <trazo-table>
-          <thead><tr><th>Quarter</th><th>Due</th><th class="num">VAT balance (303)</th><th class="num">Income tax to pay (130)</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>{{ copy.quarter }}</th><th>{{ copy.due }}</th><th class="num">{{ copy.vatBalance }} (303)</th><th class="num">{{ copy.irpfToPay }}</th><th>{{ copy.status }}</th><th></th></tr></thead>
           <tbody>
             @for (q of y.quarters; track q.quarter) {
               <tr>
                 <td>{{ q.label }}</td><td>{{ q.dueDate }}</td>
                 <td class="num">{{ eur(q.vatBalance) }}</td><td class="num">{{ eur(q.irpfToPay) }}</td>
-                <td>@if (q.allClosed) { <span class="pill closed">All months closed</span> }
-                    @else if (q.overdue) { <span class="pill overdue">Overdue</span> }
-                    @else { <span class="pill">Open</span> }</td>
+                <td>@if (q.allClosed) { <span class="pill closed">{{ copy.allMonthsClosed }}</span> }
+                    @else if (q.overdue) { <span class="pill overdue">{{ copy.overdue }}</span> }
+                    @else { <span class="pill">{{ copy.open }}</span> }</td>
                 <td class="row-actions">
-                  <trazo-button variant="secondary" type="button" [disabled]="!q.allClosed" (pressed)="downloadQuarter(q.quarter)">Download quarter package</trazo-button>
+                  <trazo-button variant="secondary" type="button" [disabled]="!q.allClosed" (pressed)="downloadQuarter(q.quarter)">{{ copy.downloadQuarter }}</trazo-button>
                 </td>
               </tr>
             }
           </tbody>
         </trazo-table>
 
-        <h2>Months</h2>
+        <h2>{{ copy.months }}</h2>
         <trazo-table>
-          <thead><tr><th>Month</th><th class="num">Income</th><th class="num">Costs</th><th class="num">VAT balance</th><th class="num">Entries</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>{{ copy.month }}</th><th class="num">{{ copy.income }}</th><th class="num">{{ copy.costs }}</th><th class="num">{{ copy.vatBalance }}</th><th class="num">{{ copy.entries }}</th><th>{{ copy.status }}</th><th></th></tr></thead>
           <tbody>
             @for (m of y.months; track m.period) {
               <tr [style.background]="selected() === m.period ? '#18243a' : ''">
                 <td>{{ m.period }}</td>
                 <td class="num">{{ eur(m.incomeBase) }}</td><td class="num">{{ eur(m.deductibleCost) }}</td><td class="num">{{ eur(m.vatBalance) }}</td>
                 <td class="num">{{ m.incomeCount + m.expenseCount }}</td>
-                <td>@if (m.closed) { <span class="pill closed">Closed</span> } @else if (m.finished) { <span class="pill warn">To close</span> } @else { <span class="pill">In progress</span> }</td>
-                <td><trazo-button variant="secondary" type="button" (pressed)="openMonth(m.period)">Open</trazo-button></td>
+                <td>@if (m.closed) { <span class="pill closed">{{ copy.closed }}</span> } @else if (m.finished) { <span class="pill warn">{{ copy.toClose }}</span> } @else { <span class="pill">{{ copy.inProgress }}</span> }</td>
+                <td><trazo-button variant="secondary" type="button" (pressed)="openMonth(m.period)">{{ copy.openMonth }}</trazo-button></td>
               </tr>
             }
           </tbody>
@@ -84,15 +84,15 @@
       }
 
       @if (month(); as m) {
-        <h2>{{ m.period }} — {{ m.closed ? 'closed' : 'open' }}</h2>
+        <h2>{{ m.period }} — {{ m.closed ? copy.monthClosed : copy.monthOpen }}</h2>
         @if (m.closed && m.closure) {
-          <p class="muted">Closed on {{ m.closure.closedAt.slice(0, 10) }} by {{ m.closure.closedBy }} ({{ m.closure.entryCount }} entries). Reopen it to make changes.</p>
+          <p class="muted">{{ copy.closedOn }} {{ m.closure.closedAt.slice(0, 10) }} {{ copy.by }} {{ m.closure.closedBy }} ({{ m.closure.entryCount }} {{ copy.entriesCount }}). {{ copy.reopenToEdit }}</p>
         }
         <div class="cards">
           <div class="card"><b>{{ eur(m.totals.incomeBase) }}</b><span>{{ copy.incomeBase }}</span></div>
           <div class="card"><b>{{ eur(m.totals.deductibleCost) }}</b><span>{{ copy.deductibleCosts }}</span></div>
-          <div class="card"><b>{{ eur(m.totals.vatOutput) }}</b><span>VAT charged / self-assessed</span></div>
-          <div class="card"><b>{{ eur(m.totals.vatInput) }}</b><span>VAT deductible</span></div>
+          <div class="card"><b>{{ eur(m.totals.vatOutput) }}</b><span>{{ copy.vatCharged }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.vatInput) }}</b><span>{{ copy.vatDeductible }}</span></div>
           <div class="card"><b>{{ eur(m.totals.vatBalance) }}</b><span>VAT balance</span></div>
           <div class="card"><b>{{ eur(m.totals.netResult) }}</b><span>{{ copy.netResult }}</span></div>
         </div>
