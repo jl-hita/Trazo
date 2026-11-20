@@ -80,7 +80,7 @@
     <!-- Logs -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" [routerLink]="tree(d.logs.errorsLink)">{{ labels.logs }}<span class="ov-sr-only">: {{ logsStatus().label }}. Ver errores de las últimas 24 horas</span></a></h3>
+        <h3><a class="ov-card-anchor" [routerLink]="tree(d.logs.errorsLink)">{{ labels.logs }}<span class="ov-sr-only">: {{ logsStatus().label }}. {{ labels.viewErrorsLastDay }}</span></a></h3>
         <span class="ov-status" [class]="'ov-status tone-' + logsStatus().tone"><span aria-hidden="true">{{ glyph(logsStatus().tone) }}</span> {{ logsStatus().label }}</span>
       </header>
       <dl>
@@ -103,7 +103,7 @@
     <!-- Configuration -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" [routerLink]="'/settings'">{{ labels.configuration }}<span class="ov-sr-only">: ir a los ajustes</span></a></h3>
+        <h3><a class="ov-card-anchor" [routerLink]="'/settings'">{{ labels.configuration }}<span class="ov-sr-only">: {{ labels.goToSettings }}</span></a></h3>
         @if (d.configuration.missing.length === 0 && smtp().tone === 'ok') {
           <span class="ov-status tone-ok"><span aria-hidden="true">✓</span> Completa</span>
         } @else {
@@ -130,7 +130,7 @@
     <!-- Users -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" routerLink="/users">{{ labels.users }}<span class="ov-sr-only">: ver la lista de usuarios</span></a></h3>
+        <h3><a class="ov-card-anchor" routerLink="/users">{{ labels.users }}<span class="ov-sr-only">: {{ labels.viewUsers }}</span></a></h3>
       </header>
       <p class="ov-figure">{{ format(d.summary.usersTotal) }}</p>
       <p class="ov-caption">{{ labels.usersTotal }}</p>
@@ -182,10 +182,10 @@
         <span class="ov-status" [class]="'ov-status tone-' + catalog().tone"><span aria-hidden="true">{{ glyph(catalog().tone) }}</span> {{ catalog().label }}</span>
       </header>
       <dl>
-        <dt>Activos</dt><dd>{{ format(d.summary.exercisesActive) }}</dd>
-        <dt>Utilizables por el motor</dt><dd>{{ format(d.summary.exercisesUsable) }}</dd>
-        <dt>No utilizables</dt><dd>{{ format(d.summary.exercisesUnusable) }}</dd>
-        <dt>Sin imágenes</dt><dd>{{ format(d.summary.exercisesWithoutImages) }}</dd>
+        <dt>{{ labels.active }}</dt><dd>{{ format(d.summary.exercisesActive) }}</dd>
+        <dt>{{ labels.usableByEngine }}</dt><dd>{{ format(d.summary.exercisesUsable) }}</dd>
+        <dt>{{ labels.unusable }}</dt><dd>{{ format(d.summary.exercisesUnusable) }}</dd>
+        <dt>{{ labels.withoutImages }}</dt><dd>{{ format(d.summary.exercisesWithoutImages) }}</dd>
       </dl>
       <p class="ov-subtitle"><a class="ov-inner-link" routerLink="/planning">{{ labels.viewEnginePreparation }}</a></p>
       <span class="ov-arrow" aria-hidden="true">→</span>
@@ -204,7 +204,7 @@
       @if (chart().empty) {
         <p class="ov-empty">{{ labels.noActivity14d }}</p>
       } @else {
-        <p class="ov-sr-only">Altas {{ chart().totals.signups }}, planes creados {{ chart().totals.plans }}, sesiones registradas {{ chart().totals.workouts }} en 14 días.</p>
+        <p class="ov-sr-only">{{ labels.chartSummary.replace('{signups}', format(chart().totals.signups)).replace('{plans}', format(chart().totals.plans)).replace('{workouts}', format(chart().totals.workouts)) }}</p>
         <ul class="ov-chart" [attr.aria-label]="labels.activityChart">
           @for (day of chart().days; track day.date) {
             <li [attr.aria-label]="day.label + ': ' + day.signups + ' altas, ' + day.plans + ' planes, ' + day.workouts + ' sesiones'">
@@ -298,7 +298,7 @@
 
     <trazo-card contentClass="ov-card ov-card-link" [ariaLabelledBy]="'ov-engine-title'">
       <header>
-        <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">{{ labels.engineAndWorkouts }}<span class="ov-sr-only">: ver el motor de planificación</span></a></h3>
+        <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">{{ labels.engineAndWorkouts }}<span class="ov-sr-only">: {{ labels.viewPlanningEngine }}</span></a></h3>
       </header>
       @if (d.insights.engine.workouts30d === 0) {
         <p class="ov-empty">{{ labels.noWorkouts30d }}</p>
@@ -313,10 +313,10 @@
         </dl>
       }
       @if (reasons().length > 0) {
-        <p class="ov-subtitle">Motivos de no completar</p>
+        <p class="ov-subtitle">{{ labels.reasonsNotCompleted }}</p>
         <ul class="ov-list">@for (r of reasons(); track r.label) { <li>{{ r.label }} <span class="muted">{{ r.count }}</span></li> }</ul>
       }
-      <p class="ov-subtitle">Ajustes automáticos ({{ format(d.insights.engine.adaptationsTotal30d) }})</p>
+      <p class="ov-subtitle">{{ labels.automaticAdjustments }} ({{ format(d.insights.engine.adaptationsTotal30d) }})</p>
       @if (adaptations().length > 0) {
         <ul class="ov-list">@for (a of adaptations(); track a.label) { <li>{{ a.label }} <span class="muted">{{ a.count }}</span></li> }</ul>
       } @else {
