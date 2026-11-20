@@ -749,6 +749,8 @@ public sealed class AdminOverviewApiTests : IDisposable
         Assert.DoesNotContain(sessionId.ToString(), research, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain(mesocycleId.ToString(), research, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain(workoutId.ToString(), research, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(planId.ToString(), research, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(user.Id.ToString(), research, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("limitations", research, StringComparison.OrdinalIgnoreCase);
 
         using var json = JsonDocument.Parse(research);
@@ -759,7 +761,14 @@ public sealed class AdminOverviewApiTests : IDisposable
         foreach (var entry in archive.Entries)
         {
             using var reader = new StreamReader(entry.Open());
-            _ = await reader.ReadToEndAsync();
+            var content = await reader.ReadToEndAsync();
+            Assert.DoesNotContain(privateGuid.ToString(), content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(sessionId.ToString(), content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(mesocycleId.ToString(), content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(workoutId.ToString(), content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(planId.ToString(), content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(user.Id.ToString(), content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("limitations", content, StringComparison.OrdinalIgnoreCase);
         }
     }
 
