@@ -10,10 +10,7 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 
 interface Draft { slug: string; name: string; channel: string; status: string; startsOn: string; endsOn: string; notes: string; }
 
-const CHANNEL_HELP: Record<string, string> = {
-  ads: 'Paid ads', social: 'Social media posts', influencer: 'Influencers and creators', email: 'E-mail', partner: 'Partners and communities',
-  content: 'Blog, SEO, video', press: 'Press and reviews', event: 'Events and talks', other: 'Other'
-};
+const CHANNEL_HELP: Record<string, string> = { ...UI_COPY.marketing.channelHelp };
 
 /**
  * Campaign links. Each campaign has a permanent tracking link; whoever opens it is sent to Google Play and, if they install and sign up,
@@ -133,6 +130,6 @@ export class CampaignsTabComponent {
   }
 
   protected async copy(text: string): Promise<void> {
-    try { await navigator.clipboard.writeText(text); this.message.set('Link copied.'); } catch { this.message.set(`Copy it by hand: ${text}`); }
+    try { await navigator.clipboard.writeText(text); this.message.set(this.labels.linkCopied); } catch { this.message.set(`${this.labels.copyManually} ${text}`); }
   }
 }
