@@ -35,6 +35,7 @@ export class ShellComponent {
   }
   private readonly allNavigation: { label: string; icon: string; link?: string }[] = [
     { label: 'Overview', icon: '◫', link: '/overview' },
+    { label: 'Trazo Intelligence', icon: '⌁', link: '/intelligence' },
     { label: 'Users', icon: '◎', link: '/users' },
     { label: 'Subscriptions', icon: '◇', link: '/subscriptions' },
     { label: 'Marketing', icon: '◉', link: '/marketing' },

@@ -319,6 +319,7 @@ app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
 app.MapAdminLogsEndpoints();
 app.MapAdminOverviewEndpoints();
+app.MapAdminIntelligenceEndpoints();
 app.MapAccountEmailEndpoints();
 app.MapPasswordSetupEndpoints();
 app.MapAccountEndpoints();
