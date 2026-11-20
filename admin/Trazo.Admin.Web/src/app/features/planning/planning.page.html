@@ -130,7 +130,7 @@
           }
 
           @if (res.program.qualityReport?.warnings?.length) {
-            <section class="pl-card" aria-label="Warnings">
+            <section class="pl-card" [attr.aria-label]="copy.warnings">
               <h2>{{ res.program.qualityReport!.warnings.length }} {{ copy.warnings }}</h2>
               <details><summary>{{ copy.show }}</summary>
                 <ul class="pl-warnings">@for (w of res.program.qualityReport!.warnings; track $index) { <li>{{ w }}</li> }</ul>
