@@ -1,0 +1,20 @@
+
+    .op { display: grid; gap: 22px; max-width: 760px; }
+    .op fieldset { margin: 0; padding: 22px; border: 1px solid #293444; border-radius: 8px; background: #131b27; display: grid; gap: 14px; }
+    .op legend { padding: 0 8px; color: #a9c2df; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+    .op label { display: grid; gap: 6px; color: #aab6c7; font-size: 12px; }
+    .op input, .op textarea, .op select { padding: 10px 12px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; font: inherit; }
+    .op textarea { min-height: 90px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; resize: vertical; }
+    .op input:focus, .op textarea:focus, .op select:focus { outline: 2px solid #6d8eb5; outline-offset: 1px; }
+    .op .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .op .hint { color: #7f8da0; font-size: 11px; margin: 0; }
+    .op .actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .op button { padding: 10px 16px; border: 1px solid #4a6585; border-radius: 6px; background: #1b2a3e; color: #e4edf8; cursor: pointer; }
+    .op button.primary { background: #3b6ea8; border-color: #6d9bd2; }
+    .op button:disabled { opacity: .45; cursor: not-allowed; }
+    .op .ok { color: #7fd3a0; font-size: 12px; }
+    .op .err { color: #f0a3a3; font-size: 12px; }
+    .op .stored { color: #7fd3a0; }
+    .op ul { margin: 0; padding-left: 18px; color: #aab6c7; font-size: 12px; }
+    .op .fielderr { color: #f0a3a3; font-size: 11px; }
+  
