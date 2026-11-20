@@ -39,14 +39,14 @@ export class LoginPageComponent {
       }
       if (!this.auth.canUseConsole) {
         this.auth.clear();
-        this.error.set('This console is only available to administrators.');
+        this.error.set(this.copy.roleNotAllowed);
         return;
       }
       await this.router.navigateByUrl(this.auth.home);
     } catch (e) {
       const status = (e as { status?: number }).status;
-      this.error.set(status === 429 ? 'Too many attempts. Wait a minute.'
-        : status === 409 ? 'Verify your email before signing in.' : 'Invalid credentials.');
+      this.error.set(status === 429 ? this.copy.tooManyAttempts
+        : status === 409 ? this.copy.verifyEmailFirst : this.copy.invalidCredentials);
     } finally {
       this.busy.set(false);
     }
