@@ -2,26 +2,26 @@
   <trazo-card>
     <div class="login-content">
       <img class="logo" src="logo-dark.svg" alt="TRAZO" height="38">
-      <h1>Administration</h1>
+      <h1>{{ copy.administration }}</h1>
       @if (challenge()) {
-        <trazo-form-field label="Authentication code" controlId="login-code">
+        <trazo-form-field [label]="copy.authenticationCode" controlId="login-code">
           <input id="login-code" name="code" inputmode="numeric" autocomplete="one-time-code" required
                  [ngModel]="code()" (ngModelChange)="code.set($event)">
         </trazo-form-field>
       } @else {
-        <trazo-form-field label="Email" controlId="login-email">
+        <trazo-form-field [label]="copy.email" controlId="login-email">
           <input id="login-email" type="email" name="email" autocomplete="username" required
                  [ngModel]="email()" (ngModelChange)="email.set($event)">
         </trazo-form-field>
-        <trazo-form-field label="Password" controlId="login-password">
+        <trazo-form-field [label]="copy.password" controlId="login-password">
           <input id="login-password" type="password" name="password" autocomplete="current-password" required
                  [ngModel]="password()" (ngModelChange)="password.set($event)">
         </trazo-form-field>
       }
       @if (error()) {
-        <trazo-state kind="error" title="Sign-in failed" [description]="error()" />
+        <trazo-state kind="error" [title]="copy.signInFailed" [description]="error()" />
       }
-      <trazo-button type="submit" variant="primary" [loading]="busy()">Sign in</trazo-button>
+      <trazo-button type="submit" variant="primary" [loading]="busy()">{{ copy.signIn }}</trazo-button>
     </div>
   </trazo-card>
 </form>
