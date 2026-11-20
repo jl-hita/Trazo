@@ -6,6 +6,8 @@ import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { FiscalApi } from './fiscal.api';
 import type { FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.models';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
+import { formatUiDate } from '../../core/ui-format';
 
 const EMPTY_ENTRY = () => ({
   id: null as string | null, kind: 'expense', date: '', concept: '', counterparty: '', counterpartyTaxId: '', counterpartyCountry: 'ES',
@@ -28,6 +30,7 @@ const EMPTY_ENTRY = () => ({
 export class FiscalPageComponent {
   private readonly api = inject(FiscalApi);
   private readonly money = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
+  protected readonly copy = UI_COPY.fiscal;
   protected readonly years = (() => { const y = new Date().getFullYear(); return [y - 2, y - 1, y, y + 1]; })();
   protected readonly yearNumber = signal(new Date().getFullYear());
   protected readonly year = signal<FiscalYearView | null>(null);
@@ -50,8 +53,14 @@ export class FiscalPageComponent {
 
   protected eur(value: number | null | undefined): string { return this.money.format(value ?? 0); }
 
+  protected date(value: string): string { return formatUiDate(value); }
+
+  protected auditAction(action: string): string { return this.copy.auditActions[action as keyof typeof this.copy.auditActions] ?? action; }
+
+  protected kindLabel(kind: string): string { return kind === 'income' ? this.copy.incomeKind : this.copy.expense; }
+
   protected vatLabel(t: string): string {
-    return t === 'domestic' ? 'Spanish VAT' : t === 'eu_reverse_charge' ? 'EU reverse charge' : 'No VAT';
+    return this.copy.vatLabels[t as keyof typeof this.copy.vatLabels] ?? t;
   }
 
   private fail(e: unknown): void {
@@ -95,7 +104,7 @@ export class FiscalPageComponent {
     try {
       this.profile = { ...(await this.api.saveFiscalProfile({ ...this.profile, gestorEmail: this.profile.gestorEmail || null })) };
       this.profile.gestorEmail ??= '';
-      this.ok('Fiscal profile saved.');
+      this.ok(this.copy.messages.profileSaved);
       await this.refresh();
     } catch (e) { this.fail(e); }
   }
@@ -128,39 +137,39 @@ export class FiscalPageComponent {
     try {
       const { id, ...body } = this.form;
       await this.api.saveFiscalEntry(id, body);
-      this.ok(id ? 'Entry updated.' : 'Entry added.');
+      this.ok(id ? this.copy.messages.entryUpdated : this.copy.messages.entryAdded);
       this.resetForm();
       await this.refresh();
     } catch (e) { this.fail(e); }
   }
 
   protected async remove(e: FiscalEntry): Promise<void> {
-    if (!window.confirm(`Delete "${e.concept}"?`)) return;
-    try { await this.api.deleteFiscalEntry(e.id); this.ok('Entry deleted.'); await this.refresh(); } catch (err) { this.fail(err); }
+    if (!window.confirm(this.copy.prompts.deleteEntry.replace('{concept}', e.concept))) return;
+    try { await this.api.deleteFiscalEntry(e.id); this.ok(this.copy.messages.entryDeleted); await this.refresh(); } catch (err) { this.fail(err); }
   }
 
   protected async bookEstimate(period: string): Promise<void> {
-    try { await this.api.bookGoogleEstimate(period); this.ok('Google Play income booked from the estimate. Edit it when you have the real figure.'); await this.refresh(); } catch (e) { this.fail(e); }
+    try { await this.api.bookGoogleEstimate(period); this.ok(this.copy.messages.estimateBooked); await this.refresh(); } catch (e) { this.fail(e); }
   }
 
   protected async close(m: FiscalMonthView): Promise<void> {
     if (m.warnings.length > 0) {
       const list = m.warnings.map((w: FiscalWarning) => `• ${w.message}`).join('\n');
-      if (!window.confirm(`This month has warnings:\n\n${list}\n\nClose it anyway?`)) return;
-    } else if (!window.confirm(`Close ${m.period}? Its entries will be frozen until you reopen it.`)) return;
+      if (!window.confirm(`${this.copy.prompts.closeWarnings}\n\n${list}\n\n${this.copy.prompts.closeAnyway}`)) return;
+    } else if (!window.confirm(this.copy.prompts.closeMonth.replace('{period}', m.period))) return;
     this.busy.set(true);
     try {
       await this.api.closeFiscalMonth(m.period, true);
       await this.refresh();
-      this.ok(`${m.period} closed. Downloading the package for your accountant.`);
+      this.ok(`${m.period} ${this.copy.messages.monthClosed}`);
       await this.downloadMonth(m.period);
     } catch (e) { this.fail(e); } finally { this.busy.set(false); }
   }
 
   protected async reopen(period: string): Promise<void> {
-    const reason = window.prompt('Why are you reopening this month? (10–300 characters, it is recorded)');
+    const reason = window.prompt(this.copy.prompts.reopenMonth);
     if (!reason) return;
-    try { await this.api.reopenFiscalMonth(period, reason); this.ok(`${period} reopened.`); await this.refresh(); } catch (e) { this.fail(e); }
+    try { await this.api.reopenFiscalMonth(period, reason); this.ok(`${period} ${this.copy.messages.monthReopened}`); await this.refresh(); } catch (e) { this.fail(e); }
   }
 
   protected async downloadMonth(period: string): Promise<void> {

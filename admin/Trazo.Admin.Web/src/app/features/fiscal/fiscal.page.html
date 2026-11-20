@@ -1,6 +1,6 @@
     <div class="page-heading">
-      <div><p class="eyebrow">FINANCE</p><h1>Tax management</h1>
-        <p class="subtitle">Books of income and expenses, VAT and income-tax figures per quarter, and a one-click month close that prepares everything the accountant needs.</p></div>
+      <div><p class="eyebrow">{{ copy.eyebrow }}</p><h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p></div>
     </div>
     <div class="fs">
       @if (message()) { <p class="ok" role="status">{{ message() }}</p> }
@@ -8,75 +8,75 @@
 
       @if (year(); as y) {
         @if (!y.profileComplete) {
-          <div class="box alert">Fill in your <b>legal name and tax id (NIF)</b> in the fiscal profile below. Months cannot be closed without them.</div>
+          <div class="box alert">{{ copy.incompleteProfile }}</div>
         }
 
         <details [open]="!y.profileComplete">
-          <summary>Fiscal profile and rules</summary>
+          <summary>{{ copy.profileAndRules }}</summary>
           <div class="box">
             <div class="grid">
-              <trazo-form-field label="Legal name" controlId="field-fiscal-legalName"><input [(ngModel)]="profile.legalName" name="legalName" id="field-fiscal-legalName"></trazo-form-field>
-              <trazo-form-field label="Tax id (NIF)" controlId="field-fiscal-taxId"><input [(ngModel)]="profile.taxId" name="taxId" id="field-fiscal-taxId"></trazo-form-field>
-              <trazo-form-field label="Address" controlId="field-fiscal-address"><input [(ngModel)]="profile.address" name="address" id="field-fiscal-address"></trazo-form-field>
-              <trazo-form-field label="Accountant's email (optional)" controlId="field-fiscal-gestorEmail"><input [(ngModel)]="profile.gestorEmail" name="gestorEmail" id="field-fiscal-gestorEmail"></trazo-form-field>
-              <trazo-form-field label="Default VAT %" controlId="field-fiscal-defaultVatPct"><input type="number" step="0.01" [(ngModel)]="profile.defaultVatPct" name="defaultVatPct" id="field-fiscal-defaultVatPct"></trazo-form-field>
-              <trazo-form-field label="Income-tax instalment % (modelo 130)" controlId="field-fiscal-irpfAdvancePct"><input type="number" step="0.01" [(ngModel)]="profile.irpfAdvancePct" name="irpfAdvancePct" id="field-fiscal-irpfAdvancePct"></trazo-form-field>
-              <label><span><input type="checkbox" [(ngModel)]="profile.filesModelo130" name="filesModelo130"> I file modelo 130</span></label>
+              <trazo-form-field [label]="copy.legalName" controlId="field-fiscal-legalName"><input [(ngModel)]="profile.legalName" name="legalName" id="field-fiscal-legalName"></trazo-form-field>
+              <trazo-form-field [label]="copy.taxId" controlId="field-fiscal-taxId"><input [(ngModel)]="profile.taxId" name="taxId" id="field-fiscal-taxId"></trazo-form-field>
+              <trazo-form-field [label]="copy.address" controlId="field-fiscal-address"><input [(ngModel)]="profile.address" name="address" id="field-fiscal-address"></trazo-form-field>
+              <trazo-form-field [label]="copy.accountantEmail" controlId="field-fiscal-gestorEmail"><input [(ngModel)]="profile.gestorEmail" name="gestorEmail" id="field-fiscal-gestorEmail"></trazo-form-field>
+              <trazo-form-field [label]="copy.defaultVat" controlId="field-fiscal-defaultVatPct"><input type="number" step="0.01" [(ngModel)]="profile.defaultVatPct" name="defaultVatPct" id="field-fiscal-defaultVatPct"></trazo-form-field>
+              <trazo-form-field [label]="copy.irpfAdvance" controlId="field-fiscal-irpfAdvancePct"><input type="number" step="0.01" [(ngModel)]="profile.irpfAdvancePct" name="irpfAdvancePct" id="field-fiscal-irpfAdvancePct"></trazo-form-field>
+              <label><span><input type="checkbox" [(ngModel)]="profile.filesModelo130" name="filesModelo130"> {{ copy.filesModelo130 }}</span></label>
             </div>
-            <p class="muted">Used to estimate Google Play income from verified purchases (an estimate: what counts is Google's monthly earnings report).</p>
+            <p class="muted">{{ copy.estimateNote }}</p>
             <div class="grid">
-              <trazo-form-field label="Monthly price (€, with VAT)" controlId="field-fiscal-playMonthlyPrice"><input type="number" step="0.01" [(ngModel)]="profile.playMonthlyPrice" name="playMonthlyPrice" id="field-fiscal-playMonthlyPrice"></trazo-form-field>
-              <trazo-form-field label="Annual price (€, with VAT)" controlId="field-fiscal-playAnnualPrice"><input type="number" step="0.01" [(ngModel)]="profile.playAnnualPrice" name="playAnnualPrice" id="field-fiscal-playAnnualPrice"></trazo-form-field>
-              <trazo-form-field label="VAT included in the consumer price %" controlId="field-fiscal-consumerVatPct"><input type="number" step="0.01" [(ngModel)]="profile.consumerVatPct" name="consumerVatPct" id="field-fiscal-consumerVatPct"></trazo-form-field>
-              <trazo-form-field label="Google service fee %" controlId="field-fiscal-googleFeePct"><input type="number" step="0.01" [(ngModel)]="profile.googleFeePct" name="googleFeePct" id="field-fiscal-googleFeePct"></trazo-form-field>
+              <trazo-form-field [label]="copy.monthlyPrice" controlId="field-fiscal-playMonthlyPrice"><input type="number" step="0.01" [(ngModel)]="profile.playMonthlyPrice" name="playMonthlyPrice" id="field-fiscal-playMonthlyPrice"></trazo-form-field>
+              <trazo-form-field [label]="copy.annualPrice" controlId="field-fiscal-playAnnualPrice"><input type="number" step="0.01" [(ngModel)]="profile.playAnnualPrice" name="playAnnualPrice" id="field-fiscal-playAnnualPrice"></trazo-form-field>
+              <trazo-form-field [label]="copy.consumerVat" controlId="field-fiscal-consumerVatPct"><input type="number" step="0.01" [(ngModel)]="profile.consumerVatPct" name="consumerVatPct" id="field-fiscal-consumerVatPct"></trazo-form-field>
+              <trazo-form-field [label]="copy.googleFee" controlId="field-fiscal-googleFeePct"><input type="number" step="0.01" [(ngModel)]="profile.googleFeePct" name="googleFeePct" id="field-fiscal-googleFeePct"></trazo-form-field>
             </div>
-            <trazo-button variant="primary" type="button" (pressed)="saveProfile()">Save profile</trazo-button>
+            <trazo-button variant="primary" type="button" (pressed)="saveProfile()">{{ copy.saveProfile }}</trazo-button>
           </div>
         </details>
 
         <div class="toolbar">
-          <trazo-form-field label="Year" controlId="field-fiscal-year"><select [ngModel]="yearNumber()" (ngModelChange)="changeYear($event)" name="year" id="field-fiscal-year">
+          <trazo-form-field [label]="copy.year" controlId="field-fiscal-year"><select [ngModel]="yearNumber()" (ngModelChange)="changeYear($event)" name="year" id="field-fiscal-year">
             @for (v of years; track v) { <option [ngValue]="v">{{ v }}</option> }
           </select></trazo-form-field>
-          <span class="muted">Current month: {{ y.currentPeriod }}</span>
+          <span class="muted">{{ copy.currentMonth }}: {{ y.currentPeriod }}</span>
         </div>
         <div class="cards">
-          <div class="card"><b>{{ eur(y.totals.incomeBase) }}</b><span>Income (base)</span></div>
-          <div class="card"><b>{{ eur(y.totals.deductibleCost) }}</b><span>Deductible costs</span></div>
-          <div class="card"><b>{{ eur(y.totals.netResult) }}</b><span>Net result</span></div>
-          <div class="card"><b>{{ eur(y.totals.vatBalance) }}</b><span>VAT balance (output − input)</span></div>
+          <div class="card"><b>{{ eur(y.totals.incomeBase) }}</b><span>{{ copy.incomeBase }}</span></div>
+          <div class="card"><b>{{ eur(y.totals.deductibleCost) }}</b><span>{{ copy.deductibleCosts }}</span></div>
+          <div class="card"><b>{{ eur(y.totals.netResult) }}</b><span>{{ copy.netResult }}</span></div>
+          <div class="card"><b>{{ eur(y.totals.vatBalance) }}</b><span>{{ copy.vatOutputInput }}</span></div>
         </div>
 
-        <h2>Quarters — returns 303, 130 and 349</h2>
+        <h2>{{ copy.quarters }}</h2>
         <trazo-table>
-          <thead><tr><th>Quarter</th><th>Due</th><th class="num">VAT balance (303)</th><th class="num">Income tax to pay (130)</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>{{ copy.quarter }}</th><th>{{ copy.due }}</th><th class="num">{{ copy.vatBalance }} (303)</th><th class="num">{{ copy.irpfToPay }}</th><th>{{ copy.status }}</th><th></th></tr></thead>
           <tbody>
             @for (q of y.quarters; track q.quarter) {
               <tr>
-                <td>{{ q.label }}</td><td>{{ q.dueDate }}</td>
+                <td>{{ q.label }}</td><td>{{ date(q.dueDate) }}</td>
                 <td class="num">{{ eur(q.vatBalance) }}</td><td class="num">{{ eur(q.irpfToPay) }}</td>
-                <td>@if (q.allClosed) { <span class="pill closed">All months closed</span> }
-                    @else if (q.overdue) { <span class="pill overdue">Overdue</span> }
-                    @else { <span class="pill">Open</span> }</td>
+                <td>@if (q.allClosed) { <span class="pill closed">{{ copy.allMonthsClosed }}</span> }
+                    @else if (q.overdue) { <span class="pill overdue">{{ copy.overdue }}</span> }
+                    @else { <span class="pill">{{ copy.open }}</span> }</td>
                 <td class="row-actions">
-                  <trazo-button variant="secondary" type="button" [disabled]="!q.allClosed" (pressed)="downloadQuarter(q.quarter)">Download quarter package</trazo-button>
+                  <trazo-button variant="secondary" type="button" [disabled]="!q.allClosed" (pressed)="downloadQuarter(q.quarter)">{{ copy.downloadQuarter }}</trazo-button>
                 </td>
               </tr>
             }
           </tbody>
         </trazo-table>
 
-        <h2>Months</h2>
+        <h2>{{ copy.months }}</h2>
         <trazo-table>
-          <thead><tr><th>Month</th><th class="num">Income</th><th class="num">Costs</th><th class="num">VAT balance</th><th class="num">Entries</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>{{ copy.month }}</th><th class="num">{{ copy.income }}</th><th class="num">{{ copy.costs }}</th><th class="num">{{ copy.vatBalance }}</th><th class="num">{{ copy.entries }}</th><th>{{ copy.status }}</th><th></th></tr></thead>
           <tbody>
             @for (m of y.months; track m.period) {
               <tr [style.background]="selected() === m.period ? '#18243a' : ''">
                 <td>{{ m.period }}</td>
                 <td class="num">{{ eur(m.incomeBase) }}</td><td class="num">{{ eur(m.deductibleCost) }}</td><td class="num">{{ eur(m.vatBalance) }}</td>
                 <td class="num">{{ m.incomeCount + m.expenseCount }}</td>
-                <td>@if (m.closed) { <span class="pill closed">Closed</span> } @else if (m.finished) { <span class="pill warn">To close</span> } @else { <span class="pill">In progress</span> }</td>
-                <td><trazo-button variant="secondary" type="button" (pressed)="openMonth(m.period)">Open</trazo-button></td>
+                <td>@if (m.closed) { <span class="pill closed">{{ copy.closed }}</span> } @else if (m.finished) { <span class="pill warn">{{ copy.toClose }}</span> } @else { <span class="pill">{{ copy.inProgress }}</span> }</td>
+                <td><trazo-button variant="secondary" type="button" (pressed)="openMonth(m.period)">{{ copy.openMonth }}</trazo-button></td>
               </tr>
             }
           </tbody>
@@ -84,111 +84,109 @@
       }
 
       @if (month(); as m) {
-        <h2>{{ m.period }} — {{ m.closed ? 'closed' : 'open' }}</h2>
+        <h2>{{ m.period }} — {{ m.closed ? copy.monthClosed : copy.monthOpen }}</h2>
         @if (m.closed && m.closure) {
-          <p class="muted">Closed on {{ m.closure.closedAt.slice(0, 10) }} by {{ m.closure.closedBy }} ({{ m.closure.entryCount }} entries). Reopen it to make changes.</p>
+          <p class="muted">{{ copy.closedOn }} {{ date(m.closure.closedAt) }} {{ copy.by }} {{ m.closure.closedBy }} ({{ m.closure.entryCount }} {{ copy.entriesCount }}). {{ copy.reopenToEdit }}</p>
         }
         <div class="cards">
-          <div class="card"><b>{{ eur(m.totals.incomeBase) }}</b><span>Income (base)</span></div>
-          <div class="card"><b>{{ eur(m.totals.deductibleCost) }}</b><span>Deductible costs</span></div>
-          <div class="card"><b>{{ eur(m.totals.vatOutput) }}</b><span>VAT charged / self-assessed</span></div>
-          <div class="card"><b>{{ eur(m.totals.vatInput) }}</b><span>VAT deductible</span></div>
-          <div class="card"><b>{{ eur(m.totals.vatBalance) }}</b><span>VAT balance</span></div>
-          <div class="card"><b>{{ eur(m.totals.netResult) }}</b><span>Net result</span></div>
+          <div class="card"><b>{{ eur(m.totals.incomeBase) }}</b><span>{{ copy.incomeBase }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.deductibleCost) }}</b><span>{{ copy.deductibleCosts }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.vatOutput) }}</b><span>{{ copy.vatCharged }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.vatInput) }}</b><span>{{ copy.vatDeductible }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.vatBalance) }}</b><span>{{ copy.vatBalance }}</span></div>
+          <div class="card"><b>{{ eur(m.totals.netResult) }}</b><span>{{ copy.netResult }}</span></div>
         </div>
 
         @if (m.estimate.available) {
           <div class="box">
-            <b>Google Play estimate</b> — {{ m.estimate.charges }} charge(s) ({{ m.estimate.monthlyCharges }} monthly, {{ m.estimate.annualCharges }} annual),
-            {{ m.estimate.refunds }} refund(s). Gross {{ eur(m.estimate.gross) }} → without VAT {{ eur(m.estimate.netOfVat) }} → minus Google fee
+            <b>{{ copy.googleEstimate }}</b> — {{ m.estimate.charges }} {{ copy.charges }} ({{ m.estimate.monthlyCharges }} {{ copy.monthly }}, {{ m.estimate.annualCharges }} {{ copy.annual }}),
+            {{ m.estimate.refunds }} {{ copy.refunds }}. {{ copy.gross }} {{ eur(m.estimate.gross) }} → {{ copy.withoutVat }} {{ eur(m.estimate.netOfVat) }} → {{ copy.minusGoogleFee }}
             {{ eur(m.estimate.googleFee) }} = <b>{{ eur(m.estimate.income) }}</b>.
-            <p class="muted">An estimate from verified purchases: replace it with the amount in Google Play's earnings report when you have it.</p>
+            <p class="muted">{{ copy.estimateExplanation }}</p>
             <trazo-button variant="secondary" type="button" [disabled]="m.closed || m.hasGoogleIncome" (pressed)="bookEstimate(m.period)">
-              {{ m.hasGoogleIncome ? 'Google Play income already booked' : 'Book this income' }}</trazo-button>
+              {{ m.hasGoogleIncome ? copy.incomeAlreadyBooked : copy.bookIncome }}</trazo-button>
           </div>
         }
 
         @if (m.warnings.length && !m.closed) {
-          <div class="box alert"><b>Review before closing</b>
+          <div class="box alert"><b>{{ copy.reviewBeforeClosing }}</b>
             <ul class="warnings">@for (w of m.warnings; track w.code) { <li>{{ w.message }}@if (w.count) { ({{ w.count }}) }</li> }</ul>
           </div>
         }
 
         <trazo-table>
-          <thead><tr><th>Date</th><th>Kind</th><th>Concept</th><th>Counterparty</th><th class="num">Base</th><th>VAT</th><th class="num">Total</th><th></th></tr></thead>
+          <thead><tr><th>{{ copy.date }}</th><th>{{ copy.kind }}</th><th>{{ copy.concept }}</th><th>{{ copy.counterparty }}</th><th class="num">{{ copy.base }}</th><th>{{ copy.vat }}</th><th class="num">{{ copy.total }}</th><th></th></tr></thead>
           <tbody>
             @for (e of m.entries; track e.id) {
               <tr>
-                <td>{{ e.date }}</td><td>{{ e.kind }}<div class="muted">{{ e.category }}</div></td>
-                <td>{{ e.concept }}@if (e.invoiceNumber) { <div class="muted">{{ e.invoiceNumber }}</div> }@if (e.source === 'google_estimate') { <div class="warn muted">estimate</div> }</td>
+                <td>{{ date(e.date) }}</td><td>{{ kindLabel(e.kind) }}<div class="muted">{{ e.category }}</div></td>
+                <td>{{ e.concept }}@if (e.invoiceNumber) { <div class="muted">{{ e.invoiceNumber }}</div> }@if (e.source === 'google_estimate') { <div class="warn muted">{{ copy.estimate }}</div> }</td>
                 <td>{{ e.counterparty }}<div class="muted">{{ e.counterpartyTaxId }}</div></td>
                 <td class="num">{{ eur(e.base) }}</td>
                 <td>{{ vatLabel(e.vatTreatment) }}@if (e.vatAmount) { <div class="muted">{{ e.vatRatePct }}% = {{ eur(e.vatAmount) }}</div> }</td>
                 <td class="num">{{ eur(e.total) }}</td>
                 <td class="row-actions">
-                  <trazo-button variant="secondary" type="button" [disabled]="m.closed" (pressed)="edit(e)">Edit</trazo-button>
-                  <trazo-button variant="danger" type="button" [disabled]="m.closed" (pressed)="remove(e)">Delete</trazo-button>
+                  <trazo-button variant="secondary" type="button" [disabled]="m.closed" (pressed)="edit(e)">{{ copy.edit }}</trazo-button>
+                  <trazo-button variant="danger" type="button" [disabled]="m.closed" (pressed)="remove(e)">{{ copy.delete }}</trazo-button>
                 </td>
               </tr>
-            } @empty { <tr><td colspan="8" class="muted">No entries yet.</td></tr> }
+            } @empty { <tr><td colspan="8" class="muted">{{ copy.noEntries }}</td></tr> }
           </tbody>
         </trazo-table>
 
         @if (!m.closed) {
-          <h2>{{ form.id ? 'Edit entry' : 'Add entry' }}</h2>
+          <h2>{{ form.id ? copy.editEntry : copy.addEntry }}</h2>
           <div class="box">
             <div class="grid">
-              <trazo-form-field label="Kind" controlId="field-fiscal-kind"><select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind" id="field-fiscal-kind"><option value="expense">Expense</option><option value="income">Income</option></select></trazo-form-field>
-              <trazo-form-field label="Date" controlId="field-fiscal-date"><input type="date" [(ngModel)]="form.date" name="date" id="field-fiscal-date"></trazo-form-field>
-              <trazo-form-field label="Concept" controlId="field-fiscal-concept"><input [(ngModel)]="form.concept" name="concept" maxlength="200" id="field-fiscal-concept"></trazo-form-field>
-              <trazo-form-field label="Category" controlId="field-fiscal-category"><select [(ngModel)]="form.category" name="category" id="field-fiscal-category">
+              <trazo-form-field [label]="copy.kind" controlId="field-fiscal-kind"><select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind" id="field-fiscal-kind"><option value="expense">{{ copy.expense }}</option><option value="income">{{ copy.incomeKind }}</option></select></trazo-form-field>
+              <trazo-form-field [label]="copy.date" controlId="field-fiscal-date"><input type="date" [(ngModel)]="form.date" name="date" id="field-fiscal-date"></trazo-form-field>
+              <trazo-form-field [label]="copy.concept" controlId="field-fiscal-concept"><input [(ngModel)]="form.concept" name="concept" maxlength="200" id="field-fiscal-concept"></trazo-form-field>
+              <trazo-form-field [label]="copy.category" controlId="field-fiscal-category"><select [(ngModel)]="form.category" name="category" id="field-fiscal-category">
                 @for (c of categories(); track c) { <option [value]="c">{{ c }}</option> }</select></trazo-form-field>
-              <trazo-form-field label="Base amount (€, negative for a credit note)" controlId="field-fiscal-base"><input type="number" step="0.01" [(ngModel)]="form.base" name="base" id="field-fiscal-base"></trazo-form-field>
-              <trazo-form-field label="VAT treatment" controlId="field-fiscal-vatTreatment"><select [(ngModel)]="form.vatTreatment" name="vatTreatment" id="field-fiscal-vatTreatment">
-                <option value="domestic">Spanish VAT</option>
-                <option value="eu_reverse_charge">EU business (reverse charge)</option>
-                <option value="no_vat">No VAT / exempt</option></select></trazo-form-field>
+              <trazo-form-field [label]="copy.baseAmount" controlId="field-fiscal-base"><input type="number" step="0.01" [(ngModel)]="form.base" name="base" id="field-fiscal-base"></trazo-form-field>
+              <trazo-form-field [label]="copy.vatTreatment" controlId="field-fiscal-vatTreatment"><select [(ngModel)]="form.vatTreatment" name="vatTreatment" id="field-fiscal-vatTreatment">
+                <option value="domestic">{{ copy.spanishVat }}</option>
+                <option value="eu_reverse_charge">{{ copy.euReverseCharge }}</option>
+                <option value="no_vat">{{ copy.noVatExempt }}</option></select></trazo-form-field>
               @if (form.vatTreatment === 'domestic' || (form.kind === 'expense' && form.vatTreatment === 'eu_reverse_charge')) {
-                <trazo-form-field label="VAT %" controlId="field-fiscal-vatRatePct"><input type="number" step="0.01" [(ngModel)]="form.vatRatePct" name="vatRatePct" id="field-fiscal-vatRatePct"></trazo-form-field>
+                <trazo-form-field [label]="copy.vatRate" controlId="field-fiscal-vatRatePct"><input type="number" step="0.01" [(ngModel)]="form.vatRatePct" name="vatRatePct" id="field-fiscal-vatRatePct"></trazo-form-field>
               }
               @if (form.kind === 'income') {
-                <trazo-form-field label="IRPF withholding %" controlId="field-fiscal-withholdingPct"><input type="number" step="0.01" [(ngModel)]="form.withholdingPct" name="withholdingPct" id="field-fiscal-withholdingPct"></trazo-form-field>
+                <trazo-form-field [label]="copy.withholding" controlId="field-fiscal-withholdingPct"><input type="number" step="0.01" [(ngModel)]="form.withholdingPct" name="withholdingPct" id="field-fiscal-withholdingPct"></trazo-form-field>
               } @else {
-                <trazo-form-field label="Deductible %" controlId="field-fiscal-deductiblePct"><input type="number" step="1" [(ngModel)]="form.deductiblePct" name="deductiblePct" id="field-fiscal-deductiblePct"></trazo-form-field>
+                <trazo-form-field [label]="copy.deductible" controlId="field-fiscal-deductiblePct"><input type="number" step="1" [(ngModel)]="form.deductiblePct" name="deductiblePct" id="field-fiscal-deductiblePct"></trazo-form-field>
               }
-              <trazo-form-field label="{{ form.kind === 'income' ? 'Customer' : 'Supplier' }}" controlId="field-fiscal-counterparty"><input [(ngModel)]="form.counterparty" name="counterparty" id="field-fiscal-counterparty"></trazo-form-field>
-              <trazo-form-field label="Tax id / EU VAT number" controlId="field-fiscal-counterpartyTaxId"><input [(ngModel)]="form.counterpartyTaxId" name="counterpartyTaxId" id="field-fiscal-counterpartyTaxId"></trazo-form-field>
-              <trazo-form-field label="Country (2 letters)" controlId="field-fiscal-counterpartyCountry"><input [(ngModel)]="form.counterpartyCountry" name="counterpartyCountry" maxlength="2" id="field-fiscal-counterpartyCountry"></trazo-form-field>
-              <trazo-form-field label="Invoice number" controlId="field-fiscal-invoiceNumber"><input [(ngModel)]="form.invoiceNumber" name="invoiceNumber" id="field-fiscal-invoiceNumber"></trazo-form-field>
-              <trazo-form-field label="Notes" controlId="field-fiscal-notes"><input [(ngModel)]="form.notes" name="notes" maxlength="500" id="field-fiscal-notes"></trazo-form-field>
+              <trazo-form-field [label]="form.kind === 'income' ? copy.customer : copy.supplier" controlId="field-fiscal-counterparty"><input [(ngModel)]="form.counterparty" name="counterparty" id="field-fiscal-counterparty"></trazo-form-field>
+              <trazo-form-field [label]="copy.taxIdEuVat" controlId="field-fiscal-counterpartyTaxId"><input [(ngModel)]="form.counterpartyTaxId" name="counterpartyTaxId" id="field-fiscal-counterpartyTaxId"></trazo-form-field>
+              <trazo-form-field [label]="copy.country" controlId="field-fiscal-counterpartyCountry"><input [(ngModel)]="form.counterpartyCountry" name="counterpartyCountry" maxlength="2" id="field-fiscal-counterpartyCountry"></trazo-form-field>
+              <trazo-form-field [label]="copy.invoiceNumber" controlId="field-fiscal-invoiceNumber"><input [(ngModel)]="form.invoiceNumber" name="invoiceNumber" id="field-fiscal-invoiceNumber"></trazo-form-field>
+              <trazo-form-field [label]="copy.notes" controlId="field-fiscal-notes"><input [(ngModel)]="form.notes" name="notes" maxlength="500" id="field-fiscal-notes"></trazo-form-field>
             </div>
-            <trazo-button variant="primary" type="button" (pressed)="saveEntry()">{{ form.id ? 'Save changes' : 'Add entry' }}</trazo-button>
-            @if (form.id) { <trazo-button variant="secondary" type="button" (pressed)="resetForm()">Cancel</trazo-button> }
-            <p class="muted">Tip: services billed by an EU company (hosting, Google Cloud…) carry no Spanish VAT — use "EU business (reverse charge)": TRAZO self-assesses the VAT and deducts it. Social-security fee and bank charges: "No VAT".</p>
+            <trazo-button variant="primary" type="button" (pressed)="saveEntry()">{{ form.id ? copy.saveChanges : copy.addEntry }}</trazo-button>
+            @if (form.id) { <trazo-button variant="secondary" type="button" (pressed)="resetForm()">{{ copy.cancel }}</trazo-button> }
+            <p class="muted">{{ copy.euServicesTip }}</p>
           </div>
         }
 
         <div class="box">
           @if (!m.closed) {
-            <trazo-button variant="primary" type="button" [disabled]="!m.canClose || busy()" (pressed)="close(m)">Close month and prepare the accountant's package</trazo-button>
-            @if (m.cannotCloseReason === 'month_not_finished') { <span class="muted"> A month can only be closed once it has finished.</span> }
-            @if (m.cannotCloseReason === 'profile_incomplete') { <span class="warn"> Complete the fiscal profile first.</span> }
+            <trazo-button variant="primary" type="button" [disabled]="!m.canClose || busy()" (pressed)="close(m)">{{ copy.closeMonth }}</trazo-button>
+            @if (m.cannotCloseReason === 'month_not_finished') { <span class="muted"> {{ copy.monthMustFinish }}</span> }
+            @if (m.cannotCloseReason === 'profile_incomplete') { <span class="warn"> {{ copy.completeProfile }}</span> }
           } @else {
-            <trazo-button variant="primary" type="button" (pressed)="downloadMonth(m.period)">Download the accountant's package (.zip)</trazo-button>
-            <trazo-button variant="danger" type="button" (pressed)="reopen(m.period)">Reopen…</trazo-button>
+            <trazo-button variant="primary" type="button" (pressed)="downloadMonth(m.period)">{{ copy.downloadAccountantPackage }}</trazo-button>
+            <trazo-button variant="danger" type="button" (pressed)="reopen(m.period)">{{ copy.reopen }}</trazo-button>
           }
         </div>
       }
 
       @if (audit().length) {
-        <h2>Closing history</h2>
+        <h2>{{ copy.closingHistory }}</h2>
         <trazo-table>
-          <thead><tr><th>When</th><th>Month</th><th>Action</th><th>By</th><th>Reason</th></tr></thead>
-          <tbody>@for (a of audit(); track a.id) { <tr><td>{{ a.at.slice(0, 16).replace('T', ' ') }}</td><td>{{ a.period }}</td><td>{{ a.action }}</td><td>{{ a.actor }}</td><td>{{ a.reason }}</td></tr> }</tbody>
+          <thead><tr><th>{{ copy.when }}</th><th>{{ copy.month }}</th><th>{{ copy.action }}</th><th>{{ copy.by }}</th><th>{{ copy.reason }}</th></tr></thead>
+          <tbody>@for (a of audit(); track a.id) { <tr><td>{{ date(a.at) }}</td><td>{{ a.period }}</td><td>{{ auditAction(a.action) }}</td><td>{{ a.actor }}</td><td>{{ a.reason }}</td></tr> }</tbody>
         </trazo-table>
       }
 
-      <p class="notice">Orientative figures to prepare the work of your accountant. They do not file anything and do not replace professional advice:
-        have your gestor review the VAT treatments, the 303/130/349 figures and the Google Play income before filing. Google Play income is booked against
-        Google Ireland Limited as a service to an EU business (no Spanish VAT, reverse charge, modelo 349).</p>
+      <p class="notice">{{ copy.guidance }}</p>
     </div>

@@ -8,6 +8,7 @@ import type {
 } from '../../core/admin.models';
 import { PlanningApi } from './planning.api';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const list = (value: string) => value.split(',').map(v => v.trim()).filter(Boolean);
@@ -30,7 +31,12 @@ function nextMonday(): string {
 export class PlanningPageComponent {
   private readonly api = inject(PlanningApi);
 
+  protected readonly copy = UI_COPY.planning;
   protected readonly days = DAYS;
+
+  protected dayLabel(day: string): string {
+    return this.copy.days[day as keyof typeof this.copy.days] ?? day;
+  }
   protected readonly goal = signal('Hypertrophy');
   protected readonly experience = signal('Intermediate');
   protected readonly split = signal('Automatic');
