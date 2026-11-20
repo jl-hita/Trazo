@@ -1,10 +1,12 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
+import { IntelligencePeriodToolbarComponent } from './intelligence-period-toolbar.component';
 import { IntelligenceApi } from './intelligence.api';
 import { IntelligenceSummary } from './intelligence.models';
 
 @Component({
   selector: 'trazo-intelligence-page',
   standalone: true,
+  imports: [IntelligencePeriodToolbarComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './intelligence.page.scss',
   templateUrl: './intelligence.page.html'
@@ -19,27 +21,28 @@ export class IntelligencePageComponent {
   protected readonly data = signal<IntelligenceSummary | null>(null);
   protected readonly loading = signal(false);
   protected readonly exporting = signal(false);
-  protected readonly error = signal('');
+  protected readonly loadError = signal('');
+  protected readonly exportError = signal('');
 
   protected usePreset(days: number): void {
-    this.preset.set(days); this.from.set(this.daysAgo(days - 1)); this.to.set(this.today()); void this.load();
+    this.preset.set(days); this.from.set(this.daysAgo(days - 1)); this.to.set(this.today()); this.loadError.set(''); this.exportError.set(''); void this.load();
   }
-  protected setFrom(value: string): void { this.from.set(value); this.preset.set(null); }
-  protected setTo(value: string): void { this.to.set(value); this.preset.set(null); }
+  protected setFrom(value: string): void { this.from.set(value); this.preset.set(null); this.loadError.set(''); this.exportError.set(''); }
+  protected setTo(value: string): void { this.to.set(value); this.preset.set(null); this.loadError.set(''); this.exportError.set(''); }
   protected async load(): Promise<void> {
-    if (!this.from() || !this.to() || this.from() > this.to()) { this.error.set('El periodo no es válido.'); return; }
+    if (!this.from() || !this.to() || this.from() > this.to()) { this.loadError.set('El periodo no es válido.'); return; }
     const requestVersion = ++this.loadVersion;
-    this.loading.set(true); this.error.set('');
+    this.loading.set(true); this.loadError.set('');
     try {
       const result = await this.api.summary(this.from(), this.to());
       if (requestVersion === this.loadVersion) this.data.set(result);
     }
-    catch (e) { if (requestVersion === this.loadVersion) this.error.set((e as {error?:{message?:string}})?.error?.message ?? 'No se han podido cargar los datos de Intelligence.'); }
+    catch (e) { if (requestVersion === this.loadVersion) this.loadError.set((e as {error?:{message?:string}})?.error?.message ?? 'No se han podido cargar los datos de Intelligence.'); }
     finally { if (requestVersion === this.loadVersion) this.loading.set(false); }
   }
   protected async export(): Promise<void> {
-    if (!this.from() || !this.to() || this.from() > this.to()) { this.error.set('El periodo no es válido.'); return; }
-    this.exporting.set(true); this.error.set('');
+    if (!this.from() || !this.to() || this.from() > this.to()) { this.exportError.set('El periodo no es válido.'); return; }
+    this.exporting.set(true); this.exportError.set('');
     try {
       const blob = await this.api.export(this.from(), this.to());
       const signature = new Uint8Array(await blob.slice(0, 4).arrayBuffer());
@@ -57,7 +60,7 @@ export class IntelligencePageComponent {
       // Revoke after the browser has had time to start consuming the download.
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (e) {
-      this.error.set(e instanceof Error ? e.message : 'No se ha podido generar la exportación.');
+      this.exportError.set(e instanceof Error ? e.message : 'No se ha podido generar la exportación.');
     }
     finally { this.exporting.set(false); }
   }

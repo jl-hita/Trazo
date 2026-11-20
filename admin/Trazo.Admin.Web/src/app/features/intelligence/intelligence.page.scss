@@ -8,6 +8,7 @@
     .ti-btn:disabled { opacity:.5; cursor:progress; }
     .ti-presets { display:flex; gap:5px; }
     .ti-presets button.active { border-color:#79a9dc; background:#315f91; color:white; }
+    .ti-loading { padding:10px 12px; border:1px solid #3a506a; border-radius:7px; background:#152131; color:#b9cde4; font-size:12px; margin:12px 0; }
     .ti-error,.ti-note { padding:12px 14px; border:1px solid #654044; border-radius:7px; background:#241719; color:#f0b2b2; font-size:12px; margin:12px 0; }
     .ti-note { border-color:#3a506a; background:#152131; color:#b9cde4; line-height:1.55; }
     .ti-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:18px 0; }
