@@ -89,7 +89,7 @@
           }
 
           <section class="pl-card" [attr.aria-label]="copy.program">
-            <h2>{{ copy.program }} · {{ res.program.sessions.length }} {{ copy.sessions }} {{ copy.over }} {{ res.program.durationWeeks }} {{ copy.weeksToGenerate.toLowerCase() }}</h2>
+            <h2>{{ copy.program }} · {{ res.program.sessions.length }} {{ copy.sessions }} {{ copy.over }} {{ res.program.durationWeeks }} {{ copy.weeks }}</h2>
             <div class="pl-weeks">
               @for (w of weekNumbers(); track w) { <trazo-button [variant]="week() === w ? 'primary' : 'secondary'" type="button" (pressed)="week.set(w)">{{ copy.week }} {{ w }}</trazo-button> }
             </div>
