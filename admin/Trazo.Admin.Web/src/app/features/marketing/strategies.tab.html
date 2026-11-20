@@ -9,10 +9,9 @@
 
       <h2>Ranking</h2>
       <div class="mk-toolbar">
-        <label>Rank strategies by
-          <select [ngModel]="metric()" (ngModelChange)="metric.set($event)" name="metric">
+        <trazo-form-field label="Rank strategies by" controlId="field-strategies-metric"><select [ngModel]="metric()" (ngModelChange)="metric.set($event)" name="metric" id="field-strategies-metric">
             @for (m of metrics; track m.key) { <option [value]="m.key">{{ m.label }}</option> }
-          </select></label>
+          </select></trazo-form-field>
         <label><span><input type="checkbox" [ngModel]="onlyReliable()" (ngModelChange)="onlyReliable.set($event)" name="reliable"> Only strategies with {{ d.minReliable }}+ signups</span></label>
         <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="download()">Download CSV</trazo-button>
       </div>

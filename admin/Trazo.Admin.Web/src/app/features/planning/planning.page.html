@@ -10,16 +10,14 @@
       <form class="pl-card" (ngSubmit)="generate()" aria-label="Profile">
         <h2>Profile</h2>
         <div class="pl-row">
-          <label>Goal
-            <select name="goal" [ngModel]="goal()" (ngModelChange)="goal.set($event)">
+          <trazo-form-field label="Goal" controlId="field-planning-goal"><select name="goal" [ngModel]="goal()" (ngModelChange)="goal.set($event)" id="field-planning-goal">
               <option value="GeneralFitness">General fitness</option><option value="Hypertrophy">Hypertrophy</option><option value="Strength">Strength</option>
             </select>
-          </label>
-          <label>Experience
-            <select name="experience" [ngModel]="experience()" (ngModelChange)="experience.set($event)">
+          </trazo-form-field>
+          <trazo-form-field label="Experience" controlId="field-planning-experience"><select name="experience" [ngModel]="experience()" (ngModelChange)="experience.set($event)" id="field-planning-experience">
               <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
             </select>
-          </label>
+          </trazo-form-field>
         </div>
         <div>
           <p class="hint" style="margin-bottom:6px">Training days</p>
@@ -32,38 +30,30 @@
           </div>
         </div>
         <div class="pl-row">
-          <label>Split
-            <select name="split" [ngModel]="split()" (ngModelChange)="split.set($event)">
+          <trazo-form-field label="Split" controlId="field-planning-split"><select name="split" [ngModel]="split()" (ngModelChange)="split.set($event)" id="field-planning-split">
               <option value="Automatic">Automatic</option><option value="FullBody">Full body</option>
               <option value="UpperLower">Upper / lower</option><option value="PushPullLegs">Push / pull / legs</option>
             </select>
-          </label>
-          <label>Session minutes
-            <input type="number" name="minutes" min="35" max="180" [ngModel]="minutes()" (ngModelChange)="minutes.set($event)">
-          </label>
+          </trazo-form-field>
+          <trazo-form-field label="Session minutes" controlId="field-planning-minutes"><input type="number" name="minutes" min="35" max="180" [ngModel]="minutes()" (ngModelChange)="minutes.set($event)" id="field-planning-minutes">
+          </trazo-form-field>
         </div>
         <div class="pl-row">
-          <label>Weeks to generate
-            <input type="number" name="weeks" min="1" max="52" [ngModel]="weeks()" (ngModelChange)="weeks.set($event)">
-          </label>
-          <label>Start date
-            <input type="date" name="start" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)">
-          </label>
+          <trazo-form-field label="Weeks to generate" controlId="field-planning-weeks"><input type="number" name="weeks" min="1" max="52" [ngModel]="weeks()" (ngModelChange)="weeks.set($event)" id="field-planning-weeks">
+          </trazo-form-field>
+          <trazo-form-field label="Start date" controlId="field-planning-start"><input type="date" name="start" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)" id="field-planning-start">
+          </trazo-form-field>
         </div>
-        <label>Available equipment
-          <input type="text" name="equipment" placeholder="empty = everything" [ngModel]="equipment()" (ngModelChange)="equipment.set($event)">
+        <trazo-form-field label="Available equipment" controlId="field-planning-equipment"><input type="text" name="equipment" placeholder="empty = everything" [ngModel]="equipment()" (ngModelChange)="equipment.set($event)" id="field-planning-equipment">
           <span class="hint">Comma separated, e.g. barbell, dumbbell, bench, leg-press-machine, smith-machine, cable, pull-up-bar.</span>
-        </label>
-        <label>Excluded exercise ids
-          <input type="text" name="excluded" [ngModel]="excluded()" (ngModelChange)="excluded.set($event)">
-        </label>
+        </trazo-form-field>
+        <trazo-form-field label="Excluded exercise ids" controlId="field-planning-excluded"><input type="text" name="excluded" [ngModel]="excluded()" (ngModelChange)="excluded.set($event)" id="field-planning-excluded">
+        </trazo-form-field>
         <div class="pl-row">
-          <label>Macrocycle weeks
-            <input type="number" name="macro" min="2" max="52" placeholder="optional" [ngModel]="macroWeeks()" (ngModelChange)="macroWeeks.set($event)">
-          </label>
-          <label>Deload every (weeks)
-            <input type="number" name="deload" min="4" max="8" placeholder="none" [ngModel]="deloadEvery()" (ngModelChange)="deloadEvery.set($event)">
-          </label>
+          <trazo-form-field label="Macrocycle weeks" controlId="field-planning-macro"><input type="number" name="macro" min="2" max="52" placeholder="optional" [ngModel]="macroWeeks()" (ngModelChange)="macroWeeks.set($event)" id="field-planning-macro">
+          </trazo-form-field>
+          <trazo-form-field label="Deload every (weeks)" controlId="field-planning-deload"><input type="number" name="deload" min="4" max="8" placeholder="none" [ngModel]="deloadEvery()" (ngModelChange)="deloadEvery.set($event)" id="field-planning-deload">
+          </trazo-form-field>
         </div>
         <trazo-button variant="primary" type="submit" [disabled]="busy()">{{ busy() ? 'Generating…' : 'Generate preview' }}</trazo-button>
         @if (error()) { <p class="err" role="alert">{{ error() }}</p> }

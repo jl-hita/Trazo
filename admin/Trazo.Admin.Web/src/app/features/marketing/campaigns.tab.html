@@ -4,17 +4,14 @@
     <div class="mk-panel">
       <h2>{{ editing() ? 'Edit campaign' : 'New campaign' }}</h2>
       <form class="mk-form" (ngSubmit)="save()" #f="ngForm">
-        <label class="mk-field">Name <input name="name" [(ngModel)]="draft.name" required maxlength="80" placeholder="Spring Instagram ads"></label>
-        <label class="mk-field">Link name <input name="slug" [(ngModel)]="draft.slug" required [disabled]="!!editing()" maxlength="32" placeholder="spring-ads"
-          pattern="[a-zA-Z0-9][a-zA-Z0-9-]{1,30}[a-zA-Z0-9]"></label>
-        <label class="mk-field">Channel
-          <select name="channel" [(ngModel)]="draft.channel">@for (c of channels(); track c) { <option [value]="c">{{ help(c) }}</option> }</select></label>
-        <label class="mk-field">Status
-          <select name="status" [(ngModel)]="draft.status"><option value="active">Active</option><option value="paused">Paused</option><option value="archived">Archived</option></select></label>
-        <label class="mk-field">Starts <input type="date" name="startsOn" [(ngModel)]="draft.startsOn"></label>
-        <label class="mk-field">Ends <input type="date" name="endsOn" [(ngModel)]="draft.endsOn"></label>
-        <label class="mk-field wide">Notes (what you did and why: creative, audience, offer…)
-          <textarea name="notes" [(ngModel)]="draft.notes" maxlength="500"></textarea></label>
+        <trazo-form-field label="Name" controlId="field-campaigns-name" fieldClass="mk-field"><input name="name" [(ngModel)]="draft.name" required maxlength="80" placeholder="Spring Instagram ads" id="field-campaigns-name"></trazo-form-field>
+        <trazo-form-field label="Link name" controlId="field-campaigns-slug" fieldClass="mk-field"><input name="slug" [(ngModel)]="draft.slug" required [disabled]="!!editing()" maxlength="32" placeholder="spring-ads"
+          pattern="[a-zA-Z0-9][a-zA-Z0-9-]{1,30}[a-zA-Z0-9]" id="field-campaigns-slug"></trazo-form-field>
+        <trazo-form-field label="Channel" controlId="field-campaigns-channel" fieldClass="mk-field"><select name="channel" [(ngModel)]="draft.channel" id="field-campaigns-channel">@for (c of channels(); track c) { <option [value]="c">{{ help(c) }}</option> }</select></trazo-form-field>
+        <trazo-form-field label="Status" controlId="field-campaigns-status" fieldClass="mk-field"><select name="status" [(ngModel)]="draft.status" id="field-campaigns-status"><option value="active">Active</option><option value="paused">Paused</option><option value="archived">Archived</option></select></trazo-form-field>
+        <trazo-form-field label="Starts" controlId="field-campaigns-startsOn" fieldClass="mk-field"><input type="date" name="startsOn" [(ngModel)]="draft.startsOn" id="field-campaigns-startsOn"></trazo-form-field>
+        <trazo-form-field label="Ends" controlId="field-campaigns-endsOn" fieldClass="mk-field"><input type="date" name="endsOn" [(ngModel)]="draft.endsOn" id="field-campaigns-endsOn"></trazo-form-field>
+        <trazo-form-field label="Notes (what you did and why: creative, audience, offer…)" controlId="field-campaigns-notes" fieldClass="mk-field wide"><textarea name="notes" [(ngModel)]="draft.notes" maxlength="500" id="field-campaigns-notes"></textarea></trazo-form-field>
         <div class="wide">
           <trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="busy() || !!f.invalid">{{ editing() ? 'Save changes' : 'Create campaign' }}</trazo-button>
           @if (editing()) { <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="cancel()">Cancel</trazo-button> }
@@ -68,9 +65,9 @@
 
       <h2>Spend</h2>
       <form class="mk-form" (ngSubmit)="addSpend()" #sf="ngForm">
-        <label class="mk-field">Day <input type="date" name="day" [(ngModel)]="spend.day" required></label>
-        <label class="mk-field">Amount (€) <input type="number" name="amount" [(ngModel)]="spend.amount" required min="0.01" step="0.01"></label>
-        <label class="mk-field">Note <input name="note" [(ngModel)]="spend.note" maxlength="200" placeholder="Week 3 of the ad set"></label>
+        <trazo-form-field label="Day" controlId="field-campaigns-day" fieldClass="mk-field"><input type="date" name="day" [(ngModel)]="spend.day" required id="field-campaigns-day"></trazo-form-field>
+        <trazo-form-field label="Amount (€)" controlId="field-campaigns-amount" fieldClass="mk-field"><input type="number" name="amount" [(ngModel)]="spend.amount" required min="0.01" step="0.01" id="field-campaigns-amount"></trazo-form-field>
+        <trazo-form-field label="Note" controlId="field-campaigns-note" fieldClass="mk-field"><input name="note" [(ngModel)]="spend.note" maxlength="200" placeholder="Week 3 of the ad set" id="field-campaigns-note"></trazo-form-field>
         <div><trazo-button variant="primary" buttonClass="mk-btn" type="submit" [disabled]="busy() || !!sf.invalid">Add spend</trazo-button></div>
       </form>
       @if (d.spend.length) {
