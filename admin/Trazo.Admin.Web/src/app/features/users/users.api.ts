@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import type {
   AdminPremiumGrant, AdminUserDetail, AdminUserSummary, Page, UserAction, UserFilters
-} from '../../core/admin.api';
+} from '../../core/admin.models';
 
 const API = '/api/v1/admin';
 

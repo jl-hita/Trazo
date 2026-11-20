@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, OperationsView } from '../../core/admin.api';
+import type { OperationsView } from '../../core/admin.models';
+import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
 
 const LOG_LEVELS = ['Debug', 'Information', 'Warning', 'Error', 'Critical'];
@@ -18,7 +19,7 @@ const LOG_LEVELS = ['Debug', 'Information', 'Warning', 'Error', 'Critical'];
   templateUrl: './operations-form.component.html'
 })
 export class OperationsFormComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(SettingsApi);
 
   protected readonly levels = LOG_LEVELS;
   protected readonly view = signal<OperationsView | null>(null);

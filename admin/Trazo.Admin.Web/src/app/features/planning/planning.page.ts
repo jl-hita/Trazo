@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, computed, inject, signal } from '@angular
 import { FormsModule } from '@angular/forms';
 import type {
   CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse, PlanSession
-} from '../../core/admin.api';
+} from '../../core/admin.models';
 import { PlanningApi } from './planning.api';
 import { errorMessage } from '../../core/setup.api';
 

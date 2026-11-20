@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, PlayBillingView } from '../../core/admin.api';
+import type { PlayBillingView } from '../../core/admin.models';
+import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
 
 /** Google Play Billing configuration: package name, service-account key and notification (RTDN) authentication. */
@@ -13,7 +14,7 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './play-billing-form.component.html'
 })
 export class PlayBillingFormComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(SettingsApi);
 
   protected readonly view = signal<PlayBillingView | null>(null);
   protected readonly packageName = signal('');

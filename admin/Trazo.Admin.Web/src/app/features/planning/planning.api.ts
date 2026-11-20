@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import type { CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse } from '../../core/admin.api';
+import type { CatalogReadiness, PlanPreviewRequest, PlanPreviewResponse } from '../../core/admin.models';
 
 const API = '/api/v1/admin/planning';
 

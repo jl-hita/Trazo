@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import type { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus } from '../../core/admin.api';
+import type { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus } from '../../core/admin.models';
 
 const API = '/api/v1/admin/error-tickets';
 

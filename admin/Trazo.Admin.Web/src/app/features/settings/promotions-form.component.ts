@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi } from '../../core/admin.api';
+import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
 
 /** Promotional Premium time: the welcome period of new accounts and the reward of the referral programme. */
@@ -13,7 +13,7 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './promotions-form.component.html'
 })
 export class PromotionsFormComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(SettingsApi);
   protected readonly trialEnabled = signal(true);
   protected readonly trialDays = signal(30);
   protected readonly referralsEnabled = signal(true);

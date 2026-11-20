@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, WaitlistEntry, WaitlistPage, WaitlistStatus } from '../../core/admin.api';
+import type { WaitlistEntry, WaitlistPage, WaitlistStatus } from '../../core/admin.models';
+import { WaitlistApi } from './waitlist.api';
 import { errorMessage } from '../../core/setup.api';
 
 /**
@@ -19,7 +20,7 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './waitlist.page.html'
 })
 export class WaitlistPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(WaitlistApi);
   private searchTimer?: ReturnType<typeof setTimeout>;
   private static readonly PageSize = 50;
   private static readonly CopyPageSize = 200;
@@ -47,7 +48,7 @@ export class WaitlistPageComponent {
   protected async load(): Promise<void> {
     this.loading.set(true);
     try {
-      this.data.set(await this.api.listWaitlist(this.q(), this.page(), WaitlistPageComponent.PageSize, this.status()));
+      this.data.set(await this.api.list(this.q(), this.page(), WaitlistPageComponent.PageSize, this.status()));
       this.error.set('');
     } catch (e) { this.error.set(errorMessage(e)); }
     finally { this.loading.set(false); }
@@ -73,7 +74,7 @@ export class WaitlistPageComponent {
 
   protected async remove(entry: WaitlistEntry): Promise<void> {
     try {
-      await this.api.deleteWaitlistEntry(entry.id);
+      await this.api.delete(entry.id);
       this.confirmId.set(null);
       this.copied.update(list => list.filter(x => x.id !== entry.id));
       if (this.entries().length === 1 && this.page() > 1) this.page.update(p => p - 1);
@@ -88,7 +89,7 @@ export class WaitlistPageComponent {
     try {
       const all: WaitlistEntry[] = [];
       for (let page = 1; ; page++) {
-        const result = await this.api.listWaitlist('', page, WaitlistPageComponent.CopyPageSize, 'confirmed');
+        const result = await this.api.list('', page, WaitlistPageComponent.CopyPageSize, 'confirmed');
         all.push(...result.items);
         if (page >= result.totalPages) break;
       }
@@ -110,7 +111,7 @@ export class WaitlistPageComponent {
       const ids = this.copied().map(x => x.id);
       let invited = 0, failed = 0;
       for (let i = 0; i < ids.length; i += WaitlistPageComponent.InviteChunk) {
-        const result = await this.api.inviteWaitlist(ids.slice(i, i + WaitlistPageComponent.InviteChunk));
+        const result = await this.api.invite(ids.slice(i, i + WaitlistPageComponent.InviteChunk));
         invited += result.invited;
         failed += result.failed;
       }
@@ -125,7 +126,7 @@ export class WaitlistPageComponent {
   protected async exportCsv(): Promise<void> {
     this.exporting.set(true);
     try {
-      const blob = await this.api.exportWaitlist();
+      const blob = await this.api.export();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;

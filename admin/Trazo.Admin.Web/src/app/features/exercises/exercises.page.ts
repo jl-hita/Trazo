@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import type {
   AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
-} from '../../core/admin.api';
+} from '../../core/admin.models';
 import { ExercisesApi } from './exercises.api';
 import { errorMessage } from '../../core/setup.api';
 

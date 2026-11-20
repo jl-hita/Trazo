@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import type {
   AdminExerciseDetail, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary,
   ExerciseAction, ExerciseFilters, Page, TransferResult
-} from '../../core/admin.api';
+} from '../../core/admin.models';
 
 const API = '/api/v1/admin';
 
