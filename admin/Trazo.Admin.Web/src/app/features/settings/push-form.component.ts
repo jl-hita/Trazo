@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi, PushView } from '../../core/admin.api';
+import type { PushView } from '../../core/admin.models';
+import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
 
 /** Push notifications (Firebase Cloud Messaging): client options for the app, the server key, a test and announcements. */
@@ -13,7 +14,7 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './push-form.component.html'
 })
 export class PushFormComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(SettingsApi);
 
   protected readonly view = signal<PushView | null>(null);
   protected readonly projectId = signal('');
