@@ -6,19 +6,18 @@
         </div>
         <fieldset>
           <legend>Superadmin account</legend>
-          <label>Email <input type="email" name="adminEmail" required autocomplete="username" [ngModel]="adminEmail()" (ngModelChange)="adminEmail.set($event)"></label>
-          <label>Display name <input type="text" name="adminName" required minlength="2" maxlength="100" [ngModel]="adminName()" (ngModelChange)="adminName.set($event)"></label>
-          <label>Password <input type="password" name="adminPassword" required minlength="12" autocomplete="new-password" [ngModel]="adminPassword()" (ngModelChange)="adminPassword.set($event)"></label>
-          <label>Repeat password <input type="password" name="adminPassword2" required autocomplete="new-password" [ngModel]="adminPassword2()" (ngModelChange)="adminPassword2.set($event)"></label>
+          <trazo-form-field label="Email" controlId="adminEmail"><input type="email" name="adminEmail" required autocomplete="username" [ngModel]="adminEmail()" (ngModelChange)="adminEmail.set($event)" id="adminEmail"></trazo-form-field>
+          <trazo-form-field label="Display name" controlId="adminName"><input type="text" name="adminName" required minlength="2" maxlength="100" [ngModel]="adminName()" (ngModelChange)="adminName.set($event)" id="adminName"></trazo-form-field>
+          <trazo-form-field label="Password" controlId="adminPassword"><input type="password" name="adminPassword" required minlength="12" autocomplete="new-password" [ngModel]="adminPassword()" (ngModelChange)="adminPassword.set($event)" id="adminPassword"></trazo-form-field>
+          <trazo-form-field label="Repeat password" controlId="adminPassword2"><input type="password" name="adminPassword2" required autocomplete="new-password" [ngModel]="adminPassword2()" (ngModelChange)="adminPassword2.set($event)" id="adminPassword2"></trazo-form-field>
           <p class="hint">At least 12 characters with uppercase, lowercase and a number.</p>
         </fieldset>
       }
 
       <fieldset>
         <legend>Google sign-in</legend>
-        <label>Web client ID
-          <input type="text" name="clientId" required placeholder="1234567890-abc.apps.googleusercontent.com" [ngModel]="clientId()" (ngModelChange)="clientId.set($event)">
-        </label>
+        <trazo-form-field label="Web client ID" controlId="clientId"><input type="text" name="clientId" required placeholder="1234567890-abc.apps.googleusercontent.com" [ngModel]="clientId()" (ngModelChange)="clientId.set($event)" id="clientId">
+        </trazo-form-field>
         <div class="actions">
           <button type="button" (click)="testGoogle()" [disabled]="busy() || !clientId().trim()">Test</button>
           @if (googleResult(); as r) { <span [class]="r.ok ? 'ok' : 'err'" role="status">{{ r.message }}</span> }
@@ -32,19 +31,18 @@
           <p class="hint">Email is off: verification, password-reset and notification messages are silently dropped. Use only on test installations.</p>
         }
         <div class="row">
-          <label>Host <input type="text" name="host" required [ngModel]="host()" (ngModelChange)="host.set($event)"></label>
-          <label>Port <input type="number" name="port" required min="1" max="65535" [ngModel]="port()" (ngModelChange)="port.set($event)"></label>
+          <trazo-form-field label="Host" controlId="host"><input type="text" name="host" required [ngModel]="host()" (ngModelChange)="host.set($event)" id="host"></trazo-form-field>
+          <trazo-form-field label="Port" controlId="port"><input type="number" name="port" required min="1" max="65535" [ngModel]="port()" (ngModelChange)="port.set($event)" id="port"></trazo-form-field>
         </div>
         <label class="check"><input type="checkbox" name="ssl" [ngModel]="ssl()" (ngModelChange)="ssl.set($event)"> Use SSL/TLS</label>
-        <label>Username (optional) <input type="text" name="smtpUser" autocomplete="off" [ngModel]="username()" (ngModelChange)="username.set($event)"></label>
-        <label>Password (optional)
-          <input type="password" name="smtpPass" autocomplete="new-password" [placeholder]="passwordSet() && password() === null ? 'Stored (leave blank to keep)' : ''"
-                 [ngModel]="password() ?? ''" (ngModelChange)="password.set($event === '' && passwordSet() ? null : $event)">
-        </label>
-        <label>Sender (From) <input type="text" name="from" required placeholder="TRAZO &lt;no-reply@example.com&gt;" [ngModel]="from()" (ngModelChange)="from.set($event)"></label>
-        <label>Action base URL <input type="text" name="actionBaseUrl" required placeholder="https://your-domain.example" [ngModel]="actionBaseUrl()" (ngModelChange)="actionBaseUrl.set($event)"></label>
+        <trazo-form-field label="Username (optional)" controlId="smtpUser"><input type="text" name="smtpUser" autocomplete="off" [ngModel]="username()" (ngModelChange)="username.set($event)" id="smtpUser"></trazo-form-field>
+        <trazo-form-field label="Password (optional)" controlId="smtpPass"><input type="password" name="smtpPass" autocomplete="new-password" [placeholder]="passwordSet() && password() === null ? 'Stored (leave blank to keep)' : ''"
+                 [ngModel]="password() ?? ''" (ngModelChange)="password.set($event === '' && passwordSet() ? null : $event)" id="smtpPass">
+        </trazo-form-field>
+        <trazo-form-field label="Sender (From)" controlId="from"><input type="text" name="from" required placeholder="TRAZO &lt;no-reply@example.com&gt;" [ngModel]="from()" (ngModelChange)="from.set($event)" id="from"></trazo-form-field>
+        <trazo-form-field label="Action base URL" controlId="actionBaseUrl"><input type="text" name="actionBaseUrl" required placeholder="https://your-domain.example" [ngModel]="actionBaseUrl()" (ngModelChange)="actionBaseUrl.set($event)" id="actionBaseUrl"></trazo-form-field>
         <p class="hint">Links in verification and password-reset emails are built from this URL (the public https address of this site; app schemes such as trazo:// are not accepted).</p>
-        <label>Send test email to <input type="email" name="recipient" [ngModel]="recipient()" (ngModelChange)="recipient.set($event)"></label>
+        <trazo-form-field label="Send test email to" controlId="recipient"><input type="email" name="recipient" [ngModel]="recipient()" (ngModelChange)="recipient.set($event)" id="recipient"></trazo-form-field>
         <div class="actions">
           <button type="button" (click)="testSmtp()" [disabled]="busy() || !recipient().trim()">Send test email</button>
           @if (smtpResult(); as r) { <span [class]="r.ok ? 'ok' : 'err'" role="status">{{ r.message }}</span> }
