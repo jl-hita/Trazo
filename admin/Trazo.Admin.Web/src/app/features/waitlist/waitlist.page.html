@@ -1,37 +1,34 @@
     <div class="page-heading">
       <div>
-        <p class="eyebrow">ADMINISTRATION</p>
-        <h1>Waitlist</h1>
-        <p class="subtitle">Addresses collected by the landing page, with the date of their consent and confirmation. Personal data: superadmin only.</p>
+        <p class="eyebrow">{{ copy.eyebrow }}</p>
+        <h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p>
       </div>
     </div>
 
     <div class="wl-stats">
-      <div class="wl-stat"><b>{{ data()?.overall?.total ?? '—' }}</b><span>Total</span></div>
-      <div class="wl-stat"><b>{{ data()?.overall?.pending ?? '—' }}</b><span>Not confirmed</span></div>
-      <div class="wl-stat"><b>{{ data()?.overall?.confirmed ?? '—' }}</b><span>Confirmed</span></div>
-      <div class="wl-stat"><b>{{ data()?.overall?.invited ?? '—' }}</b><span>Invited</span></div>
-      <div class="wl-stat"><b>{{ data()?.overall?.es ?? '—' }}</b><span>Spanish</span></div>
-      <div class="wl-stat"><b>{{ data()?.overall?.en ?? '—' }}</b><span>English</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.total ?? '—' }}</b><span>{{ copy.total }}</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.pending ?? '—' }}</b><span>{{ copy.notConfirmed }}</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.confirmed ?? '—' }}</b><span>{{ copy.confirmed }}</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.invited ?? '—' }}</b><span>{{ copy.invited }}</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.es ?? '—' }}</b><span>{{ copy.spanish }}</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.en ?? '—' }}</b><span>{{ copy.english }}</span></div>
     </div>
 
-    <section class="wl-flow" aria-label="Closed test invitations">
-      <h2>Closed test invitations</h2>
-      <p>
-        1. Copy the confirmed addresses that have not been invited yet and paste them in Play Console, in the closed test tester list.
-        2. Once they are saved there, send the invitations: the link in the email only works for addresses already in that list.
-      </p>
+    <section class="wl-flow" [attr.aria-label]="copy.closedTest">
+      <h2>{{ copy.closedTest }}</h2>
+      <p>{{ copy.closedTestInstructions }}</p>
       <div class="row">
         <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="copyConfirmed()" [disabled]="busy() || !data()?.overall?.confirmed">
-          1. Copy confirmed addresses ({{ data()?.overall?.confirmed ?? 0 }})
+          {{ copy.copyConfirmed }} ({{ data()?.overall?.confirmed ?? 0 }})
         </trazo-button>
         @if (confirmSend()) {
-          <span class="wl-confirm">Are they saved in Play Console? The email is sent to {{ copied().length }} address(es).</span>
-          <trazo-button variant="primary" buttonClass="wl-btn" type="button" (pressed)="sendInvitations()" [disabled]="busy()">Send now</trazo-button>
-          <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="confirmSend.set(false)">Cancel</trazo-button>
+          <span class="wl-confirm">{{ copy.confirmSaved }} {{ copied().length }} {{ copy.addresses }}.</span>
+          <trazo-button variant="primary" buttonClass="wl-btn" type="button" (pressed)="sendInvitations()" [disabled]="busy()">{{ copy.sendNow }}</trazo-button>
+          <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="confirmSend.set(false)">{{ copy.cancel }}</trazo-button>
         } @else {
           <trazo-button variant="primary" buttonClass="wl-btn" type="button" (pressed)="confirmSend.set(true)" [disabled]="busy() || !copied().length">
-            2. Send invitations ({{ copied().length }})
+            {{ copy.sendInvitations }} ({{ copied().length }})
           </trazo-button>
         }
       </div>
@@ -39,54 +36,54 @@
     </section>
 
     <div class="wl-toolbar">
-      <input type="search" placeholder="Search by email" aria-label="Search the waitlist" [ngModel]="q()" (ngModelChange)="onSearch($event)">
-      <select aria-label="Filter by status" [ngModel]="status()" (ngModelChange)="onStatus($event)">
-        <option value="">All</option>
-        <option value="pending">Not confirmed</option>
-        <option value="confirmed">Confirmed</option>
-        <option value="invited">Invited</option>
+      <input type="search" [placeholder]="copy.searchPlaceholder" [attr.aria-label]="copy.searchAria" [ngModel]="q()" (ngModelChange)="onSearch($event)">
+      <select [attr.aria-label]="copy.statusFilter" [ngModel]="status()" (ngModelChange)="onStatus($event)">
+        <option value="">{{ copy.all }}</option>
+        <option value="pending">{{ copy.notConfirmed }}</option>
+        <option value="confirmed">{{ copy.confirmed }}</option>
+        <option value="invited">{{ copy.invited }}</option>
       </select>
-      <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="exportCsv()" [disabled]="exporting() || !data()?.overall?.total">Export CSV</trazo-button>
-      <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="load()" [disabled]="loading()">Refresh</trazo-button>
+      <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="exportCsv()" [disabled]="exporting() || !data()?.overall?.total">{{ copy.exportCsv }}</trazo-button>
+      <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="load()" [disabled]="loading()">{{ copy.refresh }}</trazo-button>
     </div>
 
     @if (error()) { <p class="wl-error" role="alert">{{ error() }}</p> }
 
     <trazo-table tableClass="wl-table">
-      <thead><tr><th>Email</th><th>Language</th><th>Status</th><th>Consent</th><th>Joined</th><th></th></tr></thead>
+      <thead><tr><th>{{ copy.email }}</th><th>{{ copy.language }}</th><th>{{ copy.status }}</th><th>{{ copy.consent }}</th><th>{{ copy.joined }}</th><th></th></tr></thead>
       <tbody>
         @for (e of entries(); track e.id) {
           <tr>
             <td>{{ e.email }}</td>
-            <td>{{ e.language }}</td>
+            <td>{{ e.language === 'es' ? copy.spanish : copy.english }}</td>
             <td>
-              @if (e.invitedAt) { <span class="wl-badge invited">Invited {{ e.invitedAt | date: 'yyyy-MM-dd' }}</span> }
-              @else if (e.confirmedAt) { <span class="wl-badge confirmed">Confirmed {{ e.confirmedAt | date: 'yyyy-MM-dd' }}</span> }
-              @else { <span class="wl-badge">Not confirmed</span> }
+              @if (e.invitedAt) { <span class="wl-badge invited">{{ copy.invitedOn }} {{ e.invitedAt | date: 'dd/MM/yyyy' }}</span> }
+              @else if (e.confirmedAt) { <span class="wl-badge confirmed">{{ copy.confirmedOn }} {{ e.confirmedAt | date: 'dd/MM/yyyy' }}</span> }
+              @else { <span class="wl-badge">{{ copy.notConfirmed }}</span> }
             </td>
-            <td>{{ e.consentAt | date: 'yyyy-MM-dd HH:mm' }}</td>
-            <td>{{ e.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ e.consentAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ e.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
             <td class="actions">
               @if (confirmId() === e.id) {
-                <span class="wl-confirm">Delete permanently?</span>
-                <trazo-button variant="danger" buttonClass="wl-btn" type="button" (pressed)="remove(e)">Delete</trazo-button>
-                <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="confirmId.set(null)">Cancel</trazo-button>
+                <span class="wl-confirm">{{ copy.deletePermanently }}</span>
+                <trazo-button variant="danger" buttonClass="wl-btn" type="button" (pressed)="remove(e)">{{ copy.delete }}</trazo-button>
+                <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="confirmId.set(null)">{{ copy.cancel }}</trazo-button>
               } @else {
-                <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="confirmId.set(e.id)" [attr.aria-label]="'Delete ' + e.email">Delete</trazo-button>
+                <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="confirmId.set(e.id)" [attr.aria-label]="copy.deleteEntry + ' ' + e.email">{{ copy.delete }}</trazo-button>
               }
             </td>
           </tr>
         } @empty {
-          <tr><td colspan="6" class="wl-empty">{{ loading() ? 'Loading…' : (q() || status() ? 'No address matches the search.' : 'Nobody has joined yet.') }}</td></tr>
+          <tr><td colspan="6" class="wl-empty">{{ loading() ? copy.loading : (q() || status() ? copy.noSearchMatches : copy.nobodyJoined) }}</td></tr>
         }
       </tbody>
     </trazo-table>
 
     <div class="wl-pager">
-      <span>{{ data()?.totalCount ?? 0 }} {{ q() || status() ? 'matching ' : '' }}addresses</span>
+      <span>{{ data()?.totalCount ?? 0 }} {{ q() || status() ? copy.matching + ' ' : '' }}{{ data()?.totalCount === 1 ? copy.addressSingular : copy.addressPlural }}</span>
       <span>
-        <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="go(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
-        Page {{ page() }} of {{ totalPages() }}
-        <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
+        <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="go(page() - 1)" [disabled]="page() <= 1 || loading()">{{ copy.previous }}</trazo-button>
+        {{ copy.page }} {{ page() }} {{ copy.of }} {{ totalPages() }}
+        <trazo-button variant="secondary" buttonClass="wl-btn" type="button" (pressed)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">{{ copy.next }}</trazo-button>
       </span>
     </div>
