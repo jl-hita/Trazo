@@ -110,9 +110,9 @@ public static class AdminIntelligenceEndpoints
         var plans = await db.TrainingPlans.AsNoTracking().Where(x => planIds.Contains(x.Id))
             .Select(x => new { x.Id, x.UserId, x.Status, x.Origin, x.Goal, x.Experience, x.Split, x.StartDate,
                 x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
-                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.MacrocycleName, x.CreatedAt, x.UpdatedAt }).ToListAsync(ct);
+                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.CreatedAt, x.UpdatedAt }).ToListAsync(ct);
         var phases = await db.TrainingPlanPhases.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
-            .Select(x => new { x.Id, x.PlanId, x.SequenceNumber, x.Name, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate, x.Objective }).ToListAsync(ct);
+            .Select(x => new { x.Id, x.PlanId, x.SequenceNumber, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate }).ToListAsync(ct);
         var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.Sequence, x.PhaseSequenceNumber, x.PhaseType, x.IsDeload,
                 x.StartWeek, x.Weeks, generationSnapshot = SafeJson(x.GenerationSnapshotJson), x.SnapshotSchemaVersion, x.EngineVersion,
@@ -144,11 +144,41 @@ public static class AdminIntelligenceEndpoints
                 return null;
             }
         }
+
+        // JSON sanitization is deliberately performed after materialization; SafeJson is not SQL-translatable.
+        var mesocycleData = mesocycles.Select(x => new
+        {
+            x.Id, x.PlanId, x.Sequence, x.PhaseSequenceNumber, x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks,
+            GenerationSnapshotJson = SafeJson(x.GenerationSnapshotJson), x.SnapshotSchemaVersion, x.EngineVersion,
+            x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt
+        }).ToArray();
+        var sessionData = sessions.Select(x => new
+        {
+            x.Id, x.PlanId, x.MesocycleId, x.WeekNumber, x.Date, x.SequenceIndex, x.EstimatedDurationMinutes,
+            PrescriptionJson = SafeJson(x.PrescriptionJson), OriginalPrescriptionJson = SafeJson(x.OriginalPrescriptionJson),
+            x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt
+        }).ToArray();
+        var adaptationData = adaptations.Select(x => new
+        {
+            x.Id, x.PlanId, x.WorkoutLogId, x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt,
+            x.Source, x.EngineVersion, x.SchemaVersion, ChangesJson = SafeJson(x.ChangesJson)
+        }).ToArray();
+        var workoutData = workouts.Select(x => new
+        {
+            x.Id, x.UserId, x.PlanId, x.PlannedSessionId, x.PerformedAt, x.PerformedOn, x.Outcome,
+            x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, ExerciseFeedbackJson = SafeJson(x.ExerciseFeedbackJson)
+        }).ToArray();
+        var decisionData = decisions.Select(x => new
+        {
+            x.Id, x.UserId, x.PlanId, x.MesocycleSequence, x.Muscle, x.Action, x.BaselineSets, x.PreviousSets,
+            x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, SignalsJson = SafeJson(x.SignalsJson),
+            x.Reason, x.PolicyVersion, x.CreatedAt
+        }).ToArray();
         var package = new
         {
             schemaVersion = 1, generatedAt = clock.GetUtcNow(), period = new { from = start, to = end },
             privacy = new { identifiers = "HMAC-SHA256 pseudonyms with a per-export secret; stable only inside this package",
-                excluded = new[] { "names", "emails", "account IDs", "free-text workout notes", "plan limitations", "credentials" },
+                excluded = new[] { "names", "emails", "account IDs", "free-text workout notes and plan labels", "plan limitations", "credentials" },
                 warning = "Pseudonymised research data, not anonymous data. Keep the package private." },
             plans = plans.Select(x => new { id = Key(x.Id), user = Key(x.UserId), x.Status, x.Origin, x.Goal, x.Experience, x.Split,
                 x.StartDate, x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
@@ -157,13 +187,13 @@ public static class AdminIntelligenceEndpoints
             mesocycles = mesocycles.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.Sequence, x.PhaseSequenceNumber,
                 x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion,
                 x.EngineVersion, x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToArray(),
-            sessions = sessions.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), mesocycle = Key(x.MesocycleId),
-                x.WeekNumber, x.Date, x.SequenceIndex, x.Title, x.EstimatedDurationMinutes, prescription = SafeJson(x.PrescriptionJson),
-                originalPrescription = SafeJson(x.OriginalPrescriptionJson), x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToArray(),
-            adaptations = adaptations.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), workout = x.WorkoutLogId is null ? null : Key(x.WorkoutLogId.Value),
-                x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, changes = SafeJson(x.ChangesJson) }).ToArray(),
-            workouts = workouts.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), session = Key(x.PlannedSessionId),
-                x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = SafeJson(x.ExerciseFeedbackJson) }).ToArray(),
+            sessions = sessionData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), mesocycle = Key(x.MesocycleId),
+                x.WeekNumber, x.Date, x.SequenceIndex, x.Title, x.EstimatedDurationMinutes, prescription = x.PrescriptionJson,
+                originalPrescription = x.OriginalPrescriptionJson, x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToArray(),
+            adaptations = adaptationData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), workout = x.WorkoutLogId is null ? null : Key(x.WorkoutLogId.Value),
+                x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, changes = x.ChangesJson }).ToArray(),
+            workouts = workoutData.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), session = Key(x.PlannedSessionId),
+                x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = x.ExerciseFeedbackJson }).ToArray(),
             sets = sets.Select(x => new { id = Key(x.Id), workout = Key(x.WorkoutLogId), x.ExerciseId, x.SetNumber, x.WeightKg,
                 x.Repetitions, x.Rir, x.Completed, x.SkippedReason, x.PainReported }).ToArray(),
             observations = observations.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.Period,
@@ -171,9 +201,9 @@ public static class AdminIntelligenceEndpoints
                 x.SessionsPlanned, x.SessionsDone, x.Exposures, x.CompletedSets, x.BelowRangeSets, x.PerformanceChangePercent,
                 x.PerformanceSamples, x.FatigueSignals, x.FeedbackAnswers, x.LowStimulusAnswers, x.DiscomfortAnswers,
                 x.PainSessions, x.ReturnFromAbsence, x.ProcessedThrough, x.UpdatedAt }).ToArray(),
-            decisions = decisions.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.MesocycleSequence,
+            decisions = decisionData.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.MesocycleSequence,
                 x.Muscle, x.Action, x.BaselineSets, x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod,
-                signals = SafeJson(x.SignalsJson), x.Reason, x.PolicyVersion, x.CreatedAt }).ToArray()
+                signals = x.SignalsJson, x.Reason, x.PolicyVersion, x.CreatedAt }).ToArray()
         };
 
         using var memory = new MemoryStream();
