@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AdminApi, AdminSubscriptionDetail, AdminSubscriptionSummary } from '../../core/admin.api';
+import type { AdminSubscriptionDetail, AdminSubscriptionSummary } from '../../core/admin.models';
+import { SubscriptionsApi } from './subscriptions.api';
 import { errorMessage } from '../../core/setup.api';
 
 const STATUSES: { value: string; label: string }[] = [
@@ -20,7 +21,7 @@ const STATUSES: { value: string; label: string }[] = [
   templateUrl: './subscriptions.page.html'
 })
 export class SubscriptionsPageComponent {
-  private readonly api = inject(AdminApi);
+  private readonly api = inject(SubscriptionsApi);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
 
@@ -65,7 +66,7 @@ export class SubscriptionsPageComponent {
 
   protected async select(summary: AdminSubscriptionSummary): Promise<void> {
     this.message.set(''); this.panelError.set('');
-    try { this.selected.set(await this.api.getSubscription(summary.id)); }
+    try { this.selected.set(await this.api.get(summary.id)); }
     catch (e) { this.panelError.set(errorMessage(e)); }
   }
 
@@ -74,7 +75,7 @@ export class SubscriptionsPageComponent {
     if (!current) return;
     this.busy.set(true); this.message.set(''); this.panelError.set('');
     try {
-      this.selected.set(await this.api.refreshSubscription(current.subscription.id));
+      this.selected.set(await this.api.refresh(current.subscription.id));
       this.message.set('Refreshed from Google Play.');
       await this.load();
     } catch (e) {
@@ -102,7 +103,7 @@ export class SubscriptionsPageComponent {
     this.loading.set(true);
     this.error.set('');
     try {
-      const result = await this.api.listSubscriptions({
+      const result = await this.api.list({
         q: this.q(), status: this.status(), source: this.source(), expiresFrom: this.expiresFrom(),
         expiresTo: this.expiresTo(), sort: this.sort(), page: this.page(), pageSize: 25
       });
