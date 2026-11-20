@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
 
@@ -8,7 +9,7 @@ import { errorMessage } from '../../core/setup.api';
 @Component({
   selector: 'trazo-promotions-form',
   standalone: true,
-  imports: [FormsModule, UiFormFieldComponent],
+  imports: [FormsModule, UiFormFieldComponent, UiButtonComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './promotions-form.component.scss',
   templateUrl: './promotions-form.component.html'
