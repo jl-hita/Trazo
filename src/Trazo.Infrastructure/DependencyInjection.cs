@@ -7,6 +7,7 @@ using Trazo.Domain.Identity;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Trazo.Infrastructure.Billing;
+using Trazo.Infrastructure.Analytics;
 using Trazo.Infrastructure.Logging;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
@@ -70,6 +71,8 @@ public static class DependencyInjection
         services.AddScoped<ExerciseLibraryExporter>();
         services.AddScoped<ExerciseLibraryImportService>();
         services.AddScoped<AppLogReader>();
+        services.AddScoped<IIntelligenceSummaryService, IntelligenceSummaryService>();
+        services.AddScoped<IIntelligenceExportService, IntelligenceExportService>();
 
         return services;
     }
