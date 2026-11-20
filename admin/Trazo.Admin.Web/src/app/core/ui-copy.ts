@@ -935,6 +935,7 @@ export const UI_COPY = {
       returnOnSpend: 'Rentabilidad estimada del gasto'
     }
   },
+  overview: { title: 'Resumen' },
   referrals: {
     eyebrow: 'CRECIMIENTO',
     title: 'Referidos y embudo',
