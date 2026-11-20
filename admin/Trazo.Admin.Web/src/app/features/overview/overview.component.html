@@ -8,23 +8,18 @@
     @if (data(); as d) {
       <span class="muted" data-testid="generated-at">Datos de {{ when(d.generatedAt) }}</span>
     }
-    <button type="button" class="ov-btn" (click)="refresh()" [disabled]="loading()" [attr.aria-busy]="loading()">
+    <trazo-button type="button" variant="primary" (pressed)="refresh()" [loading]="loading() && !!data()">
       {{ loading() && data() ? 'Actualizando…' : 'Actualizar' }}
-    </button>
+    </trazo-button>
   </div>
 </div>
 
 <p class="ov-sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
 
 @if (error() && !data()) {
-  <section class="ov-state" role="alert" aria-labelledby="ov-error-title">
-    <span class="ov-glyph tone-crit" aria-hidden="true">✕</span>
-    <div>
-      <h2 id="ov-error-title">No se ha podido cargar el estado del sistema</h2>
-      <p>{{ error() }}</p>
-      <button type="button" class="ov-btn" (click)="retry()" [disabled]="loading()">Reintentar</button>
-    </div>
-  </section>
+  <trazo-state kind="error" title="No se ha podido cargar el estado del sistema" [description]="error()">
+    <trazo-button type="button" variant="secondary" (pressed)="retry()" [disabled]="loading()">Reintentar</trazo-button>
+  </trazo-state>
 } @else if (loading() && !data()) {
   <div role="status" aria-live="polite">
     <span class="ov-sr-only">Cargando el estado del sistema…</span>
@@ -36,7 +31,7 @@
 } @else if (data(); as d) {
   @if (error()) {
     <p class="ov-banner" role="alert">No se han podido actualizar los datos ({{ error() }}). Se muestran los últimos recibidos.
-      <button type="button" class="ov-link-button" (click)="refresh()">Reintentar</button></p>
+      <trazo-button type="button" variant="ghost" (pressed)="refresh()">Reintentar</trazo-button></p>
   }
 
   <section aria-labelledby="ov-alerts-title">
@@ -44,10 +39,7 @@
       <div><p class="eyebrow">ATENCIÓN</p><h2 id="ov-alerts-title">Alertas <span class="ov-count">{{ alertSummary() }}</span></h2></div>
     </div>
     @if (alerts().length === 0) {
-      <div class="ov-state ov-state-ok">
-        <span class="ov-glyph tone-ok" aria-hidden="true">✓</span>
-        <div><h3>Todo en orden</h3><p>No hay alertas: la base de datos, la configuración y los registros están bien.</p></div>
-      </div>
+      <trazo-state kind="success" title="Todo en orden" description="No hay alertas: la base de datos, la configuración y los registros están bien." />
     } @else {
       <ul class="ov-alerts">
         @for (a of alerts(); track a.id) {
@@ -55,7 +47,7 @@
             <a class="ov-alert" [class]="'ov-alert tone-' + severityTone(a.severity)" [routerLink]="tree(a.link)">
               <span class="ov-glyph" [class]="'ov-glyph tone-' + severityTone(a.severity)" aria-hidden="true">{{ glyph(severityTone(a.severity)) }}</span>
               <span class="ov-alert-text">
-                <span class="ov-alert-title"><span class="ov-badge" [class]="'ov-badge tone-' + severityTone(a.severity)">{{ severityLabel(a.severity) }}</span> {{ a.title }}</span>
+                <span class="ov-alert-title"><trazo-badge [tone]="badgeTone(severityTone(a.severity))">{{ severityLabel(a.severity) }}</trazo-badge> {{ a.title }}</span>
                 <span class="ov-alert-detail">{{ a.detail }}</span>
               </span>
               <span class="ov-arrow" aria-hidden="true">→</span>
@@ -259,7 +251,7 @@
       @if (cohorts().length === 0) {
         <p class="ov-empty">Todavía no hay altas.</p>
       } @else {
-        <table class="ov-table">
+        <trazo-table class="ov-table">
           <caption class="ov-sr-only">Altas de cada semana y cuántas han iniciado una suscripción o han pagado</caption>
           <thead><tr><th scope="col">Semana del</th><th scope="col">Altas</th><th scope="col">Con suscripción</th><th scope="col">Han pagado</th></tr></thead>
           <tbody>
@@ -272,7 +264,7 @@
               </tr>
             }
           </tbody>
-        </table>
+        </trazo-table>
         <p class="ov-empty">Con suscripción: prueba o pago. Han pagado: se ha cobrado alguna vez. Sin compras de prueba. Las cohortes recientes aún no han tenido tiempo de convertir.</p>
       }
     </article>

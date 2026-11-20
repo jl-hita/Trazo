@@ -3,6 +3,10 @@ import { Router, RouterLink } from '@angular/router';
 import type { AlertSeverity, Overview } from '../../core/admin.models';
 import { OverviewApi } from './overview.api';
 import { errorMessage } from '../../core/setup.api';
+import { UiBadgeComponent, type UiBadgeTone } from '../../shared/ui/ui-badge.component';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiStateComponent } from '../../shared/ui/ui-state.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 type Tone = 'ok' | 'warn' | 'crit' | 'info';
 
@@ -38,7 +42,7 @@ const REASON_LABEL: Record<string, string> = {
 @Component({
   selector: 'trazo-overview',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, UiBadgeComponent, UiButtonComponent, UiStateComponent, UiTableComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -174,6 +178,10 @@ export class OverviewComponent {
   protected severityLabel(severity: AlertSeverity): string { return SEVERITY_LABEL[severity]; }
   protected severityTone(severity: AlertSeverity): Tone { return SEVERITY_TONE[severity]; }
   protected glyph(tone: Tone): string { return TONE_GLYPH[tone]; }
+
+  protected badgeTone(tone: Tone): UiBadgeTone {
+    return tone === 'ok' ? 'success' : tone === 'warn' ? 'warning' : tone === 'crit' ? 'danger' : 'info';
+  }
 
   /** Alert and card links are admin routes with an optional query string; the router parses them into a UrlTree. */
   protected tree(link: string) { return this.router.parseUrl(link); }
