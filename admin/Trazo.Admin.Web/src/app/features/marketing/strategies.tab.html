@@ -1,33 +1,33 @@
     @if (error()) { <p class="mk-err" role="alert">{{ error() }}</p> }
     @if (data(); as d) {
       @if (d.insights.length) {
-        <h2>What the data says</h2>
+        <h2>{{ labels.whatDataSays }}</h2>
         <div class="mk-insights">
           @for (i of d.insights; track i.title) { <div class="mk-insight" [class]="'mk-insight ' + i.kind"><b>{{ i.title }}</b><span>{{ i.detail }}</span></div> }
         </div>
       }
 
-      <h2>Ranking</h2>
+      <h2>{{ labels.ranking }}</h2>
       <div class="mk-toolbar">
-        <trazo-form-field label="Rank strategies by" controlId="field-strategies-metric"><select [ngModel]="metric()" (ngModelChange)="metric.set($event)" name="metric" id="field-strategies-metric">
+        <trazo-form-field [label]="labels.rankBy" controlId="field-strategies-metric"><select [ngModel]="metric()" (ngModelChange)="metric.set($event)" name="metric" id="field-strategies-metric">
             @for (m of metrics; track m.key) { <option [value]="m.key">{{ m.label }}</option> }
           </select></trazo-form-field>
-        <label><span><input type="checkbox" [ngModel]="onlyReliable()" (ngModelChange)="onlyReliable.set($event)" name="reliable"> Only strategies with {{ d.minReliable }}+ signups</span></label>
-        <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="download()">Download CSV</trazo-button>
+        <label><span><input type="checkbox" [ngModel]="onlyReliable()" (ngModelChange)="onlyReliable.set($event)" name="reliable"> {{ labels.onlyReliable }} {{ d.minReliable }}+ {{ labels.minimumSignups }}</span></label>
+        <trazo-button variant="secondary" buttonClass="mk-btn" type="button" (pressed)="download()">{{ labels.downloadCsv }}</trazo-button>
       </div>
       @if (ranking().length) {
         <div class="mk-panel"><mk-bars [rows]="ranking()" /></div>
-        @if (metric() === 'signupToPaid') { <p class="mk-muted">The thin white line is the 95% confidence range: the wider it is, the less the figure can be trusted.</p> }
-      } @else { <p class="mk-empty">Nothing to rank yet for this metric in the period.</p> }
+        @if (metric() === 'signupToPaid') { <p class="mk-muted">{{ labels.confidenceLine }}</p> }
+      } @else { <p class="mk-empty">{{ labels.nothingToRank }}</p> }
 
       <ng-template #tbl let-rows><div class="mk-scroll"><trazo-table tableClass="mk-table">
-    <thead><tr><th>Strategy</th><th>Clicks</th><th>Installs</th><th>Signups</th><th>Trial</th><th>Paid</th><th>Signup → paid</th><th>Trial → paid</th>
-      <th>Renewed</th><th>Still training (30 d)</th><th>Spend</th><th>€ / signup</th><th>€ / payer</th><th>Est. revenue</th><th>Return</th></tr></thead>
+    <thead><tr><th>{{ labels.strategy }}</th><th>{{ labels.clicks }}</th><th>{{ labels.installs }}</th><th>{{ labels.signups }}</th><th>{{ labels.trial }}</th><th>{{ labels.paid }}</th><th>{{ labels.signupToPaidLabel }}</th><th>{{ labels.trialToPaidLabel }}</th>
+      <th>{{ labels.renewed }}</th><th>{{ labels.stillTraining30 }}</th><th>{{ labels.spend }}</th><th>{{ labels.costPerSignup }}</th><th>{{ labels.costPerPayer }}</th><th>{{ labels.estimatedRevenue }}</th><th>{{ labels.return }}</th></tr></thead>
     <tbody>
       @for (r of rows; track r.key) {
         <tr [class.clickable]="r.kind === 'campaign'" (click)="r.kind === 'campaign' && openCampaign.emit(r.key)">
-          <td><span class="name">{{ r.name }}@if (!r.reliable && r.signups > 0) { <span class="mk-flag" title="Fewer than the minimum signups: do not decide on this yet">small sample</span> }</span>
-            @if (r.status) { <span class="sub">{{ r.channel }} · {{ r.status }}</span> }</td>
+          <td><span class="name">{{ r.name }}@if (!r.reliable && r.signups > 0) { <span class="mk-flag" [attr.title]="labels.smallSampleTitle">{{ labels.smallSample }}</span> }</span>
+            @if (r.status) { <span class="sub">{{ channelLabel(r.channel) }} · {{ campaignStatusLabel(r.status) }}</span> }</td>
           <td>{{ r.kind === 'campaign' || r.clicks ? fmt.int(r.clicks) : '—' }}</td>
           <td>{{ r.kind === 'campaign' || r.installs ? fmt.int(r.installs) : '—' }}</td>
           <td>{{ r.signups }}</td>
@@ -46,25 +46,25 @@
       }
     </tbody></trazo-table></div></ng-template>
 
-      <h2>Channels</h2>
-      <p class="mk-note">A channel type groups all its campaigns. Organic is everybody who arrived without a campaign link or an invitation code; referral is the invitation programme.</p>
+      <h2>{{ labels.channels }}</h2>
+      <p class="mk-note">{{ labels.channelsExplain }}</p>
       <ng-container *ngTemplateOutlet="tbl; context: { $implicit: channels() }" />
 
-      <h2>Campaigns</h2>
+      <h2>{{ labels.campaigns }}</h2>
       @if (d.campaigns.length) {
         <ng-container *ngTemplateOutlet="tbl; context: { $implicit: campaigns() }" />
-        <p class="mk-muted">Click a campaign to manage its link and spend in the Campaigns tab.</p>
-      } @else { <p class="mk-empty">No campaigns yet. Create one in the Campaigns tab to get a tracking link.</p> }
+        <p class="mk-muted">{{ labels.clickCampaignHint }}</p>
+      } @else { <p class="mk-empty">{{ labels.noCampaignsYet }}</p> }
 
       <details class="mk-help mk-panel" style="margin-top:18px">
-        <summary>How to read these numbers</summary>
+        <summary>{{ labels.howReadNumbers }}</summary>
         <ul>
-          <li><b>Attribution.</b> A person counts in one strategy only: an invitation code wins over a campaign, a campaign wins over organic. The campaign is known when the account is created, from the link the person tapped before installing from Google Play.</li>
-          <li><b>Clicks and installs.</b> Clicks are link openings (link-preview robots excluded). Installs are first launches where the app read the campaign. People who install from elsewhere, or on another device, show up as organic.</li>
-          <li><b>Conversion</b> is measured on the accounts created in the period. A payer is someone whose first real payment was confirmed by Google Play; free trials, test purchases and promotional time never count.</li>
-          <li><b>Confidence.</b> With few signups, a rate swings a lot. Below {{ d.minReliable }} signups a strategy is flagged "small sample"; use the range shown under each rate before deciding anything.</li>
-          <li><b>Cost.</b> Spend is what you entered per campaign day in the period. Estimated revenue is the net income of those customers so far (renewals included, refunds deducted), computed from the Google Play prices of the tax settings, VAT and Google's fee already taken out. It is orientative: the real figures are in Google Play Console.</li>
-          <li><b>Retention.</b> "Still training" means the person logged a workout in the week that starts 30 days after signing up. Only people old enough to have had that week are counted.</li>
+          <li><b>{{ labels.attribution }}.</b> {{ labels.attributionExplain }}</li>
+          <li><b>{{ labels.clicksInstalls }}.</b> {{ labels.clicksInstallsExplain }}</li>
+          <li><b>{{ labels.conversion }}.</b> {{ labels.conversionExplain }}</li>
+          <li><b>{{ labels.confidence }}.</b> {{ labels.confidenceExplain }} {{ d.minReliable }}.</li>
+          <li><b>{{ labels.cost }}.</b> {{ labels.costExplain }}</li>
+          <li><b>{{ labels.retention }}.</b> {{ labels.retentionExplain }}</li>
         </ul>
       </details>
-    } @else if (!error()) { <p class="mk-empty">Loading…</p> }
+    } @else if (!error()) { <p class="mk-empty">{{ labels.loading }}</p> }
