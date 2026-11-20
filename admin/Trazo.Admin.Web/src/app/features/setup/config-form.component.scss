@@ -1,0 +1,17 @@
+.cfg { display: grid; gap: 22px; max-width: 760px; }
+    .cfg fieldset { margin: 0; padding: 22px; border: 1px solid #293444; border-radius: 8px; background: #131b27; display: grid; gap: 14px; }
+    .cfg legend { padding: 0 8px; color: #a9c2df; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+    .cfg label { display: grid; gap: 6px; color: #aab6c7; font-size: 12px; }
+    .cfg input[type=text], .cfg input[type=email], .cfg input[type=password], .cfg input[type=number], .cfg input[type=url] {
+      padding: 10px 12px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; }
+    .cfg input:focus { outline: 2px solid #6d8eb5; outline-offset: 1px; }
+    .cfg .row { display: grid; grid-template-columns: 1fr 120px; gap: 14px; }
+    .cfg .check { display: flex; align-items: center; gap: 8px; }
+    .cfg .hint { color: #7f8da0; font-size: 11px; margin: 0; }
+    .cfg .actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .cfg button { padding: 10px 16px; border: 1px solid #4a6585; border-radius: 6px; background: #1b2a3e; color: #e4edf8; cursor: pointer; }
+    .cfg button.primary { background: #3b6ea8; border-color: #6d9bd2; }
+    .cfg button:disabled { opacity: .45; cursor: not-allowed; }
+    .cfg .ok { color: #7fd3a0; font-size: 12px; }
+    .cfg .err { color: #f0a3a3; font-size: 12px; }
+    .cfg .banner { padding: 14px 16px; border: 1px solid #6b5a2e; border-radius: 8px; background: #2a2412; color: #e6d39b; font-size: 12px; line-height: 1.6; }
