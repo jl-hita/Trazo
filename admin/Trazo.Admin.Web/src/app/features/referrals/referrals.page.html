@@ -10,8 +10,8 @@
           <select [ngModel]="channel()" (ngModelChange)="channel.set($event)" name="channel">
             <option value="">All</option><option value="referral">Referral</option><option value="organic">Organic</option>
           </select></label>
-        <button type="button" (click)="load()">Apply</button>
-        <button type="button" (click)="reconcile()">Run reconciliation</button>
+        <trazo-button variant="secondary" type="button" (pressed)="load()">Apply</trazo-button>
+        <trazo-button variant="secondary" type="button" (pressed)="reconcile()">Run reconciliation</trazo-button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
       </div>
@@ -22,7 +22,7 @@
         <label>Reward for a successful referral (days)
           <input type="number" min="1" [max]="maxRewardDays()" [ngModel]="rewardDays()" (ngModelChange)="rewardDays.set($event)" name="rewardDays">
         </label>
-        <button class="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (click)="saveProgramme()">Save settings</button>
+        <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (click)="saveProgramme()">Save settings</trazo-button>
         <span class="muted">Maximum {{ maxRewardDays() }} days. Changes affect new rewards, not grants already issued.</span>
       </div>
 
@@ -48,30 +48,30 @@
 
       @if (funnel(); as f) {
         <h2>Funnel — {{ f.cohort }} accounts created in the period</h2>
-        <table class="rf-table">
+        <trazo-table tableClass="rf-table">
           <thead><tr><th>Stage</th><th>Users</th><th>vs previous</th><th>vs cohort</th></tr></thead>
           <tbody>
             @for (st of f.stages; track st.name) {
               <tr><td>{{ st.name }}</td><td>{{ st.users }}</td><td>{{ pct(st.rateOfPrevious) }}</td><td>{{ pct(st.rateOfCohort) }}</td></tr>
             }
           </tbody>
-        </table>
+        </trazo-table>
         <p class="muted">Signup → trial {{ pct(f.signupToTrial) }} · trial → paid {{ pct(f.trialToPaid) }} · signup → paid {{ pct(f.signupToPaid) }} ·
           paid customers renewed 3+ times {{ pct(f.retainedAfterSeveralCycles) }}. Groups under {{ f.minGroupSize }} users are folded into "other".</p>
         @if (f.cohorts.length) {
           <h2>Weekly cohorts</h2>
-          <table class="rf-table"><thead><tr><th>Week</th><th>Signups</th><th>Paid</th><th>Renewed</th></tr></thead>
-            <tbody>@for (c of f.cohorts; track c.week) { <tr><td>{{ c.week }}</td><td>{{ c.signups }}</td><td>{{ c.paid }}</td><td>{{ c.renewed }}</td></tr> }</tbody></table>
+          <trazo-table tableClass="rf-table"><thead><tr><th>Week</th><th>Signups</th><th>Paid</th><th>Renewed</th></tr></thead>
+            <tbody>@for (c of f.cohorts; track c.week) { <tr><td>{{ c.week }}</td><td>{{ c.signups }}</td><td>{{ c.paid }}</td><td>{{ c.renewed }}</td></tr> }</tbody></trazo-table>
         }
         @if (f.byAppVersion.length) {
           <h2>By app version</h2>
-          <table class="rf-table"><thead><tr><th>Version</th><th>Signups</th><th>Paid</th></tr></thead>
-            <tbody>@for (g of f.byAppVersion; track g.key) { <tr><td>{{ g.key }}</td><td>{{ g.users }}</td><td>{{ g.paid }}</td></tr> }</tbody></table>
+          <trazo-table tableClass="rf-table"><thead><tr><th>Version</th><th>Signups</th><th>Paid</th></tr></thead>
+            <tbody>@for (g of f.byAppVersion; track g.key) { <tr><td>{{ g.key }}</td><td>{{ g.users }}</td><td>{{ g.paid }}</td></tr> }</tbody></trazo-table>
         }
         @if (f.byPlan.length) {
           <h2>First purchase by plan</h2>
-          <table class="rf-table"><thead><tr><th>Product</th><th>Users</th></tr></thead>
-            <tbody>@for (g of f.byPlan; track g.key) { <tr><td>{{ g.key }}</td><td>{{ g.users }}</td></tr> }</tbody></table>
+          <trazo-table tableClass="rf-table"><thead><tr><th>Product</th><th>Users</th></tr></thead>
+            <tbody>@for (g of f.byPlan; track g.key) { <tr><td>{{ g.key }}</td><td>{{ g.users }}</td></tr> }</tbody></trazo-table>
         }
       }
 
@@ -84,37 +84,37 @@
           </select></label>
         <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); page.set(1); loadList()" name="incidents"> Only incidents</span></label>
       </div>
-      <table class="rf-table">
+      <trazo-table tableClass="rf-table">
         <thead><tr><th>Registered</th><th>Referrer</th><th>Invited</th><th>Status</th><th>Reward</th><th></th></tr></thead>
         <tbody>
           @for (r of items(); track r.id) {
             <tr>
               <td>{{ r.attributedAt.slice(0, 10) }}<div class="muted">{{ r.source }} · {{ r.code }}</div></td>
-              <td>{{ r.referrerEmail }}<div><button class="rf-btn" type="button" (click)="ledger(r.referrerId)">Ledger</button></div></td>
+              <td>{{ r.referrerEmail }}<div><trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="ledger(r.referrerId)">Ledger</trazo-button></div></td>
               <td>{{ r.referredEmail }}</td>
               <td>{{ r.status }}@if (r.plan) { <div class="muted">{{ r.plan }}</div> }@if (r.incident) { <div class="warn">{{ r.incident }}</div> }</td>
               <td>@if (r.rewardDays) { {{ r.rewardDays }} d · {{ r.rewardStatus }} }@if (r.lastDeferNote) { <div class="muted">{{ r.lastDeferNote }}</div> }</td>
               <td>
                 @if (r.rewardGrantId && (r.rewardStatus === 'pending' || r.rewardStatus === 'active')) {
-                  <button class="rf-btn danger" type="button" (click)="voidGrant(r.rewardGrantId)">Void…</button>
+                  <trazo-button variant="danger" buttonClass="rf-btn" type="button" (pressed)="voidGrant(r.rewardGrantId)">Void…</trazo-button>
                 }
-                @if (r.rewardGrantId && r.rewardStatus === 'pending') { <button class="rf-btn" type="button" (click)="retry(r.rewardGrantId)">Retry</button> }
+                @if (r.rewardGrantId && r.rewardStatus === 'pending') { <trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="retry(r.rewardGrantId)">Retry</trazo-button> }
               </td>
             </tr>
           } @empty { <tr><td colspan="6" class="muted">No invitations for this filter.</td></tr> }
         </tbody>
-      </table>
+      </trazo-table>
       <div class="rf-pagination">
         <span>Page {{ page() }} of {{ pageCount() }}</span>
         <div class="controls">
-          <button class="rf-btn" type="button" [disabled]="page() <= 1" (click)="changePage(-1)">Previous</button>
-          <button class="rf-btn" type="button" [disabled]="page() >= pageCount()" (click)="changePage(1)">Next</button>
+          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() <= 1" (pressed)="changePage(-1)">Previous</trazo-button>
+          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() >= pageCount()" (click)="changePage(1)">Next</trazo-button>
         </div>
       </div>
 
       @if (ledgerRows().length) {
         <h2>Premium-time ledger of the selected user</h2>
-        <table class="rf-table">
+        <trazo-table tableClass="rf-table">
           <thead><tr><th>Granted</th><th>Kind</th><th>Days</th><th>Status</th><th>Window / Google</th><th>Notes</th></tr></thead>
           <tbody>
             @for (g of ledgerRows(); track g.id) {
@@ -126,6 +126,6 @@
               </tr>
             }
           </tbody>
-        </table>
+        </trazo-table>
       }
     </div>
