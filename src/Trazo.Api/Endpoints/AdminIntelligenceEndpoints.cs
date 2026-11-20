@@ -100,7 +100,7 @@ public static class AdminIntelligenceEndpoints
                 x.LowStimulusAnswers, x.DiscomfortAnswers, x.PainSessions, x.ReturnFromAbsence, x.ProcessedThrough, x.UpdatedAt }).ToListAsync(ct);
         var decisions = await db.LongitudinalDecisions.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
             .Select(x => new { x.Id, x.UserId, x.PlanId, x.MesocycleSequence, x.Muscle, x.Action, x.BaselineSets,
-                x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, x.SignalsJson, x.Reason,
+                x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, x.SignalsJson,
                 x.PolicyVersion, x.CreatedAt }).ToListAsync(ct);
 
         var createdPlanIds = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
@@ -118,7 +118,7 @@ public static class AdminIntelligenceEndpoints
                 x.StartWeek, x.Weeks, x.GenerationSnapshotJson, x.SnapshotSchemaVersion, x.EngineVersion,
                 x.CatalogFingerprint, x.GeneratedAt, x.CreatedAt }).ToListAsync(ct);
         var sessions = await db.PlannedSessions.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
-            .Select(x => new { x.Id, x.PlanId, x.MesocycleId, x.WeekNumber, x.Date, x.SequenceIndex, x.Title,
+            .Select(x => new { x.Id, x.PlanId, x.MesocycleId, x.WeekNumber, x.Date, x.SequenceIndex,
                 x.EstimatedDurationMinutes, x.PrescriptionJson, x.OriginalPrescriptionJson, x.OriginalPrescriptionSchemaVersion,
                 x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToListAsync(ct);
         var workoutIds = workouts.Select(x => x.Id).ToArray();
