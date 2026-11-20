@@ -5,7 +5,7 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { FiscalApi } from './fiscal.api';
 import type { FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from './fiscal.models';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
 import { formatUiDate } from '../../core/ui-format';
 
