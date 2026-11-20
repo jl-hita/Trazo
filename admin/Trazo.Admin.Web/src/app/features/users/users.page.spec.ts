@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpErrorResponse } from '@angular/common/http';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../core/auth.service';
 import { UsersApi } from './users.api';
@@ -40,7 +41,7 @@ describe('UsersPageComponent', () => {
   });
 
   it('renders API errors in an accessible alert', async () => {
-    const listUsers = vi.fn().mockRejectedValue(new Error('API no disponible'));
+    const listUsers = vi.fn().mockRejectedValue(new HttpErrorResponse({ status: 500, error: { error: 'API no disponible' } }));
     const { fixture } = await createPage(listUsers);
     await fixture.whenStable();
     fixture.detectChanges();
