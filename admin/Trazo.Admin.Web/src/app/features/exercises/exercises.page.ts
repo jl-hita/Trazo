@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { UiBadgeComponent } from '../../shared/ui/ui-badge.component';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type {
   AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
 } from '../../core/admin.models';
@@ -56,7 +59,7 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
 @Component({
   selector: 'trazo-exercises-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './exercises.page.scss',
   templateUrl: './exercises.page.html'

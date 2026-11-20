@@ -28,10 +28,10 @@
             <option value="priority">Sort: priority</option>
             <option value="updated">Sort: recently edited</option>
           </select>
-          <button class="primary" type="button" (click)="startNew()">New exercise</button>
-          <button type="button" (click)="sendToDietoExpress()" [disabled]="transferBusy()" [class.danger]="transferConfirm()">
+          <trazo-button variant="primary" type="button" (pressed)="startNew()">New exercise</trazo-button>
+          <trazo-button [variant]="transferConfirm() ? 'danger' : 'secondary'" type="button" (pressed)="sendToDietoExpress()" [disabled]="transferBusy()">
             {{ transferBusy() ? 'Sending…' : transferConfirm() ? 'Confirm: send to DietoExpress' : 'Send to DietoExpress' }}
-          </button>
+          </trazo-button>
         </div>
 
         @if (transferMessage()) { <p class="ex-note" role="status">{{ transferMessage() }}</p> }
@@ -43,7 +43,7 @@
 
         @if (error()) { <p class="err" style="color:#f0a3a3;font-size:12px" role="alert">{{ error() }}</p> }
 
-        <table class="ex-table">
+        <trazo-table tableClass="ex-table">
           <thead><tr><th>Exercise</th><th>Pattern</th><th>Level</th><th>Priority</th><th>Status</th></tr></thead>
           <tbody>
             @for (e of exercises(); track e.id) {
@@ -53,23 +53,23 @@
                 <td>{{ e.minimumExperience }}</td>
                 <td>{{ e.selectionPriority }}</td>
                 <td>
-                  @if (!e.isActive) { <span class="badge bad">hidden</span> }
-                  @if (e.locallyCurated) { <span class="badge good">edited</span> }
-                  <span class="badge">{{ e.source === 'trazo' ? 'TRAZO' : 'imported' }}</span>
-                  @if (e.imageCount === 0) { <span class="badge warn">no images</span> }
+                  @if (!e.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">hidden</trazo-badge> }
+                  @if (e.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">edited</trazo-badge> }
+                  <trazo-badge badgeClass="badge" tone="neutral">{{ e.source === 'trazo' ? 'TRAZO' : 'imported' }}</trazo-badge>
+                  @if (e.imageCount === 0) { <trazo-badge badgeClass="badge warn" tone="warning">no images</trazo-badge> }
                 </td>
               </tr>
             } @empty {
               <tr><td colspan="5" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Loading…' : 'No exercises match these filters.' }}</td></tr>
             }
           </tbody>
-        </table>
+        </trazo-table>
 
         <div class="ex-pager">
           <span>{{ totalCount() }} exercise{{ totalCount() === 1 ? '' : 's' }} · page {{ page() }} of {{ totalPages() || 1 }}</span>
           <span>
-            <button type="button" (click)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
-            <button type="button" (click)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
           </span>
         </div>
       </section>
@@ -80,9 +80,9 @@
 
           @if (detail(); as d) {
             <div class="meta">
-              @if (!d.isActive) { <span class="badge bad">hidden from the catalog</span> }
-              @if (d.locallyCurated) { <span class="badge good">edited locally</span> }
-              <span class="badge">{{ d.importedFrom ? 'imported from ' + d.importedFrom : 'created in TRAZO' }}</span>
+              @if (!d.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">hidden from the catalog</trazo-badge> }
+              @if (d.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">edited locally</trazo-badge> }
+              <trazo-badge badgeClass="badge" tone="neutral">{{ d.importedFrom ? 'imported from ' + d.importedFrom : 'created in TRAZO' }}</trazo-badge>
             </div>
             @if (d.locallyCurated) {
               <p class="notice">This exercise was edited here, so future imports from DietoExpress will not overwrite it.</p>
@@ -96,7 +96,7 @@
                   <label class="img-btn">{{ d.imageSlots.includes(slot) ? 'Replace' : 'Upload' }}
                     <input type="file" accept="image/webp,image/png,image/jpeg" hidden (change)="upload(slot, $event)" [disabled]="busy()">
                   </label>
-                  @if (d.imageSlots.includes(slot)) { <button type="button" class="img-remove" (click)="removeImage(slot)" [disabled]="busy()">Remove</button> }
+                  @if (d.imageSlots.includes(slot)) { <trazo-button variant="secondary" buttonClass="img-remove" type="button" (pressed)="removeImage(slot)" [disabled]="busy()">Remove</trazo-button> }
                 </div>
               }
             </div>
@@ -130,19 +130,19 @@
           }
 
           <div class="actions">
-            <button class="primary" type="button" (click)="save()" [disabled]="busy()">{{ isNew() ? 'Create exercise' : 'Save changes' }}</button>
+            <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy()">{{ isNew() ? 'Create exercise' : 'Save changes' }}</trazo-button>
             @if (detail(); as d) {
               @if (d.isActive) {
-                <button type="button" (click)="run('deactivate')" [disabled]="busy()" [class.danger]="confirming() === 'deactivate'">
+                <trazo-button [variant]="confirming() === 'deactivate' ? 'danger' : 'secondary'" type="button" (pressed)="run('deactivate')" [disabled]="busy()">
                   {{ confirming() === 'deactivate' ? 'Confirm: hide from the catalog' : 'Hide from the catalog' }}
-                </button>
+                </trazo-button>
               } @else {
-                <button type="button" (click)="run('activate')" [disabled]="busy()">Show in the catalog</button>
+                <trazo-button variant="secondary" type="button" (pressed)="run('activate')" [disabled]="busy()">Show in the catalog</trazo-button>
               }
               @if (d.locallyCurated && d.importedFrom) {
-                <button type="button" (click)="run('release-curation')" [disabled]="busy()" [class.danger]="confirming() === 'release-curation'">
+                <trazo-button [variant]="confirming() === 'release-curation' ? 'danger' : 'secondary'" type="button" (pressed)="run('release-curation')" [disabled]="busy()">
                   {{ confirming() === 'release-curation' ? 'Confirm: allow imports to overwrite' : 'Allow imports to overwrite' }}
-                </button>
+                </trazo-button>
               }
             }
           </div>

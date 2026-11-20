@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'trazo-table',
   standalone: true,
-  template: '<div class="trazo-table-wrap"><table class="trazo-table"><ng-content /></table></div>'
+  template: '<div class="trazo-table-wrap"><table [class]="\'trazo-table \' + tableClass"><ng-content /></table></div>'
 })
-export class UiTableComponent {}
+export class UiTableComponent {
+  @Input() tableClass = '';
+}
