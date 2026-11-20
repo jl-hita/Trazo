@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { UiBadgeComponent } from '../../shared/ui/ui-badge.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
+import { UI_COPY } from '../../core/ui-copy';
+import { formatUiDateTime } from '../../core/ui-format';
 import type { AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.models';
 import { UsersApi } from './users.api';
 import { AuthService } from '../../core/auth.service';
@@ -20,6 +22,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
   templateUrl: './users.page.html'
 })
 export class UsersPageComponent {
+  protected readonly copy = UI_COPY.users;
   private readonly api = inject(UsersApi);
   private readonly auth = inject(AuthService);
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
@@ -109,7 +112,7 @@ export class UsersPageComponent {
       const created = await this.api.createUser({ displayName, email, role: this.newRole() });
       this.creating.set(false);
       this.show(created);
-      this.message.set('Invitation sent. The account will be activated when the user sets a password.');
+      this.message.set(this.copy.messages.invitationSent);
       this.page.set(1);
       await this.load();
     } catch (e) {
@@ -134,7 +137,7 @@ export class UsersPageComponent {
     const changes: { displayName?: string; role?: string } = {};
     if (this.editName().trim() !== u.displayName) changes.displayName = this.editName().trim();
     if (this.editRole() !== u.role) changes.role = this.editRole();
-    await this.perform(() => this.api.updateUser(u.id, changes), 'Changes saved.');
+    await this.perform(() => this.api.updateUser(u.id, changes), this.copy.messages.changesSaved);
   }
 
   protected async run(action: UserAction): Promise<void> {
@@ -146,8 +149,8 @@ export class UsersPageComponent {
       return;
     }
     const messages: Record<UserAction, string> = {
-      disable: 'Account disabled and sessions revoked.', enable: 'Account enabled.',
-      'revoke-sessions': 'All sessions revoked.', unlock: 'Account unlocked.', 'verify-email': 'Email marked as verified.'
+      disable: this.copy.messages.accountDisabled, enable: this.copy.messages.accountEnabled,
+      'revoke-sessions': this.copy.messages.sessionsRevoked, unlock: this.copy.messages.accountUnlocked, 'verify-email': this.copy.messages.emailVerified
     };
     await this.perform(() => this.api.userAction(u.id, action), messages[action]);
   }
@@ -164,7 +167,7 @@ export class UsersPageComponent {
         ? { permanent: true, reason }
         : { permanent: false, days: Number(this.premiumDuration()), reason });
       this.premiumReason.set('');
-      this.message.set(permanent ? 'Permanent Premium access granted.' : 'Premium time granted.');
+      this.message.set(permanent ? this.copy.messages.permanentPremiumGranted : this.copy.messages.premiumGranted);
       await this.loadPremiumGrants(u.id);
     } catch (e) {
       this.panelError.set(errorMessage(e));
@@ -183,7 +186,7 @@ export class UsersPageComponent {
       await this.api.revokePremium(u.id, grantId, reason);
       this.premiumRevokeId.set(null);
       this.premiumRevokeReason.set('');
-      this.message.set('Manual Premium grant revoked. Store purchases and referral rewards are unchanged.');
+      this.message.set(this.copy.messages.premiumGrantRevoked);
       await this.loadPremiumGrants(u.id);
     } catch (e) {
       this.panelError.set(errorMessage(e));
@@ -214,7 +217,7 @@ export class UsersPageComponent {
       const result = await this.api.deleteUser(u.id, this.deleteConfirm().trim());
       this.selected.set(null);
       this.deleteConfirm.set('');
-      this.message.set(result.playSubscriptionNotCancelled ? 'Account deleted. Its Google Play subscription is NOT cancelled.' : 'Account deleted.');
+      this.message.set(result.playSubscriptionNotCancelled ? this.copy.messages.accountDeletedSubscriptionNotCancelled : this.copy.messages.accountDeleted);
       await this.load();
     } catch (e) {
       this.panelError.set(errorMessage(e));
@@ -231,7 +234,7 @@ export class UsersPageComponent {
     this.message.set('');
     try {
       await this.api.sendPasswordInvitation(u.id);
-      this.message.set('Password setup link sent to ' + u.email + '.');
+      this.message.set(this.copy.messages.passwordSetupLinkSent + u.email + '.');
     } catch (e) {
       this.panelError.set(errorMessage(e));
     } finally {
@@ -240,12 +243,16 @@ export class UsersPageComponent {
   }
 
   protected methods(u: AdminUserDetail): string {
-    const m = [u.hasPassword ? 'password' : '', u.hasGoogle ? 'Google' : ''].filter(Boolean);
-    return m.length ? m.join(' + ') : 'none';
+    const m = [u.hasPassword ? 'Contraseña' : '', u.hasGoogle ? 'Google' : ''].filter(Boolean);
+    return m.length ? m.join(' + ') : 'Ninguno';
+  }
+
+  protected roleLabel(role: string): string {
+    return this.copy.roles[role as keyof typeof this.copy.roles] ?? role;
   }
 
   protected formatDate(value: string): string {
-    return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    return formatUiDateTime(value);
   }
 
   private async perform(call: () => Promise<AdminUserDetail>, success: string): Promise<void> {
