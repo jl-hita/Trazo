@@ -97,6 +97,7 @@ export const OVERVIEW_COPY = {
   paymentIssues: 'Con problemas de cobro',
   testPurchasesExcluded: 'Compras de prueba (excluidas)',
   engineAndWorkouts: 'Motor y entrenamientos (30 días)',
+  viewPlanningEngine: 'ver el motor de planificación',
 
   noWorkouts30d: 'Todavía no hay sesiones registradas en los últimos 30 días.',
   workouts: 'Sesiones registradas',
