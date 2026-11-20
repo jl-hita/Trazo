@@ -728,6 +728,10 @@ export const UI_COPY = {
     trials: 'Pruebas',
     startedFreeTrial: 'Inició una prueba gratuita',
     signupToPayer: 'Alta → cliente de pago',
+    signupToPaid: 'Alta → cliente de pago',
+    trialToPaid: 'Prueba → cliente de pago',
+    confidenceRange: 'intervalo del 95 %',
+    largestDrop: 'El mayor descenso entre dos pasos consecutivos indica dónde conviene empezar a investigar.'
     trialToPayer: 'Prueba → cliente de pago',
     payingCustomersShort: 'clientes de pago',
     payingCustomers: 'Clientes de pago',
