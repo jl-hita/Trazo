@@ -62,7 +62,7 @@ const tags = (value: string) => value.split(',').map(v => v.trim()).filter(Boole
 @Component({
   selector: 'trazo-exercises-page',
   standalone: true,
-  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent],
+  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent, UiFormFieldComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './exercises.page.scss',
   templateUrl: './exercises.page.html'
