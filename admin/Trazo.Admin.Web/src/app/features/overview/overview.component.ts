@@ -180,10 +180,7 @@ export class OverviewComponent {
   /** Alert and card links are admin routes with an optional query string; the router parses them into a UrlTree. */
   protected tree(link: string) { return this.router.parseUrl(link); }
 
-  protected when(iso: string): string {
-    const d = new Date(iso);
-    return formatUiDateTime(iso);
-  }
+  protected when(iso: string): string { return formatUiDateTime(iso); }
 
   protected format(n: number): string { return formatUiNumber(n, 0); }
 
