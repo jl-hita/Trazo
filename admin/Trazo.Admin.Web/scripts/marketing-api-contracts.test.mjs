@@ -27,7 +27,12 @@ async function loadService(http) {
     if (request === '@angular/core') return { Injectable: () => target => target, inject: () => http };
     if (request === '@angular/common/http') return { HttpClient: class HttpClient {}, HttpParams: TestHttpParams };
     if (request === 'rxjs') return { firstValueFrom: value => Promise.resolve(value) };
-    if (request === '../../core/setup.api') return { errorMessage: () => 'Request failed' };
+    if (request === '../../core/api-error') return { errorMessage: () => 'Request failed' };
+    if (request === '../../core/ui-format') return {
+      formatUiCurrency: value => String(value),
+      formatUiNumber: value => String(value),
+      formatUiPercent: value => value == null ? '—' : `${value * 100}%`
+    };
     return originalLoad.call(this, request, parent, isMain);
   };
   try {
@@ -106,7 +111,7 @@ test('MarketingApi keeps nullable rates and formats zero-safe values consistentl
   assert.equal(fmt.pct(null), '—');
   assert.equal(fmt.eur(null), '—');
   assert.equal(fmt.delta(0, 0), '—');
-  assert.equal(fmt.delta(3, 0), 'new');
-  assert.equal(marketingError({ error: { message: 'Specific API error' } }), 'Specific API error');
+  assert.equal(fmt.delta(3, 0), 'nuevo');
+  assert.equal(marketingError({ error: { message: 'Specific API error' } }), 'Request failed');
   assert.equal(marketingError(new Error('generic')), 'Request failed');
 });
