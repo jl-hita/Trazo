@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { RouterLink } from '@angular/router';
 import type { AdminSubscriptionDetail, AdminSubscriptionSummary } from '../../core/admin.models';
 import { SubscriptionsApi } from './subscriptions.api';
@@ -15,7 +17,7 @@ const STATUSES: { value: string; label: string }[] = [
 @Component({
   selector: 'trazo-subscriptions-page',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, UiButtonComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './subscriptions.page.scss',
   templateUrl: './subscriptions.page.html'

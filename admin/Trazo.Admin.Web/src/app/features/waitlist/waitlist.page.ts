@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type { WaitlistEntry, WaitlistPage, WaitlistStatus } from '../../core/admin.models';
 import { WaitlistApi } from './waitlist.api';
 import { errorMessage } from '../../core/setup.api';
@@ -14,7 +16,7 @@ import { errorMessage } from '../../core/setup.api';
 @Component({
   selector: 'trazo-waitlist-page',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, UiButtonComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './waitlist.page.scss',
   templateUrl: './waitlist.page.html'

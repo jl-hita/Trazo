@@ -30,7 +30,7 @@
 
         @if (error()) { <p class="subs-error" role="alert">{{ error() }}</p> }
 
-        <table class="subs-table">
+        <trazo-table tableClass="subs-table">
           <thead><tr><th>User</th><th>Status</th><th>Expires</th><th>Source</th></tr></thead>
           <tbody>
             @for (s of items(); track s.id) {
@@ -44,13 +44,13 @@
               <tr><td colspan="4" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Loading…' : 'No subscriptions match these filters.' }}</td></tr>
             }
           </tbody>
-        </table>
+        </trazo-table>
 
         <div class="subs-pager">
           <span>{{ totalCount() }} subscription{{ totalCount() === 1 ? '' : 's' }} · page {{ page() }} of {{ totalPages() || 1 }}</span>
           <span>
-            <button type="button" (click)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
-            <button type="button" (click)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
           </span>
         </div>
       </section>
@@ -74,7 +74,7 @@
             <li>Token fingerprint: <b>{{ d.purchaseTokenFingerprint }}</b></li>
             <li>Last change: <b>{{ formatDate(d.subscription.updatedAt) }}</b></li>
           </ul>
-          <div><button type="button" (click)="refresh()" [disabled]="busy()">Refresh from Google Play</button></div>
+          <div><trazo-button variant="secondary" type="button" (pressed)="refresh()" [disabled]="busy()">Refresh from Google Play</trazo-button></div>
           <a routerLink="/users">Manage the user in Users</a>
           @if (message()) { <p class="ok" role="status">{{ message() }}</p> }
           @if (panelError()) { <p class="err" role="alert">{{ panelError() }}</p> }

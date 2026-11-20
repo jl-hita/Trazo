@@ -12,7 +12,7 @@
           <select aria-label="Filter by status" [ngModel]="status()" (ngModelChange)="setStatus($event)">
             @for (f of filters; track f.value) { <option [value]="f.value">{{ f.label }}</option> }
           </select>
-          <button type="button" (click)="refresh()">Refresh</button>
+          <trazo-button variant="secondary" type="button" (pressed)="refresh()">Refresh</trazo-button>
           @if (counts(); as c) { <span class="rv-count">{{ c.pending }} pending · {{ c.mine }} mine@if (c.mineAwaitingReply > 0) { ({{ c.mineAwaitingReply }} awaiting your reply) }</span> }
         </div>
         <div class="rv-list">
@@ -58,12 +58,12 @@
             <p class="rv-note">Closed {{ when(d.review.reviewedAt) }}. The user can open a new request to continue.</p>
           }
           <div class="rv-actions">
-            @if (d.canTake) { <button type="button" class="primary" [disabled]="busy()" (click)="claim(d)">Take it</button> }
+            @if (d.canTake) { <trazo-button variant="primary" type="button" [disabled]="busy()" (pressed)="claim(d)">Take it</trazo-button> }
             @if (d.canReply) {
-              <button type="button" class="primary" [disabled]="busy() || !draft.trim()" (click)="send(d)">Send reply</button>
-              <button type="button" [disabled]="busy()" (click)="close(d)">Mark as reviewed{{ draft.trim() ? ' with this message' : '' }}</button>
+              <trazo-button variant="primary" type="button" [disabled]="busy() || !draft.trim()" (pressed)="send(d)">Send reply</trazo-button>
+              <trazo-button variant="secondary" type="button" [disabled]="busy()" (pressed)="close(d)">Mark as reviewed{{ draft.trim() ? ' with this message' : '' }}</trazo-button>
             }
-            @if (d.canRelease) { <button type="button" [disabled]="busy()" (click)="release(d)">Give back to the queue</button> }
+            @if (d.canRelease) { <trazo-button variant="secondary" type="button" [disabled]="busy()" (pressed)="release(d)">Give back to the queue</trazo-button> }
           </div>
         } @else {
           <p class="rv-empty">Select a request.</p>
