@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import type { AlertSeverity, Overview } from '../../core/admin.models';
@@ -49,6 +50,7 @@ const REASON_LABEL: Record<string, string> = {
   encapsulation: ViewEncapsulation.None
 })
 export class OverviewComponent {
+  protected readonly labels = UI_COPY.overview;
   private readonly api = inject(OverviewApi);
   private readonly router = inject(Router);
   private requestId = 0;
