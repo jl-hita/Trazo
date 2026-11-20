@@ -1,0 +1,106 @@
+.trazo-card {
+  display: block;
+  min-width: 0;
+  padding: var(--trazo-space-5);
+  border: 1px solid var(--trazo-border);
+  border-radius: var(--trazo-radius-md);
+  background: var(--trazo-surface);
+}
+
+trazo-button { display: inline-block; }
+.trazo-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--trazo-space-2);
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1px solid var(--trazo-border-strong);
+  border-radius: var(--trazo-radius-sm);
+  background: var(--trazo-surface-raised);
+  color: var(--trazo-text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.trazo-button:hover:not(:disabled) { background: var(--trazo-surface-hover); }
+.trazo-button:focus-visible { outline: none; box-shadow: var(--trazo-focus-ring); }
+.trazo-button:disabled { opacity: .5; cursor: not-allowed; }
+.trazo-button--primary { border-color: var(--trazo-accent); background: var(--trazo-accent-strong); color: #fff; }
+.trazo-button--primary:hover:not(:disabled) { background: #477db8; }
+.trazo-button--danger { border-color: #7a3b3b; background: #2c1717; color: var(--trazo-danger); }
+.trazo-button--ghost { border-color: transparent; background: transparent; }
+.trazo-button__spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: trazo-spin .7s linear infinite;
+}
+@keyframes trazo-spin { to { transform: rotate(360deg); } }
+
+.trazo-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid var(--trazo-border-strong);
+  border-radius: var(--trazo-radius-pill);
+  color: var(--trazo-text-soft);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.trazo-badge[data-tone="info"] { border-color: #3d5f8c; color: var(--trazo-info); }
+.trazo-badge[data-tone="success"] { border-color: #2f6a4b; color: var(--trazo-success); }
+.trazo-badge[data-tone="warning"] { border-color: #6b5a2e; color: var(--trazo-warning); }
+.trazo-badge[data-tone="danger"] { border-color: #7a3b3b; color: var(--trazo-danger); }
+
+.trazo-field { display: grid; gap: var(--trazo-space-2); min-width: 0; }
+.trazo-field > label { color: var(--trazo-text-soft); font-size: 12px; }
+.trazo-field input, .trazo-field select, .trazo-field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--trazo-border-strong);
+  border-radius: var(--trazo-radius-sm);
+  background: var(--trazo-bg);
+  color: var(--trazo-text);
+  font: inherit;
+  font-size: 13px;
+}
+.trazo-field input:focus-visible, .trazo-field select:focus-visible, .trazo-field textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--trazo-focus-ring);
+}
+.trazo-field__hint { color: var(--trazo-text-muted); font-size: 11px; }
+.trazo-field__error { color: var(--trazo-danger); font-size: 11px; }
+
+.trazo-state {
+  display: block;
+  padding: var(--trazo-space-5);
+  border: 1px solid var(--trazo-border);
+  border-radius: var(--trazo-radius-md);
+  background: var(--trazo-surface);
+}
+.trazo-state h2 { margin: 0 0 var(--trazo-space-2); color: var(--trazo-text-strong); font-size: 15px; }
+.trazo-state p { margin: 0; color: var(--trazo-text-soft); font-size: 13px; line-height: 1.6; }
+.trazo-state[data-kind="error"] { border-color: #5a3a3a; background: #241719; }
+.trazo-state[data-kind="success"] { border-color: #2f5a45; background: #14241d; }
+
+.trazo-table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--trazo-border); border-radius: var(--trazo-radius-md); }
+.trazo-table { width: 100%; border-collapse: collapse; background: var(--trazo-surface); color: var(--trazo-text); font-size: 13px; }
+.trazo-table th {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--trazo-border);
+  color: var(--trazo-text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.trazo-table td { padding: 11px 14px; border-bottom: 1px solid var(--trazo-border); vertical-align: middle; }
+.trazo-table tbody tr:last-child td { border-bottom: 0; }
+.trazo-table tbody tr[data-interactive="true"] { cursor: pointer; }
+.trazo-table tbody tr[data-interactive="true"]:hover td { background: var(--trazo-surface-raised); }
