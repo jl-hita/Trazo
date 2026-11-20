@@ -1,0 +1,92 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Waitlist</h1>
+        <p class="subtitle">Addresses collected by the landing page, with the date of their consent and confirmation. Personal data: superadmin only.</p>
+      </div>
+    </div>
+
+    <div class="wl-stats">
+      <div class="wl-stat"><b>{{ data()?.overall?.total ?? '—' }}</b><span>Total</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.pending ?? '—' }}</b><span>Not confirmed</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.confirmed ?? '—' }}</b><span>Confirmed</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.invited ?? '—' }}</b><span>Invited</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.es ?? '—' }}</b><span>Spanish</span></div>
+      <div class="wl-stat"><b>{{ data()?.overall?.en ?? '—' }}</b><span>English</span></div>
+    </div>
+
+    <section class="wl-flow" aria-label="Closed test invitations">
+      <h2>Closed test invitations</h2>
+      <p>
+        1. Copy the confirmed addresses that have not been invited yet and paste them in Play Console, in the closed test tester list.
+        2. Once they are saved there, send the invitations: the link in the email only works for addresses already in that list.
+      </p>
+      <div class="row">
+        <button type="button" class="wl-btn" (click)="copyConfirmed()" [disabled]="busy() || !data()?.overall?.confirmed">
+          1. Copy confirmed addresses ({{ data()?.overall?.confirmed ?? 0 }})
+        </button>
+        @if (confirmSend()) {
+          <span class="wl-confirm">Are they saved in Play Console? The email is sent to {{ copied().length }} address(es).</span>
+          <button type="button" class="wl-btn primary" (click)="sendInvitations()" [disabled]="busy()">Send now</button>
+          <button type="button" class="wl-btn" (click)="confirmSend.set(false)">Cancel</button>
+        } @else {
+          <button type="button" class="wl-btn primary" (click)="confirmSend.set(true)" [disabled]="busy() || !copied().length">
+            2. Send invitations ({{ copied().length }})
+          </button>
+        }
+      </div>
+      @if (notice()) { <p class="wl-ok" role="status">{{ notice() }}</p> }
+    </section>
+
+    <div class="wl-toolbar">
+      <input type="search" placeholder="Search by email" aria-label="Search the waitlist" [ngModel]="q()" (ngModelChange)="onSearch($event)">
+      <select aria-label="Filter by status" [ngModel]="status()" (ngModelChange)="onStatus($event)">
+        <option value="">All</option>
+        <option value="pending">Not confirmed</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="invited">Invited</option>
+      </select>
+      <button type="button" class="wl-btn" (click)="exportCsv()" [disabled]="exporting() || !data()?.overall?.total">Export CSV</button>
+      <button type="button" class="wl-btn" (click)="load()" [disabled]="loading()">Refresh</button>
+    </div>
+
+    @if (error()) { <p class="wl-error" role="alert">{{ error() }}</p> }
+
+    <table class="wl-table">
+      <thead><tr><th>Email</th><th>Language</th><th>Status</th><th>Consent</th><th>Joined</th><th></th></tr></thead>
+      <tbody>
+        @for (e of entries(); track e.id) {
+          <tr>
+            <td>{{ e.email }}</td>
+            <td>{{ e.language }}</td>
+            <td>
+              @if (e.invitedAt) { <span class="wl-badge invited">Invited {{ e.invitedAt | date: 'yyyy-MM-dd' }}</span> }
+              @else if (e.confirmedAt) { <span class="wl-badge confirmed">Confirmed {{ e.confirmedAt | date: 'yyyy-MM-dd' }}</span> }
+              @else { <span class="wl-badge">Not confirmed</span> }
+            </td>
+            <td>{{ e.consentAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+            <td>{{ e.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+            <td class="actions">
+              @if (confirmId() === e.id) {
+                <span class="wl-confirm">Delete permanently?</span>
+                <button type="button" class="wl-btn danger" (click)="remove(e)">Delete</button>
+                <button type="button" class="wl-btn" (click)="confirmId.set(null)">Cancel</button>
+              } @else {
+                <button type="button" class="wl-btn" (click)="confirmId.set(e.id)" [attr.aria-label]="'Delete ' + e.email">Delete</button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="wl-empty">{{ loading() ? 'Loading…' : (q() || status() ? 'No address matches the search.' : 'Nobody has joined yet.') }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="wl-pager">
+      <span>{{ data()?.totalCount ?? 0 }} {{ q() || status() ? 'matching ' : '' }}addresses</span>
+      <span>
+        <button type="button" class="wl-btn" (click)="go(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
+        Page {{ page() }} of {{ totalPages() }}
+        <button type="button" class="wl-btn" (click)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+      </span>
+    </div>

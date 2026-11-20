@@ -1,0 +1,12 @@
+    <form (ngSubmit)="submit()">
+      <img class="logo" src="logo-dark.svg" alt="TRAZO" height="38">
+      <h1>Administration</h1>
+      @if (challenge()) {
+        <label>Authentication code <input name="code" inputmode="numeric" autocomplete="one-time-code" required [ngModel]="code()" (ngModelChange)="code.set($event)"></label>
+      } @else {
+        <label>Email <input type="email" name="email" autocomplete="username" required [ngModel]="email()" (ngModelChange)="email.set($event)"></label>
+        <label>Password <input type="password" name="password" autocomplete="current-password" required [ngModel]="password()" (ngModelChange)="password.set($event)"></label>
+      }
+      @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+      <button type="submit" [disabled]="busy()">Sign in</button>
+    </form>

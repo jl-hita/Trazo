@@ -1,0 +1,87 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Error tickets</h1>
+        <p class="subtitle">Anonymous reports of unexpected errors in the API and the Android app, grouped by error, with the complete stack trace. Superadmin only.</p>
+      </div>
+    </div>
+
+    <div class="et-stats">
+      <div class="et-stat"><b>{{ data()?.overall?.new ?? '—' }}</b><span>New</span></div>
+      <div class="et-stat"><b>{{ data()?.overall?.seen ?? '—' }}</b><span>Seen</span></div>
+      <div class="et-stat"><b>{{ data()?.overall?.resolved ?? '—' }}</b><span>Resolved</span></div>
+    </div>
+
+    <div class="et-toolbar">
+      <input type="search" placeholder="Search the type or the stack trace" aria-label="Search error tickets" [ngModel]="q()" (ngModelChange)="onSearch($event)">
+      <select aria-label="Status" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
+        <option value="">All statuses</option><option value="new">New</option><option value="seen">Seen</option><option value="resolved">Resolved</option>
+      </select>
+      <select aria-label="Source" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
+        <option value="">API and app</option><option value="backend">API</option><option value="android">Android app</option>
+      </select>
+      <button type="button" class="et-btn" (click)="load()" [disabled]="loading()">Refresh</button>
+      <button type="button" class="et-btn" (click)="triggerTest()" [disabled]="testing()" title="Makes the API throw an exception on purpose to check this system">Trigger test error</button>
+    </div>
+
+    @if (info()) { <p class="et-info" role="status">{{ info() }}</p> }
+    @if (error()) { <p class="et-error" role="alert">{{ error() }}</p> }
+
+    <table class="et-table">
+      <thead><tr><th>Error</th><th>Source</th><th>Version</th><th>Times</th><th>Last seen</th><th>Status</th></tr></thead>
+      <tbody>
+        @for (t of tickets(); track t.id) {
+          <tr class="row" [class.open]="openId() === t.id" (click)="toggle(t)" tabindex="0" (keydown.enter)="toggle(t)">
+            <td class="et-type">{{ t.errorType }}</td>
+            <td>{{ t.source === 'backend' ? 'API' : 'Android' }}</td>
+            <td>{{ t.appVersion ?? '—' }}</td>
+            <td>{{ t.occurrences }}</td>
+            <td>{{ t.lastSeenAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+            <td><span class="et-badge" [class]="'et-badge ' + t.status">{{ t.status }}</span></td>
+          </tr>
+          @if (openId() === t.id) {
+            <tr class="et-detail">
+              <td colspan="6">
+                @if (detail(); as d) {
+                  <div class="et-meta">
+                    <span>First seen {{ d.firstSeenAt | date: 'yyyy-MM-dd HH:mm' }}</span>
+                    <span>Last seen {{ d.lastSeenAt | date: 'yyyy-MM-dd HH:mm' }}</span>
+                    <span>{{ d.occurrences }} {{ d.occurrences === 1 ? 'time' : 'times' }}</span>
+                  </div>
+                  @if (d.originalStackTrace) {
+                    <button type="button" class="et-btn" (click)="toggleOriginalTrace()">
+                      {{ showOriginalTrace() ? 'Show retraced trace' : 'Show original obfuscated trace' }}
+                    </button>
+                  }
+                  <pre class="et-trace" tabindex="0">{{ showOriginalTrace() && d.originalStackTrace ? d.originalStackTrace : d.stackTrace }}</pre>
+                  <div class="et-actions">
+                    @if (d.status !== 'resolved') { <button type="button" class="et-btn" (click)="setStatus(d, 'resolved')">Mark as resolved</button> }
+                    @if (d.status === 'resolved') { <button type="button" class="et-btn" (click)="setStatus(d, 'new')">Reopen</button> }
+                    @if (d.status === 'new') { <button type="button" class="et-btn" (click)="setStatus(d, 'seen')">Mark as seen</button> }
+                    <button type="button" class="et-btn" (click)="copy(d)">Copy stack trace</button>
+                    @if (confirmId() === d.id) {
+                      <span class="et-confirm">Delete permanently?</span>
+                      <button type="button" class="et-btn danger" (click)="remove(d)">Delete</button>
+                      <button type="button" class="et-btn" (click)="confirmId.set(null)">Cancel</button>
+                    } @else {
+                      <button type="button" class="et-btn" (click)="confirmId.set(d.id)">Delete</button>
+                    }
+                  </div>
+                } @else { Loading… }
+              </td>
+            </tr>
+          }
+        } @empty {
+          <tr><td colspan="6" class="et-empty">{{ loading() ? 'Loading…' : 'No error tickets match.' }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="et-pager">
+      <span>{{ data()?.totalCount ?? 0 }} tickets</span>
+      <span>
+        <button type="button" class="et-btn" (click)="go(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</button>
+        Page {{ page() }} of {{ totalPages() }}
+        <button type="button" class="et-btn" (click)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</button>
+      </span>
+    </div>
