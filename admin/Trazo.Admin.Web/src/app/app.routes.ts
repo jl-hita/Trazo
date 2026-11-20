@@ -83,6 +83,7 @@ export const routes: Routes = [
         canActivate: [superadminGuard],
         children: [
           { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent) },
+          { path: 'intelligence', loadComponent: () => import('./features/intelligence/intelligence.page').then(m => m.IntelligencePageComponent) },
           { path: 'users', loadComponent: () => import('./features/users/users.page').then(m => m.UsersPageComponent) },
           { path: 'subscriptions', loadComponent: () => import('./features/subscriptions/subscriptions.page').then(m => m.SubscriptionsPageComponent) },
           { path: 'exercises', loadComponent: () => import('./features/exercises/exercises.page').then(m => m.ExercisesPageComponent) },
