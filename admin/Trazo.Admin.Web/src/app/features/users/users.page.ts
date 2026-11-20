@@ -1,5 +1,8 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiBadgeComponent } from '../../shared/ui/ui-badge.component';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import type { AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.models';
 import { UsersApi } from './users.api';
 import { AuthService } from '../../core/auth.service';
@@ -11,7 +14,7 @@ const ROLES = ['user', 'admin', 'accountant', 'commercial', 'superadmin'];
 @Component({
   selector: 'trazo-users-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './users.page.scss',
   templateUrl: './users.page.html'
