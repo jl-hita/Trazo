@@ -1,6 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed, afterEach, beforeEach, describe, expect, it } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { PlanPreviewRequest } from '../core/admin.models';
+import type { FiscalEntryInput } from './fiscal/fiscal.models';
 import { ExercisesApi } from './exercises/exercises.api';
 import { LogsApi } from './logs/logs.api';
 import { ReferralsApi } from './referrals/referrals.api';
@@ -151,8 +154,13 @@ describe('Admin domain API services', () => {
 
   it('FiscalApi chooses POST versus PUT and preserves closure acknowledgement', async () => {
     const api = TestBed.inject(FiscalApi);
-    const input = { description: 'Consulting', amount: 100 };
-    const created = api.saveFiscalEntry(null, input as never);
+    const input: FiscalEntryInput = {
+      kind: 'expense', date: '2026-11-20', concept: 'Consulting', counterparty: null,
+      counterpartyTaxId: null, counterpartyCountry: null, invoiceNumber: null, category: 'services',
+      base: 100, vatTreatment: 'standard', vatRatePct: 21, withholdingPct: null,
+      deductiblePct: 100, notes: ''
+    };
+    const created = api.saveFiscalEntry(null, input);
     const createRequest = http.expectOne('/api/v1/admin/fiscal/entries');
     expect(createRequest.request.method).toBe('POST');
     expect(createRequest.request.body).toEqual(input);
@@ -167,8 +175,12 @@ describe('Admin domain API services', () => {
   });
 
   it('PlanningApi posts the preview request unchanged', async () => {
-    const payload = { objective: 'hypertrophy', experience: 'intermediate' };
-    const result = TestBed.inject(PlanningApi).preview(payload as never);
+    const payload: PlanPreviewRequest = {
+      goal: 'hypertrophy', experience: 'intermediate', startDate: '2026-12-01', durationWeeks: 8,
+      trainingDays: ['Monday', 'Wednesday', 'Friday'], maxSessionMinutes: 60,
+      availableEquipment: ['barbell', 'dumbbell'], excludedExerciseIds: [], split: 'full-body'
+    };
+    const result = TestBed.inject(PlanningApi).preview(payload);
     const request = http.expectOne('/api/v1/admin/planning/preview');
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual(payload);
