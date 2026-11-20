@@ -1,46 +1,46 @@
     <div class="page-heading">
       <div>
-        <p class="eyebrow">ADMINISTRATION</p>
-        <h1>Logs</h1>
-        <p class="subtitle">Application events from the API, newest first. Logs are kept for a limited time.</p>
+        <p class="eyebrow">{{ copy.eyebrow }}</p>
+        <h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p>
       </div>
     </div>
 
-    <div class="logs-toolbar" role="group" aria-label="Level filter">
+    <div class="logs-toolbar" role="group" [attr.aria-label]="copy.levelFilter">
       @for (l of levels; track l.id) {
         <trazo-button variant="secondary" [buttonClass]="'level-chip lv-' + l.id" type="button" [attr.aria-pressed]="isOn(l.id)" (pressed)="toggle(l.id)">
           {{ l.label }} <span class="count">{{ counts()[l.id] }}</span>
         </trazo-button>
       }
-      <input type="search" placeholder="Search message, category or exception" aria-label="Search logs"
+      <input type="search" [placeholder]="copy.searchPlaceholder" [attr.aria-label]="copy.searchAria"
              [ngModel]="q()" (ngModelChange)="onSearch($event)">
     </div>
 
-    <div class="logs-toolbar" role="group" aria-label="Date filter">
-      <span class="label">Date</span>
-      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="shiftDay(-1)" aria-label="Previous day">◀</trazo-button>
-      <input type="date" aria-label="From date" [ngModel]="from()" (ngModelChange)="setDate('from', $event)">
+    <div class="logs-toolbar" role="group" [attr.aria-label]="copy.dateFilter">
+      <span class="label">{{ copy.date }}</span>
+      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="shiftDay(-1)" [attr.aria-label]="copy.previousDay">◀</trazo-button>
+      <input type="date" [attr.aria-label]="copy.fromDate" [ngModel]="from()" (ngModelChange)="setDate('from', $event)">
       <span class="label">to</span>
-      <input type="date" aria-label="To date" [ngModel]="to()" (ngModelChange)="setDate('to', $event)">
-      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="shiftDay(1)" aria-label="Next day">▶</trazo-button>
-      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('today')">Today</trazo-button>
-      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('yesterday')">Yesterday</trazo-button>
-      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('week')">Last 7 days</trazo-button>
-      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('all')" [disabled]="!from() && !to()">All dates</trazo-button>
+      <input type="date" [attr.aria-label]="copy.toDate" [ngModel]="to()" (ngModelChange)="setDate('to', $event)">
+      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="shiftDay(1)" [attr.aria-label]="copy.nextDay">▶</trazo-button>
+      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('today')">{{ copy.today }}</trazo-button>
+      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('yesterday')">{{ copy.yesterday }}</trazo-button>
+      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('week')">{{ copy.last7Days }}</trazo-button>
+      <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('all')" [disabled]="!from() && !to()">{{ copy.allDates }}</trazo-button>
       <span style="flex:1"></span>
-      <select aria-label="Entries per page" [ngModel]="pageSize()" (ngModelChange)="setPageSize($event)">
-        <option [ngValue]="25">25 per page</option>
-        <option [ngValue]="50">50 per page</option>
-        <option [ngValue]="100">100 per page</option>
+      <select [attr.aria-label]="copy.entriesPerPage" [ngModel]="pageSize()" (ngModelChange)="setPageSize($event)">
+        <option [ngValue]="25">25 {{ copy.perPage }}</option>
+        <option [ngValue]="50">50 {{ copy.perPage }}</option>
+        <option [ngValue]="100">100 {{ copy.perPage }}</option>
       </select>
-      <label class="auto-refresh"><input type="checkbox" [ngModel]="auto()" (ngModelChange)="setAuto($event)"> Auto-refresh</label>
-      <trazo-button variant="secondary" buttonClass="logs-btn" type="button" (pressed)="refresh()" [disabled]="loading()">Refresh</trazo-button>
+      <label class="auto-refresh"><input type="checkbox" [ngModel]="auto()" (ngModelChange)="setAuto($event)"> {{ copy.autoRefresh }}</label>
+      <trazo-button variant="secondary" buttonClass="logs-btn" type="button" (pressed)="refresh()" [disabled]="loading()">{{ copy.refresh }}</trazo-button>
     </div>
 
     @if (error()) { <p class="logs-error" role="alert">{{ error() }}</p> }
 
     <trazo-table tableClass="logs-table">
-      <thead><tr><th class="c-time">Time</th><th class="c-level">Level</th><th class="c-cat">Category</th><th>Message</th></tr></thead>
+      <thead><tr><th class="c-time">{{ copy.time }}</th><th class="c-level">{{ copy.level }}</th><th class="c-cat">{{ copy.category }}</th><th>{{ copy.message }}</th></tr></thead>
       <tbody>
         @for (e of entries(); track e.id) {
           <tr class="entry" [class]="'entry lv-' + e.level" [class.open]="openId() === e.id" tabindex="0" role="button"
@@ -54,25 +54,25 @@
             <tr class="detail"><td colspan="4">
               <div class="log-detail">
                 <dl>
-                  <dt>Time</dt><dd>{{ formatTime(e.timestamp) }} (local) · {{ e.timestamp }}</dd>
-                  <dt>Category</dt><dd>{{ e.category }}</dd>
-                  @if (e.traceId) { <dt>Trace</dt><dd>{{ e.traceId }}</dd> }
-                  <dt>Message</dt><dd><pre>{{ e.message }}</pre></dd>
-                  @if (e.exception) { <dt>Exception</dt><dd><pre>{{ e.exception }}</pre></dd> }
+                  <dt>{{ copy.time }}</dt><dd>{{ formatTime(e.timestamp) }} ({{ copy.localTime }}) · {{ e.timestamp }}</dd>
+                  <dt>{{ copy.category }}</dt><dd>{{ e.category }}</dd>
+                  @if (e.traceId) { <dt>{{ copy.trace }}</dt><dd>{{ e.traceId }}</dd> }
+                  <dt>{{ copy.message }}</dt><dd><pre>{{ e.message }}</pre></dd>
+                  @if (e.exception) { <dt>{{ copy.exception }}</dt><dd><pre>{{ e.exception }}</pre></dd> }
                 </dl>
               </div>
             </td></tr>
           }
         } @empty {
-          <tr><td colspan="4" class="logs-empty">{{ loading() ? 'Loading…' : emptyText() }}</td></tr>
+          <tr><td colspan="4" class="logs-empty">{{ loading() ? copy.loading : emptyText() }}</td></tr>
         }
       </tbody>
     </trazo-table>
 
     <div class="logs-pager">
-      <span>{{ entries().length }} entr{{ entries().length === 1 ? 'y' : 'ies' }} shown · page {{ pageNumber() }}</span>
+      <span>{{ entries().length }} {{ entries().length === 1 ? copy.entryShown : copy.entriesShown }} · {{ copy.page }} {{ pageNumber() }}</span>
       <span>
-        <trazo-button variant="secondary" buttonClass="logs-btn" type="button" (pressed)="newer()" [disabled]="pageNumber() <= 1 || loading()">◀ Newer</trazo-button>
-        <trazo-button variant="secondary" buttonClass="logs-btn" type="button" (pressed)="older()" [disabled]="!nextCursor() || loading()">Older ▶</trazo-button>
+        <trazo-button variant="secondary" buttonClass="logs-btn" type="button" (pressed)="newer()" [disabled]="pageNumber() <= 1 || loading()">◀ {{ copy.newer }}</trazo-button>
+        <trazo-button variant="secondary" buttonClass="logs-btn" type="button" (pressed)="older()" [disabled]="!nextCursor() || loading()">{{ copy.older }} ▶</trazo-button>
       </span>
     </div>
