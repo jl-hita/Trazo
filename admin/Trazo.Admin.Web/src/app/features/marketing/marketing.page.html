@@ -12,8 +12,8 @@
             <trazo-button [variant]="preset() === p.days ? 'primary' : 'secondary'" buttonClass="mk-btn" type="button" (pressed)="usePreset(p.days)">{{ p.label }}</trazo-button>
           }
         </div>
-        <label>From <input type="date" [ngModel]="from()" (ngModelChange)="custom($event, to())" name="from"></label>
-        <label>To (included) <input type="date" [ngModel]="to()" (ngModelChange)="custom(from(), $event)" name="to"></label>
+        <trazo-form-field label="From" controlId="field-marketing-from"><input type="date" [ngModel]="from()" (ngModelChange)="custom($event, to())" name="from" id="field-marketing-from"></trazo-form-field>
+        <trazo-form-field label="To (included)" controlId="field-marketing-to"><input type="date" [ngModel]="to()" (ngModelChange)="custom(from(), $event)" name="to" id="field-marketing-to"></trazo-form-field>
         @if (invalid()) { <span class="mk-err" role="alert">The start must be before the end.</span> }
       </div>
       <div class="mk-tabs" role="tablist">
