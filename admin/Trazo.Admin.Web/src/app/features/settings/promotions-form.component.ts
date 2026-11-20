@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { SettingsApi } from './settings.api';
-import { errorMessage } from '../../core/setup.api';
+import { errorMessage } from '../../core/api-error';
 
 /** Promotional Premium time: the welcome period of new accounts and the reward of the referral programme. */
 @Component({
