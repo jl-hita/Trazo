@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -64,6 +65,7 @@ const TEXT: Record<Lang, Record<Action, { title: string; text: string; button: s
 @Component({
   selector: 'trazo-waitlist-action-page',
   standalone: true,
+  imports: [UiButtonComponent],
   styleUrl: './waitlist-action.page.scss',
   templateUrl: './waitlist-action.page.html'
 })

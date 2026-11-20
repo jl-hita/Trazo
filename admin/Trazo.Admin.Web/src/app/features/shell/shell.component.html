@@ -28,7 +28,7 @@
   <main class="main">
     <header class="topbar">
       <span class="breadcrumb">Workspace</span>
-      <div class="admin-chip"><span class="avatar">{{ initial() }}</span> {{ auth.user()?.displayName }} <button class="link" type="button" (click)="logout()">Sign out</button></div>
+      <div class="admin-chip"><span class="avatar">{{ initial() }}</span> {{ auth.user()?.displayName }} <trazo-button variant="ghost" buttonClass="link" type="button" (pressed)="logout()">Sign out</trazo-button></div>
     </header>
     <section class="content"><router-outlet /></section>
   </main>

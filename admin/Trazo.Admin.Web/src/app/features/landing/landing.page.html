@@ -142,16 +142,15 @@
       <h2>{{ t.waitTitle }}</h2>
       <p class="lead centered">{{ t.waitText }}</p>
       <form novalidate (submit)="submit($event, email, consent, trap)">
-        <label class="f">{{ t.emailLabel }}
-          <input #email type="email" name="email" autocomplete="email" required maxlength="254" inputmode="email" aria-describedby="email-hint">
+        <trazo-form-field [label]="t.emailLabel" controlId="landing-email" fieldClass="f"><input id="landing-email" #email type="email" name="email" autocomplete="email" required maxlength="254" inputmode="email" aria-describedby="email-hint">
           <small id="email-hint" class="hint">{{ t.emailHint }}</small>
-        </label>
+        </trazo-form-field>
         <input #trap class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="consent">
           <input #consent type="checkbox" name="consent" required>
           <span>{{ t.consent }} <a [href]="privacyUrl">{{ t.privacyLabel }}</a>.</span>
         </label>
-        <button class="btn" type="submit" [disabled]="state() === 'sending'">{{ t.send }}</button>
+        <trazo-button variant="primary" buttonClass="btn" type="submit" [disabled]="state() === 'sending'">{{ t.send }}</trazo-button>
         <p id="msg" role="status" aria-live="polite" [class.ok]="state() === 'ok'" [class.err]="state() === 'invalid' || state() === 'later' || state() === 'fail'">{{ message() }}</p>
       </form>
       <p class="note">{{ t.note }}</p>
