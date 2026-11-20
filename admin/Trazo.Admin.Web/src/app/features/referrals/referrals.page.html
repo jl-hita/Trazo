@@ -89,10 +89,10 @@
         <tbody>
           @for (r of items(); track r.id) {
             <tr>
-              <td>{{ r.attributedAt.slice(0, 10) }}<div class="muted">{{ sourceLabel(r.source) }} · {{ r.code }}</div></td>
+              <td>{{ date(r.attributedAt) }}<div class="muted">{{ sourceLabel(r.source) }} · {{ r.code }}</div></td>
               <td>{{ r.referrerEmail }}<div><trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="ledger(r.referrerId)">{{ labels.ledger }}</trazo-button></div></td>
               <td>{{ r.referredEmail }}</td>
-              <td>{{ statusLabel(r.status) }}@if (r.plan) { <div class="muted">{{ r.plan }}</div> }@if (r.incident) { <div class="warn">{{ r.incident }}</div> }</td>
+              <td>{{ statusLabel(r.status) }}@if (r.plan) { <div class="muted">{{ planLabel(r.plan) }}</div> }@if (r.incident) { <div class="warn">{{ r.incident }}</div> }</td>
               <td>@if (r.rewardDays) { {{ r.rewardDays }} d · {{ statusLabel(r.rewardStatus) }} }@if (r.lastDeferNote) { <div class="muted">{{ r.lastDeferNote }}</div> }</td>
               <td>
                 @if (r.rewardGrantId && (r.rewardStatus === 'pending' || r.rewardStatus === 'active')) {
@@ -119,9 +119,9 @@
           <tbody>
             @for (g of ledgerRows(); track g.id) {
               <tr>
-                <td>{{ g.grantedAt.slice(0, 10) }}</td><td>{{ grantKindLabel(g.kind) }}</td><td>{{ g.days }}</td><td>{{ statusLabel(g.status) }}</td>
-                <td>@if (g.startsAt) { {{ g.startsAt.slice(0, 10) }} → {{ g.endsAt?.slice(0, 10) }} }
-                  @if (g.googleExpiryAfter) { {{ labels.googleExpiry }} {{ g.googleExpiryBefore?.slice(0, 10) }} → {{ g.googleExpiryAfter.slice(0, 10) }} }</td>
+                <td>{{ date(g.grantedAt) }}</td><td>{{ grantKindLabel(g.kind) }}</td><td>{{ g.days }}</td><td>{{ statusLabel(g.status) }}</td>
+                <td>@if (g.startsAt) { {{ date(g.startsAt) }} → {{ date(g.endsAt) }} }
+                  @if (g.googleExpiryAfter) { {{ labels.googleExpiry }} {{ date(g.googleExpiryBefore) }} → {{ date(g.googleExpiryAfter) }} }</td>
                 <td>{{ g.voidReason ?? g.lastDeferError }}@if (g.voidedBy) { <span class="muted"> ({{ labels.by }} {{ g.voidedBy }})</span> }</td>
               </tr>
             }
