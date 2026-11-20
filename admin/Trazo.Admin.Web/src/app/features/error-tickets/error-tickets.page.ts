@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus, ErrorTicketSummary } from '../../core/admin.api';
+import { ErrorTicketDetail, ErrorTicketPage, ErrorTicketStatus, ErrorTicketSummary } from '../../core/admin.models';
 import { ErrorTicketsApi } from './error-tickets.api';
 import { errorMessage } from '../../core/setup.api';
 
