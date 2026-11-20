@@ -58,11 +58,11 @@ describe('Admin domain API services', () => {
 
   it('LogsApi includes cursor and optional filters without losing comma-separated levels', async () => {
     const result = TestBed.inject(LogsApi).list({
-      pageSize: 50, levels: ['Warning', 'Error'], from: '2026-11-01', to: '2026-11-20',
+      pageSize: 50, levels: ['warning', 'error'], from: '2026-11-01', to: '2026-11-20',
       q: ' timeout ', cursor: 'next-page'
     });
     const request = http.expectOne(req => req.url === '/api/v1/admin/logs');
-    expect(request.request.params.get('levels')).toBe('Warning,Error');
+    expect(request.request.params.get('levels')).toBe('warning,error');
     expect(request.request.params.get('q')).toBe('timeout');
     expect(request.request.params.get('cursor')).toBe('next-page');
     expect(request.request.params.get('from')).toBe('2026-11-01');
