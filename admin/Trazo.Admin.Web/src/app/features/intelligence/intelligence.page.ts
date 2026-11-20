@@ -30,7 +30,10 @@ export class IntelligencePageComponent {
     if (!this.from() || !this.to() || this.from() > this.to()) { this.error.set('El periodo no es válido.'); return; }
     const requestVersion = ++this.loadVersion;
     this.loading.set(true); this.error.set('');
-    try { this.data.set(await this.api.summary(this.from(), this.to())); }
+    try {
+      const result = await this.api.summary(this.from(), this.to());
+      if (requestVersion === this.loadVersion) this.data.set(result);
+    }
     catch (e) { if (requestVersion === this.loadVersion) this.error.set((e as {error?:{message?:string}})?.error?.message ?? 'No se han podido cargar los datos de Intelligence.'); }
     finally { if (requestVersion === this.loadVersion) this.loading.set(false); }
   }
