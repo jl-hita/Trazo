@@ -662,7 +662,7 @@ public sealed class AdminOverviewApiTests : IDisposable
                 new TrainingMesocycle { Id = recentMesoId, PlanId = recentPlanId, PhaseType = "Build", CreatedAt = Start },
                 new TrainingMesocycle { Id = oldMesoId, PlanId = oldPlanId, PhaseType = "Build", CreatedAt = Start.AddDays(-60) });
             db.PlannedSessions.AddRange(
-                new PlannedSession { Id = recentSessionId, PlanId = recentPlanId, MesocycleId = recentMesoId, SequenceIndex = 1, Title = "Recent", PrescriptionJson = "{}", OriginalPrescriptionJson = "{}", UpdatedAt = Start },
+                new PlannedSession { Id = recentSessionId, PlanId = recentPlanId, MesocycleId = recentMesoId, SequenceIndex = 1, Title = "Recent", PrescriptionJson = "{}", OriginalPrescriptionJson = "{}", OriginalPrescriptionSchemaVersion = 1, PrescriptionSource = "engine", UpdatedAt = Start },
                 new PlannedSession { Id = trainedOldSessionId, PlanId = oldPlanId, MesocycleId = oldMesoId, SequenceIndex = 1, Title = "Trained", PrescriptionJson = "{}", UpdatedAt = Start },
                 new PlannedSession { Id = futureOldSessionId, PlanId = oldPlanId, MesocycleId = oldMesoId, SequenceIndex = 2, Title = "Future", PrescriptionJson = "{}", UpdatedAt = Start });
             db.WorkoutLogs.Add(new WorkoutLog
@@ -705,12 +705,13 @@ public sealed class AdminOverviewApiTests : IDisposable
             db.TrainingMesocycles.Add(new TrainingMesocycle
             {
                 Id = mesocycleId, PlanId = planId, PhaseType = "Build", CreatedAt = Start,
-                GenerationSnapshotJson = """{"profile":{"limitations":["Shoulder"]},"inputs":{"loadReferences":{"items":[{"workoutLogId":"PRIVATE_GUID"}]}}}""".Replace("PRIVATE_GUID", privateGuid.ToString())
+                GenerationSnapshotJson = """{"profile":{"limitations":["Shoulder"]},"inputs":{"loadReferences":{"items":[{"workoutLogId":"PRIVATE_GUID"}]}}}""".Replace("PRIVATE_GUID", privateGuid.ToString()),
+                SnapshotSchemaVersion = 1, EngineVersion = "test-engine", CatalogFingerprint = new string('a', 64), GeneratedAt = Start
             });
             db.PlannedSessions.Add(new PlannedSession
             {
                 Id = sessionId, PlanId = planId, MesocycleId = mesocycleId, SequenceIndex = 1, Title = "A",
-                PrescriptionJson = "{}", OriginalPrescriptionJson = "{}", UpdatedAt = Start
+                PrescriptionJson = "{}", OriginalPrescriptionJson = "{}", OriginalPrescriptionSchemaVersion = 1, PrescriptionSource = "engine", UpdatedAt = Start
             });
             db.WorkoutLogs.Add(new WorkoutLog
             {
