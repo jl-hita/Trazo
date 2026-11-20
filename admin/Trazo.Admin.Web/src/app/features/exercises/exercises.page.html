@@ -9,21 +9,21 @@
     <div class="ex-layout">
       <section [attr.aria-label]="copy.exerciseList">
         <div class="ex-toolbar">
-          <input type="search" placeholder="Buscar por nombre o identificador" aria-label="Buscar ejercicios" [ngModel]="q()" (ngModelChange)="onSearch($event)">
-          <select aria-label="Patrón de movimiento" [ngModel]="pattern()" (ngModelChange)="setFilter('pattern', $event)">
+          <input type="search" [placeholder]="copy.searchPlaceholder" [attr.aria-label]="copy.searchAria" [ngModel]="q()" (ngModelChange)="onSearch($event)">
+          <select [attr.aria-label]="copy.patternFilter" [ngModel]="pattern()" (ngModelChange)="setFilter('pattern', $event)">
             <option value="">{{ copy.allPatterns }}</option>
             @for (p of options()?.movementPatterns ?? []; track p) { <option [value]="p">{{ p }}</option> }
           </select>
-          <select aria-label="Estado" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
+          <select [attr.aria-label]="copy.statusFilter" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
             <option value="">{{ copy.anyStatus }}</option>
             <option value="active">{{ copy.active }}</option>
             <option value="inactive">{{ copy.hidden }}</option>
           </select>
-          <select aria-label="Origen" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
+          <select [attr.aria-label]="copy.sourceFilter" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
             <option value="">{{ copy.anySource }}</option>
             @for (s of options()?.sources ?? []; track s) { <option [value]="s">{{ s }}</option> }
           </select>
-          <select aria-label="Ordenar" [ngModel]="sort()" (ngModelChange)="setFilter('sort', $event)">
+          <select [attr.aria-label]="copy.sort" [ngModel]="sort()" (ngModelChange)="setFilter('sort', $event)">
             <option value="">{{ copy.sortName }}</option>
             <option value="priority">{{ copy.sortPriority }}</option>
             <option value="updated">{{ copy.sortUpdated }}</option>
@@ -60,7 +60,7 @@
                 </td>
               </tr>
             } @empty {
-              <tr><td colspan="5" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Cargando…' : copy.noMatches }}</td></tr>
+              <tr><td colspan="5" class="sub" style="text-align:center;padding:26px">{{ loading() ? copy.loading : copy.noMatches }}</td></tr>
             }
           </tbody>
         </trazo-table>
@@ -74,7 +74,7 @@
         </div>
       </section>
 
-      <aside class="ex-panel" aria-label="Editor de ejercicios">
+      <aside class="ex-panel" [attr.aria-label]="copy.editor">
         @if (editing()) {
           <h2>{{ isNew() ? copy.createTitle : draft().nameEs }}</h2>
 
