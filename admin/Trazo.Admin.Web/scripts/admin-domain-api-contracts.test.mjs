@@ -103,7 +103,8 @@ test('SubscriptionsApi converts inclusive calendar filters to API timestamps', a
   assert.equal(requests[0].url, '/api/v1/admin/subscriptions');
   assert.deepEqual(requests[0].argument.params.toObject(), {
     page: '3', pageSize: '25', q: 'user', status: 'active', source: 'google_play',
-    expiresFrom: '2026-11-01T00:00:00.000Z', expiresTo: '2026-11-30T23:59:59.000Z', sort: 'expires'
+    expiresFrom: new Date(2026, 10, 1, 0, 0, 0).toISOString(),
+    expiresTo: new Date(2026, 10, 30, 23, 59, 59).toISOString(), sort: 'expires'
   });
 });
 
