@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.api';
+import type { AdminPremiumGrant, AdminUserDetail, AdminUserSummary, UserAction } from '../../core/admin.models';
 import { UsersApi } from './users.api';
 import { AuthService } from '../../core/auth.service';
 import { errorMessage } from '../../core/setup.api';
