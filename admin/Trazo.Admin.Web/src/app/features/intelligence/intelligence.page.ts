@@ -74,14 +74,14 @@ interface IntelligenceSummary {
           {{ exporting() ? 'Preparando paquete…' : '↓ Exportar investigación (ZIP)' }}
         </button>
       </div>
-      <p class="ti-note"><strong>Qué contiene la exportación:</strong> CSV y JSON relacionados de planes, mesociclos, prescripciones originales y actuales, adaptaciones, entrenamientos, series realizadas, observaciones longitudinales y decisiones del motor. Los identificadores se seudonimizan y solo son relacionables dentro del mismo paquete. Se excluyen nombres, correos, notas libres y limitaciones personales. El archivo sigue siendo información seudonimizada y debe tratarse como privada.</p>
+      <p class="ti-note"><strong>Qué contiene la exportación:</strong> CSV y JSON relacionados de planes, mesociclos, prescripciones originales y actuales, adaptaciones, entrenamientos, series realizadas, observaciones longitudinales y decisiones del motor. Los identificadores se seudonimizan también dentro de los JSON de trazabilidad. Se excluyen nombres, correos, notas libres y limitaciones personales. El archivo sigue siendo información seudonimizada y debe tratarse como privada.</p>
       @if (error()) { <p class="ti-error" role="alert">{{error()}}</p> }
       @if (loading() && !data()) { <p class="empty">Cargando datos de investigación…</p> }
       @if (data(); as d) {
         <p class="foot">Periodo {{date(d.from)}} – {{date(d.to)}} · Datos actualizados {{dateTime(d.generatedAt)}}. Las observaciones se cuentan por músculo y periodo; no equivalen a deportistas independientes.</p>
         <div class="ti-grid">
           <article class="ti-card"><span class="value">{{n(d.plans.total)}}</span><span class="label">Planes creados · {{n(d.plans.generated)}} generados / {{n(d.plans.manual)}} manuales</span></article>
-          <article class="ti-card"><span class="value">{{n(d.prescriptions.sessions)}}</span><span class="label">Sesiones prescritas · {{pct(d.prescriptions.withOriginalSnapshot,d.prescriptions.sessions)}} con snapshot original</span></article>
+          <article class="ti-card"><span class="value">{{n(d.prescriptions.sessions)}}</span><span class="label">Sesiones del periodo/cohorte · {{pct(d.prescriptions.withOriginalSnapshot,d.prescriptions.sessions)}} con snapshot original</span></article>
           <article class="ti-card"><span class="value">{{n(d.workouts.total)}}</span><span class="label">Entrenamientos realizados · {{pct(d.workouts.completed,d.workouts.total)}} completados</span></article>
           <article class="ti-card"><span class="value">{{n(adaptationTotal())}}</span><span class="label">Adaptaciones registradas en el periodo</span></article>
         </div>
@@ -93,7 +93,7 @@ interface IntelligenceSummary {
               <div class="barrow"><span>Con snapshot original</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.prescriptions.withOriginalSnapshot,d.prescriptions.sessions)"></span></span><b>{{n(d.prescriptions.withOriginalSnapshot)}}</b></div>
               <div class="barrow"><span>Sin snapshot original</span><span class="track"><span class="fill" [style.width.%]="pctValue(d.prescriptions.withoutOriginalSnapshot,d.prescriptions.sessions)"></span></span><b>{{n(d.prescriptions.withoutOriginalSnapshot)}}</b></div>
             </div>
-            <p class="foot">Los registros históricos sin snapshot se mantienen como desconocidos; no se reconstruyen usando el catálogo o el motor actual.</p>
+            <p class="foot">Incluye sesiones de planes creados en el periodo y sesiones entrenadas en el periodo. No incorpora todas las sesiones futuras de planes antiguos. Los snapshots históricos ausentes se mantienen como desconocidos.</p>
             <p class="foot">Versiones de motor: {{d.plans.engineVersions.length ? d.plans.engineVersions.join(', ') : 'No disponibles en este periodo'}}</p>
           </section>
           <section class="ti-panel"><h2>Resultado de los entrenamientos</h2>
@@ -172,10 +172,19 @@ export class IntelligencePageComponent {
     this.exporting.set(true); this.error.set('');
     try {
       const blob = await firstValueFrom(this.http.get('/api/v1/admin/intelligence/export', {params:this.params(), responseType:'blob'}));
+      if (!blob.size || (blob.type && blob.type !== 'application/zip' && blob.type !== 'application/octet-stream')) {
+        const message = await blob.text();
+        try { throw new Error(JSON.parse(message)?.message ?? 'La API no ha devuelto un ZIP válido.'); }
+        catch (e) { if (e instanceof SyntaxError) throw new Error('La API no ha devuelto un ZIP válido.'); throw e; }
+      }
       const url = URL.createObjectURL(blob); const a = document.createElement('a');
       a.href = url; a.download = 'trazo-intelligence-' + this.from().replaceAll('-','') + '-' + this.to().replaceAll('-','') + '.zip';
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    } catch { this.error.set('No se ha podido generar la exportación.'); }
+      a.style.display = 'none'; document.body.appendChild(a); a.click(); a.remove();
+      // Revoke after the browser has had time to start consuming the download.
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      this.error.set(e instanceof Error ? e.message : 'No se ha podido generar la exportación.');
+    }
     finally { this.exporting.set(false); }
   }
   protected adaptationTotal(): number { return this.data()?.adaptations.reduce((s,x)=>s+x.count,0) ?? 0; }
