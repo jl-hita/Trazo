@@ -7,7 +7,7 @@ import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.cha
 @Component({
   selector: 'mk-overview',
   standalone: true,
-  imports: [BarsComponent, ColumnsComponent],
+  imports: [BarsComponent, ColumnsComponent, UiTableComponent],
   templateUrl: './overview.tab.html'
 })
 export class OverviewTabComponent {
