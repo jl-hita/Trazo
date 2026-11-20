@@ -280,53 +280,6 @@ export class AdminApi {
     return firstValueFrom(this.http.get<LogPage>(`${API}/logs`, { params }));
   }
 
-  listExercises(filters: ExerciseFilters): Promise<Page<AdminExerciseSummary>> {
-    let params = new HttpParams().set('page', filters.page).set('pageSize', filters.pageSize);
-    if (filters.q.trim()) params = params.set('q', filters.q.trim());
-    if (filters.movementPattern) params = params.set('movementPattern', filters.movementPattern);
-    if (filters.status) params = params.set('status', filters.status);
-    if (filters.source) params = params.set('source', filters.source);
-    if (filters.sort) params = params.set('sort', filters.sort);
-    return firstValueFrom(this.http.get<Page<AdminExerciseSummary>>(`${API}/exercises`, { params }));
-  }
-
-  exerciseOptions(): Promise<AdminExerciseOptions> {
-    return firstValueFrom(this.http.get<AdminExerciseOptions>(`${API}/exercises/options`));
-  }
-
-  getExercise(id: string): Promise<AdminExerciseDetail> {
-    return firstValueFrom(this.http.get<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}`));
-  }
-
-  createExercise(input: AdminExerciseInput): Promise<AdminExerciseDetail> {
-    return firstValueFrom(this.http.post<AdminExerciseDetail>(`${API}/exercises`, input));
-  }
-
-  updateExercise(id: string, input: AdminExerciseInput): Promise<AdminExerciseDetail> {
-    return firstValueFrom(this.http.put<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}`, input));
-  }
-
-  exerciseAction(id: string, action: ExerciseAction): Promise<AdminExerciseDetail> {
-    return firstValueFrom(this.http.post<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/${action}`, {}));
-  }
-
-  previewPlan(request: PlanPreviewRequest): Promise<PlanPreviewResponse> {
-    return firstValueFrom(this.http.post<PlanPreviewResponse>(`${API}/planning/preview`, request));
-  }
-
-  catalogReadiness(): Promise<CatalogReadiness> {
-    return firstValueFrom(this.http.get<CatalogReadiness>(`${API}/planning/catalog-readiness`));
-  }
-
-  uploadExerciseImage(id: string, slot: number, file: File): Promise<AdminExerciseDetail> {
-    return firstValueFrom(this.http.put<AdminExerciseDetail>(
-      `${API}/exercises/${encodeURIComponent(id)}/images/${slot}`, file, { headers: { 'Content-Type': file.type } }));
-  }
-
-  deleteExerciseImage(id: string, slot: number): Promise<AdminExerciseDetail> {
-    return firstValueFrom(this.http.delete<AdminExerciseDetail>(`${API}/exercises/${encodeURIComponent(id)}/images/${slot}`));
-  }
-
   listPlanReviews(status: string, page: number): Promise<Page<AdminPlanReview>> {
     let params = new HttpParams().set('page', page).set('pageSize', 25);
     if (status) params = params.set('status', status);
@@ -434,10 +387,6 @@ export class AdminApi {
 
   testDietoExpress(endpoint: string): Promise<{ ok: boolean; message: string }> {
     return firstValueFrom(this.http.post<{ ok: boolean; message: string }>(`${API}/settings/operations/test/dietoexpress`, { endpoint }));
-  }
-
-  sendLibraryToDietoExpress(): Promise<TransferResult> {
-    return firstValueFrom(this.http.post<TransferResult>(`${API}/exercise-library-transfer/dietoexpress`, {}));
   }
 
   listWaitlist(q: string, page: number, pageSize: number, status: WaitlistStatus = ''): Promise<WaitlistPage> {
