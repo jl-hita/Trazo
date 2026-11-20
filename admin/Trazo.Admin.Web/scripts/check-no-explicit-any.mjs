@@ -39,10 +39,10 @@ async function main() {
     }
   }
   if (violations.length) {
-    process.stderr.write(`Explicit any types are not allowed in the admin frontend:\\n${violations.join('\\n')}\\n`);
+    process.stderr.write(`Explicit any types are not allowed in the admin frontend:\n${violations.join('\n')}\n`);
     process.exitCode = 1;
   } else {
-    process.stdout.write(`No explicit any types found in ${files.length} TypeScript files.\\n`);
+    process.stdout.write(`No explicit any types found in ${files.length} TypeScript files.\n`);
   }
 }
 
