@@ -24,7 +24,7 @@ async function loadService(relativePath, http) {
     fileName: filename
   }).outputText;
 
-  const instance = new Module(filename, module);
+  const instance = new Module(filename);
   instance.filename = filename;
   instance.paths = Module._nodeModulePaths(path.dirname(filename));
   const originalLoad = Module._load;
