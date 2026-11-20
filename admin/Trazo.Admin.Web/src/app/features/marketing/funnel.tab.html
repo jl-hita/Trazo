@@ -15,8 +15,8 @@
       @if (f.cohort === 0) { <p class="mk-empty">{{ labels.noAccountsByStrategy }}</p> }
       @else {
         <div class="mk-panel"><mk-bars [rows]="stageRows()" [max]="1" /></div>
-        <p class="mk-note" style="margin-top:10px">{{ labels.signupToPaid }} {{ fmt.pct(f.signupToPaid) }} (intervalo del 95 % {{ fmt.pct(f.signupToPaidLow) }}–{{ fmt.pct(f.signupToPaidHigh) }}) ·
-          {{ labels.trialToPaid }} {{ fmt.pct(f.trialToPaid) }} · {{ labels.renewed }} {{ fmt.pct(f.paidRenewed) }}. El mayor descenso entre dos pasos consecutivos indica dónde conviene empezar a investigar.</p>
+        <p class="mk-note" style="margin-top:10px">{{ labels.signupToPaid }} {{ fmt.pct(f.signupToPaid) }} ({{ labels.confidenceRange }} {{ fmt.pct(f.signupToPaidLow) }}–{{ fmt.pct(f.signupToPaidHigh) }}) ·
+          {{ labels.trialToPaid }} {{ fmt.pct(f.trialToPaid) }} · {{ labels.renewed }} {{ fmt.pct(f.paidRenewed) }}. {{ labels.largestDrop }}</p>
         <div class="mk-scroll"><trazo-table tableClass="mk-table">
           <thead><tr><th>{{ labels.step }}</th><th>{{ labels.people }}</th><th>{{ labels.ofPrevious }}</th><th>{{ labels.ofSignups }}</th></tr></thead>
           <tbody>@for (s of f.stages; track s.name) {
