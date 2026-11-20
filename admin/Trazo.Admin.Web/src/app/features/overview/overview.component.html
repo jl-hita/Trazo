@@ -34,7 +34,7 @@
       <trazo-button type="button" variant="ghost" (pressed)="refresh()">Reintentar</trazo-button></p>
   }
 
-  <section aria-labelledby="ov-alerts-title">
+  <section [ariaLabelledBy]="'ov-alerts-title'">
     <div class="section-heading">
       <div><p class="eyebrow">ATENCIÓN</p><h2 id="ov-alerts-title">Alertas <span class="ov-count">{{ alertSummary() }}</span></h2></div>
     </div>
@@ -199,7 +199,7 @@
   </div>
 
   <div class="ov-cards ov-cards-wide">
-    <trazo-card class="ov-span-2" contentClass="ov-card" aria-labelledby="ov-activity-title">
+    <trazo-card class="ov-span-2" contentClass="ov-card" [ariaLabelledBy]="'ov-activity-title'">
       <header><h3 id="ov-activity-title">Actividad de los últimos 14 días</h3></header>
       @if (chart().empty) {
         <p class="ov-empty">Todavía no hay actividad en estos 14 días.</p>
@@ -229,7 +229,7 @@
       </dl>
     </trazo-card>
 
-    <trazo-card contentClass="ov-card" aria-labelledby="ov-funnel-title">
+    <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-funnel-title'">
       <header><h3 id="ov-funnel-title">Embudo de activación</h3></header>
       @if (d.insights.funnel.registered === 0) {
         <p class="ov-empty">Todavía no hay usuarios registrados.</p>
@@ -246,7 +246,7 @@
       }
     </trazo-card>
 
-    <trazo-card contentClass="ov-card" aria-labelledby="ov-conv-title">
+    <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-conv-title'">
       <header><h3 id="ov-conv-title">Conversión a Premium por semana de alta</h3></header>
       @if (cohorts().length === 0) {
         <p class="ov-empty">Todavía no hay altas.</p>
@@ -269,7 +269,7 @@
       }
     </trazo-card>
 
-    <trazo-card contentClass="ov-card" aria-labelledby="ov-paywall-title">
+    <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-paywall-title'">
       <header><h3 id="ov-paywall-title">Oferta Premium abierta ({{ paywall().days }} días)</h3></header>
       @if (paywall().views === 0) {
         <p class="ov-empty">Nadie ha abierto la oferta todavía.</p>
@@ -282,7 +282,7 @@
       }
     </trazo-card>
 
-    <trazo-card contentClass="ov-card ov-card-link" aria-labelledby="ov-watch-title">
+    <trazo-card contentClass="ov-card ov-card-link" [ariaLabelledBy]="'ov-watch-title'">
       <header>
         <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones a vigilar<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
       </header>
@@ -296,7 +296,7 @@
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
 
-    <trazo-card contentClass="ov-card ov-card-link" aria-labelledby="ov-engine-title">
+    <trazo-card contentClass="ov-card ov-card-link" [ariaLabelledBy]="'ov-engine-title'">
       <header>
         <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">Motor y entrenamientos (30 días)<span class="ov-sr-only">: ver el motor de planificación</span></a></h3>
       </header>
