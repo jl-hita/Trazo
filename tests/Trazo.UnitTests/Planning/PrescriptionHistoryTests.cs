@@ -550,6 +550,28 @@ public abstract class PrescriptionHistoryScenarios(string? postgres) : PlansApiB
     }
 
     [ScenarioFact]
+    public async Task Repeating_a_log_the_server_already_accepted_is_replayed_never_a_conflict_and_never_a_second_workout()
+    {
+        var (_, client, week) = await StartPlanAsync("hist-replay@example.com");
+        var session = week.GetProperty("sessions").EnumerateArray().First();
+        var id = Guid.Parse(session.GetProperty("id").GetString()!);
+        var body = new
+        {
+            clientRequestId = Guid.NewGuid(), outcome = "Completed",
+            sets = session.GetProperty("exercises").EnumerateArray().Select(e => new
+            {
+                exerciseId = e.GetProperty("exerciseId").GetString(), setNumber = 1, weightKg = 50m, repetitions = 8, rir = 2, completed = true
+            }).ToArray()
+        };
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{id}/log", body)).StatusCode);
+
+        // Even with other writers touching the plan, the repeat is answered from what is stored: it never reaches a save.
+        RaceOn(q => q);
+        Assert.Equal(HttpStatusCode.OK, (await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{id}/log", body)).StatusCode);
+        Assert.Equal(1, await InDbAsync(db => db.WorkoutLogs.CountAsync()));
+    }
+
+    [ScenarioFact]
     public async Task Skipping_a_session_that_changed_in_the_meantime_answers_409_not_already_resolved()
     {
         var (_, client, week) = await StartPlanAsync("hist-race-skip@example.com");
