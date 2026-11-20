@@ -44,6 +44,12 @@ async function loadComponent(api) {
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
     if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
     if (request === '../../shared/ui/ui-table.component') return { UiTableComponent: class UiTableComponent {} };
+    if (request === '../../core/ui-format') return {
+      formatUiDate: value => String(value),
+      formatUiDateTime: value => String(value),
+      formatUiNumber: value => String(value),
+      formatUiPercent: value => Math.round(value * 100) + ' %'
+    };
     if (request === './intelligence.copy') return { INTELLIGENCE_COPY: {
       presets: { days30: '30 días', days90: '90 días', months12: '12 meses' },
       invalidPeriod: 'El periodo no es válido.',
