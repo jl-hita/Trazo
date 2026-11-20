@@ -57,6 +57,8 @@ export class FiscalPageComponent {
 
   protected auditAction(action: string): string { return this.copy.auditActions[action as keyof typeof this.copy.auditActions] ?? action; }
 
+  protected kindLabel(kind: string): string { return kind === 'income' ? this.copy.incomeKind : this.copy.expense; }
+
   protected vatLabel(t: string): string {
     return this.copy.vatLabels[t as keyof typeof this.copy.vatLabels] ?? t;
   }
