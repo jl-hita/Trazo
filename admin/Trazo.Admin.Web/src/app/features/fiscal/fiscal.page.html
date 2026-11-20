@@ -99,43 +99,43 @@
 
         @if (m.estimate.available) {
           <div class="box">
-            <b>Google Play estimate</b> — {{ m.estimate.charges }} charge(s) ({{ m.estimate.monthlyCharges }} monthly, {{ m.estimate.annualCharges }} annual),
-            {{ m.estimate.refunds }} refund(s). Gross {{ eur(m.estimate.gross) }} → without VAT {{ eur(m.estimate.netOfVat) }} → minus Google fee
+            <b>{{ copy.googleEstimate }}</b> — {{ m.estimate.charges }} {{ copy.charges }} ({{ m.estimate.monthlyCharges }} {{ copy.monthly }}, {{ m.estimate.annualCharges }} {{ copy.annual }}),
+            {{ m.estimate.refunds }} {{ copy.refunds }}. {{ copy.gross }} {{ eur(m.estimate.gross) }} → {{ copy.withoutVat }} {{ eur(m.estimate.netOfVat) }} → {{ copy.minusGoogleFee }}
             {{ eur(m.estimate.googleFee) }} = <b>{{ eur(m.estimate.income) }}</b>.
-            <p class="muted">An estimate from verified purchases: replace it with the amount in Google Play's earnings report when you have it.</p>
+            <p class="muted">{{ copy.estimateExplanation }}</p>
             <trazo-button variant="secondary" type="button" [disabled]="m.closed || m.hasGoogleIncome" (pressed)="bookEstimate(m.period)">
-              {{ m.hasGoogleIncome ? 'Google Play income already booked' : 'Book this income' }}</trazo-button>
+              {{ m.hasGoogleIncome ? copy.incomeAlreadyBooked : copy.bookIncome }}</trazo-button>
           </div>
         }
 
         @if (m.warnings.length && !m.closed) {
-          <div class="box alert"><b>Review before closing</b>
+          <div class="box alert"><b>{{ copy.reviewBeforeClosing }}</b>
             <ul class="warnings">@for (w of m.warnings; track w.code) { <li>{{ w.message }}@if (w.count) { ({{ w.count }}) }</li> }</ul>
           </div>
         }
 
         <trazo-table>
-          <thead><tr><th>Date</th><th>Kind</th><th>Concept</th><th>Counterparty</th><th class="num">Base</th><th>VAT</th><th class="num">Total</th><th></th></tr></thead>
+          <thead><tr><th>{{ copy.date }}</th><th>{{ copy.kind }}</th><th>{{ copy.concept }}</th><th>{{ copy.counterparty }}</th><th class="num">{{ copy.base }}</th><th>{{ copy.vat }}</th><th class="num">{{ copy.total }}</th><th></th></tr></thead>
           <tbody>
             @for (e of m.entries; track e.id) {
               <tr>
                 <td>{{ e.date }}</td><td>{{ e.kind }}<div class="muted">{{ e.category }}</div></td>
-                <td>{{ e.concept }}@if (e.invoiceNumber) { <div class="muted">{{ e.invoiceNumber }}</div> }@if (e.source === 'google_estimate') { <div class="warn muted">estimate</div> }</td>
+                <td>{{ e.concept }}@if (e.invoiceNumber) { <div class="muted">{{ e.invoiceNumber }}</div> }@if (e.source === 'google_estimate') { <div class="warn muted">{{ copy.estimate }}</div> }</td>
                 <td>{{ e.counterparty }}<div class="muted">{{ e.counterpartyTaxId }}</div></td>
                 <td class="num">{{ eur(e.base) }}</td>
                 <td>{{ vatLabel(e.vatTreatment) }}@if (e.vatAmount) { <div class="muted">{{ e.vatRatePct }}% = {{ eur(e.vatAmount) }}</div> }</td>
                 <td class="num">{{ eur(e.total) }}</td>
                 <td class="row-actions">
-                  <trazo-button variant="secondary" type="button" [disabled]="m.closed" (pressed)="edit(e)">Edit</trazo-button>
-                  <trazo-button variant="danger" type="button" [disabled]="m.closed" (pressed)="remove(e)">Delete</trazo-button>
+                  <trazo-button variant="secondary" type="button" [disabled]="m.closed" (pressed)="edit(e)">{{ copy.edit }}</trazo-button>
+                  <trazo-button variant="danger" type="button" [disabled]="m.closed" (pressed)="remove(e)">{{ copy.delete }}</trazo-button>
                 </td>
               </tr>
-            } @empty { <tr><td colspan="8" class="muted">No entries yet.</td></tr> }
+            } @empty { <tr><td colspan="8" class="muted">{{ copy.noEntries }}</td></tr> }
           </tbody>
         </trazo-table>
 
         @if (!m.closed) {
-          <h2>{{ form.id ? 'Edit entry' : 'Add entry' }}</h2>
+          <h2>{{ form.id ? copy.editEntry : copy.addEntry }}</h2>
           <div class="box">
             <div class="grid">
               <trazo-form-field label="Kind" controlId="field-fiscal-kind"><select [(ngModel)]="form.kind" (ngModelChange)="kindChanged()" name="kind" id="field-fiscal-kind"><option value="expense">Expense</option><option value="income">Income</option></select></trazo-form-field>
