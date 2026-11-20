@@ -6,11 +6,12 @@ import { UiButtonComponent } from './ui-button.component';
 @Component({
   standalone: true,
   imports: [UiButtonComponent],
-  template: '<trazo-button variant="primary" [loading]="loading" (pressed)="clicks++">Guardar</trazo-button>'
+  template: '<trazo-button variant="primary" [loading]="loading" (pressed)="onClick()">Guardar</trazo-button>'
 })
 class ButtonHostComponent {
   loading = true;
   clicks = 0;
+  onClick(): void { this.clicks += 1; }
 }
 
 describe('UiButtonComponent', () => {
