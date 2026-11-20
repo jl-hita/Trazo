@@ -37,7 +37,7 @@
             <td>{{ t.appVersion ?? '—' }}</td>
             <td>{{ t.occurrences }}</td>
             <td>{{ t.lastSeenAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-            <td><span class="et-badge" [class]="'et-badge ' + t.status">{{ t.status }}</span></td>
+            <td><span class="et-badge" [class]="'et-badge ' + t.status">{{ labelStatus(t.status) }}</span></td>
           </tr>
           @if (openId() === t.id) {
             <tr class="et-detail">
