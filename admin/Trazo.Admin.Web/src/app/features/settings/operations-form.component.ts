@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import type { OperationsView } from '../../core/admin.models';
 import { SettingsApi } from './settings.api';
 import { errorMessage } from '../../core/setup.api';
@@ -13,7 +15,7 @@ const LOG_LEVELS = ['Debug', 'Information', 'Warning', 'Error', 'Critical'];
 @Component({
   selector: 'trazo-operations-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiFormFieldComponent, UiButtonComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './operations-form.component.scss',
   templateUrl: './operations-form.component.html'
