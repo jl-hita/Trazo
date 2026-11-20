@@ -39,7 +39,7 @@
         @if (selected(); as d) {
           <div>
             <h2>{{ d.review.userName }}</h2>
-            <p class="meta">{{ d.review.userEmail }} · {{ d.review.goal }} · {{ d.review.experience }} · {{ d.review.split }} · {{ d.review.totalWeeks }} weeks from {{ d.startDate }}</p>
+            <p class="meta">{{ d.review.userEmail }} · {{ d.review.goal }} · {{ d.review.experience }} · {{ d.review.split }} · {{ d.review.totalWeeks }} {{ copy.weeks }} {{ copy.from }} {{ d.startDate }}</p>
             @if (d.review.status === 'in_progress') { <p class="meta">{{ copy.heldBy }} {{ d.review.assignedToMe ? copy.you : d.review.assignedToName }}</p> }
           </div>
           <div class="rv-thread" role="log" [attr.aria-label]="copy.threadMessages">
