@@ -5,6 +5,8 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { ReferralsApi } from './referrals.api';
 import type { ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from './referrals.models';
 import { errorMessage } from '../../core/setup.api';
+import { UI_COPY } from '../../core/ui-copy';
+import { formatUiDate, formatUiPercent } from '../../core/ui-format';
 
 /** Referral programme operations: aggregate performance, invitation audit, reward recovery and audited reward cancellation. */
 @Component({
@@ -17,6 +19,7 @@ import { errorMessage } from '../../core/setup.api';
 })
 export class ReferralsPageComponent {
   private readonly api = inject(ReferralsApi);
+  protected readonly labels = UI_COPY.referrals;
   protected readonly from = signal(new Date(Date.now() - 90 * 86_400_000).toISOString().slice(0, 10));
   protected readonly to = signal(new Date().toISOString().slice(0, 10));
   protected readonly channel = signal('');
@@ -40,8 +43,16 @@ export class ReferralsPageComponent {
   constructor() { void this.load(); }
 
   protected pct(value: number | null | undefined): string {
-    return value == null ? '–' : `${(value * 100).toFixed(1)}%`;
+    return formatUiPercent(value);
   }
+
+  protected date(value: string | null | undefined): string { return formatUiDate(value); }
+
+  protected stageLabel(value: string): string { return this.labels.stages[value as keyof typeof this.labels.stages] ?? value; }
+  protected sourceLabel(value: string): string { return this.labels.sources[value as keyof typeof this.labels.sources] ?? value; }
+  protected statusLabel(value: string): string { return this.labels.statuses[value as keyof typeof this.labels.statuses] ?? value; }
+  protected grantKindLabel(value: string): string { return this.labels.grantKinds[value as keyof typeof this.labels.grantKinds] ?? value; }
+  protected planLabel(value: string): string { return this.labels.plans[value as keyof typeof this.labels.plans] ?? value; }
 
   private range() {
     return { from: this.from() ? new Date(this.from()).toISOString() : undefined, to: this.to() ? new Date(this.to() + 'T23:59:59Z').toISOString() : undefined };
@@ -71,7 +82,7 @@ export class ReferralsPageComponent {
       this.programmeEnabled.set(saved.referralsEnabled);
       this.rewardDays.set(saved.referralRewardDays);
       this.maxRewardDays.set(saved.maxDays);
-      this.message.set('Referral programme settings saved.');
+      this.message.set(this.labels.messages.settingsSaved);
     } catch (e) { this.error.set(errorMessage(e)); }
     finally { this.settingsBusy.set(false); }
   }
@@ -102,20 +113,20 @@ export class ReferralsPageComponent {
   }
 
   protected async voidGrant(id: string): Promise<void> {
-    const reason = window.prompt('Why is this reward being voided? (5–300 characters, it is recorded with your name)');
+    const reason = window.prompt(this.labels.prompts.voidGrant);
     if (!reason) return;
     this.message.set(''); this.error.set('');
-    try { await this.api.voidGrant(id, reason); this.message.set('Reward voided.'); await this.load(); } catch (e) { this.error.set(errorMessage(e)); }
+    try { await this.api.voidGrant(id, reason); this.message.set(this.labels.messages.grantVoided); await this.load(); } catch (e) { this.error.set(errorMessage(e)); }
   }
 
   protected async retry(id: string): Promise<void> {
     this.message.set(''); this.error.set('');
-    try { const r = await this.api.retryGrant(id); this.message.set(`Retry: ${r.outcome}`); await this.load(); } catch (e) { this.error.set(errorMessage(e)); }
+    try { const r = await this.api.retryGrant(id); this.message.set(`${this.labels.messages.retry} ${r.outcome}`); await this.load(); } catch (e) { this.error.set(errorMessage(e)); }
   }
 
   protected async reconcile(): Promise<void> {
     this.message.set(''); this.error.set('');
-    try { const r = await this.api.reconcileReferrals(); this.message.set(`Reconciled: ${r.conversions} conversions, ${r.pendingResolved} applied, ${r.pendingWaiting} waiting.`); await this.load(); }
+    try { const r = await this.api.reconcileReferrals(); this.message.set(`${this.labels.messages.reconciliation} ${r.conversions} ${this.labels.conversions}, ${r.pendingResolved} ${this.labels.applied}, ${r.pendingWaiting} ${this.labels.waiting}.`); await this.load(); }
     catch (e) { this.error.set(errorMessage(e)); }
   }
 }
