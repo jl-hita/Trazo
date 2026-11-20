@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi } from '../../core/admin.api';
+import { AdminApi, FunnelGroup, ReferralAdminItem, ReferralFunnel, ReferralSummary, PremiumGrantLedgerItem } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
 /** Referral programme operations: aggregate performance, invitation audit, reward recovery and audited reward cancellation. */
@@ -19,18 +19,18 @@ export class ReferralsPageComponent {
   protected readonly channel = signal('');
   protected readonly status = signal('');
   protected readonly incidents = signal(false);
-  protected readonly summary = signal<any>(null);
+  protected readonly summary = signal<ReferralSummary | null>(null);
   protected readonly programmeEnabled = signal(false);
   protected readonly rewardDays = signal(30);
   protected readonly maxRewardDays = signal(365);
   protected readonly settingsBusy = signal(false);
-  protected readonly funnel = signal<any>(null);
-  protected readonly items = signal<any[]>([]);
+  protected readonly funnel = signal<ReferralFunnel | null>(null);
+  protected readonly items = signal<ReferralAdminItem[]>([]);
   protected readonly total = signal(0);
   protected readonly page = signal(1);
   protected readonly pageSize = 25;
   protected readonly pageCount = () => Math.max(1, Math.ceil(this.total() / this.pageSize));
-  protected readonly ledgerRows = signal<any[]>([]);
+  protected readonly ledgerRows = signal<PremiumGrantLedgerItem[]>([]);
   protected readonly message = signal('');
   protected readonly error = signal('');
 

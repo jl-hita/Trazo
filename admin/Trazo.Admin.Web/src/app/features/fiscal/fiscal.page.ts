@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminApi } from '../../core/admin.api';
+import { AdminApi, FiscalAuditEntry, FiscalEntry, FiscalMonthView, FiscalProfile, FiscalWarning, FiscalYearView } from '../../core/admin.api';
 import { errorMessage } from '../../core/setup.api';
 
 const EMPTY_ENTRY = () => ({
@@ -26,14 +26,14 @@ export class FiscalPageComponent {
   private readonly money = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
   protected readonly years = (() => { const y = new Date().getFullYear(); return [y - 2, y - 1, y, y + 1]; })();
   protected readonly yearNumber = signal(new Date().getFullYear());
-  protected readonly year = signal<any>(null);
-  protected readonly month = signal<any>(null);
+  protected readonly year = signal<FiscalYearView | null>(null);
+  protected readonly month = signal<FiscalMonthView | null>(null);
   protected readonly selected = signal('');
-  protected readonly audit = signal<any[]>([]);
+  protected readonly audit = signal<FiscalAuditEntry[]>([]);
   protected readonly message = signal('');
   protected readonly error = signal('');
   protected readonly busy = signal(false);
-  protected profile: any = { legalName: '', taxId: '', address: '', gestorEmail: '', defaultVatPct: 21, irpfAdvancePct: 20, filesModelo130: true, playMonthlyPrice: 6.99, playAnnualPrice: 49.99, consumerVatPct: 21, googleFeePct: 15 };
+  protected profile: FiscalProfile = { legalName: '', taxId: '', address: '', gestorEmail: '', defaultVatPct: 21, irpfAdvancePct: 20, filesModelo130: true, playMonthlyPrice: 6.99, playAnnualPrice: 49.99, consumerVatPct: 21, googleFeePct: 15 };
   protected form = EMPTY_ENTRY();
   private options = { incomeCategories: ['google_play', 'other_income'], expenseCategories: ['other'], vatTreatments: [] as string[] };
   protected readonly categories = computed(() => {
@@ -111,7 +111,7 @@ export class FiscalPageComponent {
     this.form.category = this.categories()[0];
   }
 
-  protected edit(e: any): void {
+  protected edit(e: FiscalEntry): void {
     this.form = {
       id: e.id, kind: e.kind, date: e.date, concept: e.concept, counterparty: e.counterparty ?? '', counterpartyTaxId: e.counterpartyTaxId ?? '',
       counterpartyCountry: e.counterpartyCountry ?? '', invoiceNumber: e.invoiceNumber ?? '', category: e.category, base: e.base,
@@ -130,7 +130,7 @@ export class FiscalPageComponent {
     } catch (e) { this.fail(e); }
   }
 
-  protected async remove(e: any): Promise<void> {
+  protected async remove(e: FiscalEntry): Promise<void> {
     if (!window.confirm(`Delete "${e.concept}"?`)) return;
     try { await this.api.deleteFiscalEntry(e.id); this.ok('Entry deleted.'); await this.refresh(); } catch (err) { this.fail(err); }
   }
@@ -139,9 +139,9 @@ export class FiscalPageComponent {
     try { await this.api.bookGoogleEstimate(period); this.ok('Google Play income booked from the estimate. Edit it when you have the real figure.'); await this.refresh(); } catch (e) { this.fail(e); }
   }
 
-  protected async close(m: any): Promise<void> {
+  protected async close(m: FiscalMonthView): Promise<void> {
     if (m.warnings.length > 0) {
-      const list = m.warnings.map((w: any) => `• ${w.message}`).join('\n');
+      const list = m.warnings.map((w: FiscalWarning) => `• ${w.message}`).join('\n');
       if (!window.confirm(`This month has warnings:\n\n${list}\n\nClose it anyway?`)) return;
     } else if (!window.confirm(`Close ${m.period}? Its entries will be frozen until you reopen it.`)) return;
     this.busy.set(true);
