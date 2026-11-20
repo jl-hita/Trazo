@@ -59,12 +59,21 @@ export class StrategiesTabComponent {
       label: r.name, value: Math.max(0, v), dim: !r.reliable,
       text: m.money ? fmt.eur(v) : m.key === 'returnOnSpend' ? fmt.pct(v, 0) : fmt.pct(v),
       low: m.key === 'signupToPaid' ? r.signupToPaidLow : null, high: m.key === 'signupToPaid' ? r.signupToPaidHigh : null,
-      hint: `${r.signups} signups${r.reliable ? '' : ' (small sample)'}`
+      hint: `${r.signups} ${this.labels.signups}${r.reliable ? '' : ` (${this.labels.smallSample})`}`
     }));
   });
 
   constructor() {
     effect(() => { const r = this.range(); void this.load(r); });
+  }
+
+  protected channelLabel(channel: string): string {
+    return this.labels.channelNames[channel as keyof typeof this.labels.channelNames]
+      ?? this.labels.channelHelp[channel as keyof typeof this.labels.channelHelp] ?? channel;
+  }
+
+  protected campaignStatusLabel(status: string): string {
+    return this.labels.campaignStatuses[status as keyof typeof this.labels.campaignStatuses] ?? status;
   }
 
   private value(r: SegmentRow, key: Metric): number | null {
