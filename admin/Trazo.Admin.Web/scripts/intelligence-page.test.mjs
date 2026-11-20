@@ -168,7 +168,7 @@ test('Intelligence page reports API failures and allows a later successful retry
   const page = new Component();
   await new Promise(resolve => setImmediate(resolve));
 
-  assert.equal(page.loadError(), 'Servicio temporalmente no disponible');
+  assert.equal(page.loadError(), 'No se han podido cargar los datos de Intelligence.');
   assert.equal(page.loading(), false);
 
   shouldFail = false;
