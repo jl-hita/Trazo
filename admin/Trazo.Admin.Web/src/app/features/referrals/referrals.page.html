@@ -1,128 +1,128 @@
     <div class="page-heading">
-      <div><p class="eyebrow">GROWTH</p><h1>Referrals &amp; funnel</h1>
-        <p class="subtitle">Manage invitations and rewards, review conversion and retention, resolve pending grants and investigate incidents. Reward cancellations require a reason and are recorded in the audit trail.</p></div>
+      <div><p class="eyebrow">{{ labels.eyebrow }}</p><h1>{{ labels.title }}</h1>
+        <p class="subtitle">{{ labels.subtitle }}</p></div>
     </div>
     <div class="rf">
       <div class="rf-toolbar">
-        <label>From <input type="date" [ngModel]="from()" (ngModelChange)="from.set($event)" name="from"></label>
-        <label>To <input type="date" [ngModel]="to()" (ngModelChange)="to.set($event)" name="to"></label>
-        <label>Channel
+        <label>{{ labels.from }} <input type="date" [ngModel]="from()" (ngModelChange)="from.set($event)" name="from"></label>
+        <label>{{ labels.to }} <input type="date" [ngModel]="to()" (ngModelChange)="to.set($event)" name="to"></label>
+        <label>{{ labels.channel }}
           <select [ngModel]="channel()" (ngModelChange)="channel.set($event)" name="channel">
-            <option value="">All</option><option value="referral">Referral</option><option value="organic">Organic</option>
+            <option value="">{{ labels.all }}</option><option value="referral">{{ labels.referral }}</option><option value="organic">{{ labels.organic }}</option>
           </select></label>
-        <trazo-button variant="secondary" type="button" (pressed)="load()">Apply</trazo-button>
-        <trazo-button variant="secondary" type="button" (pressed)="reconcile()">Run reconciliation</trazo-button>
+        <trazo-button variant="secondary" type="button" (pressed)="load()">{{ labels.apply }}</trazo-button>
+        <trazo-button variant="secondary" type="button" (pressed)="reconcile()">{{ labels.reconcile }}</trazo-button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
       </div>
 
-      <h2>Programme configuration</h2>
+      <h2>{{ labels.programmeConfig }}</h2>
       <div class="rf-settings">
-        <label><span><input type="checkbox" [ngModel]="programmeEnabled()" (ngModelChange)="programmeEnabled.set($event)" name="programmeEnabled"> Enable referral programme</span></label>
-        <label>Reward for a successful referral (days)
+        <label><span><input type="checkbox" [ngModel]="programmeEnabled()" (ngModelChange)="programmeEnabled.set($event)" name="programmeEnabled"> {{ labels.enableProgramme }}</span></label>
+        <label>{{ labels.rewardSuccessful }}
           <input type="number" min="1" [max]="maxRewardDays()" [ngModel]="rewardDays()" (ngModelChange)="rewardDays.set($event)" name="rewardDays">
         </label>
-        <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (pressed)="saveProgramme()">Save settings</trazo-button>
-        <span class="muted">Maximum {{ maxRewardDays() }} days. Changes affect new rewards, not grants already issued.</span>
+        <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="settingsBusy() || rewardDays() < 1 || rewardDays() > maxRewardDays()" (pressed)="saveProgramme()">{{ labels.saveSettings }}</trazo-button>
+        <span class="muted">{{ labels.maximum }} {{ maxRewardDays() }} {{ labels.days }}. {{ labels.changesNewRewards }}</span>
       </div>
 
       @if (summary(); as s) {
-        <h2>Referral programme</h2>
+        <h2>{{ labels.programme }}</h2>
         <div class="rf-cards">
-          <div class="rf-card"><b>{{ s.linkOpens }}</b><span>Links opened</span></div>
-          <div class="rf-card"><b>{{ s.shares }}</b><span>Shares</span></div>
-          <div class="rf-card"><b>{{ s.installsAttributed }}</b><span>Attributable installs</span></div>
-          <div class="rf-card"><b>{{ s.attributed }}</b><span>Registered (attributed)</span></div>
-          <div class="rf-card"><b>{{ s.rewarded }}</b><span>Paid → rewarded ({{ pct(s.registeredToPaid) }})</span></div>
-          <div class="rf-card"><b>{{ s.rewardDaysGranted }}</b><span>Reward days granted</span></div>
-          <div class="rf-card"><b>{{ s.rewardsPending }}</b><span>Pending ({{ s.rewardDaysPending }} d)</span></div>
-          <div class="rf-card"><b>{{ s.rewardsDeferred }}</b><span>Deferred at Google</span></div>
-          <div class="rf-card"><b>{{ s.rewardsPromo }}</b><span>Promotional windows</span></div>
-          <div class="rf-card"><b>{{ s.voided }}</b><span>Voided</span></div>
-          <div class="rf-card"><b [class.warn]="s.incidentCount > 0">{{ s.incidentCount }}</b><span>Incidents</span></div>
-          <div class="rf-card"><b>{{ s.paidMonthly }} / {{ s.paidAnnual }}</b><span>Monthly / annual</span></div>
-          <div class="rf-card"><b>{{ s.renewedAtLeastOnce }} / {{ s.renewedAtLeastThree }}</b><span>Renewed 1+ / 3+ times</span></div>
-          <div class="rf-card"><b>{{ pct(s.linkToRegistered) }}</b><span>Link → registration</span></div>
+          <div class="rf-card"><b>{{ s.linkOpens }}</b><span>{{ labels.linksOpened }}</span></div>
+          <div class="rf-card"><b>{{ s.shares }}</b><span>{{ labels.shares }}</span></div>
+          <div class="rf-card"><b>{{ s.installsAttributed }}</b><span>{{ labels.attributableInstalls }}</span></div>
+          <div class="rf-card"><b>{{ s.attributed }}</b><span>{{ labels.registeredAttributed }}</span></div>
+          <div class="rf-card"><b>{{ s.rewarded }}</b><span>{{ labels.paidRewarded }} ({{ pct(s.registeredToPaid) }})</span></div>
+          <div class="rf-card"><b>{{ s.rewardDaysGranted }}</b><span>{{ labels.rewardDaysGranted }}</span></div>
+          <div class="rf-card"><b>{{ s.rewardsPending }}</b><span>{{ labels.pending }} ({{ s.rewardDaysPending }} d)</span></div>
+          <div class="rf-card"><b>{{ s.rewardsDeferred }}</b><span>{{ labels.deferredAtGoogle }}</span></div>
+          <div class="rf-card"><b>{{ s.rewardsPromo }}</b><span>{{ labels.promotionalWindows }}</span></div>
+          <div class="rf-card"><b>{{ s.voided }}</b><span>{{ labels.voided }}</span></div>
+          <div class="rf-card"><b [class.warn]="s.incidentCount > 0">{{ s.incidentCount }}</b><span>{{ labels.incidents }}</span></div>
+          <div class="rf-card"><b>{{ s.paidMonthly }} / {{ s.paidAnnual }}</b><span>{{ labels.monthlyAnnual }}</span></div>
+          <div class="rf-card"><b>{{ s.renewedAtLeastOnce }} / {{ s.renewedAtLeastThree }}</b><span>{{ labels.renewedOneThree }}</span></div>
+          <div class="rf-card"><b>{{ pct(s.linkToRegistered) }}</b><span>{{ labels.linkToRegistration }}</span></div>
         </div>
       }
 
       @if (funnel(); as f) {
-        <h2>Funnel — {{ f.cohort }} accounts created in the period</h2>
+        <h2>{{ labels.funnel }} — {{ f.cohort }} {{ labels.cohortAccounts }}</h2>
         <trazo-table tableClass="rf-table">
-          <thead><tr><th>Stage</th><th>Users</th><th>vs previous</th><th>vs cohort</th></tr></thead>
+          <thead><tr><th>{{ labels.stage }}</th><th>{{ labels.users }}</th><th>{{ labels.vsPrevious }}</th><th>{{ labels.vsCohort }}</th></tr></thead>
           <tbody>
             @for (st of f.stages; track st.name) {
-              <tr><td>{{ st.name }}</td><td>{{ st.users }}</td><td>{{ pct(st.rateOfPrevious) }}</td><td>{{ pct(st.rateOfCohort) }}</td></tr>
+              <tr><td>{{ stageLabel(st.name) }}</td><td>{{ st.users }}</td><td>{{ pct(st.rateOfPrevious) }}</td><td>{{ pct(st.rateOfCohort) }}</td></tr>
             }
           </tbody>
         </trazo-table>
-        <p class="muted">Signup → trial {{ pct(f.signupToTrial) }} · trial → paid {{ pct(f.trialToPaid) }} · signup → paid {{ pct(f.signupToPaid) }} ·
-          paid customers renewed 3+ times {{ pct(f.retainedAfterSeveralCycles) }}. Groups under {{ f.minGroupSize }} users are folded into "other".</p>
+        <p class="muted">{{ labels.signupToTrial }} {{ pct(f.signupToTrial) }} · {{ labels.trialToPaid }} {{ pct(f.trialToPaid) }} · {{ labels.signupToPaid }} {{ pct(f.signupToPaid) }} ·
+          {{ labels.retainedSeveral }} {{ pct(f.retainedAfterSeveralCycles) }}. {{ labels.groupsFolded }} {{ f.minGroupSize }} {{ labels.usersFolded }}</p>
         @if (f.cohorts.length) {
-          <h2>Weekly cohorts</h2>
-          <trazo-table tableClass="rf-table"><thead><tr><th>Week</th><th>Signups</th><th>Paid</th><th>Renewed</th></tr></thead>
+          <h2>{{ labels.weeklyCohorts }}</h2>
+          <trazo-table tableClass="rf-table"><thead><tr><th>{{ labels.week }}</th><th>{{ labels.signups }}</th><th>{{ labels.paid }}</th><th>{{ labels.renewed }}</th></tr></thead>
             <tbody>@for (c of f.cohorts; track c.week) { <tr><td>{{ c.week }}</td><td>{{ c.signups }}</td><td>{{ c.paid }}</td><td>{{ c.renewed }}</td></tr> }</tbody></trazo-table>
         }
         @if (f.byAppVersion.length) {
-          <h2>By app version</h2>
-          <trazo-table tableClass="rf-table"><thead><tr><th>Version</th><th>Signups</th><th>Paid</th></tr></thead>
+          <h2>{{ labels.byAppVersion }}</h2>
+          <trazo-table tableClass="rf-table"><thead><tr><th>{{ labels.version }}</th><th>{{ labels.signups }}</th><th>{{ labels.paid }}</th></tr></thead>
             <tbody>@for (g of f.byAppVersion; track g.key) { <tr><td>{{ g.key }}</td><td>{{ g.users }}</td><td>{{ g.paid }}</td></tr> }</tbody></trazo-table>
         }
         @if (f.byPlan.length) {
-          <h2>First purchase by plan</h2>
-          <trazo-table tableClass="rf-table"><thead><tr><th>Product</th><th>Users</th></tr></thead>
+          <h2>{{ labels.firstPurchaseByPlan }}</h2>
+          <trazo-table tableClass="rf-table"><thead><tr><th>{{ labels.product }}</th><th>{{ labels.users }}</th></tr></thead>
             <tbody>@for (g of f.byPlan; track g.key) { <tr><td>{{ g.key }}</td><td>{{ g.users }}</td></tr> }</tbody></trazo-table>
         }
       }
 
-      <h2>Invitations <span class="muted">· {{ total() }} total</span></h2>
+      <h2>{{ labels.invitations }} <span class="muted">· {{ total() }} {{ labels.total }}</span></h2>
       <div class="rf-toolbar">
-        <label>Status
+        <label>{{ labels.status }}
           <select [ngModel]="status()" (ngModelChange)="status.set($event); page.set(1); loadList()" name="status">
-            <option value="">All</option><option value="registered">Registered</option><option value="rewarded">Rewarded</option>
-            <option value="voided">Voided</option><option value="skipped">Skipped</option>
+            <option value="">{{ labels.all }}</option><option value="registered">{{ labels.statuses.registered }}</option><option value="rewarded">{{ labels.statuses.rewarded }}</option>
+            <option value="voided">{{ labels.statuses.voided }}</option><option value="skipped">{{ labels.statuses.skipped }}</option>
           </select></label>
-        <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); page.set(1); loadList()" name="incidents"> Only incidents</span></label>
+        <label><span><input type="checkbox" [ngModel]="incidents()" (ngModelChange)="incidents.set($event); page.set(1); loadList()" name="incidents"> {{ labels.onlyIncidents }}</span></label>
       </div>
       <trazo-table tableClass="rf-table">
-        <thead><tr><th>Registered</th><th>Referrer</th><th>Invited</th><th>Status</th><th>Reward</th><th></th></tr></thead>
+        <thead><tr><th>{{ labels.registeredAt }}</th><th>{{ labels.referrer }}</th><th>{{ labels.invited }}</th><th>{{ labels.status }}</th><th>{{ labels.reward }}</th><th></th></tr></thead>
         <tbody>
           @for (r of items(); track r.id) {
             <tr>
-              <td>{{ r.attributedAt.slice(0, 10) }}<div class="muted">{{ r.source }} · {{ r.code }}</div></td>
-              <td>{{ r.referrerEmail }}<div><trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="ledger(r.referrerId)">Ledger</trazo-button></div></td>
+              <td>{{ r.attributedAt.slice(0, 10) }}<div class="muted">{{ sourceLabel(r.source) }} · {{ r.code }}</div></td>
+              <td>{{ r.referrerEmail }}<div><trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="ledger(r.referrerId)">{{ labels.ledger }}</trazo-button></div></td>
               <td>{{ r.referredEmail }}</td>
-              <td>{{ r.status }}@if (r.plan) { <div class="muted">{{ r.plan }}</div> }@if (r.incident) { <div class="warn">{{ r.incident }}</div> }</td>
-              <td>@if (r.rewardDays) { {{ r.rewardDays }} d · {{ r.rewardStatus }} }@if (r.lastDeferNote) { <div class="muted">{{ r.lastDeferNote }}</div> }</td>
+              <td>{{ statusLabel(r.status) }}@if (r.plan) { <div class="muted">{{ r.plan }}</div> }@if (r.incident) { <div class="warn">{{ r.incident }}</div> }</td>
+              <td>@if (r.rewardDays) { {{ r.rewardDays }} d · {{ statusLabel(r.rewardStatus) }} }@if (r.lastDeferNote) { <div class="muted">{{ r.lastDeferNote }}</div> }</td>
               <td>
                 @if (r.rewardGrantId && (r.rewardStatus === 'pending' || r.rewardStatus === 'active')) {
-                  <trazo-button variant="danger" buttonClass="rf-btn" type="button" (pressed)="voidGrant(r.rewardGrantId)">Void…</trazo-button>
+                  <trazo-button variant="danger" buttonClass="rf-btn" type="button" (pressed)="voidGrant(r.rewardGrantId)">{{ labels.void }}</trazo-button>
                 }
-                @if (r.rewardGrantId && r.rewardStatus === 'pending') { <trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="retry(r.rewardGrantId)">Retry</trazo-button> }
+                @if (r.rewardGrantId && r.rewardStatus === 'pending') { <trazo-button variant="secondary" buttonClass="rf-btn" type="button" (pressed)="retry(r.rewardGrantId)">{{ labels.retry }}</trazo-button> }
               </td>
             </tr>
-          } @empty { <tr><td colspan="6" class="muted">No invitations for this filter.</td></tr> }
+          } @empty { <tr><td colspan="6" class="muted">{{ labels.noInvitations }}</td></tr> }
         </tbody>
       </trazo-table>
       <div class="rf-pagination">
-        <span>Page {{ page() }} of {{ pageCount() }}</span>
+        <span>{{ labels.page }} {{ page() }} {{ labels.of }} {{ pageCount() }}</span>
         <div class="controls">
-          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() <= 1" (pressed)="changePage(-1)">Previous</trazo-button>
-          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() >= pageCount()" (pressed)="changePage(1)">Next</trazo-button>
+          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() <= 1" (pressed)="changePage(-1)">{{ labels.previous }}</trazo-button>
+          <trazo-button variant="secondary" buttonClass="rf-btn" type="button" [disabled]="page() >= pageCount()" (pressed)="changePage(1)">{{ labels.next }}</trazo-button>
         </div>
       </div>
 
       @if (ledgerRows().length) {
-        <h2>Premium-time ledger of the selected user</h2>
+        <h2>{{ labels.premiumLedger }}</h2>
         <trazo-table tableClass="rf-table">
-          <thead><tr><th>Granted</th><th>Kind</th><th>Days</th><th>Status</th><th>Window / Google</th><th>Notes</th></tr></thead>
+          <thead><tr><th>{{ labels.granted }}</th><th>{{ labels.kind }}</th><th>{{ labels.days }}</th><th>{{ labels.status }}</th><th>{{ labels.windowGoogle }}</th><th>{{ labels.notes }}</th></tr></thead>
           <tbody>
             @for (g of ledgerRows(); track g.id) {
               <tr>
-                <td>{{ g.grantedAt.slice(0, 10) }}</td><td>{{ g.kind }}</td><td>{{ g.days }}</td><td>{{ g.status }}</td>
+                <td>{{ g.grantedAt.slice(0, 10) }}</td><td>{{ grantKindLabel(g.kind) }}</td><td>{{ g.days }}</td><td>{{ statusLabel(g.status) }}</td>
                 <td>@if (g.startsAt) { {{ g.startsAt.slice(0, 10) }} → {{ g.endsAt?.slice(0, 10) }} }
-                  @if (g.googleExpiryAfter) { Google expiry {{ g.googleExpiryBefore?.slice(0, 10) }} → {{ g.googleExpiryAfter.slice(0, 10) }} }</td>
-                <td>{{ g.voidReason ?? g.lastDeferError }}@if (g.voidedBy) { <span class="muted"> (by {{ g.voidedBy }})</span> }</td>
+                  @if (g.googleExpiryAfter) { {{ labels.googleExpiry }} {{ g.googleExpiryBefore?.slice(0, 10) }} → {{ g.googleExpiryAfter.slice(0, 10) }} }</td>
+                <td>{{ g.voidReason ?? g.lastDeferError }}@if (g.voidedBy) { <span class="muted"> ({{ labels.by }} {{ g.voidedBy }})</span> }</td>
               </tr>
             }
           </tbody>
