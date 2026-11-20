@@ -56,6 +56,7 @@ export const UI_COPY = {
     disabled: 'Deshabilitado',
     unverified: 'Correo sin verificar',
     sort: 'Ordenar',
+    loading: 'Cargando…',
     sortEmail: 'Ordenar: correo',
     sortNewest: 'Ordenar: más recientes',
     columnUser: 'Usuario',
