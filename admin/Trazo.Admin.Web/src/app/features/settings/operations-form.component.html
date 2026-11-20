@@ -62,12 +62,12 @@
           </p>
         }
         <div class="actions">
-          <button type="button" (click)="testDieto()" [disabled]="busy() || !dietoEndpoint().trim()">Probar conexión</button>
+          <trazo-button variant="secondary" type="button" (pressed)="testDieto()" [disabled]="busy() || !dietoEndpoint().trim()">Probar conexión</trazo-button>
         </div>
       </fieldset>
 
       <div class="actions">
-        <button class="primary" type="submit" [disabled]="busy()">Guardar ajustes</button>
+        <trazo-button variant="primary" type="submit" [disabled]="busy()">Guardar ajustes</trazo-button>
         @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
         @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
       </div>
