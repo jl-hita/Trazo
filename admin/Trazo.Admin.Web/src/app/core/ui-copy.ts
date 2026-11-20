@@ -919,6 +919,8 @@ export const UI_COPY = {
     languages: 'Idiomas',
     forTheWeek: 'para la semana del',
     linkCopied: 'Enlace copiado.',
+    campaignSaved: 'Campaña guardada.',
+    campaignCreated: 'Campaña creada. Su enlace es',
     copyManually: 'Cópialo manualmente:',
     savedWeek: 'Descargas guardadas para la semana de',
     channelNames: { ads: 'Anuncios', social: 'Redes sociales', content: 'Contenido', partnerships: 'Colaboraciones', referral: 'Invitaciones', organic: 'Orgánico' },
