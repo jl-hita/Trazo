@@ -78,7 +78,7 @@ interface IntelligenceSummary {
       @if (error()) { <p class="ti-error" role="alert">{{error()}}</p> }
       @if (loading() && !data()) { <p class="empty">Cargando datos de investigación…</p> }
       @if (data(); as d) {
-        <p class="foot">Periodo {{date(d.from)}} – {{date(d.to)}} · Datos actualizados {{dateTime(d.generatedAt)}}. Las observaciones se cuentan por músculo y periodo; no equivalen a deportistas independientes.</p>
+        <p class="foot">Periodo {{date(d.from)}} – {{date(to())}} · Datos actualizados {{dateTime(d.generatedAt)}}. Las observaciones se cuentan por músculo y periodo; no equivalen a deportistas independientes.</p>
         <div class="ti-grid">
           <article class="ti-card"><span class="value">{{n(d.plans.total)}}</span><span class="label">Planes creados · {{n(d.plans.generated)}} generados / {{n(d.plans.manual)}} manuales</span></article>
           <article class="ti-card"><span class="value">{{n(d.prescriptions.sessions)}}</span><span class="label">Sesiones del periodo/cohorte · {{pct(d.prescriptions.withOriginalSnapshot,d.prescriptions.sessions)}} con snapshot original</span></article>
