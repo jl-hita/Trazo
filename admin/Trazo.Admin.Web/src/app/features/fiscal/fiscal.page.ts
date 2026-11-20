@@ -64,8 +64,7 @@ export class FiscalPageComponent {
   }
 
   private fail(e: unknown): void {
-    const body = (e as { error?: { message?: string; errors?: unknown } })?.error;
-    this.error.set(body?.errors ? errorMessage(e) : (body?.message ?? errorMessage(e)));
+    this.error.set(errorMessage(e));
     this.message.set('');
   }
 
