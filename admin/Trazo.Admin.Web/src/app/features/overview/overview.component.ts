@@ -64,33 +64,33 @@ export class OverviewComponent {
 
   protected readonly logsStatus = computed<Status>(() => {
     const l = this.data()?.logs;
-    if (!l) return { tone: 'info', label: 'Sin datos' };
+    if (!l) return { tone: 'info', label: OVERVIEW_COPY.statuses.noData };
     if (l.errors24h === 0) return { tone: 'ok', label: OVERVIEW_COPY.statuses.noErrors };
     const rising = l.errors24h >= 5 && l.errors24h >= 2 * Math.max(l.errorsPrevious24h, 1);
-    return { tone: rising ? 'crit' : 'warn', label: rising ? 'Errores en aumento' : 'Hay errores' };
+    return { tone: rising ? 'crit' : 'warn', label: rising ? OVERVIEW_COPY.statuses.errorsRising : OVERVIEW_COPY.statuses.hasErrors };
   });
 
   protected readonly smtp = computed<Status>(() => {
     const c = this.data()?.configuration;
-    if (!c) return { tone: 'info', label: 'Sin datos' };
+    if (!c) return { tone: 'info', label: OVERVIEW_COPY.statuses.noData };
     if (!c.smtpConfigured) return { tone: 'warn', label: OVERVIEW_COPY.statuses.notConfigured };
     if (c.lastSmtpSend && !c.lastSmtpSend.succeeded) return { tone: 'crit', label: OVERVIEW_COPY.statuses.lastSendFailed };
-    return { tone: 'ok', label: c.lastSmtpSend ? 'Funciona' : 'Configurado' };
+    return { tone: 'ok', label: c.lastSmtpSend ? OVERVIEW_COPY.statuses.works : OVERVIEW_COPY.statuses.configured };
   });
 
   protected readonly google = computed<Status>(() =>
-    this.data()?.configuration.googleConfigured ? { tone: 'ok', label: OVERVIEW_COPY.statuses.configured } : { tone: 'warn', label: 'Sin configurar' });
+    this.data()?.configuration.googleConfigured ? { tone: 'ok', label: OVERVIEW_COPY.statuses.configured } : { tone: 'warn', label: OVERVIEW_COPY.statuses.notConfigured });
 
   protected readonly play = computed<Status>(() => {
     const c = this.data()?.configuration;
-    if (!c) return { tone: 'info', label: 'Sin datos' };
-    if (!c.playBillingConfigured) return c.subscriptionsEnforced ? { tone: 'crit', label: 'Sin configurar' } : { tone: 'info', label: OVERVIEW_COPY.statuses.configuredOptional };
+    if (!c) return { tone: 'info', label: OVERVIEW_COPY.statuses.noData };
+    if (!c.playBillingConfigured) return c.subscriptionsEnforced ? { tone: 'crit', label: OVERVIEW_COPY.statuses.notConfigured } : { tone: 'info', label: OVERVIEW_COPY.statuses.configuredOptional };
     return c.playRtdnConfigured ? { tone: 'ok', label: OVERVIEW_COPY.statuses.configuredWithRtdn } : { tone: 'warn', label: OVERVIEW_COPY.statuses.withoutRtdn };
   });
 
   protected readonly catalog = computed<Status>(() => {
     const s = this.data()?.summary;
-    if (!s) return { tone: 'info', label: 'Sin datos' };
+    if (!s) return { tone: 'info', label: OVERVIEW_COPY.statuses.noData };
     if (s.exercisesUsable === 0) return { tone: 'crit', label: OVERVIEW_COPY.statuses.noUsableExercises };
     if (s.exercisesUnusable > 0 || s.exercisesWithoutImages > 0) return { tone: 'warn', label: OVERVIEW_COPY.statuses.needsReview };
     return { tone: 'ok', label: OVERVIEW_COPY.statuses.correct };
