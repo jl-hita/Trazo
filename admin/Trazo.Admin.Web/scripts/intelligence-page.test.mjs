@@ -43,6 +43,7 @@ async function loadComponent(api) {
     }
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
     if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
+    if (request === '../../shared/ui/ui-table.component') return { UiTableComponent: class UiTableComponent {} };
     return originalLoad.call(this, request, parent, isMain);
   };
 
