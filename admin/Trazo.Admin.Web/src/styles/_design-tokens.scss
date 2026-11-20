@@ -1,0 +1,41 @@
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --trazo-bg: #0d1119;
+  --trazo-surface: #131b27;
+  --trazo-surface-raised: #182231;
+  --trazo-surface-hover: #202b3b;
+  --trazo-border: #293444;
+  --trazo-border-strong: #34465b;
+
+  /* Text */
+  --trazo-text: #e8edf5;
+  --trazo-text-strong: #f2f5fa;
+  --trazo-text-soft: #aab6c7;
+  --trazo-text-muted: #8291a6;
+
+  /* Actions and semantic states */
+  --trazo-accent: #6d9bd2;
+  --trazo-accent-strong: #3b6ea8;
+  --trazo-info: #9cc0ea;
+  --trazo-success: #7fd3a0;
+  --trazo-warning: #e6d39b;
+  --trazo-danger: #f0a3a3;
+
+  /* Shape, spacing and elevation */
+  --trazo-radius-sm: 6px;
+  --trazo-radius-md: 8px;
+  --trazo-radius-lg: 10px;
+  --trazo-radius-pill: 999px;
+  --trazo-space-1: 4px;
+  --trazo-space-2: 8px;
+  --trazo-space-3: 12px;
+  --trazo-space-4: 16px;
+  --trazo-space-5: 20px;
+  --trazo-space-6: 24px;
+  --trazo-space-8: 32px;
+  --trazo-shadow-panel: 0 12px 32px rgb(0 0 0 / 18%);
+  --trazo-content-max: 1280px;
+  --trazo-focus-ring: 0 0 0 2px var(--trazo-bg), 0 0 0 4px var(--trazo-info);
+}

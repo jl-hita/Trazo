@@ -1,12 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiButtonComponent } from '../../shared/ui/ui-button.component';
+import { UiCardComponent } from '../../shared/ui/ui-card.component';
+import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
+import { UiStateComponent } from '../../shared/ui/ui-state.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'trazo-login-page',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiButtonComponent, UiCardComponent, UiFormFieldComponent, UiStateComponent],
   styleUrl: './login.page.scss',
   templateUrl: './login.page.html'
 })

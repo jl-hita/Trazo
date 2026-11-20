@@ -1,12 +1,27 @@
-    <form (ngSubmit)="submit()">
+<form (ngSubmit)="submit()">
+  <trazo-card>
+    <div class="login-content">
       <img class="logo" src="logo-dark.svg" alt="TRAZO" height="38">
       <h1>Administration</h1>
       @if (challenge()) {
-        <label>Authentication code <input name="code" inputmode="numeric" autocomplete="one-time-code" required [ngModel]="code()" (ngModelChange)="code.set($event)"></label>
+        <trazo-form-field label="Authentication code" controlId="login-code">
+          <input id="login-code" name="code" inputmode="numeric" autocomplete="one-time-code" required
+                 [ngModel]="code()" (ngModelChange)="code.set($event)">
+        </trazo-form-field>
       } @else {
-        <label>Email <input type="email" name="email" autocomplete="username" required [ngModel]="email()" (ngModelChange)="email.set($event)"></label>
-        <label>Password <input type="password" name="password" autocomplete="current-password" required [ngModel]="password()" (ngModelChange)="password.set($event)"></label>
+        <trazo-form-field label="Email" controlId="login-email">
+          <input id="login-email" type="email" name="email" autocomplete="username" required
+                 [ngModel]="email()" (ngModelChange)="email.set($event)">
+        </trazo-form-field>
+        <trazo-form-field label="Password" controlId="login-password">
+          <input id="login-password" type="password" name="password" autocomplete="current-password" required
+                 [ngModel]="password()" (ngModelChange)="password.set($event)">
+        </trazo-form-field>
       }
-      @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
-      <button type="submit" [disabled]="busy()">Sign in</button>
-    </form>
+      @if (error()) {
+        <trazo-state kind="error" title="Sign-in failed" [description]="error()" />
+      }
+      <trazo-button type="submit" variant="primary" [loading]="busy()">Sign in</trazo-button>
+    </div>
+  </trazo-card>
+</form>
