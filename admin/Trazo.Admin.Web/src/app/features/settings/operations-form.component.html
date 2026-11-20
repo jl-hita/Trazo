@@ -6,9 +6,8 @@
           <p class="hint">Fijos (entorno, solo lectura):</p>
           <ul>@for (o of view()!.environmentCorsOrigins; track o) { <li><code>{{ o }}</code></li> }</ul>
         }
-        <label>Orígenes adicionales (uno por línea)
-          <textarea name="origins" spellcheck="false" placeholder="https://admin.ejemplo.com" [ngModel]="origins()" (ngModelChange)="origins.set($event)"></textarea>
-        </label>
+        <trazo-form-field label="Orígenes adicionales (uno por línea)" controlId="origins"><textarea name="origins" spellcheck="false" placeholder="https://admin.ejemplo.com" [ngModel]="origins()" (ngModelChange)="origins.set($event)" id="origins"></textarea>
+        </trazo-form-field>
         <p class="hint">Formato <code>https://dominio[:puerto]</code>, sin ruta. Se admite <code>http</code> solo para localhost. Máximo 20.</p>
         @if (fieldError('additionalCorsOrigins')) { <span class="fielderr" role="alert">{{ fieldError('additionalCorsOrigins') }}</span> }
       </fieldset>
@@ -17,34 +16,29 @@
         <legend>Límites de peticiones</legend>
         <p class="hint">Peticiones por minuto y por IP (o usuario). El límite del inicio de sesión es fijo y no se puede cambiar.</p>
         <div class="row">
-          <label>Ajustes y asistente (10–600)
-            <input type="number" name="setup" min="10" max="600" [ngModel]="setupPerMinute()" (ngModelChange)="setupPerMinute.set($event)">
+          <trazo-form-field label="Ajustes y asistente (10–600)" controlId="setup"><input type="number" name="setup" min="10" max="600" [ngModel]="setupPerMinute()" (ngModelChange)="setupPerMinute.set($event)" id="setup">
             @if (fieldError('setupPerMinute')) { <span class="fielderr" role="alert">{{ fieldError('setupPerMinute') }}</span> }
-          </label>
-          <label>Pruebas de conexión (3–60)
-            <input type="number" name="setupTest" min="3" max="60" [ngModel]="setupTestPerMinute()" (ngModelChange)="setupTestPerMinute.set($event)">
+          </trazo-form-field>
+          <trazo-form-field label="Pruebas de conexión (3–60)" controlId="setupTest"><input type="number" name="setupTest" min="3" max="60" [ngModel]="setupTestPerMinute()" (ngModelChange)="setupTestPerMinute.set($event)" id="setupTest">
             @if (fieldError('setupTestPerMinute')) { <span class="fielderr" role="alert">{{ fieldError('setupTestPerMinute') }}</span> }
-          </label>
-          <label>Suscripciones (5–600)
-            <input type="number" name="subscription" min="5" max="600" [ngModel]="subscriptionPerMinute()" (ngModelChange)="subscriptionPerMinute.set($event)">
+          </trazo-form-field>
+          <trazo-form-field label="Suscripciones (5–600)" controlId="subscription"><input type="number" name="subscription" min="5" max="600" [ngModel]="subscriptionPerMinute()" (ngModelChange)="subscriptionPerMinute.set($event)" id="subscription">
             @if (fieldError('subscriptionPerMinute')) { <span class="fielderr" role="alert">{{ fieldError('subscriptionPerMinute') }}</span> }
-          </label>
+          </trazo-form-field>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>Registros</legend>
         <div class="row">
-          <label>Nivel mínimo
-            <select name="logLevel" [ngModel]="logLevel()" (ngModelChange)="logLevel.set($event)">
+          <trazo-form-field label="Nivel mínimo" controlId="logLevel"><select name="logLevel" [ngModel]="logLevel()" (ngModelChange)="logLevel.set($event)" id="logLevel">
               @for (l of levels; track l) { <option [value]="l">{{ l }}</option> }
             </select>
             @if (fieldError('logLevel')) { <span class="fielderr" role="alert">{{ fieldError('logLevel') }}</span> }
-          </label>
-          <label>Conservar (días, 0 = siempre)
-            <input type="number" name="retention" min="0" max="3650" [ngModel]="logRetentionDays()" (ngModelChange)="logRetentionDays.set($event)">
+          </trazo-form-field>
+          <trazo-form-field label="Conservar (días, 0 = siempre)" controlId="retention"><input type="number" name="retention" min="0" max="3650" [ngModel]="logRetentionDays()" (ngModelChange)="logRetentionDays.set($event)" id="retention">
             @if (fieldError('logRetentionDays')) { <span class="fielderr" role="alert">{{ fieldError('logRetentionDays') }}</span> }
-          </label>
+          </trazo-form-field>
         </div>
         <p class="hint">Con «Warning» o superior se dejan de guardar los mensajes informativos, pero los cambios de administración se siguen registrando.</p>
       </fieldset>
@@ -52,14 +46,12 @@
       <fieldset>
         <legend>DietoExpress</legend>
         <p class="hint">Destino al que se envían los ejercicios creados en TRAZO. La misma clave autentica la importación que recibe TRAZO.</p>
-        <label>Dirección de DietoExpress
-          <input type="text" name="dietoEndpoint" placeholder="https://dietoexpress.ejemplo.com" [ngModel]="dietoEndpoint()" (ngModelChange)="dietoEndpoint.set($event)">
+        <trazo-form-field label="Dirección de DietoExpress" controlId="dietoEndpoint"><input type="text" name="dietoEndpoint" placeholder="https://dietoexpress.ejemplo.com" [ngModel]="dietoEndpoint()" (ngModelChange)="dietoEndpoint.set($event)" id="dietoEndpoint">
           @if (fieldError('dietoExpressEndpoint')) { <span class="fielderr" role="alert">{{ fieldError('dietoExpressEndpoint') }}</span> }
-        </label>
-        <label>Clave compartida
-          <input type="password" name="dietoKey" autocomplete="new-password" [placeholder]="keyPlaceholder()" [ngModel]="dietoKey()" (ngModelChange)="dietoKey.set($event)">
+        </trazo-form-field>
+        <trazo-form-field label="Clave compartida" controlId="dietoKey"><input type="password" name="dietoKey" autocomplete="new-password" [placeholder]="keyPlaceholder()" [ngModel]="dietoKey()" (ngModelChange)="dietoKey.set($event)" id="dietoKey">
           @if (fieldError('dietoExpressApiKey')) { <span class="fielderr" role="alert">{{ fieldError('dietoExpressApiKey') }}</span> }
-        </label>
+        </trazo-form-field>
         @if (view(); as v) {
           <p class="hint">
             @switch (v.dietoExpressApiKeySource) {
