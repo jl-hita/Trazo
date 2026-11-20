@@ -3,82 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 
-export interface ReferralSummary {
-  from: string; to: string; codesCreated: number; shares: number; linkOpens: number; installsAttributed: number;
-  attributed: number; rewarded: number; voided: number; skipped: number; rewardDaysGranted: number; rewardsPending: number;
-  rewardDaysPending: number; rewardsDeferred: number; rewardsPromo: number; incidentCount: number;
-  linkToRegistered: number | null; registeredToPaid: number | null; paidMonthly: number; paidAnnual: number;
-  renewedAtLeastOnce: number; renewedAtLeastThree: number; topCodes: FunnelGroup[]; minGroupSize: number;
-}
-export interface FunnelStage { name: string; users: number; rateOfPrevious: number | null; rateOfCohort: number | null; }
-export interface FunnelGroup { key: string; users: number; paid: number; }
-export interface FunnelCohort { week: string; signups: number; paid: number; renewed: number; }
-export interface ReferralFunnel {
-  from: string; to: string; cohort: number; stages: FunnelStage[]; trialToPaid: number | null; signupToPaid: number | null;
-  signupToTrial: number | null; retainedAfterSeveralCycles: number | null; byPlan: FunnelGroup[]; byAppVersion: FunnelGroup[];
-  byReference: FunnelGroup[]; cohorts: FunnelCohort[]; minGroupSize: number;
-}
-export interface ReferralAdminItem {
-  id: string; code: string; source: string; status: string; attributedAt: string; convertedAt: string | null; plan: string | null;
-  rewardDays: number | null; incident: string | null; appVersion: string | null; referrerId: string; referrerEmail: string | null;
-  referredId: string; referredEmail: string | null; rewardGrantId: string | null; rewardStatus: string | null; lastDeferNote: string | null;
-}
-export interface PremiumGrantLedgerItem {
-  id: string; kind: string; sourceKey: string | null; days: number; status: string; grantedAt: string; startsAt: string | null;
-  endsAt: string | null; appliedAt: string | null; voidedAt: string | null; voidReason: string | null; voidedBy: string | null;
-  originUserId: string | null; originSubscriptionId: string | null; deferredSubscriptionId: string | null;
-  googleExpiryBefore: string | null; googleExpiryAfter: string | null; deferAttempts: number; lastDeferError: string | null;
-}
-export interface ReferralAdminPage { total: number; page: number; pageSize: number; items: ReferralAdminItem[]; }
-
-export interface FiscalProfile {
-  legalName: string; taxId: string; address: string; gestorEmail: string | null; defaultVatPct: number; irpfAdvancePct: number;
-  filesModelo130: boolean; playMonthlyPrice: number; playAnnualPrice: number; consumerVatPct: number; googleFeePct: number;
-}
-export interface FiscalEntry {
-  id: string; kind: string; date: string; period: string; concept: string; counterparty: string | null;
-  counterpartyTaxId: string | null; counterpartyCountry: string | null; invoiceNumber: string | null; category: string;
-  base: number; vatTreatment: string; vatRatePct: number; vatAmount: number; withholdingPct: number; withholdingAmount: number;
-  deductiblePct: number; total: number; source: string; notes: string | null; createdBy: string | null; createdAt: string; updatedAt: string;
-}
-export interface FiscalEntryInput {
-  kind: string; date: string; concept: string; counterparty: string | null; counterpartyTaxId: string | null;
-  counterpartyCountry: string | null; invoiceNumber: string | null; category: string; base: number | null;
-  vatTreatment: string; vatRatePct: number | null; withholdingPct: number | null; deductiblePct: number | null; notes: string;
-}
-export interface FiscalTotals {
-  incomeCount: number; expenseCount: number; incomeBase: number; incomeDomesticBase: number; incomeEuB2bBase: number;
-  incomeNoVatBase: number; vatOnIncome: number; selfAssessedVat: number; vatOutput: number; expenseBase: number;
-  deductibleCost: number; vatInput: number; vatBalance: number; withholdingsSuffered: number; netResult: number;
-}
-export interface FiscalMonthRow {
-  period: string; closed: boolean; closedAt: string | null; incomeCount: number; expenseCount: number; incomeBase: number;
-  deductibleCost: number; vatBalance: number; finished: boolean;
-}
-export interface FiscalQuarterRow {
-  quarter: number; label: string; dueDate: string; allClosed: boolean; vatBalance: number; irpfToPay: number; overdue: boolean;
-}
-export interface FiscalYearView {
-  year: number; profileComplete: boolean; currentPeriod: string; months: FiscalMonthRow[]; quarters: FiscalQuarterRow[]; totals: FiscalTotals;
-}
-export interface FiscalWarning { code: string; message: string; count: number; }
-export interface FiscalEstimate {
-  available: boolean; charges: number; monthlyCharges: number; annualCharges: number; refunds: number;
-  gross: number; netOfVat: number; googleFee: number; income: number;
-}
-export interface FiscalClosure { period: string; closedAt: string; closedBy: string; entryCount: number; snapshotJson: string; }
-export interface FiscalMonthView {
-  period: string; closed: boolean; closure: FiscalClosure | null; entries: FiscalEntry[]; totals: FiscalTotals;
-  estimate: FiscalEstimate; hasGoogleIncome: boolean; warnings: FiscalWarning[]; canClose: boolean; cannotCloseReason: string | null;
-}
-export interface FiscalAuditEntry { id: string; period: string; action: string; actor: string; reason: string | null; at: string; }
-export interface FiscalQuarterSummary {
-  year: number; quarter: number; label: string; dueDate: string; totals: FiscalTotals;
-  iva: { domesticIncomeBase: number; vatOnIncome: number; selfAssessedBase: number; selfAssessedVat: number; vatOutput: number; deductibleBase: number; vatInput: number; balance: number; notSubjectEuB2bBase: number };
-  irpf: { applies: boolean; ytdIncome: number; ytdDeductibleCost: number; netYtd: number; pct: number; gross: number; withholdingsYtd: number; previousPayments: number; result: number; toPay: number };
-  intra349: { key: string; counterparty: string | null; taxId: string | null; country: string | null; base: number }[];
-}
-
 export interface Page<T> { items: T[]; page: number; pageSize: number; totalCount: number; totalPages: number; }
 
 export interface AdminUserSummary {
@@ -498,48 +422,6 @@ export class AdminApi {
     return firstValueFrom(this.http.post<AdminSubscriptionDetail>(`${API}/subscriptions/${id}/refresh`, {}));
   }
 
-  private query(params: Record<string, string | boolean | undefined>): HttpParams {
-    let p = new HttpParams();
-    for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== '') p = p.set(k, String(v));
-    return p;
-  }
-
-  getReferralProgrammeSettings(): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
-    return firstValueFrom(this.http.get<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`));
-  }
-
-  saveReferralProgrammeSettings(input: { enabled: boolean; rewardDays: number }): Promise<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }> {
-    return firstValueFrom(this.http.put<{ referralsEnabled: boolean; referralRewardDays: number; maxDays: number }>(`${API}/referrals/settings`, input));
-  }
-
-  getReferralSummary(range: { from?: string; to?: string }): Promise<ReferralSummary> {
-    return firstValueFrom(this.http.get<ReferralSummary>(`${API}/referrals/summary`, { params: this.query(range) }));
-  }
-
-  getFunnel(params: { from?: string; to?: string; channel?: string }): Promise<ReferralFunnel> {
-    return firstValueFrom(this.http.get<ReferralFunnel>(`${API}/analytics/funnel`, { params: this.query(params) }));
-  }
-
-  getReferrals(params: { status?: string; incidents?: boolean; from?: string; to?: string; page?: number; pageSize?: number }): Promise<ReferralAdminPage> {
-    return firstValueFrom(this.http.get<ReferralAdminPage>(`${API}/referrals`, { params: this.query({ ...params, page: String(params.page ?? 1), pageSize: String(params.pageSize ?? 25) }) }));
-  }
-
-  getUserLedger(userId: string): Promise<{ items: PremiumGrantLedgerItem[] }> {
-    return firstValueFrom(this.http.get<{ items: PremiumGrantLedgerItem[] }>(`${API}/referrals/users/${userId}/ledger`));
-  }
-
-  voidGrant(id: string, reason: string): Promise<{ outcome: string }> {
-    return firstValueFrom(this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/void`, { reason }));
-  }
-
-  retryGrant(id: string): Promise<{ outcome: string }> {
-    return firstValueFrom(this.http.post<{ outcome: string }>(`${API}/referrals/grants/${id}/retry`, {}));
-  }
-
-  reconcileReferrals(): Promise<{ conversions: number; pendingResolved: number; pendingWaiting: number }> {
-    return firstValueFrom(this.http.post<{ conversions: number; pendingResolved: number; pendingWaiting: number }>(`${API}/referrals/reconcile`, {}));
-  }
-
   getPromotions(): Promise<PromotionsView> {
     return firstValueFrom(this.http.get<PromotionsView>(`${API}/settings/promotions`));
   }
@@ -655,30 +537,4 @@ export class AdminApi {
     return firstValueFrom(this.http.get(`${API}/waitlist/export.csv`, { responseType: 'blob' }));
   }
 
-  // ---- Fiscal management (superadmin) ----
-  getFiscalProfile(): Promise<FiscalProfile> { return firstValueFrom(this.http.get<FiscalProfile>(`${API}/fiscal/profile`)); }
-  saveFiscalProfile(profile: FiscalProfile): Promise<FiscalProfile> { return firstValueFrom(this.http.put<FiscalProfile>(`${API}/fiscal/profile`, profile)); }
-  getFiscalOptions(): Promise<{ incomeCategories: string[]; expenseCategories: string[]; vatTreatments: string[] }> {
-    return firstValueFrom(this.http.get<{ incomeCategories: string[]; expenseCategories: string[]; vatTreatments: string[] }>(`${API}/fiscal/options`));
-  }
-  getFiscalYear(year: number): Promise<FiscalYearView> { return firstValueFrom(this.http.get<FiscalYearView>(`${API}/fiscal/years/${year}`)); }
-  getFiscalMonth(period: string): Promise<FiscalMonthView> { return firstValueFrom(this.http.get<FiscalMonthView>(`${API}/fiscal/months/${period}`)); }
-  getFiscalQuarter(year: number, quarter: number): Promise<FiscalQuarterSummary> { return firstValueFrom(this.http.get<FiscalQuarterSummary>(`${API}/fiscal/quarters/${year}/${quarter}`)); }
-  saveFiscalEntry(id: string | null, entry: FiscalEntryInput): Promise<FiscalEntry> {
-    return firstValueFrom(id ? this.http.put<FiscalEntry>(`${API}/fiscal/entries/${id}`, entry) : this.http.post<FiscalEntry>(`${API}/fiscal/entries`, entry));
-  }
-  deleteFiscalEntry(id: string): Promise<void> { return firstValueFrom(this.http.delete<void>(`${API}/fiscal/entries/${id}`)); }
-  bookGoogleEstimate(period: string): Promise<FiscalEntry> { return firstValueFrom(this.http.post<FiscalEntry>(`${API}/fiscal/months/${period}/book-google-estimate`, {})); }
-  closeFiscalMonth(period: string, acknowledgeWarnings: boolean): Promise<FiscalMonthView> {
-    return firstValueFrom(this.http.post<FiscalMonthView>(`${API}/fiscal/months/${period}/close`, { acknowledgeWarnings }));
-  }
-  reopenFiscalMonth(period: string, reason: string): Promise<void> {
-    return firstValueFrom(this.http.post<void>(`${API}/fiscal/months/${period}/reopen`, { reason }));
-  }
-  getFiscalAudit(): Promise<{ items: FiscalAuditEntry[] }> { return firstValueFrom(this.http.get<{ items: FiscalAuditEntry[] }>(`${API}/fiscal/audit`)); }
-  /** ZIPs are fetched through HttpClient so the bearer token is sent. */
-  downloadFiscalMonth(period: string): Promise<Blob> { return firstValueFrom(this.http.get(`${API}/fiscal/months/${period}/package`, { responseType: 'blob' })); }
-  downloadFiscalQuarter(year: number, quarter: number): Promise<Blob> {
-    return firstValueFrom(this.http.get(`${API}/fiscal/quarters/${year}/${quarter}/package`, { responseType: 'blob' }));
-  }
 }
