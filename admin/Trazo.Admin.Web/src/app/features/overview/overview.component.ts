@@ -4,6 +4,7 @@ import type { AlertSeverity, Overview } from '../../core/admin.models';
 import { OverviewApi } from './overview.api';
 import { errorMessage } from '../../core/setup.api';
 import { UiBadgeComponent, type UiBadgeTone } from '../../shared/ui/ui-badge.component';
+import { UiCardComponent } from '../../shared/ui/ui-card.component';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiStateComponent } from '../../shared/ui/ui-state.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
@@ -42,7 +43,7 @@ const REASON_LABEL: Record<string, string> = {
 @Component({
   selector: 'trazo-overview',
   standalone: true,
-  imports: [RouterLink, UiBadgeComponent, UiButtonComponent, UiStateComponent, UiTableComponent],
+  imports: [RouterLink, UiBadgeComponent, UiButtonComponent, UiCardComponent, UiStateComponent, UiTableComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
   encapsulation: ViewEncapsulation.None
