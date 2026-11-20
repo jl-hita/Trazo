@@ -56,16 +56,16 @@
         <div class="ti-columns">
           <section class="ti-panel"><h2>Adaptaciones por tipo y origen</h2>
             @if (d.adaptations.length) {
-              <div class="ti-table-wrap"><trazo-table><thead><tr><th>Tipo</th><th>Origen</th><th>Veces</th></tr></thead><tbody>
+              <div class="ti-table-wrap"><table><thead><tr><th>Tipo</th><th>Origen</th><th>Veces</th></tr></thead><tbody>
                 @for (a of d.adaptations; track a.kind + ':' + a.source) { <tr><td>{{adaptationLabel(a.kind)}}</td><td>{{sourceLabel(a.source)}}</td><td>{{n(a.count)}}</td></tr> }
-              </tbody></trazo-table></div>
+              </tbody></table></div>
             } @else { <p class="empty">No hay adaptaciones en el periodo.</p> }
           </section>
           <section class="ti-panel"><h2>Decisiones longitudinales</h2>
             @if (d.decisions.length) {
-              <div class="ti-table-wrap"><trazo-table><thead><tr><th>Acción</th><th>Política</th><th>Decisiones</th></tr></thead><tbody>
+              <div class="ti-table-wrap"><table><thead><tr><th>Acción</th><th>Política</th><th>Decisiones</th></tr></thead><tbody>
                 @for (x of d.decisions; track x.action + x.policyVersion) { <tr><td>{{x.action}}</td><td>{{x.policyVersion}}</td><td>{{n(x.count)}}</td></tr> }
-              </tbody></trazo-table></div>
+              </tbody></table></div>
             } @else { <p class="empty">No hay decisiones longitudinales registradas en el periodo.</p> }
           </section>
         </div>
@@ -73,11 +73,11 @@
         <h2 class="ti-section">Respuesta por grupo muscular</h2>
         <section class="ti-panel">
           @if (d.observations.length) {
-            <div class="ti-table-wrap"><trazo-table><thead><tr><th>Músculo</th><th>Calidad</th><th>Periodos</th><th>Series prescritas</th><th>Series realizadas</th><th>Muestras rendimiento</th><th>Cambio medio</th><th>Señales fatiga</th></tr></thead>
+            <div class="ti-table-wrap"><table><thead><tr><th>Músculo</th><th>Calidad</th><th>Periodos</th><th>Series prescritas</th><th>Series realizadas</th><th>Muestras rendimiento</th><th>Cambio medio</th><th>Señales fatiga</th></tr></thead>
               <tbody>@for (o of d.observations; track o.muscle + o.quality) {
                 <tr><td>{{o.muscle}}</td><td><span class="quality">{{qualityLabel(o.quality)}}</span></td><td>{{n(o.count)}}</td><td>{{decimal(o.prescribedSets)}}</td><td>{{decimal(o.performedSets)}}</td><td>{{n(o.performanceSamples)}}</td><td>{{o.averagePerformanceChange === null ? '—' : decimal(o.averagePerformanceChange) + ' %'}}</td><td>{{n(o.fatigueSignals)}}</td></tr>
               }</tbody>
-            </trazo-table></div>
+            </table></div>
             <p class="foot">No mezcles periodos válidos, parciales y excluidos al estimar respuestas. El cambio de rendimiento es un indicador observado, no una medida directa de hipertrofia.</p>
           } @else { <p class="empty">No hay observaciones longitudinales actualizadas en el periodo.</p> }
         </section>
