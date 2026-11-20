@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
@@ -16,6 +17,8 @@ import { errorMessage } from '../../core/setup.api';
   templateUrl: './play-billing-form.component.html'
 })
 export class PlayBillingFormComponent {
+  protected readonly labels = UI_COPY.settings.playBilling;
+
   private readonly api = inject(SettingsApi);
 
   protected readonly view = signal<PlayBillingView | null>(null);
@@ -59,7 +62,7 @@ export class PlayBillingFormComponent {
       });
       this.serviceAccountJson.set(''); this.rtdnSecret.set('');
       await this.load();
-      this.message.set('Play Billing settings saved.');
+      this.message.set(this.labels.saved);
     } catch (e) {
       this.error.set(errorMessage(e));
     } finally {
