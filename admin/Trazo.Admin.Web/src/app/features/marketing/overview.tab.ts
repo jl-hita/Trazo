@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { MarketingApi, fmt, marketingError } from './marketing.api';
 import type { Range, SummaryReport } from './marketing.models';
 import { BarRow, BarsComponent, ColumnsComponent, Series } from './marketing.charts';
+import { UiTableComponent } from '../../shared/ui/ui-table.component';
 
 /** The state of acquisition at a glance: flows against the previous period, conversion rates, current subscribers and where signups come from. */
 @Component({
