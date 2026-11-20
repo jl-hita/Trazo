@@ -1,42 +1,42 @@
     <div class="page-heading">
       <div>
-        <p class="eyebrow">TRAINING LIBRARY</p>
-        <h1>Exercises</h1>
-        <p class="subtitle">The catalog used by the apps and by plan generation.</p>
+        <p class="eyebrow">{{ copy.eyebrow }}</p>
+        <h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p>
       </div>
     </div>
 
     <div class="ex-layout">
       <section aria-label="Exercise list">
         <div class="ex-toolbar">
-          <input type="search" placeholder="Search by name or identifier" aria-label="Search exercises" [ngModel]="q()" (ngModelChange)="onSearch($event)">
-          <select aria-label="Movement pattern" [ngModel]="pattern()" (ngModelChange)="setFilter('pattern', $event)">
-            <option value="">All patterns</option>
+          <input type="search" placeholder="Buscar por nombre o identificador" aria-label="Buscar ejercicios" [ngModel]="q()" (ngModelChange)="onSearch($event)">
+          <select aria-label="Patrón de movimiento" [ngModel]="pattern()" (ngModelChange)="setFilter('pattern', $event)">
+            <option value="">{{ copy.allPatterns }}</option>
             @for (p of options()?.movementPatterns ?? []; track p) { <option [value]="p">{{ p }}</option> }
           </select>
-          <select aria-label="Status" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
-            <option value="">Any status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Hidden</option>
+          <select aria-label="Estado" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
+            <option value="">{{ copy.anyStatus }}</option>
+            <option value="active">{{ copy.active }}</option>
+            <option value="inactive">{{ copy.hidden }}</option>
           </select>
-          <select aria-label="Source" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
-            <option value="">Any source</option>
+          <select aria-label="Origen" [ngModel]="source()" (ngModelChange)="setFilter('source', $event)">
+            <option value="">{{ copy.anySource }}</option>
             @for (s of options()?.sources ?? []; track s) { <option [value]="s">{{ s }}</option> }
           </select>
-          <select aria-label="Sort" [ngModel]="sort()" (ngModelChange)="setFilter('sort', $event)">
-            <option value="">Sort: name</option>
-            <option value="priority">Sort: priority</option>
-            <option value="updated">Sort: recently edited</option>
+          <select aria-label="Ordenar" [ngModel]="sort()" (ngModelChange)="setFilter('sort', $event)">
+            <option value="">{{ copy.sortName }}</option>
+            <option value="priority">{{ copy.sortPriority }}</option>
+            <option value="updated">{{ copy.sortUpdated }}</option>
           </select>
-          <trazo-button variant="primary" type="button" (pressed)="startNew()">New exercise</trazo-button>
+          <trazo-button variant="primary" type="button" (pressed)="startNew()">{{ copy.newExercise }}</trazo-button>
           <trazo-button [variant]="transferConfirm() ? 'danger' : 'secondary'" type="button" (pressed)="sendToDietoExpress()" [disabled]="transferBusy()">
-            {{ transferBusy() ? 'Sending…' : transferConfirm() ? 'Confirm: send to DietoExpress' : 'Send to DietoExpress' }}
+            {{ transferBusy() ? copy.sending : transferConfirm() ? copy.confirmSend : copy.sendToDietoExpress }}
           </trazo-button>
         </div>
 
         @if (transferMessage()) { <p class="ex-note" role="status">{{ transferMessage() }}</p> }
         @if (transferSkipped().length) {
-          <details class="ex-note"><summary>{{ transferSkipped().length }} not sent</summary>
+          <details class="ex-note"><summary>{{ transferSkipped().length }} {{ copy.notSent }}</summary>
             <ul>@for (s of transferSkipped(); track s.exerciseId) { <li><b>{{ s.exerciseId }}</b>: {{ s.reason }}</li> }</ul>
           </details>
         }
@@ -44,48 +44,48 @@
         @if (error()) { <p class="err" style="color:#f0a3a3;font-size:12px" role="alert">{{ error() }}</p> }
 
         <trazo-table tableClass="ex-table">
-          <thead><tr><th>Exercise</th><th>Pattern</th><th>Level</th><th>Priority</th><th>Status</th></tr></thead>
+          <thead><tr><th>{{ copy.columnExercise }}</th><th>{{ copy.columnPattern }}</th><th>{{ copy.columnLevel }}</th><th>{{ copy.columnPriority }}</th><th>{{ copy.columnStatus }}</th></tr></thead>
           <tbody>
             @for (e of exercises(); track e.id) {
               <tr class="row" [class.selected]="selectedId() === e.id" [class.inactive]="!e.isActive" (click)="select(e)" tabindex="0" (keydown.enter)="select(e)">
-                <td><div class="name">{{ e.nameEs }}</div><div class="sub">{{ e.nameEn }} · {{ e.equipment || 'no equipment' }}</div></td>
+                <td><div class="name">{{ e.nameEs }}</div><div class="sub">{{ e.nameEn }} · {{ e.equipment || copy.noEquipment }}</div></td>
                 <td>{{ e.movementPattern }}</td>
                 <td>{{ e.minimumExperience }}</td>
                 <td>{{ e.selectionPriority }}</td>
                 <td>
-                  @if (!e.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">hidden</trazo-badge> }
-                  @if (e.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">edited</trazo-badge> }
+                  @if (!e.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">{{ copy.hidden }}</trazo-badge> }
+                  @if (e.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.edited }}</trazo-badge> }
                   <trazo-badge badgeClass="badge" tone="neutral">{{ e.source === 'trazo' ? 'TRAZO' : 'imported' }}</trazo-badge>
-                  @if (e.imageCount === 0) { <trazo-badge badgeClass="badge warn" tone="warning">no images</trazo-badge> }
+                  @if (e.imageCount === 0) { <trazo-badge badgeClass="badge warn" tone="warning">{{ copy.noImages }}</trazo-badge> }
                 </td>
               </tr>
             } @empty {
-              <tr><td colspan="5" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Loading…' : 'No exercises match these filters.' }}</td></tr>
+              <tr><td colspan="5" class="sub" style="text-align:center;padding:26px">{{ loading() ? 'Cargando…' : copy.noMatches }}</td></tr>
             }
           </tbody>
         </trazo-table>
 
         <div class="ex-pager">
-          <span>{{ totalCount() }} exercise{{ totalCount() === 1 ? '' : 's' }} · page {{ page() }} of {{ totalPages() || 1 }}</span>
+          <span>{{ totalCount() }} {{ totalCount() === 1 ? copy.exerciseSingular : copy.exercisePlural }} · {{ copy.page }} {{ page() }} de {{ totalPages() || 1 }}</span>
           <span>
-            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">Previous</trazo-button>
-            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">Next</trazo-button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() - 1)" [disabled]="page() <= 1 || loading()">{{ copy.previous }}</trazo-button>
+            <trazo-button variant="secondary" type="button" (pressed)="goTo(page() + 1)" [disabled]="page() >= totalPages() || loading()">{{ copy.next }}</trazo-button>
           </span>
         </div>
       </section>
 
-      <aside class="ex-panel" aria-label="Exercise editor">
+      <aside class="ex-panel" aria-label="Editor de ejercicios">
         @if (editing()) {
-          <h2>{{ isNew() ? 'New exercise' : draft().nameEs }}</h2>
+          <h2>{{ isNew() ? copy.createTitle : draft().nameEs }}</h2>
 
           @if (detail(); as d) {
             <div class="meta">
-              @if (!d.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">hidden from the catalog</trazo-badge> }
-              @if (d.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">edited locally</trazo-badge> }
-              <trazo-badge badgeClass="badge" tone="neutral">{{ d.importedFrom ? 'imported from ' + d.importedFrom : 'created in TRAZO' }}</trazo-badge>
+              @if (!d.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">{{ copy.hiddenFromCatalog }}</trazo-badge> }
+              @if (d.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.editedLocally }}</trazo-badge> }
+              <trazo-badge badgeClass="badge" tone="neutral">{{ d.importedFrom ? copy.importedFrom + ' ' + d.importedFrom : copy.createdIn + ' TRAZO' }}</trazo-badge>
             </div>
             @if (d.locallyCurated) {
-              <p class="notice">This exercise was edited here, so future imports from DietoExpress will not overwrite it.</p>
+              <p class="notice">{{ copy.curatedNotice }}</p>
             }
             <div class="images" aria-label="Images">
               @for (slot of imageSlots; track slot) {
@@ -93,16 +93,16 @@
                   @if (d.imageSlots.includes(slot)) {
                     <img [src]="imageUrl(d.id, slot)" [alt]="d.nameEs + ' ' + (slot + 1)">
                   } @else { <div class="img-empty">Image {{ slot + 1 }}</div> }
-                  <label class="img-btn">{{ d.imageSlots.includes(slot) ? 'Replace' : 'Upload' }}
+                  <label class="img-btn">{{ d.imageSlots.includes(slot) ? copy.replaceImage : copy.uploadImage }}
                     <input type="file" accept="image/webp,image/png,image/jpeg" hidden (change)="upload(slot, $event)" [disabled]="busy()">
                   </label>
-                  @if (d.imageSlots.includes(slot)) { <trazo-button variant="secondary" buttonClass="img-remove" type="button" (pressed)="removeImage(slot)" [disabled]="busy()">Remove</trazo-button> }
+                  @if (d.imageSlots.includes(slot)) { <trazo-button variant="secondary" buttonClass="img-remove" type="button" (pressed)="removeImage(slot)" [disabled]="busy()">{{ copy.remove }}</trazo-button> }
                 </div>
               }
             </div>
-            <p class="hint">WebP, PNG or JPEG up to 1 MB. Uploading replaces an imported image and keeps it through future imports.</p>
+            <p class="hint">{{ copy.imageHelp }}</p>
           } @else {
-            <p class="hint">Create the exercise first; images can be added once it exists.</p>
+            <p class="hint">{{ copy.createFirst }}</p>
           }
 
           @for (f of fields; track f.key) {
@@ -120,8 +120,8 @@
               </label>
             }
           }
-          <label class="check"><input type="checkbox" [ngModel]="draft().isUnilateral" (ngModelChange)="patch('isUnilateral', $event)"> Unilateral (one side at a time)</label>
-          <label class="check"><input type="checkbox" [ngModel]="draft().isBodyweight" (ngModelChange)="patch('isBodyweight', $event)"> Bodyweight</label>
+          <label class="check"><input type="checkbox" [ngModel]="draft().isUnilateral" (ngModelChange)="patch('isUnilateral', $event)"> {{ copy.unilateral }}</label>
+          <label class="check"><input type="checkbox" [ngModel]="draft().isBodyweight" (ngModelChange)="patch('isBodyweight', $event)"> {{ copy.bodyweight }}</label>
 
           @for (list of optionLists; track list) {
             <datalist [id]="'list-' + list">
@@ -130,18 +130,18 @@
           }
 
           <div class="actions">
-            <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy()">{{ isNew() ? 'Create exercise' : 'Save changes' }}</trazo-button>
+            <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy()">{{ isNew() ? copy.createTitle : copy.saveChanges }}</trazo-button>
             @if (detail(); as d) {
               @if (d.isActive) {
                 <trazo-button [variant]="confirming() === 'deactivate' ? 'danger' : 'secondary'" type="button" (pressed)="run('deactivate')" [disabled]="busy()">
-                  {{ confirming() === 'deactivate' ? 'Confirm: hide from the catalog' : 'Hide from the catalog' }}
+                  {{ confirming() === 'deactivate' ? copy.confirmHide : copy.hideFromCatalog }}
                 </trazo-button>
               } @else {
-                <trazo-button variant="secondary" type="button" (pressed)="run('activate')" [disabled]="busy()">Show in the catalog</trazo-button>
+                <trazo-button variant="secondary" type="button" (pressed)="run('activate')" [disabled]="busy()">{{ copy.showInCatalog }}</trazo-button>
               }
               @if (d.locallyCurated && d.importedFrom) {
                 <trazo-button [variant]="confirming() === 'release-curation' ? 'danger' : 'secondary'" type="button" (pressed)="run('release-curation')" [disabled]="busy()">
-                  {{ confirming() === 'release-curation' ? 'Confirm: allow imports to overwrite' : 'Allow imports to overwrite' }}
+                  {{ confirming() === 'release-curation' ? copy.confirmAllowImports : copy.allowImports }}
                 </trazo-button>
               }
             }
@@ -150,7 +150,7 @@
           @if (message()) { <p class="ok" role="status">{{ message() }}</p> }
           @if (panelError()) { <p class="err" role="alert">{{ panelError() }}</p> }
         } @else {
-          <p class="empty">Select an exercise to edit it, or create a new one.</p>
+          <p class="empty">{{ copy.selectExercise }}</p>
         }
       </aside>
     </div>
