@@ -195,7 +195,6 @@ export class OverviewComponent {
       if (announce) this.announcement.set(`${OVERVIEW_COPY.announcements.refreshed} ${result.alerts.length === 0 ? OVERVIEW_COPY.announcements.noAlerts : `${result.alerts.length} ${OVERVIEW_COPY.alertsSuffix}.`}`);
     } catch (e) {
       if (request !== this.requestId) return;
-      const status = (e as { status?: number })?.status;
       this.error.set(errorMessage(e, OVERVIEW_COPY.refreshError));
       if (announce) this.announcement.set(OVERVIEW_COPY.announcements.failed);
     } finally {
