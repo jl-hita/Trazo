@@ -1,3 +1,4 @@
+import { UI_COPY } from '../../core/ui-copy';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarketingApi, fmt, marketingError } from './marketing.api';
@@ -19,6 +20,8 @@ const STAGE_LABELS: Record<string, string> = {
   templateUrl: './funnel.tab.html'
 })
 export class FunnelTabComponent {
+  protected readonly labels = UI_COPY.marketing;
+
   private readonly api = inject(MarketingApi);
   readonly range = input.required<Range>();
   protected readonly fmt = fmt;
