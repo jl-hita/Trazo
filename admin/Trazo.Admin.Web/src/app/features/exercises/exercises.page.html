@@ -29,7 +29,7 @@
             <option value="updated">Sort: recently edited</option>
           </select>
           <trazo-button variant="primary" type="button" (pressed)="startNew()">New exercise</trazo-button>
-          <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="sendToDietoExpress()" [disabled]="transferBusy()">
+          <trazo-button [variant]="transferConfirm() ? 'danger' : 'secondary'" type="button" (pressed)="sendToDietoExpress()" [disabled]="transferBusy()">
             {{ transferBusy() ? 'Sending…' : transferConfirm() ? 'Confirm: send to DietoExpress' : 'Send to DietoExpress' }}
           </trazo-button>
         </div>
@@ -133,14 +133,14 @@
             <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy()">{{ isNew() ? 'Create exercise' : 'Save changes' }}</trazo-button>
             @if (detail(); as d) {
               @if (d.isActive) {
-                <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="run('deactivate')" [disabled]="busy()">
+                <trazo-button [variant]="confirming() === 'deactivate' ? 'danger' : 'secondary'" type="button" (pressed)="run('deactivate')" [disabled]="busy()">
                   {{ confirming() === 'deactivate' ? 'Confirm: hide from the catalog' : 'Hide from the catalog' }}
                 </trazo-button>
               } @else {
                 <trazo-button variant="secondary" type="button" (pressed)="run('activate')" [disabled]="busy()">Show in the catalog</trazo-button>
               }
               @if (d.locallyCurated && d.importedFrom) {
-                <trazo-button [variant]="expr} ? 'danger' : 'secondary" type="button" (pressed)="run('release-curation')" [disabled]="busy()">
+                <trazo-button [variant]="confirming() === 'release-curation' ? 'danger' : 'secondary'" type="button" (pressed)="run('release-curation')" [disabled]="busy()">
                   {{ confirming() === 'release-curation' ? 'Confirm: allow imports to overwrite' : 'Allow imports to overwrite' }}
                 </trazo-button>
               }
