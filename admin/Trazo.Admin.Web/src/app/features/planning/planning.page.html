@@ -83,8 +83,8 @@
           @if (res.macrocycle; as m) {
             <section class="pl-card" [attr.aria-label]="copy.macrocycle">
               <h2>{{ m.name }}</h2>
-              <p class="hint">{{ m.periodizationModel }} · {{ m.startDate }} to {{ m.endDate }}</p>
-              <ul class="pl-phases">@for (p of m.phases; track p.sequenceNumber) { <li><b>{{ p.name }}</b> ({{ p.startDate }} to {{ p.endDate }}): {{ p.objective }}</li> }</ul>
+              <p class="hint">{{ m.periodizationModel }} · {{ m.startDate }} {{ copy.until }} {{ m.endDate }}</p>
+              <ul class="pl-phases">@for (p of m.phases; track p.sequenceNumber) { <li><b>{{ p.name }}</b> ({{ p.startDate }} {{ copy.until }} {{ p.endDate }}): {{ p.objective }}</li> }</ul>
             </section>
           }
 

@@ -46,6 +46,9 @@ export class ReviewsPageComponent {
   }
 
   protected when(value: string | null): string { return value ? formatUiDateTime(value) : ''; }
+  protected goalLabel(value: string): string { return (UI_COPY.planning.goals as Record<string, string>)[value] ?? value; }
+  protected experienceLabel(value: string): string { return (UI_COPY.planning.experiences as Record<string, string>)[value] ?? value; }
+  protected splitLabel(value: string): string { return (UI_COPY.planning.splits as Record<string, string>)[value] ?? value; }
 
   protected setStatus(value: string): void { this.status.set(value); void this.refresh(); }
 

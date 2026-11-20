@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { ACCOUNT_COPY } from './account.copy';
 
 @Component({
   selector: 'trazo-reset-password-page',
@@ -17,6 +18,7 @@ import { firstValueFrom } from 'rxjs';
 export class ResetPasswordPageComponent {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
+  protected readonly copy = ACCOUNT_COPY.resetPassword;
   protected readonly token = this.route.snapshot.queryParamMap.get('token') ?? '';
 
   constructor() {
@@ -47,8 +49,8 @@ export class ResetPasswordPageComponent {
     } catch (e) {
       const status = (e as { status?: number }).status;
       this.error.set(status === 400
-        ? 'This link is invalid, expired or has already been used. Ask the administrator for a new invitation.'
-        : 'We could not save your password. Please try again.');
+        ? this.copy.invalidExpired
+        : this.copy.saveFailed);
     } finally {
       this.busy.set(false);
     }

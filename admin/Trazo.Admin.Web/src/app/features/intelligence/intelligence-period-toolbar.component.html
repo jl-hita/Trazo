@@ -1,18 +1,18 @@
 <div class="ti-toolbar">
-  <div class="ti-presets" role="group" aria-label="Periodo">
+  <div class="ti-presets" role="group" [attr.aria-label]="copy.period">
     @for (p of presets(); track p.days) {
       <button class="ti-btn" [class.active]="preset() === p.days" type="button"
         (click)="presetSelected.emit(p.days)">{{p.label}}</button>
     }
   </div>
-  <label class="ti-field">Desde
+  <label class="ti-field">{{ copy.from }}
     <input type="date" #fromInput [value]="from()" (change)="fromChanged.emit(fromInput.value)">
   </label>
-  <label class="ti-field">Hasta (incluido)
+  <label class="ti-field">{{ copy.toInclusive }}
     <input type="date" #toInput [value]="to()" (change)="toChanged.emit(toInput.value)">
   </label>
-  <button class="ti-btn" type="button" (click)="refreshRequested.emit()" [disabled]="loading()">Actualizar</button>
+  <button class="ti-btn" type="button" (click)="refreshRequested.emit()" [disabled]="loading()">{{ copy.refresh }}</button>
   <button class="ti-btn primary" type="button" (click)="exportRequested.emit()" [disabled]="exporting() || loading()">
-    {{ exporting() ? 'Preparando paquete…' : '↓ Exportar investigación (ZIP)' }}
+    {{ exporting() ? copy.preparingExport : copy.exportZip }}
   </button>
 </div>

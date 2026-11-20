@@ -3,6 +3,8 @@ import { IntelligencePeriodToolbarComponent } from './intelligence-period-toolba
 import { IntelligenceApi } from './intelligence.api';
 import { IntelligenceSummary } from './intelligence.models';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
+import { INTELLIGENCE_COPY } from './intelligence.copy';
+import { formatUiDate, formatUiDateTime, formatUiNumber, formatUiPercent } from '../../core/ui-format';
 
 @Component({
   selector: 'trazo-intelligence-page',
@@ -14,8 +16,9 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 })
 export class IntelligencePageComponent {
   private readonly api = inject(IntelligenceApi);
+  protected readonly copy = INTELLIGENCE_COPY;
   private loadVersion = 0;
-  protected readonly presets = [{days:30,label:'30 días'},{days:90,label:'90 días'},{days:365,label:'12 meses'}];
+  protected readonly presets = [{days:30,label:INTELLIGENCE_COPY.presets.days30},{days:90,label:INTELLIGENCE_COPY.presets.days90},{days:365,label:INTELLIGENCE_COPY.presets.months12}];
   protected readonly preset = signal<number | null>(90);
   protected readonly from = signal(this.daysAgo(89));
   protected readonly to = signal(this.today());
@@ -31,18 +34,18 @@ export class IntelligencePageComponent {
   protected setFrom(value: string): void { this.from.set(value); this.preset.set(null); this.loadError.set(''); this.exportError.set(''); }
   protected setTo(value: string): void { this.to.set(value); this.preset.set(null); this.loadError.set(''); this.exportError.set(''); }
   protected async load(): Promise<void> {
-    if (!this.from() || !this.to() || this.from() > this.to()) { this.loadError.set('El periodo no es válido.'); return; }
+    if (!this.from() || !this.to() || this.from() > this.to()) { this.loadError.set(INTELLIGENCE_COPY.invalidPeriod); return; }
     const requestVersion = ++this.loadVersion;
     this.loading.set(true); this.loadError.set('');
     try {
       const result = await this.api.summary(this.from(), this.to());
       if (requestVersion === this.loadVersion) this.data.set(result);
     }
-    catch (e) { if (requestVersion === this.loadVersion) this.loadError.set((e as {error?:{message?:string}})?.error?.message ?? 'No se han podido cargar los datos de Intelligence.'); }
+    catch (e) { if (requestVersion === this.loadVersion) this.loadError.set((e as {error?:{message?:string}})?.error?.message ?? INTELLIGENCE_COPY.loadError); }
     finally { if (requestVersion === this.loadVersion) this.loading.set(false); }
   }
   protected async export(): Promise<void> {
-    if (!this.from() || !this.to() || this.from() > this.to()) { this.exportError.set('El periodo no es válido.'); return; }
+    if (!this.from() || !this.to() || this.from() > this.to()) { this.exportError.set(INTELLIGENCE_COPY.invalidPeriod); return; }
     this.exporting.set(true); this.exportError.set('');
     try {
       const blob = await this.api.export(this.from(), this.to());
@@ -51,7 +54,7 @@ export class IntelligencePageComponent {
         && ((signature[2] === 0x03 && signature[3] === 0x04) || (signature[2] === 0x05 && signature[3] === 0x06));
       if (!blob.size || !hasZipSignature) {
         const message = await blob.text();
-        let detail = 'La API no ha devuelto un ZIP válido.';
+        let detail = INTELLIGENCE_COPY.invalidZip;
         try { detail = JSON.parse(message)?.message ?? detail; } catch { /* The response was not a JSON error. */ }
         throw new Error(detail);
       }
@@ -61,22 +64,22 @@ export class IntelligencePageComponent {
       // Revoke after the browser has had time to start consuming the download.
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (e) {
-      this.exportError.set(e instanceof Error ? e.message : 'No se ha podido generar la exportación.');
+      this.exportError.set(e instanceof Error ? e.message : INTELLIGENCE_COPY.exportError);
     }
     finally { this.exporting.set(false); }
   }
   protected adaptationTotal(): number { return this.data()?.adaptations.reduce((s,x)=>s+x.count,0) ?? 0; }
-  protected n(value: number): string { return value.toLocaleString('es-ES'); }
-  protected decimal(value: number): string { return value.toLocaleString('es-ES',{maximumFractionDigits:1}); }
-  protected pct(a: number,b: number): string { return b ? Math.round(a*100/b)+' %' : '—'; }
+  protected n(value: number): string { return formatUiNumber(value, 0); }
+  protected decimal(value: number): string { return formatUiNumber(value, 1); }
+  protected pct(a: number,b: number): string { return b ? formatUiPercent(a / b, 0) : '—'; }
   protected pctValue(a: number,b: number): number { return b ? Math.min(100,Math.max(0,a*100/b)) : 0; }
-  protected date(value: string): string { return new Date(value).toLocaleDateString('es-ES'); }
-  protected dateTime(value: string): string { return new Date(value).toLocaleString('es-ES'); }
+  protected date(value: string): string { return formatUiDate(value); }
+  protected dateTime(value: string): string { return formatUiDateTime(value); }
   protected adaptationLabel(value: string): string {
-    return ({reduction_sets:'Reducción de series',raise_reserve:'Aumento de RIR',restore_sets:'Restauración de series',deload:'Descarga',hold_progression:'Progresión retenida',load_update:'Actualización de cargas'} as Record<string,string>)[value] ?? value;
+    return (INTELLIGENCE_COPY.adaptationLabels as Record<string, string>)[value] ?? value;
   }
-  protected sourceLabel(value: string | null): string { return value === 'engine' ? 'Automática' : value === 'user' ? 'Usuario' : value === 'admin' ? 'Administrador' : 'Sin dato'; }
-  protected qualityLabel(value: string): string { return ({valid:'Válida',partial:'Parcial',excluded:'Excluida'} as Record<string,string>)[value] ?? value; }
+  protected sourceLabel(value: string | null): string { return (INTELLIGENCE_COPY.sourceLabels as Record<string, string>)[value ?? 'unknown'] ?? INTELLIGENCE_COPY.sourceLabels.unknown; }
+  protected qualityLabel(value: string): string { return (INTELLIGENCE_COPY.qualityLabels as Record<string, string>)[value] ?? value; }
   private today(): string { return this.localDate(new Date()); }
   private daysAgo(days: number): string { const date = new Date(); date.setDate(date.getDate() - days); return this.localDate(date); }
   private localDate(date: Date): string {

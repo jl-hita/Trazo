@@ -15,6 +15,14 @@ export function formatUiDate(value: string | Date | null | undefined): string {
   }).format(date);
 }
 
+export function formatUiShortDate(value: string | Date | null | undefined): string {
+  if (!value) return '—';
+  const date = parseUiDate(value);
+  return Number.isNaN(date.getTime()) ? '—' : new Intl.DateTimeFormat(UI_LOCALE, {
+    day: 'numeric', month: 'short'
+  }).format(date);
+}
+
 export function formatUiDateTime(value: string | Date | null | undefined): string {
   if (!value) return '—';
   const date = parseUiDate(value);

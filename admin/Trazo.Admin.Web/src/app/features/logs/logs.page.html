@@ -20,7 +20,7 @@
       <span class="label">{{ copy.date }}</span>
       <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="shiftDay(-1)" [attr.aria-label]="copy.previousDay">◀</trazo-button>
       <input type="date" [attr.aria-label]="copy.fromDate" [ngModel]="from()" (ngModelChange)="setDate('from', $event)">
-      <span class="label">to</span>
+      <span class="label">{{ copy.toLabel }}</span>
       <input type="date" [attr.aria-label]="copy.toDate" [ngModel]="to()" (ngModelChange)="setDate('to', $event)">
       <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="shiftDay(1)" [attr.aria-label]="copy.nextDay">▶</trazo-button>
       <trazo-button variant="secondary" buttonClass="logs-btn small" type="button" (pressed)="preset('today')">{{ copy.today }}</trazo-button>

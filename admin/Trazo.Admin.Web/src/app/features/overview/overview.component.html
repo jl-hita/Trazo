@@ -1,15 +1,15 @@
 <div class="page-heading">
   <div>
-    <p class="eyebrow">ADMINISTRACIÓN</p>
+    <p class="eyebrow">{{ labels.eyebrow }}</p>
     <h1>{{ labels.title }}</h1>
-    <p class="subtitle">Estado del sistema y lo que requiere tu atención.</p>
+    <p class="subtitle">{{ labels.subtitle }}</p>
   </div>
   <div class="ov-heading-actions">
     @if (data(); as d) {
-      <span class="muted" data-testid="generated-at">Datos de {{ when(d.generatedAt) }}</span>
+      <span class="muted" data-testid="generated-at">{{ labels.generatedAt }} {{ when(d.generatedAt) }}</span>
     }
     <trazo-button type="button" variant="primary" (pressed)="refresh()" [loading]="loading() && !!data()">
-      {{ loading() && data() ? 'Actualizando…' : 'Actualizar' }}
+      {{ loading() && data() ? labels.updating : labels.refresh }}
     </trazo-button>
   </div>
 </div>
@@ -17,12 +17,12 @@
 <p class="ov-sr-only" role="status" aria-live="polite">{{ announcement() }}</p>
 
 @if (error() && !data()) {
-  <trazo-state kind="error" title="No se ha podido cargar el estado del sistema" [description]="error()">
-    <trazo-button type="button" variant="secondary" (pressed)="retry()" [disabled]="loading()">Reintentar</trazo-button>
+  <trazo-state kind="error" [title]="labels.loadErrorTitle" [description]="error()">
+    <trazo-button type="button" variant="secondary" (pressed)="retry()" [disabled]="loading()">{{ labels.retry }}</trazo-button>
   </trazo-state>
 } @else if (loading() && !data()) {
   <div role="status" aria-live="polite">
-    <span class="ov-sr-only">Cargando el estado del sistema…</span>
+    <span class="ov-sr-only">{{ labels.loading }}</span>
   </div>
   <div class="ov-skeleton-alerts" aria-hidden="true"><div class="ov-skeleton"></div><div class="ov-skeleton"></div></div>
   <div class="ov-cards" aria-hidden="true">
@@ -30,16 +30,16 @@
   </div>
 } @else if (data(); as d) {
   @if (error()) {
-    <p class="ov-banner" role="alert">No se han podido actualizar los datos ({{ error() }}). Se muestran los últimos recibidos.
-      <trazo-button type="button" variant="ghost" (pressed)="refresh()">Reintentar</trazo-button></p>
+    <p class="ov-banner" role="alert">{{ labels.refreshError }} ({{ error() }}). {{ labels.lastData }}
+      <trazo-button type="button" variant="ghost" (pressed)="refresh()">{{ labels.retry }}</trazo-button></p>
   }
 
   <section aria-labelledby="ov-alerts-title">
     <div class="section-heading">
-      <div><p class="eyebrow">ATENCIÓN</p><h2 id="ov-alerts-title">Alertas <span class="ov-count">{{ alertSummary() }}</span></h2></div>
+      <div><p class="eyebrow">{{ labels.attention }}</p><h2 id="ov-alerts-title">{{ labels.alerts }} <span class="ov-count">{{ alertSummary() }}</span></h2></div>
     </div>
     @if (alerts().length === 0) {
-      <trazo-state kind="success" title="Todo en orden" description="No hay alertas: la base de datos, la configuración y los registros están bien." />
+      <trazo-state kind="success" [title]="labels.statuses.allGood" [description]="labels.allClearDescription" />
     } @else {
       <ul class="ov-alerts">
         @for (a of alerts(); track a.id) {
@@ -59,43 +59,43 @@
   </section>
 
   <div class="section-heading">
-    <div><p class="eyebrow">SISTEMA</p><h2>Estado por áreas</h2></div>
+    <div><p class="eyebrow">{{ labels.system }}</p><h2>{{ labels.areas }}</h2></div>
   </div>
 
   <div class="ov-cards">
     <!-- Health -->
     <trazo-card contentClass="ov-card">
       <header>
-        <h3>Salud del sistema</h3>
+        <h3>{{ labels.health }}</h3>
         <span class="ov-status" [class]="'ov-status tone-' + health().tone"><span aria-hidden="true">{{ glyph(health().tone) }}</span> {{ health().label }}</span>
       </header>
       <dl>
-        <dt>Base de datos</dt><dd>{{ d.health.databaseOk ? 'Disponible' : 'No responde' }} · {{ d.health.databaseLatencyMs }} ms</dd>
-        <dt>Migraciones</dt><dd>{{ d.health.migrationsApplied }} de {{ d.health.migrationsTotal }} aplicadas</dd>
-        <dt>Versión</dt><dd>{{ d.health.version }}@if (d.health.commit) { <span class="muted"> · {{ d.health.commit }}</span> }</dd>
-        <dt>Entorno</dt><dd>{{ d.health.environment }}</dd>
+        <dt>{{ labels.database }}</dt><dd>{{ d.health.databaseOk ? labels.available : labels.unavailable }} · {{ d.health.databaseLatencyMs }} ms</dd>
+        <dt>{{ labels.migrations }}</dt><dd>{{ d.health.migrationsApplied }} {{ labels.appliedOf }} {{ d.health.migrationsTotal }} {{ labels.applied }}</dd>
+        <dt>{{ labels.version }}</dt><dd>{{ d.health.version }}@if (d.health.commit) { <span class="muted"> · {{ d.health.commit }}</span> }</dd>
+        <dt>{{ labels.environment }}</dt><dd>{{ d.health.environment }}</dd>
       </dl>
     </trazo-card>
 
     <!-- Logs -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" [routerLink]="tree(d.logs.errorsLink)">Registros<span class="ov-sr-only">: {{ logsStatus().label }}. Ver errores de las últimas 24 horas</span></a></h3>
+        <h3><a class="ov-card-anchor" [routerLink]="tree(d.logs.errorsLink)">{{ labels.logs }}<span class="ov-sr-only">: {{ logsStatus().label }}. {{ labels.viewErrorsLastDay }}</span></a></h3>
         <span class="ov-status" [class]="'ov-status tone-' + logsStatus().tone"><span aria-hidden="true">{{ glyph(logsStatus().tone) }}</span> {{ logsStatus().label }}</span>
       </header>
       <dl>
-        <dt>Errores (24 h)</dt><dd>{{ format(d.logs.errors24h) }} <span class="muted">· {{ format(d.logs.errorsPrevious24h) }} las 24 h anteriores</span></dd>
-        <dt>Avisos (24 h)</dt><dd>{{ format(d.logs.warnings24h) }}</dd>
+        <dt>{{ labels.errors24h }}</dt><dd>{{ format(d.logs.errors24h) }} <span class="muted">· {{ format(d.logs.errorsPrevious24h) }} {{ labels.previous24h }}</span></dd>
+        <dt>{{ labels.warnings24h }}</dt><dd>{{ format(d.logs.warnings24h) }}</dd>
       </dl>
       @if (d.logs.topErrorSources.length > 0) {
-        <p class="ov-subtitle">Orígenes con más errores</p>
+        <p class="ov-subtitle">{{ labels.topErrorSources }}</p>
         <ul class="ov-list">
           @for (s of d.logs.topErrorSources; track s.category) {
             <li><a class="ov-inner-link" [routerLink]="tree(s.link)">{{ s.category }}</a> <span class="muted">{{ s.count }} · {{ when(s.lastAt) }}</span></li>
           }
         </ul>
       } @else {
-        <p class="ov-empty">Sin errores en las últimas 24 horas.</p>
+        <p class="ov-empty">{{ labels.noErrors24h }}</p>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
@@ -103,23 +103,23 @@
     <!-- Configuration -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" [routerLink]="'/settings'">Configuración<span class="ov-sr-only">: ir a los ajustes</span></a></h3>
+        <h3><a class="ov-card-anchor" [routerLink]="'/settings'">{{ labels.configuration }}<span class="ov-sr-only">: {{ labels.goToSettings }}</span></a></h3>
         @if (d.configuration.missing.length === 0 && smtp().tone === 'ok') {
-          <span class="ov-status tone-ok"><span aria-hidden="true">✓</span> Completa</span>
+          <span class="ov-status tone-ok"><span aria-hidden="true">✓</span> {{ labels.complete }}</span>
         } @else {
-          <span class="ov-status tone-warn"><span aria-hidden="true">!</span> Requiere atención</span>
+          <span class="ov-status tone-warn"><span aria-hidden="true">!</span> {{ labels.requiresAttention }}</span>
         }
       </header>
       <dl>
-        <dt>Correo SMTP</dt><dd><span class="ov-status" [class]="'ov-status tone-' + smtp().tone"><span aria-hidden="true">{{ glyph(smtp().tone) }}</span> {{ smtp().label }}</span></dd>
+        <dt>{{ labels.smtp }}</dt><dd><span class="ov-status" [class]="'ov-status tone-' + smtp().tone"><span aria-hidden="true">{{ glyph(smtp().tone) }}</span> {{ smtp().label }}</span></dd>
         @if (d.configuration.lastSmtpSend; as send) {
-          <dt>Último envío</dt><dd>{{ send.succeeded ? 'Correcto' : 'Fallido (' + (send.error ?? 'error') + ')' }} <span class="muted">· {{ when(send.at) }}</span></dd>
+          <dt>{{ labels.lastSend }}</dt><dd>{{ send.succeeded ? labels.succeeded : labels.failed + ' (' + (send.error ?? 'error') + ')' }} <span class="muted">· {{ when(send.at) }}</span></dd>
         }
-        <dt>Inicio con Google</dt><dd><span class="ov-status" [class]="'ov-status tone-' + google().tone"><span aria-hidden="true">{{ glyph(google().tone) }}</span> {{ google().label }}</span></dd>
-        <dt>Google Play Billing</dt><dd><span class="ov-status" [class]="'ov-status tone-' + play().tone"><span aria-hidden="true">{{ glyph(play().tone) }}</span> {{ play().label }}</span></dd>
+        <dt>{{ labels.googleSignIn }}</dt><dd><span class="ov-status" [class]="'ov-status tone-' + google().tone"><span aria-hidden="true">{{ glyph(google().tone) }}</span> {{ google().label }}</span></dd>
+        <dt>{{ labels.playBilling }}</dt><dd><span class="ov-status" [class]="'ov-status tone-' + play().tone"><span aria-hidden="true">{{ glyph(play().tone) }}</span> {{ play().label }}</span></dd>
       </dl>
       @if (d.configuration.missing.length > 0) {
-        <p class="ov-subtitle">Falta por configurar</p>
+        <p class="ov-subtitle">{{ labels.missingConfiguration }}</p>
         <ul class="ov-list">
           @for (m of d.configuration.missing; track m.id) { <li>{{ m.label }}</li> }
         </ul>
@@ -130,47 +130,47 @@
     <!-- Users -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" routerLink="/users">Usuarios<span class="ov-sr-only">: ver la lista de usuarios</span></a></h3>
+        <h3><a class="ov-card-anchor" routerLink="/users">{{ labels.users }}<span class="ov-sr-only">: {{ labels.viewUsers }}</span></a></h3>
       </header>
       <p class="ov-figure">{{ format(d.summary.usersTotal) }}</p>
-      <p class="ov-caption">usuarios en total</p>
+      <p class="ov-caption">{{ labels.usersTotal }}</p>
       <dl>
-        <dt>Altas (7 días)</dt><dd>{{ format(d.summary.usersNew7d) }}</dd>
+        <dt>{{ labels.signups7d }}</dt><dd>{{ format(d.summary.usersNew7d) }}</dd>
       </dl>
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
 
     <!-- Activity -->
     <trazo-card contentClass="ov-card">
-      <header><h3>Actividad (7 días)</h3></header>
+      <header><h3>{{ labels.activity7d }}</h3></header>
       <dl>
-        <dt>Planes creados</dt><dd>{{ format(d.summary.plansCreated7d) }}</dd>
-        <dt>Sesiones registradas</dt><dd>{{ format(d.summary.workoutsLogged7d) }}</dd>
+        <dt>{{ labels.plansCreated }}</dt><dd>{{ format(d.summary.plansCreated7d) }}</dd>
+        <dt>{{ labels.workoutsLogged }}</dt><dd>{{ format(d.summary.workoutsLogged7d) }}</dd>
       </dl>
       @if (d.summary.plansCreated7d === 0 && d.summary.workoutsLogged7d === 0) {
-        <p class="ov-empty">Sin actividad en los últimos 7 días.</p>
+        <p class="ov-empty">{{ labels.noActivity7d }}</p>
       }
     </trazo-card>
 
     <!-- Subscriptions -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+        <h3><a class="ov-card-anchor" routerLink="/subscriptions">{{ labels.subscriptions }}<span class="ov-sr-only">: {{ labels.viewSubscriptions }}</span></a></h3>
         @if (!d.summary.subscriptionsEnforced) {
-          <span class="ov-status tone-info"><span aria-hidden="true">i</span> No obligatorias</span>
+          <span class="ov-status tone-info"><span aria-hidden="true">i</span> {{ labels.notRequired }}</span>
         }
       </header>
       @if (!d.summary.subscriptionsEnforced) {
-        <p class="ov-notice"><strong>Suscripciones no obligatorias:</strong> todos los usuarios tienen acceso sin pagar.</p>
+        <p class="ov-notice"><strong>{{ labels.notRequired }}:</strong> {{ labels.subscriptionsNotRequired }}</p>
       }
       <p class="ov-figure">{{ format(d.summary.subscriptionsTotal) }}</p>
-      <p class="ov-caption">suscripciones registradas</p>
+      <p class="ov-caption">{{ labels.subscriptionsTotal }}</p>
       @if (subscriptions().length > 0) {
         <dl>
           @for (s of subscriptions(); track s.label) { <dt>{{ s.label }}</dt><dd>{{ format(s.count) }}</dd> }
         </dl>
       } @else {
-        <p class="ov-empty">Todavía no hay suscripciones.</p>
+        <p class="ov-empty">{{ labels.noSubscriptions }}</p>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
@@ -178,34 +178,34 @@
     <!-- Catalog -->
     <trazo-card contentClass="ov-card ov-card-link">
       <header>
-        <h3><a class="ov-card-anchor" routerLink="/exercises">Catálogo de ejercicios<span class="ov-sr-only">: {{ catalog().label }}. Ver la biblioteca</span></a></h3>
+        <h3><a class="ov-card-anchor" routerLink="/exercises">{{ labels.exerciseCatalog }}<span class="ov-sr-only">: {{ catalog().label }}. {{ labels.viewLibrary }}</span></a></h3>
         <span class="ov-status" [class]="'ov-status tone-' + catalog().tone"><span aria-hidden="true">{{ glyph(catalog().tone) }}</span> {{ catalog().label }}</span>
       </header>
       <dl>
-        <dt>Activos</dt><dd>{{ format(d.summary.exercisesActive) }}</dd>
-        <dt>Utilizables por el motor</dt><dd>{{ format(d.summary.exercisesUsable) }}</dd>
-        <dt>No utilizables</dt><dd>{{ format(d.summary.exercisesUnusable) }}</dd>
-        <dt>Sin imágenes</dt><dd>{{ format(d.summary.exercisesWithoutImages) }}</dd>
+        <dt>{{ labels.active }}</dt><dd>{{ format(d.summary.exercisesActive) }}</dd>
+        <dt>{{ labels.usableByEngine }}</dt><dd>{{ format(d.summary.exercisesUsable) }}</dd>
+        <dt>{{ labels.unusable }}</dt><dd>{{ format(d.summary.exercisesUnusable) }}</dd>
+        <dt>{{ labels.withoutImages }}</dt><dd>{{ format(d.summary.exercisesWithoutImages) }}</dd>
       </dl>
-      <p class="ov-subtitle"><a class="ov-inner-link" routerLink="/planning">Ver preparación del motor</a></p>
+      <p class="ov-subtitle"><a class="ov-inner-link" routerLink="/planning">{{ labels.viewEnginePreparation }}</a></p>
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
   </div>
 
   <!-- Product insights: aggregates only -->
   <div class="section-heading">
-    <div><p class="eyebrow">PRODUCTO</p><h2>Uso y adopción</h2></div>
-    <span class="muted">Solo datos agregados</span>
+    <div><p class="eyebrow">{{ labels.product }}</p><h2>{{ labels.adoption }}</h2></div>
+    <span class="muted">{{ labels.aggregatedOnly }}</span>
   </div>
 
   <div class="ov-cards ov-cards-wide">
     <trazo-card class="ov-span-2" contentClass="ov-card" [ariaLabelledBy]="'ov-activity-title'">
-      <header><h3 id="ov-activity-title">Actividad de los últimos 14 días</h3></header>
+      <header><h3 id="ov-activity-title">{{ labels.activity14d }}</h3></header>
       @if (chart().empty) {
-        <p class="ov-empty">Todavía no hay actividad en estos 14 días.</p>
+        <p class="ov-empty">{{ labels.noActivity14d }}</p>
       } @else {
-        <p class="ov-sr-only">Altas {{ chart().totals.signups }}, planes creados {{ chart().totals.plans }}, sesiones registradas {{ chart().totals.workouts }} en 14 días.</p>
-        <ul class="ov-chart" aria-label="Actividad diaria: altas, planes y sesiones">
+        <p class="ov-sr-only">{{ labels.chartSummary.replace('{signups}', format(chart().totals.signups)).replace('{plans}', format(chart().totals.plans)).replace('{workouts}', format(chart().totals.workouts)) }}</p>
+        <ul class="ov-chart" [attr.aria-label]="labels.activityChart">
           @for (day of chart().days; track day.date) {
             <li [attr.aria-label]="day.label + ': ' + day.signups + ' altas, ' + day.plans + ' planes, ' + day.workouts + ' sesiones'">
               <span class="ov-bars" aria-hidden="true">
@@ -218,21 +218,21 @@
           }
         </ul>
         <p class="ov-legend" aria-hidden="true">
-          <span><i class="swatch bar-signups"></i>Altas ({{ chart().totals.signups }})</span>
-          <span><i class="swatch bar-plans"></i>Planes ({{ chart().totals.plans }})</span>
-          <span><i class="swatch bar-workouts"></i>Sesiones ({{ chart().totals.workouts }})</span>
+          <span><i class="swatch bar-signups"></i>{{ labels.signups }} ({{ chart().totals.signups }})</span>
+          <span><i class="swatch bar-plans"></i>{{ labels.plans }} ({{ chart().totals.plans }})</span>
+          <span><i class="swatch bar-workouts"></i>{{ labels.sessions }} ({{ chart().totals.workouts }})</span>
         </p>
       }
       <dl>
-        <dt>Usuarios activos (7 días)</dt><dd>{{ format(d.insights.activity.activeUsers7d) }}</dd>
-        <dt>Usuarios activos (30 días)</dt><dd>{{ format(d.insights.activity.activeUsers30d) }}</dd>
+        <dt>{{ labels.activeUsers7d }}</dt><dd>{{ format(d.insights.activity.activeUsers7d) }}</dd>
+        <dt>{{ labels.activeUsers30d }}</dt><dd>{{ format(d.insights.activity.activeUsers30d) }}</dd>
       </dl>
     </trazo-card>
 
     <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-funnel-title'">
-      <header><h3 id="ov-funnel-title">Embudo de activación</h3></header>
+      <header><h3 id="ov-funnel-title">{{ labels.activationFunnel }}</h3></header>
       @if (d.insights.funnel.registered === 0) {
-        <p class="ov-empty">Todavía no hay usuarios registrados.</p>
+        <p class="ov-empty">{{ labels.noRegisteredUsers }}</p>
       } @else {
         <ol class="ov-funnel">
           @for (step of funnel(); track step.label) {
@@ -247,13 +247,13 @@
     </trazo-card>
 
     <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-conv-title'">
-      <header><h3 id="ov-conv-title">Conversión a Premium por semana de alta</h3></header>
+      <header><h3 id="ov-conv-title">{{ labels.premiumConversion }}</h3></header>
       @if (cohorts().length === 0) {
-        <p class="ov-empty">Todavía no hay altas.</p>
+        <p class="ov-empty">{{ labels.noSignups }}</p>
       } @else {
         <trazo-table class="ov-table">
-          <caption class="ov-sr-only">Altas de cada semana y cuántas han iniciado una suscripción o han pagado</caption>
-          <thead><tr><th scope="col">Semana del</th><th scope="col">Altas</th><th scope="col">Con suscripción</th><th scope="col">Han pagado</th></tr></thead>
+          <caption class="ov-sr-only">{{ labels.cohortCaption }}</caption>
+          <thead><tr><th scope="col">{{ labels.weekOf }}</th><th scope="col">{{ labels.signups }}</th><th scope="col">{{ labels.subscribed }}</th><th scope="col">{{ labels.paid }}</th></tr></thead>
           <tbody>
             @for (c of cohorts(); track c.weekStart) {
               <tr>
@@ -265,62 +265,62 @@
             }
           </tbody>
         </trazo-table>
-        <p class="ov-empty">Con suscripción: prueba o pago. Han pagado: se ha cobrado alguna vez. Sin compras de prueba. Las cohortes recientes aún no han tenido tiempo de convertir.</p>
+        <p class="ov-empty">{{ labels.cohortExplanation }}</p>
       }
     </trazo-card>
 
     <trazo-card contentClass="ov-card" [ariaLabelledBy]="'ov-paywall-title'">
-      <header><h3 id="ov-paywall-title">Oferta Premium abierta ({{ paywall().days }} días)</h3></header>
+      <header><h3 id="ov-paywall-title">{{ labels.premiumOffer }} ({{ paywall().days }} {{ labels.days }})</h3></header>
       @if (paywall().views === 0) {
-        <p class="ov-empty">Nadie ha abierto la oferta todavía.</p>
+        <p class="ov-empty">{{ labels.noPaywallViews }}</p>
       } @else {
         <dl>
-          <dt>Total</dt><dd>{{ format(paywall().views) }}</dd>
+          <dt>{{ labels.total }}</dt><dd>{{ format(paywall().views) }}</dd>
           @for (s of paywall().sources; track s.label) { <dt>{{ s.label }}</dt><dd>{{ format(s.count) }}</dd> }
         </dl>
-        <p class="ov-empty">Aperturas anónimas, sin usuario: dicen desde dónde se llega al paywall, no quién.</p>
+        <p class="ov-empty">{{ labels.anonymousPaywall }}</p>
       }
     </trazo-card>
 
     <trazo-card contentClass="ov-card ov-card-link" [ariaLabelledBy]="'ov-watch-title'">
       <header>
-        <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">Suscripciones a vigilar<span class="ov-sr-only">: ver las suscripciones</span></a></h3>
+        <h3 id="ov-watch-title"><a class="ov-card-anchor" routerLink="/subscriptions">{{ labels.subscriptionsToWatch }}<span class="ov-sr-only">: {{ labels.viewSubscriptions }}</span></a></h3>
       </header>
       <dl>
-        <dt>Pruebas que terminan en 7 días</dt><dd>{{ format(d.insights.subscriptions.trialsEndingSoon) }}</dd>
-        <dt>Cancelaciones que caducan en 7 días</dt><dd>{{ format(d.insights.subscriptions.cancelingSoon) }}</dd>
-        <dt>Con problemas de cobro</dt><dd>{{ format(d.insights.subscriptions.paymentIssues) }}</dd>
-        <dt>Compras de prueba (excluidas)</dt><dd>{{ format(d.insights.subscriptions.testPurchases) }}</dd>
+        <dt>{{ labels.trialsEnding }}</dt><dd>{{ format(d.insights.subscriptions.trialsEndingSoon) }}</dd>
+        <dt>{{ labels.cancellationsEnding }}</dt><dd>{{ format(d.insights.subscriptions.cancelingSoon) }}</dd>
+        <dt>{{ labels.paymentIssues }}</dt><dd>{{ format(d.insights.subscriptions.paymentIssues) }}</dd>
+        <dt>{{ labels.testPurchasesExcluded }}</dt><dd>{{ format(d.insights.subscriptions.testPurchases) }}</dd>
       </dl>
-      @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">Todavía no hay suscripciones.</p> }
+      @if (d.summary.subscriptionsTotal === 0) { <p class="ov-empty">{{ labels.noSubscriptions }}</p> }
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>
 
     <trazo-card contentClass="ov-card ov-card-link" [ariaLabelledBy]="'ov-engine-title'">
       <header>
-        <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">Motor y entrenamientos (30 días)<span class="ov-sr-only">: ver el motor de planificación</span></a></h3>
+        <h3 id="ov-engine-title"><a class="ov-card-anchor" routerLink="/planning">{{ labels.engineAndWorkouts }}<span class="ov-sr-only">: {{ labels.viewPlanningEngine }}</span></a></h3>
       </header>
       @if (d.insights.engine.workouts30d === 0) {
-        <p class="ov-empty">Todavía no hay sesiones registradas en los últimos 30 días.</p>
+        <p class="ov-empty">{{ labels.noWorkouts30d }}</p>
       } @else {
         <dl>
-          <dt>Sesiones registradas</dt><dd>{{ format(d.insights.engine.workouts30d) }}</dd>
-          <dt>Completas</dt><dd>{{ format(d.insights.engine.completed30d) }}</dd>
-          <dt>Parciales</dt><dd>{{ format(d.insights.engine.partial30d) }}</dd>
-          <dt>No realizadas</dt><dd>{{ format(d.insights.engine.notCompleted30d) }}</dd>
-          <dt>Con dolor reportado</dt>
+          <dt>{{ labels.workouts }}</dt><dd>{{ format(d.insights.engine.workouts30d) }}</dd>
+          <dt>{{ labels.completed }}</dt><dd>{{ format(d.insights.engine.completed30d) }}</dd>
+          <dt>{{ labels.partial }}</dt><dd>{{ format(d.insights.engine.partial30d) }}</dd>
+          <dt>{{ labels.notCompleted }}</dt><dd>{{ format(d.insights.engine.notCompleted30d) }}</dd>
+          <dt>{{ labels.painReported }}</dt>
           <dd>{{ d.insights.engine.painReportedPercent === null ? 'Pocos datos' : d.insights.engine.painReportedPercent + ' %' }}</dd>
         </dl>
       }
       @if (reasons().length > 0) {
-        <p class="ov-subtitle">Motivos de no completar</p>
+        <p class="ov-subtitle">{{ labels.reasonsNotCompleted }}</p>
         <ul class="ov-list">@for (r of reasons(); track r.label) { <li>{{ r.label }} <span class="muted">{{ r.count }}</span></li> }</ul>
       }
-      <p class="ov-subtitle">Ajustes automáticos ({{ format(d.insights.engine.adaptationsTotal30d) }})</p>
+      <p class="ov-subtitle">{{ labels.automaticAdjustments }} ({{ format(d.insights.engine.adaptationsTotal30d) }})</p>
       @if (adaptations().length > 0) {
         <ul class="ov-list">@for (a of adaptations(); track a.label) { <li>{{ a.label }} <span class="muted">{{ a.count }}</span></li> }</ul>
       } @else {
-        <p class="ov-empty">El motor no ha ajustado ningún plan.</p>
+        <p class="ov-empty">{{ labels.noAdjustments }}</p>
       }
       <span class="ov-arrow" aria-hidden="true">→</span>
     </trazo-card>

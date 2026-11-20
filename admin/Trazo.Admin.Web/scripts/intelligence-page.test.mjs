@@ -44,6 +44,20 @@ async function loadComponent(api) {
     if (request === './intelligence.api') return { IntelligenceApi: class IntelligenceApi {} };
     if (request === './intelligence-period-toolbar.component') return { IntelligencePeriodToolbarComponent: class IntelligencePeriodToolbarComponent {} };
     if (request === '../../shared/ui/ui-table.component') return { UiTableComponent: class UiTableComponent {} };
+    if (request === '../../core/ui-format') return {
+      formatUiDate: value => String(value),
+      formatUiDateTime: value => String(value),
+      formatUiNumber: value => String(value),
+      formatUiPercent: value => Math.round(value * 100) + ' %'
+    };
+    if (request === './intelligence.copy') return { INTELLIGENCE_COPY: {
+      presets: { days30: '30 días', days90: '90 días', months12: '12 meses' },
+      invalidPeriod: 'El periodo no es válido.',
+      loadError: 'No se han podido cargar los datos de Intelligence.',
+      invalidZip: 'La API no ha devuelto un ZIP válido.',
+      exportError: 'No se ha podido generar la exportación.',
+      adaptationLabels: {}, sourceLabels: { unknown: 'Sin dato' }, qualityLabels: {}
+    } };
     return originalLoad.call(this, request, parent, isMain);
   };
 
@@ -183,11 +197,15 @@ test('Intelligence page changes the date preset and marks manual date edits as a
 test('Intelligence page template exposes accessible loading, error, and export states', async () => {
   const template = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence.page.html'), 'utf8');
   const toolbar = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence-period-toolbar.component.html'), 'utf8');
+  const copy = await readFile(path.resolve(process.cwd(), 'src/app/features/intelligence/intelligence.copy.ts'), 'utf8');
   const combinedTemplate = `${template}\\n${toolbar}`;
   assert.match(template, /role="alert"/);
   assert.match(template, /role="status"/);
-  assert.match(template, /Cargando datos de investigación/);
-  assert.match(combinedTemplate, /aria-label="Periodo"/);
+    assert.match(template, /{{ copy\.loading }}/);
+  assert.match(copy, /loading: 'Cargando datos de investigación/);
+    assert.match(combinedTemplate, /copy\.period/);
+  assert.match(copy, /period: 'Periodo'/);
   assert.match(combinedTemplate, /\[disabled\]="exporting\(\) \|\| loading\(\)"/);
-  assert.match(combinedTemplate, /Exportar investigación \(ZIP\)/);
+    assert.match(combinedTemplate, /copy\.exportZip/);
+  assert.match(copy, /exportZip: '↓ Exportar investigación \(ZIP\)'/);
 });
