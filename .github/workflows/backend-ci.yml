@@ -9,6 +9,7 @@ on:
       - "Trazo.sln"
       - "Directory.Build.props"
       - "global.json"
+      - "deploy/**"
       - ".github/workflows/backend-ci.yml"
   pull_request:
     paths:
@@ -54,6 +55,8 @@ jobs:
       - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
           dotnet-version: "10.0.x"
+      - name: Validate deployment shell scripts
+        run: bash -n deploy/scripts/*.sh
       - name: Restore
         run: dotnet restore Trazo.sln
       - name: Build
