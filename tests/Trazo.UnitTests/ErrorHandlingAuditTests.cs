@@ -249,6 +249,7 @@ public sealed class ErrorHandlingAuditTests : IDisposable
         // The outbox row is the evidence of the link (the row is gone once the ticket is stored, so it is read before the flush).
         var row = await scope.ServiceProvider.GetRequiredService<TrazoDbContext>().ErrorReportOutbox.SingleAsync();
         Assert.Equal(traceId, row.TraceId);
+        Assert.DoesNotContain("secret.person", row.StackTrace); // scrubbed before it is written, not only when the ticket is built
     }
 
     [Fact]

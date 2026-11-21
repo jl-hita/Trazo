@@ -24,7 +24,7 @@ One exception is reported **once**, however many of those places see it: the rep
  logger provider / database down ───────► in-memory queue (1,000) ─► writer ─► outbox ─► ticket (one per fingerprint)
 ```
 
-A report is **appended to the outbox table first** and removed only once its ticket is stored. What can still go wrong:
+A report is **appended to the outbox table first** and removed only once its ticket is stored. The API's own traces are scrubbed before they are written; the app's traces are stored as sent (R8 Retrace needs them) for the few seconds until the ticket is built, so the table is treated like the tickets: no user, short-lived. What can still go wrong:
 
 | Risk | What happens |
 |---|---|

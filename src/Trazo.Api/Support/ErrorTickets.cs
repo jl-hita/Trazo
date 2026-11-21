@@ -375,7 +375,9 @@ public sealed class ErrorTicketPipeline(
                 db.ErrorReportOutbox.Add(new ErrorReportOutboxItem
                 {
                     Id = Guid.NewGuid(), Source = r.Source, AppVersion = ErrorTicketService.CleanVersion(r.AppVersion),
-                    StackTrace = r.StackTrace.Length <= 40_000 ? r.StackTrace : r.StackTrace[..40_000],
+                    // The API's own traces need no retrace, so they are scrubbed before they are written: the outbox never holds an address that an
+                    // exception message quoted. The app's traces stay as sent until the ticket is built (R8 needs the obfuscated names).
+                    StackTrace = r.Source == ErrorTicketSource.Backend ? ErrorTicketService.Scrub(r.StackTrace) : r.StackTrace.Length <= 40_000 ? r.StackTrace : r.StackTrace[..40_000],
                     TraceId = r.TraceId is { Length: <= 64 } trace ? trace : null, ReportedAt = now, NextAttemptAt = now
                 });
             await db.SaveChangesAsync(ct);
