@@ -148,12 +148,26 @@ public static class ReferralEndpoints
     }
 
     private static async Task<IResult> InvitationsAsync(
-        System.Security.Claims.ClaimsPrincipal principal, IReferralService referrals, string? status, CancellationToken ct)
+        System.Security.Claims.ClaimsPrincipal principal,
+        IReferralService referrals,
+        HttpContext http,
+        ILoggerFactory loggerFactory,
+        Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions> jsonOptions,
+        string? status,
+        CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         if (status is not null && status is not (ReferralStatuses.Registered or ReferralStatuses.Rewarded or ReferralStatuses.Voided or ReferralStatuses.Skipped))
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["status"] = ["Unknown status."] });
-        return Results.Ok(new { items = await referrals.InvitationsAsync(userId, status, ct) });
+
+        var response = new { items = await referrals.InvitationsAsync(userId, status, ct) };
+        // Serialize once with the same HTTP JSON options used by ASP.NET Core, log those exact bytes,
+        // and return that same JSON so the diagnostic cannot drift from the response sent to Android.
+        var responseJson = JsonSerializer.Serialize(response, jsonOptions.Value.SerializerOptions);
+        loggerFactory.CreateLogger("Trazo.Api.ReferralResponses").LogInformation(
+            "GET /api/v1/referrals/invitations response: HTTP 200; UserId {UserId}; StatusFilter {StatusFilter}; Body {ResponseBody}",
+            userId, status, responseJson);
+        return Results.Content(responseJson, "application/json; charset=utf-8");
     }
 
     private static async Task<IResult> RewardsAsync(System.Security.Claims.ClaimsPrincipal principal, IReferralService referrals, CancellationToken ct)
