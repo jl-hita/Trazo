@@ -35,11 +35,20 @@ public sealed class ErrorTicketsApiTests : IDisposable
 
     private readonly SetupFixture _fixture = new();
     private readonly string _keys = Path.Combine(Path.GetTempPath(), $"trazo-keys-{Guid.NewGuid():N}");
+    private readonly string _mappingDirectory = Path.Combine(Path.GetTempPath(), $"trazo-mappings-{Guid.NewGuid():N}");
+    private readonly string _retraceScript = Path.Combine(Path.GetTempPath(), $"trazo-retrace-{Guid.NewGuid():N}.sh");
     private readonly FakeEmail _email = new();
     private readonly WebApplicationFactory<Program> _factory;
 
     public ErrorTicketsApiTests()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            File.WriteAllText(_retraceScript,
+                "#!/bin/sh\nprintf '%s\\n' 'java.lang.ClassCastException: <no message>' '    at com.trazo.android.data.referral.ReferralRepository.rewards(Referral.kt:171)'\n");
+            File.SetUnixFileMode(_retraceScript, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+        }
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Testing");
@@ -48,6 +57,9 @@ public sealed class ErrorTicketsApiTests : IDisposable
             builder.UseSetting("Authentication:Jwt:Audience", "TRAZO-Clients");
             builder.UseSetting("Authentication:Jwt:SigningKey", new string((char)107, 48));
             builder.UseSetting("DataProtection:KeysPath", _keys);
+            builder.UseSetting("Diagnostics:MappingsPath", _mappingDirectory);
+            builder.UseSetting("Diagnostics:RetraceExecutable", OperatingSystem.IsWindows() ? "retrace-not-installed" : _retraceScript);
+            builder.UseSetting("Diagnostics:MappingUploadKey", "mapping-test-secret");
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<DbContextOptions<TrazoDbContext>>();
@@ -69,6 +81,8 @@ public sealed class ErrorTicketsApiTests : IDisposable
         _factory.Dispose();
         _fixture.Dispose();
         try { Directory.Delete(_keys, true); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+        try { Directory.Delete(_mappingDirectory, true); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+        try { File.Delete(_retraceScript); } catch (IOException) { } catch (UnauthorizedAccessException) { }
     }
 
     private sealed class FakeEmail : IEmailSender
@@ -191,6 +205,41 @@ public sealed class ErrorTicketsApiTests : IDisposable
         Assert.DoesNotContain("ana.lopez", ticket.StackTrace);
         Assert.Contains("PlanViewModel.load", ticket.StackTrace);
         Assert.Contains("Caused by: java.io.IOException", ticket.StackTrace); // the complete trace, not only the first line
+    }
+
+    [Fact]
+    public async Task AndroidReport_WithUploadedVersionMapping_IsRetracedBeforePersistingAndKeepsOriginal()
+    {
+        if (OperatingSystem.IsWindows()) return; // the fake retrace executable is a small POSIX script
+
+        var client = _factory.CreateClient();
+        var unauthorized = await client.PostAsync(
+            "/api/internal/diagnostics/mappings?appVersion=1.0.3",
+            new StringContent("mapping contents", System.Text.Encoding.UTF8, "text/plain"));
+        Assert.Equal(HttpStatusCode.Unauthorized, unauthorized.StatusCode);
+
+        client.DefaultRequestHeaders.Add("X-Trazo-Diagnostics-Key", "mapping-test-secret");
+        var upload = await client.PostAsync(
+            "/api/internal/diagnostics/mappings?appVersion=1.0.3",
+            new StringContent("mapping contents", System.Text.Encoding.UTF8, "text/plain"));
+        Assert.Equal(HttpStatusCode.Accepted, upload.StatusCode);
+        var uploadBody = await upload.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(uploadBody.GetProperty("accepted").GetBoolean());
+        Assert.Equal(64, uploadBody.GetProperty("sha256").GetString()?.Length);
+
+        const string obfuscated = """
+            java.lang.ClassCastException: <no message>
+                at o7.a.h(r8-map-id-[hex]:6)
+                at ha.c.F(r8-map-id-[hex]:88)
+            """;
+        Assert.Equal(HttpStatusCode.Accepted, (await Report(client, obfuscated, "1.0.3")).StatusCode);
+        await DrainAsync();
+
+        var ticket = Assert.Single(await StoredAsync());
+        Assert.Contains("com.trazo.android.data.referral.ReferralRepository.rewards", ticket.StackTrace);
+        Assert.Contains("o7.a.h", ticket.OriginalStackTrace);
+        Assert.DoesNotContain("r8-map-id-", ticket.StackTrace);
+        Assert.Equal("java.lang.ClassCastException", ticket.ErrorType);
     }
 
     [Fact]
