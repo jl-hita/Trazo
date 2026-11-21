@@ -32,7 +32,7 @@ git clone https://github.com/jl-hita/Trazo.git ~/trazo-bootstrap
 cd ~/trazo-bootstrap
 sudo bash deploy/scripts/bootstrap-trazo-server.sh
 ```
-Crea el usuario `trazo`, `/opt/trazo`, `/var/lib/trazo/data-protection-keys`, `/etc/trazo/trazo.env` (con JWT e import key aleatorios), la unidad systemd, el vhost Nginx y el helper `/usr/local/sbin/trazo-deploy` con su regla sudoers. Revisa los scripts antes de ejecutarlos como root.
+Crea el usuario `trazo`, `/opt/trazo`, `/var/lib/trazo/data-protection-keys`, `/etc/trazo/trazo.env` (con JWT e import key aleatorios), la unidad systemd, el vhost Nginx y el helper `/usr/local/sbin/trazo-deploy` con su regla sudoers. Revisa los scripts antes de ejecutarlos como root. También instala Java 17 y las Android Command-line Tools oficiales (con SHA-256 fijado), configura R8 Retrace en `/opt/android-sdk/cmdline-tools/latest/bin/retrace`, crea el directorio privado `/var/lib/trazo/r8-mappings` y añade a `trazo.env` `Diagnostics__MappingsPath`, `Diagnostics__RetraceExecutable` y una `Diagnostics__MappingUploadKey` aleatoria. El bootstrap conserva los valores que ya existan.
 
 Después edita `/etc/trazo/trazo.env` solo para la contraseña de BD. Google, SMTP y la cuenta superadmin se configuran desde el asistente de primer arranque del frontend (ver `docs/configuration-and-deployment.md`, sección 3.1): complétalo **inmediatamente** tras el primer despliegue, porque quien llegue primero a la URL pública se queda con la instalación.
 
@@ -47,7 +47,9 @@ Es un runner **por repositorio**: el de DietoExpress no sirve para TRAZO. Instal
    sudo ./svc.sh install joso && sudo ./svc.sh start
    ```
    Las etiquetas por defecto (`self-hosted`, `Linux`, `X64`) coinciden con el workflow.
-3. Requisitos: `git`, `curl`, `rsync`, `python3` y salida a Internet (descarga el SDK .NET).
+
+3. En GitHub → `jl-hita/Trazo` → Settings → Secrets and variables → Actions, crea el secret `TRAZO_DIAGNOSTICS_UPLOAD_KEY` con el mismo valor de `Diagnostics__MappingUploadKey` de `/etc/trazo/trazo.env`. No lo pegues en issues ni en el repositorio. Sin ese secret la release Android se publica, pero el paso de subida del mapping se omite y los tickets de esa versión seguirán ofuscados.
+4. Requisitos: `git`, `curl`, `rsync`, `python3` y salida a Internet (descarga el SDK .NET).
 
 ### 6. Primer despliegue
 Con todo lo anterior, cualquier push a `main` que toque `src/`, `tests/` o `deploy/` despliega, o ejecuta manualmente **Actions → Deploy TRAZO API → Run workflow**. El despliegue aplica las migraciones EF y el seed al arrancar y solo se da por bueno si responden `/health`, `/health/ready` y `/api/v1/exercises`.
@@ -65,7 +67,7 @@ curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 
 ### 8. Tras el primer arranque
 - Si usaste `BootstrapAdmin__*` en lugar del asistente, comprueba que el superadmin inicia sesión y **borra** esas tres variables de `trazo.env`; `sudo systemctl restart trazo`.
-- Haz copia de seguridad de la base `trazo` y de `/var/lib/trazo/data-protection-keys` (sin esas claves se pierden los secretos 2FA).
+- Haz copia de seguridad de la base `trazo`, `/var/lib/trazo/data-protection-keys` (sin esas claves se pierden los secretos 2FA) y `/var/lib/trazo/r8-mappings` (conserva los mappings históricos para poder reprocesar tickets pendientes).
 - Compila Android con `-PapiScheme=https -PapiHost=trazostrength.duckdns.org -PapiPort=443`.
 
 ## Operación
