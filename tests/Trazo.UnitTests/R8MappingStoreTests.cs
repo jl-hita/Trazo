@@ -75,6 +75,48 @@ public sealed class R8MappingStoreTests
         Assert.False(R8MappingStore.IsValidUploadKey("a-long-random-secret", null));
     }
 
+    [Fact]
+    public async Task StoreAsync_AcceptsMappingAt64MiBLimit()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "trazo-r8-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var store = CreateStore(directory);
+            await using var input = new MemoryStream(new byte[checked((int)R8MappingStore.MaxMappingBytes)]);
+
+            var hash = await store.StoreAsync("0.2.2+30029", input, CancellationToken.None);
+
+            Assert.NotNull(hash);
+            Assert.Equal(R8MappingStore.MaxMappingBytes,
+                new FileInfo(Path.Combine(directory, "0.2.2+30029.mapping.txt")).Length);
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task StoreAsync_RejectsMappingAbove64MiBLimit()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "trazo-r8-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var store = CreateStore(directory);
+            await using var input = new MemoryStream(new byte[checked((int)R8MappingStore.MaxMappingBytes + 1)]);
+
+            var exception = await Assert.ThrowsAsync<InvalidDataException>(
+                () => store.StoreAsync("0.2.2+30029", input, CancellationToken.None));
+
+            Assert.Contains("64 MiB", exception.Message);
+            Assert.False(File.Exists(Path.Combine(directory, "0.2.2+30029.mapping.txt")));
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
+        }
+    }
+
     private static R8MappingStore CreateStore(string directory, string executable = "retrace")
     {
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
