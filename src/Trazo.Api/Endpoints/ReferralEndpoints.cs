@@ -34,7 +34,7 @@ public static class ReferralEndpoints
         var me = endpoints.MapGroup("/api/v1/referrals").WithTags("Referrals").RequireAuthorization().RequireRateLimiting(RateLimitPolicy);
         me.MapGet("/me", MeAsync);
         me.MapGet("/invitations", InvitationsAsync);
-        me.MapPost("/invitations/diagnostics", ReferralDiagnosticsAsync).WithRequestSizeLimit(24 * 1024);
+        me.MapPost("/invitations/diagnostics", ReferralDiagnosticsAsync);
         me.MapGet("/rewards", RewardsAsync);
         me.MapPost("/shared", SharedAsync);
 
@@ -150,7 +150,6 @@ public static class ReferralEndpoints
     private static async Task<IResult> InvitationsAsync(
         System.Security.Claims.ClaimsPrincipal principal,
         IReferralService referrals,
-        HttpContext http,
         ILoggerFactory loggerFactory,
         Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions> jsonOptions,
         string? status,
