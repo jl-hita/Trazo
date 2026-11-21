@@ -32,7 +32,7 @@ git clone https://github.com/jl-hita/Trazo.git ~/trazo-bootstrap
 cd ~/trazo-bootstrap
 sudo bash deploy/scripts/bootstrap-trazo-server.sh
 ```
-Crea el usuario `trazo`, `/opt/trazo`, `/var/lib/trazo/data-protection-keys`, `/etc/trazo/trazo.env` (con JWT e import key aleatorios), la unidad systemd, el vhost Nginx y el helper `/usr/local/sbin/trazo-deploy` con su regla sudoers. Revisa los scripts antes de ejecutarlos como root.
+Crea el usuario `trazo`, `/opt/trazo`, `/var/lib/trazo/data-protection-keys`, `/etc/trazo/trazo.env` (con JWT e import key aleatorios), la unidad systemd, el vhost Nginx y el helper `/usr/local/sbin/trazo-deploy` con su regla sudoers. Revisa los scripts antes de ejecutarlos como root. También instala Java 17 y las Android Command-line Tools oficiales (con SHA-256 fijado), configura R8 Retrace en `/opt/android-sdk/cmdline-tools/latest/bin/retrace`, crea el directorio privado `/var/lib/trazo/r8-mappings` y añade a `trazo.env` `Diagnostics__MappingsPath`, `Diagnostics__RetraceExecutable` y una `Diagnostics__MappingUploadKey` aleatoria. El bootstrap conserva los valores que ya existan.
 
 Después edita `/etc/trazo/trazo.env` solo para la contraseña de BD. Google, SMTP y la cuenta superadmin se configuran desde el asistente de primer arranque del frontend (ver `docs/configuration-and-deployment.md`, sección 3.1): complétalo **inmediatamente** tras el primer despliegue, porque quien llegue primero a la URL pública se queda con la instalación.
 
@@ -47,6 +47,8 @@ Es un runner **por repositorio**: el de DietoExpress no sirve para TRAZO. Instal
    sudo ./svc.sh install joso && sudo ./svc.sh start
    ```
    Las etiquetas por defecto (`self-hosted`, `Linux`, `X64`) coinciden con el workflow.
+
+3. En GitHub → `jl-hita/Trazo` → Settings → Secrets and variables → Actions, crea el secret `TRAZO_DIAGNOSTICS_UPLOAD_KEY` con el mismo valor de `Diagnostics__MappingUploadKey` de `/etc/trazo/trazo.env`. No lo pegues en issues ni en el repositorio. Sin ese secret la release Android se publica, pero el paso de subida del mapping se omite y los tickets de esa versión seguirán ofuscados.
 3. Requisitos: `git`, `curl`, `rsync`, `python3` y salida a Internet (descarga el SDK .NET).
 
 ### 6. Primer despliegue
