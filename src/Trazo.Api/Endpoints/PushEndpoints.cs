@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Trazo.Api.Support;
 using Trazo.Domain.Push;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Push;
@@ -81,7 +82,7 @@ public static class PushEndpoints
                 await db.SaveChangesAsync(ct);
                 break;
             }
-            catch (DbUpdateException) when (attempt == 0)
+            catch (DbUpdateException ex) when (attempt == 0 && DbErrors.IsUniqueViolation(ex))
             {
                 // Two requests registered the same token at once: the second one updates the row the first created.
                 db.ChangeTracker.Clear();
@@ -117,7 +118,22 @@ public static class PushEndpoints
         return Results.Ok(new { saved = true });
     }
 
-    private static async Task<IResult> CheckAsync(IPushSender push, CancellationToken ct)
+    /// <summary>
+    /// The check and the sends answer 200 with <c>ok: false</c> and a message when Firebase cannot be used: that is the result the console
+    /// shows, not a failure of this API. Which of those results are expected (no ticket) and which are a provider fault (a ticket):
+    /// not configured, credentials refused and Firebase not reachable are conditions the superadmin fixes or waits out; Firebase
+    /// answering with an error status is a fault on the provider's side or ours and is reported, with its trace id in the answer.
+    /// </summary>
+    private static async Task<string?> PushFailureAsync(PushException ex, HttpContext http, IErrorReporter reporter)
+    {
+        // A PushException with an inner exception wraps a network failure; without one it wraps an unexpected answer of Firebase.
+        if (ex.Failure != PushFailure.Unavailable || ex.InnerException is not null) ex.AsExpected();
+        var traceId = ErrorMarks.IsExpected(ex) ? null : ErrorResults.TraceIdOf(http);
+        if (traceId is not null) await reporter.ReportAsync(ex, traceId, CancellationToken.None);
+        return traceId;
+    }
+
+    private static async Task<IResult> CheckAsync(IPushSender push, HttpContext http, IErrorReporter reporter, CancellationToken ct)
     {
         try
         {
@@ -127,19 +143,19 @@ public static class PushEndpoints
         catch (PushException ex)
         {
             // Messages are written by us and never include credentials.
-            return Results.Ok(new { ok = false, message = ex.Message });
+            return Results.Ok(new { ok = false, message = ex.Message, traceId = await PushFailureAsync(ex, http, reporter) });
         }
     }
 
-    private static async Task<IResult> TestAsync(IPushSender push, ClaimsPrincipal principal, CancellationToken ct)
+    private static async Task<IResult> TestAsync(IPushSender push, ClaimsPrincipal principal, HttpContext http, IErrorReporter reporter, CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
-        return await SendAsync(push, [userId], new PushMessage("TRAZO", "Notificación de prueba: las notificaciones funcionan.", "test"), ct,
+        return await SendAsync(push, http, reporter, [userId], new PushMessage("TRAZO", "Notificación de prueba: las notificaciones funcionan.", "test"), ct,
             noDevices: "No hay ningún dispositivo registrado con tu cuenta. Abre la app con tu cuenta de administrador y concede el permiso de notificaciones.");
     }
 
     private static async Task<IResult> BroadcastAsync(
-        BroadcastRequest? request, IPushSender push, ClaimsPrincipal principal, ILoggerFactory loggerFactory, CancellationToken ct)
+        BroadcastRequest? request, IPushSender push, ClaimsPrincipal principal, HttpContext http, IErrorReporter reporter, ILoggerFactory loggerFactory, CancellationToken ct)
     {
         var title = request?.Title?.Trim() ?? "";
         var body = request?.Body?.Trim() ?? "";
@@ -147,14 +163,14 @@ public static class PushEndpoints
         if (title.Length is 0 or > MaxTitleLength) errors["title"] = [$"The title is required and at most {MaxTitleLength} characters."];
         if (body.Length is 0 or > MaxBodyLength) errors["body"] = [$"The text is required and at most {MaxBodyLength} characters."];
         if (errors.Count > 0) return Results.ValidationProblem(errors);
-        var result = await SendAsync(push, null, new PushMessage(title, body, "announcement"), ct, noDevices: "Todavía no hay dispositivos registrados.");
+        var result = await SendAsync(push, http, reporter, null, new PushMessage(title, body, "announcement"), ct, noDevices: "Todavía no hay dispositivos registrados.");
         loggerFactory.CreateLogger("Trazo.Admin").LogInformation(
             "Superadmin {Actor} sent a push announcement to all devices.", OperationsSettingsEndpoints.Actor(principal));
         return result;
     }
 
     private static async Task<IResult> SendAsync(
-        IPushSender push, IReadOnlyCollection<Guid>? users, PushMessage message, CancellationToken ct, string noDevices)
+        IPushSender push, HttpContext http, IErrorReporter reporter, IReadOnlyCollection<Guid>? users, PushMessage message, CancellationToken ct, string noDevices)
     {
         try
         {
@@ -169,7 +185,7 @@ public static class PushEndpoints
         }
         catch (PushException ex)
         {
-            return Results.Ok(new { ok = false, message = ex.Message, Devices = 0, Sent = 0, Failed = 0, Removed = 0 });
+            return Results.Ok(new { ok = false, message = ex.Message, traceId = await PushFailureAsync(ex, http, reporter), Devices = 0, Sent = 0, Failed = 0, Removed = 0 });
         }
     }
 }

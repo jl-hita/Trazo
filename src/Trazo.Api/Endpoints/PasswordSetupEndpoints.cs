@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Security;
+using Trazo.Api.Support;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Settings;
@@ -69,10 +70,8 @@ public static class PasswordSetupEndpoints
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            loggers.CreateLogger("Trazo.Audit").LogWarning(
-                "Password setup email could not be sent for user {UserId} ({Error}).", user.Id, ex.GetType().Name);
-            return Results.Problem("No se ha podido enviar el correo. Inténtalo más tarde.",
-                statusCode: StatusCodes.Status503ServiceUnavailable);
+            // A mail server that does not answer is expected (503, no ticket); anything else (the token could not be stored...) is a defect (500 and a ticket).
+            return ErrorResults.Failure(ex, StatusCodes.Status503ServiceUnavailable, "email_unavailable", "No se ha podido enviar el correo. Inténtalo más tarde.");
         }
     }
 
@@ -109,10 +108,7 @@ public static class PasswordSetupEndpoints
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            loggers.CreateLogger("Trazo.Admin").LogWarning(
-                "Password invitation could not be sent for user {Target} ({Error}).", user.Id, ex.GetType().Name);
-            return Results.Problem("No se ha podido enviar la invitación. Inténtalo más tarde.",
-                statusCode: StatusCodes.Status503ServiceUnavailable);
+            return ErrorResults.Failure(ex, StatusCodes.Status503ServiceUnavailable, "email_unavailable", "No se ha podido enviar la invitación. Inténtalo más tarde.");
         }
     }
 }

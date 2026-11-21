@@ -129,9 +129,7 @@ public sealed class ErrorTicketsApiTests : IDisposable
     /// <summary>Does what the background writer does, so the test sees the stored result.</summary>
     private async Task DrainAsync()
     {
-        var queue = _factory.Services.GetRequiredService<ErrorTicketQueue>();
-        var recorder = _factory.Services.GetRequiredService<ErrorTicketRecorder>();
-        while (queue.Reader.TryRead(out var report)) await recorder.ProcessAsync(report, CancellationToken.None);
+        await _factory.Services.GetRequiredService<ErrorTicketPipeline>().FlushAsync(CancellationToken.None);
     }
 
     private async Task<List<ErrorTicket>> StoredAsync()

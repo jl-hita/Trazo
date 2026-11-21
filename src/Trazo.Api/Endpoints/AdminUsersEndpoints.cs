@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Contracts;
 using Trazo.Api.Security;
+using Trazo.Api.Support;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Settings;
@@ -75,7 +76,7 @@ public static class AdminUsersEndpoints
         {
             await db.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             return Results.Conflict(new { error = "An account with this email already exists." });
         }
@@ -101,10 +102,9 @@ public static class AdminUsersEndpoints
                 .ExecuteDeleteAsync(cancellationToken);
             db.Users.Remove(user);
             await db.SaveChangesAsync(cancellationToken);
-            loggerFactory.CreateLogger("Trazo.Admin").LogError(exception,
-                "Could not send the account invitation for user {UserId}.", user.Id);
-            return Results.Problem("The invitation email could not be sent. No account was created.",
-                statusCode: StatusCodes.Status503ServiceUnavailable);
+            // The mail server not answering is expected (503, no ticket); anything else is a defect (500 and a ticket).
+            return ErrorResults.Failure(exception, StatusCodes.Status503ServiceUnavailable, "invitation_email_unavailable",
+                "The invitation email could not be sent. No account was created.");
         }
 
         var actorId = ActorId(principal);

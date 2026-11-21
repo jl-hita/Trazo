@@ -122,6 +122,21 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("error_tickets");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Support.ErrorReportOutboxItem", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<string>("Source").IsRequired().HasMaxLength(16).HasColumnType("character varying(16)");
+            b.Property<string>("AppVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("StackTrace").IsRequired().HasMaxLength(40000).HasColumnType("character varying(40000)");
+            b.Property<string>("TraceId").HasMaxLength(64).HasColumnType("character varying(64)");
+            b.Property<DateTimeOffset>("ReportedAt").HasColumnType("timestamp with time zone");
+            b.Property<int>("Attempts").HasColumnType("integer");
+            b.Property<DateTimeOffset>("NextAttemptAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("NextAttemptAt");
+            b.ToTable("error_report_outbox");
+        });
+
         modelBuilder.Entity("Trazo.Domain.Settings.AppSetting", b =>
         {
             b.Property<string>("Key").HasMaxLength(100).HasColumnType("character varying(100)");

@@ -59,7 +59,7 @@ public static class AnalyticsEndpoints
             db.PaywallViews.Add(new PaywallView { Day = day, Source = source, Views = 1 });
             await db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             // Another request created today's row first: add to it.
             db.ChangeTracker.Clear();

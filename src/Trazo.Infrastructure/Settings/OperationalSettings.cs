@@ -296,8 +296,12 @@ public sealed class RuntimeOptions : IRuntimeOptions
         catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
         catch (Exception exception)
         {
-            // Keeping the last good values is always safe; the settings are never needed to start or to sign in.
-            _logger.LogWarning(exception, "The runtime settings could not be read from the database; keeping the previous values.");
+            // Keeping the last good values is always safe; the settings are never needed to start or to sign in. A database that does not
+            // answer is a state the overview shows; any other failure (a key that cannot decrypt a value) would repeat every 30 seconds in
+            // silence, so it is logged as an error (an error ticket).
+            if (exception is System.Data.Common.DbException or IOException or TimeoutException)
+                _logger.LogWarning(exception, "The runtime settings could not be read from the database; keeping the previous values.");
+            else _logger.LogError(exception, "The runtime settings could not be read; keeping the previous values.");
         }
     }
 

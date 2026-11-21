@@ -131,7 +131,10 @@ public static class SetupEndpoints
             if (recorder is not null) await recorder.RecordAsync(null, CancellationToken.None);
             return Results.Ok(new { ok = true, message = "Test email sent." });
         }
-        catch (Exception ex) when (ex is not OperationCanceledException || !ct.IsCancellationRequested)
+        // A test is a question to the mail server: "no" (it did not answer, refused the login, the address typed is not valid) is the answer
+        // and is shown as such. Anything else is not an answer but a defect, and is left to the exception handler (a ticket and a 500).
+        catch (Exception ex) when (Trazo.Api.Security.SmtpEmailSender.IsDeliveryFailure(ex) || ex is FormatException ||
+                                   (ex is OperationCanceledException && !ct.IsCancellationRequested))
         {
             if (recorder is not null) await recorder.RecordAsync(ex, CancellationToken.None);
             // Return only the exception type and a short message; never echo credentials.

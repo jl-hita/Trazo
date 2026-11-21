@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -41,7 +42,7 @@ public static class AccountData
     /// </summary>
     public static readonly IReadOnlySet<Type> NotPersonal = new HashSet<Type>
     {
-        typeof(ExerciseCatalogItem), typeof(ExerciseCatalogTranslation), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket),
+        typeof(ExerciseCatalogItem), typeof(ExerciseCatalogTranslation), typeof(AppSetting), typeof(Trazo.Domain.Support.ErrorTicket), typeof(Trazo.Domain.Support.ErrorReportOutboxItem),
         typeof(Trazo.Domain.Analytics.PaywallView),
         // Marketing campaigns, their anonymous daily counters and the owner-entered spend: no user in any of them.
         typeof(Trazo.Domain.Marketing.MarketingCampaign), typeof(Trazo.Domain.Marketing.CampaignDailyStat), typeof(Trazo.Domain.Marketing.CampaignSpend), typeof(Trazo.Domain.Marketing.StoreDownloads),
@@ -84,7 +85,7 @@ public interface IAccountService
 /// Account information, the data export (right of access and portability) and the deletion of the account with all of its
 /// data (right to erasure). Deletion is explicit and transactional: either every row of the user disappears or none does.
 /// </summary>
-public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAccountService
+public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Microsoft.Extensions.Logging.ILogger<AccountService>? logger = null) : IAccountService
 {
     public const string ManageSubscriptionsUrl = "https://play.google.com/store/account/subscriptions";
     private const string SuperadminRole = "superadmin";
@@ -226,9 +227,11 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock) : IAcc
             var pattern = $"%{userId}%";
             await db.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM app_logs WHERE message LIKE {pattern} OR exception LIKE {pattern}", ct);
         }
-        catch (Exception)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            // Logs are purged by retention anyway; failing here must not undo a completed erasure.
+            // Logs are purged by retention anyway, so failing here must not undo a completed erasure; but the erasure of personal data is
+            // not silently incomplete either: it is logged as an error, which becomes a ticket.
+            logger?.LogError(ex, "The logs of a deleted account could not be scrubbed.");
         }
     }
 

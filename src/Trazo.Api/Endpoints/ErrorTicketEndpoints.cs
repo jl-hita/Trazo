@@ -112,15 +112,16 @@ public static class ErrorTicketEndpoints
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
-    private static IResult ReportAsync(ReportErrorRequest? request, ErrorTicketQueue queue)
+    private static async Task<IResult> ReportAsync(ReportErrorRequest? request, IErrorReporter reporter, CancellationToken ct)
     {
         var errors = new Dictionary<string, string[]>();
         if (string.IsNullOrWhiteSpace(request?.StackTrace)) errors["stackTrace"] = ["A stack trace is required."];
         else if (request.StackTrace.Length > MaxIncomingLength) errors["stackTrace"] = [$"The stack trace is too long (maximum {MaxIncomingLength} characters)."];
         if (errors.Count > 0) return Results.ValidationProblem(errors);
 
-        // Queued and stored off the request path; the answer never says whether the error was already known.
-        queue.TryWrite(new ErrorReport(ErrorTicketSource.Android, request!.AppVersion, request.StackTrace!));
+        // Accepted means kept: it is written to the outbox before the answer (the memory queue only if the database does not answer),
+        // and the ticket is built off the request path. The answer never says whether the error was already known.
+        await reporter.ReportAsync(new ErrorReport(ErrorTicketSource.Android, request!.AppVersion, request.StackTrace!), ct);
         return Results.Accepted(value: new { accepted = true });
     }
 

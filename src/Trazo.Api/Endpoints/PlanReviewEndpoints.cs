@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Security;
@@ -91,7 +92,7 @@ public static class PlanReviewEndpoints
 
     private static async Task<IResult> CreateAsync(
         CreateReviewRequest? request, ClaimsPrincipal principal, TrazoDbContext db, TimeProvider clock,
-        IServiceScopeFactory scopes, ILoggerFactory loggerFactory, CancellationToken ct)
+        IBackgroundWork background, CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         var note = string.IsNullOrWhiteSpace(request?.Note) ? null : request!.Note.Trim();
@@ -108,18 +109,18 @@ public static class PlanReviewEndpoints
         if (note is not null)
             db.PlanReviewMessages.Add(new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = entity.Id, Author = PlanReviewAuthors.User, Body = note, CreatedAt = now });
         try { await db.SaveChangesAsync(ct); }
-        catch (DbUpdateException) // two simultaneous requests: the unique index on open requests rejects the second
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex)) // two simultaneous requests: the unique index on open requests rejects the second
         {
             return Problem(StatusCodes.Status409Conflict, "Ya tienes una revisión abierta de este plan.", "review_already_open");
         }
 
-        await PlanReviewNotifier.NotifyStaffAsync(scopes, loggerFactory, entity.Id, userId, isNew: true);
+        PlanReviewNotifier.NotifyStaff(background, entity.Id, userId, isNew: true);
         return Results.Created("/api/v1/plans/current/review-request", await BuildViewAsync(db, entity, true, now, ct));
     }
 
     private static async Task<IResult> SendMessageAsync(
         MessageRequest? request, ClaimsPrincipal principal, TrazoDbContext db, TimeProvider clock,
-        IServiceScopeFactory scopes, ILoggerFactory loggerFactory, CancellationToken ct)
+        IBackgroundWork background, CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         var body = request?.Body?.Trim();
@@ -145,7 +146,7 @@ public static class PlanReviewEndpoints
         entity.UpdatedAt = now;
         await db.SaveChangesAsync(ct);
 
-        await PlanReviewNotifier.NotifyStaffAsync(scopes, loggerFactory, entity.Id, userId, isNew: false);
+        PlanReviewNotifier.NotifyStaff(background, entity.Id, userId, isNew: false);
         return Results.Created("/api/v1/plans/current/review-request", await BuildViewAsync(db, entity, true, now, ct));
     }
 

@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Planning;
@@ -196,7 +197,7 @@ public static class AdminPlanReviewEndpoints
 
     private static async Task<IResult> PostMessageAsync(
         Guid id, MessageRequest? request, ClaimsPrincipal principal, TrazoDbContext db, TimeProvider clock,
-        IServiceScopeFactory scopes, ILoggerFactory loggerFactory, CancellationToken ct)
+        IBackgroundWork background, CancellationToken ct)
     {
         if (UserId(principal) is not { } me) return Results.Unauthorized();
         var body = request?.Body?.Trim();
@@ -212,13 +213,13 @@ public static class AdminPlanReviewEndpoints
         AddMessage(db, id, PlanReviewAuthors.Staff, me, body, now);
         entity.UpdatedAt = now;
         await db.SaveChangesAsync(ct);
-        await PlanReviewNotifier.NotifyUserAsync(scopes, loggerFactory, entity.UserId, closed: false);
+        PlanReviewNotifier.NotifyUser(background, entity.UserId, closed: false);
         return Results.NoContent();
     }
 
     private static async Task<IResult> CloseAsync(
         Guid id, CloseRequest? request, ClaimsPrincipal principal, TrazoDbContext db, TimeProvider clock,
-        IServiceScopeFactory scopes, ILoggerFactory loggerFactory, CancellationToken ct)
+        IBackgroundWork background, ILoggerFactory loggerFactory, CancellationToken ct)
     {
         if (UserId(principal) is not { } me) return Results.Unauthorized();
         var message = string.IsNullOrWhiteSpace(request?.Message) ? null : request!.Message.Trim();
@@ -238,7 +239,7 @@ public static class AdminPlanReviewEndpoints
         entity.UpdatedAt = now;
         await db.SaveChangesAsync(ct);
         loggerFactory.CreateLogger("Trazo.Admin").LogInformation("Administrator {Actor} closed plan review {ReviewId}.", OperationsSettingsEndpoints.Actor(principal), id);
-        await PlanReviewNotifier.NotifyUserAsync(scopes, loggerFactory, entity.UserId, closed: true);
+        PlanReviewNotifier.NotifyUser(background, entity.UserId, closed: true);
         return Results.NoContent();
     }
 }

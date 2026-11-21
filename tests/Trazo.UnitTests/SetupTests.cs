@@ -50,6 +50,9 @@ public sealed class SetupFixture : IDisposable
               "Id" TEXT PRIMARY KEY, "Fingerprint" TEXT NOT NULL UNIQUE, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL,
               "ErrorType" TEXT NOT NULL, "StackTrace" TEXT NOT NULL, "OriginalStackTrace" TEXT NULL, "Occurrences" INTEGER NOT NULL,
               "FirstSeenAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL, "Status" TEXT NOT NULL);
+            CREATE TABLE error_report_outbox (
+              "Id" TEXT PRIMARY KEY, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL, "StackTrace" TEXT NOT NULL, "TraceId" TEXT NULL,
+              "ReportedAt" TEXT NOT NULL, "Attempts" INTEGER NOT NULL, "NextAttemptAt" TEXT NOT NULL);
             CREATE TABLE premium_grants (
               "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "Kind" TEXT NOT NULL, "SourceKey" TEXT NOT NULL, "Days" INTEGER NOT NULL,
               "IsPermanent" INTEGER NOT NULL DEFAULT 0, "GrantReason" TEXT NULL, "GrantedBy" TEXT NULL,

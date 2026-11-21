@@ -87,7 +87,7 @@ public sealed class ReferralService(TrazoDbContext db, IRuntimeSettings settings
                 await events.RecordAsync(GrowthEventNames.ReferralCodeCreated, userId, new GrowthEventInfo(Reference: row.Code, DedupeKey: $"code:{userId:N}"), ct);
                 return row;
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
             {
                 // Either another request created this user's code (unique user) or the random code collided (unique code).
                 db.Entry(row).State = EntityState.Detached;
@@ -130,7 +130,7 @@ public sealed class ReferralService(TrazoDbContext db, IRuntimeSettings settings
         {
             await db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             db.Entry(row).State = EntityState.Detached; // already attributed: the first referrer stays
             return false;

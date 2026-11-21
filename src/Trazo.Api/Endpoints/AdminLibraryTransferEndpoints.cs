@@ -1,3 +1,4 @@
+using Trazo.Api.Support;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -60,11 +61,11 @@ public static class AdminLibraryTransferEndpoints
             {
                 logger.LogWarning("DietoExpress rejected the exercise transfer with {StatusCode}: {Body}", (int)response.StatusCode,
                     body.Length > 500 ? body[..500] : body);
-                return Results.Json(new
+                return ApiErrors.Json(new
                 {
                     error = "DietoExpress did not accept the transfer. Nothing was confirmed.",
                     targetStatus = (int)response.StatusCode, skipped = exported.Skipped
-                }, statusCode: StatusCodes.Status502BadGateway);
+                }, StatusCodes.Status502BadGateway);
             }
 
             logger.LogInformation("Superadmin {Actor} sent {Exercises} exercises and {Images} images to DietoExpress.",
@@ -76,12 +77,12 @@ public static class AdminLibraryTransferEndpoints
         catch (HttpRequestException exception)
         {
             logger.LogWarning(exception, "Could not reach DietoExpress for the exercise transfer.");
-            return Results.Json(new { error = "DietoExpress could not be reached.", skipped = Array.Empty<object>() }, statusCode: StatusCodes.Status502BadGateway);
+            return ApiErrors.Json(new { error = "DietoExpress could not be reached.", skipped = Array.Empty<object>() }, StatusCodes.Status502BadGateway);
         }
         finally
         {
             try { if (File.Exists(path)) File.Delete(path); }
-            catch (Exception exception) { logger.LogWarning(exception, "Could not remove the temporary transfer archive."); }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException) { logger.LogWarning(exception, "Could not remove the temporary transfer archive."); }
         }
     }
 }

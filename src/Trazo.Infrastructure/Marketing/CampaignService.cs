@@ -104,7 +104,7 @@ public sealed partial class CampaignService(TrazoDbContext db, IGrowthEvents eve
         };
         db.MarketingCampaigns.Add(row);
         try { await db.SaveChangesAsync(ct); }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             db.Entry(row).State = EntityState.Detached;
             throw new MarketingException(409, "slug_taken", "That link name is already used by another campaign.");
@@ -188,7 +188,7 @@ public sealed partial class CampaignService(TrazoDbContext db, IGrowthEvents eve
             db.CampaignDailyStats.Add(new CampaignDailyStat { CampaignId = campaignId, Day = day, Clicks = clicks, Installs = installs });
             await db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             db.ChangeTracker.Clear(); // another request created today's row first: add to it
             await Bump();

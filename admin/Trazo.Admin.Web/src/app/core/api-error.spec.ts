@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { errorMessage } from './api-error';
+import { errorMessage, errorReference } from './api-error';
 import { UI_COPY } from './ui-copy';
 
 describe('errorMessage', () => {
@@ -35,5 +35,29 @@ describe('errorMessage', () => {
   it('uses the caller fallback for unknown failures', () => {
     expect(errorMessage(new Error('Internal exception'), 'No se pudo guardar.')).toBe('No se pudo guardar.');
     expect(errorMessage({ status: 418 }, 'No se pudo guardar.')).toBe('No se pudo guardar.');
+  });
+});
+
+describe('errorReference', () => {
+  const trace = '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01';
+
+  it('quotes the incident reference of server-side failures', () => {
+    const body = { type: 'about:blank', title: 'server_error', status: 500, code: 'server_error', traceId: trace };
+    expect(errorReference({ status: 500, error: body })).toBe('4bf92f3577b3');
+    expect(errorMessage({ status: 500, error: body })).toBe(`${UI_COPY.apiErrors.server} (Ref. 4bf92f3577b3)`);
+    expect(errorMessage({ status: 503, error: { ...body, status: 503, traceId: trace } }))
+      .toBe(`${UI_COPY.apiErrors.unavailable} (Ref. 4bf92f3577b3)`);
+  });
+
+  it('accepts the plain request id of a host without tracing', () => {
+    expect(errorReference({ error: { traceId: '0HN4F5K2P0M1Q:00000001' } })).toBe('0HN4F5K2P0M1');
+  });
+
+  it('ignores a missing or malformed reference and never adds it to client errors', () => {
+    expect(errorReference({ status: 500 })).toBeNull();
+    expect(errorReference({ error: { traceId: '<script>alert(1)</script>' } })).toBeNull();
+    expect(errorReference({ error: { traceId: 42 } })).toBeNull();
+    expect(errorMessage({ status: 500, error: { traceId: 'x y' } })).toBe(UI_COPY.apiErrors.server);
+    expect(errorMessage({ status: 404, error: { traceId: trace } })).toBe(UI_COPY.apiErrors.notFound);
   });
 });
