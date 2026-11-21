@@ -16,6 +16,7 @@ public sealed record InstallReferrerRequest(string? Code);
 public sealed record VoidGrantRequest(string? Reason);
 public sealed record ReferralProgrammeSettingsRequest(bool Enabled, int RewardDays);
 public sealed record ClientEventRequest(string? Name);
+public sealed record ReferralDiagnosticsRequest(int HttpStatus, string? ContentType, long ContentLength, string? Preview, string? AppVersion);
 
 /// <summary>
 /// The referral programme: the signed-in user's code, link, statistics and rewards; the public invitation page and Android App
@@ -33,6 +34,7 @@ public static class ReferralEndpoints
         var me = endpoints.MapGroup("/api/v1/referrals").WithTags("Referrals").RequireAuthorization().RequireRateLimiting(RateLimitPolicy);
         me.MapGet("/me", MeAsync);
         me.MapGet("/invitations", InvitationsAsync);
+        me.MapPost("/invitations/diagnostics", ReferralDiagnosticsAsync).WithRequestSizeLimit(12 * 1024);
         me.MapGet("/rewards", RewardsAsync);
         me.MapPost("/shared", SharedAsync);
 
@@ -76,6 +78,51 @@ public static class ReferralEndpoints
     {
         var value = http.Request.Headers["X-App-Version"].ToString().Trim();
         return value.Length is > 0 and <= 40 ? value : null;
+    }
+
+
+    private static IResult ReferralDiagnosticsAsync(
+        ReferralDiagnosticsRequest? request, ILoggerFactory loggerFactory)
+    {
+        if (request is null || request.HttpStatus is < 100 or > 599 ||
+            request.ContentLength < -1 || request.Preview is null || request.Preview.Length > 8192 ||
+            (request.ContentType?.Length ?? 0) > 120 || (request.AppVersion?.Length ?? 0) > 40)
+            return Results.BadRequest(new { error = "invalid_diagnostic" });
+
+        string preview;
+        try
+        {
+            using var document = JsonDocument.Parse(request.Preview);
+            preview = JsonSerializer.Serialize(SanitizeReferralDiagnostic(document.RootElement));
+        }
+        catch (JsonException)
+        {
+            preview = "<non-JSON preview>";
+        }
+
+        loggerFactory.CreateLogger("Trazo.Api.ReferralDiagnostics").LogInformation(
+            "Referral invitations response observed by Android: HTTP {HttpStatus}; ContentType {ContentType}; ContentLength {ContentLength}; AppVersion {AppVersion}; Preview {Preview}",
+            request.HttpStatus, request.ContentType, request.ContentLength, request.AppVersion, preview);
+        return Results.NoContent();
+    }
+
+    private static object? SanitizeReferralDiagnostic(JsonElement element)
+    {
+        const string redacted = "<redacted>";
+        return element.ValueKind switch
+        {
+            JsonValueKind.Object => element.EnumerateObject().ToDictionary(
+                p => p.Name,
+                p => new[] { "id", "userid", "code", "link", "email", "name", "token", "accesstoken", "refreshtoken" }
+                    .Contains(new string(p.Name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray()))
+                    ? (object?)redacted : SanitizeReferralDiagnostic(p.Value)),
+            JsonValueKind.Array => element.EnumerateArray().Select(SanitizeReferralDiagnostic).ToArray(),
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => element.GetDecimal(),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            _ => null
+        };
     }
 
     private static Guid? UserId(System.Security.Claims.ClaimsPrincipal principal) => SubscriptionEndpoints.UserId(principal);
