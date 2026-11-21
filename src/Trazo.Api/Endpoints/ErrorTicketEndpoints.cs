@@ -103,7 +103,7 @@ public static class ErrorTicketEndpoints
         private int Count(int count)
         {
             _read += count;
-            if (_read > limit) throw new InvalidDataException("The R8 mapping file exceeds the 50 MB limit.");
+            if (_read > limit) throw new InvalidDataException("The R8 mapping file exceeds the 64 MiB limit.");
             return count;
         }
         public override void Flush() => throw new NotSupportedException();
