@@ -80,12 +80,12 @@ install -d -o trazo -g trazo -m 0700 /var/lib/trazo/r8-mappings
 # Completa claves de diagnóstico sin sobrescribir valores que ya existan.
 ensure_env_setting() {
   local key="$1" value="$2"
-  if grep -q "^\\${key}=" /etc/trazo/trazo.env; then
-    if ! grep -q "^\\${key}=." /etc/trazo/trazo.env; then
-      sed -i "s|^\\${key}=.*$|\\${key}=\\${value}|" /etc/trazo/trazo.env
+  if grep -q "^${key}=" /etc/trazo/trazo.env; then
+    if ! grep -q "^${key}=." /etc/trazo/trazo.env; then
+      sed -i "s|^${key}=.*$|${key}=${value}|" /etc/trazo/trazo.env
     fi
   else
-    printf '%s=%s\\n' "$key" "$value" >> /etc/trazo/trazo.env
+    printf '%s=%s\n' "$key" "$value" >> /etc/trazo/trazo.env
   fi
 }
 ensure_env_setting "Diagnostics__MappingsPath" "/var/lib/trazo/r8-mappings"
