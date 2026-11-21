@@ -34,7 +34,7 @@ public static class ReferralEndpoints
         var me = endpoints.MapGroup("/api/v1/referrals").WithTags("Referrals").RequireAuthorization().RequireRateLimiting(RateLimitPolicy);
         me.MapGet("/me", MeAsync);
         me.MapGet("/invitations", InvitationsAsync);
-        me.MapPost("/invitations/diagnostics", ReferralDiagnosticsAsync).WithRequestSizeLimit(12 * 1024);
+        me.MapPost("/invitations/diagnostics", ReferralDiagnosticsAsync).WithRequestSizeLimit(24 * 1024);
         me.MapGet("/rewards", RewardsAsync);
         me.MapPost("/shared", SharedAsync);
 
