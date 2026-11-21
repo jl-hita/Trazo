@@ -1,4 +1,5 @@
 using Trazo.Api.Overview;
+using Trazo.Api.Support;
 
 namespace Trazo.Api.Endpoints;
 
@@ -21,9 +22,12 @@ public static class AdminOverviewEndpoints
         {
             return Results.Ok(await service.GetAsync(refresh, ct));
         }
-        catch (OverviewUnavailableException)
+        catch (OverviewUnavailableException ex)
         {
-            return Results.Problem("La base de datos no está disponible.", statusCode: StatusCodes.Status503ServiceUnavailable);
+            // The service only throws it (it does not report it). A database that does not answer is a real fault, so it is reported once
+            // (the fingerprint groups the repeats of a console that polls) and the console still gets its 503.
+            return ErrorResults.Failure(ex, StatusCodes.Status503ServiceUnavailable, "database_unavailable",
+                "La base de datos no está disponible.", keepAnswerWhenReported: true);
         }
     }
 }

@@ -73,6 +73,10 @@ internal static class AccountCatalog
         ("El enlace no es válido, ha caducado o ya se ha usado.", "The link is invalid, expired or already used."),
         ("El enlace no es válido.", "The link is invalid."),
         ("Error inesperado.", "Unexpected error."),
+        ("El servicio no está disponible temporalmente. Inténtalo más tarde.", "The service is temporarily unavailable. Try again later."),
+        ("No se ha podido enviar el correo. Inténtalo más tarde.", "The email could not be sent. Try again later."),
+        ("No se ha podido enviar la invitación. Inténtalo más tarde.", "The invitation could not be sent. Try again later."),
+        ("La base de datos no está disponible.", "The database is not available."),
         // notifications to the user
         ("Hemos terminado de revisar tu rutina.", "We have finished reviewing your routine."),
         ("Tienes un mensaje del equipo.", "You have a message from the team."),

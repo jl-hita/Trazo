@@ -1,6 +1,7 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using Trazo.Api.Support;
 using Trazo.Infrastructure.Settings;
 namespace Trazo.Api.Security;
 
@@ -53,7 +54,7 @@ public sealed class SmtpEmailSender(
             return;
         }
         if (string.IsNullOrWhiteSpace(config.Host) || string.IsNullOrWhiteSpace(config.From))
-            throw new InvalidOperationException("Transactional email is not configured.");
+            throw new InvalidOperationException("Transactional email is not configured.").AsExpected(); // shown by the overview; not a defect
         try
         {
             await transport.SendAsync(config, recipient, subject, body, cancellationToken);
@@ -61,8 +62,20 @@ public sealed class SmtpEmailSender(
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
             if (recorder is not null) await recorder.RecordAsync(exception, CancellationToken.None);
+            // The mail server did not answer or refused us: an operational condition (the overview shows it), not a defect to ticket.
+            if (IsDeliveryFailure(exception)) exception.AsExpected();
             throw;
         }
         if (recorder is not null) await recorder.RecordAsync(null, CancellationToken.None);
     }
+
+    /// <summary>
+    /// Failures of reaching or being accepted by the mail server (connection, TLS, authentication, SMTP refusals, timeouts). Anything else
+    /// that goes wrong while sending (a malformed address, a bug) is not in this list and stays an unexpected error.
+    /// </summary>
+    internal static bool IsDeliveryFailure(Exception exception) => exception is
+        MailKit.ProtocolException or MailKit.CommandException or MailKit.ServiceNotConnectedException or MailKit.ServiceNotAuthenticatedException
+        or MailKit.Security.AuthenticationException or MailKit.Security.SslHandshakeException
+        or System.Security.Authentication.AuthenticationException
+        or System.Net.Sockets.SocketException or IOException or TimeoutException;
 }

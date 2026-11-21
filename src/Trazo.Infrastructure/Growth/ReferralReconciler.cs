@@ -76,8 +76,11 @@ public sealed class ReferralReconcilerWorker(IServiceScopeFactory scopes, ILogge
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    // The database may not be ready yet (first start) or Google may be down: try again next round.
-                    logger.LogWarning(ex, "Referral reconciliation failed; it will run again.");
+                    // Google being down or the database being busy pass by themselves: try again next round. Anything else is a defect that
+                    // would repeat every round without anybody noticing, so it is logged as an error (an error ticket).
+                    if (ex is System.Net.Http.HttpRequestException or TimeoutException or System.Data.Common.DbException or PlayBillingException)
+                        logger.LogWarning(ex, "Referral reconciliation failed; it will run again.");
+                    else logger.LogError(ex, "Referral reconciliation failed; it will run again.");
                 }
             } while (await timer.WaitForNextTickAsync(stoppingToken));
         }

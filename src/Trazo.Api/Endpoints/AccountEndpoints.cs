@@ -1,9 +1,9 @@
-using Trazo.Api.Support;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Security;
+using Trazo.Api.Support;
 using Trazo.Infrastructure.Accounts;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Planning;
@@ -131,7 +131,7 @@ public static class AccountEndpoints
     private static Trazo.Application.Localization.AppLanguage Lang(HttpContext http) => http.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current;
 
     private static async Task<IResult> RequestDeletionAsync(
-        HttpRequest request, DeletionRequestThrottle throttle, IServiceScopeFactory scopes, IConfiguration configuration, Trazo.Application.Localization.RequestLanguage language, CancellationToken ct)
+        HttpRequest request, DeletionRequestThrottle throttle, IBackgroundWork background, IConfiguration configuration, Trazo.Application.Localization.RequestLanguage language, CancellationToken ct)
     {
         var chosen = language.Current;
         string? email;
@@ -144,38 +144,29 @@ public static class AccountEndpoints
         if (normalized is not null && throttle.TryAcquire(normalized))
         {
             var baseUrl = (configuration["Account:PublicBaseUrl"] ?? DefaultPublicBaseUrl).TrimEnd('/');
-            // Sent in the background so the response time does not depend on the address existing.
-            _ = Task.Run(() => SendLinkAsync(scopes, normalized, baseUrl, chosen));
+            // Sent in the background so the response time does not depend on the address existing. A failure is reported by the
+            // background service (a mail server that does not answer is expected; anything else becomes an error ticket).
+            background.Enqueue("account-deletion-link", (services, ct) => SendLinkAsync(services, normalized, baseUrl, chosen, ct));
         }
         return html ? HtmlResult(request.HttpContext, AccountPages.RequestReceived(chosen), StatusCodes.Status202Accepted)
             : Results.Accepted(value: new { message = Trazo.Application.Localization.Localizer.Translate("Si existe una cuenta con ese correo, enviaremos un enlace de confirmación.", chosen) });
     }
 
-    private static async Task SendLinkAsync(IServiceScopeFactory scopes, string normalizedEmail, string baseUrl, Trazo.Application.Localization.AppLanguage language)
+    private static async Task SendLinkAsync(IServiceProvider services, string normalizedEmail, string baseUrl, Trazo.Application.Localization.AppLanguage language, CancellationToken ct)
     {
-        try
-        {
-            using var scope = scopes.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
-            var user = await db.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
-            if (user is null || user.DisabledAt is not null) return;
-            language = Trazo.Application.Localization.LanguageNegotiation.FromChoice(user.Language) ?? language;
-            string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language)!;
-            var raw = await AccountEmailEndpoints.CreateTokenAsync(user, DeletePurpose, LinkLifetime, db, CancellationToken.None);
-            var url = $"{baseUrl}/account/delete/confirm?token={Uri.EscapeDataString(raw)}";
-            await scope.ServiceProvider.GetRequiredService<IEmailSender>().SendAsync(user.Email, Tr("Confirma la eliminación de tu cuenta de TRAZO"),
-                Tr("Has pedido eliminar tu cuenta de TRAZO y todos sus datos.") + "\n\n" + Tr("Para confirmarlo, abre este enlace:") + $"\n\n{url}\n\n" +
-                Tr($"El enlace caduca en {(int)LinkLifetime.TotalMinutes} minutos y solo se puede usar una vez.") + " " + Tr("Si no has sido tú, ignora este mensaje: no se borrará nada.") + "\n\n" +
-                Tr("Eliminar la cuenta no cancela tu suscripción de Google Play; cancélala en Google Play si tenías una."),
-                CancellationToken.None);
-        }
-        catch (Exception ex)
-        {
-            // Never log the exception text: mail errors can quote the recipient address.
-            scopes.CreateScope().ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Trazo.Audit")
-                .LogWarning("The account deletion email could not be sent ({Error}).", ex.GetType().Name);
-        }
-    }
+        var db = services.GetRequiredService<TrazoDbContext>();
+        var user = await db.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, ct);
+        if (user is null || user.DisabledAt is not null) return;
+        language = Trazo.Application.Localization.LanguageNegotiation.FromChoice(user.Language) ?? language;
+        string Tr(string text) => Trazo.Application.Localization.Localizer.Translate(text, language)!;
+        var raw = await AccountEmailEndpoints.CreateTokenAsync(user, DeletePurpose, LinkLifetime, db, ct);
+        var url = $"{baseUrl}/account/delete/confirm?token={Uri.EscapeDataString(raw)}";
+        await services.GetRequiredService<IEmailSender>().SendAsync(user.Email, Tr("Confirma la eliminación de tu cuenta de TRAZO"),
+            Tr("Has pedido eliminar tu cuenta de TRAZO y todos sus datos.") + "\n\n" + Tr("Para confirmarlo, abre este enlace:") + $"\n\n{url}\n\n" +
+            Tr($"El enlace caduca en {(int)LinkLifetime.TotalMinutes} minutos y solo se puede usar una vez.") + " " + Tr("Si no has sido tú, ignora este mensaje: no se borrará nada.") + "\n\n" +
+            Tr("Eliminar la cuenta no cancela tu suscripción de Google Play; cancélala en Google Play si tenías una."),
+            ct);
+}
 
     private static async Task<IResult> ConfirmPageAsync(HttpContext http, TrazoDbContext db, string? token, CancellationToken ct)
     {

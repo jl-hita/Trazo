@@ -50,6 +50,7 @@ public static class AuthenticationEndpoints
         ISetupService setup,
         DeletionRequestThrottle emailThrottle,
         ILoggerFactory loggerFactory,
+        IErrorReporter reporter,
         Trazo.Application.Localization.RequestLanguage language,
         Trazo.Infrastructure.Growth.ISignupTrialService growth,
         Trazo.Infrastructure.Growth.IReferralService referrals,
@@ -82,6 +83,9 @@ public static class AuthenticationEndpoints
                     // Never log the exception text: mail errors can quote the recipient address.
                     loggerFactory.CreateLogger("Trazo.Auth").LogWarning(
                         "The existing-account notice could not be sent ({Error}).", exception.GetType().Name);
+                    // The answer must not depend on it (anti-enumeration), but a defect is not silenced: the mail server not answering is
+                    // expected and marked by the sender; anything else becomes an error ticket.
+                    await reporter.ReportAsync(exception, ErrorResults.TraceIdOf(http), cancellationToken);
                 }
             }
             return RegistrationAccepted(Tr("Te hemos enviado un enlace para verificar tu correo."));
@@ -109,7 +113,7 @@ public static class AuthenticationEndpoints
             await campaigns.AttributeAsync(user.Id, request.CampaignCode, request.ReferralSource, cancellationToken);
             return RegistrationAccepted(Tr("Te hemos enviado un enlace para verificar tu correo."));
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             return RegistrationAccepted(Tr("Te hemos enviado un enlace para verificar tu correo.")); // lost a race with another registration of the same address
         }

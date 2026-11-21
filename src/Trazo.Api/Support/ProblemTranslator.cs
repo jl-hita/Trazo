@@ -50,6 +50,8 @@ public static class ApiErrors
                 foreach (var field in TextFields)
                     if (node[field] is JsonValue value && value.TryGetValue<string>(out var text))
                         node[field] = Localizer.Translate(text, language);
+            // A server-side failure always carries the reference the client can quote (4xx answers are the client's to fix).
+            if (node is not null && statusCode >= 500 && !node.ContainsKey("traceId")) node["traceId"] = ErrorResults.TraceIdOf(httpContext);
             httpContext.Response.StatusCode = statusCode;
             return httpContext.Response.WriteAsJsonAsync(node ?? (object)body, options);
         }

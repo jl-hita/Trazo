@@ -838,7 +838,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var stored = await db.PlannedSessions.AsNoTracking().Where(x => ids.Contains(x.Id)).Select(x => x.PrescriptionJson).ToListAsync(ct);
             return stored.Any(json => PrescriptionJson.EasedBackFor(json) == absence);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             // Another request lightened it first (the unique index lets only one): nothing is changed twice.
             db.ChangeTracker.Clear();
@@ -1067,7 +1067,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         if (db.ChangeTracker.HasChanges())
         {
             try { await db.SaveChangesAsync(ct); }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
             {
                 // Another request created the same proposal first: use theirs.
                 db.ChangeTracker.Clear();
@@ -2250,7 +2250,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         {
             await db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException ex) when (DbErrors.IsUniqueViolation(ex))
         {
             // Another request generated the same block first: use theirs.
             db.ChangeTracker.Clear();

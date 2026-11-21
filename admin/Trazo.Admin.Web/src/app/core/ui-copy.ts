@@ -1185,6 +1185,7 @@ export const UI_COPY = {
     rateLimited: 'Has realizado demasiadas solicitudes. Espera un momento e inténtalo de nuevo.',
     server: 'Se ha producido un error en el servidor. Inténtalo de nuevo más tarde.',
     unavailable: 'El servicio no está disponible en este momento. Inténtalo de nuevo más tarde.',
-    unexpected: 'No se ha podido completar la operación. Inténtalo de nuevo.'
+    unexpected: 'No se ha podido completar la operación. Inténtalo de nuevo.',
+    reference: 'Ref.'
   }
 } as const;

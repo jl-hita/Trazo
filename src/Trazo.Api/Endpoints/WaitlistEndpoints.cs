@@ -62,7 +62,7 @@ public static class WaitlistEndpoints
 
     private static async Task<IResult> JoinAsync(
         JoinWaitlistRequest? request, TrazoDbContext db, TimeProvider clock, DeletionRequestThrottle throttle,
-        IServiceScopeFactory scopes, IConfiguration configuration, CancellationToken ct)
+        IBackgroundWork background, IConfiguration configuration, CancellationToken ct)
     {
         var errors = new Dictionary<string, string[]>();
         if (!WaitlistService.IsValidEmail(request?.Email)) errors["email"] = ["A valid email address is required."];
@@ -80,31 +80,24 @@ public static class WaitlistEndpoints
         if (throttle.TryAcquire("waitlist|" + normalized))
         {
             var baseUrl = (configuration["Account:PublicBaseUrl"] ?? AccountEndpoints.DefaultPublicBaseUrl).TrimEnd('/');
-            _ = Task.Run(() => SendConfirmationAsync(scopes, normalized, language!, baseUrl));
+            background.Enqueue("waitlist-confirmation", (services, token) => SendConfirmationAsync(services, normalized, language!, baseUrl, token));
         }
         return Results.Accepted(value: new { accepted = true });
     }
 
-    private static async Task SendConfirmationAsync(IServiceScopeFactory scopes, string email, string language, string baseUrl)
+    /// <summary>
+    /// Runs in the background service, which logs a failure by type only (a mail error can quote the address) and reports it as an error
+    /// ticket unless the mail server was the one that did not answer.
+    /// </summary>
+    private static async Task SendConfirmationAsync(IServiceProvider services, string email, string language, string baseUrl, CancellationToken ct)
     {
-        try
-        {
-            using var scope = scopes.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
-            var clock = scope.ServiceProvider.GetRequiredService<TimeProvider>();
-            var raw = await WaitlistService.IssueConfirmationAsync(db, email, clock.GetUtcNow(), CancellationToken.None);
-            if (raw is null) return; // already confirmed (or gone): nothing to send
-            var url = $"{baseUrl}/waitlist/confirm?token={Uri.EscapeDataString(raw)}&lang={language}";
-            var (subject, body) = WaitlistMail.Confirmation(language, url);
-            await scope.ServiceProvider.GetRequiredService<IEmailSender>().SendAsync(email, subject, body, CancellationToken.None);
-        }
-        catch (Exception ex)
-        {
-            // Never log the exception text: mail errors can quote the recipient address.
-            using var scope = scopes.CreateScope();
-            scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Trazo.Waitlist")
-                .LogWarning("The waitlist confirmation email could not be sent ({Error}).", ex.GetType().Name);
-        }
+        var db = services.GetRequiredService<TrazoDbContext>();
+        var clock = services.GetRequiredService<TimeProvider>();
+        var raw = await WaitlistService.IssueConfirmationAsync(db, email, clock.GetUtcNow(), ct);
+        if (raw is null) return; // already confirmed (or gone): nothing to send
+        var url = $"{baseUrl}/waitlist/confirm?token={Uri.EscapeDataString(raw)}&lang={language}";
+        var (subject, body) = WaitlistMail.Confirmation(language, url);
+        await services.GetRequiredService<IEmailSender>().SendAsync(email, subject, body, ct);
     }
 
     private static async Task<IResult> ConfirmAsync(WaitlistTokenRequest? request, TrazoDbContext db, TimeProvider clock, CancellationToken ct) =>
@@ -211,8 +204,8 @@ public static class WaitlistEndpoints
     /// only a sent invitation is marked, so the failed ones can be tried again.
     /// </summary>
     private static async Task<IResult> InviteAsync(
-        InviteRequest? request, TrazoDbContext db, IEmailSender email, IDataProtectionProvider protection, IConfiguration configuration,
-        TimeProvider clock, ILoggerFactory loggers, CancellationToken ct)
+        InviteRequest? request, HttpContext http, TrazoDbContext db, IEmailSender email, IDataProtectionProvider protection, IConfiguration configuration,
+        TimeProvider clock, ILoggerFactory loggers, IErrorReporter reporter, CancellationToken ct)
     {
         var ids = request?.Ids?.Distinct().ToArray() ?? [];
         if (ids.Length == 0 || ids.Length > MaxInvitesPerCall)
@@ -241,6 +234,8 @@ public static class WaitlistEndpoints
                 failed++;
                 // The exception type only: mail errors can quote the recipient address.
                 log.LogWarning("A waitlist invitation could not be sent ({Error}).", ex.GetType().Name);
+                // A mail server that did not answer is expected (it is marked, and nothing is reported); anything else is a defect.
+                await reporter.ReportAsync(ex, ErrorResults.TraceIdOf(http), ct);
             }
         }
         // "skipped": unknown ids, not confirmed yet, or already invited.

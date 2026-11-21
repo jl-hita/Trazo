@@ -119,8 +119,10 @@ public static class SubscriptionEndpoints
         }
         catch (PlayBillingException ex)
         {
-            // A 5xx makes Pub/Sub redeliver the message later.
-            logger.LogError(ex, "Could not process a Google Play notification ({Failure}).", ex.Failure);
+            // A 5xx makes Pub/Sub redeliver the message later. Only a rejected service account is a defect worth a ticket; Google not
+            // answering or billing not being set up are conditions that pass or are fixed in the console.
+            if (ex.Failure == PlayBillingFailure.Unauthorized) logger.LogError(ex, "Could not process a Google Play notification ({Failure}).", ex.Failure);
+            else logger.LogWarning(ex, "Could not process a Google Play notification ({Failure}).", ex.Failure);
             return Results.Problem("The notification could not be processed.", statusCode: StatusCodes.Status503ServiceUnavailable);
         }
     }
@@ -153,7 +155,8 @@ public static class SubscriptionEndpoints
                 return ApiErrors.Json(new { error = "invalid_purchase", message = "Google Play does not recognise this purchase." },
                     statusCode: StatusCodes.Status400BadRequest);
             case PlayBillingFailure.NotConfigured:
-                logger.LogError(ex, "Google Play Billing is not configured.");
+                // A setup state the overview already shows ("Play Billing not configured"), not a defect: no ticket.
+                logger.LogWarning(ex, "Google Play Billing is not configured.");
                 return ApiErrors.Json(new { error = "billing_not_configured", message = "Subscriptions are not available yet." },
                     statusCode: StatusCodes.Status503ServiceUnavailable);
             case PlayBillingFailure.Unauthorized:

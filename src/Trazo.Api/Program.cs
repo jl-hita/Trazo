@@ -222,6 +222,8 @@ builder.Services.AddCors();
 // Error answers (ProblemDetails) are put in the language of the request on the way out (see ProblemTranslator).
 builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
 {
+    // Every problem answer gets the trace id and a stable code (see ErrorResults), then its text in the language of the request.
+    Trazo.Api.Support.ErrorResults.Describe(context.ProblemDetails, context.HttpContext);
     if (context.HttpContext.RequestServices.GetService<Trazo.Application.Localization.RequestLanguage>() is { } language)
         Trazo.Api.Support.ProblemTranslator.Translate(context.ProblemDetails, language.Current);
 });
@@ -389,13 +391,14 @@ app.MapPost("/api/internal/exercise-catalog/import", async (
     }
     catch (Exception exception)
     {
-        logger.LogError(exception, "DietoExpress exercise-library import failed.");
-        return Results.Problem("The exercise library could not be imported.", statusCode: StatusCodes.Status500InternalServerError);
+        // Reported as an error ticket (not an expected condition); the sender still gets the specific text.
+        return ErrorResults.Failure(exception, StatusCodes.Status500InternalServerError, "library_import_failed",
+            "The exercise library could not be imported.", keepAnswerWhenReported: true);
     }
     finally
     {
         try { if (File.Exists(path)) File.Delete(path); }
-        catch (Exception exception) { logger.LogWarning(exception, "Could not remove temporary exercise import archive."); }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException) { logger.LogWarning(exception, "Could not remove temporary exercise import archive."); }
     }
 })
 .WithName("ImportDietoExpressExerciseLibrary");
