@@ -84,7 +84,7 @@ public static class AuthenticationEndpoints
                         "The existing-account notice could not be sent ({Error}).", exception.GetType().Name);
                 }
             }
-            return RegistrationAccepted();
+            return RegistrationAccepted(Tr("Te hemos enviado un enlace para verificar tu correo."));
         }
 
         var now = DateTimeOffset.UtcNow;
@@ -107,16 +107,16 @@ public static class AuthenticationEndpoints
             await growth.SignedUpAsync(user.Id, ReferralEndpoints.AppVersion(http), cancellationToken);
             await referrals.AttributeAsync(user.Id, user.Email, request.ReferralCode, request.ReferralSource, ReferralEndpoints.AppVersion(http), cancellationToken);
             await campaigns.AttributeAsync(user.Id, request.CampaignCode, request.ReferralSource, cancellationToken);
-            return RegistrationAccepted();
+            return RegistrationAccepted(Tr("Te hemos enviado un enlace para verificar tu correo."));
         }
         catch (DbUpdateException)
         {
-            return RegistrationAccepted(); // lost a race with another registration of the same address
+            return RegistrationAccepted(Tr("Te hemos enviado un enlace para verificar tu correo.")); // lost a race with another registration of the same address
         }
     }
 
-    private static IResult RegistrationAccepted() =>
-        Results.Accepted(value: new { emailVerificationRequired = true, message = "Te hemos enviado un enlace para verificar tu correo." });
+    private static IResult RegistrationAccepted(string message) =>
+        Results.Accepted(value: new { emailVerificationRequired = true, message });
 
     // Verified when the address has no usable account, so the response time does not reveal whether it exists.
     private static readonly Lazy<string> DummyPasswordHash =

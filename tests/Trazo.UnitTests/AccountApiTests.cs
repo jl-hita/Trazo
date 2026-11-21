@@ -818,6 +818,14 @@ public sealed class AccountApiTests : IDisposable
         var reset = new { token = "nope", newPassword = "CorrectHorse1Battery" };
         Assert.Equal("El enlace no es válido o ha caducado.", (await JsonAsync(await _factory.CreateClient().PostAsJsonAsync("/api/v1/auth/password/reset", reset))).GetProperty("error").GetString());
         Assert.Equal("The link is not valid or has expired.", (await JsonAsync(await ClientIn("en").PostAsJsonAsync("/api/v1/auth/password/reset", reset))).GetProperty("error").GetString());
+
+        var registrationEs = await JsonAsync(await _factory.CreateClient().PostAsJsonAsync("/api/v1/auth/register",
+            new { email = "register.es@example.com", displayName = "Spanish User", password = Password }));
+        Assert.Equal("Te hemos enviado un enlace para verificar tu correo.", registrationEs.GetProperty("message").GetString());
+
+        var registrationEn = await JsonAsync(await ClientIn("en").PostAsJsonAsync("/api/v1/auth/register",
+            new { email = "register.en@example.com", displayName = "English User", password = Password }));
+        Assert.Equal("We have sent you a link to verify your email.", registrationEn.GetProperty("message").GetString());
     }
 
     [Fact]

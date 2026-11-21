@@ -183,6 +183,8 @@ internal static class EnglishCatalog
          "Plan generated automatically from your profile."),
         ("Plan creado por ti.",
          "Plan created by you."),
+        ("Te hemos enviado un enlace para verificar tu correo.",
+         "We have sent you a link to verify your email."),
         ("Con Premium, TRAZO adapta cargas, series y descansos según cómo te va.",
          "With Premium, TRAZO adapts loads, sets and rest according to how you are doing."),
         ("No es consejo médico: si notas dolor, detén el ejercicio y consulta a un especialista.",
