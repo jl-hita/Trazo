@@ -2,6 +2,7 @@
 Description=TRAZO encrypted backup to Google Drive
 After=network-online.target postgresql.service
 Wants=network-online.target
+OnFailure=trazo-backup-failed.service
 
 [Service]
 Type=oneshot

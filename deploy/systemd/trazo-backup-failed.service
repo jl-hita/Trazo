@@ -1,0 +1,6 @@
+[Unit]
+Description=Notify that the TRAZO backup failed
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/trazo-backup-check --failed

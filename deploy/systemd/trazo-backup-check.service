@@ -1,0 +1,8 @@
+[Unit]
+Description=Check that TRAZO has a recent backup in Google Drive
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/trazo-backup-check

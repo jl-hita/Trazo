@@ -18,7 +18,8 @@ KEEP_DAILY="${KEEP_DAILY:-14}"
 KEEP_WEEKLY="${KEEP_WEEKLY:-8}"
 export RCLONE_CONFIG="${RCLONE_CONFIG:-/etc/trazo/rclone.conf}"
 # Rutas incluidas ademas de la BD: sin las claves de Data Protection se pierden los secretos 2FA.
-EXTRA_PATHS="${EXTRA_PATHS:-/var/lib/trazo/data-protection-keys /var/lib/trazo/r8-mappings /etc/trazo/trazo.env}"
+# r8-mappings queda fuera a proposito (cientos de MB que casi no cambian); anade la ruta en EXTRA_PATHS si la quieres.
+EXTRA_PATHS="${EXTRA_PATHS:-/var/lib/trazo/data-protection-keys /etc/trazo/trazo.env}"
 
 for bin in pg_dump age rclone tar runuser; do
   command -v "$bin" >/dev/null || { echo "ERROR: falta $bin." >&2; exit 1; }

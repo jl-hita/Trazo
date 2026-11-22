@@ -9,9 +9,12 @@ Un `trazo-AAAAMMDDTHHMMSSZ.tar.age` con:
 
 - `database.dump`: `pg_dump -Fc` de la base `trazo` (incluye usuarios, planes, logs, tickets y los ajustes del asistente).
 - `files/var/lib/trazo/data-protection-keys`: sin ellas se pierden los secretos 2FA.
-- `files/var/lib/trazo/r8-mappings`: mappings para desofuscar tickets Android.
 - `files/etc/trazo/trazo.env`: JWT, conexión a BD y demás secretos del servidor.
 - `MANIFEST.txt`.
+
+`/var/lib/trazo/r8-mappings` **no** se incluye por defecto: son cientos de MB que casi no cambian y inflarían cada copia
+diaria. Sin ellos solo se pierde poder desofuscar tickets Android antiguos. Para incluirlos, define en `backup.env`
+`EXTRA_PATHS="/var/lib/trazo/data-protection-keys /var/lib/trazo/r8-mappings /etc/trazo/trazo.env"`.
 
 ## Cómo está protegido
 
@@ -47,11 +50,11 @@ Un `trazo-AAAAMMDDTHHMMSSZ.tar.age` con:
 
 4. Rellena `/etc/trazo/backup.env`: `AGE_RECIPIENT=age1...` y `RCLONE_REMOTE=trazo-drive:trazo-backups`.
 
-5. Prueba manual y activa el timer (diario ~03:30, con `Persistent=true`):
+5. Prueba manual y activa los timers (copia diaria ~03:30 con `Persistent=true`, y chequeo diario a las 09:00):
 
    ```bash
    sudo systemctl start trazo-backup.service && journalctl -u trazo-backup -n 50
-   sudo systemctl enable --now trazo-backup.timer
+   sudo systemctl enable --now trazo-backup.timer trazo-backup-check.timer
    ```
 
 ## Restaurar
@@ -77,5 +80,13 @@ Borra `/var/tmp/r` al terminar: contiene secretos en claro.
 
 ## Vigilancia
 
-El servicio falla (exit ≠ 0) si el volcado, el cifrado o la subida fallan; mira `systemctl status trazo-backup` o
-`systemctl list-timers trazo-backup.timer`. Pendiente: aviso automático cuando no haya copia reciente en Drive.
+- El backup falla (exit ≠ 0) si el volcado, el cifrado o la subida fallan; entonces `trazo-backup-failed.service` avisa.
+- `trazo-backup-check.timer` (diario, 09:00) comprueba en Drive que la última copia tenga menos de `MAX_AGE_HOURS`
+  (36 por defecto). Si no la hay o es más antigua, la unidad queda en `failed` y se avisa. Cubre también el caso en que el
+  timer no llegue a ejecutarse o Drive deje de aceptar subidas.
+- Un aviso siempre escribe en el journal con prioridad error (`journalctl -t trazo-backup-check -p err`). Para recibirlo
+  fuera del servidor, define en `backup.env` `NOTIFY_URL` con una URL a la que se haga POST con el mensaje; sirve
+  [ntfy.sh](https://ntfy.sh) con un tema largo y secreto (instala la app y suscríbete a ese tema).
+- Activación del chequeo (también en instalaciones anteriores a esta versión): vuelve a ejecutar
+  `sudo bash deploy/scripts/install-trazo-backup.sh` y luego `sudo systemctl enable --now trazo-backup-check.timer`.
+- Estado: `systemctl list-timers 'trazo-backup*'` y `sudo trazo-backup-check`.
