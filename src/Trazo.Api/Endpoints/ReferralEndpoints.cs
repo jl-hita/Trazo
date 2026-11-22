@@ -16,6 +16,7 @@ public sealed record InstallReferrerRequest(string? Code);
 public sealed record VoidGrantRequest(string? Reason);
 public sealed record ReferralProgrammeSettingsRequest(bool Enabled, int RewardDays);
 public sealed record ClientEventRequest(string? Name);
+public sealed record ReferralDiagnosticsRequest(int HttpStatus, string? ContentType, long ContentLength, string? Preview, string? AppVersion);
 
 /// <summary>
 /// The referral programme: the signed-in user's code, link, statistics and rewards; the public invitation page and Android App
@@ -33,6 +34,7 @@ public static class ReferralEndpoints
         var me = endpoints.MapGroup("/api/v1/referrals").WithTags("Referrals").RequireAuthorization().RequireRateLimiting(RateLimitPolicy);
         me.MapGet("/me", MeAsync);
         me.MapGet("/invitations", InvitationsAsync);
+        me.MapPost("/invitations/diagnostics", ReferralDiagnosticsAsync);
         me.MapGet("/rewards", RewardsAsync);
         me.MapPost("/shared", SharedAsync);
 
@@ -78,6 +80,51 @@ public static class ReferralEndpoints
         return value.Length is > 0 and <= 40 ? value : null;
     }
 
+
+    private static IResult ReferralDiagnosticsAsync(
+        ReferralDiagnosticsRequest? request, ILoggerFactory loggerFactory)
+    {
+        if (request is null || request.HttpStatus is < 100 or > 599 ||
+            request.ContentLength < -1 || request.Preview is null || request.Preview.Length > 8192 ||
+            (request.ContentType?.Length ?? 0) > 120 || (request.AppVersion?.Length ?? 0) > 40)
+            return Results.BadRequest(new { error = "invalid_diagnostic" });
+
+        string preview;
+        try
+        {
+            using var document = JsonDocument.Parse(request.Preview);
+            preview = JsonSerializer.Serialize(SanitizeReferralDiagnostic(document.RootElement));
+        }
+        catch (JsonException)
+        {
+            preview = "<non-JSON preview>";
+        }
+
+        loggerFactory.CreateLogger("Trazo.Api.ReferralDiagnostics").LogInformation(
+            "Referral invitations response observed by Android: HTTP {HttpStatus}; ContentType {ContentType}; ContentLength {ContentLength}; AppVersion {AppVersion}; Preview {Preview}",
+            request.HttpStatus, request.ContentType, request.ContentLength, request.AppVersion, preview);
+        return Results.NoContent();
+    }
+
+    private static object? SanitizeReferralDiagnostic(JsonElement element)
+    {
+        const string redacted = "<redacted>";
+        return element.ValueKind switch
+        {
+            JsonValueKind.Object => element.EnumerateObject().ToDictionary(
+                p => p.Name,
+                p => new[] { "id", "userid", "code", "link", "email", "name", "token", "accesstoken", "refreshtoken" }
+                    .Contains(new string(p.Name.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray()))
+                    ? (object?)redacted : SanitizeReferralDiagnostic(p.Value)),
+            JsonValueKind.Array => element.EnumerateArray().Select(SanitizeReferralDiagnostic).ToArray(),
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => element.GetDecimal(),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            _ => null
+        };
+    }
+
     private static Guid? UserId(System.Security.Claims.ClaimsPrincipal principal) => SubscriptionEndpoints.UserId(principal);
 
     internal static async Task<string> BaseUrlAsync(HttpContext http, IRuntimeSettings settings, CancellationToken ct)
@@ -101,12 +148,25 @@ public static class ReferralEndpoints
     }
 
     private static async Task<IResult> InvitationsAsync(
-        System.Security.Claims.ClaimsPrincipal principal, IReferralService referrals, string? status, CancellationToken ct)
+        System.Security.Claims.ClaimsPrincipal principal,
+        IReferralService referrals,
+        ILoggerFactory loggerFactory,
+        Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions> jsonOptions,
+        string? status,
+        CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         if (status is not null && status is not (ReferralStatuses.Registered or ReferralStatuses.Rewarded or ReferralStatuses.Voided or ReferralStatuses.Skipped))
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["status"] = ["Unknown status."] });
-        return Results.Ok(new { items = await referrals.InvitationsAsync(userId, status, ct) });
+
+        var response = new { items = await referrals.InvitationsAsync(userId, status, ct) };
+        // Serialize once with the same HTTP JSON options used by ASP.NET Core, log those exact bytes,
+        // and return that same JSON so the diagnostic cannot drift from the response sent to Android.
+        var responseJson = JsonSerializer.Serialize(response, jsonOptions.Value.SerializerOptions);
+        loggerFactory.CreateLogger("Trazo.Api.ReferralResponses").LogInformation(
+            "GET /api/v1/referrals/invitations response: HTTP 200; UserId {UserId}; StatusFilter {StatusFilter}; Body {ResponseBody}",
+            userId, status, responseJson);
+        return Results.Content(responseJson, "application/json; charset=utf-8");
     }
 
     private static async Task<IResult> RewardsAsync(System.Security.Claims.ClaimsPrincipal principal, IReferralService referrals, CancellationToken ct)
