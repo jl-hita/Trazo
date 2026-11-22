@@ -260,3 +260,12 @@ export interface BackupStatus {
   configured: boolean; health: BackupHealth; message: string | null; checkedAt: string | null; maxAgeHours: number;
   remote: string | null; lastRun: BackupLastRun | null; copies: BackupCopy[];
 }
+
+export interface BackupAlertCandidate { id: string; displayName: string; email: string; role: string; devices: number; }
+
+/** Who gets the push notification when the backups go wrong; `candidates` are the active staff accounts that can be chosen. */
+export interface BackupAlertView {
+  recipientUserId: string | null; recipientName: string | null; recipientDevices: number; candidates: BackupAlertCandidate[];
+}
+
+export interface BackupAlertTestResult { ok: boolean; message: string; }

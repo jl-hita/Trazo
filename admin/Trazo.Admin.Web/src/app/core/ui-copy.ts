@@ -478,7 +478,24 @@ export const UI_COPY = {
     daily: 'Diaria',
     weekly: 'Semanal (domingo)',
     noCopies: 'No hay copias en Drive.',
-    encryptionNote: 'Cada copia está cifrada con una clave pública: el servidor no puede abrirla y la clave privada no está aquí. Destino:'
+    encryptionNote: 'Cada copia está cifrada con una clave pública: el servidor no puede abrirla y la clave privada no está aquí. Destino:',
+    alerts: {
+      title: 'Avisos por notificación',
+      help: 'Si una copia falla o la última tiene más de 36 horas, la app envía una notificación a la cuenta elegida (una vez al día mientras dure el problema, y otra cuando se recupere). No lleva datos: solo el estado de las copias.',
+      recipient: 'Quién recibe los avisos',
+      nobody: 'Nadie (avisos desactivados)',
+      save: 'Guardar',
+      saving: 'Guardando…',
+      test: 'Enviar aviso de prueba',
+      testing: 'Enviando…',
+      saved: 'Destinatario guardado.',
+      savedOff: 'Avisos desactivados.',
+      noDevices: 'Esa cuenta no tiene ningún móvil registrado: tiene que abrir la app con su cuenta y conceder el permiso de notificaciones, o no recibirá nada.',
+      devices: 'móvil(es)',
+      saveFirst: 'Guarda el cambio antes de enviar la prueba.',
+      loadFailed: 'No se han podido cargar los avisos.',
+      roles: { admin: 'administración', superadmin: 'superadministración' } as Record<string, string>
+    }
   },
   waitlist: {
     eyebrow: 'ADMINISTRACIÓN',

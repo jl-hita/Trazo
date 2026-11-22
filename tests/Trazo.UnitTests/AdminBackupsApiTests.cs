@@ -13,6 +13,9 @@ using Trazo.Api.Security;
 using Trazo.Api.Support;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
+using Trazo.Infrastructure.Push;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Trazo.UnitTests;
@@ -24,6 +27,7 @@ public sealed class AdminBackupsApiTests : IDisposable
     private readonly string _status = Path.Combine(Path.GetTempPath(), $"trazo-backups-{Guid.NewGuid():N}");
     private readonly string _keys = Path.Combine(Path.GetTempPath(), $"trazo-keys-{Guid.NewGuid():N}");
     private readonly SetupFixture _fixture = new();
+    private readonly FakePushSender _push = new();
     private readonly WebApplicationFactory<Program> _factory;
 
     public AdminBackupsApiTests()
@@ -43,6 +47,8 @@ public sealed class AdminBackupsApiTests : IDisposable
                 services.RemoveAll<DbContextOptions<TrazoDbContext>>();
                 services.RemoveAll(typeof(IDbContextOptionsConfiguration<TrazoDbContext>));
                 services.AddDbContext<TrazoDbContext>(o => o.UseSqlite(_fixture.ConnectionString));
+                services.RemoveAll<IPushSender>();
+                services.AddSingleton<IPushSender>(_push);
             });
         });
     }
@@ -178,5 +184,164 @@ public sealed class AdminBackupsApiTests : IDisposable
         Assert.True(body.GetProperty("configured").GetBoolean());
         Assert.Equal("healthy", body.GetProperty("health").GetString());
         Assert.Equal(2048, body.GetProperty("copies")[0].GetProperty("sizeBytes").GetInt64());
+    }
+
+    // ------------------------------------------------------------------ who is told when the backups go wrong
+
+    private sealed class FixedTime(DateTimeOffset now) : TimeProvider
+    {
+        public DateTimeOffset Value { get; set; } = now;
+        public override DateTimeOffset GetUtcNow() => Value;
+    }
+
+    private async Task<Guid> AddUserAsync(string role, bool disabled = false, string? name = null)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var now = DateTimeOffset.UtcNow;
+        var email = $"{role}-{Guid.NewGuid():N}@trazo.test";
+        var user = new TrazoUser
+        {
+            Id = Guid.NewGuid(), Email = email, NormalizedEmail = email.ToUpperInvariant(), DisplayName = name ?? role,
+            Role = role, EmailVerifiedAt = now, CreatedAt = now, UpdatedAt = now, DisabledAt = disabled ? now : null
+        };
+        db.Users.Add(user);
+        await db.SaveChangesAsync();
+        return user.Id;
+    }
+
+    private async Task<BackupAlertOutcome> RunAlerterAsync(FixedTime time)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        var alerter = new BackupAlerter(new BackupAlertSettings(db, time), _push, configuration, time, NullLogger<BackupAlerter>.Instance);
+        return await alerter.RunOnceAsync(CancellationToken.None);
+    }
+
+    private async Task ChooseAsync(Guid? userId)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var settings = new BackupAlertSettings(scope.ServiceProvider.GetRequiredService<TrazoDbContext>(), TimeProvider.System);
+        Assert.True(await settings.SetRecipientAsync(userId, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task TheRecipientIsChosenFromActiveStaffOnly_AndOnlyBySuperadmins()
+    {
+        var admin = await AddUserAsync("admin", name: "Ana");
+        var superadmin = await AddUserAsync("superadmin", name: "Beto");
+        var disabled = await AddUserAsync("admin", disabled: true, name: "Caído");
+        var plain = await AddUserAsync("user", name: "Dani");
+
+        Assert.Equal(HttpStatusCode.Forbidden, (await (await ClientForAsync("admin")).GetAsync("/api/v1/admin/backups/alerts")).StatusCode);
+
+        var client = await ClientForAsync("superadmin");
+        var view = (await (await client.GetAsync("/api/v1/admin/backups/alerts")).Content.ReadFromJsonAsync<JsonElement>())!;
+        Assert.Equal(JsonValueKind.Null, view.GetProperty("recipientUserId").ValueKind);
+        var ids = view.GetProperty("candidates").EnumerateArray().Select(c => c.GetProperty("id").GetGuid()).ToList();
+        Assert.Contains(admin, ids);
+        Assert.Contains(superadmin, ids);
+        Assert.DoesNotContain(disabled, ids);
+        Assert.DoesNotContain(plain, ids);
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync("/api/v1/admin/backups/alerts", new { userId = plain })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync("/api/v1/admin/backups/alerts", new { userId = disabled })).StatusCode);
+
+        var saved = await client.PutAsJsonAsync("/api/v1/admin/backups/alerts", new { userId = admin });
+        Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
+        var after = (await saved.Content.ReadFromJsonAsync<JsonElement>())!;
+        Assert.Equal(admin, after.GetProperty("recipientUserId").GetGuid());
+        Assert.Equal("Ana", after.GetProperty("recipientName").GetString());
+
+        var off = (await (await client.PutAsJsonAsync("/api/v1/admin/backups/alerts", new { userId = (Guid?)null })).Content.ReadFromJsonAsync<JsonElement>())!;
+        Assert.Equal(JsonValueKind.Null, off.GetProperty("recipientUserId").ValueKind);
+    }
+
+    [Fact]
+    public async Task TestNotice_NeedsARecipient_AndGoesToThem()
+    {
+        var client = await ClientForAsync("superadmin");
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync("/api/v1/admin/backups/alerts/test", null)).StatusCode);
+
+        var admin = await AddUserAsync("admin");
+        await ChooseAsync(admin);
+        var response = await client.PostAsync("/api/v1/admin/backups/alerts/test", null);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var sent = Assert.Single(_push.Sent);
+        Assert.Equal([admin], sent.Users);
+        Assert.Equal("backup-test", sent.Message.Kind);
+    }
+
+    [Fact]
+    public async Task NoRecipient_NothingIsSent()
+    {
+        WriteStatus(Now.AddHours(-1));
+        Assert.Equal(BackupAlertOutcome.Nothing, await RunAlerterAsync(new FixedTime(Now)));
+        Assert.Empty(_push.Sent);
+    }
+
+    [Fact]
+    public async Task AFailure_IsAnnouncedOnce_RepeatedAfterADay_AndTheRecoveryIsToldOnce()
+    {
+        var admin = await AddUserAsync("admin");
+        await ChooseAsync(admin);
+        var time = new FixedTime(Now);
+        WriteStatus(Now.AddHours(-1), Copy(Now.AddHours(-40), 1000));
+
+        Assert.Equal(BackupAlertOutcome.Alerted, await RunAlerterAsync(time));
+        var first = Assert.Single(_push.Sent);
+        Assert.Equal([admin], first.Users);
+        Assert.Equal("backup-alert", first.Message.Kind);
+        Assert.Contains("36 horas", first.Message.Body);
+
+        time.Value = Now.AddHours(3);
+        Assert.Equal(BackupAlertOutcome.Nothing, await RunAlerterAsync(time));
+        Assert.Single(_push.Sent);
+
+        time.Value = Now.AddHours(25);
+        Assert.Equal(BackupAlertOutcome.Alerted, await RunAlerterAsync(time));
+        Assert.Equal(2, _push.Sent.Count);
+
+        WriteStatus(Now.AddHours(26), Copy(Now.AddHours(25), 5000));
+        time.Value = Now.AddHours(26);
+        Assert.Equal(BackupAlertOutcome.Recovered, await RunAlerterAsync(time));
+        Assert.Equal("backup-ok", _push.Sent[^1].Message.Kind);
+        Assert.Equal(BackupAlertOutcome.Nothing, await RunAlerterAsync(time));
+        Assert.Equal(3, _push.Sent.Count);
+    }
+
+    [Fact]
+    public async Task APushThatFails_IsTriedAgainNextRound()
+    {
+        var admin = await AddUserAsync("admin");
+        await ChooseAsync(admin);
+        var time = new FixedTime(Now);
+        WriteStatus(Now.AddHours(-1));
+        _push.Failure = new PushException(PushFailure.NotConfigured, "not configured");
+
+        Assert.Equal(BackupAlertOutcome.PushFailed, await RunAlerterAsync(time));
+
+        _push.Failure = null;
+        Assert.Equal(BackupAlertOutcome.Alerted, await RunAlerterAsync(time));
+        Assert.Single(_push.Sent);
+    }
+
+    [Fact]
+    public async Task ADisabledRecipient_StopsReceiving()
+    {
+        var admin = await AddUserAsync("admin");
+        await ChooseAsync(admin);
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            (await db.Users.SingleAsync(u => u.Id == admin)).DisabledAt = DateTimeOffset.UtcNow;
+            await db.SaveChangesAsync();
+        }
+        WriteStatus(Now.AddHours(-1));
+
+        Assert.Equal(BackupAlertOutcome.Nothing, await RunAlerterAsync(new FixedTime(Now)));
+        Assert.Empty(_push.Sent);
     }
 }

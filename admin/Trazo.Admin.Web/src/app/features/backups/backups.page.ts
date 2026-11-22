@@ -1,8 +1,9 @@
 import { Component, DestroyRef, ViewEncapsulation, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UiButtonComponent } from '../../shared/ui/ui-button.component';
 import { UiBadgeComponent, type UiBadgeTone } from '../../shared/ui/ui-badge.component';
 import { UiTableComponent } from '../../shared/ui/ui-table.component';
-import type { BackupCopy, BackupHealth, BackupStatus } from '../../core/admin.models';
+import type { BackupAlertView, BackupCopy, BackupHealth, BackupStatus } from '../../core/admin.models';
 import { BackupsApi } from './backups.api';
 import { errorMessage } from '../../core/api-error';
 import { UI_COPY } from '../../core/ui-copy';
@@ -31,7 +32,7 @@ export function isWeekly(copy: BackupCopy): boolean {
 @Component({
   selector: 'trazo-backups-page',
   standalone: true,
-  imports: [UiButtonComponent, UiBadgeComponent, UiTableComponent],
+  imports: [FormsModule, UiButtonComponent, UiBadgeComponent, UiTableComponent],
   encapsulation: ViewEncapsulation.None,
   styleUrl: './backups.page.scss',
   templateUrl: './backups.page.html'
@@ -49,19 +50,77 @@ export class BackupsPageComponent {
   protected readonly tone = computed(() => TONES[this.status()?.health ?? 'unknown']);
   protected readonly healthLabel = computed(() => this.copy.health[this.status()?.health ?? 'unknown']);
 
+  protected readonly alerts = signal<BackupAlertView | null>(null);
+  /** The id picked in the dropdown ('' = nobody); it only becomes the recipient when saved. */
+  protected readonly choice = signal('');
+  protected readonly saving = signal(false);
+  protected readonly testing = signal(false);
+  protected readonly alertMessage = signal('');
+  protected readonly alertError = signal('');
+  protected readonly dirty = computed(() => this.choice() !== (this.alerts()?.recipientUserId ?? ''));
+  protected readonly chosenHasNoDevices = computed(() => {
+    const picked = this.alerts()?.candidates.find(c => c.id === this.choice());
+    return !!picked && picked.devices === 0;
+  });
+
   constructor() {
     void this.load();
+    void this.loadAlerts();
     // The files change once a day; a slow refresh keeps an open tab honest without hammering the API.
     this.timer = setInterval(() => { if (!this.loading()) void this.load(true); }, 5 * 60_000);
     inject(DestroyRef).onDestroy(() => clearInterval(this.timer));
   }
 
-  protected refresh(): void { void this.load(); }
+  protected refresh(): void { void this.load(); void this.loadAlerts(); }
+
+  protected async saveRecipient(): Promise<void> {
+    this.saving.set(true);
+    this.alertMessage.set('');
+    this.alertError.set('');
+    try {
+      const view = await this.api.saveAlerts(this.choice() || null);
+      this.applyAlerts(view);
+      this.alertMessage.set(view.recipientUserId ? this.copy.alerts.saved : this.copy.alerts.savedOff);
+    } catch (e) {
+      this.alertError.set(errorMessage(e));
+    } finally {
+      this.saving.set(false);
+    }
+  }
+
+  protected async sendTest(): Promise<void> {
+    this.testing.set(true);
+    this.alertMessage.set('');
+    this.alertError.set('');
+    try {
+      const result = await this.api.testAlert();
+      (result.ok ? this.alertMessage : this.alertError).set(result.message);
+    } catch (e) {
+      this.alertError.set(errorMessage(e));
+    } finally {
+      this.testing.set(false);
+    }
+  }
+
+  protected roleLabel(role: string): string { return this.copy.alerts.roles[role] ?? role; }
 
   protected readonly formatTime = (iso: string | null | undefined) => formatUiDateTime(iso);
   protected readonly formatSize = (bytes: number) => formatUiBytes(bytes);
   protected readonly age = (iso: string | null | undefined) => ageLabel(iso);
   protected readonly kind = (c: BackupCopy) => isWeekly(c) ? this.copy.weekly : this.copy.daily;
+
+  private applyAlerts(view: BackupAlertView): void {
+    this.alerts.set(view);
+    this.choice.set(view.recipientUserId ?? '');
+  }
+
+  private async loadAlerts(): Promise<void> {
+    try {
+      this.applyAlerts(await this.api.alerts());
+    } catch (e) {
+      this.alertError.set(errorMessage(e) || this.copy.alerts.loadFailed);
+    }
+  }
 
   private async load(quiet = false): Promise<void> {
     if (!quiet) this.loading.set(true);
