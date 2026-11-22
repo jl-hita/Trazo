@@ -29,7 +29,24 @@ if [[ "${1:-}" == "--failed" ]]; then
 fi
 
 : "${RCLONE_REMOTE:?RCLONE_REMOTE sin definir en $CONFIG}"
-latest="$(rclone lsf "$RCLONE_REMOTE" --files-only 2>/dev/null | grep -E '^trazo-[0-9]{8}T[0-9]{6}Z\.tar\.age$' | sort | tail -n 1 || true)"
+if ! listing="$(rclone lsjson "$RCLONE_REMOTE" --files-only 2>/dev/null)"; then
+  alert "No se pudo listar $RCLONE_REMOTE (Drive no responde o la autorizacion de rclone ha caducado)."
+  exit 1
+fi
+
+# Lo que lee el panel de la consola (la API; docs/backups.md): copias que hay ahora mismo en Drive.
+STATUS_DIR="${BACKUP_STATUS_DIR:-/var/lib/trazo}"
+if [[ -d "$STATUS_DIR" ]]; then
+  target="$STATUS_DIR/backup-status.json"
+  tmp="$(mktemp "$target.XXXXXX")"
+  remote_json="$(printf '%s' "$RCLONE_REMOTE" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')"
+  printf '{"checkedAt":"%s","remote":"%s","maxAgeHours":%s,"copies":%s}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$remote_json" "$MAX_AGE_HOURS" "${listing:-[]}" > "$tmp"
+  chmod 0640 "$tmp"; chown trazo:trazo "$tmp" 2>/dev/null || true
+  mv -f "$tmp" "$target"
+fi
+
+latest="$(grep -oE 'trazo-[0-9]{8}T[0-9]{6}Z\.tar\.age' <<<"$listing" | sort | tail -n 1 || true)"
 if [[ -z "$latest" ]]; then
   alert "No hay ninguna copia en $RCLONE_REMOTE (o Drive no responde)."
   exit 1

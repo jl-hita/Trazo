@@ -9,6 +9,7 @@ TestResults/
 # Node / Angular
 **/node_modules/
 **/dist/
+**/coverage/
 **/.angular/
 npm-debug.log*
 

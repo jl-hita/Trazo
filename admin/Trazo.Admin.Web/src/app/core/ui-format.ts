@@ -43,3 +43,13 @@ export function formatUiPercent(value: number | null | undefined, maximumFractio
   if (value == null || !Number.isFinite(value)) return '—';
   return new Intl.NumberFormat(UI_LOCALE, { style: 'percent', maximumFractionDigits }).format(value);
 }
+
+/** Size in bytes as "4,7 MB" (decimal units, as Drive shows them). */
+export function formatUiBytes(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes < 0) return '—';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let value = bytes;
+  let unit = 0;
+  while (value >= 1000 && unit < units.length - 1) { value /= 1000; unit++; }
+  return `${formatUiNumber(value, unit === 0 ? 0 : 1)} ${units[unit]}`;
+}

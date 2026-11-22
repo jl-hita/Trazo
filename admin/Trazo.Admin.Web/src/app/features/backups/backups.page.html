@@ -1,0 +1,63 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">{{ copy.eyebrow }}</p>
+        <h1>{{ copy.title }}</h1>
+        <p class="subtitle">{{ copy.subtitle }}</p>
+      </div>
+      <trazo-button variant="secondary" buttonClass="bk-btn" type="button" (pressed)="refresh()" [disabled]="loading()">{{ copy.refresh }}</trazo-button>
+    </div>
+
+    @if (error()) { <p class="bk-error" role="alert">{{ error() }}</p> }
+
+    @if (status(); as s) {
+      <section class="bk-status" [attr.data-health]="s.health" [attr.aria-label]="copy.statusAria">
+        <trazo-badge [tone]="tone()">{{ healthLabel() }}</trazo-badge>
+        <span class="bk-message">{{ s.configured ? s.message : copy.notConfigured }}</span>
+        @if (s.checkedAt) { <span class="bk-checked">{{ copy.checkedAt }} {{ formatTime(s.checkedAt) }}</span> }
+      </section>
+
+      @if (!s.configured) {
+        <p class="bk-hint">{{ copy.notConfiguredHelp }}</p>
+      } @else {
+        <div class="bk-stats">
+          <div class="bk-stat">
+            <b>{{ latest() ? formatTime(latest()!.createdAt) : '—' }}</b>
+            <span>{{ copy.lastCopy }}@if (latest(); as l) { · {{ copy.ago }} {{ age(l.createdAt) }} }</span>
+          </div>
+          <div class="bk-stat"><b>{{ latest() ? formatSize(latest()!.sizeBytes) : '—' }}</b><span>{{ copy.lastSize }}</span></div>
+          <div class="bk-stat"><b>{{ s.copies.length }}</b><span>{{ copy.copiesInDrive }} · {{ formatSize(totalBytes()) }}</span></div>
+          <div class="bk-stat">
+            @if (s.lastRun; as run) {
+              <b [class.bad]="!run.ok">{{ run.ok ? copy.runOk : copy.runFailed }}</b>
+              <span>{{ copy.lastRun }} · {{ formatTime(run.finishedAt) }}</span>
+            } @else {
+              <b>—</b><span>{{ copy.lastRun }}</span>
+            }
+          </div>
+        </div>
+
+        @if (s.lastRun?.error; as runError) {
+          <p class="bk-run-error" role="alert"><b>{{ copy.runErrorTitle }}</b> {{ runError }}</p>
+        }
+
+        <trazo-table tableClass="bk-table">
+          <thead><tr><th>{{ copy.date }}</th><th>{{ copy.kind }}</th><th class="num">{{ copy.size }}</th><th>{{ copy.file }}</th></tr></thead>
+          <tbody>
+            @for (c of s.copies; track c.name) {
+              <tr>
+                <td>{{ formatTime(c.createdAt) }}</td>
+                <td>{{ kind(c) }}</td>
+                <td class="num">{{ formatSize(c.sizeBytes) }}</td>
+                <td class="bk-file">{{ c.name }}</td>
+              </tr>
+            } @empty {
+              <tr><td colspan="4" class="bk-empty">{{ copy.noCopies }}</td></tr>
+            }
+          </tbody>
+        </trazo-table>
+
+        <p class="bk-note">{{ copy.encryptionNote }} <span class="bk-remote">{{ s.remote }}</span></p>
+      }
+    } @else if (!error()) {
+      <p class="bk-empty">{{ copy.loading }}</p>
+    }
