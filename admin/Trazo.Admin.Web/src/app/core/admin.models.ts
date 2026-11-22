@@ -249,3 +249,14 @@ export interface ErrorTicketSummary {
 }
 export interface ErrorTicketDetail extends ErrorTicketSummary { stackTrace: string; originalStackTrace: string | null; }
 export interface ErrorTicketPage extends Page<ErrorTicketSummary> { overall: { total: number; new: number; seen: number; resolved: number }; }
+
+export type BackupHealth = 'healthy' | 'warning' | 'error' | 'unknown';
+
+export interface BackupCopy { name: string; sizeBytes: number; createdAt: string; }
+
+export interface BackupLastRun { ok: boolean; startedAt: string | null; finishedAt: string | null; copy: string | null; error: string | null; }
+
+export interface BackupStatus {
+  configured: boolean; health: BackupHealth; message: string | null; checkedAt: string | null; maxAgeHours: number;
+  remote: string | null; lastRun: BackupLastRun | null; copies: BackupCopy[];
+}

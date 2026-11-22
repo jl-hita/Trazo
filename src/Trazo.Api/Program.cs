@@ -320,6 +320,7 @@ app.MapAdminExercisesEndpoints();
 app.MapAdminPlanningEndpoints();
 app.MapAdminLibraryTransferEndpoints();
 app.MapAdminLogsEndpoints();
+app.MapAdminBackupsEndpoints();
 app.MapAdminOverviewEndpoints();
 app.MapAdminIntelligenceEndpoints();
 app.MapAccountEmailEndpoints();

@@ -90,3 +90,22 @@ Borra `/var/tmp/r` al terminar: contiene secretos en claro.
 - Activación del chequeo (también en instalaciones anteriores a esta versión): vuelve a ejecutar
   `sudo bash deploy/scripts/install-trazo-backup.sh` y luego `sudo systemctl enable --now trazo-backup-check.timer`.
 - Estado: `systemctl list-timers 'trazo-backup*'` y `sudo trazo-backup-check`.
+
+## Panel en la consola de administración
+
+**Copias de seguridad** (solo superadmin, solo lectura) muestra la salud (correcto, atención, error o sin datos), la
+última copia con su antigüedad y tamaño, cómo terminó la última ejecución (con su error si falló) y la lista de copias
+en Drive, marcando las de domingo como semanales.
+
+La API no habla con Drive ni tiene credenciales. Lee dos ficheros pequeños que dejan los scripts en `/var/lib/trazo`
+(0640, `trazo:trazo`; ruta cambiable con `Backups__StatusPath`):
+
+| Fichero | Lo escribe | Contenido |
+|---|---|---|
+| `backup-last-run.json` | `trazo-backup` (éxito o fallo, con el paso en que falló) | `ok`, `startedAt`, `finishedAt`, `copy`, `error` |
+| `backup-status.json` | `trazo-backup-check` (tras cada copia y a diario) | `checkedAt`, `remote`, `maxAgeHours`, lista de copias (`rclone lsjson`) |
+
+`GET /api/v1/admin/backups` calcula la salud al responder: **error** si la última ejecución falló después de la última
+copia, si no hay copias o si la última supera `maxAgeHours`; **atención** si la comprobación diaria lleva más de ~50 h
+sin ejecutarse; **sin datos** mientras no exista ninguno de los dos ficheros (instalación nueva o sin copias aún).
+Tras actualizar los scripts, el panel se rellena con la siguiente copia o con `sudo trazo-backup-check`.

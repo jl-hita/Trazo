@@ -27,14 +27,38 @@ done
 
 stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 name="trazo-${stamp}.tar.age"
+started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 work="$(mktemp -d /var/tmp/trazo-backup.XXXXXX)"
-trap 'rm -rf "$work"' EXIT
 
+# Como termino la ultima ejecucion, para el panel de la consola de administracion (la API lo lee; docs/backups.md).
+STATUS_DIR="${BACKUP_STATUS_DIR:-/var/lib/trazo}"
+step="preparacion"
+finished_ok=0
+json_escape() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | tr '\n\t' '  '; }
+write_last_run() { # ok(true|false) copia error
+  local target="$STATUS_DIR/backup-last-run.json" tmp error="null"
+  [[ -n "$3" ]] && error="\"$(json_escape "$3")\""
+  [[ -d "$STATUS_DIR" ]] || return 0
+  tmp="$(mktemp "$target.XXXXXX")" || return 0
+  printf '{"ok":%s,"startedAt":"%s","finishedAt":"%s","copy":"%s","error":%s}\n' \
+    "$1" "$started_at" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$2" "$error" > "$tmp"
+  chmod 0640 "$tmp"; chown trazo:trazo "$tmp" 2>/dev/null || true
+  mv -f "$tmp" "$target"
+}
+finish() {
+  local rc=$?
+  rm -rf "$work"
+  if [[ $finished_ok -ne 1 ]]; then write_last_run false "" "Fallo en el paso '$step' (codigo $rc)" || true; fi
+}
+trap finish EXIT
+
+step="volcado de la base"
 echo ">> Volcando la base '$DB_NAME'..."
 mkdir -p "$work/payload"
 runuser -u postgres -- pg_dump --format=custom --no-owner "$DB_NAME" > "$work/payload/database.dump"
 [[ -s "$work/payload/database.dump" ]] || { echo "ERROR: el volcado de la BD esta vacio." >&2; exit 1; }
 
+step="copia de secretos"
 echo ">> Copiando secretos y ficheros de estado..."
 manifest="$work/payload/MANIFEST.txt"
 { echo "trazo-backup $stamp"; echo "db=$DB_NAME"; echo "host=$(hostname)"; } > "$manifest"
@@ -49,15 +73,18 @@ for path in $EXTRA_PATHS; do
   fi
 done
 
+step="cifrado"
 echo ">> Cifrando con age..."
 tar -C "$work/payload" -cf - . | age --recipient "$AGE_RECIPIENT" --output "$work/$name"
 [[ -s "$work/$name" ]] || { echo "ERROR: el fichero cifrado esta vacio." >&2; exit 1; }
 
+step="subida a Drive"
 echo ">> Subiendo a $RCLONE_REMOTE ($(du -h "$work/$name" | cut -f1))..."
 # copyto compara el checksum remoto tras subir: si no coincide, falla.
 rclone copyto "$work/$name" "$RCLONE_REMOTE/$name" --checksum --retries 3
 
 # Retencion: las KEEP_DAILY mas recientes + los KEEP_WEEKLY domingos mas recientes. Borra el resto.
+step="retencion"
 echo ">> Aplicando retencion ($KEEP_DAILY diarias, $KEEP_WEEKLY semanales)..."
 mapfile -t all < <(rclone lsf "$RCLONE_REMOTE" --files-only | grep -E '^trazo-[0-9]{8}T[0-9]{6}Z\.tar\.age$' | sort -r)
 declare -A keep=()
@@ -81,3 +108,7 @@ for f in "${all[@]}"; do
 done
 
 echo ">> Backup $name completado."
+finished_ok=1
+write_last_run true "$name" ""
+# Refresca la lista de copias que lee el panel (y comprueba que la recien subida es visible en Drive).
+if [[ -x /usr/local/sbin/trazo-backup-check ]]; then /usr/local/sbin/trazo-backup-check || true; fi
