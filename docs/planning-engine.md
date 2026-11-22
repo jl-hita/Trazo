@@ -136,8 +136,7 @@ text so the same mapping works on PostgreSQL and on SQLite in tests. A partial u
 7. **Equipment.** Tokens are normalised (lower case, hyphens). An empty list means *everything is available*; the engine
    treats `machine` as interchangeable with `*-machine`.
 8. **Calendar.** A plan week is the seven days starting at the plan's start date (the day it was created by default).
-   Each training day falls once in each week. "Today" is the UTC date. A session can be used during its own week and the
-   week after, to log a late workout; anything else answers `409 session_out_of_window`.
+   Each training day falls once in each week. "Today" is the date in the user's time zone (see "Week order, time zone and retries"). Any session of an active plan can be logged, however late or out of order (see "Planned vs performed vs registered"); `409 session_out_of_window` only applies to swap and alternatives outside the current and previous plan weeks.
 9. **A deliberate change to the engine** (see 12 for the rest). The generator could put the same exercise twice in one session when equipment
    or level left a single candidate for two movement patterns (for example one row serving both the vertical and the
    horizontal pull). Property tests found it; `TrainingProgramGenerator` now skips a pattern whose only candidate is already
@@ -338,7 +337,7 @@ Every change is stored in `plan_adaptations` (kind, exercises, sessions changed,
 ## 8. Known limits and next steps
 
 - The plan is a generated draft; it is not a clinical prescription. The disclaimer travels in `PlanView`.
-- The week follows UTC. A device-timezone parameter can be added when the Android app needs it.
+- The week follows the user's time zone (`X-Time-Zone` header, saved profile zone, then `Europe/Madrid`); see "Week order, time zone and retries".
 - Intensification blocks (strength plans for non-beginners, second half) change the prescription of the heavy lifts: see "Intensification blocks" below.
 - The muscle questionnaire (`TrainingMuscleFeedback*`) is available in the library but not exposed.
 - Catalog levels live in the data, not in the engine: see "Catalog experience levels" below. Rows an administrator already
