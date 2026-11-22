@@ -1,0 +1,11 @@
+[Unit]
+Description=TRAZO encrypted backup to Google Drive
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/trazo-backup
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=2h

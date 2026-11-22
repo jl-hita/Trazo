@@ -81,6 +81,8 @@ curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 
 Se conservan las 5 últimas releases. El rollback revierte el código, **no** el esquema: las migraciones deben ser compatibles hacia atrás con la release anterior, y conviene respaldar la BD antes de desplegar migraciones destructivas.
 
+Backups diarios cifrados de la BD y los secretos a Google Drive, y cómo restaurarlos: [docs/backups.md](backups.md).
+
 ## Seguridad del diseño
 - El runner (`joso`) no escribe en `/opt/trazo`; solo puede invocar `trazo-deploy` con un SHA validado.
 - El servicio corre como `trazo`, sin shell, con `ProtectSystem=strict` y escritura solo en `/var/lib/trazo`.
