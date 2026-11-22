@@ -87,6 +87,14 @@ Borra `/var/tmp/r` al terminar: contiene secretos en claro.
 - Un aviso siempre escribe en el journal con prioridad error (`journalctl -t trazo-backup-check -p err`). Para recibirlo
   fuera del servidor, define en `backup.env` `NOTIFY_URL` con una URL a la que se haga POST con el mensaje; sirve
   [ntfy.sh](https://ntfy.sh) con un tema largo y secreto (instala la app y suscríbete a ese tema).
+- **Notificación en el móvil (la app de Trazo).** En «Copias de seguridad» → «Avisos por notificación» se elige, en un
+  desplegable, qué cuenta de administración recibe el aviso (se guarda su id en la base de datos, no en el `.env`). Cada
+  30 minutos la API lee los mismos ficheros de estado que el panel y, si la salud es **error**, envía un push a esa
+  cuenta: una vez, y otra cada 24 h mientras dure; cuando vuelve a estar bien envía un último aviso. El texto solo
+  dice el estado de las copias. Requisitos: Firebase configurado (Ajustes → Notificaciones) y que esa cuenta haya abierto
+  la app con su sesión y concedido el permiso de notificaciones (el desplegable muestra cuántos móviles tiene cada
+  cuenta; hay un botón de prueba). Solo se pueden elegir cuentas `admin`/`superadmin` activas. Depende de que la API
+  esté en marcha: si el servidor entero cae, no hay aviso, y para eso sirve `NOTIFY_URL`.
 - Activación del chequeo (también en instalaciones anteriores a esta versión): vuelve a ejecutar
   `sudo bash deploy/scripts/install-trazo-backup.sh` y luego `sudo systemctl enable --now trazo-backup-check.timer`.
 - Estado: `systemctl list-timers 'trazo-backup*'` y `sudo trazo-backup-check`.

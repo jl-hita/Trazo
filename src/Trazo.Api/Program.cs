@@ -49,10 +49,15 @@ if (!builder.Environment.IsEnvironment("Testing"))
 // Retries pending referral rewards and converts invitations the event path missed. Not run by the test host.
 if (!builder.Environment.IsEnvironment("Testing"))
     builder.Services.AddHostedService<Trazo.Infrastructure.Growth.ReferralReconcilerWorker>();
+// Pushes a notice to the chosen account when the backups are in error (reads the same files as the backups panel). Not run by the test host.
+if (!builder.Environment.IsEnvironment("Testing"))
+    builder.Services.AddHostedService<BackupAlertWorker>();
 builder.Services.AddSingleton<AuthTokenService>();
 builder.Services.AddSingleton<Trazo.Api.Overview.OverviewCache>();
 builder.Services.AddScoped<Trazo.Api.Overview.OverviewInsightsBuilder>();
 builder.Services.AddScoped<Trazo.Api.Overview.AdminOverviewService>();
+builder.Services.AddScoped<BackupAlertSettings>();
+builder.Services.AddScoped<BackupAlerter>();
 builder.Services.AddSingleton<Trazo.Api.Billing.IPubSubTokenValidator, Trazo.Api.Billing.GooglePubSubTokenValidator>();
 builder.Services.AddSingleton<ISmtpTransport, SystemNetSmtpTransport>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();

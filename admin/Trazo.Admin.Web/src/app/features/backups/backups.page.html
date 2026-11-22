@@ -61,3 +61,31 @@
     } @else if (!error()) {
       <p class="bk-empty">{{ copy.loading }}</p>
     }
+
+    @if (alerts(); as a) {
+      <section class="bk-alerts" aria-labelledby="bk-alerts-title">
+        <h2 id="bk-alerts-title">{{ copy.alerts.title }}</h2>
+        <p class="bk-hint">{{ copy.alerts.help }}</p>
+        <div class="bk-alerts-row">
+          <label for="bk-recipient">{{ copy.alerts.recipient }}</label>
+          <select id="bk-recipient" [ngModel]="choice()" (ngModelChange)="choice.set($event)">
+            <option value="">{{ copy.alerts.nobody }}</option>
+            @for (c of a.candidates; track c.id) {
+              <option [value]="c.id">{{ c.displayName }} · {{ roleLabel(c.role) }} · {{ c.email }} ({{ c.devices }} {{ copy.alerts.devices }})</option>
+            }
+          </select>
+          <trazo-button variant="primary" buttonClass="bk-btn" type="button" (pressed)="saveRecipient()" [disabled]="!dirty() || saving()">
+            {{ saving() ? copy.alerts.saving : copy.alerts.save }}
+          </trazo-button>
+          <trazo-button variant="secondary" buttonClass="bk-btn" type="button" (pressed)="sendTest()" [disabled]="!a.recipientUserId || dirty() || testing()">
+            {{ testing() ? copy.alerts.testing : copy.alerts.test }}
+          </trazo-button>
+        </div>
+        @if (dirty() && a.recipientUserId) { <p class="bk-hint">{{ copy.alerts.saveFirst }}</p> }
+        @if (chosenHasNoDevices()) { <p class="bk-run-error" role="alert">{{ copy.alerts.noDevices }}</p> }
+        @if (alertMessage()) { <p class="bk-ok" role="status">{{ alertMessage() }}</p> }
+        @if (alertError()) { <p class="bk-error" role="alert">{{ alertError() }}</p> }
+      </section>
+    } @else if (alertError()) {
+      <p class="bk-error" role="alert">{{ alertError() }}</p>
+    }

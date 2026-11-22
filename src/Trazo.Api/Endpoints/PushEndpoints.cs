@@ -169,7 +169,7 @@ public static class PushEndpoints
         return result;
     }
 
-    private static async Task<IResult> SendAsync(
+    internal static async Task<IResult> SendAsync(
         IPushSender push, HttpContext http, IErrorReporter reporter, IReadOnlyCollection<Guid>? users, PushMessage message, CancellationToken ct, string noDevices)
     {
         try

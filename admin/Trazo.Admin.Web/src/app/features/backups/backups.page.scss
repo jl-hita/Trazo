@@ -22,3 +22,10 @@
     .bk-error, .bk-run-error { color: #f0a3a3; font-size: 13px; margin: 0 0 12px; }
     .bk-hint, .bk-note { color: #aab6c7; font-size: 12.5px; line-height: 1.5; margin: 12px 0 0; }
     .bk-remote { color: #8fa0b6; font-family: ui-monospace, Consolas, monospace; }
+    .bk-alerts { margin-top: 28px; padding-top: 18px; border-top: 1px solid #293444; }
+    .bk-alerts h2 { margin: 0 0 6px; font-size: 15px; color: #e8edf5; }
+    .bk-alerts-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+    .bk-alerts-row label { color: #aab6c7; font-size: 13px; }
+    .bk-alerts-row select { min-width: 280px; max-width: 100%; padding: 8px 10px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; font-size: 13px; }
+    .bk-alerts-row select:focus { outline: 2px solid #6d8eb5; outline-offset: 1px; }
+    .bk-ok { color: #8fd1a6; font-size: 13px; margin: 10px 0 0; }
