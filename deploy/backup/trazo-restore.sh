@@ -71,5 +71,5 @@ if [[ "$db" == "trazo" ]]; then
     -c "ALTER DATABASE \"$db\" OWNER TO trazo_app"
 fi
 
-echo ">> Ficheros de estado extraidos en $workdir/payload/files (data-protection-keys, r8-mappings, trazo.env)."
+echo ">> Ficheros de estado extraidos en $workdir/payload/files (los listados en MANIFEST.txt)."
 echo "   En un desastre real, copialos a su ruta original con el mismo propietario y permisos antes de arrancar el servicio."

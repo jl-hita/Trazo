@@ -13,6 +13,10 @@ install -o root -g root -m 0755 "$REPO/deploy/backup/trazo-backup.sh" /usr/local
 install -o root -g root -m 0755 "$REPO/deploy/backup/trazo-restore.sh" /usr/local/sbin/trazo-restore
 install -o root -g root -m 0644 "$REPO/deploy/systemd/trazo-backup.service" /etc/systemd/system/trazo-backup.service
 install -o root -g root -m 0644 "$REPO/deploy/systemd/trazo-backup.timer" /etc/systemd/system/trazo-backup.timer
+install -o root -g root -m 0755 "$REPO/deploy/backup/trazo-backup-check.sh" /usr/local/sbin/trazo-backup-check
+for unit in trazo-backup-check.service trazo-backup-check.timer trazo-backup-failed.service; do
+  install -o root -g root -m 0644 "$REPO/deploy/systemd/$unit" "/etc/systemd/system/$unit"
+done
 
 if [[ ! -f /etc/trazo/backup.env ]]; then
   umask 077
@@ -24,9 +28,11 @@ RCLONE_REMOTE=
 DB_NAME=trazo
 KEEP_DAILY=14
 KEEP_WEEKLY=8
+# Opcional: URL a la que se hace POST con el aviso cuando falla el backup o no hay copia reciente (p. ej. https://ntfy.sh/tema-secreto).
+NOTIFY_URL=
 ENV
   echo ">> Creado /etc/trazo/backup.env: rellena AGE_RECIPIENT y RCLONE_REMOTE."
 fi
 systemctl daemon-reload
-echo ">> Instalado. Cuando backup.env y rclone esten listos: sudo systemctl enable --now trazo-backup.timer"
+echo ">> Instalado. Cuando backup.env y rclone esten listos: sudo systemctl enable --now trazo-backup.timer trazo-backup-check.timer"
 echo ">> Primera prueba manual: sudo systemctl start trazo-backup.service && journalctl -u trazo-backup -n 50"
