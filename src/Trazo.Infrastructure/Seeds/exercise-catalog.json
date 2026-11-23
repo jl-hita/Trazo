@@ -1,7 +1,7 @@
 [
   {
     "id": "ab-wheel-rollout",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Rueda Abdominal",
     "nameEn": "Ab Wheel Rollout",
@@ -45,7 +45,7 @@
     "requiredEquipment": [
       "ab-wheel"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 68,
     "isActive": true
   },
   {
@@ -95,10 +95,10 @@
   },
   {
     "id": "assisted-pull-ups",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Dominadas Asistidas",
-    "nameEn": "Assisted Pull Ups",
+    "nameEn": "Assisted Pull-Up",
     "descriptionEs": "Una dominada en máquina asistida que contrarresta parte del peso corporal, pensada para construir la fuerza de espalda necesaria para dominadas estrictas.",
     "instructionsEs": [
       "Coloca las rodillas en el pad de la máquina de dominadas asistidas.",
@@ -144,13 +144,13 @@
   },
   {
     "id": "ball-leg-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas con Pelota de Estabilidad",
     "nameEn": "Stability Ball Leg Curl",
     "descriptionEs": "Un curl de isquiotibiales con el propio peso usando una pelota de estabilidad, rodando los talones hacia los glúteos mientras se eleva la cadera.",
     "instructionsEs": [
-      "Acuéstate boca arriba en el suelo con los talones y la parte inferior de las pantorrillas sobre la pelota de estabilidad y los brazos estirados para hacer equilibrio.",
+      "Túmbate boca arriba en el suelo con los talones y la parte inferior de las pantorrillas sobre la pelota de estabilidad y los brazos estirados para hacer equilibrio.",
       "Presiona con los talones para elevar las caderas formando una línea recta desde los hombros hasta los tobillos.",
       "Manteniendo las caderas arriba, flexiona las rodillas para rodar la pelota hacia los glúteos.",
       "Extiende las piernas de vuelta de forma controlada sin bajar las caderas.",
@@ -279,9 +279,9 @@
   },
   {
     "id": "band-pull-apart",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Aperturas con Banda Elástica",
+    "nameEs": "Band Pull-Apart",
     "nameEn": "Band Pull-Apart",
     "descriptionEs": "Separación de una banda elástica con los brazos extendidos para activar la parte posterior del hombro y la espalda alta.",
     "instructionsEs": [
@@ -458,13 +458,13 @@
   },
   {
     "id": "barbell-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl con Barra",
     "nameEn": "Barbell Curl",
     "descriptionEs": "Un ejercicio clásico de aislamiento de bíceps que usa la barra para una carga máxima.",
     "instructionsEs": [
-      "Párate sosteniendo una barra con agarre supino a la anchura de los hombros.",
+      "Ponte de pie sosteniendo una barra con agarre supino a la anchura de los hombros.",
       "Sube la barra hacia los hombros.",
       "Aprieta en la parte superior, luego baja de forma controlada.",
       "Repite."
@@ -501,13 +501,13 @@
   },
   {
     "id": "barbell-glute-bridge",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Puente de Glúteos con Barra",
     "nameEn": "Barbell Glute Bridge",
     "descriptionEs": "Un puente de glúteos con carga usando una barra para mayor resistencia.",
     "instructionsEs": [
-      "Acuéstate en el suelo con una barra sobre las caderas y las rodillas flexionadas.",
+      "Túmbate en el suelo con una barra sobre las caderas y las rodillas flexionadas.",
       "Eleva las caderas apretando los glúteos.",
       "Aguanta en la parte superior con las caderas completamente extendidas.",
       "Baja con control.",
@@ -547,11 +547,11 @@
   },
   {
     "id": "barbell-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo con Barra Inclinado",
     "nameEn": "Bent-Over Barbell Row",
-    "descriptionEs": "Un movimiento de jalón compuesto que trabaja la parte superior e intermedia de la espalda.",
+    "descriptionEs": "Un movimiento compuesto de tracción que trabaja la parte superior e intermedia de la espalda.",
     "instructionsEs": [
       "Inclínate en las caderas con una ligera flexión de rodillas.",
       "Agarra la barra ligeramente más ancho que la anchura de los hombros.",
@@ -636,14 +636,14 @@
   },
   {
     "id": "bench-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press de Banca con Barra",
     "nameEn": "Barbell Bench Press",
     "descriptionEs": "Un movimiento compuesto de empuje que trabaja el pecho, los hombros y los tríceps.",
     "instructionsEs": [
-      "Acuéstate en el banco con los ojos bajo la barra.",
-      "Agarra la barra ligeramente más ancho que la anchura de los hombros.",
+      "Túmbate en el banco con los ojos bajo la barra.",
+      "Agarra la barra con las manos algo más separadas que la anchura de los hombros.",
       "Saca la barra del rack y bájala hasta el centro del pecho.",
       "Empuja la barra de vuelta hasta la extensión completa de los brazos.",
       "Repite el número de repeticiones deseado."
@@ -651,7 +651,7 @@
     "tipsEs": [
       "Mantén los pies planos en el suelo.",
       "Conserva una ligera curvatura en la zona lumbar.",
-      "Impulsa con las piernas para dar estabilidad."
+      "Empuja con las piernas contra el suelo para mantenerte estable."
     ],
     "forceType": "push",
     "mechanic": "compound",
@@ -685,7 +685,7 @@
   },
   {
     "id": "bent-knee-inverted-row",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Remo Invertido con Rodillas Flexionadas",
     "nameEn": "Bent-Knee Inverted Row",
@@ -703,7 +703,7 @@
     "forceType": "pull",
     "mechanic": "compound",
     "difficulty": "beginner",
-    "equipment": "pull_up_bar",
+    "equipment": "barbell",
     "bodyPart": "back",
     "met": 5,
     "isUnilateral": false,
@@ -731,9 +731,9 @@
   },
   {
     "id": "bodyweight-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Elevación de Talones con Peso Corporal",
+    "nameEs": "Elevación de Gemelos con Peso Corporal",
     "nameEn": "Bodyweight Calf Raise",
     "descriptionEs": "Una elevación de talones con el propio peso corporal, un ejercicio básico para fortalecer los gemelos.",
     "instructionsEs": [
@@ -772,9 +772,9 @@
   },
   {
     "id": "bodyweight-reverse-lunge",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Zancada Atrás con Peso Corporal",
+    "nameEs": "Zancada Inversa con Peso Corporal",
     "nameEn": "Bodyweight Reverse Lunge",
     "descriptionEs": "Zancada hacia atrás sin material, más estable y amable con las rodillas que la zancada hacia delante.",
     "instructionsEs": [
@@ -905,13 +905,13 @@
   },
   {
     "id": "cable-crunch",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Crunch con Cable",
+    "nameEs": "Crunch en Polea",
     "nameEn": "Cable Crunch",
     "descriptionEs": "Un encogimiento abdominal de rodillas en polea alta con cuerda, que permite añadir carga progresiva al trabajo del recto abdominal.",
     "instructionsEs": [
-      "Arrodíllate frente a una máquina de cable con el accesorio de cuerda en la parte superior.",
+      "Arrodíllate frente a una polea con el accesorio de cuerda en la parte superior.",
       "Sujeta la cuerda cerca de la frente con los codos flexionados.",
       "Baja flexionando la columna y llevando los codos hacia los muslos.",
       "Aprieta fuerte los abdominales en la parte inferior.",
@@ -945,14 +945,14 @@
     "requiredEquipment": [
       "cable"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 80,
     "isActive": true
   },
   {
     "id": "cable-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Curl con Cable",
+    "nameEs": "Curl en Polea",
     "nameEn": "Cable Curl",
     "descriptionEs": "Un curl de bíceps con resistencia de cable para tensión constante.",
     "instructionsEs": [
@@ -993,9 +993,9 @@
   },
   {
     "id": "cable-external-rotation",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Rotación Externa con Cable",
+    "nameEs": "Rotación Externa en Polea",
     "nameEn": "Cable External Rotation",
     "descriptionEs": "Un ejercicio de rotación externa en polea, con el codo pegado al costado, que fortalece los rotadores externos del manguito rotador con ayuda del deltoides posterior.",
     "instructionsEs": [
@@ -1038,9 +1038,9 @@
   },
   {
     "id": "cable-fly",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
-    "nameEs": "Aperturas con Cable",
+    "nameEs": "Aperturas en Polea",
     "nameEn": "Cable Fly",
     "descriptionEs": "Un ejercicio de aislamiento para el pecho con resistencia de cable para tensión constante.",
     "instructionsEs": [
@@ -1083,9 +1083,9 @@
   },
   {
     "id": "cable-front-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Elevación Frontal en Polea",
+    "nameEs": "Elevaciones Frontales en Polea",
     "nameEn": "Cable Front Raise",
     "descriptionEs": "Elevación frontal con polea baja, que mantiene tensión constante durante todo el recorrido.",
     "instructionsEs": [
@@ -1124,9 +1124,9 @@
   },
   {
     "id": "cable-lateral-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
-    "nameEs": "Elevación Lateral en Polea",
+    "nameEs": "Elevaciones Laterales en Polea",
     "nameEn": "Cable Lateral Raise",
     "descriptionEs": "Una elevación lateral unilateral en polea, que ofrece tensión constante sobre el deltoides lateral.",
     "instructionsEs": [
@@ -1169,10 +1169,10 @@
   },
   {
     "id": "cable-overhead-tricep-extension",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
-    "nameEs": "Extensión de Tríceps por Encima de la Cabeza con Cable",
-    "nameEn": "Cable Overhead Tricep Extension",
+    "nameEs": "Extensión de Tríceps sobre la Cabeza en Polea",
+    "nameEn": "Cable Overhead Triceps Extension",
     "descriptionEs": "Un ejercicio de tríceps con cable: de espaldas a la pila de pesas, sujetas una cuerda detrás de la cabeza y extiendes los codos para empujarla hacia arriba y por encima de la cabeza. La posición sobre la cabeza estira la cabeza larga del tríceps y el cable mantiene la tensión en el músculo durante todo el movimiento.",
     "instructionsEs": [
       "Engancha una cuerda a la polea baja y selecciona un peso ligero.",
@@ -1210,12 +1210,12 @@
     "requiredEquipment": [
       "cable"
     ],
-    "selectionPriority": 72,
+    "selectionPriority": 76,
     "isActive": true
   },
   {
     "id": "cable-pallof-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press Pallof en Polea",
     "nameEn": "Cable Pallof Press",
@@ -1259,14 +1259,14 @@
     "requiredEquipment": [
       "cable"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 62,
     "isActive": true
   },
   {
     "id": "cable-reverse-fly",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
-    "nameEs": "Apertura Inversa con Cable",
+    "nameEs": "Pájaro en Polea",
     "nameEn": "Cable Reverse Fly",
     "descriptionEs": "Un ejercicio de pie con cable para los deltoides posteriores: de cara al espacio entre dos torres de polea, sujetas las empuñaduras opuestas con los cables cruzados delante de ti y llevas los brazos hacia fuera y atrás hasta que quedan a la altura de los hombros. Los cables mantienen la tensión en la parte posterior de los hombros durante todo el arco.",
     "instructionsEs": [
@@ -1310,7 +1310,7 @@
   },
   {
     "id": "captains-chair-knee-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Elevación de Rodillas en Silla Romana",
     "nameEn": "Captain's Chair Knee Raise",
@@ -1330,7 +1330,7 @@
     "forceType": "pull",
     "mechanic": "compound",
     "difficulty": "beginner",
-    "equipment": null,
+    "equipment": "captains_chair",
     "bodyPart": "core",
     "met": 5,
     "isUnilateral": false,
@@ -1352,7 +1352,7 @@
     "requiredEquipment": [
       "captains-chair"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 72,
     "isActive": true
   },
   {
@@ -1449,17 +1449,17 @@
   },
   {
     "id": "chest-supported-kettlebell-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Remo con Kettlebell Apoyado en el Pecho",
+    "nameEs": "Remo con Pesa Rusa Apoyado en el Pecho",
     "nameEn": "Chest-Supported Kettlebell Row",
-    "descriptionEs": "Este ejercicio trabaja los músculos de tu espalda, principalmente el dorsal ancho y los romboides, remando con una kettlebell en cada mano hacia las caderas mientras el torso está apoyado en un banco inclinado.",
+    "descriptionEs": "Este ejercicio trabaja los músculos de tu espalda, principalmente el dorsal ancho y los romboides, remando con una pesa rusa en cada mano hacia las caderas mientras el torso está apoyado en un banco inclinado.",
     "instructionsEs": [
-      "Acuéstate boca abajo en un banco inclinado, dejando que tus brazos cuelguen libremente con una kettlebell en cada mano.",
+      "Túmbate boca abajo en un banco inclinado, dejando que tus brazos cuelguen libremente con una pesa rusa en cada mano.",
       "Contrae tu abdomen y retrae tus escápulas.",
-      "Tira de las kettlebells hacia tus caderas, apretando tus escápulas.",
+      "Tira de las pesas rusas hacia tus caderas, apretando tus escápulas.",
       "Haz una breve pausa en la parte superior, sintiendo la contracción en tu espalda.",
-      "Baja lentamente las kettlebells a la posición inicial con control."
+      "Baja lentamente las pesas rusas a la posición inicial con control."
     ],
     "tipsEs": [
       "Mantén el torso estable durante todo el movimiento; evita balancearte.",
@@ -1595,7 +1595,7 @@
   },
   {
     "id": "chin-ups",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Dominadas en Supinación",
     "nameEn": "Chin-Ups",
@@ -1617,7 +1617,7 @@
     "bodyPart": "back",
     "met": 6,
     "isUnilateral": false,
-    "isBodyweight": false,
+    "isBodyweight": true,
     "movementPattern": "VerticalPull",
     "primaryMuscles": [
       "Biceps",
@@ -1823,7 +1823,7 @@
   },
   {
     "id": "dead-bug",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Dead Bug",
     "nameEn": "Dead Bug",
@@ -1859,7 +1859,7 @@
       "GeneralFitness"
     ],
     "requiredEquipment": [],
-    "selectionPriority": 75,
+    "selectionPriority": 62,
     "isActive": true
   },
   {
@@ -2003,6 +2003,53 @@
     "isActive": true
   },
   {
+    "id": "dumbbell-bent-over-row",
+    "version": 2,
+    "source": "trazo-curated",
+    "nameEs": "Remo Inclinado con Mancuernas",
+    "nameEn": "Bent-Over Dumbbell Row",
+    "descriptionEs": "Remo con una mancuerna en cada mano y el torso inclinado: trabaja dorsales y espalda alta sin más material que unas mancuernas.",
+    "instructionsEs": [
+      "De pie, con una mancuerna en cada mano, flexiona ligeramente las rodillas e inclina el torso desde las caderas hasta dejarlo casi paralelo al suelo, con la espalda recta.",
+      "Deja los brazos colgando con las palmas mirándose entre sí.",
+      "Tira de las mancuernas hacia las caderas llevando los codos hacia atrás y juntando los omóplatos.",
+      "Haz una breve pausa arriba y baja con control hasta extender los brazos."
+    ],
+    "tipsEs": [
+      "Mantén el torso fijo: si necesitas balancearte para subir las mancuernas, pesan demasiado.",
+      "Mantén el cuello alineado con la columna, mirando al suelo.",
+      "Si la zona lumbar se cansa antes que la espalda, usa menos peso o recurre a un remo con apoyo."
+    ],
+    "forceType": "pull",
+    "mechanic": "compound",
+    "difficulty": "intermediate",
+    "equipment": "dumbbell",
+    "bodyPart": "back",
+    "met": 5,
+    "isUnilateral": false,
+    "isBodyweight": false,
+    "movementPattern": "HorizontalPull",
+    "primaryMuscles": [
+      "Lats",
+      "UpperBack"
+    ],
+    "secondaryMuscles": [
+      "Biceps",
+      "Deltoids"
+    ],
+    "minimumExperience": "Beginner",
+    "suitableGoals": [
+      "Hypertrophy",
+      "Strength",
+      "GeneralFitness"
+    ],
+    "requiredEquipment": [
+      "dumbbell"
+    ],
+    "selectionPriority": 62,
+    "isActive": true
+  },
+  {
     "id": "dumbbell-curl",
     "version": 2,
     "source": "trazo-curated",
@@ -2047,13 +2094,13 @@
   },
   {
     "id": "dumbbell-farmers-walk",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Caminata del Granjero con Mancuernas",
+    "nameEs": "Paseo del Granjero con Mancuernas",
     "nameEn": "Dumbbell Farmer's Walk",
     "descriptionEs": "Este ejercicio de cuerpo completo implica caminar sosteniendo mancuernas pesadas, desarrollando eficazmente la fuerza de agarre, la estabilidad del core y la resistencia muscular general.",
     "instructionsEs": [
-      "Párate erguido con una mancuerna en cada mano, los brazos extendidos a los lados.",
+      "Ponte de pie erguido con una mancuerna en cada mano, los brazos extendidos a los lados.",
       "Retrae tus escápulas y activa tu core, manteniendo una columna vertebral neutra.",
       "Camina lenta y deliberadamente por una distancia o duración establecida, dando pasos cortos y controlados.",
       "Mantén el pecho erguido y evita inclinarte hacia un lado mientras caminas.",
@@ -2091,7 +2138,7 @@
     "requiredEquipment": [
       "dumbbell"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 62,
     "isActive": true
   },
   {
@@ -2137,9 +2184,9 @@
   },
   {
     "id": "dumbbell-reverse-fly",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
-    "nameEs": "Pájaro Invertido con Mancuernas",
+    "nameEs": "Pájaro con Mancuernas",
     "nameEn": "Dumbbell Reverse Fly",
     "descriptionEs": "Un ejercicio de aislamiento inclinado que levanta las mancuernas hacia los lados, trabajando los deltoides posteriores y la espalda alta.",
     "instructionsEs": [
@@ -2183,7 +2230,7 @@
   },
   {
     "id": "dumbbell-romanian-deadlift",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Peso Muerto Rumano con Mancuernas",
     "nameEn": "Dumbbell Romanian Deadlift",
@@ -2205,7 +2252,7 @@
     "mechanic": "compound",
     "difficulty": "intermediate",
     "equipment": "dumbbell",
-    "bodyPart": "back",
+    "bodyPart": "upper_legs",
     "met": 6,
     "isUnilateral": false,
     "isBodyweight": false,
@@ -2280,7 +2327,7 @@
   },
   {
     "id": "dumbbell-shrug",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Encogimientos con Mancuernas",
     "nameEn": "Dumbbell Shrug",
@@ -2318,7 +2365,7 @@
     "requiredEquipment": [
       "dumbbell"
     ],
-    "selectionPriority": 66,
+    "selectionPriority": 48,
     "isActive": true
   },
   {
@@ -2364,9 +2411,9 @@
   },
   {
     "id": "elevated-pike-push-up",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Flexión en Pica con Manos Elevadas",
+    "nameEs": "Flexiones en Pica con Manos Elevadas",
     "nameEn": "Elevated Pike Push-Up",
     "descriptionEs": "Versión de principiante de la flexión en pica, con las manos sobre un escalón o una silla estable para reducir la carga.",
     "instructionsEs": [
@@ -2382,7 +2429,7 @@
     "forceType": "push",
     "mechanic": "compound",
     "difficulty": "beginner",
-    "equipment": null,
+    "equipment": "step",
     "bodyPart": "shoulders",
     "met": 5,
     "isUnilateral": false,
@@ -2725,9 +2772,9 @@
   },
   {
     "id": "handstand-push-up",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Flexión en Pino",
+    "nameEs": "Flexiones en Pino",
     "nameEn": "Handstand Push-Up",
     "descriptionEs": "Flexión en vertical apoyando los pies en la pared, uno de los ejercicios de empuje con peso corporal más exigentes.",
     "instructionsEs": [
@@ -2767,7 +2814,7 @@
   },
   {
     "id": "hanging-knee-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Elevación de Rodillas Colgado",
     "nameEn": "Hanging Knee Raise",
@@ -2791,7 +2838,7 @@
     "bodyPart": "core",
     "met": 6,
     "isUnilateral": false,
-    "isBodyweight": false,
+    "isBodyweight": true,
     "movementPattern": "Core",
     "primaryMuscles": [
       "HipFlexors",
@@ -2810,12 +2857,12 @@
     "requiredEquipment": [
       "pull-up-bar"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 72,
     "isActive": true
   },
   {
     "id": "hanging-leg-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Piernas Colgado",
     "nameEn": "Hanging Leg Raise",
@@ -2837,7 +2884,7 @@
     "bodyPart": "core",
     "met": 6,
     "isUnilateral": false,
-    "isBodyweight": false,
+    "isBodyweight": true,
     "movementPattern": "Core",
     "primaryMuscles": [
       "HipFlexors",
@@ -2957,10 +3004,10 @@
   },
   {
     "id": "hip-adduction",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Aducción de Cadera en Máquina",
-    "nameEn": "Hip Adduction",
+    "nameEn": "Machine Hip Adduction",
     "descriptionEs": "Un ejercicio en máquina apretando las piernas una contra otra frente a la resistencia, aislando y fortaleciendo los aductores de la cara interna del muslo.",
     "instructionsEs": [
       "Siéntate en la máquina de aducción de cadera con la espalda contra el respaldo.",
@@ -3001,14 +3048,14 @@
   },
   {
     "id": "hip-thrust",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Hip Thrust con Barra",
     "nameEn": "Barbell Hip Thrust",
     "descriptionEs": "Un ejercicio compuesto para glúteos que utiliza una barra apoyada sobre las caderas.",
     "instructionsEs": [
       "Siéntate en el suelo con la parte superior de la espalda contra un banco y la barra sobre las caderas.",
-      "Empuja las caderas hacia arriba hasta que los muslos queden paralelos al suelo.",
+      "Empuja las caderas hacia arriba hasta que el tronco y los muslos queden alineados.",
       "Aprieta los glúteos en la parte superior.",
       "Baja las caderas de nuevo con control.",
       "Repite."
@@ -3093,13 +3140,13 @@
   },
   {
     "id": "incline-bench-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press en Banco Inclinado con Barra",
     "nameEn": "Incline Barbell Bench Press",
     "descriptionEs": "Un movimiento de press con barra en banco inclinado que trabaja la parte superior del pecho.",
     "instructionsEs": [
-      "Acuéstate en un banco inclinado a 30-45 grados.",
+      "Túmbate en un banco inclinado a 30-45 grados.",
       "Agarra la barra ligeramente más ancha que los hombros y desrackea.",
       "Baja la barra hasta la parte superior del pecho.",
       "Empuja la barra de vuelta hasta la extensión completa.",
@@ -3277,9 +3324,9 @@
   },
   {
     "id": "incline-push-ups",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Push-Up Inclinado",
+    "nameEs": "Flexiones Inclinadas",
     "nameEn": "Incline Push-Up",
     "descriptionEs": "Una variación del push-up apta para principiantes con las manos elevadas sobre un banco o escalón.",
     "instructionsEs": [
@@ -3297,7 +3344,7 @@
     "forceType": "push",
     "mechanic": "compound",
     "difficulty": "beginner",
-    "equipment": null,
+    "equipment": "bench",
     "bodyPart": "chest",
     "met": 5,
     "isUnilateral": false,
@@ -3323,14 +3370,14 @@
   },
   {
     "id": "inverted-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo Invertido",
     "nameEn": "Inverted Row",
-    "descriptionEs": "Un ejercicio de jalón horizontal con el peso corporal realizado bajo una barra fija, tirando del pecho hacia la barra mientras se mantiene el cuerpo rígido.",
+    "descriptionEs": "Un ejercicio de tracción horizontal con el peso corporal realizado bajo una barra fija, tirando del pecho hacia la barra mientras se mantiene el cuerpo rígido.",
     "instructionsEs": [
       "Coloca una barra en un rack a la altura de la cintura aproximadamente.",
-      "Acuéstate debajo y agarra la barra ligeramente más ancha que los hombros con agarre prono.",
+      "Túmbate debajo y agarra la barra ligeramente más ancha que los hombros con agarre prono.",
       "Cuélgate con los brazos extendidos, los talones en el suelo y el cuerpo recto de la cabeza a los tobillos.",
       "Tira del pecho hacia la barra, apretando los omóplatos.",
       "Bájate con control hasta que los brazos estén completamente extendidos.",
@@ -3465,10 +3512,10 @@
   },
   {
     "id": "knee-push-ups",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Push-Up en Rodillas",
-    "nameEn": "Knee Push Ups",
+    "nameEs": "Flexiones con Rodillas Apoyadas",
+    "nameEn": "Knee Push-Up",
     "descriptionEs": "Una variante de flexión apta para principiantes, con las rodillas apoyadas en el suelo para reducir la carga sobre el tren superior.",
     "instructionsEs": [
       "Comienza en posición de push-up con las rodillas en el suelo.",
@@ -3512,13 +3559,13 @@
   },
   {
     "id": "lateral-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Elevación Lateral con Mancuernas",
+    "nameEs": "Elevaciones Laterales con Mancuernas",
     "nameEn": "Dumbbell Lateral Raise",
     "descriptionEs": "Un movimiento de aislamiento que trabaja el deltoides lateral para ganar anchura en los hombros.",
     "instructionsEs": [
-      "Párate con mancuernas a los costados.",
+      "Ponte de pie con mancuernas a los costados.",
       "Eleva las mancuernas hacia los lados hasta que los brazos queden paralelos al suelo.",
       "Baja de forma controlada.",
       "Repite."
@@ -3553,7 +3600,7 @@
   },
   {
     "id": "lat-pulldown",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Jalón al Pecho",
     "nameEn": "Lat Pulldown",
@@ -3561,8 +3608,8 @@
     "instructionsEs": [
       "Siéntate en la máquina de jalón con los muslos sujetos bajo los rodillos.",
       "Agarra la barra ancha con un agarre en pronación.",
-      "Jala la barra hasta la parte superior del pecho apretando los dorsales.",
-      "Regresa la barra lentamente a la posición inicial.",
+      "Tira de la barra hasta la parte superior del pecho apretando los dorsales.",
+      "Devuelve la barra lentamente a la posición inicial.",
       "Repite."
     ],
     "tipsEs": [
@@ -3573,7 +3620,7 @@
     "forceType": "pull",
     "mechanic": "compound",
     "difficulty": "beginner",
-    "equipment": "cable",
+    "equipment": "lat_pulldown_machine",
     "bodyPart": "back",
     "met": 6,
     "isUnilateral": false,
@@ -3865,10 +3912,10 @@
   },
   {
     "id": "machine-bicep-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Bíceps en Máquina",
-    "nameEn": "Machine Bicep Curl",
+    "nameEn": "Machine Biceps Curl",
     "descriptionEs": "Un curl de bíceps en máquina para el entrenamiento aislado de brazos.",
     "instructionsEs": [
       "Siéntate en la máquina y ajusta el rodillo a la longitud de tus brazos.",
@@ -3908,17 +3955,17 @@
   },
   {
     "id": "machine-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Elevación de Pantorrillas en Máquina",
+    "nameEs": "Elevación de Gemelos en Máquina",
     "nameEn": "Machine Calf Raise",
     "descriptionEs": "Un ejercicio de aislamiento en máquina de pie que trabaja los gemelos y el sóleo con un recorrido completo del tobillo.",
     "instructionsEs": [
-      "Párate en la máquina de elevación de pantorrillas con los metatarsos sobre la plataforma.",
+      "Colócate en la máquina de elevación de gemelos con los metatarsos sobre la plataforma.",
       "Coloca los rodillos de hombro firmemente.",
       "Baja los talones por debajo de la plataforma para un estiramiento completo.",
       "Empuja con los metatarsos para elevarte en los dedos de los pies.",
-      "Aprieta las pantorrillas en la parte superior.",
+      "Aprieta los gemelos en la parte superior.",
       "Baja con control y repite."
     ],
     "tipsEs": [
@@ -3999,9 +4046,9 @@
   },
   {
     "id": "machine-reverse-fly",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Apertura Inversa en Máquina",
+    "nameEs": "Pájaro en Máquina",
     "nameEn": "Machine Reverse Fly",
     "descriptionEs": "Un ejercicio sentado en máquina para los deltoides posteriores, también conocido como pec deck inverso: de cara a la almohadilla, llevas las dos empuñaduras hacia fuera y atrás en un arco amplio contra la pila de pesas. La almohadilla mantiene el torso quieto, de modo que el trabajo se queda en la parte posterior de los hombros y en los músculos entre los omóplatos.",
     "instructionsEs": [
@@ -4045,9 +4092,9 @@
   },
   {
     "id": "machine-seated-crunch",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Abdominales en Máquina Sentado",
+    "nameEs": "Crunch en Máquina Sentado",
     "nameEn": "Machine Seated Crunch",
     "descriptionEs": "Un ejercicio de aislamiento abdominal en una máquina sentada que flexiona la columna contra resistencia.",
     "instructionsEs": [
@@ -4086,7 +4133,7 @@
     "requiredEquipment": [
       "ab-crunch-machine"
     ],
-    "selectionPriority": 75,
+    "selectionPriority": 78,
     "isActive": true
   },
   {
@@ -4137,9 +4184,9 @@
   },
   {
     "id": "negative-pull-up",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Dominada Negativa",
+    "nameEs": "Dominadas Negativas",
     "nameEn": "Negative Pull-Up",
     "descriptionEs": "Fase de bajada lenta de la dominada, para construir la fuerza necesaria para hacer dominadas completas.",
     "instructionsEs": [
@@ -4182,7 +4229,7 @@
   },
   {
     "id": "nordic-hamstring-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl Nórdico de Isquiotibiales",
     "nameEn": "Nordic Hamstring Curl",
@@ -4207,7 +4254,7 @@
     "bodyPart": "upper_legs",
     "met": 5,
     "isUnilateral": false,
-    "isBodyweight": false,
+    "isBodyweight": true,
     "movementPattern": "Accessory",
     "primaryMuscles": [
       "Hamstrings"
@@ -4324,10 +4371,10 @@
   },
   {
     "id": "overhead-tricep-extension",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Extensión de Tríceps por Encima de la Cabeza",
-    "nameEn": "Overhead Tricep Extension",
+    "nameEs": "Extensión de Tríceps sobre la Cabeza con Mancuerna",
+    "nameEn": "Dumbbell Overhead Triceps Extension",
     "descriptionEs": "Un ejercicio de aislamiento para el tríceps que enfatiza la cabeza larga.",
     "instructionsEs": [
       "De pie o sentado, sostén una mancuerna por encima de la cabeza con ambas manos.",
@@ -4362,7 +4409,7 @@
     "requiredEquipment": [
       "dumbbell"
     ],
-    "selectionPriority": 58,
+    "selectionPriority": 66,
     "isActive": true
   },
   {
@@ -4550,7 +4597,7 @@
   },
   {
     "id": "pendlay-row",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Remo Pendlay",
     "nameEn": "Pendlay Row",
@@ -4591,14 +4638,14 @@
     "requiredEquipment": [
       "barbell"
     ],
-    "selectionPriority": 97,
+    "selectionPriority": 85,
     "isActive": true
   },
   {
     "id": "pike-push-up",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Flexión en Pica",
+    "nameEs": "Flexiones en Pica",
     "nameEn": "Pike Push-Up",
     "descriptionEs": "Flexión con el cuerpo en forma de V invertida, que traslada la carga del pecho al hombro sin material.",
     "instructionsEs": [
@@ -4683,7 +4730,7 @@
   },
   {
     "id": "plank",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Plancha Frontal",
     "nameEn": "Plank",
@@ -4722,14 +4769,14 @@
       "Strength"
     ],
     "requiredEquipment": [],
-    "selectionPriority": 75,
+    "selectionPriority": 62,
     "isActive": true
   },
   {
     "id": "plate-loaded-glute-drive",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Empuje de Glúteo en Máquina de Discos",
+    "nameEs": "Hip Thrust en Máquina de Discos",
     "nameEn": "Plate-Loaded Glute Drive",
     "descriptionEs": "Un empuje de cadera en una máquina de glúteo de discos, donde el respaldo y la plataforma integrados fijan la posición para que las caderas extiendan contra la carga sin tener que montar un banco.",
     "instructionsEs": [
@@ -4818,9 +4865,9 @@
   },
   {
     "id": "pull-up",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Dominada",
+    "nameEs": "Dominadas",
     "nameEn": "Pull-Up",
     "descriptionEs": "Un ejercicio compuesto con el peso corporal que trabaja el dorsal ancho y el bíceps.",
     "instructionsEs": [
@@ -4831,7 +4878,7 @@
     ],
     "tipsEs": [
       "Evita balancearte o usar impulso.",
-      "Activa el dorsal ancho jalando los codos hacia abajo."
+      "Activa el dorsal ancho llevando los codos hacia abajo."
     ],
     "forceType": "pull",
     "mechanic": "compound",
@@ -4840,7 +4887,7 @@
     "bodyPart": "back",
     "met": 6,
     "isUnilateral": false,
-    "isBodyweight": false,
+    "isBodyweight": true,
     "movementPattern": "VerticalPull",
     "primaryMuscles": [
       "Lats"
@@ -4910,9 +4957,9 @@
   },
   {
     "id": "push-up",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Push-Up",
+    "nameEs": "Flexiones",
     "nameEn": "Push-Up",
     "descriptionEs": "Un ejercicio fundamental con el peso corporal para el pecho, los hombros y los tríceps.",
     "instructionsEs": [
@@ -4954,7 +5001,7 @@
   },
   {
     "id": "rack-pull",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Peso Muerto desde Rack",
     "nameEn": "Rack Pull",
@@ -4997,18 +5044,18 @@
       "barbell",
       "squat-rack"
     ],
-    "selectionPriority": 97,
+    "selectionPriority": 80,
     "isActive": true
   },
   {
     "id": "reverse-lunge",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Zancada Inversa",
+    "nameEs": "Zancada Inversa con Mancuernas",
     "nameEn": "Reverse Lunge",
     "descriptionEs": "Una variación de la zancada que da un paso hacia atrás para mayor estabilidad de rodilla.",
     "instructionsEs": [
-      "Párate sosteniendo mancuernas a los costados.",
+      "Ponte de pie sosteniendo mancuernas a los costados.",
       "Da un paso hacia atrás con una pierna y baja la rodilla hacia el suelo.",
       "Baja hasta que el muslo delantero quede paralelo al suelo.",
       "Empuja con el talón delantero para volver a la posición de pie.",
@@ -5048,9 +5095,9 @@
   },
   {
     "id": "reverse-nordic-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Nordic Curl Inverso",
+    "nameEs": "Curl Nórdico Inverso",
     "nameEn": "Reverse Nordic Curl",
     "descriptionEs": "Un ejercicio de cuádriceps con el propio peso corporal, arrodillado, inclinando el torso hacia atrás con control mientras se mantiene la cadera extendida.",
     "instructionsEs": [
@@ -5088,19 +5135,19 @@
       "GeneralFitness"
     ],
     "requiredEquipment": [],
-    "selectionPriority": 58,
+    "selectionPriority": 42,
     "isActive": true
   },
   {
     "id": "romanian-deadlift",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Peso Muerto Rumano",
     "nameEn": "Romanian Deadlift",
     "descriptionEs": "Un movimiento de bisagra de cadera que enfatiza los isquiotibiales y los glúteos.",
     "instructionsEs": [
-      "Párate sosteniendo la barra a la altura de las caderas con agarre prono.",
-      "Bisagra en las caderas empujándolas hacia atrás mientras mantienes las piernas casi rectas.",
+      "Ponte de pie sosteniendo la barra a la altura de las caderas con agarre prono.",
+      "Lleva las caderas hacia atrás inclinando el tronco, con las rodillas ligeramente flexionadas y casi fijas.",
       "Baja la barra a lo largo de las piernas hasta sentir el estiramiento de los isquiotibiales.",
       "Empuja las caderas hacia adelante para volver a la posición de pie.",
       "Repite."
@@ -5286,9 +5333,9 @@
   },
   {
     "id": "seated-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Elevación de Talones Sentado",
+    "nameEs": "Elevación de Gemelos Sentado en Máquina",
     "nameEn": "Seated Calf Raise",
     "descriptionEs": "Una elevación de talones en máquina realizada sentado para trabajar específicamente el músculo sóleo.",
     "instructionsEs": [
@@ -5370,9 +5417,9 @@
   },
   {
     "id": "seated-dumbbell-lateral-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Elevación Lateral con Mancuerna Sentado",
+    "nameEs": "Elevaciones Laterales Sentado con Mancuernas",
     "nameEn": "Seated Dumbbell Lateral Raise",
     "descriptionEs": "Un ejercicio de aislamiento sentado que levanta las mancuernas hacia los lados, trabajando los deltoides laterales sin impulso de piernas.",
     "instructionsEs": [
@@ -5417,7 +5464,7 @@
   },
   {
     "id": "seated-leg-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas Sentado",
     "nameEn": "Seated Leg Curl",
@@ -5432,7 +5479,7 @@
     "tipsEs": [
       "Mantén la espalda firmemente apoyada en el respaldo durante todo el movimiento.",
       "Flexiona ligeramente los pies hacia las espinillas en la contracción máxima para mayor activación de los isquios.",
-      "Controla la fase excéntrica — no dejes que el peso jale las piernas de vuelta rápidamente."
+      "Controla la fase excéntrica — no dejes que el peso te devuelva las piernas rápidamente."
     ],
     "forceType": "pull",
     "mechanic": "isolation",
@@ -5457,14 +5504,14 @@
     "requiredEquipment": [
       "leg-curl-machine"
     ],
-    "selectionPriority": 58,
+    "selectionPriority": 66,
     "isActive": true
   },
   {
     "id": "shrug",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Encogimiento con Barra",
+    "nameEs": "Encogimientos con Barra",
     "nameEn": "Barbell Shrug",
     "descriptionEs": "Un movimiento de aislamiento para el trapecio superior.",
     "instructionsEs": [
@@ -5501,18 +5548,18 @@
     "requiredEquipment": [
       "barbell"
     ],
-    "selectionPriority": 72,
+    "selectionPriority": 50,
     "isActive": true
   },
   {
     "id": "side-lying-hip-abduction",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Abducción de Cadera Acostado de Lado",
+    "nameEs": "Abducción de Cadera Tumbado de Lado",
     "nameEn": "Side-Lying Hip Abduction",
     "descriptionEs": "Un ejercicio de aislamiento con peso corporal que trabaja el glúteo medio y los abductores de cadera.",
     "instructionsEs": [
-      "Acuéstate de lado con las piernas apiladas.",
+      "Túmbate de lado con las piernas apiladas.",
       "Mantén la pierna inferior ligeramente flexionada.",
       "Eleva la pierna superior hacia el techo.",
       "Baja con control.",
@@ -5547,13 +5594,13 @@
   },
   {
     "id": "side-lying-hip-adduction",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Aducción de Cadera Acostado de Lado",
-    "nameEn": "Side Lying Hip Adduction",
+    "nameEs": "Aducción de Cadera Tumbado de Lado",
+    "nameEn": "Side-Lying Hip Adduction",
     "descriptionEs": "Un ejercicio de aducción tumbado de lado que eleva la pierna inferior contra la gravedad para trabajar la cadera con el propio peso.",
     "instructionsEs": [
-      "Acuéstate de lado con la pierna inferior recta.",
+      "Túmbate de lado con la pierna inferior recta.",
       "Flexiona la pierna superior y coloca su pie plano frente al muslo inferior.",
       "Apoya la cabeza con el brazo inferior.",
       "Eleva la pierna inferior hacia el techo.",
@@ -5589,13 +5636,13 @@
   },
   {
     "id": "side-plank",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Plancha Lateral",
     "nameEn": "Side Plank",
     "descriptionEs": "Una variación de plancha lateral que trabaja los oblicuos y el core lateral.",
     "instructionsEs": [
-      "Acuéstate de lado con el antebrazo en el suelo y el codo bajo el hombro.",
+      "Túmbate de lado con el antebrazo en el suelo y el codo bajo el hombro.",
       "Levanta las caderas del suelo formando una línea recta de la cabeza a los pies.",
       "Mantén la posición con el core apretado.",
       "Respira con regularidad.",
@@ -5628,14 +5675,14 @@
       "GeneralFitness"
     ],
     "requiredEquipment": [],
-    "selectionPriority": 75,
+    "selectionPriority": 62,
     "isActive": true
   },
   {
     "id": "single-arm-db-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Remo con Mancuerna a Un Brazo",
+    "nameEs": "Remo con Mancuerna a un Brazo",
     "nameEn": "Single-Arm Dumbbell Row",
     "descriptionEs": "Un ejercicio de espalda unilateral con mancuerna para un desarrollo equilibrado.",
     "instructionsEs": [
@@ -5682,9 +5729,9 @@
   },
   {
     "id": "single-arm-plate-loaded-lateral-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Elevación Lateral a Un Brazo en Máquina de Discos",
+    "nameEs": "Elevaciones Laterales a un Brazo en Máquina de Discos",
     "nameEn": "Single-Arm Plate-Loaded Lateral Raise",
     "descriptionEs": "La elevación lateral en máquina de discos trabajando un brazo cada vez, de modo que cada lado levanta su propia carga y ambos pueden entrenarse hasta el mismo nivel.",
     "instructionsEs": [
@@ -5727,9 +5774,9 @@
   },
   {
     "id": "single-leg-glute-bridge",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
-    "nameEs": "Puente de Glúteo a una Pierna",
+    "nameEs": "Puente de Glúteos a una Pierna",
     "nameEn": "Single-Leg Glute Bridge",
     "descriptionEs": "Puente de glúteo con una sola pierna apoyada, que aumenta la exigencia sin añadir material.",
     "instructionsEs": [
@@ -5768,13 +5815,13 @@
   },
   {
     "id": "skull-crusher",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Skull Crusher",
     "nameEn": "Skull Crusher",
     "descriptionEs": "Una extensión de tríceps tumbado con barra que aísla los tríceps a través de un rango de movimiento completo.",
     "instructionsEs": [
-      "Acuéstate en un banco plano sosteniendo una barra sobre el pecho con agarre estrecho.",
+      "Túmbate en un banco plano sosteniendo una barra sobre el pecho con agarre estrecho.",
       "Baja la barra hacia la frente flexionando los codos.",
       "Extiende los brazos de vuelta a la posición inicial.",
       "Repite."
@@ -5810,14 +5857,14 @@
   },
   {
     "id": "smith-machine-bench-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press de Banca en Máquina Smith",
     "nameEn": "Smith Machine Bench Press",
     "descriptionEs": "Un press de banca en máquina Smith cuyo recorrido guiado permite entrenar el pecho con menos demanda de estabilización.",
     "instructionsEs": [
-      "Acuéstate en un banco plano dentro de la máquina Smith.",
-      "Agarra la barra ligeramente más ancho que el ancho de hombros y desbloquéala.",
+      "Túmbate en un banco plano dentro de la máquina Smith.",
+      "Agarra la barra con las manos algo más separadas que la anchura de los hombros y desbloquéala.",
       "Baja la barra con control hasta el centro del pecho.",
       "Haz una breve pausa sin rebotar.",
       "Empuja la barra hacia arriba hasta extender completamente los brazos.",
@@ -5900,14 +5947,14 @@
   },
   {
     "id": "smith-machine-incline-bench-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press Inclinado en Máquina Smith",
     "nameEn": "Smith Machine Incline Bench Press",
     "descriptionEs": "Un press inclinado en máquina Smith que enfatiza la parte superior del pecho y los deltoides anteriores con una trayectoria guiada.",
     "instructionsEs": [
       "Ajusta un banco inclinado a 30-45 grados dentro de la máquina Smith.",
-      "Recuéstate y agarra la barra ligeramente más ancho que el ancho de hombros.",
+      "Túmbate y agarra la barra ligeramente más ancho que el ancho de hombros.",
       "Desbloquea y baja la barra hasta la parte superior del pecho.",
       "Haz una breve pausa en la parte inferior.",
       "Empuja la barra hacia arriba hasta extender los brazos.",
@@ -5948,16 +5995,62 @@
     "isActive": true
   },
   {
-    "id": "squat",
+    "id": "smith-machine-squat",
     "version": 2,
+    "source": "trazo-curated",
+    "nameEs": "Sentadilla en Máquina Smith",
+    "nameEn": "Smith Machine Squat",
+    "descriptionEs": "Sentadilla con la barra guiada de la máquina Smith: el recorrido fijo reduce la demanda de equilibrio y deja el esfuerzo en piernas y glúteos, una buena opción cuando no hay un rack libre.",
+    "instructionsEs": [
+      "Ajusta la barra a la altura de los hombros y colócate debajo, con la barra sobre la parte alta de la espalda y los pies ligeramente adelantados respecto a la barra.",
+      "Gira las muñecas para soltar los ganchos y mantén el torso erguido y el core activo.",
+      "Baja flexionando rodillas y caderas hasta que los muslos queden al menos paralelos al suelo, con las rodillas siguiendo la dirección de los pies.",
+      "Empuja con todo el pie contra el suelo hasta volver a la posición de pie.",
+      "Al terminar la serie, gira las muñecas para enganchar la barra en los topes."
+    ],
+    "tipsEs": [
+      "Adelantar un poco los pies permite bajar más sin que los talones se despeguen.",
+      "Coloca los topes de seguridad justo por debajo del punto más bajo de tu recorrido."
+    ],
+    "forceType": "push",
+    "mechanic": "compound",
+    "difficulty": "beginner",
+    "equipment": "smith_machine",
+    "bodyPart": "upper_legs",
+    "met": 6,
+    "isUnilateral": false,
+    "isBodyweight": false,
+    "movementPattern": "Squat",
+    "primaryMuscles": [
+      "Glutes",
+      "Quadriceps"
+    ],
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "minimumExperience": "Beginner",
+    "suitableGoals": [
+      "Hypertrophy",
+      "Strength",
+      "GeneralFitness"
+    ],
+    "requiredEquipment": [
+      "smith-machine"
+    ],
+    "selectionPriority": 85,
+    "isActive": true
+  },
+  {
+    "id": "squat",
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Sentadilla Trasera con Barra",
     "nameEn": "Barbell Back Squat",
     "descriptionEs": "Un movimiento compuesto de tren inferior que trabaja cuádriceps, glúteos e isquiotibiales.",
     "instructionsEs": [
       "Coloca la barra sobre tus trapecios superiores.",
-      "Desrackea y da un paso atrás, con los pies al ancho de los hombros.",
-      "Contrae el core y haz la sentadilla hasta que los muslos queden paralelos.",
+      "Saca la barra del rack y da un paso atrás, con los pies al ancho de los hombros.",
+      "Contrae el core y baja flexionando rodillas y caderas hasta que los muslos queden paralelos al suelo.",
       "Empuja a través de los talones para volver a la posición de pie.",
       "Repite."
     ],
@@ -6044,13 +6137,13 @@
   },
   {
     "id": "standing-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Elevación de Talones de Pie",
     "nameEn": "Standing Calf Raise",
     "descriptionEs": "Una elevación de talones realizada de pie para desarrollar el gastrocnemio a través de un rango completo de movimiento.",
     "instructionsEs": [
-      "Párate en el borde de una plataforma o máquina de elevación de talones.",
+      "Ponte de pie en el borde de una plataforma o máquina de elevación de talones.",
       "Baja los talones por debajo de la plataforma.",
       "Empuja hacia arriba de puntillas.",
       "Baja lentamente.",
@@ -6082,7 +6175,7 @@
       "standing-calf-raise-machine"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": "standing-hip-abduction",
@@ -6131,17 +6224,17 @@
   },
   {
     "id": "step-ups",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Step Ups",
-    "nameEn": "Step Ups",
+    "nameEs": "Subidas al Escalón",
+    "nameEn": "Step-Up",
     "descriptionEs": "Una subida a un cajón o banco con una pierna que entrena cuádriceps y glúteos de forma funcional.",
     "instructionsEs": [
-      "Párate frente a una caja o banco resistente.",
+      "Ponte de pie frente a una caja o banco resistente.",
       "Coloca un pie completamente sobre la superficie de la caja.",
       "Empuja a través de ese talón para subir el cuerpo a la caja.",
       "Sube el pie de atrás para quedar completamente sobre la caja.",
-      "Baja con el mismo pie que subió primero.",
+      "Baja el pie de atrás de nuevo al suelo con control, manteniendo la carga en la pierna que trabaja.",
       "Alterna piernas o completa todas las repeticiones de un lado antes de cambiar."
     ],
     "tipsEs": [
@@ -6152,10 +6245,10 @@
     "forceType": "push",
     "mechanic": "compound",
     "difficulty": "intermediate",
-    "equipment": null,
+    "equipment": "step",
     "bodyPart": "upper_legs",
     "met": 5,
-    "isUnilateral": false,
+    "isUnilateral": true,
     "isBodyweight": true,
     "movementPattern": "SingleLeg",
     "primaryMuscles": [
@@ -6180,13 +6273,13 @@
   },
   {
     "id": "straight-arm-pulldown",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Jalón con Brazos Rectos",
     "nameEn": "Straight-Arm Pulldown",
     "descriptionEs": "Un ejercicio de aislamiento para los dorsales usando cable con los brazos rectos.",
     "instructionsEs": [
-      "Párate frente a una máquina de cable con una barra recta enganchada a la polea alta.",
+      "Ponte de pie frente a una polea con una barra recta enganchada a la polea alta.",
       "Con los brazos casi rectos, empuja la barra hacia abajo en un arco hacia los muslos.",
       "Aprieta los dorsales en la parte inferior.",
       "Devuelve la barra lentamente a la posición inicial.",
@@ -6325,13 +6418,13 @@
   },
   {
     "id": "tricep-pushdown",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
-    "nameEs": "Jalón de Tríceps en Cable",
-    "nameEn": "Cable Tricep Pushdown",
-    "descriptionEs": "Un ejercicio de aislamiento para los tríceps usando una máquina de cable.",
+    "nameEs": "Extensión de Tríceps en Polea",
+    "nameEn": "Cable Triceps Pushdown",
+    "descriptionEs": "Un ejercicio de aislamiento para los tríceps usando una polea.",
     "instructionsEs": [
-      "Párate frente a una máquina de cable con un accesorio de barra recta.",
+      "Ponte de pie frente a una polea con un accesorio de barra recta.",
       "Agarra la barra y pega los codos a los costados.",
       "Empuja la barra hacia abajo hasta que los brazos estén completamente extendidos.",
       "Regresa lentamente a la posición inicial.",
@@ -6367,13 +6460,13 @@
   },
   {
     "id": "trx-hamstring-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Isquiotibiales con TRX",
     "nameEn": "TRX Hamstring Curl",
     "descriptionEs": "Este ejercicio de aislamiento utiliza un entrenador de suspensión para trabajar los isquiotibiales, glúteos y pantorrillas al flexionar los talones hacia los glúteos.",
     "instructionsEs": [
-      "Acuéstate boca arriba con los talones en los soportes del entrenador de suspensión, rodillas flexionadas a 90 grados.",
+      "Túmbate boca arriba con los talones en los soportes del entrenador de suspensión, rodillas flexionadas a 90 grados.",
       "Levanta tus caderas del suelo, creando una línea recta desde las rodillas hasta los hombros.",
       "Extiende tus piernas hacia adelante, manteniendo las caderas elevadas y la tensión en el core.",
       "Tira de tus talones hacia tus glúteos, contrayendo los isquiotibiales con fuerza.",
@@ -6550,7 +6643,7 @@
   },
   {
     "id": "weighted-pull-up",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Dominadas con Lastre",
     "nameEn": "Weighted Pull-Up",
@@ -6591,7 +6684,7 @@
       "pull-up-bar",
       "dumbbell"
     ],
-    "selectionPriority": 97,
+    "selectionPriority": 80,
     "isActive": true
   },
   {
