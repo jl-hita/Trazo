@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           runtimes="$(/usr/bin/dotnet --list-runtimes)"
-          printf '%s\\n' "$runtimes"
+          printf '%s\n' "$runtimes"
           grep -Fq 'Microsoft.AspNetCore.App 10.' <<< "$runtimes" || {
             echo "ERROR: falta el runtime ASP.NET Core 10 en weirdfish. No se ha modificado producción."
             exit 1
@@ -52,8 +52,8 @@ jobs:
         run: |
           set -o pipefail
           out="$(dotnet list Trazo.sln package --vulnerable --include-transitive)"
-          printf '%s\\n' "$out"
-          if printf '%s\\n' "$out" | grep -Eiq '>.*(High|Critical)'; then
+          printf '%s\n' "$out"
+          if printf '%s\n' "$out" | grep -Eiq '>.*(High|Critical)'; then
             echo "Vulnerabilidades High/Critical en dependencias .NET."
             exit 1
           fi
@@ -77,7 +77,7 @@ jobs:
           # Fail before touching production if a required EF runtime assembly is absent.
           test -f /tmp/trazo-backend/Microsoft.EntityFrameworkCore.Relational.dll || {
             echo "ERROR: EF Core Relational is missing from the API publish output."
-            find /tmp/trazo-backend -maxdepth 1 -name 'Microsoft.EntityFrameworkCore*.dll' -printf '%f\\n' | sort
+            find /tmp/trazo-backend -maxdepth 1 -name 'Microsoft.EntityFrameworkCore*.dll' -printf '%f\n' | sort
             exit 1
           }
 
