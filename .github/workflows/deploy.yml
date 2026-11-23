@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   deploy:
@@ -111,3 +111,29 @@ jobs:
           path: /var/lib/trazo/artifacts/exercise-catalog.json
           if-no-files-found: error
           retention-days: 30
+
+      # Keep a public, single-file snapshot branch so the catalog can be read
+      # directly without downloading a workflow artifact. This branch is not
+      # part of the deploy path filter, so its push cannot trigger another deploy.
+      - name: Publish public exercise catalog snapshot
+        if: success()
+        continue-on-error: true
+        env:
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          set -euo pipefail
+          source_file="/var/lib/trazo/artifacts/exercise-catalog.json"
+          test -s "$source_file"
+          snapshot="$RUNNER_TEMP/exercise-catalog.json"
+          install -m 0644 "$source_file" "$snapshot"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git branch -D catalog-audit 2>/dev/null || true
+          git checkout --orphan catalog-audit
+          git rm -rf . >/dev/null 2>&1 || true
+          git clean -fdx
+          install -m 0644 "$snapshot" exercise-catalog.json
+          git add exercise-catalog.json
+          git commit --allow-empty -m "chore: publish exercise catalog snapshot"
+          git push --force origin HEAD:refs/heads/catalog-audit

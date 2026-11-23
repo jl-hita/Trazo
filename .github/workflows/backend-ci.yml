@@ -10,7 +10,7 @@ on:
       - "Directory.Build.props"
       - "global.json"
       - "deploy/**"
-      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/**"
   pull_request:
     paths:
       - "src/**"
