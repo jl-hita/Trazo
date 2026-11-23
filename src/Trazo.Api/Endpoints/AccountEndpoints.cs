@@ -13,6 +13,7 @@ namespace Trazo.Api.Endpoints;
 public sealed record TimeZoneRequest(string? TimeZone);
 public sealed record DeletionRequestBody(string? Email);
 public sealed record LanguageRequest(string? Language);
+public sealed record ResearchConsentRequest(bool Consent);
 public sealed record DeletionConfirmBody(string? Token, string? Code);
 
 /// <summary>
@@ -41,6 +42,9 @@ public static class AccountEndpoints
         group.MapPut("/language", SetLanguageAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetLanguage")
             .WithSummary("Chooses the language of the texts of the API, e-mails and notifications: es, en, or empty/auto to follow the language of each request.")
             .Produces(StatusCodes.Status204NoContent).ProducesValidationProblem();
+        group.MapPut("/research-consent", SetResearchConsentAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetResearchConsent")
+            .WithSummary("Optional and revocable: lets the anonymous statistics kept when the account is deleted be grouped per plan. Never needed to use the app.")
+            .Produces(StatusCodes.Status204NoContent);
         group.MapPut("/time-zone", SetTimeZoneAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetTimeZone")
             .WithSummary("Saves the IANA time zone (for example Europe/Madrid) used for today and the current plan week.")
             .Produces(StatusCodes.Status204NoContent).ProducesValidationProblem();
@@ -93,6 +97,12 @@ public static class AccountEndpoints
         if (!Trazo.Application.Localization.LanguageNegotiation.TryNormalizeChoice(request.Language, out _))
             return Results.ValidationProblem(new Dictionary<string, string[]> { ["language"] = ["Usa es, en o auto."] });
         return await accounts.SetLanguageAsync(id, request.Language, ct) ? Results.NoContent() : Results.Unauthorized();
+    }
+
+    private static async Task<IResult> SetResearchConsentAsync(ResearchConsentRequest request, ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } id) return Results.Unauthorized();
+        return await accounts.SetResearchConsentAsync(id, request.Consent, ct) ? Results.NoContent() : Results.Unauthorized();
     }
 
     private static async Task<IResult> SetTimeZoneAsync(TimeZoneRequest request, ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
