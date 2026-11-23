@@ -19,7 +19,7 @@ on:
       - "Directory.Build.props"
       - "global.json"
       - "deploy/**"
-      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/**"
 
 # Cancel superseded CI runs for the same PR or branch; keep unrelated work independent.
 concurrency:
