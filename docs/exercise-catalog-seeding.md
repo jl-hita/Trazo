@@ -4,7 +4,7 @@
 
 `Seeds/exercise-catalog.json` is the versioned bootstrap snapshot of the complete exercise library, not merely the TRAZO-curated additions. It is generated from the database-backed catalog artifact published by the latest successful deployment. The snapshot includes every exercise and its current metadata: source, Spanish and English names, Spanish description/instructions/tips, movement and muscle metadata, difficulty, activity state, selection priority, and both `Equipment` and `RequiredEquipment`.
 
-The seed currently represents all 148 exercises in the library (100 `repdb-free` and 48 `trazo-curated`). It is deliberately independent of a runtime RepDB download: a fresh installation can reproduce the library even if the upstream dataset changes or is unavailable.
+The seed currently represents all 150 exercises in the library (100 `repdb-free` and 50 `trazo-curated`; one, `standing-calf-raise`, is retired with `isActive: false`). It is deliberately independent of a runtime RepDB download: a fresh installation can reproduce the library even if the upstream dataset changes or is unavailable.
 
 ## First-run behavior
 

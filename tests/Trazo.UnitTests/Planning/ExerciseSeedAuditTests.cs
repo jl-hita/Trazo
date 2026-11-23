@@ -29,11 +29,11 @@ public sealed class ExerciseSeedAuditTests
     public void SeedIsACompleteSnapshotOfTheCurrentExerciseLibrary()
     {
         var entries = Entries();
-        Assert.Equal(148, entries.Count);
-        Assert.Equal(148, entries.Select(x => x.GetProperty("id").GetString()).Distinct().Count());
+        Assert.Equal(150, entries.Count);
+        Assert.Equal(150, entries.Select(x => x.GetProperty("id").GetString()).Distinct().Count());
         Assert.Equal(100, entries.Count(x => x.GetProperty("source").GetString() == "repdb-free"));
-        Assert.Equal(48, entries.Count(x => x.GetProperty("source").GetString() == "trazo-curated"));
-        Assert.All(entries, x => Assert.True(x.GetProperty("isActive").GetBoolean()));
+        Assert.Equal(50, entries.Count(x => x.GetProperty("source").GetString() == "trazo-curated"));
+        Assert.Equal(["standing-calf-raise"], entries.Where(x => !x.GetProperty("isActive").GetBoolean()).Select(x => x.GetProperty("id").GetString()));
     }
 
     [Fact]
@@ -153,7 +153,7 @@ public sealed class ExerciseSeedAuditTests
             Assert.True(Level(id) == "Advanced", $"{id} must stay Advanced");
 
         var counts = Entries().GroupBy(x => x.GetProperty("minimumExperience").GetString()!).ToDictionary(g => g.Key, g => g.Count());
-        Assert.Equal(100, counts["Beginner"]);
+        Assert.Equal(102, counts["Beginner"]);
         Assert.Equal(30, counts["Intermediate"]);
         Assert.Equal(18, counts["Advanced"]);
     }

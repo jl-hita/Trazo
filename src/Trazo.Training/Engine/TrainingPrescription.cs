@@ -298,7 +298,9 @@ internal static class TrainingExerciseStimulus
             ["band-row"] = [TrainingMuscleGroup.Biceps],
             ["band-lat-pulldown"] = [TrainingMuscleGroup.Biceps],
             ["band-shoulder-press"] = [TrainingMuscleGroup.Triceps],
-            ["elevated-pike-push-up"] = [TrainingMuscleGroup.Triceps]
+            ["elevated-pike-push-up"] = [TrainingMuscleGroup.Triceps],
+            ["dumbbell-bent-over-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
+            ["smith-machine-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps]
         };
 
     // Explicitly audited catalog isolates/accessories whose secondary tags do not represent
