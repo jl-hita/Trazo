@@ -15,6 +15,7 @@ const status = (over: Partial<BackupStatus> = {}): BackupStatus => ({
     { name: 'trazo-20261122T033800Z.tar.age', sizeBytes: 4_700_000, createdAt: '2026-11-22T03:38:00Z' },
     { name: 'trazo-20261121T033800Z.tar.age', sizeBytes: 4_600_000, createdAt: '2026-11-21T03:38:00Z' }
   ],
+  running: false, restore: null,
   ...over
 });
 
@@ -30,10 +31,11 @@ const alertView = (over: Partial<BackupAlertView> = {}): BackupAlertView => ({
 type FakeApi = {
   status: ReturnType<typeof vi.fn>; alerts?: ReturnType<typeof vi.fn>;
   saveAlerts?: ReturnType<typeof vi.fn>; testAlert?: ReturnType<typeof vi.fn>;
+  runBackup?: ReturnType<typeof vi.fn>; restore?: ReturnType<typeof vi.fn>;
 };
 
 async function render(api: FakeApi) {
-  const full = { alerts: vi.fn().mockResolvedValue(alertView()), saveAlerts: vi.fn(), testAlert: vi.fn(), ...api };
+  const full = { alerts: vi.fn().mockResolvedValue(alertView()), saveAlerts: vi.fn(), testAlert: vi.fn(), runBackup: vi.fn(), restore: vi.fn(), ...api };
   await TestBed.configureTestingModule({
     imports: [BackupsPageComponent],
     providers: [{ provide: BackupsApi, useValue: full }]
@@ -232,5 +234,106 @@ describe('backup helpers', () => {
     expect(formatUiBytes(4_700_000)).toBe('4,7 MB');
     expect(formatUiBytes(514_000_000)).toBe('514 MB');
     expect(formatUiBytes(-1)).toBe('—');
+  });
+});
+
+describe('BackupsPageComponent actions', () => {
+  afterEach(() => TestBed.resetTestingModule());
+
+  const KEY = 'AGE-SECRET-KEY-1QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ';
+  type Fixture = Awaited<ReturnType<typeof render>>;
+  const settle = async (fixture: Fixture) => { fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges(); };
+  const byText = (fixture: Fixture, selector: string, label: string): HTMLButtonElement =>
+    Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll(selector)).find(b => b.textContent?.includes(label))!;
+  const type = async (fixture: Fixture, selector: string, value: string) => {
+    const el: HTMLInputElement = fixture.nativeElement.querySelector(selector);
+    el.value = value;
+    el.dispatchEvent(new Event('input'));
+    await settle(fixture);
+  };
+
+  it('asks for a backup now and says so', async () => {
+    const runBackup = vi.fn().mockResolvedValue({ ok: true, message: 'Copia en marcha.' });
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status()), runBackup });
+
+    byText(fixture, '.bk-actions button', 'Hacer copia ahora').click();
+    await settle(fixture);
+
+    expect(runBackup).toHaveBeenCalled();
+    expect(fixture.nativeElement.textContent).toContain('Copia en marcha.');
+  });
+
+  it('cannot start a backup while one is running', async () => {
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status({ running: true })) });
+    expect(byText(fixture, '.bk-actions button', 'Copia en curso').disabled).toBe(true);
+  });
+
+  it('has a Restore button on every copy and opens a dialog for that copy', async () => {
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status()) });
+    const buttons = fixture.nativeElement.querySelectorAll('.bk-row-action button');
+    expect(buttons.length).toBe(2);
+
+    (buttons[1] as HTMLButtonElement).click();
+    await settle(fixture);
+
+    const dialog: HTMLElement = fixture.nativeElement.querySelector('.bk-dialog');
+    expect(dialog.textContent).toContain('trazo-20261121T033800Z.tar.age');
+  });
+
+  it('verifies in the scratch database with the pasted key, without asking for a typed confirmation', async () => {
+    const restore = vi.fn().mockResolvedValue({ ok: true, message: 'Verificación en marcha.' });
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status()), restore });
+    (fixture.nativeElement.querySelector('.bk-row-action button') as HTMLButtonElement).click();
+    await settle(fixture);
+
+    expect(byText(fixture, '.bk-dialog button', 'Verificar copia').disabled).toBe(true); // no key yet
+    await type(fixture, '#bk-key', KEY);
+    byText(fixture, '.bk-dialog button', 'Verificar copia').click();
+    await settle(fixture);
+
+    expect(restore).toHaveBeenCalledWith('trazo-20261122T033800Z.tar.age', 'test', KEY, '');
+    expect(fixture.nativeElement.querySelector('.bk-dialog')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Verificación en marcha.');
+  });
+
+  it('only restores production after typing RESTAURAR, and the key is wiped from the page', async () => {
+    const restore = vi.fn().mockResolvedValue({ ok: true, message: 'Restauración en marcha.' });
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status()), restore });
+    (fixture.nativeElement.querySelector('.bk-row-action button') as HTMLButtonElement).click();
+    await settle(fixture);
+    (fixture.nativeElement.querySelector('input[value=production]') as HTMLInputElement).click();
+    await settle(fixture);
+    await type(fixture, '#bk-key', KEY);
+
+    expect(byText(fixture, '.bk-dialog button', 'Restaurar en producción').disabled).toBe(true);
+    await type(fixture, '#bk-confirm', 'restaurar');
+    expect(byText(fixture, '.bk-dialog button', 'Restaurar en producción').disabled).toBe(true);
+    await type(fixture, '#bk-confirm', 'RESTAURAR');
+    byText(fixture, '.bk-dialog button', 'Restaurar en producción').click();
+    await settle(fixture);
+
+    expect(restore).toHaveBeenCalledWith('trazo-20261122T033800Z.tar.age', 'production', KEY, 'RESTAURAR');
+    expect(fixture.nativeElement.textContent).not.toContain('AGE-SECRET-KEY');
+  });
+
+  it('keeps the dialog open and shows the server error when the restore is refused', async () => {
+    const restore = vi.fn().mockRejectedValue(new Error('Hay una copia en curso.'));
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status()), restore });
+    (fixture.nativeElement.querySelector('.bk-row-action button') as HTMLButtonElement).click();
+    await settle(fixture);
+    await type(fixture, '#bk-key', KEY);
+    byText(fixture, '.bk-dialog button', 'Verificar copia').click();
+    await settle(fixture);
+
+    expect(fixture.nativeElement.querySelector('.bk-dialog [role=alert]')).not.toBeNull();
+  });
+
+  it('shows how the last restore went', async () => {
+    const fixture = await render({ status: vi.fn().mockResolvedValue(status({
+      restore: { state: 'failed', mode: 'test', copy: 'trazo-20261122T033800Z.tar.age', startedAt: null, finishedAt: null, message: 'Fallo en el paso descifrado' }
+    })) });
+    const text: string = fixture.nativeElement.textContent;
+    expect(text).toContain('Fallida');
+    expect(text).toContain('Fallo en el paso descifrado');
   });
 });

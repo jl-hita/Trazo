@@ -256,10 +256,22 @@ export interface BackupCopy { name: string; sizeBytes: number; createdAt: string
 
 export interface BackupLastRun { ok: boolean; startedAt: string | null; finishedAt: string | null; copy: string | null; error: string | null; }
 
+export interface BackupRestoreStatus {
+  state: 'running' | 'ok' | 'failed'; mode: 'test' | 'production' | null; copy: string | null;
+  startedAt: string | null; finishedAt: string | null; message: string | null;
+}
+
 export interface BackupStatus {
   configured: boolean; health: BackupHealth; message: string | null; checkedAt: string | null; maxAgeHours: number;
   remote: string | null; lastRun: BackupLastRun | null; copies: BackupCopy[];
+  /** A backup is being made right now. */
+  running: boolean;
+  /** How the last verification or restore requested from the panel went. */
+  restore: BackupRestoreStatus | null;
 }
+
+export type BackupRestoreMode = 'test' | 'production';
+export interface BackupActionResult { ok: boolean; message: string; }
 
 export interface BackupAlertCandidate { id: string; displayName: string; email: string; role: string; devices: number; }
 

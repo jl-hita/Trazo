@@ -1,0 +1,6 @@
+[Unit]
+Description=Start the TRAZO backup requested from the admin panel
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'rm -f /run/trazo/backup-now && exec systemctl start --no-block trazo-backup.service'

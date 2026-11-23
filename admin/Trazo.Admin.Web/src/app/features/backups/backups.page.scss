@@ -29,3 +29,18 @@
     .bk-alerts-row select { min-width: 280px; max-width: 100%; padding: 8px 10px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; font-size: 13px; }
     .bk-alerts-row select:focus { outline: 2px solid #6d8eb5; outline-offset: 1px; }
     .bk-ok { color: #8fd1a6; font-size: 13px; margin: 10px 0 0; }
+    .bk-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .bk-row-action { text-align: right; width: 1%; white-space: nowrap; }
+    .bk-restore-status { margin-bottom: 14px; padding: 12px 16px; border: 1px solid #293444; border-radius: 8px; background: #131b27; color: #e8edf5; font-size: 13px; }
+    .bk-restore-status[data-state=ok] { border-color: #3d7a55; }
+    .bk-restore-status[data-state=failed] { border-color: #8a4040; }
+    .bk-restore-status[data-state=running] { border-color: #8a7233; }
+    .bk-restore-message { display: block; margin-top: 6px; color: #aab6c7; }
+    .bk-backdrop { position: fixed; inset: 0; background: rgba(5, 8, 13, .7); z-index: 50; }
+    .bk-dialog { position: fixed; z-index: 51; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; padding: 22px; border: 1px solid #34465b; border-radius: 10px; background: #131b27; color: #e8edf5; display: flex; flex-direction: column; gap: 8px; }
+    .bk-dialog h2 { margin: 0; font-size: 17px; }
+    .bk-dialog label { color: #aab6c7; font-size: 13px; }
+    .bk-dialog textarea, .bk-dialog input[type=text] { padding: 8px 10px; border: 1px solid #34465b; border-radius: 6px; background: #0d1119; color: #e8edf5; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+    .bk-modes { border: 1px solid #293444; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .bk-modes legend { color: #8291a6; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 0 6px; }
+    .bk-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }

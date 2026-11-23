@@ -4,8 +4,24 @@
         <h1>{{ copy.title }}</h1>
         <p class="subtitle">{{ copy.subtitle }}</p>
       </div>
-      <trazo-button variant="secondary" buttonClass="bk-btn" type="button" (pressed)="refresh()" [disabled]="loading()">{{ copy.refresh }}</trazo-button>
+      <div class="bk-actions">
+        <trazo-button variant="primary" buttonClass="bk-btn" type="button" (pressed)="backupNow()" [disabled]="busy() || startingBackup() || !status()?.configured">
+          {{ status()?.running ? copy.backupRunning : startingBackup() ? copy.backupStarting : copy.backupNow }}
+        </trazo-button>
+        <trazo-button variant="secondary" buttonClass="bk-btn" type="button" (pressed)="refresh()" [disabled]="loading()">{{ copy.refresh }}</trazo-button>
+      </div>
     </div>
+
+    @if (actionMessage()) { <p class="bk-ok" role="status">{{ actionMessage() }}</p> }
+    @if (actionError()) { <p class="bk-error" role="alert">{{ actionError() }}</p> }
+    @if (serverDown()) { <p class="bk-hint" role="status">{{ copy.restore.serverDown }}</p> }
+    @if (restoreRecent(); as r) {
+      <section class="bk-restore-status" [attr.data-state]="r.state" role="status">
+        <b>{{ r.state === 'running' ? copy.restore.running : r.state === 'ok' ? copy.restore.done : copy.restore.failed }}</b>
+        · {{ modeLabel(r.mode) }} · <span class="bk-file">{{ r.copy }}</span>
+        @if (r.message) { <span class="bk-restore-message">{{ r.message }}</span> }
+      </section>
+    }
 
     @if (error()) { <p class="bk-error" role="alert">{{ error() }}</p> }
 
@@ -41,7 +57,7 @@
         }
 
         <trazo-table tableClass="bk-table">
-          <thead><tr><th>{{ copy.date }}</th><th>{{ copy.kind }}</th><th class="num">{{ copy.size }}</th><th>{{ copy.file }}</th></tr></thead>
+          <thead><tr><th>{{ copy.date }}</th><th>{{ copy.kind }}</th><th class="num">{{ copy.size }}</th><th>{{ copy.file }}</th><th></th></tr></thead>
           <tbody>
             @for (c of s.copies; track c.name) {
               <tr>
@@ -49,9 +65,12 @@
                 <td>{{ kind(c) }}</td>
                 <td class="num">{{ formatSize(c.sizeBytes) }}</td>
                 <td class="bk-file">{{ c.name }}</td>
+                <td class="bk-row-action">
+                  <trazo-button variant="secondary" buttonClass="bk-btn" type="button" (pressed)="openRestore(c)" [disabled]="busy()">{{ copy.restore.button }}</trazo-button>
+                </td>
               </tr>
             } @empty {
-              <tr><td colspan="4" class="bk-empty">{{ copy.noCopies }}</td></tr>
+              <tr><td colspan="5" class="bk-empty">{{ copy.noCopies }}</td></tr>
             }
           </tbody>
         </trazo-table>
@@ -89,3 +108,39 @@
     } @else if (alertError()) {
       <p class="bk-error" role="alert">{{ alertError() }}</p>
     }
+
+@if (restoreTarget(); as target) {
+  <div class="bk-backdrop" (click)="closeRestore()"></div>
+  <div class="bk-dialog" role="dialog" aria-modal="true" aria-labelledby="bk-restore-title" (keydown.escape)="closeRestore()">
+    <h2 id="bk-restore-title">{{ copy.restore.title }}</h2>
+    <p class="bk-file">{{ target.name }} · {{ formatTime(target.createdAt) }} · {{ formatSize(target.sizeBytes) }}</p>
+
+    <fieldset class="bk-modes">
+      <legend>{{ copy.restore.modeLegend }}</legend>
+      <label><input type="radio" name="bk-mode" value="test" [ngModel]="restoreMode()" (ngModelChange)="restoreMode.set($event)"> <b>{{ copy.restore.modeTest }}</b> — {{ copy.restore.modeTestHelp }}</label>
+      <label><input type="radio" name="bk-mode" value="production" [ngModel]="restoreMode()" (ngModelChange)="restoreMode.set($event)"> <b>{{ copy.restore.modeProduction }}</b> — {{ copy.restore.modeProductionHelp }}</label>
+    </fieldset>
+
+    @if (restoreMode() === 'production') {
+      <p class="bk-run-error" role="alert">{{ copy.restore.warning }}</p>
+    }
+
+    <label for="bk-key">{{ copy.restore.keyLabel }}</label>
+    <textarea id="bk-key" rows="4" autocomplete="off" autocapitalize="off" spellcheck="false" [placeholder]="copy.restore.keyPlaceholder"
+              [ngModel]="restoreKey()" (ngModelChange)="restoreKey.set($event)"></textarea>
+    <p class="bk-hint">{{ copy.restore.keyHelp }}</p>
+
+    @if (restoreMode() === 'production') {
+      <label for="bk-confirm">{{ copy.restore.confirmLabel }} <b>{{ confirmWord }}</b></label>
+      <input id="bk-confirm" type="text" autocomplete="off" [ngModel]="restoreConfirm()" (ngModelChange)="restoreConfirm.set($event)">
+    }
+
+    @if (restoreError()) { <p class="bk-error" role="alert">{{ restoreError() }}</p> }
+    <div class="bk-dialog-actions">
+      <trazo-button variant="secondary" buttonClass="bk-btn" type="button" (pressed)="closeRestore()" [disabled]="restoring()">{{ copy.restore.cancel }}</trazo-button>
+      <trazo-button [variant]="restoreMode() === 'production' ? 'danger' : 'primary'" buttonClass="bk-btn" type="button" (pressed)="submitRestore()" [disabled]="!canRestore()">
+        {{ restoring() ? copy.restore.sending : restoreMode() === 'production' ? copy.restore.submitProduction : copy.restore.submitTest }}
+      </trazo-button>
+    </div>
+  </div>
+}

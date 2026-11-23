@@ -1,0 +1,9 @@
+[Unit]
+Description=Run a TRAZO backup when the admin panel asks for one
+
+[Path]
+PathExists=/run/trazo/backup-now
+Unit=trazo-backup-now.service
+
+[Install]
+WantedBy=multi-user.target

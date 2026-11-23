@@ -20,6 +20,9 @@ PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
 ReadWritePaths=/var/lib/trazo
+# Buzon (tmpfs) por el que el panel pide copias y restauraciones; lo recogen trazo-backup-now.path y trazo-restore-request.path.
+RuntimeDirectory=trazo
+RuntimeDirectoryMode=0700
 
 [Install]
 WantedBy=multi-user.target
