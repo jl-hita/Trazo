@@ -101,7 +101,7 @@ Borra `/var/tmp/r` al terminar: contiene secretos en claro.
 
 ## Panel en la consola de administración
 
-**Copias de seguridad** (solo superadmin, solo lectura) muestra la salud (correcto, atención, error o sin datos), la
+**Copias de seguridad** (solo superadmin) muestra la salud (correcto, atención, error o sin datos), la
 última copia con su antigüedad y tamaño, cómo terminó la última ejecución (con su error si falló) y la lista de copias
 en Drive, marcando las de domingo como semanales.
 
@@ -117,3 +117,27 @@ La API no habla con Drive ni tiene credenciales. Lee dos ficheros pequeños que 
 copia, si no hay copias o si la última supera `maxAgeHours`; **atención** si la comprobación diaria lleva más de ~50 h
 sin ejecutarse; **sin datos** mientras no exista ninguno de los dos ficheros (instalación nueva o sin copias aún).
 Tras actualizar los scripts, el panel se rellena con la siguiente copia o con `sudo trazo-backup-check`.
+
+### Hacer una copia ahora y restaurar desde el panel
+
+- **Hacer copia ahora**: la API crea `/run/trazo/backup-now`; `trazo-backup-now.path` (systemd, root) lo ve y arranca
+  `trazo-backup.service`, que sube la copia a Drive como la diaria. Mientras corre, el script deja `backup-running` en
+  `/var/lib/trazo` y el panel lo muestra.
+- **Restaurar** (botón en cada copia). Como el servidor solo tiene la clave pública, el diálogo pide **pegar la clave
+  privada** (vale el fichero entero de `age-keygen`). Va por HTTPS en esa petición, la API la deja en `/run/trazo`
+  (tmpfs, 0600, `RuntimeDirectory` de `trazo.service`), `trazo-restore-request.path` lanza `trazo-restore-request` (root),
+  que la mueve a su propio directorio en tmpfs y la destruye (`shred`) al acabar. No se guarda en la base de datos ni se
+  escribe en ningún log. Dos modos:
+  - **Verificar en la base de prueba**: descarga, descifra y restaura en `trazo_restore_test`, y la borra. No toca producción.
+  - **Restaurar en producción** (hay que escribir `RESTAURAR`): primero hace la verificación anterior (así una clave
+    equivocada o una copia dañada falla *antes* de parar nada), guarda un volcado previo en `/var/backups/trazo-pre-restore`
+    (root, últimos 3), para `trazo`, restaura la base y las claves de Data Protection, y arranca `trazo`. **No** restaura
+    `trazo.env` (se conserva el actual). Si la restauración falla, recupera el volcado previo y arranca `trazo`.
+- El resultado queda en `/var/lib/trazo/backup-restore-status.json` y el panel lo enseña (la API está parada unos minutos
+  en una restauración en producción; la página sigue consultando y vuelve sola).
+- Instalación en un servidor que ya tiene los backups: `sudo bash deploy/scripts/install-trazo-backup.sh` (instala las
+  unidades `.path`, reinstala `trazo.service` con `RuntimeDirectory=trazo` y las activa) y **reiniciar `trazo` una vez**
+  para que exista `/run/trazo`.
+- Seguridad: quien comprometa la API solo puede dejar peticiones; sin la clave privada no puede restaurar nada, y pedir una
+  copia solo sube una copia más a Drive. Los nombres de copia y modos se validan con listas cerradas en la API y de nuevo en
+  el script root.

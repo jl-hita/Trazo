@@ -7,10 +7,14 @@ public sealed record BackupCopy(string Name, long SizeBytes, DateTimeOffset Crea
 
 public sealed record BackupLastRun(bool Ok, DateTimeOffset? StartedAt, DateTimeOffset? FinishedAt, string? Copy, string? Error);
 
+/// <param name="State"><c>running</c>, <c>ok</c> or <c>failed</c>.</param>
+/// <param name="Mode"><c>test</c> (scratch database) or <c>production</c>.</param>
+public sealed record BackupRestoreStatus(string State, string? Mode, string? Copy, DateTimeOffset? StartedAt, DateTimeOffset? FinishedAt, string? Message);
+
 /// <param name="Health"><c>healthy</c>, <c>warning</c>, <c>error</c> or <c>unknown</c> (nothing recorded yet).</param>
 public sealed record BackupStatusView(
     bool Configured, string Health, string? Message, DateTimeOffset? CheckedAt, int MaxAgeHours, string? Remote,
-    BackupLastRun? LastRun, IReadOnlyList<BackupCopy> Copies);
+    BackupLastRun? LastRun, IReadOnlyList<BackupCopy> Copies, bool Running = false, BackupRestoreStatus? Restore = null);
 
 /// <summary>
 /// Reads what the server's backup scripts leave in the status directory (see docs/backups.md): <c>backup-status.json</c>
@@ -23,6 +27,10 @@ public static class BackupStatusReader
     public const string DefaultDirectory = "/var/lib/trazo";
     public const string StatusFile = "backup-status.json";
     public const string LastRunFile = "backup-last-run.json";
+    /// <summary>Exists while <c>trazo-backup</c> is running (a leftover older than <see cref="RunningIsStaleAfter"/> is ignored).</summary>
+    public const string RunningFile = "backup-running";
+    public const string RestoreFile = "backup-restore-status.json";
+    private static readonly TimeSpan RunningIsStaleAfter = TimeSpan.FromHours(3);
     private const int DefaultMaxAgeHours = 36;
     /// <summary>The daily check has stopped running when its own record is older than this.</summary>
     private static readonly TimeSpan CheckIsStaleAfter = TimeSpan.FromHours(50);
@@ -32,8 +40,10 @@ public static class BackupStatusReader
         var dir = string.IsNullOrWhiteSpace(directory) ? DefaultDirectory : directory;
         using var status = Load(Path.Combine(dir, StatusFile));
         using var lastRunDoc = Load(Path.Combine(dir, LastRunFile));
+        var running = IsRunning(dir, now);
+        var restore = ReadRestore(dir);
         if (status is null && lastRunDoc is null)
-            return new BackupStatusView(false, "unknown", null, null, DefaultMaxAgeHours, null, null, []);
+            return new BackupStatusView(false, "unknown", null, null, DefaultMaxAgeHours, null, null, [], running, restore);
 
         var root = status?.RootElement;
         var maxAge = root is { } r && r.TryGetProperty("maxAgeHours", out var m) && m.TryGetInt32(out var hours) && hours > 0 ? hours : DefaultMaxAgeHours;
@@ -43,7 +53,23 @@ public static class BackupStatusReader
         var lastRun = lastRunDoc is null ? null : ParseLastRun(lastRunDoc.RootElement);
 
         var (health, message) = Evaluate(copies, lastRun, checkedAt, maxAge, status is not null, now);
-        return new BackupStatusView(true, health, message, checkedAt, maxAge, remote, lastRun, copies);
+        return new BackupStatusView(true, health, message, checkedAt, maxAge, remote, lastRun, copies, running, restore);
+    }
+
+    public static bool IsRunning(string? directory, DateTimeOffset now)
+    {
+        var path = Path.Combine(string.IsNullOrWhiteSpace(directory) ? DefaultDirectory : directory, RunningFile);
+        try { return File.Exists(path) && now - new DateTimeOffset(File.GetLastWriteTimeUtc(path), TimeSpan.Zero) < RunningIsStaleAfter; }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { return false; }
+    }
+
+    public static BackupRestoreStatus? ReadRestore(string? directory)
+    {
+        using var doc = Load(Path.Combine(string.IsNullOrWhiteSpace(directory) ? DefaultDirectory : directory, RestoreFile));
+        if (doc is null || Text(doc.RootElement, "state") is not { } state || state is not ("running" or "ok" or "failed")) return null;
+        var root = doc.RootElement;
+        return new BackupRestoreStatus(state, Text(root, "mode"), Text(root, "copy"), Date(root, "startedAt"), Date(root, "finishedAt"),
+            Text(root, "message") is { Length: > 0 } m ? m[..Math.Min(m.Length, 800)] : null);
     }
 
     private static (string Health, string Message) Evaluate(

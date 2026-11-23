@@ -34,6 +34,8 @@ work="$(mktemp -d /var/tmp/trazo-backup.XXXXXX)"
 STATUS_DIR="${BACKUP_STATUS_DIR:-/var/lib/trazo}"
 step="preparacion"
 finished_ok=0
+# Marca "en curso" para el panel (lo borra finish).
+if [[ -d "$STATUS_DIR" ]]; then touch "$STATUS_DIR/backup-running" && chown trazo:trazo "$STATUS_DIR/backup-running" 2>/dev/null || true; fi
 json_escape() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | tr '\n\t' '  '; }
 write_last_run() { # ok(true|false) copia error
   local target="$STATUS_DIR/backup-last-run.json" tmp error="null"
@@ -47,7 +49,7 @@ write_last_run() { # ok(true|false) copia error
 }
 finish() {
   local rc=$?
-  rm -rf "$work"
+  rm -rf "$work" "$STATUS_DIR/backup-running"
   if [[ $finished_ok -ne 1 ]]; then write_last_run false "" "Fallo en el paso '$step' (codigo $rc)" || true; fi
 }
 trap finish EXIT

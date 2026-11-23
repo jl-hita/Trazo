@@ -14,7 +14,10 @@ install -o root -g root -m 0755 "$REPO/deploy/backup/trazo-restore.sh" /usr/loca
 install -o root -g root -m 0644 "$REPO/deploy/systemd/trazo-backup.service" /etc/systemd/system/trazo-backup.service
 install -o root -g root -m 0644 "$REPO/deploy/systemd/trazo-backup.timer" /etc/systemd/system/trazo-backup.timer
 install -o root -g root -m 0755 "$REPO/deploy/backup/trazo-backup-check.sh" /usr/local/sbin/trazo-backup-check
-for unit in trazo-backup-check.service trazo-backup-check.timer trazo-backup-failed.service; do
+install -o root -g root -m 0755 "$REPO/deploy/backup/trazo-restore-request.sh" /usr/local/sbin/trazo-restore-request
+# El panel pide copias y restauraciones por /run/trazo (RuntimeDirectory de trazo.service): reinstala tambien trazo.service.
+install -o root -g root -m 0644 "$REPO/deploy/systemd/trazo.service" /etc/systemd/system/trazo.service
+for unit in trazo-backup-check.service trazo-backup-check.timer trazo-backup-failed.service   trazo-backup-now.path trazo-backup-now.service trazo-restore-request.path trazo-restore-request.service; do
   install -o root -g root -m 0644 "$REPO/deploy/systemd/$unit" "/etc/systemd/system/$unit"
 done
 
@@ -34,5 +37,7 @@ ENV
   echo ">> Creado /etc/trazo/backup.env: rellena AGE_RECIPIENT y RCLONE_REMOTE."
 fi
 systemctl daemon-reload
+systemctl enable --now trazo-backup-now.path trazo-restore-request.path
+echo ">> Para que el panel pueda pedir copias hace falta reiniciar trazo una vez (crea /run/trazo): sudo systemctl restart trazo"
 echo ">> Instalado. Cuando backup.env y rclone esten listos: sudo systemctl enable --now trazo-backup.timer trazo-backup-check.timer"
 echo ">> Primera prueba manual: sudo systemctl start trazo-backup.service && journalctl -u trazo-backup -n 50"

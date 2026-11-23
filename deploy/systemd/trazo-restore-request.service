@@ -1,0 +1,9 @@
+[Unit]
+Description=Verify or restore a TRAZO backup requested from the admin panel
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/trazo-restore-request
+TimeoutStartSec=2h
