@@ -46,6 +46,12 @@ public static class AccountData
         typeof(Trazo.Domain.Analytics.PaywallView),
         // Marketing campaigns, their anonymous daily counters and the owner-entered spend: no user in any of them.
         typeof(Trazo.Domain.Marketing.MarketingCampaign), typeof(Trazo.Domain.Marketing.CampaignDailyStat), typeof(Trazo.Domain.Marketing.CampaignSpend), typeof(Trazo.Domain.Marketing.StoreDownloads),
+        // Anonymous engine research, written when an account is deleted. Not personal data because (1) each row has its own random id and
+        // no user id, plan id, original id, date or free text (EngineResearchSampler is an allow-list; a test walks the model and fails on
+        // such a column); (2) no mapping from the original ids is stored, so it is anonymised and not pseudonymised; (3) the plan context
+        // is generalised (closed vocabularies, plan length in bands of four, no limitations, equipment, priorities, seed or dates).
+        // SampleGroupId is a new random value, filled only with the user's research consent. See docs/account-deletion.md.
+        typeof(EngineResearchObservation), typeof(EngineResearchDecision),
         // Business books of the owner: they refer to suppliers and customers, never to app users.
         typeof(Trazo.Domain.Fiscal.FiscalEntry), typeof(Trazo.Domain.Fiscal.FiscalClosure), typeof(Trazo.Domain.Fiscal.FiscalAuditEntry)
     };
@@ -61,7 +67,7 @@ public sealed record PlaySubscriptionNotice(string Status, DateTimeOffset Expire
 /// <summary>What the app needs before it offers account deletion.</summary>
 public sealed record AccountInfo(
     Guid Id, string Email, string DisplayName, string Role, string TimeZone, bool HasPassword, bool GoogleLinked, bool TwoFactorEnabled,
-    bool CanDelete, string? CannotDeleteReason, DeletionRequirements Deletion, PlaySubscriptionNotice? PlaySubscription, string? Language = null);
+    bool CanDelete, string? CannotDeleteReason, DeletionRequirements Deletion, PlaySubscriptionNotice? PlaySubscription, string? Language = null, bool ResearchConsent = false);
 
 /// <summary>
 /// What a deletion request must prove. <c>RequiresPassword</c> and <c>RequiresGoogleIdToken</c> are alternatives (one is enough);
@@ -79,6 +85,8 @@ public interface IAccountService
     Task<bool> SetTimeZoneAsync(Guid userId, string timeZone, CancellationToken ct);
     /// <summary>Saves the language the user chose ("es", "en", or null for automatic).</summary>
     Task<bool> SetLanguageAsync(Guid userId, string? language, CancellationToken ct);
+    /// <summary>Saves the optional consent to group the anonymous research rows of a future deletion per plan. Revocable at any time.</summary>
+    Task<bool> SetResearchConsentAsync(Guid userId, bool consent, CancellationToken ct);
 }
 
 /// <summary>
@@ -109,7 +117,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
             lastSuperadmin ? "Eres el último superadministrador: nombra a otro antes de eliminar la cuenta." : null,
             new DeletionRequirements(user.PasswordHash is not null, user.GoogleSubject is not null && user.PasswordHash is null,
                 user.TwoFactorEnabled, notice is not null, warning, notice is null ? null : ManageSubscriptionsUrl),
-            notice, user.Language);
+            notice, user.Language, user.ResearchConsent);
     }
 
     private async Task<PlaySubscriptionNotice?> PlaySubscriptionAsync(Guid userId, CancellationToken ct)
@@ -143,6 +151,13 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
         return changed == 1;
     }
 
+    public async Task<bool> SetResearchConsentAsync(Guid userId, bool consent, CancellationToken ct)
+    {
+        var changed = await db.Users.Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.ResearchConsent, consent).SetProperty(u => u.UpdatedAt, clock.GetUtcNow()), ct);
+        return changed == 1;
+    }
+
     // ---------------------------------------------------------------- deletion
 
     public async Task<AccountDeletionResult> DeleteAsync(Guid userId, CancellationToken ct)
@@ -158,6 +173,9 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
 
         var plans = db.TrainingPlans.Where(p => p.UserId == userId).Select(p => p.Id);
         var rows = 0;
+        // Anonymous research rows are written FIRST and in the same transaction: if any delete below fails, they roll back with it and
+        // no orphan sample is left for an account that still exists.
+        await WriteResearchSamplesAsync(user, ct);
         // Children first. Every step deletes and then checks that nothing is left.
         // Manual plan reviews. The user's own conversations (which may hold health information) are deleted. When the account
         // belongs to an administrator, the conversations of other users stay: only the reference to this administrator goes.
@@ -204,6 +222,20 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
 
         await ScrubLogsAsync(userId, ct);
         return new(true, null, rows, hash, playPending);
+    }
+
+    /// <summary>Copies the allowed, anonymised fields of the user's learning data into the research tables (see <see cref="EngineResearchSampler"/>).</summary>
+    private async Task WriteResearchSamplesAsync(TrazoUser user, CancellationToken ct)
+    {
+        var plans = await db.TrainingPlans.AsNoTracking().Where(p => p.UserId == user.Id).ToListAsync(ct);
+        var observations = await db.MuscleWeekObservations.AsNoTracking().Where(o => o.UserId == user.Id).ToListAsync(ct);
+        var decisions = await db.LongitudinalDecisions.AsNoTracking().Where(d => d.UserId == user.Id).ToListAsync(ct);
+        var sample = EngineResearchSampler.Build(plans, observations, decisions, grouped: user.ResearchConsent);
+        if (sample.Observations.Count == 0 && sample.Decisions.Count == 0) return;
+        db.EngineResearchObservations.AddRange(sample.Observations);
+        db.EngineResearchDecisions.AddRange(sample.Decisions);
+        await db.SaveChangesAsync(ct);
+        db.ChangeTracker.Clear();
     }
 
     private static async Task<int> StepAsync<T>(IQueryable<T> rows, CancellationToken ct) where T : class

@@ -360,6 +360,182 @@ public sealed class AccountApiTests : IDisposable
         Assert.Equal(HttpStatusCode.Unauthorized, (await anaClient.GetAsync("/api/v1/account")).StatusCode);
     }
 
+    // ------------------------------------------------------------------ anonymous engine research
+
+    private async Task<(Guid PlanId, string Goal)> SeedDirtyLearningAsync(Guid userId)
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var plan = await db.TrainingPlans.FirstAsync(p => p.UserId == userId);
+        db.MuscleWeekObservations.AddRange(
+            new MuscleWeekObservation
+            {
+                Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, Period = 1, MesocycleSequence = 1, Muscle = "Chest", Quality = "partial",
+                Reason = "pain", PrescribedSets = 12, PerformedSets = 9, Exposures = 2, PainSessions = 1, ProcessedThrough = Now, UpdatedAt = Now
+            },
+            new MuscleWeekObservation
+            {
+                Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, Period = 2, MesocycleSequence = 1, Muscle = "Chest", Quality = "excluded",
+                Reason = "me duele la rodilla izquierda desde el accidente", PrescribedSets = 12, ProcessedThrough = Now, UpdatedAt = Now
+            });
+        db.LongitudinalDecisions.Add(new LongitudinalDecision
+        {
+            Id = Guid.NewGuid(), UserId = userId, PlanId = plan.Id, MesocycleSequence = 1, Muscle = "Chest", Action = "decrease", BaselineSets = 12,
+            PreviousSets = 12, ProposedSets = 10, AnalyzedFromPeriod = 1, AnalyzedToPeriod = 2, SignalsJson = "{\"secret\":\"ana@example.com\"}",
+            Reason = "Texto libre con datos personales de Ana", PolicyVersion = "longitudinal-2.0", CreatedAt = Now
+        });
+        await db.SaveChangesAsync();
+        return (plan.Id, plan.Goal);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task DeletingTheAccountLeavesAnAnonymousRecordThatPointsAtNobody(bool consent)
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        await StartPlanAndLogAsync(ClientFor(ana));
+        var (planId, _) = await SeedDirtyLearningAsync(ana.Id);
+        using (var scope = _factory.Services.CreateScope())
+            Assert.True(await scope.ServiceProvider.GetRequiredService<IAccountService>().SetResearchConsentAsync(ana.Id, consent, default));
+
+        Assert.Equal(HttpStatusCode.OK, (await DeleteAsync(ClientFor(ana), new { password = Password })).StatusCode);
+
+        using var check = _factory.Services.CreateScope();
+        var db = check.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        var observations = await db.EngineResearchObservations.AsNoTracking().ToListAsync();
+        var decisions = await db.EngineResearchDecisions.AsNoTracking().ToListAsync();
+        Assert.Equal(2, observations.Count);
+        Assert.Single(decisions);
+        // Only the closed reason codes survive; free text is dropped.
+        Assert.Equal(new[] { null, "pain" }, observations.Select(o => o.Reason).OrderBy(r => r, StringComparer.Ordinal).ToArray());
+        Assert.Equal("decrease", decisions[0].Action);
+        // Grouping per plan only with consent, and with a random id.
+        if (consent)
+        {
+            Assert.All(observations, o => Assert.NotNull(o.SampleGroupId));
+            Assert.Single(observations.Select(o => o.SampleGroupId).Concat(decisions.Select(d => d.SampleGroupId)).Distinct());
+        }
+        else Assert.All(observations.Select(o => o.SampleGroupId).Concat(decisions.Select(d => d.SampleGroupId)), g => Assert.Null(g));
+        // Nothing in any column leads back to the person, the plan or the original rows.
+        var dump = System.Text.Json.JsonSerializer.Serialize(new { observations, decisions });
+        Assert.DoesNotContain(ana.Id.ToString(), dump, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(planId.ToString(), dump, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ana", dump.Replace("analyzed", "", StringComparison.OrdinalIgnoreCase), StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("rodilla", dump, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("secret", dump, StringComparison.OrdinalIgnoreCase);
+        Assert.All(observations, o => { Assert.False(string.IsNullOrEmpty(o.PlanGoal)); Assert.Equal(0, o.PlanTotalPeriodsBand % 4); });
+    }
+
+    [Fact]
+    public async Task AnAccountWithoutLearningDataLeavesNoResearchRows()
+    {
+        var bob = await AddUserAsync("bob@example.com");
+
+        Assert.Equal(HttpStatusCode.OK, (await DeleteAsync(ClientFor(bob), new { password = Password })).StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        Assert.Empty(await db.EngineResearchObservations.ToListAsync());
+        Assert.Empty(await db.EngineResearchDecisions.ToListAsync());
+    }
+
+    [Fact]
+    public void TheResearchTablesCannotHoldAnythingThatIdentifiesAPersonOrAPlan()
+    {
+        using var scope = _factory.Services.CreateScope();
+        var model = scope.ServiceProvider.GetRequiredService<TrazoDbContext>().Model;
+        var forbiddenNames = new[] { "UserId", "PlanId", "Email", "Name", "Note", "Text", "Comment", "Message", "Json", "Limitation", "Equipment", "Exercise", "Seed", "TimeZone", "Day", "Date", "Token", "Ip" };
+        foreach (var type in new[] { typeof(EngineResearchObservation), typeof(EngineResearchDecision) })
+        {
+            var entity = model.FindEntityType(type)!;
+            Assert.Empty(entity.GetForeignKeys());
+            Assert.True(AccountData.NotPersonal.Contains(type), type.Name + " must be declared NotPersonal.");
+            foreach (var property in entity.GetProperties())
+            {
+                var name = property.Name;
+                var where = $"{type.Name}.{name}";
+                Assert.False(forbiddenNames.Any(f => name.Contains(f, StringComparison.OrdinalIgnoreCase) && name != "PlanSessionsPerPeriod" && name != "PlanExperience" && name != "PlanTotalPeriodsBand"),
+                    where + " looks like an identifier or free text.");
+                Assert.False(name.EndsWith("At", StringComparison.Ordinal), where + " looks like an exact timestamp.");
+                var clr = Nullable.GetUnderlyingType(property.ClrType) ?? property.ClrType;
+                Assert.False(clr == typeof(DateTime) || clr == typeof(DateTimeOffset) || clr == typeof(DateOnly) || clr == typeof(TimeOnly), where + " is a date.");
+                if (clr == typeof(Guid)) Assert.True(name is "Id" or "SampleGroupId", where + ": the only ids allowed are the random row id and the random group id.");
+                if (clr == typeof(string)) Assert.True(property.GetMaxLength() is > 0 and <= 40, where + " is a string without a short length limit (free text).");
+                Assert.True(clr == typeof(Guid) || clr == typeof(string) || clr == typeof(int) || clr == typeof(bool) || clr == typeof(decimal), where + " has an unexpected type " + clr.Name);
+            }
+        }
+        // Nothing may point at the research tables either.
+        Assert.All(model.GetEntityTypes(), e => Assert.DoesNotContain(e.GetForeignKeys(),
+            k => k.PrincipalEntityType.ClrType == typeof(EngineResearchObservation) || k.PrincipalEntityType.ClrType == typeof(EngineResearchDecision)));
+    }
+
+    [Fact]
+    public void TheSamplerGeneralisesThePlanAndDropsWhatIsNotOnTheAllowList()
+    {
+        var plan = new TrainingPlan
+        {
+            Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Goal = "Hypertrophy", Experience = "Intermediate", Split = "UpperLower", TotalWeeks = 9,
+            SessionsPerPeriod = 4, Readiness = "Returning", EngineVersion = "engine-4.2", Limitations = ["rodilla"], Seed = 1234,
+            TrainingDays = ["Mon"], AvailableEquipment = ["bar"]
+        };
+        var odd = new TrainingPlan { Id = Guid.NewGuid(), UserId = plan.UserId, Goal = "quiero mejorar mi rodilla", Experience = "x", Split = "y", EngineVersion = "a b c", Readiness = "algo" };
+
+        var context = EngineResearchSampler.ContextOf(plan);
+        var dirty = EngineResearchSampler.ContextOf(odd);
+
+        Assert.Equal(("Hypertrophy", "Intermediate", "UpperLower", "Returning", "engine-4.2", 4, 12), (context.Goal, context.Experience, context.Split, context.Readiness, context.EngineVersion, context.SessionsPerPeriod, context.TotalPeriodsBand));
+        Assert.Null(dirty.Goal);
+        Assert.Null(dirty.Readiness);
+        Assert.Null(dirty.EngineVersion);
+        // A row whose muscle or action is not a closed token is not exported at all.
+        var result = EngineResearchSampler.Build([plan],
+            [new MuscleWeekObservation { Id = Guid.NewGuid(), UserId = plan.UserId, PlanId = plan.Id, Muscle = "mi pierna rota", Quality = "valid", ProcessedThrough = Now, UpdatedAt = Now }],
+            [new LongitudinalDecision { Id = Guid.NewGuid(), UserId = plan.UserId, PlanId = plan.Id, Muscle = "Chest", Action = "texto libre", SignalsJson = "{}", Reason = "r", PolicyVersion = "p-1", CreatedAt = Now }],
+            grouped: false);
+        Assert.Empty(result.Observations);
+        Assert.Empty(result.Decisions);
+    }
+
+    [Fact]
+    public async Task ADeletionThatFailsHalfWayLeavesNoOrphanResearchRows()
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        await StartPlanAndLogAsync(ClientFor(ana));
+        await SeedDirtyLearningAsync(ana.Id);
+        using (var scope = _factory.Services.CreateScope())
+        {
+            // The last step of the deletion (the user row) fails, after the research rows were already written in the same transaction.
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            await db.Database.ExecuteSqlRawAsync("CREATE TRIGGER fail_user_delete BEFORE DELETE ON users BEGIN SELECT RAISE(ABORT, 'boom'); END;");
+        }
+
+        using (var scope = _factory.Services.CreateScope())
+            await Assert.ThrowsAnyAsync<Exception>(() => scope.ServiceProvider.GetRequiredService<IAccountService>().DeleteAsync(ana.Id, default));
+
+        using var check = _factory.Services.CreateScope();
+        var after = check.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        Assert.Equal(0, await after.EngineResearchObservations.CountAsync());
+        Assert.Equal(0, await after.EngineResearchDecisions.CountAsync());
+        Assert.Equal(1, await after.Users.CountAsync(u => u.Id == ana.Id));
+        Assert.True(await after.MuscleWeekObservations.AnyAsync(o => o.UserId == ana.Id));
+    }
+
+    [Fact]
+    public async Task ResearchConsentIsOptionalOffByDefaultAndRevocable()
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        var client = ClientFor(ana);
+        Assert.False((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("researchConsent").GetBoolean());
+
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync("/api/v1/account/research-consent", new { consent = true })).StatusCode);
+        Assert.True((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("researchConsent").GetBoolean());
+
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync("/api/v1/account/research-consent", new { consent = false })).StatusCode);
+        Assert.False((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("researchConsent").GetBoolean());
+        Assert.Equal(HttpStatusCode.Unauthorized, (await ClientFor(null).PutAsJsonAsync("/api/v1/account/research-consent", new { consent = true })).StatusCode);
+    }
+
     [Fact]
     public async Task InfoWarnsThatAnActivePlaySubscriptionIsNotCancelled()
     {

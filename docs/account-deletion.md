@@ -49,23 +49,86 @@ whole transaction is rolled back). All sessions end with it: refresh tokens are 
 | `training_plans`, `training_plan_phases`, `training_mesocycles`, `planned_sessions` | profile (limitations, equipment) and the plan |
 | `workout_logs`, `workout_set_logs` | logged sessions: loads, repetitions, RIR, recovery, **pain reported, free notes** |
 | `plan_adaptations` | changes the engine made to the plan |
-| `muscle_week_observations` | per muscle and week observations (kept; today only the fall-with-fatigue pattern reads them) (deleted before the plans) |
-| `longitudinal_decisions` | audit log of every volume decision of longitudinal learning (deleted before the plans) |
+| `muscle_week_observations` | per muscle and week observations (deleted before the plans; an anonymous copy of the counters is kept, see "Anonymous engine research") |
+| `longitudinal_decisions` | audit log of every volume decision of longitudinal learning (deleted before the plans; an anonymous copy of the structured fields is kept) |
 | `frequency_proposals` | proposals and decisions to reorganise the training days (deleted before the plans) |
 | `waitlist_entries` | the landing waitlist row with the same email as the account (not linked by id; matched by the normalised email) |
 | `plan_review_requests`, `plan_review_messages` | manual plan reviews: the user's conversations (may contain health data) are deleted; when an administrator is deleted, their reviews go back to the queue and only the reference to them is cleared |
 
 A test (`EveryTableOfTheModelIsEitherDeletedWithTheAccountOrKnownNotToBePersonal`) walks the EF model and fails if a table exists that is
-neither in `AccountData.UserOwned` (deleted) nor in `AccountData.NotPersonal` (catalog, settings). Add new user tables to `AccountService` too.
+neither in `AccountData.UserOwned` (deleted) nor in `AccountData.NotPersonal` (catalog, settings, anonymous research). Add new user tables to `AccountService` too.
+A second test walks the two research tables and fails if they gain an id of a person or plan, a foreign key, a date, a free-text column or an unexpected type.
 
 ## What is kept, and why
 
-- **Nothing about the user is kept in TRAZO.** Subscription payments are processed by Google Play, which is the merchant of record and
+- **Nothing that identifies the user is kept in TRAZO**, except what the next section describes, which is anonymous and is not about the
+  user any more. Subscription payments are processed by Google Play, which is the merchant of record and
   keeps the legally required billing records; TRAZO holds only a verified cache of the purchase, which is deleted with the account.
   No anonymised subscription record is retained (it would add no legal value and would keep a purchase fingerprint).
 - **Audit log:** one line `Account deleted: subject <16 hex of a SHA-256>, initiated by self|web-link|superadmin <id>, N rows removed.`
   The subject tag is not reversible and there is no email or name. (For admin deletions the acting superadmin's id is logged.)
 - **Backups:** if the server database is backed up, deleted data disappears from backups when they rotate out. State the backup retention in the policy.
+
+## Anonymous engine research (kept on purpose)
+
+**Status: needs legal review before the privacy policy that mentions it is published.** The design below is meant to be anonymous in the
+sense of recital 26 GDPR (nobody can single the person out with means reasonably likely to be used); that is a legal judgement, not only
+a technical one, and it has not been made by a lawyer or a DPO yet.
+
+When an account is deleted, `AccountService.DeleteAsync` first copies a few allowed fields into two tables **in the same transaction** as
+the deletes (so a failed deletion rolls the copy back and leaves no orphan rows), and then deletes everything else as described above.
+The copy is built by `EngineResearchSampler`, which works by allow-list.
+
+| Table | What it holds | Source |
+|---|---|---|
+| `engine_research_observations` | per muscle and plan period: `Period`, `MesocycleSequence`, `IsDeload`, `Muscle`, `Quality`, `Reason`, prescribed/performed sets, sessions planned/done, exposures, completed and below-range sets, performance change %, performance samples, fatigue signals, feedback / low-stimulus / discomfort answers, pain sessions, `ReturnFromAbsence` | `muscle_week_observations` |
+| `engine_research_decisions` | `MesocycleSequence`, `Muscle`, `Action`, baseline / previous / proposed sets, analysed period range, `PolicyVersion` | `longitudinal_decisions` |
+
+Both tables also repeat a **generalised plan profile**: goal, experience, split, readiness (`Regular`, `New`, `Returning`), engine version,
+sessions per period (capped at 7) and plan length rounded **up to a multiple of 4** weeks (capped at 52).
+
+### What is deliberately NOT copied
+
+- Any user id, plan id or original row id; nothing maps the new random row ids back to the old ones, and no mapping is stored anywhere
+  (a stored mapping would make it pseudonymisation, which is still personal data).
+- Dates and times of any kind (`ProcessedThrough`, `UpdatedAt`, `CreatedAt`, plan start date, time zone, training days, `PerformedAt`).
+- `LongitudinalDecision.Reason` (generated prose) and `SignalsJson` (unversioned JSON): they could carry anything, so they are dropped.
+  `MuscleWeekObservation.Reason` is kept only if it is one of the closed codes the observer writes (`deload`, `preparation`, `pain`,
+  `return_from_absence`, `date_unreliable`, `no_valid_exposure`, `low_completion`); anything else becomes null.
+- From the plan: `Limitations`, `MusclePriorities`, `AvailableEquipment`, `ExcludedExerciseIds`, `Seed`, `TrainingDays`, exact `TotalWeeks`,
+  `StartDate`, macrocycle texts. Text fields that are copied (goal, experience, split, muscle, versions) must match a strict token pattern
+  (letters, digits, `_`, `-`, at most 30-40 characters) or are dropped; a row whose muscle or action is not a valid token is not exported.
+- Workout logs (notes, pain, dates), exact weights, reviews and messages, emails, names, anything free-text. These are deleted as before.
+
+### Consent: `ResearchConsent`
+
+`users.ResearchConsent` (default **false**), set by `PUT /api/v1/account/research-consent` `{ "consent": true|false }` and reported in
+`GET /api/v1/account` as `researchConsent`. It is optional, revocable at any time and never a condition of using the app (the Android
+client has no screen for it yet; the backend is ready).
+
+- **Without consent (default):** the rows are written independent of each other (`SampleGroupId` is null). Each row is one
+  muscle-week counter plus a generalised profile; rows of the same person cannot be linked to each other.
+- **With consent:** the rows of one deleted plan share a `SampleGroupId`, a **new random Guid per deletion** (not derived from the plan id
+  or anything else, not stored elsewhere). It lets the engine study sequences (what happened after a volume decrease). This is the
+  riskier of the two modes, because a long, unusual sequence can start to single someone out; that is why it needs the opt-in.
+
+### Anonymisation criteria applied
+
+1. No direct identifier and no foreign key (a test fails if the tables get a `UserId`/`PlanId`/email/name/text/date column or any FK).
+2. No stored mapping to the original ids.
+3. Allow-list copy: numbers, flags, closed vocabularies, tokens; never free text.
+4. Generalisation of quasi-identifiers (plan length in bands, sessions capped, no dates, no limitations or equipment).
+5. Linkage only with explicit opt-in, through a random id.
+
+### Known limits (for the legal / DPO review)
+
+- No k-anonymity threshold is enforced: a deleted account with a very unusual profile still produces rows. If the review asks for one,
+  suppress rows whose (goal, experience, split, band, engine version) combination has fewer than k members, at write or at analysis time.
+- The pain counters (`PainSessions`, `DiscomfortAnswers`, `Reason = pain`) are health-related in origin. They are counters with no
+  person, date or body area attached, but this is the part to look at first under art. 9 GDPR.
+- Rows cannot be erased on request after deletion (nobody can be identified), which the privacy policy states.
+- The two tables are not part of `AccountData.UserOwned`; they are in `AccountData.NotPersonal`, with the reasoning in a comment there.
+- Database backups taken before a deletion still contain the original rows until they rotate out.
 
 ## Application logs (`app_logs`)
 
@@ -107,4 +170,4 @@ It never contains password or token hashes, the 2FA key, recovery codes, or purc
   `deploy/nginx/trazo.conf` has it for reference; the live file is edited by hand because certbot changes it. Do not add a conflicting
   `Content-Security-Policy` in nginx for that path.
 - **Email:** SMTP must be configured (Settings); otherwise the web flow answers normally but no link is sent.
-- **Migration:** `20261114140000_UserTimeZone` adds `users."TimeZoneId"`; account deletion needs no schema change.
+- **Migrations:** `20261114140000_UserTimeZone` adds `users."TimeZoneId"`; `20261203100000_EngineResearchSamples` adds `users."ResearchConsent"` and the two research tables.

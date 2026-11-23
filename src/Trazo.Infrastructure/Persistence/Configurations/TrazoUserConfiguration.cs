@@ -19,6 +19,7 @@ public sealed class TrazoUserConfiguration : IEntityTypeConfiguration<TrazoUser>
         builder.Property(x => x.ProtectedAuthenticatorKey).HasMaxLength(1024);
         builder.Property(x => x.TimeZoneId).HasMaxLength(64);
         builder.Property(x => x.Language).HasMaxLength(5);
+        builder.Property(x => x.ResearchConsent).HasDefaultValue(false);
         builder.HasIndex(x => x.NormalizedEmail).IsUnique();
         builder.HasIndex(x => x.GoogleSubject).IsUnique();
         builder.HasIndex(x => x.Role);

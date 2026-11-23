@@ -33,6 +33,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset?>("DisabledAt").HasColumnType("timestamp with time zone");
             b.Property<string>("TimeZoneId").HasMaxLength(64).HasColumnType("character varying(64)");
             b.Property<string>("Language").HasMaxLength(5).HasColumnType("character varying(5)");
+            b.Property<bool>("ResearchConsent").ValueGeneratedOnAdd().HasColumnType("boolean").HasDefaultValue(false);
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");
@@ -120,6 +121,68 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.HasIndex("Fingerprint").IsUnique();
             b.HasIndex("LastSeenAt");
             b.ToTable("error_tickets");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Planning.EngineResearchObservation", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid?>("SampleGroupId").HasColumnType("uuid");
+            b.Property<int>("Period").HasColumnType("integer");
+            b.Property<int>("MesocycleSequence").HasColumnType("integer");
+            b.Property<bool>("IsDeload").HasColumnType("boolean");
+            b.Property<string>("Muscle").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("Quality").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("Reason").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<decimal>("PrescribedSets").HasColumnType("numeric(6,1)");
+            b.Property<decimal>("PerformedSets").HasColumnType("numeric(6,1)");
+            b.Property<int>("SessionsPlanned").HasColumnType("integer");
+            b.Property<int>("SessionsDone").HasColumnType("integer");
+            b.Property<int>("Exposures").HasColumnType("integer");
+            b.Property<int>("CompletedSets").HasColumnType("integer");
+            b.Property<int>("BelowRangeSets").HasColumnType("integer");
+            b.Property<decimal?>("PerformanceChangePercent").HasColumnType("numeric(8,2)");
+            b.Property<int>("PerformanceSamples").HasColumnType("integer");
+            b.Property<int>("FatigueSignals").HasColumnType("integer");
+            b.Property<int>("FeedbackAnswers").HasColumnType("integer");
+            b.Property<int>("LowStimulusAnswers").HasColumnType("integer");
+            b.Property<int>("DiscomfortAnswers").HasColumnType("integer");
+            b.Property<int>("PainSessions").HasColumnType("integer");
+            b.Property<bool>("ReturnFromAbsence").HasColumnType("boolean");
+            b.Property<string>("PlanGoal").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanExperience").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanSplit").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanReadiness").HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("PlanEngineVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<int>("PlanSessionsPerPeriod").HasColumnType("integer");
+            b.Property<int>("PlanTotalPeriodsBand").HasColumnType("integer");
+            b.HasKey("Id");
+            b.HasIndex("SampleGroupId");
+            b.ToTable("engine_research_observations");
+        });
+
+        modelBuilder.Entity("Trazo.Domain.Planning.EngineResearchDecision", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid?>("SampleGroupId").HasColumnType("uuid");
+            b.Property<int>("MesocycleSequence").HasColumnType("integer");
+            b.Property<string>("Muscle").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("Action").IsRequired().HasMaxLength(10).HasColumnType("character varying(10)");
+            b.Property<decimal>("BaselineSets").HasColumnType("numeric(5,1)");
+            b.Property<decimal>("PreviousSets").HasColumnType("numeric(5,1)");
+            b.Property<decimal>("ProposedSets").HasColumnType("numeric(5,1)");
+            b.Property<int>("AnalyzedFromPeriod").HasColumnType("integer");
+            b.Property<int>("AnalyzedToPeriod").HasColumnType("integer");
+            b.Property<string>("PolicyVersion").IsRequired().HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanGoal").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanExperience").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanSplit").HasMaxLength(30).HasColumnType("character varying(30)");
+            b.Property<string>("PlanReadiness").HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("PlanEngineVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<int>("PlanSessionsPerPeriod").HasColumnType("integer");
+            b.Property<int>("PlanTotalPeriodsBand").HasColumnType("integer");
+            b.HasKey("Id");
+            b.HasIndex("SampleGroupId");
+            b.ToTable("engine_research_decisions");
         });
 
         modelBuilder.Entity("Trazo.Domain.Support.ErrorReportOutboxItem", b =>

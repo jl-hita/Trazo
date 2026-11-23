@@ -22,6 +22,11 @@ public sealed class TrazoUser
     public string? TimeZoneId { get; set; }
     /// <summary>Language the user chose for the texts of the API, e-mails and notifications: "es" or "en". Null means automatic (the language of the request).</summary>
     public string? Language { get; set; }
+    /// <summary>
+    /// Optional. When true, the anonymous research rows written if the account is deleted may be grouped per plan (random group id) so the
+    /// engine can study sequences. False (the default) keeps only independent anonymous rows. Never a condition of using the app.
+    /// </summary>
+    public bool ResearchConsent { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }
