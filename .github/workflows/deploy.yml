@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   deploy:
@@ -112,11 +112,18 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      # Keep a public, single-file snapshot branch so the catalog can be read
-      # directly without downloading a workflow artifact. This branch is not
-      # part of the deploy path filter, so its push cannot trigger another deploy.
+  # Only this job needs write access: it publishes the generated catalog branch.
+  # Keep it on the deployment host, where the running application wrote the snapshot.
+  publish-catalog:
+    needs: deploy
+    if: needs.deploy.result == 'success'
+    runs-on: [self-hosted, Linux, X64]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
       - name: Publish public exercise catalog snapshot
-        if: success()
         continue-on-error: true
         env:
           GIT_TERMINAL_PROMPT: "0"
