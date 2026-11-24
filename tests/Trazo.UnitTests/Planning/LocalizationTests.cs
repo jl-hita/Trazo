@@ -401,14 +401,25 @@ public sealed class UserLanguageApiTests() : PlansApiBase(enforced: false)
     public async Task EveryLanguageOfTheAppCanBeChosen_AndTheApiAnswersInEnglishUntilItIsTranslated()
     {
         var client = WithHeader(ClientFor(await AddUserAsync("lang-app@example.com")), "es");
-        foreach (var language in new[] { "ca", "de", "pt", "fr", "it", "pl", "tr", "sv", "zh" })
+        foreach (var language in new[] { "de", "nl-be", "sr", "ja" }) // the endpoint is rate limited: a sample goes through the API, the full list below
         {
             Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, language)).StatusCode);
             Assert.Equal(language, (await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("language").GetString());
             // the choice wins over the header, and a language without translated texts is answered in English, never in Spanish
             Assert.Equal("You do not have an active plan.", (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString());
         }
-        Assert.Equal(HttpStatusCode.BadRequest, (await ChooseAsync(client, "ru")).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await ChooseAsync(client, "vi")).StatusCode);
+    }
+
+    [Fact]
+    public void EveryLanguageOfTheAppIsAcceptedAndStoredInLowerCase()
+    {
+        foreach (var language in new[] { "ca", "gl", "eu", "pt", "fr", "it", "de", "nl", "nl-be", "da", "nb", "sv", "fi", "pl", "cs", "sk", "sl", "hr", "sr", "bs", "mk", "ru", "el", "tr", "ar", "zh", "ja", "ko" })
+        {
+            Assert.True(LanguageNegotiation.TryNormalizeChoice(language.ToUpperInvariant(), out var stored), language);
+            Assert.Equal(language, stored);
+            Assert.True(language.Length <= 5, language); // the column of users.Language
+        }
     }
 
     [Fact]
@@ -417,7 +428,7 @@ public sealed class UserLanguageApiTests() : PlansApiBase(enforced: false)
         Assert.Equal(AppLanguage.Es, LanguageNegotiation.FromChoice("es"));
         Assert.Equal(AppLanguage.En, LanguageNegotiation.FromChoice("en"));
         Assert.Equal(AppLanguage.En, LanguageNegotiation.FromChoice(" DE "));
-        Assert.Null(LanguageNegotiation.FromChoice("ru"));
+        Assert.Null(LanguageNegotiation.FromChoice("vi"));
         Assert.Null(LanguageNegotiation.FromChoice(null));
         // the app asks "de, en;q=0.8": the first supported language is English
         Assert.Equal(AppLanguage.En, LanguageNegotiation.FromAcceptLanguage("de, en;q=0.8"));
