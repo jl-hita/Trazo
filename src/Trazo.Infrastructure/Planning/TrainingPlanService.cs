@@ -34,6 +34,8 @@ public interface ITrainingPlanService
     Task<PlanResult<RescheduleResult>> RescheduleAsync(Guid userId, CancellationToken ct);
     /// <summary>Replaces the muscle priorities of the generated plan. They shape the blocks generated from now on; a block that already exists is not rewritten.</summary>
     Task<PlanResult<PlanView>> UpdateMusclePrioritiesAsync(Guid userId, IReadOnlyDictionary<string, string>? priorities, CancellationToken ct);
+    /// <summary>Replaces the body areas the user cannot load (an injury outside a session, or its recovery) and swaps what they rule out from the pending sessions (Premium).</summary>
+    Task<PlanResult<PlanView>> UpdateLimitationsAsync(Guid userId, IReadOnlyList<string>? limitations, CancellationToken ct);
     /// <summary>Omits a pending session on purpose: resolved without being training, no progression, no volume adaptation unless the reason is physical (Premium).</summary>
     Task<PlanResult<SkipResult>> SkipSessionAsync(Guid userId, Guid sessionId, string? reason, string? notes, CancellationToken ct);
     Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct);
@@ -734,6 +736,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     public const string ReviewKind = "review";
     public const string SwapKind = "user_swap_exercise";
     public const string AddKind = "user_add_exercise";
+    public const string LimitationsKind = "user_limitations";
     public const string ManualEditKind = "user_manual_plan_edit";
 
     public const string ConcurrentModificationMessage = "Tu plan cambió mientras se guardaba esta modificación y no se ha aplicado nada. Recarga el plan y vuelve a intentarlo.";
@@ -925,6 +928,72 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Explanation = "Prioridades musculares actualizadas: se aplican a los bloques que se generen a partir de ahora."
         });
         await db.SaveChangesAsync(ct);
+        return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
+    }
+
+    public async Task<PlanResult<PlanView>> UpdateLimitationsAsync(Guid userId, IReadOnlyList<string>? limitations, CancellationToken ct)
+    {
+        await UseUserClockAsync(userId, ct);
+        var plan = await ActivePlanAsync(userId, ct);
+        if (plan is null) return PlanResult<PlanView>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (plan.Origin != TrainingPlanOrigin.Generated)
+            return PlanResult<PlanView>.Fail(PlanFailure.NotAllowed, "Las lesiones solo se aplican a un plan generado por TRAZO.");
+        if (await IsLockedAsync(plan, ct)) return PlanResult<PlanView>.Fail(PlanFailure.PremiumRequired, LockedMessage);
+
+        var areas = new List<string>();
+        var invalid = new List<string>();
+        foreach (var raw in limitations ?? [])
+        {
+            var area = LimitationRules.Canonical(raw);
+            if (area is null) invalid.Add(raw ?? string.Empty);
+            else if (!areas.Contains(area)) areas.Add(area);
+        }
+        if (invalid.Count > 0)
+            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Las zonas indicadas no son válidas.",
+                new Dictionary<string, string[]> { ["limitations"] = [$"Zonas admitidas: {string.Join(", ", LimitationRules.Areas)}."] });
+
+        var now = clock.GetUtcNow();
+        var before = plan.Limitations;
+        plan.Limitations = areas.ToArray();
+        plan.UpdatedAt = now;
+
+        // Pending sessions already generated keep nothing the new areas rule out; later blocks are generated with them.
+        var candidates = (await LoadCandidatesAsync(ct)).Candidates;
+        var excluded = plan.ExcludedExerciseIds.Concat(LimitationRules.ExcludedExerciseIds(plan.Limitations, candidates))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var ruledOut = LimitationRules.ExcludedExerciseIds(plan.Limitations, candidates).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var pending = ruledOut.Count == 0 ? [] : await db.PlannedSessions
+            .Where(s => s.PlanId == plan.Id && s.Status == PlannedSessionStatus.Planned).OrderBy(s => s.SequenceIndex).ToListAsync(ct);
+        var changes = new List<SessionChange>();
+        var touched = new List<string>();
+        foreach (var session in pending)
+        {
+            foreach (var exercise in PrescriptionJson.Read(session.PrescriptionJson).Where(e => ruledOut.Contains(e.ExerciseId)).ToArray())
+            {
+                var inSession = PrescriptionJson.Read(session.PrescriptionJson).Select(e => e.ExerciseId);
+                var alternative = TrainingExerciseAlternativeFinder.Find(
+                    exercise.ExerciseId, exercise.PrimaryMuscleGroups, candidates, excluded.Concat(inSession).ToHashSet(StringComparer.OrdinalIgnoreCase),
+                    Enum.Parse<TrainingGoal>(plan.Goal), Enum.Parse<TrainingExperience>(plan.Experience), plan.AvailableEquipment, 1).Alternatives.FirstOrDefault();
+                var candidate = alternative is null ? null
+                    : candidates.FirstOrDefault(c => string.Equals(c.ExerciseId, alternative.ExerciseId, StringComparison.OrdinalIgnoreCase));
+                if (candidate is null || !TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(session.PrescriptionJson, exercise.ExerciseId, candidate, out var updated, out _))
+                    continue;
+                changes.Add(Modified(session, session.PrescriptionJson, updated));
+                session.PrescriptionJson = updated;
+                session.UpdatedAt = now;
+                touched.Add(exercise.ExerciseId);
+                touched.Add(candidate.ExerciseId);
+            }
+        }
+        db.PlanAdaptations.Add(Traced(new PlanAdaptation
+        {
+            Id = Guid.NewGuid(), PlanId = plan.Id, Kind = LimitationsKind, ExerciseIds = touched.Distinct().ToArray(),
+            SessionsChanged = changes.Select(c => c.SessionId).Distinct().Count(), AppliedAt = now, EvidenceAt = now,
+            Explanation = areas.Count == 0
+                ? "El usuario indicó que ya no tiene zonas lesionadas."
+                : $"El usuario indicó zonas lesionadas ({string.Join(", ", areas)}): se sustituyeron los ejercicios que las cargan en las sesiones pendientes y se evitarán en los bloques siguientes."
+        }, PrescriptionSources.User, changes));
+        if (!await SaveUnlessConflictAsync(ct)) return PlanResult<PlanView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<PlanView>.Ok(ToView(plan, await PositionAsync(plan, ct)));
     }
 
