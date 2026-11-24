@@ -15,22 +15,29 @@ public sealed class RequestLanguage
 
 public static class LanguageNegotiation
 {
-    /// <summary>The stored choice ("es", "en") as a language; null for automatic or anything else.</summary>
-    public static AppLanguage? FromChoice(string? choice) => choice?.Trim().ToLowerInvariant() switch
-    {
-        "es" => AppLanguage.Es,
-        "en" => AppLanguage.En,
-        _ => null
-    };
+    /// <summary>
+    /// Every language the app can be shown in, which is what a user may choose. The API itself answers in Spanish and English only:
+    /// any other language of the app is answered in English until its texts are translated.
+    /// </summary>
+    public static readonly IReadOnlyList<string> AppChoices = ["es", "en", "ca", "de", "pt", "fr", "it", "pl", "tr", "sv", "zh"];
 
-    /// <summary>The value to store for a choice: "es", "en", or null (automatic) for an empty or "auto" choice; false when it is none of them.</summary>
+    /// <summary>The language the API answers in for a stored choice; null for automatic or anything unknown. Spanish is Spanish, every other language of the app is English for now.</summary>
+    public static AppLanguage? FromChoice(string? choice)
+    {
+        var value = choice?.Trim().ToLowerInvariant();
+        if (value == "es") return AppLanguage.Es;
+        return value is not null && AppChoices.Contains(value) ? AppLanguage.En : null;
+    }
+
+    /// <summary>The value to store for a choice: a language of the app, or null (automatic) for an empty or "auto" choice; false when it is none of them.</summary>
     public static bool TryNormalizeChoice(string? choice, out string? stored)
     {
         stored = null;
         var value = choice?.Trim().ToLowerInvariant();
         if (string.IsNullOrEmpty(value) || value == "auto") return true;
-        if (value is "es" or "en") { stored = value; return true; }
-        return false;
+        if (!AppChoices.Contains(value)) return false;
+        stored = value;
+        return true;
     }
 
     /// <summary>
