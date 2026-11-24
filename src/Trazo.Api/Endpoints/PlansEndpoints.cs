@@ -65,6 +65,9 @@ public static class PlansEndpoints
         group.MapGet("/current/block", GetBlockAsync).WithName("GetPlanBlock")
             .WithSummary("The whole current block (at most four weeks) with every session's prescription. Later blocks are never served.")
             .Produces<BlockView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/sessions/{sessionId:guid}", GetSessionAsync).WithName("GetPlanSession")
+            .WithSummary("Any session of the user by id, with its prescription and, if recorded, its log (sets, loads, repetitions, RIR, omissions, pain), even from an earlier block or an archived plan. Read-only.")
+            .Produces<SessionView>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current/next", GetNextAsync).WithName("GetNextPlanSession")
             .WithSummary("The session to do next (program order, whatever its date), its position, the late sessions and, with Premium, whether the muscles are recovered.")
             .Produces<NextSessionView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -189,6 +192,13 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         return await plans.GetCurrentWeekAsync(userId, ct) is { } week ? Results.Ok(week) : NoPlan();
+    }
+
+    private static async Task<IResult> GetSessionAsync(Guid sessionId, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.GetSessionAsync(userId, sessionId, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 
     private static async Task<IResult> GetNextAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
