@@ -185,6 +185,8 @@ public static class TrainingAdaptationPrescriptionAdjuster
             target["secondaryMuscleGroups"] = new JsonArray(replacement.SecondaryMuscleGroups.Select(m => (JsonNode?)JsonValue.Create(m.ToString())).ToArray());
             foreach (var stale in new[] { "targetLoadKg", "loadBasis", "warmupSets", "warmupNote", "adaptationOriginalSets" })
                 target.Remove(stale);
+            // The approach sets depend on the muscles of the exercise: the replacement gets its own (what the generator would give it).
+            RefreshWarmups(items);
             var rationale = $"Intercambio solicitado por el paciente: {originalName} → {replacement.Name} (mismo patrón o mismos músculos principales).";
             target["selectionRationale"] = rationale.Length <= 500 ? rationale : rationale[..500];
 
@@ -196,6 +198,33 @@ public static class TrainingAdaptationPrescriptionAdjuster
         catch (JsonException) { return false; }
         catch (InvalidOperationException) { return false; }
         catch (FormatException) { return false; }
+    }
+
+    /// <summary>
+    /// Gives the approach sets of a session by the same rule as the generator (<c>AddWarmupGuidance</c>): in order, an exercise whose
+    /// primary muscles are not warm yet gets them (2 sets the first time, 1 after), unless it only works the core. Run after an exercise
+    /// is swapped so the replacement keeps its warm-up and the following exercises stay consistent.
+    /// </summary>
+    private static void RefreshWarmups(IReadOnlyCollection<JsonObject> exercises)
+    {
+        var warmed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var isFirst = true;
+        foreach (var item in exercises.OrderBy(e => ReadInt(e, "order", 0)))
+        {
+            item.Remove("warmupSets");
+            item.Remove("warmupNote");
+            var muscles = item["primaryMuscleGroups"] is JsonArray array
+                ? array.Select(node => node?.ToString() ?? string.Empty).Where(name => name.Length > 0).ToArray()
+                : [];
+            var coreOnly = muscles.All(name => name is "Abdominals" or "Obliques");
+            var cold = muscles.Where(name => !warmed.Contains(name)).ToArray();
+            warmed.UnionWith(muscles);
+            if (coreOnly || cold.Length == 0) continue;
+            var sets = isFirst ? 2 : 1;
+            isFirst = false;
+            item["warmupSets"] = sets;
+            item["warmupNote"] = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold)}. No cuentan como series de trabajo.";
+        }
     }
 
     /// <summary>

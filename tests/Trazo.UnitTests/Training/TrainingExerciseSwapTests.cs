@@ -85,7 +85,8 @@ public sealed class TrainingExerciseSwapTests
         Assert.Equal(3, (int)ex["sets"]!);
         Assert.Equal(120, (int)ex["restSeconds"]!);
         Assert.Null(ex["targetLoadKg"]);
-        Assert.Null(ex["warmupSets"]);
+        Assert.Equal(2, (int)ex["warmupSets"]!); // the replacement keeps its warm-up sets
+        Assert.Contains("Chest", (string)ex["warmupNote"]!);
         Assert.Contains("Intercambio solicitado por el paciente", (string)ex["selectionRationale"]!);
         Assert.Contains("dumbbell-press", legacy);
 
@@ -104,5 +105,31 @@ public sealed class TrainingExerciseSwapTests
             Session, "bench", C("row", TrainingMovementPattern.HorizontalPull, 50, Chest), out _, out _));
         Assert.False(TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(
             "not json", "bench", C("x", TrainingMovementPattern.Squat, 50, Chest), out _, out _));
+    }
+
+    [Fact]
+    public void TheReplacementGetsTheWarmupOfItsOwnMuscles_AndACoreOnlyOneGetsNone()
+    {
+        var legs = C("leg-press", TrainingMovementPattern.Squat, 70, [TrainingMuscleGroup.Quadriceps]);
+        Assert.True(TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(Session, "bench", legs, out var updated, out _));
+        var ex = JsonNode.Parse(updated)!["exercises"]![0]!;
+        Assert.Equal(2, (int)ex["warmupSets"]!);
+        Assert.Contains("Quadriceps", (string)ex["warmupNote"]!);
+        Assert.DoesNotContain("Chest", (string)ex["warmupNote"]!);
+
+        var core = C("crunch", TrainingMovementPattern.Core, 70, [TrainingMuscleGroup.Abdominals]);
+        Assert.True(TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(Session, "bench", core, out var coreOnly, out _));
+        Assert.Null(JsonNode.Parse(coreOnly)!["exercises"]![0]!["warmupSets"]);
+    }
+
+    [Fact]
+    public void ASecondExerciseOfTheSameMusclesGetsOneWarmupSetOnlyIfItIsCold()
+    {
+        const string twoChest = """{"exercises":[{"exerciseId":"a","order":1,"sets":3,"minRepetitions":8,"maxRepetitions":12,"restSeconds":90,"progressionRule":1,"catalogVersion":"v0","warmupSets":2,"warmupNote":"x","primaryMuscleGroups":["Chest"]},{"exerciseId":"b","order":2,"sets":3,"minRepetitions":8,"maxRepetitions":12,"restSeconds":90,"progressionRule":1,"catalogVersion":"v0","primaryMuscleGroups":["Chest"]}]}""";
+        Assert.True(TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(
+            twoChest, "a", C("c", TrainingMovementPattern.HorizontalPush, 60, [TrainingMuscleGroup.Triceps]), out var updated, out _));
+        var exercises = JsonNode.Parse(updated)!["exercises"]!.AsArray();
+        Assert.Equal(2, (int)exercises[0]!["warmupSets"]!);   // the triceps replacement is first and cold
+        Assert.Equal(1, (int)exercises[1]!["warmupSets"]!);   // the chest is no longer warm: it needs its own
     }
 }
