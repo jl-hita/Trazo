@@ -220,6 +220,9 @@ public sealed record SkipSessionRequest(string? Reason, string? Notes);
 /// <summary>Muscle to priority (Emphasize, Grow, Maintain). A muscle that is not listed is Grow; an empty map clears every priority.</summary>
 public sealed record UpdateMusclePrioritiesRequest(IReadOnlyDictionary<string, string>? MusclePriorities);
 
+/// <summary>The body areas (Knee, Shoulder, LowerBack, Wrist, Elbow) the user cannot load now; replaces the previous set, empty clears it.</summary>
+public sealed record UpdateLimitationsRequest(IReadOnlyList<string>? Limitations);
+
 /// <summary>What omitting did: the session (now Skipped), the next one, and whether the omission also adapted the plan (physical reasons, Premium).</summary>
 public sealed record SkipResult(SessionView Session, bool Adapted, string Message);
 
