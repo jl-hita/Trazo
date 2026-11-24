@@ -19,7 +19,7 @@ public static class LanguageNegotiation
     /// Every language the app can be shown in, which is what a user may choose. The API itself answers in Spanish and English only:
     /// any other language of the app is answered in English until its texts are translated.
     /// </summary>
-    public static readonly IReadOnlyList<string> AppChoices = ["es", "en", "ca", "de", "pt", "fr", "it", "pl", "tr", "sv", "zh"];
+    public static readonly IReadOnlyList<string> AppChoices = ["es", "en", "ca", "gl", "eu", "pt", "fr", "it", "de", "nl", "nl-be", "da", "nb", "sv", "fi", "pl", "cs", "sk", "sl", "hr", "sr", "bs", "mk", "ru", "el", "tr", "ar", "zh", "ja", "ko"];
 
     /// <summary>The language the API answers in for a stored choice; null for automatic or anything unknown. Spanish is Spanish, every other language of the app is English for now.</summary>
     public static AppLanguage? FromChoice(string? choice)
