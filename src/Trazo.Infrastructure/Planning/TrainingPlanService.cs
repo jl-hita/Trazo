@@ -26,6 +26,8 @@ public interface ITrainingPlanService
     Task<PlanResult<SessionView>> AddExerciseAsync(Guid userId, Guid sessionId, AddExerciseRequest request, CancellationToken ct);
     Task<PlanResult<SessionView>> SwapExerciseAsync(Guid userId, Guid sessionId, string exerciseId, string replacementId, bool applyToRemainingBlock, CancellationToken ct);
     Task<BlockView?> GetCurrentBlockAsync(Guid userId, CancellationToken ct);
+    /// <summary>Any session of the user, from the active plan or an archived one, with its log. Read-only.</summary>
+    Task<PlanResult<SessionView>> GetSessionAsync(Guid userId, Guid sessionId, CancellationToken ct);
     /// <summary>The session to do next (by program order, whatever the date), with where it sits and whether the muscles are recovered.</summary>
     Task<NextSessionView?> GetNextAsync(Guid userId, CancellationToken ct);
     /// <summary>Moves the pending program of a calendar plan forward, by whole weeks, so its first pending week is the current one.</summary>
@@ -1444,6 +1446,17 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             ReviewKind => T("Sesión revisada: no hacía falta cambiar el plan."),
             _ => Tn(a.Explanation) ?? a.Explanation
         };
+    }
+
+    public async Task<PlanResult<SessionView>> GetSessionAsync(Guid userId, Guid sessionId, CancellationToken ct)
+    {
+        var session = await (from s in db.PlannedSessions.AsNoTracking()
+                             join p in db.TrainingPlans.AsNoTracking() on s.PlanId equals p.Id
+                             where s.Id == sessionId && p.UserId == userId
+                             select s).FirstOrDefaultAsync(ct);
+        if (session is null) return PlanResult<SessionView>.Fail(PlanFailure.SessionNotFound, "La sesión no existe.");
+        var log = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
+        return PlanResult<SessionView>.Ok(ToSessionView(session, log));
     }
 
     public async Task<IReadOnlyList<HistoryItem>?> GetHistoryAsync(Guid userId, int take, CancellationToken ct)

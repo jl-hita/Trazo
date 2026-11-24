@@ -205,6 +205,7 @@ errors list the offending fields. All routes are in the OpenAPI document with th
 | POST | `/` | Create the plan from a profile (macrocycle + first block). Generated plans need Premium | 201 `PlanView` | 400 fields, 401, 402, 409, 422 |
 | GET | `/current` | Profile and macrocycle phases, no sessions | 200 `PlanView` | 404 |
 | GET | `/current/week` | Sessions of the current week with prescription (generates the block when first needed). `locked` is true for a generated plan without Premium: it is read-only and no block is generated | 200 `WeekView` | 404 |
+| GET | `/sessions/{id}` | Any session of the user by id, from the current block, an earlier block or an archived plan, with its prescription and `log` (sets with weight, repetitions, RIR, completed, skip reason, pain). Read-only; another user's session is 404 `session_not_found` | 200 `SessionView` | 401, 404 |
 | GET | `/current/history?take=30` | Logged sessions, newest first (1-100) | 200 | 404 |
 | GET | `/current/load` | Weekly volume in sets for every plan week: `plannedSets` (null while that block is not generated), `completedSets` (null for weeks not reached yet), phase and deload flag. Read-only, also for a plan locked by a lapsed Premium. `periodKind` (`Week`/`Rotation`) says what a period is; `rolling` is the real dose of the last seven days (see "One engine, two scheduling policies") | 200 `PlanLoadView` | 404 |
 | POST | `/current/archive` | Close the active plan | 204 | 404 |
