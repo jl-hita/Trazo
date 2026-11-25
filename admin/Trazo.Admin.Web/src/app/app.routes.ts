@@ -1,5 +1,10 @@
-import { Routes } from '@angular/router';
+import { ResolveFn, Routes } from '@angular/router';
+import { LANDING_LANGUAGES, WaitlistPagesText, landingLanguage } from './features/landing/landing.content';
 import { adminGuard, fiscalGuard, loginGuard, marketingGuard, referralsGuard, setupGuard, setupPageGuard, staffGuard, superadminGuard } from './core/guards';
+
+// Los textos de las páginas de los correos van en el idioma del enlace (`?lang=`).
+const waitlistText: ResolveFn<WaitlistPagesText> = route =>
+  landingLanguage(route.queryParamMap.get('lang')).load().then(content => content.waitlistPages);
 
 export const routes: Routes = [
   // Páginas legales públicas, accesibles sin iniciar sesión.
@@ -23,27 +28,25 @@ export const routes: Routes = [
     data: { lang: 'en' },
     loadComponent: () => import('./features/terms/terms.page').then(m => m.TermsPageComponent)
   },
-  // Landing pública (lista de espera).
-  {
-    path: '',
-    pathMatch: 'full',
-    data: { lang: 'es' },
+  // Landing pública (lista de espera): una ruta por idioma (`/`, `/en`, `/de`...).
+  ...LANDING_LANGUAGES.map(language => ({
+    path: language.path,
+    pathMatch: 'full' as const,
+    data: { lang: language.code },
+    resolve: { content: () => language.load() },
     loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
-  },
-  {
-    path: 'en',
-    data: { lang: 'en' },
-    loadComponent: () => import('./features/landing/landing.page').then(m => m.LandingPageComponent)
-  },
+  })),
   // Enlaces de los correos de la lista de espera: confirmar el correo y darse de baja.
   {
     path: 'waitlist/confirm',
     data: { action: 'confirm' },
+    resolve: { content: waitlistText },
     loadComponent: () => import('./features/waitlist/waitlist-action.page').then(m => m.WaitlistActionPageComponent)
   },
   {
     path: 'waitlist/unsubscribe',
     data: { action: 'unsubscribe' },
+    resolve: { content: waitlistText },
     loadComponent: () => import('./features/waitlist/waitlist-action.page').then(m => m.WaitlistActionPageComponent)
   },
   {
