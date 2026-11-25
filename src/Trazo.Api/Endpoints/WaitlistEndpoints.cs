@@ -67,7 +67,7 @@ public static class WaitlistEndpoints
         var errors = new Dictionary<string, string[]>();
         if (!WaitlistService.IsValidEmail(request?.Email)) errors["email"] = ["A valid email address is required."];
         var language = request?.Language?.Trim().ToLowerInvariant();
-        if (language is null || !WaitlistService.Languages.Contains(language)) errors["language"] = ["Use 'es' or 'en'."];
+        if (language is null || !WaitlistService.Languages.Contains(language)) errors["language"] = ["Idioma no admitido."];
         if (request?.Consent != true) errors["consent"] = ["Consent is required."];
         if (errors.Count > 0) return Results.ValidationProblem(errors);
 
@@ -131,7 +131,7 @@ public static class WaitlistEndpoints
         if (page < 1) errors["page"] = ["page must be 1 or greater."];
         if (pageSize is < 1 or > MaxPageSize) errors["pageSize"] = [$"pageSize must be between 1 and {MaxPageSize}."];
         if (q?.Length > 100) errors["q"] = ["The search text is too long."];
-        if (!string.IsNullOrEmpty(language) && !WaitlistService.Languages.Contains(language)) errors["language"] = ["Use 'es' or 'en'."];
+        if (!string.IsNullOrEmpty(language) && !WaitlistService.Languages.Contains(language)) errors["language"] = ["Idioma no admitido."];
         if (!string.IsNullOrEmpty(status) && !Statuses.Contains(status)) errors["status"] = ["Use 'pending', 'confirmed' or 'invited'."];
         if (errors.Count > 0) return Results.ValidationProblem(errors);
 

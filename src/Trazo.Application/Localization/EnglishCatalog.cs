@@ -8,18 +8,21 @@ namespace Trazo.Application.Localization;
 /// </summary>
 internal static class EnglishCatalog
 {
+    internal static readonly (string Es, string En)[] DayNames =
+    [
+        ("lunes", "Monday"), ("martes", "Tuesday"), ("miércoles", "Wednesday"), ("jueves", "Thursday"), ("viernes", "Friday"),
+        ("sábado", "Saturday"), ("domingo", "Sunday")
+    ];
+
     /// <summary>The lists of weekdays a frequency proposal writes ("lunes, miércoles, viernes"): every non-empty combination, in week order.</summary>
-    internal static IEnumerable<(string Es, string En)> DayLists
+    internal static IEnumerable<(string Es, string En)> DayLists => Lists(DayNames);
+
+    internal static IEnumerable<(string From, string To)> Lists((string From, string To)[] days)
     {
-        get
+        for (var mask = 1; mask < 1 << 7; mask++)
         {
-            string[] es = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
-            string[] en = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-            for (var mask = 1; mask < 1 << 7; mask++)
-            {
-                var picked = Enumerable.Range(0, 7).Where(i => (mask & (1 << i)) != 0).ToArray();
-                yield return (string.Join(", ", picked.Select(i => es[i])), string.Join(", ", picked.Select(i => en[i])));
-            }
+            var picked = Enumerable.Range(0, 7).Where(i => (mask & (1 << i)) != 0).ToArray();
+            yield return (string.Join(", ", picked.Select(i => days[i].From)), string.Join(", ", picked.Select(i => days[i].To)));
         }
     }
 

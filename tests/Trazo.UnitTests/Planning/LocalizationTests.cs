@@ -405,8 +405,10 @@ public sealed class UserLanguageApiTests() : PlansApiBase(enforced: false)
         {
             Assert.Equal(HttpStatusCode.NoContent, (await ChooseAsync(client, language)).StatusCode);
             Assert.Equal(language, (await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("language").GetString());
-            // the choice wins over the header, and a language without translated texts is answered in English, never in Spanish
-            Assert.Equal("You do not have an active plan.", (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString());
+            // the choice wins over the header: its own texts if the language is translated, English otherwise, never Spanish
+            var expected = Localizer.Translate("No tienes un plan activo.", LanguageNegotiation.FromChoice(language)!.Value);
+            Assert.NotEqual("No tienes un plan activo.", expected);
+            Assert.Equal(expected, (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("detail").GetString());
         }
         Assert.Equal(HttpStatusCode.BadRequest, (await ChooseAsync(client, "vi")).StatusCode);
     }
@@ -427,11 +429,16 @@ public sealed class UserLanguageApiTests() : PlansApiBase(enforced: false)
     {
         Assert.Equal(AppLanguage.Es, LanguageNegotiation.FromChoice("es"));
         Assert.Equal(AppLanguage.En, LanguageNegotiation.FromChoice("en"));
-        Assert.Equal(AppLanguage.En, LanguageNegotiation.FromChoice(" DE "));
+        Assert.Equal(AppLanguage.De, LanguageNegotiation.FromChoice(" DE "));
         Assert.Null(LanguageNegotiation.FromChoice("vi"));
         Assert.Null(LanguageNegotiation.FromChoice(null));
-        // the app asks "de, en;q=0.8": the first supported language is English
-        Assert.Equal(AppLanguage.En, LanguageNegotiation.FromAcceptLanguage("de, en;q=0.8"));
+        Assert.Equal(AppLanguage.De, LanguageNegotiation.FromAcceptLanguage("de-AT, en;q=0.8"));
+        // a language without a translation yet: the app asks "xx, en;q=0.8" and the first supported one is English
+        foreach (var language in LanguageNegotiation.AppChoices.Where(c => LanguageNegotiation.FromTag(c) is null))
+        {
+            Assert.Equal(AppLanguage.En, LanguageNegotiation.FromChoice(language));
+            Assert.Equal(AppLanguage.En, LanguageNegotiation.FromAcceptLanguage(language + ", en;q=0.8"));
+        }
     }
 
     [Fact]

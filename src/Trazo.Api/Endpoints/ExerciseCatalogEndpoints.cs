@@ -1,4 +1,5 @@
 using Trazo.Api.Support;
+using Trazo.Application.Localization;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Domain.Training;
 using Trazo.Infrastructure.Persistence;
@@ -59,10 +60,13 @@ public static class ExerciseCatalogEndpoints
         string? experience,
         string? equipment,
         string? muscle,
+        RequestLanguage requestLanguage,
         int page = 1,
         int pageSize = 30,
         CancellationToken cancellationToken = default)
     {
+        // Spanish and English names travel in every item; any other language also gets its own.
+        var code = requestLanguage.Current is AppLanguage.Es or AppLanguage.En ? null : requestLanguage.Current.Code();
         if (page < 1 || pageSize is < 1 or > 100 ||
             (q?.Length > 100) ||
             (movementPattern?.Length > 80) ||
@@ -85,7 +89,9 @@ public static class ExerciseCatalogEndpoints
             query = query.Where(x =>
                 EF.Functions.ILike(x.NameEs, pattern) ||
                 EF.Functions.ILike(x.NameEn, pattern) ||
-                EF.Functions.ILike(x.DescriptionEs, pattern));
+                EF.Functions.ILike(x.DescriptionEs, pattern) ||
+                db.ExerciseCatalogTranslations.Any(t => t.ExerciseId == x.Id && t.LanguageCode == code && t.Status == "published" &&
+                    t.Name != null && EF.Functions.ILike(t.Name, pattern)));
         }
 
         if (!string.IsNullOrWhiteSpace(movementPattern))
@@ -136,6 +142,15 @@ public static class ExerciseCatalogEndpoints
                 x.SelectionPriority))
             .ToListAsync(cancellationToken);
 
+        if (code is not null)
+        {
+            var ids = items.Select(i => i.Id).ToList();
+            var names = await db.ExerciseCatalogTranslations.AsNoTracking()
+                .Where(t => ids.Contains(t.ExerciseId) && t.LanguageCode == code && t.Status == "published" && t.Name != null)
+                .ToDictionaryAsync(t => t.ExerciseId, t => t.Name, cancellationToken);
+            items = items.Select(i => i with { LocalizedName = names.GetValueOrDefault(i.Id) }).ToList();
+        }
+
         return Results.Ok(new ExerciseCatalogPage(
             items,
             page,
@@ -156,13 +171,13 @@ public static class ExerciseCatalogEndpoints
                 .OrderBy(o => o.Label, StringComparer.CurrentCultureIgnoreCase).ThenBy(o => o.Key, StringComparer.Ordinal).ToList();
 
         // The labels follow the language of the request (the keys never do).
-        var english = http.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current == Trazo.Application.Localization.AppLanguage.En;
+        var language = http.RequestServices.GetRequiredService<RequestLanguage>().Current;
         var options = new ExerciseFilterOptions(
-            Build(rows.Select(r => r.MovementPattern), english ? ExerciseVocabulary.PatternsEn : ExerciseVocabulary.Patterns),
-            Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), english ? ExerciseVocabulary.MusclesEn : ExerciseVocabulary.Muscles),
-            Build(rows.SelectMany(r => r.RequiredEquipment).Distinct(), english ? ExerciseVocabulary.EquipmentEn : ExerciseVocabulary.Equipment),
-            Build(rows.Select(r => r.MinimumExperience), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
-            Build(rows.Select(r => r.Difficulty), english ? ExerciseVocabulary.LevelsEn : ExerciseVocabulary.Levels),
+            Build(rows.Select(r => r.MovementPattern), ExerciseVocabulary.In(language, ExerciseVocabulary.Patterns, ExerciseVocabulary.PatternsEn)),
+            Build(rows.SelectMany(r => r.PrimaryMuscles.Concat(r.SecondaryMuscles).Distinct()), ExerciseVocabulary.In(language, ExerciseVocabulary.Muscles, ExerciseVocabulary.MusclesEn)),
+            Build(rows.SelectMany(r => r.RequiredEquipment).Distinct(), ExerciseVocabulary.In(language, ExerciseVocabulary.Equipment, ExerciseVocabulary.EquipmentEn)),
+            Build(rows.Select(r => r.MinimumExperience), ExerciseVocabulary.In(language, ExerciseVocabulary.Levels, ExerciseVocabulary.LevelsEn)),
+            Build(rows.Select(r => r.Difficulty), ExerciseVocabulary.In(language, ExerciseVocabulary.Levels, ExerciseVocabulary.LevelsEn)),
             new ExerciseFilterParameters("movementPattern", "muscle", "equipment", "experience", "difficulty"));
 
         // Cacheable: the answer only changes when the catalog does, so clients revalidate with the ETag.
@@ -191,7 +206,7 @@ public static class ExerciseCatalogEndpoints
             .Where(x => x.ExerciseId == id)
             .ToListAsync(cancellationToken);
 
-        var language = requestLanguage.Current == Trazo.Application.Localization.AppLanguage.En ? "en" : "es";
+        var language = requestLanguage.Current.Code();
         var resolved = Trazo.Application.Localization.ExerciseCatalogTranslationResolver.Resolve(
             language, translations, exercise.NameEs, exercise.NameEn, exercise.DescriptionEs,
             exercise.InstructionsEs, exercise.TipsEs);
@@ -260,7 +275,8 @@ public sealed record ExerciseCatalogListItem(
     string MinimumExperience,
     bool IsUnilateral,
     bool IsBodyweight,
-    int SelectionPriority);
+    int SelectionPriority,
+    string? LocalizedName = null);
 
 public sealed record ExerciseCatalogDetail(
     string Id,
@@ -292,7 +308,7 @@ public sealed record FilterOption(string Key, string Label, int Count);
 public sealed record ExerciseFilterParameters(string MovementPattern, string Muscle, string Equipment, string Experience, string Difficulty);
 
 /// <summary>
-/// Keys are the values stored in the catalog (stable, accepted as they are by the list filters); labels are Spanish or English, by the language of the request. A value
+/// Keys are the values stored in the catalog (stable, accepted as they are by the list filters); labels follow the language of the request. A value
 /// without a known label gets a readable fallback, so a new catalog value never breaks the screen.
 /// </summary>
 public sealed record ExerciseFilterOptions(
@@ -301,6 +317,15 @@ public sealed record ExerciseFilterOptions(
 
 public static class ExerciseVocabulary
 {
+    /// <summary>The labels of one list in a language: the Spanish or English map, or the Spanish one translated.</summary>
+    public static IReadOnlyDictionary<string, string> In(AppLanguage language, IReadOnlyDictionary<string, string> spanish, IReadOnlyDictionary<string, string> english) =>
+        language switch
+        {
+            AppLanguage.Es => spanish,
+            AppLanguage.En => english,
+            _ => spanish.ToDictionary(p => p.Key, p => Localizer.Translate(p.Value, language)!, StringComparer.OrdinalIgnoreCase)
+        };
+
     public static string Label(IReadOnlyDictionary<string, string> labels, string key) =>
         labels.TryGetValue(key, out var label) ? label : Humanize(key);
 

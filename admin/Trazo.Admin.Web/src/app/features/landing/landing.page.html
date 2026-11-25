@@ -2,7 +2,14 @@
 <div class="wrap">
   <header class="top">
     <img src="/landing/trazo-logo-dark.svg" alt="TRAZO" width="80" height="35">
-    <a class="lang" [routerLink]="t.otherPath" [attr.hreflang]="t.otherLang" [attr.lang]="t.otherLang" [attr.aria-label]="t.otherAria">{{ t.otherLabel }}</a>
+    <details class="languages" #menu>
+      <summary class="lang" [attr.aria-label]="t.languageLabel + ': ' + language.name">{{ language.name }}</summary>
+      <nav [attr.aria-label]="t.languageLabel">
+        @for (l of languages; track l.code) {
+          <a [routerLink]="'/' + l.path" [attr.hreflang]="l.code" [attr.lang]="l.code" [attr.aria-current]="l.code === language.code ? 'page' : null" (click)="menu.open = false">{{ l.name }}</a>
+        }
+      </nav>
+    </details>
   </header>
 </div>
 <main id="main" tabindex="-1" #main>
@@ -13,7 +20,7 @@
       <p class="lead">{{ t.lead }}</p>
       <a class="btn" href="#waitlist" (click)="$event.preventDefault(); waitlist.scrollIntoView({ behavior: 'smooth' })">{{ t.cta }}</a>
     </div>
-    <div class="phone"><div class="shot"><img [src]="t.showcase[3].shots[0].file" width="1280" height="2856" [alt]="t.shotAlt + ': ' + t.showcase[3].shots[0].caption"></div></div>
+    <div class="phone"><div class="shot"><img [src]="t.showcase[3].shots[0].file" width="640" height="1428" [alt]="t.shotAlt + ': ' + t.showcase[3].shots[0].caption"></div></div>
   </div>
 
   <section class="auto-section" id="engine">
@@ -61,7 +68,7 @@
         <div class="phones" [class.three]="row.shots.length === 3">
           @for (s of row.shots; track s.file) {
             <figure>
-              <div class="phone"><div class="shot"><img [src]="s.file" width="1280" height="2856" loading="lazy" [alt]="t.shotAlt + ': ' + s.caption"></div></div>
+              <div class="phone"><div class="shot"><img [src]="s.file" width="640" height="1428" loading="lazy" [alt]="t.shotAlt + ': ' + s.caption"></div></div>
               <figcaption>{{ s.caption }}</figcaption>
             </figure>
           }

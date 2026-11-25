@@ -1,3 +1,4 @@
+using Trazo.Application.Localization;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,7 +14,8 @@ namespace Trazo.Infrastructure.Waitlist;
 public static class WaitlistService
 {
     public const int MaxEmailLength = 254;
-    public static readonly string[] Languages = ["es", "en"];
+    /// <summary>The languages the waitlist can write in: those the API has texts for.</summary>
+    public static readonly string[] Languages = Trazo.Application.Localization.LanguageNegotiation.Supported.Select(l => l.Code()).ToArray();
 
     /// <summary>The only stored form of an address: trimmed and lower-cased.</summary>
     public static string Normalize(string email) => email.Trim().ToLowerInvariant();

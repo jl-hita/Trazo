@@ -50,7 +50,7 @@ public static class ExerciseCatalogTranslationResolver
 
         if (name is null)
         {
-            if (requested == "en" && !string.IsNullOrWhiteSpace(legacyNameEn))
+            if (requested != "es" && !string.IsNullOrWhiteSpace(legacyNameEn))
             {
                 name = legacyNameEn;
                 nameLanguage = "en";

@@ -45,6 +45,45 @@ public sealed class ExerciseCatalogSeeder(
         public bool IsActive { get; init; } = true;
     }
 
+    private sealed class TranslationEntry
+    {
+        public string Name { get; init; } = "";
+        public string Description { get; init; } = "";
+        public string[] Instructions { get; init; } = [];
+        public string[] Tips { get; init; } = [];
+    }
+
+    /// <summary>
+    /// The translated catalog texts, one file per language (<c>Seeds/translations/{code}.json</c>, keyed by exercise id). Only missing rows
+    /// are added: whatever the administrator has since edited stays.
+    /// </summary>
+    private async Task<int> SeedTranslationsAsync(HashSet<string> exerciseIds, DateTimeOffset now, CancellationToken cancellationToken)
+    {
+        var folder = Path.Combine(AppContext.BaseDirectory, "Seeds", "translations");
+        if (!Directory.Exists(folder)) return 0;
+        var added = 0;
+        foreach (var path in Directory.GetFiles(folder, "*.json").Order(StringComparer.Ordinal))
+        {
+            var language = Path.GetFileNameWithoutExtension(path);
+            await using var stream = File.OpenRead(path);
+            var entries = await JsonSerializer.DeserializeAsync<Dictionary<string, TranslationEntry>>(stream, JsonOptions, cancellationToken)
+                ?? throw new InvalidDataException($"Exercise translations '{language}' are empty or invalid.");
+            var present = (await db.ExerciseCatalogTranslations.Where(x => x.LanguageCode == language)
+                .Select(x => x.ExerciseId).ToListAsync(cancellationToken)).ToHashSet(StringComparer.Ordinal);
+            foreach (var (id, text) in entries.Where(e => exerciseIds.Contains(e.Key) && !present.Contains(e.Key)))
+            {
+                db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
+                {
+                    ExerciseId = id, LanguageCode = language, Name = text.Name, Description = text.Description,
+                    Instructions = text.Instructions, Tips = text.Tips, Status = "published", UpdatedAt = now
+                });
+                added++;
+            }
+        }
+        await db.SaveChangesAsync(cancellationToken);
+        return added;
+    }
+
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Seeds", "exercise-catalog.json");
@@ -203,6 +242,7 @@ public sealed class ExerciseCatalogSeeder(
         }
 
         await db.SaveChangesAsync(cancellationToken);
+        translationsAdded += await SeedTranslationsAsync(entries.Select(x => x.Id).ToHashSet(StringComparer.Ordinal), now, cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation(
