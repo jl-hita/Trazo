@@ -93,16 +93,28 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     {
         var zone = await zones.ResolveAsync(userId, ct);
         _today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(clock.GetUtcNow(), zone).DateTime);
-        // Exercise names are stored in Spanish in the prescription; in English they are read from the catalog, once per request.
-        if (Lang == AppLanguage.En && _namesEn is null)
-            _namesEn = (await db.ExerciseCatalog.AsNoTracking().Select(e => new { e.Id, e.NameEn }).ToListAsync(ct))
-                .Where(e => !string.IsNullOrWhiteSpace(e.NameEn)).ToDictionary(e => e.Id, e => e.NameEn, StringComparer.OrdinalIgnoreCase);
+        // Exercise names are stored in Spanish in the prescription; in any other language they are read from the catalog, once per request.
+        if (Lang != AppLanguage.Es && _names is null) _names = await ExerciseNamesAsync(ct);
+    }
+
+    /// <summary>The names of the catalog in the request's language, in English where there is no translation.</summary>
+    private async Task<Dictionary<string, string>> ExerciseNamesAsync(CancellationToken ct)
+    {
+        var names = (await db.ExerciseCatalog.AsNoTracking().Select(e => new { e.Id, e.NameEn }).ToListAsync(ct))
+            .Where(e => !string.IsNullOrWhiteSpace(e.NameEn)).ToDictionary(e => e.Id, e => e.NameEn, StringComparer.OrdinalIgnoreCase);
+        if (Lang == AppLanguage.En) return names;
+        var code = Lang.Code();
+        var translated = await db.ExerciseCatalogTranslations.AsNoTracking()
+            .Where(t => t.LanguageCode == code && t.Status == "published" && t.Name != null)
+            .Select(t => new { t.ExerciseId, t.Name }).ToListAsync(ct);
+        foreach (var t in translated) names[t.ExerciseId] = t.Name!;
+        return names;
     }
 
     // ---------------------------------------------------------------- language
 
     private AppLanguage Lang => language.Current;
-    private Dictionary<string, string>? _namesEn;
+    private Dictionary<string, string>? _names;
     /// <summary>Titles, phases and objectives of a GENERATED plan are the engine's texts; in a manual plan they are the user's own words.</summary>
     private bool _generatedPlan = true;
 
@@ -110,7 +122,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
     private string? Tn(string? text) => Localizer.Translate(text, Lang);
     private string TitleOf(string title) => _generatedPlan ? T(title) : title;
     private string NameOf(string exerciseId, string fallback) =>
-        Lang == AppLanguage.En && _namesEn is not null && _namesEn.TryGetValue(exerciseId, out var name) ? name : fallback;
+        _names is not null && _names.TryGetValue(exerciseId, out var name) ? name : fallback;
 
     private AdaptationReport Localized(AdaptationReport r) => Lang == AppLanguage.Es ? r : r with
     {
@@ -143,6 +155,18 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         new("Sunday", 7, "Sunday", "S")
     ];
 
+    private static IReadOnlyList<DayOption> WeekDaysIn(AppLanguage language) => language switch
+    {
+        AppLanguage.Es => WeekDays,
+        AppLanguage.En => WeekDaysEn,
+        _ => WeekDaysEn.Select((day, i) =>
+        {
+            var name = Localizer.Translate(WeekDays[i].Label.ToLowerInvariant(), language)!;
+            name = char.ToUpperInvariant(name[0]) + name[1..];
+            return day with { Label = name, ShortLabel = ServerTranslations.For(language).GetValueOrDefault("@short:" + day.Id) ?? name[..1] };
+        }).ToList()
+    };
+
     public async Task<PlanOptions> GetOptionsAsync(CancellationToken ct)
     {
         // RequiredEquipment is the single source of truth for the generator selector.
@@ -155,7 +179,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
             WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
             2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
-            Lang == AppLanguage.En ? WeekDaysEn : WeekDays, nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
+            WeekDaysIn(Lang), nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
             PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod,
             Enum.GetValues<TrainingProgramSplit>().Select(split => new SplitSupportOption(
                 split.ToString(),
@@ -499,7 +523,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var items = PriorityDelivery.Build(MesocycleGenerator.Baselines(ProfileOf(plan)), targets, PriorityDelivery.WeeklySets(sessions));
         return items.Select(i =>
         {
-            var name = Lang == AppLanguage.En ? i.Muscle.ToString() : Trazo.Application.Planning.Longitudinal.MuscleNames.Es(i.Muscle.ToString());
+            var name = Lang == AppLanguage.En ? i.Muscle.ToString() : T(Trazo.Application.Planning.Longitudinal.MuscleNames.Es(i.Muscle.ToString()));
             var inv = System.Globalization.CultureInfo.InvariantCulture;
             string? note = i.Status switch
             {

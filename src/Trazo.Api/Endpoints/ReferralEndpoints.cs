@@ -213,21 +213,21 @@ public static class ReferralEndpoints
 
         var package = (await settings.GetPlayBillingAsync(ct)).PackageName;
         if (string.IsNullOrWhiteSpace(package)) package = DefaultPackage;
-        var en = language.Current == AppLanguage.En;
+        string Tr(string spanish) => Localizer.Format(language.Current, spanish);
         string E(string s) => WebUtility.HtmlEncode(s);
         // Google Play passes the "referrer" value to the app on first launch (Play Install Referrer API).
         var store = valid
             ? $"https://play.google.com/store/apps/details?id={Uri.EscapeDataString(package)}&referrer={Uri.EscapeDataString("trazo_ref=" + normalized)}"
             : $"https://play.google.com/store/apps/details?id={Uri.EscapeDataString(package)}";
-        var title = en ? "You have been invited to TRAZO" : "Te han invitado a TRAZO";
+        var title = Tr("Te han invitado a TRAZO");
         var body = valid
-            ? (en ? "Create your account with this invitation code and your friend can earn free Premium time when you subscribe."
-                  : "Crea tu cuenta con este código de invitación; tu amistad podrá ganar Premium gratis cuando te suscribas.")
-            : (en ? "This invitation is not valid, but you can still install TRAZO." : "Esta invitación no es válida, pero puedes instalar TRAZO igualmente.");
-        var html = $"<!doctype html><html lang=\"{(en ? "en" : "es")}\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
+            ? Tr("Crea tu cuenta con este código de invitación; tu amistad podrá ganar Premium gratis cuando te suscribas.")
+            : Tr("Esta invitación no es válida, pero puedes instalar TRAZO igualmente.");
+        var direction = language.Current == AppLanguage.Ar ? "rtl" : "ltr";
+        var html = $"<!doctype html><html lang=\"{language.Current.Code()}\" dir=\"{direction}\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             + $"<meta name=\"robots\" content=\"noindex\"><title>TRAZO</title><style>{PageCss}</style></head><body><main><h1>{E(title)}</h1><p>{E(body)}</p>"
-            + (valid ? $"<p>{(en ? "Invitation code" : "Código de invitación")}: <code>{E(normalized!)}</code></p>" : "")
-            + $"<a class=\"b\" href=\"{E(store)}\">{(en ? "Get it on Google Play" : "Descargar en Google Play")}</a></main></body></html>";
+            + (valid ? $"<p>{E(Tr("Código de invitación"))}: <code>{E(normalized!)}</code></p>" : "")
+            + $"<a class=\"b\" href=\"{E(store)}\">{E(Tr("Descargar en Google Play"))}</a></main></body></html>";
         http.Response.Headers.ContentSecurityPolicy = $"default-src 'none'; style-src '{CssHash}'; base-uri 'none'; frame-ancestors 'none'";
         http.Response.Headers["Referrer-Policy"] = "no-referrer";
         http.Response.Headers.CacheControl = "no-store";

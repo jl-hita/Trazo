@@ -33,7 +33,7 @@ the IP comes from `X-Forwarded-For` through the trusted reverse proxy). Nothing 
 
 | Rule | Behaviour |
 | --- | --- |
-| Validation | `email` must be a valid address (max 254), `language` is `es` or `en`, `consent` must be `true`; otherwise `400` with the field errors. |
+| Validation | `email` must be a valid address (max 254), `language` is one the API has texts for (`es`, `en` and every language with a translation file), `consent` must be `true`; otherwise `400` with the field errors. |
 | Success | `202 {"accepted": true}`. |
 | Address already on the list | **Identical** `202` answer and no change to the stored row, so the form cannot be used to find out who signed up. |
 | Confirmation e-mail | Sent in the background (the response time does not reveal anything) to an address that is **not confirmed yet**, with a fresh link each time (the previous link stops working). At most 3 e-mails per address per hour (`DeletionRequestThrottle`, key prefix `waitlist\|`). A confirmed address gets nothing. If the SMTP is not configured or fails, the answer is still `202`; the log keeps the exception type only. |

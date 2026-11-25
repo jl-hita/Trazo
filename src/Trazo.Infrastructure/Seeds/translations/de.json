@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Ab-Wheel-Rollout",
+  "description": "Eine Rumpfübung, bei der ein Rad vor- und zurückgerollt wird und die die Anti-Extension der Wirbelsäule trainiert.",
+  "instructions": [
+   "Knie dich auf den Boden und greif die Griffe des Rads schulterbreit.",
+   "Spanne den Rumpf kräftig an, sodass der untere Rücken neutral bleibt.",
+   "Rolle das Rad langsam nach vorn und strecke den Körper so weit, wie du es kontrollieren kannst.",
+   "Stoppe, bevor die Hüfte durchhängt oder der Rücken ins Hohlkreuz geht.",
+   "Zieh das Rad durch Anspannen der Bauchmuskeln zurück zu den Knien."
+  ],
+  "tips": [
+   "Spanne den Rumpf vor jeder Wiederholung an — lass den unteren Rücken nicht durchhängen.",
+   "Vergrößere den Bewegungsumfang schrittweise und stoppe, bevor die Hüfte absinkt.",
+   "Nutze eine Wand als Anschlag, wenn du die tiefe Position nicht kontrollieren kannst."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold Press",
+  "description": "Kurzhantel-Schulterdrücken mit Drehung der Handgelenke, das den Deltamuskel über einen großen Bewegungsumfang fordert.",
+  "instructions": [
+   "Setz dich mit gerader Lehne hin und halte die Hanteln auf Brusthöhe, Handflächen zu dir, Ellbogen nach vorn.",
+   "Drücke nach oben, während du die Ellbogen öffnest und die Handflächen nach vorn drehst.",
+   "Ende mit gestreckten Armen über dem Kopf, ohne die Ellbogen durchzudrücken.",
+   "Senke die Hanteln und drehe die Handflächen dabei wieder zu dir bis in die Ausgangsposition."
+  ],
+  "tips": [
+   "Führe die Drehung flüssig und ohne Schwung aus.",
+   "Halte den Rücken an der Lehne."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Unterstützte Klimmzüge",
+  "description": "Ein Klimmzug an der unterstützten Maschine, die einen Teil des Körpergewichts ausgleicht, um die Rückenkraft für saubere Klimmzüge aufzubauen.",
+  "instructions": [
+   "Leg die Knie auf das Polster der Klimmzugmaschine.",
+   "Greif die Stange im Obergriff etwas weiter als schulterbreit.",
+   "Zieh die Brust zur Stange, indem du die Ellbogen nach unten drückst.",
+   "Lass dich kontrolliert ab, bis du mit gestreckten Armen hängst.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Beginne die Bewegung, indem du die Schulterblätter senkst, bevor du die Ellbogen beugst.",
+   "Vermeide Schwingen, damit der Rücken die Arbeit leistet.",
+   "Stell das Gegengewicht so ein, dass du alle Wiederholungen mit guter Technik schaffst."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Beinbeugen am Gymnastikball",
+  "description": "Ein Beinbeuger-Curl mit Körpergewicht am Gymnastikball: Die Fersen rollen zum Gesäß, während die Hüfte angehoben bleibt.",
+  "instructions": [
+   "Leg dich auf den Rücken, Fersen und untere Waden auf dem Gymnastikball, Arme zur Stabilisierung ausgestreckt.",
+   "Drücke dich über die Fersen hoch, bis Schultern, Hüfte und Knöchel eine Linie bilden.",
+   "Halte die Hüfte oben und beuge die Knie, um den Ball zum Gesäß zu rollen.",
+   "Strecke die Beine kontrolliert zurück, ohne die Hüfte abzusenken.",
+   "Mach alle Wiederholungen, senke dann die Hüfte und löse dich vom Ball."
+  ],
+  "tips": [
+   "Die Hüfte bleibt den ganzen Satz oben: Es ist eine Kombination aus Brücke und Curl.",
+   "Beginne mit beiden Füßen; wechsle zu einbeinig, wenn es leicht wird."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Beinbeugen stehend mit Band",
+  "description": "Ein stehender Beinbeuger-Curl mit Band um den Knöchel, ideal auf Reisen oder als leichter Abschluss für die Beinrückseite.",
+  "instructions": [
+   "Leg ein Band um einen Knöchel und fixiere das andere Ende unter dem Standfuß oder an einem festen Punkt vor dir.",
+   "Steh aufrecht, halte dich bei Bedarf fest, das Standbein leicht gebeugt.",
+   "Zieh die Ferse mit dem Band zum Gesäß, der Oberschenkel bleibt ruhig.",
+   "Spanne oben die Beinrückseite an und senke dann kontrolliert bis zur vollen Dehnung.",
+   "Mach alle Wiederholungen auf einer Seite und wechsle das Bein."
+  ],
+  "tips": [
+   "Halte den Oberschenkel still — nur der Unterschenkel bewegt sich.",
+   "Vermeide Schwung aus der Hüfte.",
+   "Nimm ein leichteres Band, wenn du das Absenken nicht kontrollieren kannst."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Latzug mit Widerstandsband",
+  "description": "Latzug mit einem hoch befestigten Widerstandsband als Alternative zum Kabelzug.",
+  "instructions": [
+   "Im Stand, das Band hoch befestigt (Tür oder Stange), in jeder Hand ein Ende, Arme über dem Kopf gestreckt.",
+   "Zieh die Hände nach unten und führe die Ellbogen zu den Seiten, Brust raus.",
+   "Spanne den Rücken an, wenn die Hände auf Schulterhöhe sind.",
+   "Führe die Arme kontrolliert zurück, bis sie wieder gestreckt sind."
+  ],
+  "tips": [
+   "Lehne den Oberkörper beim Ziehen nicht zurück.",
+   "Prüfe vor dem Start, dass die Befestigung sicher ist."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Band Pull-Apart",
+  "description": "Auseinanderziehen eines Bands mit gestreckten Armen zur Aktivierung der hinteren Schulter und des oberen Rückens.",
+  "instructions": [
+   "Steh und halte das Band schulterbreit mit gestreckten Armen vor der Brust.",
+   "Zieh die Hände seitlich auseinander, bis das Band die Brust berührt.",
+   "Führe am Ende die Schulterblätter zusammen, ohne die Schultern hochzuziehen.",
+   "Kehre kontrolliert zurück und lass dich nicht vom Band ziehen."
+  ],
+  "tips": [
+   "Wähle ein Band, mit dem 15 oder mehr saubere Wiederholungen möglich sind.",
+   "Halte die Rippen unten, damit der untere Rücken nicht ins Hohlkreuz geht."
+  ]
+ },
+ "band-row": {
+  "name": "Rudern mit Widerstandsband",
+  "description": "Sitzendes Rudern mit einem an den Füßen fixierten Band, ganz ohne weiteres Gerät.",
+  "instructions": [
+   "Setz dich mit gestreckten Beinen auf den Boden, das Band um die Fußsohlen, in jeder Hand ein Ende.",
+   "Zieh die Hände mit geradem Rücken zum Bauch und führe die Ellbogen nach hinten.",
+   "Führe am Ende der Bewegung die Schulterblätter zusammen.",
+   "Strecke die Arme kontrolliert, ohne die Spannung des Bands zu verlieren."
+  ],
+  "tips": [
+   "Schaukle nicht mit dem Oberkörper nach.",
+   "Wähle ein Band für 12 bis 15 saubere Wiederholungen."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Schulterdrücken mit Widerstandsband",
+  "description": "Stehendes Schulterdrücken auf einem Widerstandsband, um den Deltamuskel mit minimaler Ausrüstung zu trainieren.",
+  "instructions": [
+   "Stell dich hüftbreit auf die Mitte des Bands, in jeder Hand ein Ende auf Schulterhöhe.",
+   "Drücke die Hände nach oben, bis die Arme über dem Kopf gestreckt sind.",
+   "Halte den Bauch fest und die Rippen unten.",
+   "Senke kontrolliert zu den Schultern, ohne Spannung zu verlieren."
+  ],
+  "tips": [
+   "Geh beim Drücken nicht ins Hohlkreuz.",
+   "Wickle das Band einmal mehr, um den Widerstand zu erhöhen."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulgarische Kniebeuge mit Langhantel",
+  "description": "Einbeinige Kniebeuge mit dem hinteren Fuß auf einer Bank und der Langhantel auf dem Rücken.",
+  "instructions": [
+   "Leg den Spann eines Fußes hinter dir auf eine Bank, die Stange auf dem oberen Rücken, das andere Bein vorn.",
+   "Beuge das vordere Knie und senke dich mit aufrechtem Oberkörper, bis der Oberschenkel parallel zum Boden ist.",
+   "Halte das Gewicht auf der Ferse des vorderen Beins.",
+   "Drücke dich mit dem vorderen Fuß hoch, bis das Bein gestreckt ist; mach alle Wiederholungen und wechsle das Bein."
+  ],
+  "tips": [
+   "Wähle den Abstand so, dass das vordere Knie nicht weit über die Fußspitze ragt.",
+   "Übe zuerst ohne Gewicht oder mit Kurzhanteln."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Langhantelcurl",
+  "description": "Eine klassische Isolationsübung für den Bizeps, bei der die Langhantel maximale Last erlaubt.",
+  "instructions": [
+   "Steh aufrecht und halte die Langhantel schulterbreit im Untergriff.",
+   "Führe die Stange zu den Schultern.",
+   "Spanne oben an und senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Vermeide Schwingen mit dem Oberkörper.",
+   "Halte die Ellbogen eng am Körper."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Glute Bridge mit Langhantel",
+  "description": "Eine Glute Bridge mit Langhantel für mehr Widerstand.",
+  "instructions": [
+   "Leg dich mit der Stange über der Hüfte und gebeugten Knien auf den Boden.",
+   "Hebe die Hüfte, indem du das Gesäß anspannst.",
+   "Halte oben mit vollständig gestreckter Hüfte.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Vermeide ein Hohlkreuz beim Strecken der Hüfte.",
+   "Drücke über die Fersen, nicht über die Zehen.",
+   "Zieh das Kinn ein und lass den oberen Rücken liegen."
+  ]
+ },
+ "barbell-row": {
+  "name": "Vorgebeugtes Langhantelrudern",
+  "description": "Eine zusammengesetzte Zugübung für den oberen und mittleren Rücken.",
+  "instructions": [
+   "Beuge dich aus der Hüfte vor, Knie leicht gebeugt.",
+   "Greif die Stange etwas weiter als schulterbreit.",
+   "Zieh die Stange zur unteren Brust und führe die Schulterblätter zusammen.",
+   "Senke die Stange kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte den Oberkörper etwa im 45-Grad-Winkel.",
+   "Hol keinen Schwung, um das Gewicht zu bewegen."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Wadenheben stehend mit Langhantel",
+  "description": "Stehendes Wadenheben mit freier Langhantel auf dem Rücken, ohne Spezialmaschine.",
+  "instructions": [
+   "Steh mit der Stange auf dem oberen Rücken, die Fußballen hüftbreit auf einer Stufe oder Scheibe.",
+   "Lass die Fersen sinken, bis die Waden gedehnt sind, Oberkörper aufrecht.",
+   "Geh so hoch wie möglich auf die Zehenspitzen, ohne die Knie zu beugen.",
+   "Halte oben kurz und senke kontrolliert ab."
+  ],
+  "tips": [
+   "Beginne mit wenig Gewicht, bis du das Gleichgewicht beherrschst.",
+   "Führe die Übung zur Sicherheit in einem Rack mit passend eingestellten Ablagen aus."
+  ]
+ },
+ "bench-press": {
+  "name": "Bankdrücken mit Langhantel",
+  "description": "Eine zusammengesetzte Drückübung für Brust, Schultern und Trizeps.",
+  "instructions": [
+   "Leg dich so auf die Bank, dass die Augen unter der Stange sind.",
+   "Greif die Stange etwas weiter als schulterbreit.",
+   "Hebe die Stange aus der Ablage und senke sie zur Mitte der Brust.",
+   "Drücke die Stange zurück, bis die Arme vollständig gestreckt sind.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Halte die Füße flach auf dem Boden.",
+   "Behalte eine leichte Wölbung im unteren Rücken.",
+   "Drücke mit den Beinen in den Boden, um stabil zu bleiben."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Umgekehrtes Rudern mit gebeugten Knien",
+  "description": "Einsteigerversion des umgekehrten Ruderns: Mit gebeugten Knien und nah stehenden Füßen ist es leichter und besser kontrollierbar.",
+  "instructions": [
+   "Leg dich unter eine stabile, niedrige Stange, greif etwas weiter als schulterbreit und halte den Rumpf gerade, Knie gebeugt, Füße flach.",
+   "Zieh die Brust zur Stange, Ellbogen nach hinten, Schulterblätter zusammen.",
+   "Halte oben kurz, ohne die Hüfte sinken zu lassen.",
+   "Senke kontrolliert ab, bis die Arme gestreckt sind."
+  ],
+  "tips": [
+   "Stell die Füße näher heran, um es leichter zu machen, oder weiter weg, um zu steigern.",
+   "Wenn du 12 Wiederholungen beherrschst, wechsle zum umgekehrten Rudern mit gestreckten Beinen."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Wadenheben mit Körpergewicht",
+  "description": "Wadenheben mit dem eigenen Körpergewicht, eine Grundübung zur Kräftigung der Waden.",
+  "instructions": [
+   "Steh mit hüftbreiten Füßen auf ebenem Boden.",
+   "Geh so hoch wie möglich auf die Zehenspitzen.",
+   "Spanne die Waden oben an.",
+   "Senke die Fersen kontrolliert zum Boden.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Verteile das Gewicht beim Hochgehen auf alle Zehen.",
+   "Halte die Beine gestreckt, damit die Waden die Arbeit leisten.",
+   "Fixiere einen Punkt, um das Gleichgewicht zu halten."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Rückwärtsausfallschritt mit Körpergewicht",
+  "description": "Ausfallschritt nach hinten ohne Gerät, stabiler und knieschonender als der Ausfallschritt nach vorn.",
+  "instructions": [
+   "Steh mit geschlossenen Füßen, Hände an der Hüfte, Brust raus.",
+   "Mach einen großen Schritt zurück und beuge beide Knie, bis das hintere Knie fast den Boden erreicht.",
+   "Halte den Oberkörper aufrecht und das Gewicht auf dem vorderen Fuß.",
+   "Drücke dich mit dem vorderen Bein zurück in die Ausgangsposition; mach alle Wiederholungen und wechsle das Bein."
+  ],
+  "tips": [
+   "Mach den Schritt so groß, dass das vordere Knie nicht weit über die Fußspitze geht.",
+   "Halte dich an einer Stütze fest, wenn dir das Gleichgewicht noch schwerfällt."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Kniebeuge mit Körpergewicht",
+  "description": "Grundkniebeuge ohne Gerät, ideal, um das Bewegungsmuster zu lernen und überall Beine zu trainieren.",
+  "instructions": [
+   "Steh schulterbreit, Fußspitzen leicht nach außen, Arme nach vorn gestreckt.",
+   "Schieb die Hüfte zurück und nach unten, als würdest du dich setzen, Brust raus, Rücken neutral.",
+   "Geh tief, bis die Oberschenkel parallel zum Boden sind; die Knie folgen der Richtung der Füße.",
+   "Drücke dich mit dem ganzen Fuß hoch, bis du wieder aufrecht stehst."
+  ],
+  "tips": [
+   "Lass die Fersen über den gesamten Bewegungsweg am Boden.",
+   "Wenn dir das Tiefgehen schwerfällt, setz dich auf einen Stuhl und steh ohne Schwung auf."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgarische Kniebeuge",
+  "description": "Eine einbeinige Kniebeugenvariante mit erhöhtem hinterem Fuß.",
+  "instructions": [
+   "Stell dich vor eine Bank und leg einen Fuß hinter dir darauf.",
+   "Halte Kurzhanteln an den Seiten.",
+   "Senke den Körper, bis der vordere Oberschenkel parallel zum Boden ist.",
+   "Drücke dich über die vordere Ferse zurück in den Stand.",
+   "Wiederhole auf beiden Seiten."
+  ],
+  "tips": [
+   "Halte fast das ganze Gewicht auf dem vorderen Bein.",
+   "Passe den Abstand zur Bank an, bis der Ausfallschritt stabil ist.",
+   "Mach alle Wiederholungen auf einem Bein, bevor du wechselst."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Kabel-Crunch",
+  "description": "Ein kniender Crunch am hohen Kabelzug mit Seil, mit dem sich die Last für den geraden Bauchmuskel schrittweise steigern lässt.",
+  "instructions": [
+   "Knie dich vor den Kabelzug mit dem Seilgriff oben.",
+   "Halte das Seil mit gebeugten Ellbogen nah an der Stirn.",
+   "Senke dich, indem du die Wirbelsäule einrollst und die Ellbogen zu den Oberschenkeln führst.",
+   "Spanne unten die Bauchmuskeln kräftig an.",
+   "Kehre zur Ausgangsposition zurück und wiederhole."
+  ],
+  "tips": [
+   "Rolle die Wirbelsäule ein, statt mit den Armen zu ziehen.",
+   "Setz dich nicht bei jeder Wiederholung mit der Hüfte nach hinten.",
+   "Atme beim Absenken kräftig aus, um den Bauch besser anzuspannen."
+  ]
+ },
+ "cable-curl": {
+  "name": "Curl am Kabelzug",
+  "description": "Ein Bizepscurl am Kabel mit konstanter Spannung.",
+  "instructions": [
+   "Stell dich vor einen tiefen Kabelzug mit gerader oder SZ-Stange.",
+   "Greif die Stange im Untergriff, Ellbogen eng am Körper.",
+   "Führe die Stange zu den Schultern.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Lass die Ellbogen beim Hochziehen nicht nach vorn wandern.",
+   "Hilf nicht mit dem Oberkörper nach.",
+   "Steh etwas weiter vom Kabelzug weg, um die Spannung zu halten."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Außenrotation am Kabelzug",
+  "description": "Eine Außenrotation am Kabelzug mit anliegendem Ellbogen, die die Außenrotatoren der Rotatorenmanschette mit Hilfe der hinteren Schulter kräftigt.",
+  "instructions": [
+   "Stell die Rolle auf Ellbogenhöhe ein und greif den Griff.",
+   "Stell dich seitlich zur Maschine, den arbeitenden Ellbogen 90 Grad gebeugt.",
+   "Halte den Ellbogen am Körper und drehe den Unterarm nach außen.",
+   "Halte am Ende der Bewegung kurz inne.",
+   "Kehre kontrolliert zurück. Mach eine Seite fertig und wechsle dann."
+  ],
+  "tips": [
+   "Zieh beim Drehen des Arms die Schulter nicht hoch.",
+   "Arbeite mit wenig Gewicht, langsam und kontrolliert.",
+   "Halte das Handgelenk fest und in Linie mit dem Unterarm."
+  ]
+ },
+ "cable-fly": {
+  "name": "Fliegende am Kabelzug",
+  "description": "Eine Isolationsübung für die Brust am Kabelzug mit konstanter Spannung.",
+  "instructions": [
+   "Stell dich zwischen zwei Kabeltürme, die Griffe an den oberen Rollen.",
+   "Öffne mit leicht gebeugten Ellbogen die Arme zur Seite.",
+   "Führe die Hände in einer Umarmungsbewegung vor der Brust zusammen.",
+   "Kehre langsam zur Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte den Ellbogenwinkel konstant, damit es kein Drücken wird.",
+   "Spanne die Brust eine Sekunde an, wenn sich die Hände treffen.",
+   "Schieb die Schultern bei geöffneten Armen nicht nach vorn."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Frontheben am Kabelzug",
+  "description": "Frontheben am tiefen Kabelzug mit konstanter Spannung über den gesamten Bewegungsweg.",
+  "instructions": [
+   "Steh mit dem Rücken zum tiefen Kabelzug, das Kabel zwischen den Beinen, den Griff in einer Hand, Arm vor dem Oberschenkel gestreckt.",
+   "Hebe den Arm mit leicht gebeugtem Ellbogen nach vorn bis auf Schulterhöhe.",
+   "Halte oben kurz, ohne den Oberkörper zurückzulehnen.",
+   "Senke kontrolliert, ohne das Gewicht abzusetzen; wiederhole und wechsle den Arm."
+  ],
+  "tips": [
+   "Stell dich so weit weg, dass das Kabel nach hinten zieht.",
+   "Halte den Bauch fest, damit du nicht ins Hohlkreuz gehst."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Seitheben am Kabelzug",
+  "description": "Einarmiges Seitheben am Kabel mit konstanter Spannung auf der seitlichen Schulter.",
+  "instructions": [
+   "Stell dich seitlich zum tiefen Kabelzug und greif den Griff mit der maschinenfernen Hand.",
+   "Beuge den Ellbogen leicht und lass das Kabel vor dem Körper verlaufen.",
+   "Hebe den Arm zur Seite bis parallel zum Boden.",
+   "Senke kontrolliert ab. Alle Wiederholungen pro Seite, dann wechseln.",
+   "Halte die Spannung — setz das Gewicht unten nicht ab."
+  ],
+  "tips": [
+   "Führe mit dem Ellbogen, nicht mit der Hand.",
+   "Halte oben kurz inne, ohne Schwung.",
+   "Nimm weniger Last als mit der Kurzhantel — die Kabelspannung ist konstant."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Trizepsstrecken über Kopf am Kabelzug",
+  "description": "Eine Trizepsübung am Kabel: Mit dem Rücken zum Gewichtsblock hältst du ein Seil hinter dem Kopf und streckst die Ellbogen, um es nach oben über den Kopf zu drücken. Die Überkopfposition dehnt den langen Trizepskopf, und das Kabel hält die Spannung über die ganze Bewegung.",
+  "instructions": [
+   "Befestige ein Seil an der unteren Rolle und wähle ein leichtes Gewicht.",
+   "Greif das Seil mit beiden Händen, dreh dem Gewichtsblock den Rücken zu und mach einen Schritt in die Schrittstellung, sodass das Kabel dich nach hinten zieht.",
+   "Führe das Seil mit gebeugten Ellbogen über den Kopf, Oberarme nah an den Ohren, sodass die Hände hinter dem Kopf sind.",
+   "Spanne den Rumpf an, halte die Oberarme still und strecke die Ellbogen, bis die Arme über dem Kopf ganz gestreckt sind.",
+   "Halte oben kurz und beuge dann die Ellbogen, um das Seil kontrolliert wieder hinter den Kopf zu senken.",
+   "Wiederhole für die geplante Anzahl."
+  ],
+  "tips": [
+   "Halte die Ellbogen nach vorn gerichtet und die Oberarme still; wenn sie sich öffnen oder wandern, wird aus dem Strecken ein Drücken.",
+   "Mach einen ausreichend großen Schritt nach vorn, damit das Kabel dich stabil hält, und vermeide ein Hohlkreuz beim Heben der Arme.",
+   "Nimm ein Gewicht, das du in der gesamten Dehnung kontrollieren kannst; schwere Lasten drücken die Ellbogen auseinander."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof Press am Kabelzug",
+  "description": "Eine Anti-Rotations-Rumpfübung: Das Kabel zieht dich zur Seite, während du den Griff gerade von der Brust wegdrückst und den Oberkörper nicht drehen lässt.",
+  "instructions": [
+   "Stell die Rolle auf Brusthöhe und nimm den Griff mit beiden Händen, seitlich zur Maschine stehend.",
+   "Geh weg, bis echte Spannung auf dem Kabel ist, Füße schulterbreit, Knie leicht gebeugt.",
+   "Führe den Griff zur Brustmitte und spanne Rumpf und Gesäß an.",
+   "Drücke den Griff gerade nach vorn, bis die Arme gestreckt sind, und widerstehe dem Zug zur Maschine.",
+   "Halte die gestreckte Position kurz und führe den Griff dann kontrolliert zur Brust zurück.",
+   "Mach die gewünschten Wiederholungen, dreh dich dann um und wiederhole zur anderen Seite."
+  ],
+  "tips": [
+   "Nichts darf sich drehen. Drehen sich die Schultern beim Drücken zum Kabelzug, nimm Gewicht weg — trainiert wird die Rotation, die nicht passiert.",
+   "Je weiter du von der Maschine weg stehst, desto länger ist der Hebel und desto schwerer wird es; so änderst du die Schwierigkeit, ohne das Gewicht zu verstellen.",
+   "Halte die Arme auf Brusthöhe und die Schultern unten; steigt der Griff, wird daraus ein Frontheben."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Reverse Fly am Kabelzug",
+  "description": "Eine stehende Kabelübung für die hinteren Schultern: Zwischen zwei Kabeltürmen hältst du die gegenüberliegenden Griffe mit vor dir gekreuzten Kabeln und führst die Arme nach außen und hinten bis auf Schulterhöhe. Die Kabel halten die Spannung über den ganzen Bogen.",
+  "instructions": [
+   "Stell beide Rollen etwa auf Schulterhöhe ein und stell dich mittig zwischen die Türme.",
+   "Greif den linken Griff mit der rechten Hand und den rechten mit der linken, sodass sich die Kabel vor dir kreuzen.",
+   "Steh aufrecht, Arme auf Schulterhöhe nach vorn gestreckt, Ellbogen leicht gebeugt.",
+   "Führe die Arme in weitem Bogen nach außen und hinten, geführt von den Ellbogen, bis sie in Linie mit den Schultern sind.",
+   "Führe die Schulterblätter kurz zusammen, ohne ins Hohlkreuz zu gehen.",
+   "Führe die Griffe langsam in die gekreuzte Ausgangsposition zurück und wiederhole für die geplante Anzahl."
+  ],
+  "tips": [
+   "Halte die Ellbogen leicht gebeugt und fixiert; beugst und streckst du sie, wird aus der Fliegenden ein Rudern.",
+   "Halte die Schultern unten und den Nacken locker, damit die hinteren Schultern arbeiten und nicht der obere Trapezmuskel.",
+   "Nimm ein leichtes Gewicht und führe langsam zurück; am Ende des Bogens ziehen die Kabel am stärksten, also kontrolliere diese Position."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Knieheben in der Beinhebestation",
+  "description": "Eine Körpergewichtsübung in der Beinhebestation für den unteren Bauch und die Hüftbeuger.",
+  "instructions": [
+   "Stütze dich in der Station ab, Rücken flach an der Lehne, Unterarme auf den Polstern.",
+   "Lass die Beine gestreckt nach unten hängen.",
+   "Spanne den Rumpf an und zieh die Knie zur Brust.",
+   "Halte oben kurz und senke dann langsam in die Ausgangsposition.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Vermeide, mit den Beinen Schwung zu holen.",
+   "Atme beim Anheben der Knie aus.",
+   "Halte den Rücken während der ganzen Übung an der Lehne."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Brustpresse an der Maschine",
+  "description": "Eine Drückbewegung für die Brust an der Maschine, ideal für Einsteiger.",
+  "instructions": [
+   "Setz dich mit flachem Rücken an die Lehne.",
+   "Greif die Griffe auf Brusthöhe.",
+   "Drücke die Griffe nach vorn, bis die Arme vollständig gestreckt sind.",
+   "Kehre langsam zur Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Stell den Sitz so ein, dass die Griffe auf Brusthöhe sind.",
+   "Drücke, ohne die Ellbogen ruckartig durchzustrecken.",
+   "Führe kontrolliert zurück und lass das Gewicht nicht fallen."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Kurzhantelrudern mit Brustauflage",
+  "description": "Kurzhantelrudern mit Brustauflage, das den unteren Rücken entlastet und die Rückenmuskeln isoliert.",
+  "instructions": [
+   "Leg dich bäuchlings auf eine Schrägbank, die Hanteln hängen darunter.",
+   "Rudere die Hanteln zu den Seiten.",
+   "Spanne oben an und senke ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Die Brustauflage verhindert die Ermüdung des unteren Rückens.",
+   "Konzentriere dich darauf, die Schulterblätter zusammenzuführen."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Kettlebell-Rudern mit Brustauflage",
+  "description": "Diese Übung trainiert die Rückenmuskulatur, vor allem Latissimus und Rautenmuskeln, indem du mit je einer Kettlebell zur Hüfte ruderst, während der Oberkörper auf einer Schrägbank liegt.",
+  "instructions": [
+   "Leg dich bäuchlings auf eine Schrägbank und lass die Arme mit je einer Kettlebell frei hängen.",
+   "Spanne den Bauch an und zieh die Schulterblätter zurück.",
+   "Zieh die Kettlebells zur Hüfte und drücke die Schulterblätter zusammen.",
+   "Halte oben kurz und spüre die Anspannung im Rücken.",
+   "Senke die Kettlebells langsam und kontrolliert in die Ausgangsposition."
+  ],
+  "tips": [
+   "Halte den Oberkörper über die ganze Bewegung stabil; vermeide Schwingen.",
+   "Beginne den Zug mit der Rückenmuskulatur, nicht nur mit den Armen.",
+   "Halte die Ellbogen nah am Körper, um den Latissimus zu betonen."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Maschinenrudern mit Brustauflage",
+  "description": "Sitzendes Maschinenrudern mit Brustpolster: Latissimus und die Muskeln zwischen den Schulterblättern ziehen, der untere Rücken bleibt außen vor. Du ziehst die Griffe zurück, die Ellbogen hinter dich, und führst sie kontrolliert wieder nach vorn.",
+  "instructions": [
+   "Stell den Sitz so ein, dass die Griffe auf Höhe der unteren Brust sind, Brust am Polster, Füße fest aufgestellt.",
+   "Greif die Griffe mit gestreckten Armen und lockeren Schultern.",
+   "Spanne den Rumpf an und zieh die Griffe zurück, Ellbogen hinter den Körper.",
+   "Führe am Ende des Zugs die Schulterblätter zusammen, ohne die Brust vom Polster zu lösen.",
+   "Halte kurz und strecke dann die Arme kontrolliert nach vorn.",
+   "Wiederhole für die geplante Anzahl, die Brust bleibt immer am Polster."
+  ],
+  "tips": [
+   "Zieh mit den Ellbogen statt mit den Händen, damit Latissimus und mittlerer Rücken arbeiten und der Bizeps nur hilft.",
+   "Brust am Polster, Schultern unten; wer sie hochzieht oder sich zurücklehnt, macht daraus einen Zug des oberen Trapezmuskels.",
+   "Lass die Schulterblätter zu Beginn jeder Wiederholung nach vorn gleiten, für volle Dehnung vor dem nächsten Zug."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "T-Bar-Rudern mit Brustauflage",
+  "description": "T-Bar-Rudern mit der Brust auf der Schrägbank, das den Rücken ohne Belastung des unteren Rückens isoliert.",
+  "instructions": [
+   "Leg die Brust auf die Schrägbank, Füße fest am Boden, und greif den T-Bar-Griff mit gestreckten Armen.",
+   "Zieh den Griff zur Brust, Ellbogen nach hinten und nah am Körper.",
+   "Drücke oben kurz die Schulterblätter zusammen.",
+   "Senke kontrolliert bis zur Armstreckung, ohne die Brust von der Bank zu lösen."
+  ],
+  "tips": [
+   "Halte den Kopf in Linie mit der Wirbelsäule.",
+   "Musst du die Brust zum Ziehen von der Bank lösen, reduziere das Gewicht."
+  ]
+ },
+ "chin-ups": {
+  "name": "Klimmzüge im Untergriff",
+  "description": "Eine Klimmzugvariante im Untergriff, die neben dem Latissimus den Bizeps stark fordert.",
+  "instructions": [
+   "Häng dich schulterbreit im Untergriff an eine Stange.",
+   "Zieh dich hoch, bis das Kinn über der Stange ist.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte den Rumpf während der ganzen Übung angespannt.",
+   "Vermeide übermäßiges Schwingen."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Enges Bankdrücken",
+  "description": "Bankdrücken mit engerem Griff, das den Trizeps stärker einbezieht und die Brust weiter fordert.",
+  "instructions": [
+   "Leg dich auf die Bank und greif die Stange schulterbreit oder etwas enger.",
+   "Hebe die Stange aus der Ablage und bring sie mit gestreckten Armen über die Brust.",
+   "Senke kontrolliert, bis sie die untere Brust berührt, Ellbogen nah am Körper.",
+   "Drücke die Stange hoch, bis die Ellbogen gestreckt sind."
+  ],
+  "tips": [
+   "Greif nicht zu eng, das belastet die Handgelenke; Schulterbreite genügt.",
+   "Bitte um Hilfe oder nutze ein Rack mit Sicherungen, wenn du nah am Muskelversagen arbeitest."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Bankdrücken mit Kurzhanteln",
+  "description": "Eine zusammengesetzte Brustübung mit Kurzhanteln, die mehr Bewegungsumfang als das Langhantel-Bankdrücken erlaubt.",
+  "instructions": [
+   "Leg dich auf eine Flachbank, in jeder Hand eine Kurzhantel auf Brusthöhe.",
+   "Drücke die Hanteln hoch, bis die Arme vollständig gestreckt sind.",
+   "Senke sie langsam in die Ausgangsposition.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Handgelenke während der ganzen Übung neutral.",
+   "Spanne oben die Brust an."
+  ]
+ },
+ "db-fly": {
+  "name": "Fliegende mit Kurzhanteln",
+  "description": "Eine Isolationsübung, die den Brustmuskel über einen weiten Bogen dehnt und anspannt.",
+  "instructions": [
+   "Leg dich auf eine Bank, die Hanteln über der Brust, Handflächen zueinander.",
+   "Senke die Hanteln mit leicht gebeugten Ellbogen zur Seite.",
+   "Kehre in die Ausgangsposition zurück und spanne die Brust an.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Ellbogen während der ganzen Übung gleich stark gebeugt.",
+   "Senke die Hanteln nicht zu tief."
+  ]
+ },
+ "db-squat": {
+  "name": "Kniebeuge mit Kurzhanteln",
+  "description": "Eine Kniebeuge mit je einer Kurzhantel an den Seiten, auch ohne Langhantel machbar.",
+  "instructions": [
+   "Füße schulterbreit, in jeder Hand eine Hantel an der Seite.",
+   "Spanne den Rumpf an und halte die Brust oben.",
+   "Geh in die Hocke, indem du Hüfte und Knie beugst.",
+   "Senke dich, bis die Oberschenkel parallel oder tiefer sind.",
+   "Drücke dich über die Fersen wieder hoch."
+  ],
+  "tips": [
+   "Halte die Brust oben und den Rücken gerade.",
+   "Führe die Knie in Richtung der Zehen.",
+   "Nutze Zughilfen, wenn die Griffkraft zum limitierenden Faktor wird."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead Bug",
+  "description": "Eine Rumpfübung in Rückenlage, die das Strecken gegenüberliegender Gliedmaßen koordiniert und die tiefe Rumpfstabilität trainiert.",
+  "instructions": [
+   "Leg dich auf den Rücken, Arme zur Decke gestreckt, Knie 90 Grad.",
+   "Senke den rechten Arm und das linke Bein zum Boden, der untere Rücken bleibt angedrückt.",
+   "Kehre in die Ausgangsposition zurück.",
+   "Wiederhole auf der anderen Seite.",
+   "Wechsle ab."
+  ],
+  "tips": [
+   "Drücke den unteren Rücken die ganze Zeit auf den Boden.",
+   "Beweg dich langsam."
+  ]
+ },
+ "deadlift": {
+  "name": "Kreuzheben mit Langhantel",
+  "description": "Eine zusammengesetzte Ganzkörperübung, die vor allem die hintere Muskelkette trainiert.",
+  "instructions": [
+   "Steh hüftbreit, die Stange über der Fußmitte.",
+   "Beuge dich aus der Hüfte und greif die Stange.",
+   "Spanne den Rumpf an und hebe, indem du Hüfte und Knie streckst.",
+   "Richte dich oben vollständig auf und senke dann kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Stange nah am Körper.",
+   "Mach den unteren Rücken nicht rund."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Defizit-Kreuzheben",
+  "description": "Kreuzheben auf einer niedrigen Plattform, das den Bewegungsweg und die Anforderung beim Anheben erhöht.",
+  "instructions": [
+   "Stell dich auf eine 2 bis 5 cm hohe Plattform, Füße unter der Stange, und greif sie mit neutralem Rücken, Schultern über der Stange.",
+   "Spanne den Körper an und drücke die Füße in den Boden, während die Stange eng an den Beinen hochgeht.",
+   "Strecke Hüfte und Knie gleichzeitig, bis du vollständig aufrecht stehst.",
+   "Senke die Stange kontrolliert mit neutralem Rücken zum Boden."
+  ],
+  "tips": [
+   "Beginne mit kleinem Defizit und wenig Gewicht, um die Technik anzupassen.",
+   "Mach den Rücken beim Abheben nicht rund."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon Flag",
+  "description": "Fortgeschrittene Bauchübung: Der starre Körper stützt sich nur auf den Schultern und hebt und senkt sich wie ein Hebel.",
+  "instructions": [
+   "Leg dich auf eine Bank, greif die Kante hinter dem Kopf und hebe den geraden Körper, nur Schultern und oberer Rücken liegen auf.",
+   "Senke den geraden Körper, ohne in der Hüfte einzuknicken, bis fast parallel zum Boden.",
+   "Halte Bauch und Gesäß fest, ohne die Bank zu berühren.",
+   "Hebe den geraden Körper wieder in die Senkrechte; wenn das noch nicht geht, beginne nur mit dem Absenken."
+  ],
+  "tips": [
+   "Beginne mit gebeugten Knien oder nur mit der exzentrischen Phase.",
+   "Nicht in der Hüfte einzuknicken ist der Schlüssel der Übung."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Vorgebeugtes Kurzhantelrudern",
+  "description": "Rudern mit je einer Kurzhantel und vorgebeugtem Oberkörper: trainiert Latissimus und oberen Rücken nur mit Kurzhanteln.",
+  "instructions": [
+   "Steh mit je einer Hantel, beuge die Knie leicht und neige den Oberkörper aus der Hüfte fast parallel zum Boden, Rücken gerade.",
+   "Lass die Arme hängen, Handflächen zueinander.",
+   "Zieh die Hanteln zur Hüfte, Ellbogen nach hinten, Schulterblätter zusammen.",
+   "Halte oben kurz und senke kontrolliert bis zur Armstreckung."
+  ],
+  "tips": [
+   "Halte den Oberkörper ruhig: Wenn du Schwung brauchst, sind die Hanteln zu schwer.",
+   "Halte den Nacken in Linie mit der Wirbelsäule, Blick zum Boden.",
+   "Ermüdet der untere Rücken vor dem restlichen Rücken, nimm weniger Gewicht oder wähle ein gestütztes Rudern."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Kurzhantelcurl",
+  "description": "Armbeugen mit je einer Kurzhantel, um den Bizeps mit freiem Bewegungsumfang zu trainieren.",
+  "instructions": [
+   "Steh mit je einer Hantel, Arme neben dem Körper gestreckt, Handflächen nach vorn.",
+   "Halte die Ellbogen am Oberkörper und beuge die Arme ohne Körperschwung.",
+   "Spanne oben den Bizeps kurz an, ohne die Schultern zu heben.",
+   "Senke kontrolliert, bis der Ellbogen ganz gestreckt ist."
+  ],
+  "tips": [
+   "Hol keinen Schwung aus dem Rücken: Wenn du ihn brauchst, reduziere das Gewicht.",
+   "Kontrolliere das Absenken; es dauert mindestens doppelt so lang wie das Heben."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmer's Walk mit Kurzhanteln",
+  "description": "Diese Ganzkörperübung besteht darin, mit schweren Kurzhanteln zu gehen; sie entwickelt Griffkraft, Rumpfstabilität und allgemeine Kraftausdauer.",
+  "instructions": [
+   "Steh aufrecht mit je einer Hantel, Arme an den Seiten gestreckt.",
+   "Zieh die Schulterblätter zurück, spanne den Rumpf an und halte die Wirbelsäule neutral.",
+   "Geh langsam und bewusst eine festgelegte Strecke oder Zeit in kleinen, kontrollierten Schritten.",
+   "Halte die Brust aufrecht und neige dich beim Gehen nicht zur Seite.",
+   "Achte während der ganzen Bewegung auf eine starke, stabile Haltung."
+  ],
+  "tips": [
+   "Nimm die schwersten Hanteln, die du ohne Technikverlust kontrollieren kannst.",
+   "Atme tief und rhythmisch, um die Rumpfspannung zu halten.",
+   "Stell dir vor, du balancierst ein Glas Wasser auf dem Kopf."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Frontheben mit Kurzhanteln",
+  "description": "Anheben der Kurzhanteln nach vorn bis auf Schulterhöhe für die vordere Schulter.",
+  "instructions": [
+   "Steh mit je einer Hantel vor den Oberschenkeln, Arme fast gestreckt.",
+   "Hebe die Hanteln mit leicht gebeugten Ellbogen nach vorn bis auf Schulterhöhe.",
+   "Stoppe in der Waagerechten, ohne den Oberkörper zu schaukeln.",
+   "Senke kontrolliert zu den Oberschenkeln."
+  ],
+  "tips": [
+   "Hol keinen Schwung aus dem Rücken: Sonst reduziere das Gewicht.",
+   "Die vordere Schulter arbeitet beim Drücken schon viel; übertreibe das Volumen nicht."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Reverse Fly mit Kurzhanteln",
+  "description": "Eine vorgebeugte Isolationsübung, bei der die Hanteln zur Seite gehoben werden, für hintere Schultern und oberen Rücken.",
+  "instructions": [
+   "Beuge dich aus der Hüfte vor, die Hanteln hängen an gestreckten Armen.",
+   "Halte den Rücken gerade und die Knie leicht gebeugt.",
+   "Hebe die Hanteln seitlich bis auf Schulterhöhe.",
+   "Drücke oben die Schulterblätter zusammen.",
+   "Senke die Hanteln kontrolliert ab.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Nimm leichtes Gewicht, damit die hinteren Schultern arbeiten und nicht der Schwung.",
+   "Drücke oben die Schulterblätter zusammen.",
+   "Halte die Ellbogen die ganze Zeit leicht und gleichbleibend gebeugt."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Rumänisches Kreuzheben mit Kurzhanteln",
+  "description": "Rumänisches Kreuzheben mit Kurzhanteln, das über die Hüftbeuge die Dehnung der Beinrückseite betont.",
+  "instructions": [
+   "Steh mit den Hanteln vor den Oberschenkeln, Knie leicht gebeugt.",
+   "Beuge dich aus der Hüfte und schieb das Gesäß nach hinten.",
+   "Führe die Hanteln an den Beinen entlang, bis du die Dehnung in der Beinrückseite spürst.",
+   "Halte den Rücken gerade und die Schultern hinten.",
+   "Schieb die Hüfte nach vorn, um wieder aufzustehen.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Geh nur so tief, wie deine Beweglichkeit erlaubt, ohne zu erzwingen.",
+   "Behalte die leichte Kniebeugung über den ganzen Weg bei.",
+   "Mach aus der Bewegung keine Kniebeuge."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Schulterdrücken mit Kurzhanteln",
+  "description": "Ein Überkopfdrücken mit Kurzhanteln, sitzend oder stehend, für die vordere und seitliche Schulter.",
+  "instructions": [
+   "Setz dich oder steh und halte die Hanteln auf Schulterhöhe, Handflächen nach vorn.",
+   "Drücke beide Hanteln über den Kopf, bis die Arme vollständig gestreckt sind.",
+   "Halte den Rumpf angespannt und vermeide ein Hohlkreuz.",
+   "Senke die Hanteln kontrolliert auf Schulterhöhe.",
+   "Lass die Hanteln nicht hinter den Kopf wandern.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Drücke die Hanteln gerade nach oben, ohne sie oben zusammenzustoßen.",
+   "Halte die Handgelenke fest und in Linie mit den Unterarmen.",
+   "Wenn du ins Hohlkreuz gehst, reduziere das Gewicht."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Schulterheben mit Kurzhanteln",
+  "description": "Schulterheben mit je einer Kurzhantel für den oberen Rücken und den Trapezmuskel.",
+  "instructions": [
+   "Steh mit je einer Hantel, Arme neben dem Körper gestreckt, Blick nach vorn.",
+   "Zieh die Schultern gerade zu den Ohren, ohne sie zu kreisen oder die Ellbogen zu beugen.",
+   "Halte die Anspannung oben kurz.",
+   "Senke kontrolliert, bis der Trapezmuskel ganz gedehnt ist."
+  ],
+  "tips": [
+   "Kreise nicht mit den Schultern: Die Bewegung ist senkrecht.",
+   "Versagt der Griff vor dem Trapezmuskel, nutze Zughilfen."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Einbeiniges Wadenheben mit Kurzhantel",
+  "description": "Einbeiniges Wadenheben auf einer Stufe mit einer Kurzhantel, die andere Hand stützt zum Gleichgewicht.",
+  "instructions": [
+   "Steh mit dem Fußballen eines Fußes auf einer Stufe, das andere Bein gebeugt, die Hantel in der Hand derselben Seite; die andere Hand an der Wand.",
+   "Lass die Ferse unter die Stufe sinken, bis die Wade gedehnt ist.",
+   "Geh so hoch wie möglich auf die Zehenspitzen, ohne das Knie zu beugen.",
+   "Halte oben kurz und senke kontrolliert; mach alle Wiederholungen und wechsle das Bein."
+  ],
+  "tips": [
+   "Drücke über den Großzehenballen, ohne dass das Sprunggelenk nach außen kippt.",
+   "Die Übung ist einseitig: Mach mit jedem Bein gleich viele Wiederholungen."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Erhöhte Pike-Liegestütze",
+  "description": "Einsteigerversion der Pike-Liegestütze mit den Händen auf einer Stufe oder einem stabilen Stuhl, um die Last zu verringern.",
+  "instructions": [
+   "Stütze die Hände schulterbreit auf die Kante einer Stufe, Bank oder eines festen Stuhls und geh mit den Füßen zurück, bis die Hüfte hoch ist.",
+   "Beuge die Ellbogen und senke den Kopf zur Stütze, die Hüfte bleibt hoch.",
+   "Stoppe, wenn der Kopf zwischen den Händen ist, ohne die Position zu verlieren.",
+   "Drücke dich mit den Armen hoch, bis die Ellbogen gestreckt sind."
+  ],
+  "tips": [
+   "Stell die Füße näher an die Stütze, um es schwerer zu machen.",
+   "Prüfe vor dem Start, dass die Stütze nicht wegrutscht."
+  ]
+ },
+ "face-pull": {
+  "name": "Face Pull am Kabelzug",
+  "description": "Eine Kabelübung für die hinteren Schultern und die Außenrotatoren.",
+  "instructions": [
+   "Befestige ein Seil an einer oberen Rolle.",
+   "Zieh das Seil zum Gesicht und führe die Enden auseinander.",
+   "Spanne hintere Schultern und Außenrotatoren an.",
+   "Kehre kontrolliert in die Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Ellbogen hoch, auf Schulterhöhe.",
+   "Führe am Ende jeder Wiederholung die Schulterblätter zusammen.",
+   "Arbeite mit leichtem Gewicht, damit die Technik sauber bleibt."
+  ]
+ },
+ "front-squat": {
+  "name": "Frontkniebeuge",
+  "description": "Eine Kniebeuge mit der Langhantel vorn auf den Schultern, die Quadrizeps und Rumpf betont.",
+  "instructions": [
+   "Nimm die Stange auf die vorderen Schultern, die Ellbogen hoch.",
+   "Geh mit aufrechtem Oberkörper in die Hocke, bis die Oberschenkel parallel zum Boden sind.",
+   "Komm wieder hoch.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Ellbogen hoch, um die Stange zu stabilisieren.",
+   "Ein aufrechterer Oberkörper aktiviert die Quadrizeps stärker."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Glute Bridge",
+  "description": "Eine Übung zur Gesäßaktivierung mit Körpergewicht in Rückenlage.",
+  "instructions": [
+   "Leg dich auf den Rücken, Knie gebeugt, Füße flach auf dem Boden.",
+   "Hebe die Hüfte, indem du das Gesäß anspannst.",
+   "Halte oben kurz mit vollständig gestreckter Hüfte.",
+   "Senke die Hüfte kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Drücke über die Fersen, um das Gesäß besser zu aktivieren.",
+   "Vermeide ein Hohlkreuz beim Strecken der Hüfte.",
+   "Halte die Knie über den gesamten Weg in Linie mit den Füßen."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet-Kniebeuge",
+  "description": "Eine einsteigerfreundliche Kniebeuge mit einer Kettlebell vor der Brust, die Haltung und Tiefe verbessert.",
+  "instructions": [
+   "Halte eine Kettlebell mit beiden Händen auf Brusthöhe.",
+   "Geh in die Hocke und halte das Gewicht nah an der Brust.",
+   "Komm wieder hoch.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Die Goblet-Position fördert von selbst einen aufrechten Oberkörper.",
+   "Drücke die Knie unten nach außen."
+  ]
+ },
+ "good-morning": {
+  "name": "Good Morning",
+  "description": "Hüftbeuge mit der Langhantel auf dem Rücken zur Kräftigung von Beinbeugern, Gesäß und unterem Rücken.",
+  "instructions": [
+   "Steh mit der Stange auf dem oberen Rücken, Füße schulterbreit, Knie leicht gebeugt.",
+   "Schieb die Hüfte zurück und neige den Oberkörper mit neutralem Rücken nach vorn.",
+   "Geh tief, bis du Spannung in den Beinbeugern spürst, der Oberkörper nahe der Waagerechten.",
+   "Schieb die Hüfte nach vorn, um wieder aufzustehen."
+  ],
+  "tips": [
+   "Beginne mit sehr wenig Gewicht: Der untere Rücken arbeitet intensiv.",
+   "Schau nach vorn und mach den Rücken nicht rund."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hackenschmidt-Kniebeuge",
+  "description": "Eine geführte Übung an der Hackenschmidt-Maschine, die mit einer kontrollierten Kniebeuge auf dem Schlitten vor allem die Quadrizeps trainiert.",
+  "instructions": [
+   "Belade die Maschine und stell dich mit Rücken und Schultern an die Polster.",
+   "Stell die Füße schulterbreit auf die Plattform, leicht nach außen gedreht.",
+   "Löse die Sicherungsgriffe und senke den Schlitten, indem du Knie und Hüfte beugst.",
+   "Senke dich, bis die Oberschenkel mindestens parallel zur Plattform sind.",
+   "Drücke über die Fersen, strecke die Beine und bring den Schlitten in die Ausgangsposition.",
+   "Raste die Sicherungsgriffe nach dem Satz wieder ein."
+  ],
+  "tips": [
+   "Halte den unteren Rücken über die ganze Bewegung am Polster.",
+   "Höher auf der Plattform platzierte Füße verlagern den Schwerpunkt auf Gesäß und Beinbeuger.",
+   "Kontrolliere das Absenken; hol am tiefsten Punkt keinen Schwung."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Hammercurl mit Kurzhanteln",
+  "description": "Eine Variante des Bizepscurls im neutralen Griff, die den Oberarmspeichenmuskel trainiert.",
+  "instructions": [
+   "Steh und halte die Hanteln an den Seiten, Handflächen zueinander.",
+   "Führe die Hanteln hoch, Handflächen nach innen.",
+   "Spanne oben an und senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Ellbogen über den gesamten Weg am Oberkörper.",
+   "Hol mit dem Körper keinen Schwung für die Hanteln.",
+   "Die Handgelenke bleiben während des ganzen Curls fest und neutral."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Handstand-Liegestütze",
+  "description": "Liegestütz im Handstand mit den Füßen an der Wand, eine der anspruchsvollsten Drückübungen mit Körpergewicht.",
+  "instructions": [
+   "Stell dich mit dem Rücken zur Wand, setz die Hände auf den Boden und führe die Füße hoch, bis du mit festem Bauch senkrecht stehst.",
+   "Beuge die Ellbogen und senke den Kopf kontrolliert zum Boden.",
+   "Stoppe, wenn der Kopf den Boden oder eine Matte berührt.",
+   "Drücke dich hoch, bis die Ellbogen ganz gestreckt sind."
+  ],
+  "tips": [
+   "Übe vorher den Handstand und die Pike-Liegestütze.",
+   "Eine Matte unter dem Kopf gibt Sicherheit."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Knieheben im Hang",
+  "description": "Eine Rumpfübung an der Stange für unteren Bauch und Hüftbeuger mit gebeugten Knien.",
+  "instructions": [
+   "Häng dich im Obergriff mit vollständig gestreckten Armen an eine Stange.",
+   "Spanne den Rumpf an und zieh die Knie zur Brust.",
+   "Halte oben kurz.",
+   "Senke die Beine langsam in die Ausgangsposition.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Vermeide Schwingen — beginne die Bewegung aus dem Rumpf.",
+   "Atme beim Anheben der Knie aus.",
+   "Steigere zum Beinheben mit gestreckten Beinen, wenn es leicht wird."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Beinheben im Hang",
+  "description": "Beinheben mit gestreckten Beinen bis zur Waagerechten im Hang, für Bauch und Hüftbeuger.",
+  "instructions": [
+   "Häng dich etwas weiter als schulterbreit an die Stange, Beine geschlossen und gestreckt.",
+   "Hebe die gestreckten Beine parallel zum Boden und kippe das Becken leicht nach hinten.",
+   "Halte oben kurz, ohne zu schwingen.",
+   "Senke kontrolliert in die Ausgangsposition, ohne dass der Körper pendelt."
+  ],
+  "tips": [
+   "Schaffst du es nicht mit gestreckten Beinen, beuge die Knie.",
+   "Kein Schwung: Nutze den Bauch."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Kreuzheben mit Hex-Bar",
+  "description": "Kreuzheben im Stand innerhalb einer Hex-Bar: Die Last bleibt zentriert, der Zug aufrechter und rückenschonender.",
+  "instructions": [
+   "Stell dich schulterbreit in die beladene Hex-Bar.",
+   "Beuge Hüfte und Knie, um die Griffe zu fassen.",
+   "Spanne den Rumpf an und halte den Rücken gerade.",
+   "Drücke über die Fersen und strecke Hüfte und Knie, bis du aufrecht stehst.",
+   "Schließe oben mit zurückgenommenen Schultern ab.",
+   "Senke die Stange kontrolliert zum Boden."
+  ],
+  "tips": [
+   "Halte beim Greifen die Brust oben und den Rücken gerade.",
+   "Drücke den Boden weg, statt die Stange mit dem Rücken zu ziehen.",
+   "Richte dich oben vollständig auf, ohne dich zurückzulehnen."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Hüftabduktion an der Maschine",
+  "description": "Eine Maschinenübung für die äußere Hüftmuskulatur.",
+  "instructions": [
+   "Setz dich in die Abduktorenmaschine, die Polster an den Außenseiten der Oberschenkel.",
+   "Drücke die Beine gegen den Widerstand nach außen.",
+   "Halte am weitesten Punkt kurz.",
+   "Kehre kontrolliert in die Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Lass den Rücken an der Lehne.",
+   "Öffne die Beine ohne Schwung in kontrolliertem Tempo.",
+   "Bremse den Rückweg, statt das Gewicht fallen zu lassen."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Hüftadduktion an der Maschine",
+  "description": "Eine Maschinenübung, bei der die Beine gegen Widerstand zusammengedrückt werden und die Adduktoren an der Oberschenkelinnenseite isoliert gekräftigt werden.",
+  "instructions": [
+   "Setz dich in die Adduktorenmaschine, Rücken an der Lehne.",
+   "Leg die Beine an die Polster, die Maschine auf eine angenehme Dehnung eingestellt.",
+   "Drücke die Beine zusammen, bis sich die Polster in der Mitte treffen.",
+   "Halte die Anspannung in der geschlossenen Position kurz.",
+   "Lass die Beine kontrolliert wieder in die Ausgangsposition öffnen.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Wähle eine Startöffnung, die dehnt, ohne die Leiste zu überlasten.",
+   "Nutze den vollen Weg in gleichmäßigem, kontrolliertem Tempo.",
+   "Lass die Gewichte beim Öffnen nicht anschlagen."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip Thrust mit Langhantel",
+  "description": "Eine zusammengesetzte Gesäßübung mit einer Langhantel auf der Hüfte.",
+  "instructions": [
+   "Setz dich auf den Boden, oberer Rücken an einer Bank, die Stange auf der Hüfte.",
+   "Drücke die Hüfte hoch, bis Rumpf und Oberschenkel eine Linie bilden.",
+   "Spanne oben das Gesäß an.",
+   "Senke die Hüfte kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte das Kinn zur Brust und die Rippen unten.",
+   "Drücke über die Fersen, nicht über die Zehen.",
+   "Vermeide oben ein Hohlkreuz."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Horizontale Beinpresse",
+  "description": "Eine horizontale Beinpresse für Quadrizeps, Gesäß und Beinbeuger.",
+  "instructions": [
+   "Setz dich in die horizontale Beinpresse, Rücken an der Lehne, Füße schulterbreit auf der Plattform.",
+   "Drücke mit den Füßen, bis die Beine gestreckt sind, ohne die Knie durchzudrücken.",
+   "Beuge die Knie kontrolliert, bis sie nahe an der Brust sind.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Lass den unteren Rücken nicht vom Sitz abheben.",
+   "Strecke die Knie nicht vollständig durch."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Schrägbankdrücken mit Langhantel",
+  "description": "Eine Drückbewegung mit der Langhantel auf der Schrägbank für die obere Brust.",
+  "instructions": [
+   "Leg dich auf eine Bank mit 30 bis 45 Grad Neigung.",
+   "Greif die Stange etwas weiter als schulterbreit und hebe sie aus der Ablage.",
+   "Senke die Stange zur oberen Brust.",
+   "Drücke die Stange zurück bis zur vollen Streckung.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Zieh die Schulterblätter zurück und halte sie auf der Bank.",
+   "Lass die Stange nicht von der Brust abprallen.",
+   "Lass dir bei schweren Lasten helfen."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Y-Heben auf der Schrägbank",
+  "description": "Y-förmiges Anheben der Kurzhanteln in Bauchlage auf der Schrägbank für den unteren und mittleren Trapezmuskel.",
+  "instructions": [
+   "Leg dich bäuchlings auf die Schrägbank, Brust aufliegend, je eine leichte Hantel hängend.",
+   "Hebe die Arme in Y-Form nach vorn oben, Daumen zur Decke.",
+   "Stoppe, wenn die Arme in Linie mit dem Rumpf sind, ohne die Brust von der Bank zu heben.",
+   "Senke kontrolliert in die Ausgangsposition."
+  ],
+  "tips": [
+   "Nimm wenig Gewicht: Der untere Trapezmuskel ist klein.",
+   "Halte den Nacken neutral, Blick zum Boden."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Kurzhantelcurl auf der Schrägbank",
+  "description": "Ein Bizepscurl auf der Schrägbank für eine stärkere Dehnung des langen Kopfs.",
+  "instructions": [
+   "Setz dich auf eine 45-Grad-Bank, die Hanteln an den Seiten.",
+   "Lass die Arme gerade hängen, Handflächen nach vorn.",
+   "Führe die Hanteln zu den Schultern.",
+   "Senke kontrolliert bis zur vollen Streckung.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Lass Schultern und Rücken an der Bank.",
+   "Schieb beim Hochführen die Schultern nicht nach vorn.",
+   "Nutze die Dehnung unten mit langsamem Absenken."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Schrägbankdrücken mit Kurzhanteln",
+  "description": "Eine Drückbewegung auf der Schrägbank mit Betonung der oberen Brust.",
+  "instructions": [
+   "Stell die Bank auf 30 Grad ein und setz dich mit den Hanteln auf Schulterhöhe.",
+   "Drücke die Hanteln nach oben und zusammen, bis die Arme vollständig gestreckt sind.",
+   "Senke die Hanteln kontrolliert auf Schulterhöhe.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Füße fest am Boden und die Schulterblätter zurück.",
+   "Stoße die Hanteln oben nicht zusammen.",
+   "Senke, bis du eine sanfte Dehnung in der Brust spürst."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Erhöhte Liegestütze",
+  "description": "Eine einsteigerfreundliche Liegestützvariante mit den Händen auf einer Bank oder Stufe.",
+  "instructions": [
+   "Setz die Hände schulterbreit auf eine Bank oder Erhöhung.",
+   "Strecke die Beine nach hinten in die Stützposition.",
+   "Senke die Brust zur Bank, indem du die Ellbogen beugst.",
+   "Drücke dich in die Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Spanne den Bauch an, damit die Hüfte nicht durchhängt.",
+   "Je höher die Fläche, desto leichter die Übung.",
+   "Prüfe vor dem Start, dass die Bank nicht wegrutscht."
+  ]
+ },
+ "inverted-row": {
+  "name": "Umgekehrtes Rudern",
+  "description": "Eine horizontale Zugübung mit Körpergewicht unter einer festen Stange: Du ziehst die Brust zur Stange und hältst den Körper starr.",
+  "instructions": [
+   "Leg eine Stange etwa auf Hüfthöhe ins Rack.",
+   "Leg dich darunter und greif im Obergriff etwas weiter als schulterbreit.",
+   "Häng mit gestreckten Armen, Fersen am Boden, der Körper von Kopf bis Knöchel gerade.",
+   "Zieh die Brust zur Stange und drücke die Schulterblätter zusammen.",
+   "Lass dich kontrolliert ab, bis die Arme ganz gestreckt sind.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte den Rumpf angespannt — die Hüfte hängt nicht durch.",
+   "Schwerer wird es mit erhöhten Füßen; leichter, wenn die Füße näher zur Stange wandern.",
+   "Halte oben kurz, die Brust an der Stange."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Tibialisheben mit Kettlebell",
+  "description": "Eine Übung für das Schienbein, sitzend auf einer Bank mit einer Kettlebell vorn am Fuß. Die Zehen gegen das Gewicht zum Schienbein zu heben, kräftigt die vordere Unterschenkelmuskulatur.",
+  "instructions": [
+   "Setz dich ans Ende einer Flachbank, ein Bein gestreckt, die Ferse am Boden.",
+   "Häng eine Kettlebell mit dem Griff über den Vorfuß, über die Zehen.",
+   "Zieh die Zehen so weit wie angenehm zum Schienbein, die Ferse bleibt am Boden.",
+   "Halte die obere Position kurz.",
+   "Senke den Fuß langsam, bis die Zehen zum Boden zeigen.",
+   "Mach alle Wiederholungen und wechsle das Bein."
+  ],
+  "tips": [
+   "Bewege nur das Sprunggelenk; Knie und Oberschenkel bleiben ruhig.",
+   "Beginne mit einer leichten Kettlebell und steigere langsam; die Schienbeinmuskeln ermüden schnell.",
+   "Senke langsam, statt das Gewicht fallen zu lassen."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Rudern am Kabelzug kniend",
+  "description": "Kabelrudern aus aufrechtem Kniestand: Ohne Schwung aus der Hüfte bleibt die Spannung die ganze Bewegung über im oberen Rücken.",
+  "instructions": [
+   "Stell die Rolle auf Brusthöhe ein und befestige ein Seil oder einen doppelten D-Griff.",
+   "Knie dich aufrecht so weit vor die Maschine, dass die Gewichte nicht anschlagen.",
+   "Greif den Griff mit beiden Händen und halte ihn gestreckt vor der Brust.",
+   "Zieh den Griff zum Brustbein, Ellbogen nach hinten, Schulterblätter zusammen.",
+   "Kehre kontrolliert in die gedehnte Ausgangsposition zurück.",
+   "Wiederhole für die empfohlene Anzahl."
+  ],
+  "tips": [
+   "Bleib aufrecht: Lehne dich nicht zurück, um die Wiederholung zu beenden.",
+   "Der aufrechte Kniestand zwingt den Rumpf, bei jedem Zug der Rotation zu widerstehen."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Liegestütze auf Knien",
+  "description": "Eine einsteigerfreundliche Liegestützvariante mit den Knien am Boden, die den Oberkörper entlastet.",
+  "instructions": [
+   "Beginne in der Liegestützposition mit den Knien am Boden.",
+   "Setz die Hände schulterbreit auf den Boden.",
+   "Halte den Körper von den Knien bis zu den Schultern gerade.",
+   "Senke die Brust zum Boden, indem du die Ellbogen beugst.",
+   "Drücke dich mit den Händen zurück in die Ausgangsposition.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Spreize die Ellbogen nicht zu weit zur Seite.",
+   "Spanne Gesäß und Bauch während der ganzen Bewegung an.",
+   "Schau zum Boden, damit der Nacken neutral bleibt."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Seitheben mit Kurzhanteln",
+  "description": "Eine Isolationsübung für die seitliche Schulter für mehr Schulterbreite.",
+  "instructions": [
+   "Steh mit den Hanteln an den Seiten.",
+   "Hebe die Hanteln seitlich, bis die Arme parallel zum Boden sind.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Ellbogen leicht gebeugt.",
+   "Führe mit den Ellbogen, nicht mit den Händen."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Latzug zur Brust",
+  "description": "Eine Übung am Kabelzug für den Latissimus.",
+  "instructions": [
+   "Setz dich an den Latzug, die Oberschenkel unter den Polstern.",
+   "Greif die breite Stange im Obergriff.",
+   "Zieh die Stange zur oberen Brust und spanne den Latissimus an.",
+   "Führe die Stange langsam in die Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Beginne den Zug, indem du die Schulterblätter senkst, nicht die Ellbogen beugst.",
+   "Schaukle nicht mit dem Oberkörper, um das Gewicht zu bewegen.",
+   "Führe die Ellbogen nach unten und hinten, nicht nach außen."
+  ]
+ },
+ "leg-curl": {
+  "name": "Beinbeugen liegend",
+  "description": "Eine Isolationsübung für die Beinbeuger an der Beinbeugermaschine.",
+  "instructions": [
+   "Leg dich bäuchlings auf die Maschine, die Knöchel unter der Rolle.",
+   "Zieh die Fersen zum Gesäß.",
+   "Spanne oben die Beinbeuger an.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Hüfte über den ganzen Weg auf der Bank.",
+   "Vermeide ein Hohlkreuz beim Heranziehen der Fersen.",
+   "Wähle ein Gewicht, das den vollen, kontrollierten Weg erlaubt."
+  ]
+ },
+ "leg-extension": {
+  "name": "Beinstrecken",
+  "description": "Eine Isolationsübung für die Quadrizeps an der Maschine.",
+  "instructions": [
+   "Setz dich an den Beinstrecker, die Knöchel hinter der Rolle.",
+   "Strecke die Beine, bis sie gerade sind.",
+   "Spanne oben die Quadrizeps an.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Richte die Knie auf die Drehachse der Maschine aus.",
+   "Hebe das Gewicht, ohne es mit Schwung zu schleudern.",
+   "Halte dich an den Griffen fest, damit die Hüfte stabil im Sitz bleibt."
+  ]
+ },
+ "leg-press": {
+  "name": "Beinpresse",
+  "description": "Eine zusammengesetzte Maschinenübung für Quadrizeps und Gesäß.",
+  "instructions": [
+   "Setz dich in die Beinpresse, Füße schulterbreit auf der Plattform.",
+   "Löse die Sicherungen und senke die Plattform, indem du die Knie beugst.",
+   "Drücke die Plattform hoch, bis die Beine fast gestreckt sind.",
+   "Drücke die Knie oben nicht durch.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte den unteren Rücken immer an der Lehne.",
+   "Senke nur so weit, wie die Hüfte aufliegen bleibt.",
+   "Richte die Knie auf die Fußspitzen aus."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Wadenheben an der Beinpresse",
+  "description": "Wadenheben, bei dem die Plattform der Beinpresse mit den Fußballen gedrückt wird.",
+  "instructions": [
+   "Setz dich in die Presse, Beine fast gestreckt, nur der Vorfuß an der unteren Kante der Plattform.",
+   "Löse die Sicherung und lass die Fersen sinken, bis die Waden gedehnt sind.",
+   "Drücke die Plattform mit den Fußballen, bis du auf den Zehenspitzen bist.",
+   "Halte oben kurz und senke wieder kontrolliert."
+  ],
+  "tips": [
+   "Drücke die Knie nicht ganz durch.",
+   "Nutze den vollen Weg und pausiere unten: Dort entsteht der Reiz."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Beinheben liegend",
+  "description": "Anheben beider Beine in Rückenlage für den unteren Bauch und die Hüftbeuger.",
+  "instructions": [
+   "Leg dich auf den Rücken, Beine geschlossen und gestreckt, Hände unter dem Gesäß oder neben dem Körper.",
+   "Drücke den unteren Rücken durch Anspannen des Bauchs in den Boden.",
+   "Hebe die Beine ohne Schwung, bis sie senkrecht stehen.",
+   "Senke langsam, ohne dass die Füße den Boden berühren oder du ins Hohlkreuz gehst."
+  ],
+  "tips": [
+   "Hebt der untere Rücken ab, beuge die Knie.",
+   "Kontrolliere das Absenken: Es fordert den Bauch am meisten."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Rückenstrecken an der Maschine",
+  "description": "Eine sitzende Isolationsübung für den unteren Rücken: Hüfte und Beine sind fixiert, der Oberkörper drückt gegen eine Polsterrolle nach hinten und streckt die Wirbelsäule gegen das Gewicht.",
+  "instructions": [
+   "Setz dich an die Maschine, Füße auf der Plattform, und stell die Rolle so ein, dass sie knapp unter den Schulterblättern am oberen Rücken liegt.",
+   "Greif die seitlichen Griffe und lass den Oberkörper leicht nach vorn kommen: Das ist die Ausgangsposition.",
+   "Drücke gegen die Rolle nach hinten, bis der Oberkörper zurückgeneigt und der untere Rücken voll angespannt ist.",
+   "Halte in der vollen Streckung kurz und kehre kontrolliert gegen das Gewicht zurück.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Platziere die Rolle knapp unter den Schulterblättern: Höher drückt sie auf den Nacken, tiefer verlierst du Bewegungsweg.",
+   "Strecke aus dem unteren Rücken, statt Kopf und Schultern zurückzuwerfen, und bewege dich in beide Richtungen langsam.",
+   "Stoppe in neutraler Streckung, statt die Wirbelsäule weiter zu zwingen, und beginne leicht: Der untere Rücken spricht besser auf kontrollierte Wiederholungen an als auf hohe Lasten."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Bizepscurl an der Maschine",
+  "description": "Ein Bizepscurl an der Maschine für isoliertes Armtraining.",
+  "instructions": [
+   "Setz dich an die Maschine und passe das Polster an deine Armlänge an.",
+   "Greif die Griffe im Untergriff.",
+   "Führe die Griffe zu den Schultern.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Lass die Ellbogen immer auf dem Polster.",
+   "Zieh beim Hochführen die Schultern nicht hoch.",
+   "Senke, bis die Arme fast gestreckt sind, ohne die Spannung zu verlieren."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Wadenheben an der Maschine",
+  "description": "Eine stehende Isolationsübung an der Maschine für die Wadenmuskulatur über den vollen Weg des Sprunggelenks.",
+  "instructions": [
+   "Stell dich mit den Fußballen auf die Plattform der Wadenmaschine.",
+   "Leg die Schulterpolster fest an.",
+   "Senke die Fersen unter die Plattform für eine volle Dehnung.",
+   "Drücke über die Fußballen auf die Zehenspitzen.",
+   "Spanne die Waden oben an.",
+   "Senke kontrolliert und wiederhole."
+  ],
+  "tips": [
+   "Vermeide Federn unten, damit die Spannung bleibt.",
+   "Halte die Knie gestreckt, ohne sie durchzudrücken.",
+   "Geh senkrecht hoch, ohne die Sprunggelenke nach außen zu kippen."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Butterfly an der Maschine",
+  "description": "Eine Isolationsübung für die Brust an der Maschine, die die Hebel in einem Bogen vor dem Körper zusammenführt.",
+  "instructions": [
+   "Setz dich an die Maschine und stell den Sitz so ein, dass die Hebel auf Brusthöhe sind.",
+   "Halte die Hebel mit leicht gebeugten Ellbogen.",
+   "Führe die Hebel in sanftem Bogen vor der Brust zusammen.",
+   "Spanne am Punkt der größten Anspannung den Brustmuskel an.",
+   "Kehre kontrolliert zurück, ohne das Gewicht fallen zu lassen.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Halte die Ellbogen während der ganzen Bewegung leicht und gleich gebeugt.",
+   "Konzentriere dich auf das Anspannen der Brust statt auf das Drücken mit den Armen.",
+   "Kontrolliere den Rückweg, statt die Gewichte fallen zu lassen."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Reverse Butterfly",
+  "description": "Eine sitzende Maschinenübung für die hinteren Schultern, auch Reverse Pec Deck genannt: Mit dem Gesicht zum Polster führst du beide Griffe in weitem Bogen nach außen und hinten. Das Polster hält den Oberkörper ruhig, sodass hintere Schultern und die Muskeln zwischen den Schulterblättern arbeiten.",
+  "instructions": [
+   "Stell den Sitz so ein, dass die Griffe auf Schulterhöhe sind, und setz dich mit der Brust am Polster zur Maschine.",
+   "Greif die Griffe mit nach vorn gestreckten Armen und leicht gebeugten Ellbogen.",
+   "Halte die Schultern unten, weg von den Ohren, und spanne den Rumpf an.",
+   "Führe die Griffe in weitem Bogen nach außen und hinten, geführt von den Ellbogen, bis die Arme etwa in Linie mit den Schultern sind.",
+   "Führe die Schulterblätter kurz zusammen, ohne die Brust vom Polster zu lösen.",
+   "Führe die Griffe langsam nach vorn zurück und wiederhole für die geplante Anzahl."
+  ],
+  "tips": [
+   "Führe mit den Ellbogen statt mit den Händen zu ziehen, damit die hinteren Schultern arbeiten und nicht der Bizeps.",
+   "Brust am Polster und Nacken locker; wer sich zurücklehnt oder die Schultern hochzieht, verlagert die Last auf den oberen Trapezmuskel.",
+   "Wähle ein Gewicht, das du kontrolliert zurückführen kannst; leichter mit langsamem Rückweg trainiert die hinteren Schultern besser als Schwung mit viel Gewicht."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Crunch an der Maschine sitzend",
+  "description": "Eine Isolationsübung für den Bauch an einer sitzenden Maschine, die die Wirbelsäule gegen Widerstand beugt.",
+  "instructions": [
+   "Setz dich an die Bauchmaschine und greif die Griffe.",
+   "Leg das Brustpolster an den Oberkörper.",
+   "Spanne den Bauch an und beuge den Oberkörper nach vorn unten.",
+   "Spanne am Ende des Wegs an.",
+   "Kehre kontrolliert in die Ausgangsposition zurück.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Beginne die Bewegung mit dem Bauch, nicht mit den Armen.",
+   "Atme beim Einrollen aus.",
+   "Hol keinen Schwung mit dem Körper."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Schulterdrücken an der Maschine",
+  "description": "Eine Überkopf-Drückbewegung an der Maschine für die Schultern.",
+  "instructions": [
+   "Setz dich mit dem Rücken ans Polster.",
+   "Greif die Griffe auf Schulterhöhe.",
+   "Drücke die Griffe über den Kopf, bis die Arme vollständig gestreckt sind.",
+   "Senke kontrolliert in die Ausgangsposition.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Geh beim Drücken nicht ins Hohlkreuz.",
+   "Strecke die Ellbogen oben nicht ruckartig durch.",
+   "Halte die Handgelenke fest und in Linie mit den Unterarmen."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negative Klimmzüge",
+  "description": "Die langsame Absenkphase des Klimmzugs, um die Kraft für ganze Klimmzüge aufzubauen.",
+  "instructions": [
+   "Steig auf eine Bank oder spring, bis das Kinn über der Stange ist, Griff etwas weiter als schulterbreit.",
+   "Senke den Körper ohne Abstützen sehr langsam, in etwa drei bis fünf Sekunden.",
+   "Kontrolliere die Bewegung, bis die Arme ganz gestreckt sind.",
+   "Komm mit Bank oder Sprung wieder hoch und wiederhole."
+  ],
+  "tips": [
+   "Halte beim Absenken die Schultern weg von den Ohren.",
+   "Wenn du fünf langsame Wiederholungen beherrschst, versuche ohne Hilfe hochzukommen."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic Hamstring Curl",
+  "description": "Eine Kniebeugeübung, bei der du den Oberkörper aus dem Kniestand nach vorn absenkst und die Beinbeuger exzentrisch trainierst.",
+  "instructions": [
+   "Knie dich auf eine Matte, die Knöchel unter einer festen Halterung.",
+   "Halte den Oberkörper aufrecht und die Hüfte gestreckt.",
+   "Senke den Körper langsam nach vorn und bremse mit den Beinbeugern.",
+   "Fang den Fall kurz vor dem Boden mit den Händen ab.",
+   "Drücke dich mit den Händen ab und zieh dich in die Ausgangsposition zurück.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Senke so langsam wie möglich: Die exzentrische Phase ist das Ziel.",
+   "Halte die Hüfte gestreckt; knick nicht in der Taille ein.",
+   "Bremse mit den Händen und drücke leicht nach, während du stärker wirst."
+  ]
+ },
+ "ohp": {
+  "name": "Überkopfdrücken mit Langhantel",
+  "description": "Eine zusammengesetzte Überkopf-Drückbewegung für Schultern und Trizeps.",
+  "instructions": [
+   "Steh schulterbreit, die Stange auf Höhe der Schlüsselbeine.",
+   "Spanne den Rumpf an und drücke die Stange über den Kopf.",
+   "Strecke oben die Ellbogen, die Stange über der Fußmitte.",
+   "Senke die Stange bis auf Höhe der Schlüsselbeine.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Lehne dich nicht zu weit zurück.",
+   "Spanne für mehr Stabilität das Gesäß an."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Einarmiges Kabelrudern sitzend",
+  "description": "Einarmiges sitzendes Kabelrudern für Latissimus und oberen Rücken: Der Oberkörper bleibt frontal, während das Schulterblatt der aktiven Seite kontrolliert vor- und zurückgleitet.",
+  "instructions": [
+   "Setz dich an den Kabelzug und halte den Griff mit gestrecktem Arm.",
+   "Stell die Füße fest auf, sitz aufrecht und spanne den Rumpf an, ohne dich zurückzulehnen.",
+   "Zieh den Griff zu den unteren Rippen und ziehe das Schulterblatt zurück.",
+   "Halte kurz, ohne den Oberkörper zu drehen oder die Schulter zu heben.",
+   "Strecke den Arm kontrolliert, beende den Satz und wechsle die Seite."
+  ],
+  "tips": [
+   "Halte beide Schultern während der ganzen Wiederholung nach vorn.",
+   "Führe den Ellbogen nah am Körper nach hinten, statt nur den Arm zu beugen.",
+   "Lass das Schulterblatt zu Beginn nach vorn gleiten, ohne den unteren Rücken rund zu machen."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Trizepsstrecken über Kopf mit Kurzhantel",
+  "description": "Eine Isolationsübung für den Trizeps mit Betonung des langen Kopfs.",
+  "instructions": [
+   "Steh oder sitz und halte eine Kurzhantel mit beiden Händen über dem Kopf.",
+   "Senke die Hantel hinter den Kopf, indem du die Ellbogen beugst.",
+   "Strecke die Arme zurück in die Ausgangsposition.",
+   "Halte die Ellbogen während der ganzen Übung nah am Kopf.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Bewege nur die Unterarme, alles andere bleibt ruhig.",
+   "Vermeide ein Hohlkreuz, wenn die Hantel sinkt.",
+   "Greif die Hantel mit beiden Handflächen unter der oberen Scheibe."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dips am Barren",
+  "description": "Eine Körpergewichtsübung am Barren für Brust, Trizeps und Schultern.",
+  "instructions": [
+   "Stütz dich mit gestreckten Armen auf den Barren, der Körper hängt frei.",
+   "Neige den Oberkörper leicht vor und beuge die Ellbogen kontrolliert.",
+   "Stoppe, wenn die Schultern auf Ellbogenhöhe sind, ohne ins Gelenk zu sacken.",
+   "Drücke mit Brust und Trizeps, bis die Arme wieder gestreckt sind."
+  ],
+  "tips": [
+   "Schaffst du keine sauberen Sätze, nutze eine unterstützte Dipmaschine oder Bänder.",
+   "Geh nicht tiefer, als deine Schulter beschwerdefrei zulässt."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Bankdrücken mit Pause",
+  "description": "Bankdrücken mit ein bis zwei Sekunden Pause auf der Brust, das den Abpraller nimmt und die Kraft aus der unteren Position verbessert.",
+  "instructions": [
+   "Leg dich auf die Bank, Füße fest, Schulterblätter zusammen, die Stange etwas weiter als schulterbreit über der Brust.",
+   "Senke die Stange kontrolliert, bis sie die Brust berührt.",
+   "Halte sie ein bis zwei Sekunden ruhig auf der Brust, ohne die Spannung zu lösen.",
+   "Drücke die Stange hoch, bis die Ellbogen gestreckt sind."
+  ],
+  "tips": [
+   "Nimm 10 bis 15 % weniger Gewicht als beim normalen Bankdrücken.",
+   "Lass jemanden sichern oder nutze die Ablagen des Racks."
+  ]
+ },
+ "pause-squat": {
+  "name": "Kniebeuge mit Pause",
+  "description": "Kniebeuge mit Pause am tiefsten Punkt, für Kontrolle und Kraft ohne Abfedern.",
+  "instructions": [
+   "Leg die Stange auf den oberen Rücken, Füße schulterbreit, Spitzen leicht nach außen.",
+   "Geh kontrolliert tief, Rücken neutral, Knie in Richtung der Füße.",
+   "Halte die tiefste Position ein bis drei Sekunden, ohne den Rumpf zu entspannen.",
+   "Drücke dich mit den Füßen hoch, bis du wieder aufrecht stehst."
+  ],
+  "tips": [
+   "Reduziere die Last gegenüber deiner normalen Kniebeuge.",
+   "Federe nicht aus der Pause: Drücke gleichmäßig."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec Deck",
+  "description": "Eine Isolationsmaschine für die Brust mit beweglichen Griffen, die die Brustmuskeln durch horizontale Adduktion trainiert.",
+  "instructions": [
+   "Setz dich an die Pec-Deck-Maschine und greif die Griffe mit seitlich geöffneten Armen und leicht gebeugten Ellbogen.",
+   "Stell den Sitz so ein, dass die Griffe auf mittlerer Brusthöhe sind.",
+   "Führe die Griffe vor der Brust zusammen und spanne an.",
+   "Halte die Anspannung in der Mitte kurz.",
+   "Kehre kontrolliert in die Ausgangsposition zurück.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Lass die Arme beim Öffnen nicht zu weit nach hinten wandern.",
+   "Halte Rücken und Schultern an der Lehne.",
+   "Atme beim Zusammenführen aus und beim Öffnen ein."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay-Rudern",
+  "description": "Explosives Langhantelrudern, das bei jeder Wiederholung vom Boden startet, den Rumpf parallel zum Boden.",
+  "instructions": [
+   "Füße unter der Stange, Rumpf fast parallel zum Boden, greif etwas weiter als schulterbreit mit neutralem Rücken.",
+   "Zieh die Stange kraftvoll bis zur unteren Brust, der Rumpf bleibt unbewegt.",
+   "Senke die Stange kontrolliert ab, setz sie auf dem Boden ab und halte kurz.",
+   "Richte den Rücken neu aus und wiederhole vom Boden."
+  ],
+  "tips": [
+   "Der Rumpf hebt und senkt sich nicht: Bewegt er sich, ist die Last zu hoch.",
+   "Jede Wiederholung beginnt mit ruhender Stange am Boden."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike-Liegestütze",
+  "description": "Liegestütz in umgekehrter V-Form, der die Last ohne Gerät von der Brust auf die Schultern verlagert.",
+  "instructions": [
+   "Setz die Hände schulterbreit auf den Boden und hebe die Hüfte zu einem umgekehrten V, die Beine fast gestreckt.",
+   "Beuge die Ellbogen und senke den Kopf zwischen die Hände.",
+   "Stoppe, wenn der Kopf nah am Boden ist, ohne ihn abzulegen.",
+   "Drücke dich hoch, bis die Ellbogen gestreckt sind, zurück in die Ausgangsposition."
+  ],
+  "tips": [
+   "Je näher die Füße an den Händen, desto schwerer die Übung.",
+   "Halte die Hüfte über den gesamten Weg hoch."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol Squat",
+  "description": "Tiefe einbeinige Kniebeuge mit nach vorn gestrecktem anderem Bein, nur mit Körpergewicht.",
+  "instructions": [
+   "Steh auf einem Bein, das andere nach vorn angehoben, Arme zur Balance ausgestreckt.",
+   "Beuge das Standbein und senke dich kontrolliert, die Ferse bleibt am Boden.",
+   "Geh so tief, wie es die Technik erlaubt, das freie Bein nach vorn gestreckt.",
+   "Drücke dich mit dem Fuß wieder in den Stand; wiederhole und wechsle das Bein."
+  ],
+  "tips": [
+   "Beginne, indem du dich an einer Stütze festhältst oder dich auf eine Box setzt.",
+   "Halte das Knie in Linie mit dem Fuß."
+  ]
+ },
+ "plank": {
+  "name": "Unterarmstütz (Plank)",
+  "description": "Isometrische Rumpfübung für die Stabilität: Du hältst den Körper gerade auf Unterarmen und Zehenspitzen.",
+  "instructions": [
+   "Leg die Unterarme auf den Boden, Ellbogen unter den Schultern, Beine gestreckt.",
+   "Hebe den Körper, bis er von Kopf bis Fersen eine gerade Linie bildet.",
+   "Spanne Bauch und Gesäß an und halte den unteren Rücken neutral, ohne die Hüfte sinken zu lassen.",
+   "Atme normal und halte die Position für die angegebene Zeit."
+  ],
+  "tips": [
+   "Beginne mit kurzen, sauberen Sätzen, bevor du die Zeit verlängerst.",
+   "Hängt der untere Rücken durch, setz die Knie ab oder verkürze die Zeit."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip Thrust an der Scheibenmaschine",
+  "description": "Ein Hip Thrust an einer Scheibenmaschine: Lehne und Plattform fixieren die Position, sodass die Hüfte gegen die Last streckt, ohne eine Bank aufbauen zu müssen.",
+  "instructions": [
+   "Belade beide Scheibenaufnahmen gleich und setz dich in die Maschine, oberer Rücken an der Lehne, Füße flach auf der Plattform.",
+   "Senke das Polster oder die Stange auf die Hüfte und stell sie so ein, dass sie in der Hüftbeuge liegt und nicht auf dem Bauch.",
+   "Stell die Füße so, dass die Schienbeine oben senkrecht sind, und halte dich an den Griffen fest.",
+   "Drücke die Hüfte hoch und spanne das Gesäß an, bis Oberschenkel und Oberkörper eine Linie bilden, und halte oben kurz.",
+   "Senke kontrolliert bis kurz vor das Ende des Wegs und wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Leg das Polster in die Hüftbeuge. Auf dem Bauch ist das Einzige, was an dieser Maschine wirklich unangenehm ist, und das löst man durch Verschieben, nicht durch mehr Polsterung.",
+   "Beende die Bewegung mit der Hüfte, nicht mit dem unteren Rücken. Gehen oben die Rippen auf, ist die Hüftstreckung zu Ende und du gehst ins Hohlkreuz – dann trainiert die Maschine das Gesäß nicht mehr.",
+   "Das ist der Hip Thrust, wenn Bank und Langhantel besetzt sind: Lehne und Plattform gehören zum Rahmen, beim Aufbau kann also nichts schiefgehen."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Scottcurl",
+  "description": "Eine Curlvariante an der Scottbank, die den Bizeps isoliert.",
+  "instructions": [
+   "Setz dich an die Scottbank, die Arme auf dem Polster.",
+   "Halte eine SZ-Stange im Untergriff.",
+   "Führe die Stange zu den Schultern.",
+   "Senke kontrolliert, bis die Arme fast gestreckt sind.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Vermeide Federn am unteren Ende.",
+   "Halte die Handgelenke neutral auf der SZ-Stange.",
+   "Hebe die Stange ohne Schwung aus Schultern oder Rücken."
+  ]
+ },
+ "pull-up": {
+  "name": "Klimmzüge",
+  "description": "Eine zusammengesetzte Körpergewichtsübung für Latissimus und Bizeps.",
+  "instructions": [
+   "Häng dich im Obergriff etwas weiter als schulterbreit an eine Stange.",
+   "Zieh dich hoch, bis das Kinn über der Stange ist.",
+   "Senke dich kontrolliert bis zum vollen Hang.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Vermeide Schwingen und Schwung.",
+   "Aktiviere den Latissimus, indem du die Ellbogen nach unten ziehst."
+  ]
+ },
+ "push-press": {
+  "name": "Push Press",
+  "description": "Schulterdrücken mit Beinschwung, mit dem du mehr Last bewegst als beim strikten Überkopfdrücken.",
+  "instructions": [
+   "Steh mit der Stange auf oberer Brust und Schultern, Ellbogen leicht vorn, Füße hüftbreit.",
+   "Beuge die Knie leicht bei senkrechtem Oberkörper und strecke Hüfte und Knie kraftvoll.",
+   "Nutze den Schwung, um die Stange bis zur Armstreckung über den Kopf zu drücken.",
+   "Senke die Stange kontrolliert zur Brust und federe mit den Beinen ab."
+  ],
+  "tips": [
+   "Der Schwung kommt aus den Beinen, nicht aus dem Zurücklehnen.",
+   "Ende mit der Stange über dem Scheitel und stabilem Körper."
+  ]
+ },
+ "push-up": {
+  "name": "Liegestütze",
+  "description": "Eine grundlegende Körpergewichtsübung für Brust, Schultern und Trizeps.",
+  "instructions": [
+   "Beginne im hohen Stütz, Hände schulterbreit.",
+   "Senke den Körper, bis die Brust fast den Boden berührt.",
+   "Drücke dich in die Ausgangsposition zurück.",
+   "Halte den Körper immer in einer geraden Linie.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Spanne Bauch und Gesäß an, damit die Hüfte nicht absinkt.",
+   "Spreize die Ellbogen nicht zu weit; halte sie nah am Oberkörper.",
+   "Halte den Nacken neutral, Blick zum Boden."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack Pull",
+  "description": "Teilkreuzheben ab Kniehöhe, das oberen Rücken und Hüftstreckung überlastet.",
+  "instructions": [
+   "Leg die Stange auf Ablagen auf Kniehöhe oder knapp darunter, Füße hüftbreit unter der Stange.",
+   "Greif die Stange, spanne Rücken und Bauch an und drücke die Füße in den Boden.",
+   "Strecke Hüfte und Knie gleichzeitig, bis du aufrecht stehst, Schultern zurück.",
+   "Senke die Stange kontrolliert auf die Ablagen."
+  ],
+  "tips": [
+   "Stell die Ablagen so hoch ein, dass der Rücken neutral bleiben kann.",
+   "Überstrecke am Ende nicht den unteren Rücken."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Rückwärtsausfallschritt mit Kurzhanteln",
+  "description": "Eine Ausfallschrittvariante mit Schritt nach hinten für mehr Kniestabilität.",
+  "instructions": [
+   "Steh mit Kurzhanteln an den Seiten.",
+   "Mach mit einem Bein einen Schritt zurück und senke das Knie zum Boden.",
+   "Senke, bis der vordere Oberschenkel parallel zum Boden ist.",
+   "Drücke dich über die vordere Ferse zurück in den Stand.",
+   "Wiederhole auf beiden Seiten."
+  ],
+  "tips": [
+   "Mach den Schritt so lang, dass das vordere Knie nicht über den Fuß geht.",
+   "Halte den Oberkörper aufrecht und die Hanteln nah am Körper.",
+   "Mach mit jedem Bein gleich viele Wiederholungen."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Reverse Nordic Curl",
+  "description": "Eine Quadrizepsübung mit Körpergewicht im Kniestand: Du neigst den Oberkörper kontrolliert nach hinten und hältst die Hüfte gestreckt.",
+  "instructions": [
+   "Knie dich auf ein Polster, Knie hüftbreit, Schienbeine und Spann am Boden, Oberkörper aufrecht.",
+   "Halte die Hüfte gestreckt und den Rumpf angespannt.",
+   "Neige den Oberkörper langsam nach hinten, der Körper bleibt gerade.",
+   "Geh so tief, wie du es mit den Quadrizeps kontrollieren kannst.",
+   "Komm in die Ausgangsposition zurück.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Halte die Hüfte immer gestreckt, ohne einzuknicken.",
+   "Geh nur so tief, wie du die Bewegung kontrollieren kannst.",
+   "Ein Polster unter den Knien ist bequemer."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Rumänisches Kreuzheben",
+  "description": "Eine Hüftbeugebewegung mit Betonung auf Beinbeugern und Gesäß.",
+  "instructions": [
+   "Steh mit der Stange auf Hüfthöhe im Obergriff.",
+   "Schieb die Hüfte zurück und neige den Oberkörper, Knie leicht gebeugt und fast fixiert.",
+   "Führe die Stange an den Beinen entlang, bis du die Dehnung der Beinbeuger spürst.",
+   "Schieb die Hüfte nach vorn, um wieder aufzustehen.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Mach den unteren Rücken nicht rund; halte die Wirbelsäule neutral.",
+   "Geh nur so tief, wie du die Haltung halten kannst.",
+   "Spanne den Latissimus an, damit die Stange nah am Körper bleibt."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Rudergerät",
+  "description": "Eine Ganzkörper-Ausdauerübung am Rudergerät: Jeder Zug drückt mit den Beinen, lehnt den Oberkörper zurück und zieht den Griff zu den Rippen – Beine, Rücken und Arme in einem fortlaufenden Zyklus.",
+  "instructions": [
+   "Setz dich ans Rudergerät, fixiere die Füße mit den Riemen und greif den Griff im Obergriff.",
+   "Gleite nach vorn in die Auslage: Schienbeine senkrecht, Oberkörper leicht vor der Hüfte, Arme zum Schwungrad gestreckt.",
+   "Drücke zuerst mit den Beinen und schieb den Sitz zurück, bis die Knie fast gestreckt sind.",
+   "Lehne den Oberkörper über die Senkrechte hinaus zurück und zieh dann den Griff zu den unteren Rippen, Ellbogen an den Seiten vorbei.",
+   "Kehre die Reihenfolge in der Erholungsphase um – erst Arme nach vorn, dann Oberkörper, zuletzt Knie beugen – und gleite zurück in die Auslage.",
+   "Mach weiter für die gewünschte Zeit, Strecke oder Schlagzahl."
+  ],
+  "tips": [
+   "Halte die Reihenfolge ein: Beine, Rumpf, Arme beim Zug und Arme, Rumpf, Beine beim Zurückgleiten. Wer die Arme zu früh beugt, verschenkt den stärksten Teil des Schlags.",
+   "Rudere mit geradem Rücken und angespanntem Rumpf: Ein runder unterer Rücken in der Auslage macht aus dem Rudern Rückenschmerzen statt Ausdauertraining.",
+   "Führe den Griff gerade und waagerecht zu den unteren Rippen und gleite etwa doppelt so langsam zurück, wie du ziehst."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Überkopfdrücken mit Langhantel sitzend",
+  "description": "Sitzendes Schulterdrücken mit der Langhantel mit Rückenlehne, um die Arbeit auf die Schultern zu konzentrieren.",
+  "instructions": [
+   "Setz dich auf eine Bank mit senkrechter Lehne, greif etwas weiter als schulterbreit und leg die Stange auf die obere Brust.",
+   "Drücke die Stange gerade nach oben, bis die Ellbogen gestreckt sind.",
+   "Halte die Stange über dem Scheitel, Rippen unten.",
+   "Senke kontrolliert bis zum Schlüsselbein."
+  ],
+  "tips": [
+   "Spanne Gesäß und Bauch an, damit du nicht ins Hohlkreuz gehst.",
+   "Bewege den Kopf zurück, um der Stange Platz zu machen, ohne den Nacken zu belasten."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Rudern am Kabelzug sitzend",
+  "description": "Eine Rückenübung an der Kabelrudermaschine: Im Sitzen ziehst du einen Griff zum Oberkörper.",
+  "instructions": [
+   "Setz dich an die Rudermaschine und stell die Füße auf die Stützen.",
+   "Halte den Griff und sitz aufrecht mit leichter Vorlage.",
+   "Zieh die Ellbogen nach hinten und den Griff zum unteren Bauch.",
+   "Spanne am Ende des Zugs die Schulterblätter an.",
+   "Strecke die Arme kontrolliert in die Ausgangsposition.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Halte den Oberkörper aufrecht mit minimalem Schwung.",
+   "Zieh die Ellbogen gerade nach hinten, nicht zur Seite.",
+   "Spanne am Ende des Zugs die Schulterblätter an."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Wadenheben sitzend an der Maschine",
+  "description": "Sitzendes Wadenheben an der Maschine, gezielt für den Schollenmuskel.",
+  "instructions": [
+   "Setz dich an die Maschine, die Polster auf den Oberschenkeln.",
+   "Senke die Fersen so tief wie möglich.",
+   "Drücke dich auf die Fußballen.",
+   "Senke kontrolliert ab.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Das gebeugte Knie entspannt den Zwillingsmuskel, sodass der Schollenmuskel mehr arbeitet.",
+   "Nutze den vollen Bewegungsumfang."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Wadenheben sitzend mit Kurzhanteln",
+  "description": "Sitzendes Wadenheben mit Kurzhanteln auf den Oberschenkeln, das den Schollenmuskel bei gebeugtem Knie trainiert.",
+  "instructions": [
+   "Setz dich auf eine Bank, Fußspitzen auf einer Stufe oder Scheibe, je eine Hantel auf den Oberschenkeln nahe den Knien.",
+   "Lass die Fersen so tief wie möglich sinken, um die Waden zu dehnen.",
+   "Hebe die Fersen über den Vorfuß so hoch wie möglich.",
+   "Halte oben kurz und senke kontrolliert ab."
+  ],
+  "tips": [
+   "Halte die Hanteln mit den Händen fest, damit sie nicht abrutschen.",
+   "Das gebeugte Knie verlagert die Arbeit auf den Schollenmuskel."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Seitheben sitzend mit Kurzhanteln",
+  "description": "Eine sitzende Isolationsübung: Die Hanteln werden zur Seite gehoben, für die seitliche Schulter ohne Beinschwung.",
+  "instructions": [
+   "Setz dich auf eine Bank mit je einer Hantel an den Seiten.",
+   "Halte den Rücken aufrecht und den Rumpf angespannt.",
+   "Hebe beide Hanteln seitlich auf Schulterhöhe.",
+   "Halte die Ellbogen leicht gebeugt.",
+   "Senke die Hanteln kontrolliert.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Nimm leichtes Gewicht, damit die Bewegung strikt bleibt.",
+   "Führe mit den Ellbogen statt mit den Händen.",
+   "Hebe bis auf Schulterhöhe und senke kontrolliert."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Beinbeugen sitzend",
+  "description": "Eine Isolationsübung für die Beinbeuger an der Maschine im Sitzen, mit konstanter Spannung und weniger Beteiligung der Hüftbeuger als liegend.",
+  "instructions": [
+   "Stell Lehne und Knöchelpolster so ein, dass die Knie auf der Drehachse der Maschine liegen.",
+   "Setz dich aufrecht, leg die Knöchelrückseiten auf das Polster und halte dich an den Griffen fest.",
+   "Beuge die Beine nach unten und hinten unter den Sitz, so weit es die Maschine erlaubt.",
+   "Halte in der maximalen Anspannung und kehre langsam zurück.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Halte den Rücken während der ganzen Bewegung fest an der Lehne.",
+   "Zieh in der maximalen Anspannung die Füße leicht zum Schienbein, um die Beinbeuger stärker zu aktivieren.",
+   "Kontrolliere die exzentrische Phase — lass das Gewicht die Beine nicht schnell zurückziehen."
+  ]
+ },
+ "shrug": {
+  "name": "Schulterheben mit Langhantel",
+  "description": "Eine Isolationsbewegung für den oberen Trapezmuskel.",
+  "instructions": [
+   "Steh und halte die Langhantel mit gestreckten Armen im Obergriff.",
+   "Zieh die Schultern gerade zu den Ohren.",
+   "Halte oben kurz.",
+   "Senke die Schultern kontrolliert.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Hebe die Schultern senkrecht, ohne zu kreisen.",
+   "Nutze die Arme nicht; die Ellbogen bleiben gestreckt.",
+   "Hol keinen Schwung aus den Beinen, um mehr Gewicht zu bewegen."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Hüftabduktion in Seitlage",
+  "description": "Eine Isolationsübung mit Körpergewicht für den mittleren Gesäßmuskel und die Abduktoren.",
+  "instructions": [
+   "Leg dich auf die Seite, die Beine übereinander.",
+   "Halte das untere Bein leicht gebeugt.",
+   "Hebe das obere Bein zur Decke.",
+   "Senke kontrolliert ab.",
+   "Wiederhole auf beiden Seiten."
+  ],
+  "tips": [
+   "Halte die Hüften während der ganzen Übung übereinander.",
+   "Kippe das Becken nicht."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Hüftadduktion in Seitlage",
+  "description": "Eine Adduktionsübung in Seitlage, bei der das untere Bein gegen die Schwerkraft gehoben wird und die Hüfte mit Körpergewicht arbeitet.",
+  "instructions": [
+   "Leg dich auf die Seite, das untere Bein gestreckt.",
+   "Beuge das obere Bein und stell den Fuß flach vor den unteren Oberschenkel.",
+   "Stütze den Kopf mit dem unteren Arm.",
+   "Hebe das untere Bein zur Decke.",
+   "Senke das Bein kontrolliert.",
+   "Mach alle Wiederholungen auf einer Seite und wechsle dann."
+  ],
+  "tips": [
+   "Bewege nur das Bein; Hüfte und Oberkörper bleiben ruhig.",
+   "Hebe das Bein ohne Schwung und senke es langsam.",
+   "Richte Schultern, Hüfte und Füße aus, bevor du beginnst."
+  ]
+ },
+ "side-plank": {
+  "name": "Seitstütz",
+  "description": "Eine Variante des Unterarmstützes zur Seite für die schrägen Bauchmuskeln und den seitlichen Rumpf.",
+  "instructions": [
+   "Leg dich auf die Seite, Unterarm am Boden, Ellbogen unter der Schulter.",
+   "Hebe die Hüfte, bis der Körper von Kopf bis Fuß eine Linie bildet.",
+   "Halte die Position mit angespanntem Rumpf.",
+   "Atme gleichmäßig.",
+   "Wiederhole auf beiden Seiten."
+  ],
+  "tips": [
+   "Lass die Hüfte nicht zum Boden sinken.",
+   "Halte Schultern und Hüfte in einer Ebene, ohne den Oberkörper zu drehen.",
+   "Drücke den Unterarm in den Boden, damit du nicht in der Schulter hängst."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Einarmiges Kurzhantelrudern",
+  "description": "Eine einseitige Rückenübung mit Kurzhantel für ausgeglichene Entwicklung.",
+  "instructions": [
+   "Stütze ein Knie und eine Hand auf einer Bank ab.",
+   "Halte in der anderen Hand eine Hantel mit gestrecktem Arm.",
+   "Zieh die Hantel zur Hüfte und drücke das Schulterblatt nach hinten.",
+   "Senke die Hantel kontrolliert.",
+   "Wiederhole auf beiden Seiten."
+  ],
+  "tips": [
+   "Dreh den Oberkörper beim Ziehen nicht; halte die Hüfte stabil.",
+   "Zieh zu Beginn die Schulter nicht zum Ohr.",
+   "Mach mit jedem Arm gleich viele Wiederholungen."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Einarmiges Seitheben an der Scheibenmaschine",
+  "description": "Seitheben an der Scheibenmaschine mit einem Arm nach dem anderen: Jede Seite hebt ihre eigene Last, und beide lassen sich auf dasselbe Niveau trainieren.",
+  "instructions": [
+   "Stell die Sitzhöhe so ein, dass die Drehachse des Polsters auf Schulterhöhe liegt, und belade nur die Seite, die du trainierst.",
+   "Setz dich mit dem Rücken an die Lehne und leg die Außenseite des arbeitenden Arms an das Polster.",
+   "Halte mit der freien Hand den Griff oder leg sie in den Schoß und halte den Oberkörper gerade zum Sitz.",
+   "Drücke den arbeitenden Arm gegen das Polster nach außen und oben bis auf Schulterhöhe und senke kontrolliert.",
+   "Mach alle Wiederholungen dieser Seite, belade dann die andere und trainiere sie."
+  ],
+  "tips": [
+   "Richte die Seiten nach dem schwächeren Arm aus, nicht nach dem stärkeren. Einseitiges Training zeigt ein Ungleichgewicht nur, wenn die schwache Seite die Wiederholungszahl vorgibt.",
+   "Lass den Oberkörper nicht zur arbeitenden Seite kippen. Mit Last nur auf einem Arm gleicht sich die Maschine nicht selbst aus, und Kippen macht aus dem Heben eine Seitbeuge.",
+   "Beginne mit dem schwächeren Arm, damit er das Ziel setzt, und gönn beiden Seiten gleich viel Pause."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Einbeinige Glute Bridge",
+  "description": "Glute Bridge mit nur einem aufgestellten Bein, die ohne Zusatzgerät die Anforderung erhöht.",
+  "instructions": [
+   "Leg dich auf den Rücken, ein Knie gebeugt mit Fuß am Boden, das andere Bein in der Luft gestreckt.",
+   "Drücke über die Ferse des Standbeins und hebe die Hüfte, bis Schulter, Hüfte und Knie eine Linie bilden.",
+   "Spanne oben kurz das Gesäß an, ohne ins Hohlkreuz zu gehen.",
+   "Senke kontrolliert, ohne die Hüfte abzulegen; mach alle Wiederholungen und wechsle das Bein."
+  ],
+  "tips": [
+   "Halte das Becken waagerecht, ohne dass eine Hüfte absinkt.",
+   "Fällt es dir schwer, beginne mit der beidbeinigen Glute Bridge."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Skull Crusher",
+  "description": "Liegendes Trizepsstrecken mit der Langhantel, das den Trizeps über den vollen Weg isoliert.",
+  "instructions": [
+   "Leg dich auf eine Flachbank, die Stange eng gegriffen über der Brust.",
+   "Senke die Stange zur Stirn, indem du die Ellbogen beugst.",
+   "Strecke die Arme zurück in die Ausgangsposition.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Oberarme während der ganzen Übung senkrecht.",
+   "Senke langsam, um die Ellbogen zu schonen."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Bankdrücken an der Multipresse",
+  "description": "Bankdrücken an der Multipresse: Die geführte Bahn trainiert die Brust mit weniger Stabilisierungsaufwand.",
+  "instructions": [
+   "Leg dich auf eine Flachbank in der Multipresse.",
+   "Greif etwas weiter als schulterbreit und löse die Stange.",
+   "Senke die Stange kontrolliert zur Brustmitte.",
+   "Halte kurz, ohne abzufedern.",
+   "Drücke die Stange hoch, bis die Arme ganz gestreckt sind.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Richte die Bank so aus, dass die Stange zur Brustmitte geht.",
+   "Halte die Füße während des ganzen Satzes fest am Boden.",
+   "Lerne die Handgelenkdrehung zum Einhaken der Stange, bevor du Gewicht auflegst."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Wadenheben an der Multipresse",
+  "description": "Stehendes Wadenheben mit der geführten Stange der Multipresse auf den Schultern.",
+  "instructions": [
+   "Stell dich unter die Stange, Fußspitzen auf einer Stufe oder Scheibe, die Stange auf dem oberen Rücken.",
+   "Löse die Stange und lass die Fersen sinken, bis die Waden gedehnt sind.",
+   "Geh mit gestreckten Beinen auf die Zehenspitzen, ohne die Knie durchzudrücken.",
+   "Halte oben kurz und senke kontrolliert, bevor du die Stange einhakst."
+  ],
+  "tips": [
+   "Die Führung stabilisiert dich: Nutze das für mehr Last.",
+   "Halte den Oberkörper aufrecht und den Blick nach vorn."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Schrägbankdrücken an der Multipresse",
+  "description": "Schrägbankdrücken an der Multipresse mit geführter Bahn, das obere Brust und vordere Schulter betont.",
+  "instructions": [
+   "Stell eine Schrägbank mit 30 bis 45 Grad in die Multipresse.",
+   "Leg dich hin und greif etwas weiter als schulterbreit.",
+   "Löse die Stange und senke sie zur oberen Brust.",
+   "Halte unten kurz.",
+   "Drücke die Stange hoch, bis die Arme gestreckt sind.",
+   "Wiederhole für die gewünschte Anzahl."
+  ],
+  "tips": [
+   "Stell die Bank so, dass die Stange zur oberen Brust kommt.",
+   "Senke die Stange, ohne sie von der Brust abprallen zu lassen.",
+   "Lass das Gesäß auf der Bank und die Füße fest stehen."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Kniebeuge an der Multipresse",
+  "description": "Kniebeuge mit der geführten Stange der Multipresse: Die feste Bahn verringert die Gleichgewichtsanforderung, Beine und Gesäß arbeiten – eine gute Wahl, wenn kein Rack frei ist.",
+  "instructions": [
+   "Stell die Stange auf Schulterhöhe und geh darunter, Stange auf dem oberen Rücken, Füße leicht vor der Stange.",
+   "Drehe die Handgelenke, um die Haken zu lösen, Oberkörper aufrecht, Rumpf angespannt.",
+   "Senke dich durch Beugen von Knien und Hüfte, bis die Oberschenkel mindestens parallel zum Boden sind, Knie in Richtung der Füße.",
+   "Drücke dich mit dem ganzen Fuß wieder in den Stand.",
+   "Drehe am Satzende die Handgelenke, um die Stange einzuhaken."
+  ],
+  "tips": [
+   "Etwas weiter vorn stehende Füße erlauben mehr Tiefe, ohne dass die Fersen abheben.",
+   "Stell die Sicherheitsanschläge knapp unter deinen tiefsten Punkt."
+  ]
+ },
+ "squat": {
+  "name": "Kniebeuge mit Langhantel",
+  "description": "Eine zusammengesetzte Unterkörperübung für Quadrizeps, Gesäß und Beinbeuger.",
+  "instructions": [
+   "Leg die Stange auf den oberen Trapezmuskel.",
+   "Hebe die Stange aus dem Rack, tritt zurück und stell dich schulterbreit hin.",
+   "Spanne den Rumpf an und beuge Knie und Hüfte, bis die Oberschenkel parallel zum Boden sind.",
+   "Drücke dich über die Fersen wieder in den Stand.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Brust während der ganzen Bewegung oben.",
+   "Drücke die Knie nach außen in Richtung der Zehen."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Ab-Wheel-Rollout stehend",
+  "description": "Ab-Wheel-Rollout aus dem Stand mit gestreckten Beinen und großem Bewegungsweg.",
+  "instructions": [
+   "Steh mit gestreckten Beinen, beuge dich vor und setz das Rad mit beiden Händen auf den Boden.",
+   "Rolle mit gestreckten Armen und festem Bauch nach vorn, bis du fast parallel zum Boden bist.",
+   "Halte die Hüfte in Linie, ohne den unteren Rücken durchhängen zu lassen.",
+   "Zieh mit dem Bauch zurück in die Ausgangsposition."
+  ],
+  "tips": [
+   "Beginne mit der knienden Variante, bis du den Weg beherrschst.",
+   "Stoppe, bevor der untere Rücken durchhängt."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Wadenheben stehend",
+  "description": "Stehendes Wadenheben zum Aufbau des Zwillingsmuskels über den vollen Weg.",
+  "instructions": [
+   "Stell dich auf die Kante einer Plattform oder Wadenmaschine.",
+   "Senke die Fersen unter die Plattform.",
+   "Drücke dich auf die Zehenspitzen.",
+   "Senke langsam.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte oben, um die Anspannung zu maximieren.",
+   "Die Ferse ganz zu senken vergrößert den Bewegungsumfang."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Hüftabduktion stehend",
+  "description": "Seitliches Beinheben im Einbeinstand mit Körpergewicht. Es trainiert den mittleren Gesäßmuskel auf der Seite des angehobenen Beins und am Standbein die Muskeln, die das Becken waagerecht halten.",
+  "instructions": [
+   "Steh aufrecht, Hände in die Hüften, Füße zusammen.",
+   "Verlagere das Gewicht auf ein Bein und beuge dieses Knie leicht.",
+   "Hebe das andere Bein gestreckt zur Seite, Zehen nach vorn, Oberkörper aufrecht.",
+   "Hebe das Bein nur so hoch, wie es ohne Neigen des Oberkörpers zur Gegenseite geht.",
+   "Senke das Bein langsam neben den Standfuß.",
+   "Mach die geplanten Wiederholungen und wechsle das Bein."
+  ],
+  "tips": [
+   "Halte die Hüfte gerade und den Oberkörper ruhig; Wegneigen nimmt der Hüfte Arbeit ab.",
+   "Kontrolliere auch das Absenken; lass das Bein nicht pendeln.",
+   "Halte dich an Wand oder Stuhl, wenn du das Gleichgewicht nicht hältst; leg ein Band um die Oberschenkel, wenn es leicht wird."
+  ]
+ },
+ "step-ups": {
+  "name": "Step-ups",
+  "description": "Einbeiniger Aufstieg auf Box oder Bank, der Quadrizeps und Gesäß funktionell trainiert.",
+  "instructions": [
+   "Stell dich vor eine stabile Box oder Bank.",
+   "Setz einen Fuß vollständig auf die Box.",
+   "Drücke über diese Ferse, um den Körper auf die Box zu heben.",
+   "Zieh den hinteren Fuß nach, bis du ganz auf der Box stehst.",
+   "Setz den hinteren Fuß kontrolliert wieder ab, die Last bleibt auf dem arbeitenden Bein.",
+   "Wechsle die Beine ab oder mach erst alle Wiederholungen einer Seite."
+  ],
+  "tips": [
+   "Setz den ganzen Fuß auf die Box.",
+   "Drücke mit der Ferse des steigenden Beins, nicht mit dem hinteren.",
+   "Kontrolliere den Abstieg, statt dich fallen zu lassen."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Latziehen mit gestreckten Armen",
+  "description": "Eine Isolationsübung für den Latissimus am Kabel mit gestreckten Armen.",
+  "instructions": [
+   "Stell dich vor den Kabelzug mit gerader Stange an der oberen Rolle.",
+   "Drücke die Stange mit fast gestreckten Armen im Bogen zu den Oberschenkeln.",
+   "Spanne unten den Latissimus an.",
+   "Führe die Stange langsam in die Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte die Arme während der ganzen Bewegung fast gestreckt.",
+   "Führe die Stange im Bogen zu den Oberschenkeln.",
+   "Spanne den Latissimus am unteren Ende an."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo-Kreuzheben",
+  "description": "Kreuzheben mit sehr breitem Stand und engem Griff, das die Arbeit auf Gesäß, Adduktoren und Quadrizeps verlagert.",
+  "instructions": [
+   "Stell die Füße weit auseinander, Spitzen leicht nach außen, die Stange über der Fußmitte.",
+   "Greif die Stange innerhalb der Beine, Rücken neutral, Brust raus.",
+   "Drücke den Boden mit den Beinen weg und öffne die Knie, bis du mit der Stange am Körper stehst.",
+   "Schließe Hüfte und Knie oben ab und senke die Stange kontrolliert auf demselben Weg."
+  ],
+  "tips": [
+   "Halte die Stange immer nah am Körper.",
+   "Die Knie folgen der Richtung der Fußspitzen; lass sie nicht nach innen fallen."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-Bar-Rudern",
+  "description": "Zusammengesetztes T-Bar-Rudern mit vorgebeugtem Oberkörper für Latissimus und Rautenmuskeln mit hohen Lasten.",
+  "instructions": [
+   "Stell dich schulterbreit über die T-Bar.",
+   "Beuge dich aus der Hüfte, bis der Oberkörper etwa 45 Grad hat.",
+   "Greif die Griffe und halte den Rücken gerade.",
+   "Zieh die Stange zur Brust, Ellbogen nach hinten.",
+   "Drücke oben die Schulterblätter zusammen.",
+   "Senke die Stange kontrolliert und wiederhole."
+  ],
+  "tips": [
+   "Neige den Oberkörper etwa 45 Grad bei geradem Rücken.",
+   "Zieh mit den Ellbogen nach hinten, nicht nur mit den Armen.",
+   "Führe oben die Schulterblätter zusammen."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Trizepsdrücken am Kabelzug",
+  "description": "Eine Isolationsübung für den Trizeps am Kabelzug.",
+  "instructions": [
+   "Stell dich vor einen Kabelzug mit gerader Stange.",
+   "Greif die Stange und leg die Ellbogen an die Seiten.",
+   "Drücke die Stange nach unten, bis die Arme ganz gestreckt sind.",
+   "Kehre langsam in die Ausgangsposition zurück.",
+   "Wiederhole."
+  ],
+  "tips": [
+   "Halte den Oberkörper aufrecht.",
+   "Nur die Unterarme bewegen sich."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "TRX-Beinbeugen",
+  "description": "Diese Isolationsübung am Schlingentrainer trainiert Beinbeuger, Gesäß und Waden, indem du die Fersen zum Gesäß ziehst.",
+  "instructions": [
+   "Leg dich auf den Rücken, Fersen in den Schlaufen, Knie 90 Grad gebeugt.",
+   "Hebe die Hüfte, bis Knie bis Schultern eine Linie bilden.",
+   "Strecke die Beine nach vorn, Hüfte oben, Rumpf angespannt.",
+   "Zieh die Fersen zum Gesäß und spanne die Beinbeuger kräftig an.",
+   "Kontrolliere die Bewegung und lass die Hüfte den ganzen Satz nicht absinken."
+  ],
+  "tips": [
+   "Halte den Rumpf angespannt, damit die Hüfte nicht durchhängt.",
+   "Konzentriere dich auf eine starke Anspannung der Beinbeuger am Endpunkt.",
+   "Kontrolliere die exzentrische Phase, indem du die Beine langsam streckst."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Latzug mit V-Griff",
+  "description": "Ein Latzug im neutralen Griff mit engem V-Griff, der die Latissimusdehnung maximiert und eine tiefere Anspannung erlaubt.",
+  "instructions": [
+   "Befestige einen V-Griff (Doppel-D-Griff) am Latzugkabel.",
+   "Setz dich mit fixierten Oberschenkeln und greif den Griff, Handflächen zueinander.",
+   "Beginne mit vollständig gestreckten Armen über dem Kopf.",
+   "Zieh den Griff zum Brustbein, Ellbogen nach unten und leicht nach hinten.",
+   "Spanne den Latissimus unten an und führe langsam und kontrolliert zurück.",
+   "Wiederhole für die empfohlene Anzahl."
+  ],
+  "tips": [
+   "Der neutrale Griff ist schulterschonender als Ober- oder Untergriff.",
+   "Stell dir vor, du ziehst die Rippen zur Hüfte: Denk an den Latissimus, nicht an die Arme."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Gehende Ausfallschritte mit Kurzhanteln",
+  "description": "Abwechselnde Ausfallschritte im Gehen mit je einer Kurzhantel; trainiert Quadrizeps und Gesäß einseitig.",
+  "instructions": [
+   "Steh mit je einer Hantel, die Arme locker an den Seiten.",
+   "Mach einen großen Schritt nach vorn und senke dich, bis beide Knie etwa 90 Grad haben.",
+   "Drücke dich mit dem vorderen Bein hoch und führe das hintere zum nächsten Schritt nach vorn.",
+   "Wechsle die Beine ab, Oberkörper über den ganzen Weg aufrecht."
+  ],
+  "tips": [
+   "Mach die Schritte so lang, dass das vordere Knie nicht weit über die Fußspitze geht.",
+   "Du brauchst freien Platz; sonst nimm Rückwärtsausfallschritte."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Dips mit Zusatzgewicht",
+  "description": "Dips am Barren mit Zusatzgewicht, eine Kurzhantel zwischen den Füßen oder mit Gewichtsweste.",
+  "instructions": [
+   "Stütz dich mit gestreckten Armen auf den Barren, eine Hantel zwischen Füßen oder Knöcheln.",
+   "Neige den Oberkörper leicht vor und beuge die Ellbogen kontrolliert.",
+   "Stoppe, wenn die Schultern auf Ellbogenhöhe sind.",
+   "Drücke mit Brust und Trizeps, bis die Arme gestreckt sind."
+  ],
+  "tips": [
+   "Beherrsche zuerst Dips mit Körpergewicht.",
+   "Geh nicht tiefer, als deine Schulter verträgt."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Klimmzüge mit Zusatzgewicht",
+  "description": "Klimmzug mit Zusatzgewicht, eine Kurzhantel zwischen den Füßen oder mit Gewichtsweste.",
+  "instructions": [
+   "Häng dich etwas weiter als schulterbreit an die Stange, eine Hantel zwischen Füßen oder Knöcheln.",
+   "Zieh die Ellbogen nach unten und hinten, bis das Kinn über der Stange ist.",
+   "Halte den Körper stabil, ohne zu schwingen.",
+   "Senke kontrolliert, bis die Arme ganz gestreckt sind."
+  ],
+  "tips": [
+   "Beherrsche zuerst Klimmzüge mit Körpergewicht.",
+   "Mit Gewichtsweste steigere das Gewicht schrittweise."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Breites Kabelrudern sitzend",
+  "description": "Horizontales Kabelrudern mit langer Stange im weiten Griff für oberen Rücken und hintere Schulter.",
+  "instructions": [
+   "Setz dich vor den unteren Kabelzug, Füße auf der Stütze, Knie leicht gebeugt, die lange Stange weit gegriffen.",
+   "Zieh die Stange mit geradem Rücken und aufrechter Brust zur unteren Brust, Ellbogen nach außen und hinten.",
+   "Führe am Ende die Schulterblätter zusammen und halte kurz.",
+   "Strecke die Arme kontrolliert und lass die Schulterblätter auseinandergleiten, ohne den Rücken rund zu machen."
+  ],
+  "tips": [
+   "Schaukle nicht: Der Rücken macht die Bewegung, nicht der Oberkörper.",
+   "Zieh die Stange zur Brust, nicht zum Bauch, um den oberen Rücken zu belasten."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher-Kniebeuge",
+  "description": "Kniebeuge mit der Stange in den Ellenbeugen, die die Last nach vorn verlagert und den Rumpf stark fordert.",
+  "instructions": [
+   "Leg die Stange auf Bauchhöhe in die Ellenbeugen, Unterarme gekreuzt oder Fäuste zusammen.",
+   "Senke dich durch Beugen von Hüfte und Knien, Brust oben, Ellbogen am Körper.",
+   "Stoppe, wenn die Oberschenkel parallel zum Boden oder etwas tiefer sind.",
+   "Drücke dich mit den Füßen hoch, bis du wieder aufrecht stehst."
+  ],
+  "tips": [
+   "Nimm ein Polster oder Handtuch um die Stange, wenn sie an den Ellbogen stört.",
+   "Halte den Bauch fest, damit du nicht nach vorn kippst."
+  ]
+ },
+ "z-press": {
+  "name": "Z-Press",
+  "description": "Überkopfdrücken im Sitzen auf dem Boden mit gestreckten Beinen, das ohne Abstützung viel Rumpfstabilität verlangt.",
+  "instructions": [
+   "Setz dich mit nach vorn gestreckten Beinen auf den Boden, die Stange auf der oberen Brust.",
+   "Halte den Oberkörper aufrecht und drücke die Stange gerade nach oben, bis die Arme gestreckt sind.",
+   "Halte die Stange über dem Scheitel, ohne dich zurückzulehnen.",
+   "Senke kontrolliert bis zum Schlüsselbein."
+  ],
+  "tips": [
+   "Nimm weniger Gewicht als im Stehen: Der Rumpf stabilisiert.",
+   "Spanne Gesäß und Bauch während der ganzen Bewegung an."
+  ]
+ }
+}

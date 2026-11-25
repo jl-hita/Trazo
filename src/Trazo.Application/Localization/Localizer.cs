@@ -78,8 +78,35 @@ public static partial class Localizer
         }
     }
 
-    private static readonly Direction ToEnglish = new(EnglishCatalog.Entries.Concat(EnglishCatalog.DayLists).Concat(AccountCatalog.SpanishToEnglish));
+    private static readonly Direction ToEnglish = new(Pairs().Concat(EnglishCatalog.DayLists));
     private static readonly Direction ToSpanish = new(AccountCatalog.EnglishToSpanish);
+    private static readonly ConcurrentDictionary<AppLanguage, Lazy<Direction>> ToOthers = new();
+
+    /// <summary>Every pair of the catalogs, (Spanish, English). A method, so no static field depends on another one's initialisation order.</summary>
+    private static IEnumerable<(string Es, string En)> Pairs() =>
+        EnglishCatalog.Entries.Concat(AccountCatalog.Pairs).Concat(PageCatalog.Pairs).Concat(VocabularyCatalog.Pairs);
+
+    /// <summary>The Spanish texts a translation file has to cover (the weekday lists are built from the seven names).</summary>
+    public static IReadOnlyList<string> SourceTexts() =>
+        Pairs().Select(p => p.Es).Concat(EnglishCatalog.DayNames.Select(d => d.Es)).Distinct(StringComparer.Ordinal).ToArray();
+
+    /// <summary>
+    /// The direction to a translated language: the Spanish text and the English one both lead to the translation, and a text the file
+    /// does not have yet comes out in English.
+    /// </summary>
+    private static Direction To(AppLanguage language)
+    {
+        var file = ServerTranslations.For(language);
+        var entries = new List<(string, string)>();
+        foreach (var (es, en) in Pairs())
+        {
+            var target = file.GetValueOrDefault(es) ?? en;
+            entries.Add((en, target));
+            entries.Add((es, target));
+        }
+        entries.AddRange(EnglishCatalog.Lists(EnglishCatalog.DayNames.Select(d => (d.Es, file.GetValueOrDefault(d.Es) ?? d.En)).ToArray()));
+        return new Direction(entries);
+    }
 
     [GeneratedRegex(@"\{(\d+)\}")]
     private static partial Regex Placeholder();
@@ -93,7 +120,25 @@ public static partial class Localizer
     public static string? Translate(string? text, AppLanguage language)
     {
         if (string.IsNullOrWhiteSpace(text)) return text;
-        return (language == AppLanguage.En ? ToEnglish : ToSpanish).Translate(text);
+        var direction = language switch
+        {
+            AppLanguage.Es => ToSpanish,
+            AppLanguage.En => ToEnglish,
+            _ => ToOthers.GetOrAdd(language, l => new Lazy<Direction>(() => To(l))).Value
+        };
+        return direction.Translate(text);
+    }
+
+    /// <summary>A text with values, given by its Spanish template (<c>{0} días</c>): the template is translated and the values go in as they are.</summary>
+    public static string Format(AppLanguage language, string template, params object[] values)
+    {
+        var translated = template;
+        if (language != AppLanguage.Es)
+        {
+            var english = Pairs().FirstOrDefault(p => p.Es == template).En ?? template;
+            translated = language == AppLanguage.En ? english : ServerTranslations.For(language).GetValueOrDefault(template) ?? english;
+        }
+        return string.Format(System.Globalization.CultureInfo.InvariantCulture, translated, values);
     }
 
     /// <summary>The same for every text of a list (validation messages).</summary>

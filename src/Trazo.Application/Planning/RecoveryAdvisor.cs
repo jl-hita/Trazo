@@ -89,12 +89,9 @@ public static class RecoveryAdvisor
 
         var availableAt = limiting.Max(l => l.Readiness.At);
         var state = availableAt - now <= TimeSpan.FromHours(CautionHours) ? RecoveryState.Caution : RecoveryState.Wait;
-        var english = language == AppLanguage.En;
-        var reasons = limiting.OrderByDescending(l => l.Readiness.At).Take(3).Select(l => english
-            ? $"{Label(l.Muscle, language)}: worked {Hours(now - l.Readiness.PerformedAt, language)} ago ({Math.Round(l.Readiness.Sets)} effective sets); " +
-              $"needs about {Hours(l.Readiness.At - now, language)} more."
-            : $"{Label(l.Muscle, language)}: trabajado hace {Hours(now - l.Readiness.PerformedAt, language)} ({Math.Round(l.Readiness.Sets)} series efectivas); " +
-              $"necesita unas {Hours(l.Readiness.At - now, language)} más.").ToList();
+        var reasons = limiting.OrderByDescending(l => l.Readiness.At).Take(3).Select(l => Localizer.Format(language,
+            "{0}: trabajado hace {1} ({2} series efectivas); necesita unas {3} más.",
+            Label(l.Muscle, language), Hours(now - l.Readiness.PerformedAt, language), Math.Round(l.Readiness.Sets), Hours(l.Readiness.At - now, language))).ToList();
         return new(candidate.SessionId, candidate.SequenceIndex, candidate.Title, state, availableAt, reasons);
     }
 
@@ -173,7 +170,9 @@ public static class RecoveryAdvisor
     private static string Hours(TimeSpan span, AppLanguage language)
     {
         var hours = Math.Max(1, (int)Math.Round(span.TotalHours));
-        return hours >= 48 ? $"{Math.Round(hours / 24.0, 1):0.#} {(language == AppLanguage.En ? "days" : "días")}" : $"{hours} h";
+        return hours >= 48
+            ? Localizer.Format(language, "{0} días", Math.Round(hours / 24.0, 1).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture))
+            : $"{hours} h";
     }
 
     private static readonly Dictionary<string, string> Labels = new(StringComparer.Ordinal)
@@ -185,15 +184,6 @@ public static class RecoveryAdvisor
         ["Serratus"] = "Serrato", ["TibialisAnterior"] = "Tibial anterior", ["RotatorCuff"] = "Manguito rotador"
     };
 
-    private static readonly Dictionary<string, string> LabelsEn = new(StringComparer.Ordinal)
-    {
-        ["Chest"] = "Chest", ["Lats"] = "Lats", ["UpperBack"] = "Upper back", ["Deltoids"] = "Shoulders", ["Biceps"] = "Biceps",
-        ["Triceps"] = "Triceps", ["Forearms"] = "Forearms", ["Abdominals"] = "Abs", ["Obliques"] = "Obliques",
-        ["ErectorSpinae"] = "Lower back", ["Glutes"] = "Glutes", ["Quadriceps"] = "Quads", ["Hamstrings"] = "Hamstrings",
-        ["Calves"] = "Calves", ["Adductors"] = "Adductors", ["Abductors"] = "Abductors", ["HipFlexors"] = "Hip flexors",
-        ["Serratus"] = "Serratus", ["TibialisAnterior"] = "Tibialis anterior", ["RotatorCuff"] = "Rotator cuff"
-    };
-
     private static string Label(string muscle, AppLanguage language) =>
-        (language == AppLanguage.En ? LabelsEn : Labels).GetValueOrDefault(muscle, muscle);
+        Labels.TryGetValue(muscle, out var label) ? Localizer.Translate(label, language)! : muscle;
 }
