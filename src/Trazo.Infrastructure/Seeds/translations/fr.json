@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Roue abdominale",
+  "description": "Un exercice de gainage où l'on fait rouler une roue d'avant en arrière, qui entraîne l'anti-extension de la colonne.",
+  "instructions": [
+   "Agenouille-toi et saisis les poignées de la roue à largeur d'épaules.",
+   "Gaine fortement pour garder le bas du dos neutre.",
+   "Fais rouler la roue lentement vers l'avant, en allongeant le corps aussi loin que tu le maîtrises.",
+   "Arrête avant que les hanches s'affaissent ou que le dos se cambre.",
+   "Ramène la roue vers les genoux en contractant les abdominaux."
+  ],
+  "tips": [
+   "Gaine avant chaque répétition — ne laisse pas le bas du dos se cambrer.",
+   "Augmente l'amplitude progressivement, en t’arrêtant avant que les hanches s'affaissent.",
+   "Utilise un mur comme butée si tu ne maîtrises pas la position basse."
+  ]
+ },
+ "arnold-press": {
+  "name": "Développé Arnold",
+  "description": "Développé épaules aux haltères avec rotation des poignets, qui sollicite le deltoïde sur une grande amplitude.",
+  "instructions": [
+   "Assis dossier droit, tiens les haltères à hauteur de poitrine, paumes vers toi et coudes vers l'avant.",
+   "Commence à pousser en ouvrant les coudes et en tournant les paumes vers l'avant.",
+   "Termine bras tendus au-dessus de la tête sans verrouiller les coudes.",
+   "Redescends en retournant les paumes vers toi jusqu'à la position de départ."
+  ],
+  "tips": [
+   "Effectue la rotation de façon fluide, sans élan.",
+   "Garde le dos contre le dossier."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Tractions assistées",
+  "description": "Une traction à la machine assistée, qui compense une partie du poids du corps, pour construire la force du dos nécessaire aux tractions strictes.",
+  "instructions": [
+   "Pose les genoux sur le coussin de la machine à tractions assistées.",
+   "Saisis la barre paumes vers l'avant, un peu plus large que les épaules.",
+   "Tire la poitrine vers la barre en abaissant les coudes.",
+   "Redescends avec contrôle jusqu'à être suspendu bras tendus.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Commence le mouvement en abaissant les omoplates avant de plier les coudes.",
+   "Évite de te balancer pour laisser le dos travailler.",
+   "Règle le contrepoids pour réaliser toutes les répétitions avec une bonne technique."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Leg curl au swiss ball",
+  "description": "Un leg curl au poids du corps sur swiss ball, en ramenant les talons vers les fessiers pendant que les hanches montent.",
+  "instructions": [
+   "Allonge-toi sur le dos, talons et bas des mollets sur le ballon, bras écartés pour l'équilibre.",
+   "Pousse dans les talons pour lever les hanches, en ligne droite des épaules aux chevilles.",
+   "En gardant les hanches hautes, fléchis les genoux pour rouler le ballon vers les fessiers.",
+   "Tends les jambes avec contrôle sans baisser les hanches.",
+   "Fais toutes les répétitions, puis repose les hanches et quitte le ballon."
+  ],
+  "tips": [
+   "Les hanches restent hautes toute la série : c'est un mélange de pont et de curl.",
+   "Commence à deux pieds ; passe à une jambe quand cela devient facile."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Leg curl debout avec élastique",
+  "description": "Un leg curl debout avec un élastique à la cheville, pratique en voyage ou en finition légère pour les ischios.",
+  "instructions": [
+   "Passe un élastique autour d'une cheville et fixe l'autre bout sous le pied d'appui ou à un point fixe devant toi.",
+   "Tiens-toi droit, appuie-toi si besoin, jambe d'appui légèrement fléchie.",
+   "Ramène le talon avec l'élastique vers le fessier en gardant la cuisse immobile.",
+   "Contracte l'ischio en haut, puis redescends avec contrôle jusqu'à l'étirement complet.",
+   "Fais toutes les répétitions d'un côté puis change de jambe."
+  ],
+  "tips": [
+   "Garde la cuisse immobile — seul le bas de la jambe bouge.",
+   "N'utilise pas les hanches pour prendre de l'élan.",
+   "Prends un élastique plus léger si tu ne contrôles pas la descente."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Tirage vertical à l'élastique",
+  "description": "Tirage vertical avec un élastique fixé en hauteur, en alternative à la poulie.",
+  "instructions": [
+   "Debout, élastique fixé en hauteur (porte ou barre), une extrémité dans chaque main, bras tendus au-dessus de la tête.",
+   "Tire les mains vers le bas en ramenant les coudes le long du corps, poitrine haute.",
+   "Serre le dos quand les mains arrivent à hauteur des épaules.",
+   "Remonte les bras avec contrôle jusqu'à les tendre."
+  ],
+  "tips": [
+   "N'incline pas le buste en arrière pour tirer.",
+   "Vérifie que la fixation est solide avant de commencer."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Écartés à l'élastique",
+  "description": "Écartement d'un élastique bras tendus pour activer l'arrière de l'épaule et le haut du dos.",
+  "instructions": [
+   "Debout, tiens l'élastique mains à largeur d'épaules, bras tendus devant toi à hauteur de poitrine.",
+   "Écarte les mains vers les côtés jusqu'à ce que l'élastique touche la poitrine.",
+   "Rapproche les omoplates en fin de mouvement sans hausser les épaules.",
+   "Reviens avec contrôle sans laisser l'élastique te tirer."
+  ],
+  "tips": [
+   "Choisis un élastique permettant 15 répétitions propres ou plus.",
+   "Garde les côtes rentrées pour ne pas cambrer."
+  ]
+ },
+ "band-row": {
+  "name": "Rowing à l'élastique",
+  "description": "Rowing assis avec un élastique fixé aux pieds, sans autre matériel.",
+  "instructions": [
+   "Assis au sol, jambes tendues, élastique sous les plantes des pieds, une extrémité dans chaque main.",
+   "Dos droit, tire les mains vers le ventre en ramenant les coudes en arrière.",
+   "Rapproche les omoplates en fin de mouvement.",
+   "Tends les bras avec contrôle sans relâcher la tension de l'élastique."
+  ],
+  "tips": [
+   "Ne tu balances pas pour toi aider du buste.",
+   "Choisis un élastique permettant 12 à 15 répétitions propres."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Développé épaules à l'élastique",
+  "description": "Développé épaules debout sur un élastique, pour travailler les deltoïdes avec très peu de matériel.",
+  "instructions": [
+   "Debout au centre de l'élastique, pieds à largeur de hanches, une extrémité dans chaque main à hauteur d'épaules.",
+   "Pousse les mains vers le haut jusqu'à tendre les bras au-dessus de la tête.",
+   "Garde le ventre ferme et les côtes rentrées.",
+   "Redescends avec contrôle aux épaules sans perdre la tension."
+  ],
+  "tips": [
+   "Ne cambre pas en poussant.",
+   "Fais un tour de plus avec l'élastique pour augmenter la résistance."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Squat bulgare à la barre",
+  "description": "Squat sur une jambe, pied arrière surélevé sur un banc, barre sur le dos.",
+  "instructions": [
+   "Pose le dessus d'un pied sur un banc derrière toi, barre sur le haut du dos, l'autre jambe en avant.",
+   "Fléchis le genou avant et descends buste droit jusqu'à ce que la cuisse soit parallèle au sol.",
+   "Garde le poids sur le talon de la jambe avant.",
+   "Pousse dans le pied avant jusqu'à tendre la jambe ; fais tes répétitions puis change de jambe."
+  ],
+  "tips": [
+   "Règle la distance pour que le genou avant ne dépasse pas beaucoup la pointe du pied.",
+   "Entraîne-toi d'abord sans charge ou avec des haltères."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Curl à la barre",
+  "description": "Un exercice classique d'isolation des biceps avec la barre pour une charge maximale.",
+  "instructions": [
+   "Debout, tiens la barre en supination à largeur d'épaules.",
+   "Monte la barre vers les épaules.",
+   "Contracte en haut, puis redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Évite de balancer le buste.",
+   "Garde les coudes près du corps."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Pont fessier à la barre",
+  "description": "Un pont fessier avec une barre pour plus de résistance.",
+  "instructions": [
+   "Allonge-toi, barre sur les hanches et genoux fléchis.",
+   "Lève les hanches en serrant les fessiers.",
+   "Tiens en haut, hanches complètement tendues.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Évite de cambrer en tendant les hanches.",
+   "Pousse avec les talons, pas avec la pointe des pieds.",
+   "Rentre le menton et garde le haut du dos posé."
+  ]
+ },
+ "barbell-row": {
+  "name": "Rowing barre buste penché",
+  "description": "Un mouvement de tirage polyarticulaire pour le haut et le milieu du dos.",
+  "instructions": [
+   "Penche-toi à partir des hanches, genoux légèrement fléchis.",
+   "Saisis la barre un peu plus large que les épaules.",
+   "Tire la barre vers le bas de la poitrine en serrant les omoplates.",
+   "Redescends la barre avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde le buste à environ 45 degrés.",
+   "N'utilise pas d'élan pour balancer la charge."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Mollets debout à la barre",
+  "description": "Élévation des mollets debout avec une barre libre sur le dos, sans machine dédiée.",
+  "instructions": [
+   "Debout, barre sur le haut du dos, pointes des pieds sur une marche ou un disque, à largeur de hanches.",
+   "Laisse descendre les talons jusqu'à étirer les mollets, buste droit.",
+   "Monte le plus haut possible sur la pointe des pieds sans plier les genoux.",
+   "Tiens un instant en haut et redescends avec contrôle."
+  ],
+  "tips": [
+   "Commence léger jusqu'à maîtriser l'équilibre.",
+   "Fais-le dans un rack avec les sécurités à la bonne hauteur."
+  ]
+ },
+ "bench-press": {
+  "name": "Développé couché à la barre",
+  "description": "Un mouvement de poussée polyarticulaire pour les pectoraux, les épaules et les triceps.",
+  "instructions": [
+   "Allonge-toi sur le banc, les yeux sous la barre.",
+   "Saisis la barre un peu plus large que les épaules.",
+   "Sors la barre du rack et descends-la au milieu de la poitrine.",
+   "Repousse la barre jusqu'à tendre complètement les bras.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Garde les pieds à plat au sol.",
+   "Conserve une légère cambrure lombaire.",
+   "Pousse dans le sol avec les jambes pour rester stable."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Rowing inversé genoux fléchis",
+  "description": "Version débutant du rowing inversé : genoux fléchis et pieds près du corps, c'est plus léger et plus facile à maîtriser.",
+  "instructions": [
+   "Allonge-toi sous une barre basse et solide, mains un peu plus larges que les épaules, buste droit, genoux fléchis et pieds à plat.",
+   "Tire la poitrine vers la barre en amenant les coudes en arrière et en serrant les omoplates.",
+   "Tiens un instant en haut sans laisser tomber les hanches.",
+   "Redescends avec contrôle jusqu'à tendre les bras."
+  ],
+  "tips": [
+   "Rapproche les pieds pour faciliter ou éloigne-les pour progresser.",
+   "Quand tu maîtrises 12 répétitions, passe au rowing inversé jambes tendues."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Mollets au poids du corps",
+  "description": "Une élévation des mollets au poids du corps, exercice de base pour les renforcer.",
+  "instructions": [
+   "Debout, pieds à largeur de hanches sur une surface plane.",
+   "Monte le plus haut possible sur la pointe des pieds.",
+   "Contracte les mollets en haut.",
+   "Repose les talons avec contrôle.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Répartis le poids sur tous les orteils en montant.",
+   "Garde les jambes tendues pour cibler les mollets.",
+   "Fixe un point pour garder l'équilibre."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Fente arrière au poids du corps",
+  "description": "Fente arrière sans matériel, plus stable et plus douce pour les genoux que la fente avant.",
+  "instructions": [
+   "Debout, pieds joints, mains sur les hanches, poitrine haute.",
+   "Fais un grand pas en arrière et descends en fléchissant les deux genoux jusqu'à ce que le genou arrière frôle le sol.",
+   "Garde le buste droit et le poids sur le pied avant.",
+   "Pousse avec la jambe avant pour revenir ; fais tes répétitions puis change de jambe."
+  ],
+  "tips": [
+   "Fais un pas assez grand pour que le genou avant ne dépasse pas beaucoup le pied.",
+   "Tiens-toi à un support si l'équilibre reste difficile."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Squat au poids du corps",
+  "description": "Squat de base sans matériel, idéal pour apprendre le mouvement et travailler les jambes partout.",
+  "instructions": [
+   "Debout, pieds à largeur d'épaules, pointes légèrement ouvertes, bras tendus devant.",
+   "Recule et descends les hanches comme pour toi asseoir, poitrine haute, dos neutre.",
+   "Descends jusqu'à ce que les cuisses soient parallèles au sol, genoux dans l'axe des pieds.",
+   "Pousse dans tout le pied jusqu'à toi redresser."
+  ],
+  "tips": [
+   "Garde les talons au sol sur toute l'amplitude.",
+   "Si descendre est difficile, assieds-toi sur une chaise et relève-toi sans élan."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Squat bulgare",
+  "description": "Une variante unilatérale du squat avec le pied arrière surélevé.",
+  "instructions": [
+   "Place-toi devant un banc et pose un pied derrière toi dessus.",
+   "Tiens des haltères le long du corps.",
+   "Descends jusqu'à ce que la cuisse avant soit parallèle au sol.",
+   "Pousse sur le talon avant pour toi relever.",
+   "Répète des deux côtés."
+  ],
+  "tips": [
+   "Garde presque tout le poids sur la jambe avant.",
+   "Règle la distance au banc pour une fente stable.",
+   "Fais toutes les répétitions d'une jambe avant de changer."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Crunch à la poulie",
+  "description": "Un crunch à genoux à la poulie haute avec corde, qui permet d'augmenter progressivement la charge sur le grand droit.",
+  "instructions": [
+   "Agenouille-toi face à la poulie, corde en haut.",
+   "Tiens la corde près du front, coudes fléchis.",
+   "Descends en enroulant la colonne, coudes vers les cuisses.",
+   "Contracte fort les abdominaux en bas.",
+   "Reviens à la position de départ et répète."
+  ],
+  "tips": [
+   "Enroule la colonne au lieu de tirer avec les bras.",
+   "Évite de t’asseoir sur les talons à chaque répétition.",
+   "Expire fort en descendant pour mieux contracter le ventre."
+  ]
+ },
+ "cable-curl": {
+  "name": "Curl à la poulie",
+  "description": "Un curl biceps au câble pour une tension constante.",
+  "instructions": [
+   "Debout face à une poulie basse avec une barre droite ou EZ.",
+   "Saisis la barre en supination, coudes contre le corps.",
+   "Monte la barre vers les épaules.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Évite que les coudes avancent quand tu montes.",
+   "Ne balance pas le buste pour aider.",
+   "Recule un peu de la poulie pour garder la tension."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Rotation externe à la poulie",
+  "description": "Une rotation externe à la poulie, coude collé au corps, qui renforce les rotateurs externes de la coiffe avec l'aide du deltoïde postérieur.",
+  "instructions": [
+   "Règle la poulie à hauteur du coude et saisis la poignée.",
+   "Place-toi de côté, coude actif à 90 degrés.",
+   "Garde le coude au corps et tourne l'avant-bras vers l'extérieur.",
+   "Marque une pause en fin de mouvement.",
+   "Reviens avec contrôle. Fais un côté puis change."
+  ],
+  "tips": [
+   "Ne hausse pas l'épaule en tournant le bras.",
+   "Travaille léger, lentement et avec contrôle.",
+   "Garde le poignet ferme, dans l'axe de l'avant-bras."
+  ]
+ },
+ "cable-fly": {
+  "name": "Écartés à la poulie",
+  "description": "Un exercice d'isolation des pectoraux au câble, à tension constante.",
+  "instructions": [
+   "Place-toi entre deux colonnes, poignées sur les poulies hautes.",
+   "Coudes légèrement fléchis, ouvre les bras sur les côtés.",
+   "Rejoins les mains devant la poitrine, comme une étreinte.",
+   "Reviens lentement à la position de départ.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde l'angle des coudes pour que cela ne devienne pas un développé.",
+   "Contracte les pectoraux une seconde quand les mains se rejoignent.",
+   "N'avance pas les épaules quand les bras sont ouverts."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Élévation frontale à la poulie",
+  "description": "Élévation frontale à la poulie basse, à tension constante sur toute l'amplitude.",
+  "instructions": [
+   "Dos à la poulie basse, câble entre les jambes, poignée dans une main, bras tendu devant la cuisse.",
+   "Lève le bras devant toi jusqu'à hauteur d'épaule, coude légèrement fléchi.",
+   "Tiens un instant en haut sans pencher le buste en arrière.",
+   "Redescends avec contrôle sans reposer la charge ; répète et change de bras."
+  ],
+  "tips": [
+   "Éloigne-toi assez pour que le câble tire vers l'arrière.",
+   "Garde le ventre ferme pour ne pas cambrer."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Élévation latérale à la poulie",
+  "description": "Une élévation latérale unilatérale à la poulie, à tension constante sur le deltoïde latéral.",
+  "instructions": [
+   "De côté à une poulie basse, saisis la poignée de la main la plus éloignée.",
+   "Garde le coude légèrement fléchi et laisse le câble passer devant le corps.",
+   "Lève le bras sur le côté jusqu'à l'horizontale.",
+   "Redescends avec contrôle. Répétitions par côté, puis change.",
+   "Garde la tension — ne repose pas la charge en bas."
+  ],
+  "tips": [
+   "Mène avec le coude, pas avec la main.",
+   "Marque une courte pause en haut, sans balancement.",
+   "Prends moins lourd qu'avec un haltère — la tension du câble est constante."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Extension triceps au-dessus de la tête à la poulie",
+  "description": "Un exercice des triceps au câble : dos à la pile de poids, tu tiens une corde derrière la tête et tends les coudes pour la pousser au-dessus de la tête. La position étire le long chef du triceps et le câble garde la tension tout au long du mouvement.",
+  "instructions": [
+   "Accroche une corde à la poulie basse et choisis une charge légère.",
+   "Saisis la corde à deux mains, tourne le dos à la pile et avance en position fendue pour que le câble te tire en arrière.",
+   "Monte la corde au-dessus de la tête, coudes fléchis et bras près des oreilles, mains derrière la tête.",
+   "Gaine, garde les bras immobiles et tends les coudes pour pousser la corde jusqu'à tendre complètement les bras.",
+   "Courte pause en haut, puis plie les coudes pour redescendre la corde derrière la tête avec contrôle.",
+   "Répète le nombre de répétitions prévu."
+  ],
+  "tips": [
+   "Garde les coudes vers l'avant et les bras immobiles ; s'ils s'écartent ou bougent, l'extension devient un développé.",
+   "Avance assez pour que le câble te stabilise et évite de cambrer en levant les bras.",
+   "Prends une charge maîtrisable sur tout l'étirement ; trop lourd, les coudes s'écartent."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof press à la poulie",
+  "description": "Un exercice de gainage anti-rotation : le câble te tire sur le côté pendant que tu pousses la poignée devant la poitrine sans laisser le buste tourner.",
+  "instructions": [
+   "Règle la poulie à hauteur de poitrine et tiens la poignée à deux mains, de profil.",
+   "Éloigne-toi jusqu'à sentir une vraie tension, pieds à largeur d'épaules, genoux légèrement fléchis.",
+   "Amène la poignée au centre de la poitrine et gaine tronc et fessiers.",
+   "Pousse la poignée droit devant jusqu'à tendre les bras en résistant à la traction qui veut te faire tourner.",
+   "Tiens un instant bras tendus puis ramène la poignée avec contrôle.",
+   "Fais les répétitions voulues, retourne-toi et répète de l'autre côté."
+  ],
+  "tips": [
+   "Rien ne doit tourner. Si les épaules pivotent vers la poulie, baisse la charge — on entraîne la rotation qui ne se produit pas.",
+   "Plus tu es loin de la machine, plus le bras de levier est long et plus c'est dur : tu changes la difficulté sans toucher aux poids.",
+   "Garde les bras à hauteur de poitrine et les épaules basses ; si la poignée monte, cela devient une élévation frontale."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Oiseau à la poulie",
+  "description": "Un exercice debout au câble pour l'arrière des épaules : entre deux colonnes, tu tiens les poignées opposées, câbles croisés devant, et ouvre les bras vers l'extérieur et l'arrière jusqu'à hauteur d'épaules. Les câbles gardent la tension sur tout l'arc.",
+  "instructions": [
+   "Règle les deux poulies environ à hauteur d'épaules et place-toi au centre.",
+   "Saisis la poignée gauche de la main droite et la droite de la main gauche, câbles croisés devant toi.",
+   "Tiens-toi droit, bras tendus devant à hauteur d'épaules, coudes légèrement fléchis.",
+   "Ouvre les bras vers l'extérieur et l'arrière en grand arc, en menant avec les coudes, jusqu'à l'alignement avec les épaules.",
+   "Serre brièvement les omoplates sans cambrer.",
+   "Ramène lentement les poignées croisées et répète."
+  ],
+  "tips": [
+   "Garde les coudes légèrement fléchis et fixes ; sinon l'écarté devient un rowing.",
+   "Épaules basses et nuque relâchée pour que l'arrière d'épaule travaille et non le trapèze supérieur.",
+   "Prends léger et reviens lentement ; la traction est maximale en fin d'arc, contrôle cette position."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Relevé de genoux à la chaise romaine",
+  "description": "Un exercice au poids du corps à la chaise romaine pour le bas des abdominaux et les fléchisseurs de hanche.",
+  "instructions": [
+   "Installe-toi dos à plat contre le dossier, avant-bras sur les appuis.",
+   "Laisse les jambes pendre droites.",
+   "Gaine et monte les genoux vers la poitrine.",
+   "Tiens brièvement en haut puis redescends lentement.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Évite de balancer les jambes pour prendre de l'élan.",
+   "Expire en montant les genoux.",
+   "Garde le dos contre le dossier tout du long."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Développé pectoraux à la machine",
+  "description": "Un mouvement de poussée à la machine pour les pectoraux, idéal pour débuter.",
+  "instructions": [
+   "Assieds-toi, dos à plat contre le dossier.",
+   "Saisis les poignées à hauteur de poitrine.",
+   "Pousse les poignées jusqu'à tendre complètement les bras.",
+   "Reviens lentement à la position de départ.",
+   "Répète."
+  ],
+  "tips": [
+   "Règle le siège pour que les poignées soient à hauteur de poitrine.",
+   "Pousse sans verrouiller brusquement les coudes.",
+   "Reviens avec contrôle sans lâcher la charge."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Rowing haltères poitrine en appui",
+  "description": "Un rowing haltères poitrine en appui qui soulage le bas du dos et isole le dos.",
+  "instructions": [
+   "Allonge-toi à plat ventre sur un banc incliné, haltères pendants.",
+   "Tire les haltères sur les côtés.",
+   "Contracte en haut puis redescends.",
+   "Répète."
+  ],
+  "tips": [
+   "L'appui sur la poitrine évite la fatigue lombaire.",
+   "Concentre-toi sur le rapprochement des omoplates."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Rowing kettlebell poitrine en appui",
+  "description": "Cet exercice travaille le dos, surtout le grand dorsal et les rhomboïdes, en tirant un kettlebell dans chaque main vers les hanches, buste appuyé sur un banc incliné.",
+  "instructions": [
+   "Allonge-toi à plat ventre sur un banc incliné, bras libres, un kettlebell dans chaque main.",
+   "Contracte le ventre et rétracte les omoplates.",
+   "Tire les kettlebells vers les hanches en serrant les omoplates.",
+   "Courte pause en haut en sentant la contraction du dos.",
+   "Redescends lentement les kettlebells avec contrôle."
+  ],
+  "tips": [
+   "Garde le buste stable ; évite de te balancer.",
+   "Initie le tirage avec le dos, pas seulement les bras.",
+   "Garde les coudes près du corps pour cibler le grand dorsal."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Rowing machine poitrine en appui",
+  "description": "Un rowing assis à la machine avec appui poitrine : dorsaux et muscles entre les omoplates tirent, le bas du dos est épargné. Tu tires les poignées coudes vers l'arrière puis les laisse revenir avec contrôle.",
+  "instructions": [
+   "Règle le siège pour que les poignées soient au bas de la poitrine, poitrine sur le coussin et pieds bien posés.",
+   "Tends-toi et saisis les poignées bras tendus, épaules relâchées.",
+   "Gaine et tire les poignées, coudes vers l'arrière.",
+   "Serre les omoplates en fin de tirage sans décoller la poitrine.",
+   "Courte pause puis tends les bras avec contrôle.",
+   "Répète en gardant la poitrine sur le coussin."
+  ],
+  "tips": [
+   "Tire avec les coudes et non les mains, pour que dorsaux et milieu du dos mènent et que les biceps aident.",
+   "Poitrine sur le coussin et épaules basses ; hausser les épaules ou partir en arrière en fait un tirage du trapèze supérieur.",
+   "Laisse les omoplates s'écarter au début de chaque répétition pour un étirement complet."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Rowing en T poitrine en appui",
+  "description": "Rowing en T poitrine appuyée sur un banc incliné, qui isole le dos sans charger les lombaires.",
+  "instructions": [
+   "Pose la poitrine sur le banc, pieds fermes, et saisis la poignée bras tendus.",
+   "Tire la poignée vers la poitrine, coudes en arrière et près du corps.",
+   "Serre les omoplates un instant en haut.",
+   "Redescends avec contrôle jusqu'à tendre les bras sans décoller la poitrine."
+  ],
+  "tips": [
+   "Garde la tête dans l'axe de la colonne.",
+   "S'il faut décoller la poitrine pour tirer, allège."
+  ]
+ },
+ "chin-ups": {
+  "name": "Tractions en supination",
+  "description": "Une variante des tractions en supination qui sollicite fortement les biceps avec le grand dorsal.",
+  "instructions": [
+   "Suspends-toi à une barre en supination à largeur d'épaules.",
+   "Monte jusqu'à passer le menton au-dessus de la barre.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde le tronc gainé.",
+   "Évite de trop te balancer."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Développé couché prise serrée",
+  "description": "Développé couché mains plus rapprochées, qui augmente la part des triceps tout en travaillant les pectoraux.",
+  "instructions": [
+   "Allonge-toi et saisis la barre à largeur d'épaules ou un peu moins.",
+   "Décroche la barre et amène-la au-dessus de la poitrine bras tendus.",
+   "Descends avec contrôle jusqu'à effleurer le bas de la poitrine, coudes près du corps.",
+   "Pousse jusqu'à tendre les coudes."
+  ],
+  "tips": [
+   "Ne serre pas trop les mains : les poignets souffrent ; la largeur d'épaules suffit.",
+   "Fais-toi aider ou utilise un rack avec sécurités près de l'échec."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Développé couché haltères",
+  "description": "Un exercice polyarticulaire des pectoraux aux haltères, avec plus d'amplitude qu'à la barre.",
+  "instructions": [
+   "Allonge-toi sur un banc plat, un haltère dans chaque main à hauteur de poitrine.",
+   "Pousse les haltères jusqu'à tendre complètement les bras.",
+   "Redescends lentement.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde les poignets neutres.",
+   "Contracte les pectoraux en haut."
+  ]
+ },
+ "db-fly": {
+  "name": "Écartés aux haltères",
+  "description": "Un exercice d'isolation qui étire et contracte les pectoraux sur un large arc.",
+  "instructions": [
+   "Allonge-toi, haltères au-dessus de la poitrine, paumes face à face.",
+   "Coudes légèrement fléchis, descends les haltères sur les côtés.",
+   "Reviens en contractant les pectoraux.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde la même flexion des coudes.",
+   "Ne descends pas trop les haltères."
+  ]
+ },
+ "db-squat": {
+  "name": "Squat aux haltères",
+  "description": "Un squat avec un haltère dans chaque main le long du corps, possible sans barre.",
+  "instructions": [
+   "Pieds à largeur d'épaules, un haltère de chaque côté.",
+   "Gaine et garde la poitrine haute.",
+   "Descends en fléchissant hanches et genoux.",
+   "Descends jusqu'aux cuisses parallèles ou plus bas.",
+   "Pousse sur les talons pour remonter."
+  ],
+  "tips": [
+   "Poitrine haute et dos droit.",
+   "Pousse les genoux dans l'axe des orteils.",
+   "Utilise des sangles si la prise devient limitante."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "Un exercice de gainage sur le dos qui coordonne l'extension de membres opposés pour la stabilité profonde.",
+  "instructions": [
+   "Allonge-toi sur le dos, bras tendus vers le plafond, genoux à 90 degrés.",
+   "Descends le bras droit et la jambe gauche vers le sol, bas du dos plaqué.",
+   "Reviens à la position de départ.",
+   "Répète de l'autre côté.",
+   "Alterne."
+  ],
+  "tips": [
+   "Garde le bas du dos plaqué au sol.",
+   "Bouge lentement."
+  ]
+ },
+ "deadlift": {
+  "name": "Soulevé de terre à la barre",
+  "description": "Un soulevé polyarticulaire de tout le corps qui travaille surtout la chaîne postérieure.",
+  "instructions": [
+   "Debout, pieds à largeur de hanches, barre au-dessus du milieu du pied.",
+   "Plie à la hanche et saisis la barre.",
+   "Gaine et soulève en tendant hanches et genoux.",
+   "Redresse-toi complètement puis redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde la barre près du corps.",
+   "N'arrondis pas le bas du dos."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Soulevé de terre en déficit",
+  "description": "Soulevé de terre debout sur une petite plateforme, qui augmente l'amplitude et l'exigence au démarrage.",
+  "instructions": [
+   "Monte sur une plateforme de 2 à 5 cm, pieds sous la barre, dos neutre et épaules au-dessus.",
+   "Mets-toi en tension et pousse le sol tandis que la barre monte le long des jambes.",
+   "Tends hanches et genoux ensemble jusqu'à être debout.",
+   "Redescends la barre avec contrôle, dos neutre."
+  ],
+  "tips": [
+   "Commence avec un petit déficit et léger pour ajuster la technique.",
+   "N'arrondis pas le dos au décollage."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "Exercice abdominal avancé : corps rigide en appui sur les épaules seules, montant et descendant comme un levier.",
+  "instructions": [
+   "Allongé sur un banc, tiens le bord derrière la tête et lève le corps droit, appuyé sur les épaules et le haut du dos.",
+   "Descends le corps droit, sans plier les hanches, presque à l'horizontale.",
+   "Garde ventre et fessiers fermes sans toucher le banc.",
+   "Remonte le corps droit à la verticale ; sinon commence par la descente seule."
+  ],
+  "tips": [
+   "Commence genoux fléchis ou avec la seule phase excentrique.",
+   "Ne pas plier les hanches est la clé."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Rowing haltères buste penché",
+  "description": "Rowing un haltère dans chaque main, buste penché : dorsaux et haut du dos avec des haltères seulement.",
+  "instructions": [
+   "Debout, un haltère par main, fléchis les genoux et penche le buste presque à l'horizontale, dos droit.",
+   "Laisse les bras pendre, paumes face à face.",
+   "Tire les haltères vers les hanches, coudes en arrière, omoplates serrées.",
+   "Courte pause en haut puis redescends bras tendus avec contrôle."
+  ],
+  "tips": [
+   "Garde le buste fixe : s'il faut de l'élan, c'est trop lourd.",
+   "Nuque alignée, regard au sol.",
+   "Si les lombaires fatiguent avant le dos, allège ou prends un rowing en appui."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Curl haltères",
+  "description": "Flexion des coudes avec un haltère par main pour les biceps en amplitude libre.",
+  "instructions": [
+   "Debout, un haltère par main, bras tendus le long du corps, paumes vers l'avant.",
+   "Coudes contre le buste, monte les haltères sans balancer.",
+   "Contracte les biceps un instant sans lever les épaules.",
+   "Redescends avec contrôle jusqu'à tendre le coude."
+  ],
+  "tips": [
+   "Pas d'élan du dos : sinon allège.",
+   "Contrôle la descente, au moins deux fois plus longue que la montée."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Marche du fermier aux haltères",
+  "description": "Cet exercice complet consiste à marcher avec des haltères lourds : force de préhension, stabilité du tronc et endurance générale.",
+  "instructions": [
+   "Tiens-toi droit, un haltère par main, bras le long du corps.",
+   "Rétracte les omoplates et gaine, colonne neutre.",
+   "Marche lentement et avec application sur une distance ou une durée donnée, à petits pas contrôlés.",
+   "Poitrine haute, sans pencher d'un côté.",
+   "Garde une posture forte et stable."
+  ],
+  "tips": [
+   "Prends les haltères les plus lourds que tu maîtrises sans perdre la technique.",
+   "Respire profondément et en rythme pour garder le gainage.",
+   "Imagine un verre d'eau en équilibre sur la tête."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Élévation frontale aux haltères",
+  "description": "Élévation des haltères devant jusqu'à hauteur d'épaules pour le deltoïde antérieur.",
+  "instructions": [
+   "Debout, un haltère par main devant les cuisses, bras presque tendus.",
+   "Lève les haltères devant jusqu'à hauteur d'épaules, coudes légèrement fléchis.",
+   "Arrête à l'horizontale sans balancer le buste.",
+   "Redescends avec contrôle aux cuisses."
+  ],
+  "tips": [
+   "Pas d'élan du dos : sinon allège.",
+   "Le deltoïde antérieur travaille déjà beaucoup aux développés ; n'abuse pas du volume."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Oiseau aux haltères",
+  "description": "Un exercice d'isolation buste penché, haltères vers les côtés, pour l'arrière d'épaule et le haut du dos.",
+  "instructions": [
+   "Penche-toi à partir des hanches, haltères pendants.",
+   "Dos droit, genoux légèrement pliés.",
+   "Monte les haltères sur les côtés jusqu'à hauteur d'épaules.",
+   "Serre les omoplates en haut.",
+   "Redescends avec contrôle.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Prends léger pour que l'arrière d'épaule travaille, pas l'élan.",
+   "Rapproche les omoplates en haut.",
+   "Garde les coudes légèrement fléchis et fixes."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Soulevé de terre roumain aux haltères",
+  "description": "Un soulevé de terre roumain aux haltères qui accentue l'étirement des ischios par la charnière de hanche.",
+  "instructions": [
+   "Debout, haltères devant les cuisses, genoux légèrement fléchis.",
+   "Penche-toi à partir des hanches en reculant les fessiers.",
+   "Descends les haltères le long des jambes jusqu'à sentir l'étirement des ischios.",
+   "Dos droit, épaules en arrière.",
+   "Avance les hanches pour toi redresser.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Descends aussi loin que ta souplesse le permet, sans forcer.",
+   "Garde la même légère flexion des genoux.",
+   "Ne transforme pas le mouvement en squat."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Développé épaules aux haltères",
+  "description": "Un développé vertical aux haltères, assis ou debout, pour les faisceaux antérieur et latéral du deltoïde.",
+  "instructions": [
+   "Assis ou debout, tiens les haltères à hauteur d'épaules, paumes vers l'avant.",
+   "Pousse les deux haltères au-dessus de la tête jusqu'à tendre complètement les bras.",
+   "Gaine et évite de cambrer.",
+   "Redescends avec contrôle à hauteur d'épaules.",
+   "Ne laisse pas les haltères passer derrière la tête.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Monte en ligne droite sans les entrechoquer en haut.",
+   "Garde les poignets fermes, dans l'axe des avant-bras.",
+   "Si le bas du dos se cambre, allège."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Shrugs aux haltères",
+  "description": "Haussement des épaules, un haltère par main, pour le haut du dos et les trapèzes.",
+  "instructions": [
+   "Debout, un haltère par main, bras le long du corps, regard devant.",
+   "Monte les épaules vers les oreilles en ligne droite, sans rotation ni flexion des coudes.",
+   "Tiens un instant la contraction en haut.",
+   "Redescends avec contrôle jusqu'à étirer complètement le trapèze."
+  ],
+  "tips": [
+   "Pas de cercles avec les épaules : le trajet est vertical.",
+   "Si la prise lâche avant les trapèzes, utilise des sangles."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Mollet unilatéral avec haltère",
+  "description": "Élévation d'un mollet sur une marche avec un haltère, l'autre main en appui pour l'équilibre.",
+  "instructions": [
+   "Debout sur une marche sur la pointe d'un pied, autre jambe fléchie, haltère du même côté ; l'autre main au mur.",
+   "Laisse descendre le talon sous la marche jusqu'à étirer le mollet.",
+   "Monte le plus haut possible sans plier le genou.",
+   "Tiens un instant puis redescends avec contrôle ; fais tes répétitions et change de jambe."
+  ],
+  "tips": [
+   "Pousse sur la base du gros orteil, sans laisser la cheville partir vers l'extérieur.",
+   "C'est unilatéral : mêmes répétitions de chaque côté."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pompes en piqué mains surélevées",
+  "description": "Version débutant des pompes en piqué, mains sur une marche ou une chaise stable pour alléger.",
+  "instructions": [
+   "Mains au bord d'une marche, d'un banc ou d'une chaise solide, à largeur d'épaules, recule les pieds jusqu'à lever les hanches.",
+   "Fléchis les coudes et descends la tête vers le support, hanches hautes.",
+   "Arrête quand la tête est entre les mains, sans perdre la position.",
+   "Pousse avec les bras jusqu'à tendre les coudes."
+  ],
+  "tips": [
+   "Rapproche les pieds du support pour durcir.",
+   "Vérifie que le support ne bouge pas."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull à la poulie",
+  "description": "Un exercice au câble pour l'arrière des épaules et les rotateurs externes.",
+  "instructions": [
+   "Accroche une corde à une poulie haute.",
+   "Tire la corde vers le visage en écartant les extrémités.",
+   "Contracte l'arrière des épaules et les rotateurs externes.",
+   "Reviens avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde les coudes hauts, au niveau des épaules.",
+   "Serre les omoplates à chaque fin de répétition.",
+   "Travaille léger pour garder la technique."
+  ]
+ },
+ "front-squat": {
+  "name": "Squat avant",
+  "description": "Un squat barre devant sur les deltoïdes, qui accentue quadriceps et tronc.",
+  "instructions": [
+   "Place la barre sur les deltoïdes antérieurs, coudes hauts.",
+   "Descends buste droit jusqu'aux cuisses parallèles au sol.",
+   "Remonte.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde les coudes hauts pour stabiliser la barre.",
+   "Un buste plus vertical active davantage les quadriceps."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Pont fessier",
+  "description": "Un exercice d'activation des fessiers au poids du corps, allongé.",
+  "instructions": [
+   "Sur le dos, genoux fléchis, pieds à plat.",
+   "Lève les hanches en serrant les fessiers.",
+   "Tiens brièvement en haut, hanches complètement tendues.",
+   "Redescends les hanches avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Pousse sur les talons pour mieux activer les fessiers.",
+   "Évite de cambrer en tendant les hanches.",
+   "Garde les genoux dans l'axe des pieds."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet squat",
+  "description": "Un squat pour débutants avec un kettlebell à la poitrine, qui améliore posture et profondeur.",
+  "instructions": [
+   "Tiens un kettlebell à deux mains à hauteur de poitrine.",
+   "Descends en gardant la charge près de la poitrine.",
+   "Remonte.",
+   "Répète."
+  ],
+  "tips": [
+   "La position goblet favorise naturellement un buste droit.",
+   "Pousse les genoux vers l'extérieur en bas."
+  ]
+ },
+ "good-morning": {
+  "name": "Good morning",
+  "description": "Charnière de hanche barre sur le dos pour renforcer ischios, fessiers et lombaires.",
+  "instructions": [
+   "Debout, barre sur le haut du dos, pieds à largeur d'épaules, genoux légèrement fléchis.",
+   "Recule les hanches en penchant le buste, dos neutre.",
+   "Descends jusqu'à sentir les ischios, buste proche de l'horizontale.",
+   "Avance les hanches pour toi redresser."
+  ],
+  "tips": [
+   "Commence très léger : les lombaires travaillent fort.",
+   "Regarde devant et n'arrondis pas le dos."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack squat",
+  "description": "Un exercice guidé à la machine hack squat, surtout pour les quadriceps, avec un squat contrôlé sur le chariot.",
+  "instructions": [
+   "Charge la machine et place dos et épaules contre les coussins.",
+   "Pieds à largeur d'épaules sur la plateforme, légèrement ouverts.",
+   "Libère les sécurités et descends en fléchissant genoux et hanches.",
+   "Descends au moins jusqu'aux cuisses parallèles à la plateforme.",
+   "Pousse sur les talons pour tendre les jambes et revenir.",
+   "Réengage les sécurités en fin de série."
+  ],
+  "tips": [
+   "Garde le bas du dos contre le coussin.",
+   "Des pieds plus hauts déplacent l'effort vers les fessiers et les ischios.",
+   "Contrôle la descente ; pas d'élan en bas."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Curl marteau aux haltères",
+  "description": "Une variante du curl en prise neutre qui travaille le brachioradial.",
+  "instructions": [
+   "Debout, haltères le long du corps, paumes face à face.",
+   "Monte les haltères, paumes vers l'intérieur.",
+   "Contracte en haut et redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde les coudes contre le buste.",
+   "Ne balance pas le corps pour lancer les haltères.",
+   "Les poignets restent fermes et neutres."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Pompes en équilibre sur les mains",
+  "description": "Pompes à la verticale, pieds au mur, l'une des poussées au poids du corps les plus exigeantes.",
+  "instructions": [
+   "Dos au mur, mains au sol, monte les pieds jusqu'à la verticale, ventre gainé.",
+   "Fléchis les coudes et descends la tête avec contrôle.",
+   "Arrête quand la tête touche le sol ou un tapis.",
+   "Pousse jusqu'à tendre les coudes."
+  ],
+  "tips": [
+   "Maîtrise d'abord l'équilibre et les pompes en piqué.",
+   "Un tapis sous la tête met en confiance."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Relevé de genoux suspendu",
+  "description": "Un exercice de gainage suspendu pour le bas des abdos et les fléchisseurs de hanche, genoux pliés.",
+  "instructions": [
+   "Suspends-toi en pronation, bras complètement tendus.",
+   "Gaine et monte les genoux vers la poitrine.",
+   "Tiens brièvement en haut.",
+   "Redescends les jambes lentement.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Évite le balancement — pars du tronc.",
+   "Expire en montant les genoux.",
+   "Passe aux jambes tendues quand cela devient facile."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Relevé de jambes suspendu",
+  "description": "Montée des jambes tendues à l'horizontale, suspendu, pour abdos et fléchisseurs.",
+  "instructions": [
+   "Suspends-toi un peu plus large que les épaules, jambes jointes et tendues.",
+   "Monte les jambes tendues à l'horizontale en basculant légèrement le bassin.",
+   "Tiens un instant sans balancer.",
+   "Redescends avec contrôle sans laisser le corps osciller."
+  ],
+  "tips": [
+   "Si les jambes tendues sont trop dures, plie les genoux.",
+   "Pas de balancement : travaille avec les abdos."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Soulevé de terre à la trap bar",
+  "description": "Un soulevé de terre debout dans une trap bar, charge centrée pour un tirage plus droit et doux pour le dos.",
+  "instructions": [
+   "Place-toi dans la barre chargée, pieds à largeur d'épaules.",
+   "Fléchis hanches et genoux pour saisir les poignées.",
+   "Gaine et garde le dos plat.",
+   "Pousse sur les talons et tends hanches et genoux.",
+   "Verrouille en haut, épaules en arrière.",
+   "Repose la barre avec contrôle."
+  ],
+  "tips": [
+   "Poitrine haute et dos plat en ajustant la prise.",
+   "Repousse le sol au lieu de tirer avec le dos.",
+   "Redresse-toi sans partir en arrière."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Abduction de hanche à la machine",
+  "description": "Un exercice à la machine pour les muscles externes de la hanche.",
+  "instructions": [
+   "Assieds-toi, coussins contre l'extérieur des cuisses.",
+   "Écarte les jambes contre la résistance.",
+   "Tiens brièvement au point le plus ouvert.",
+   "Reviens avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde le dos contre le dossier.",
+   "Écarte sans élan, à rythme maîtrisé.",
+   "Freine le retour au lieu de lâcher."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Adduction de hanche à la machine",
+  "description": "Un exercice à la machine en serrant les jambes contre la résistance, qui isole les adducteurs.",
+  "instructions": [
+   "Assieds-toi, dos contre le dossier.",
+   "Place les jambes contre les coussins avec un étirement confortable.",
+   "Serre jusqu'à ce que les coussins se rejoignent.",
+   "Tiens brièvement la contraction fermée.",
+   "Laisse les jambes s'ouvrir avec contrôle.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Choisis une ouverture qui étire sans forcer l'aine.",
+   "Parcours toute l'amplitude à vitesse régulière.",
+   "Ne laisse pas les plaques claquer à l'ouverture."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust à la barre",
+  "description": "Un exercice polyarticulaire des fessiers avec une barre sur les hanches.",
+  "instructions": [
+   "Assis au sol, haut du dos contre un banc, barre sur les hanches.",
+   "Monte les hanches jusqu'à aligner buste et cuisses.",
+   "Serre les fessiers en haut.",
+   "Redescends les hanches avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Menton rentré et côtes basses.",
+   "Pousse sur les talons, pas les pointes.",
+   "Évite de cambrer en haut."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Presse à cuisses horizontale",
+  "description": "Une presse horizontale pour quadriceps, fessiers et ischios.",
+  "instructions": [
+   "Dos contre le dossier, pieds à largeur d'épaules sur la plateforme.",
+   "Pousse pour tendre les jambes sans verrouiller les genoux.",
+   "Fléchis les genoux avec contrôle vers la poitrine.",
+   "Répète."
+  ],
+  "tips": [
+   "Ne laisse pas les lombaires décoller.",
+   "Évite de verrouiller complètement les genoux."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Développé incliné à la barre",
+  "description": "Un développé à la barre sur banc incliné pour le haut des pectoraux.",
+  "instructions": [
+   "Allonge-toi sur un banc incliné à 30–45 degrés.",
+   "Prise un peu plus large que les épaules, sors la barre.",
+   "Descends au haut de la poitrine.",
+   "Repousse jusqu'à l'extension complète.",
+   "Répète."
+  ],
+  "tips": [
+   "Rétracte les omoplates et garde-les sur le banc.",
+   "Pas de rebond sur la poitrine.",
+   "Fais-toi assister avec de lourdes charges."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Élévations en Y sur banc incliné",
+  "description": "Élévations en Y à plat ventre sur banc incliné pour le trapèze inférieur et moyen.",
+  "instructions": [
+   "À plat ventre, poitrine appuyée, un haltère léger dans chaque main.",
+   "Lève les bras en Y vers l'avant et le haut, pouces vers le plafond.",
+   "Arrête dans l'axe du buste sans décoller la poitrine.",
+   "Redescends avec contrôle."
+  ],
+  "tips": [
+   "Prends léger : le trapèze inférieur est petit.",
+   "Nuque neutre, regard au sol."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Curl incliné aux haltères",
+  "description": "Un curl sur banc incliné pour étirer davantage le long biceps.",
+  "instructions": [
+   "Assis sur un banc à 45 degrés, haltères sur les côtés.",
+   "Bras pendants, paumes vers l'avant.",
+   "Monte les haltères vers les épaules.",
+   "Redescends jusqu'à l'extension complète.",
+   "Répète."
+  ],
+  "tips": [
+   "Épaules et dos sur le banc.",
+   "N'avance pas les épaules en montant.",
+   "Profite de l'étirement en bas avec une descente lente."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Développé incliné haltères",
+  "description": "Un développé incliné qui cible le haut des pectoraux.",
+  "instructions": [
+   "Banc à 30 degrés, haltères à hauteur d'épaules.",
+   "Pousse les haltères vers le haut et l'un vers l'autre, bras tendus.",
+   "Redescends à hauteur d'épaules avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Pieds au sol et omoplates serrées.",
+   "Ne cogne pas les haltères en haut.",
+   "Descends jusqu'à un léger étirement des pectoraux."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Pompes inclinées",
+  "description": "Une variante de pompes pour débutants, mains sur un banc ou une marche.",
+  "instructions": [
+   "Mains sur une surface surélevée, à largeur d'épaules.",
+   "Tends les jambes en position de planche.",
+   "Descends la poitrine vers le banc en pliant les coudes.",
+   "Repousse à la position de départ.",
+   "Répète."
+  ],
+  "tips": [
+   "Gaine pour que les hanches ne tombent pas.",
+   "Plus la surface est haute, plus c'est facile.",
+   "Vérifie que le banc ne bouge pas."
+  ]
+ },
+ "inverted-row": {
+  "name": "Rowing inversé",
+  "description": "Un tirage horizontal au poids du corps sous une barre fixe, poitrine vers la barre, corps rigide.",
+  "instructions": [
+   "Place une barre dans un rack à hauteur de taille environ.",
+   "Allonge-toi dessous, prise en pronation un peu plus large que les épaules.",
+   "Bras tendus, talons au sol, corps droit de la tête aux chevilles.",
+   "Tire la poitrine vers la barre en serrant les omoplates.",
+   "Redescends jusqu'à tendre les bras.",
+   "Répète."
+  ],
+  "tips": [
+   "Gaine — sans laisser tomber les hanches.",
+   "Plus dur : surélève les pieds ; plus facile : rapproche-les.",
+   "Courte pause en haut, poitrine à la barre."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Relevé de tibia avec kettlebell",
+  "description": "Un exercice des tibias assis sur un banc, kettlebell suspendu sur l'avant d'un pied. Relever les orteils contre la charge renforce l'avant de la jambe.",
+  "instructions": [
+   "Au bout d'un banc plat, une jambe tendue, talon au sol.",
+   "Accroche le kettlebell par l'anse sur l'avant du pied.",
+   "Relève les orteils vers le tibia, talon au sol.",
+   "Tiens brièvement en haut.",
+   "Redescends lentement jusqu'à pointer les orteils.",
+   "Fais tes répétitions puis change de jambe."
+  ],
+  "tips": [
+   "Bouge seulement la cheville ; genou et cuisse immobiles.",
+   "Commence léger et augmente peu à peu ; ces muscles fatiguent vite.",
+   "Descends lentement au lieu de lâcher."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Rowing à la poulie à genoux",
+  "description": "Un rowing à la poulie à genoux droit, sans élan des hanches, qui garde la tension dans le haut du dos.",
+  "instructions": [
+   "Poulie à hauteur de poitrine avec corde ou double poignée en D.",
+   "À genoux droit, assez loin pour que les poids ne touchent pas.",
+   "Tiens la poignée à deux mains, bras tendus devant la poitrine.",
+   "Amène la poignée au sternum, coudes en arrière, omoplates serrées.",
+   "Reviens avec contrôle en position étirée.",
+   "Répète le nombre conseillé."
+  ],
+  "tips": [
+   "Reste droit : ne pars pas en arrière pour finir.",
+   "À genoux, le tronc doit résister à la rotation à chaque tirage."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Pompes sur les genoux",
+  "description": "Une variante de pompes pour débutants, genoux au sol, qui soulage le haut du corps.",
+  "instructions": [
+   "Position de pompe, genoux au sol.",
+   "Mains au sol à largeur d'épaules.",
+   "Corps droit des genoux aux épaules.",
+   "Descends la poitrine en pliant les coudes.",
+   "Repousse pour revenir.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "N'écarte pas trop les coudes.",
+   "Serre fessiers et abdos tout du long.",
+   "Regarde le sol pour garder la nuque neutre."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Élévations latérales aux haltères",
+  "description": "Un exercice d'isolation du deltoïde latéral pour la largeur d'épaules.",
+  "instructions": [
+   "Debout, haltères le long du corps.",
+   "Monte les haltères sur les côtés jusqu'à l'horizontale.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Coudes légèrement fléchis.",
+   "Mène avec les coudes, pas les mains."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Tirage vertical poitrine",
+  "description": "Un exercice à la poulie pour le grand dorsal.",
+  "instructions": [
+   "Assieds-toi, cuisses calées sous les boudins.",
+   "Saisis la barre large en pronation.",
+   "Tire la barre au haut de la poitrine en contractant les dorsaux.",
+   "Ramène la barre lentement.",
+   "Répète."
+  ],
+  "tips": [
+   "Initie le tirage en abaissant les omoplates, pas en pliant les coudes.",
+   "Pas de balancement du buste.",
+   "Coudes vers le bas et l'arrière, pas vers l'extérieur."
+  ]
+ },
+ "leg-curl": {
+  "name": "Leg curl allongé",
+  "description": "Un exercice d'isolation des ischios à la machine leg curl.",
+  "instructions": [
+   "À plat ventre, chevilles sous le boudin.",
+   "Ramène les talons vers les fessiers.",
+   "Contracte en haut.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Garde les hanches sur le banc.",
+   "Ne cambre pas en montant les talons.",
+   "Prends une charge permettant toute l'amplitude."
+  ]
+ },
+ "leg-extension": {
+  "name": "Leg extension",
+  "description": "Un exercice d'isolation des quadriceps à la machine.",
+  "instructions": [
+   "Assis, chevilles derrière le boudin.",
+   "Tends les jambes.",
+   "Contracte les quadriceps en haut.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Aligne les genoux avec l'axe de la machine.",
+   "Monte sans lancer la charge.",
+   "Tiens les poignées pour garder le bassin stable."
+  ]
+ },
+ "leg-press": {
+  "name": "Presse à cuisses",
+  "description": "Un mouvement polyarticulaire à la machine pour quadriceps et fessiers.",
+  "instructions": [
+   "Assieds-toi, pieds à largeur d'épaules sur la plateforme.",
+   "Déverrouille et descends en pliant les genoux.",
+   "Pousse jusqu'à des jambes presque tendues.",
+   "Ne verrouille pas les genoux.",
+   "Répète."
+  ],
+  "tips": [
+   "Lombaires contre le dossier en permanence.",
+   "Descends tant que le bassin reste posé.",
+   "Genoux dans l'axe des orteils."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Mollets à la presse",
+  "description": "Élévation des mollets en poussant la plateforme avec la pointe des pieds.",
+  "instructions": [
+   "Jambes presque tendues, seul l'avant des pieds au bord de la plateforme.",
+   "Libère la sécurité et laisse descendre les talons.",
+   "Pousse avec la pointe des pieds jusqu'à l'extension.",
+   "Tiens un instant puis redescends avec contrôle."
+  ],
+  "tips": [
+   "Ne verrouille pas les genoux.",
+   "Amplitude complète et pause en bas : c'est là que se gagne le stimulus."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Relevé de jambes allongé",
+  "description": "Relevé des deux jambes sur le dos pour le bas des abdos et les fléchisseurs de hanche.",
+  "instructions": [
+   "Sur le dos, jambes jointes et tendues, mains sous les fessiers ou sur les côtés.",
+   "Plaque le bas du dos en contractant le ventre.",
+   "Monte les jambes à la verticale sans élan.",
+   "Descends lentement sans toucher le sol ni cambrer."
+  ],
+  "tips": [
+   "Si les lombaires décollent, plie les genoux.",
+   "Contrôle la descente : c'est elle qui sollicite le plus."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Extension lombaire à la machine",
+  "description": "Un exercice d'isolation assis pour les lombaires : hanches et jambes fixes, le buste pousse en arrière contre un boudin et étend la colonne contre les poids.",
+  "instructions": [
+   "Assieds-toi à la machine, pieds sur la plateforme, et règle le boudin sur le haut du dos, juste sous les omoplates.",
+   "Tiens les poignées et laisse le buste venir un peu en avant : position de départ.",
+   "Pousse contre le boudin en étendant la colonne jusqu'à contracter complètement les lombaires.",
+   "Courte pause en extension puis reviens en résistant.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Place le boudin sous les omoplates : plus haut il gêne la nuque, plus bas on perd de l'amplitude.",
+   "Étends depuis les lombaires sans jeter la tête et les épaules, lentement dans les deux sens.",
+   "Arrête en position neutre sans forcer au-delà, et commence léger : les lombaires préfèrent des répétitions contrôlées."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Curl biceps à la machine",
+  "description": "Un curl biceps à la machine pour isoler les bras.",
+  "instructions": [
+   "Assieds-toi et règle le pupitre à la longueur des bras.",
+   "Saisis les poignées en supination.",
+   "Amène les poignées vers les épaules.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Coudes posés sur le coussin.",
+   "Ne hausse pas les épaules en montant.",
+   "Descends presque bras tendus sans perdre la tension."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Mollets à la machine",
+  "description": "Un exercice d'isolation debout à la machine pour les mollets, avec toute l'amplitude de la cheville.",
+  "instructions": [
+   "Place la base des orteils sur la plateforme.",
+   "Cale fermement les épaulières.",
+   "Descends les talons sous la plateforme pour un étirement complet.",
+   "Pousse sur la base des orteils pour monter.",
+   "Contracte les mollets en haut.",
+   "Redescends avec contrôle et répète."
+  ],
+  "tips": [
+   "Pas de rebond en bas.",
+   "Genoux tendus sans les verrouiller.",
+   "Monte à la verticale sans basculer les chevilles."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Écartés à la machine",
+  "description": "Un exercice d'isolation des pectoraux à la machine qui rapproche les bras en arc devant le corps.",
+  "instructions": [
+   "Règle le siège pour que les bras de la machine soient à hauteur de poitrine.",
+   "Tiens les bras coudes légèrement fléchis.",
+   "Rapproche-les devant la poitrine en un arc doux.",
+   "Contracte les pectoraux au point maximal.",
+   "Reviens sans laisser retomber la charge.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Garde la même légère flexion des coudes.",
+   "Contracte la poitrine plutôt que de pousser avec les bras.",
+   "Contrôle le retour sans laisser tomber les poids."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Oiseau à la machine",
+  "description": "Un exercice assis à la machine pour l'arrière des épaules, ou pec deck inversé : face au coussin, tu écartes les poignées vers l'extérieur et l'arrière. Le coussin immobilise le buste et le travail reste à l'arrière des épaules et entre les omoplates.",
+  "instructions": [
+   "Règle le siège pour des poignées à hauteur d'épaules, poitrine contre le coussin.",
+   "Bras tendus devant, coudes légèrement fléchis.",
+   "Épaules basses, loin des oreilles, tronc gainé.",
+   "Écarte en grand arc en menant avec les coudes jusqu'à l'alignement des épaules.",
+   "Serre les omoplates sans décoller la poitrine.",
+   "Ramène lentement les poignées vers l'avant et répète le nombre de répétitions prévu."
+  ],
+  "tips": [
+   "Mène avec les coudes pour travailler l'arrière d'épaule et non les biceps.",
+   "Poitrine sur le coussin, nuque relâchée ; sinon la charge passe au trapèze supérieur.",
+   "Prends une charge contrôlable au retour ; léger et lent vaut mieux que lourd en balançant."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Crunch assis à la machine",
+  "description": "Un exercice d'isolation des abdos sur machine assise qui enroule la colonne contre résistance.",
+  "instructions": [
+   "Assieds-toi et saisis les poignées.",
+   "Place le coussin contre le buste.",
+   "Contracte le ventre pour fléchir le buste vers l'avant et le bas.",
+   "Contracte en fin de course.",
+   "Reviens avec contrôle.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Pars des abdos, pas des bras.",
+   "Expire en enroulant.",
+   "Pas d'élan du corps."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Développé épaules à la machine",
+  "description": "Un développé au-dessus de la tête à la machine pour les épaules.",
+  "instructions": [
+   "Assieds-toi, dos contre le dossier.",
+   "Saisis les poignées à hauteur d'épaules.",
+   "Pousse au-dessus de la tête jusqu'à tendre les bras.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Ne cambre pas en poussant.",
+   "Ne verrouille pas brusquement les coudes.",
+   "Poignets fermes, dans l'axe des avant-bras."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Tractions négatives",
+  "description": "La descente lente des tractions, pour acquérir la force des tractions complètes.",
+  "instructions": [
+   "Monte sur un banc ou saute pour passer le menton au-dessus, prise un peu plus large que les épaules.",
+   "Sans appui, descends très lentement, en trois à cinq secondes.",
+   "Contrôle jusqu'à tendre les bras.",
+   "Remonte avec le banc ou un saut et répète."
+  ],
+  "tips": [
+   "Épaules loin des oreilles pendant la descente.",
+   "Après cinq descentes lentes maîtrisées, essaie de monter sans aide."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic curl",
+  "description": "Une flexion de genoux en descendant le buste depuis la position à genoux, travail excentrique des ischios.",
+  "instructions": [
+   "À genoux sur un tapis, chevilles bloquées sous un support.",
+   "Buste droit, hanches tendues.",
+   "Descends lentement vers l'avant en résistant avec les ischios.",
+   "Amortis avec les mains juste avant le sol.",
+   "Repousse avec les mains et remonte.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Descends le plus lentement possible : c'est l'objectif.",
+   "Hanches tendues ; ne casse pas à la taille.",
+   "Freine avec les mains et aide un peu en gagnant en force."
+  ]
+ },
+ "ohp": {
+  "name": "Développé militaire à la barre",
+  "description": "Un mouvement polyarticulaire au-dessus de la tête pour épaules et triceps.",
+  "instructions": [
+   "Debout, pieds à largeur d'épaules, barre aux clavicules.",
+   "Gaine et pousse la barre au-dessus de la tête.",
+   "Verrouille les coudes, barre au-dessus du milieu des pieds.",
+   "Redescends aux clavicules.",
+   "Répète."
+  ],
+  "tips": [
+   "Ne pars pas trop en arrière.",
+   "Serre les fessiers pour la stabilité."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Rowing assis à la poulie un bras",
+  "description": "Un rowing assis unilatéral à la poulie pour dorsaux et haut du dos, buste de face pendant que l'omoplate avance et recule.",
+  "instructions": [
+   "Assis, bras actif tendu tenant la poignée.",
+   "Pieds calés, buste droit, gainé sans partir en arrière.",
+   "Amène la poignée aux côtes basses en rétractant l'omoplate.",
+   "Courte pause sans tourner le buste ni lever l'épaule.",
+   "Tends le bras, finis la série et change."
+  ],
+  "tips": [
+   "Garde les deux épaules de face.",
+   "Coude en arrière près du corps, au lieu de seulement plier le bras.",
+   "Laisse l'omoplate avancer au départ sans arrondir les lombaires."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Extension triceps au-dessus de la tête avec haltère",
+  "description": "Un exercice d'isolation des triceps accentuant le long chef.",
+  "instructions": [
+   "Debout ou assis, un haltère tenu à deux mains au-dessus de la tête.",
+   "Descends-le derrière la tête en pliant les coudes.",
+   "Tends les bras pour revenir.",
+   "Coudes près de la tête.",
+   "Répète."
+  ],
+  "tips": [
+   "Seuls les avant-bras bougent.",
+   "Ne cambre pas quand l'haltère descend.",
+   "Tiens l'haltère sous le disque supérieur avec les deux paumes."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dips aux barres parallèles",
+  "description": "Exercice au poids du corps aux barres parallèles pour pectoraux, triceps et épaules.",
+  "instructions": [
+   "En appui bras tendus, corps suspendu.",
+   "Penche un peu le buste et fléchis les coudes avec contrôle.",
+   "Arrête épaules à hauteur des coudes, sans t’enfoncer.",
+   "Pousse jusqu'à tendre les bras."
+  ],
+  "tips": [
+   "Sans séries propres, utilise la machine assistée ou des élastiques.",
+   "Ne descends pas au-delà de ce que l'épaule tolère."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Développé couché avec pause",
+  "description": "Développé couché avec une pause d'une à deux secondes sur la poitrine, sans rebond, pour la force au départ.",
+  "instructions": [
+   "Pieds ancrés, omoplates serrées, barre au-dessus de la poitrine, prise un peu large.",
+   "Descends avec contrôle jusqu'à la poitrine.",
+   "Garde la barre immobile une à deux secondes sans relâcher.",
+   "Pousse jusqu'à tendre les coudes."
+  ],
+  "tips": [
+   "Prends 10 à 15 % de moins qu'au développé normal.",
+   "Fais surveiller ou utilise les sécurités du rack."
+  ]
+ },
+ "pause-squat": {
+  "name": "Squat avec pause",
+  "description": "Squat avec une pause au point bas, pour le contrôle et la force sans rebond.",
+  "instructions": [
+   "Barre sur le haut du dos, pieds à largeur d'épaules, pointes ouvertes.",
+   "Descends avec contrôle, dos neutre, genoux dans l'axe des pieds.",
+   "Tiens le point bas une à trois secondes sans relâcher.",
+   "Pousse dans le sol pour toi redresser."
+  ],
+  "tips": [
+   "Allège par rapport à ton squat habituel.",
+   "Pas de rebond après la pause : pousse en continu."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Une machine d'isolation à poignées mobiles qui travaille les pectoraux par adduction horizontale.",
+  "instructions": [
+   "Au pec deck, bras ouverts, coudes légèrement fléchis.",
+   "Règle le siège pour des poignées au milieu de la poitrine.",
+   "Rapproche les poignées devant la poitrine en serrant.",
+   "Tiens brièvement la contraction.",
+   "Reviens avec contrôle à la position de départ.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Ne laisse pas les bras partir trop en arrière.",
+   "Dos et épaules contre le dossier.",
+   "Expire en rapprochant, inspire en ouvrant."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Rowing Pendlay",
+  "description": "Rowing barre explosif partant du sol à chaque répétition, buste parallèle au sol.",
+  "instructions": [
+   "Pieds sous la barre, buste presque horizontal, prise un peu plus large que les épaules, dos neutre.",
+   "Tire fort jusqu'au bas de la poitrine, buste immobile.",
+   "Repose la barre au sol avec contrôle et marque un arrêt.",
+   "Replace le dos et repars du sol."
+  ],
+  "tips": [
+   "Le buste ne bouge pas : sinon la charge est trop lourde.",
+   "Chaque répétition part barre immobile au sol."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pompes en piqué",
+  "description": "Pompe en V inversé, qui transfère la charge des pectoraux aux épaules sans matériel.",
+  "instructions": [
+   "Mains au sol à largeur d'épaules, hanches hautes en V inversé, jambes presque tendues.",
+   "Fléchis les coudes et descends la tête entre les mains.",
+   "Arrête près du sol sans poser la tête.",
+   "Pousse jusqu'à tendre les coudes."
+  ],
+  "tips": [
+   "Plus les pieds sont près des mains, plus c'est dur.",
+   "Garde les hanches hautes."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol squat",
+  "description": "Squat profond sur une jambe, l'autre tendue devant, au poids du corps.",
+  "instructions": [
+   "Sur une jambe, l'autre levée devant, bras tendus pour l'équilibre.",
+   "Fléchis le genou d'appui avec contrôle, talon au sol.",
+   "Descends aussi bas que la technique le permet, jambe libre tendue.",
+   "Pousse dans le pied pour remonter ; répète et change."
+  ],
+  "tips": [
+   "Commence en te tenant à un support ou en t’asseyant sur une box.",
+   "Genou dans l'axe du pied."
+  ]
+ },
+ "plank": {
+  "name": "Planche",
+  "description": "Exercice isométrique de gainage : corps droit sur les avant-bras et la pointe des pieds.",
+  "instructions": [
+   "Avant-bras au sol, coudes sous les épaules, jambes tendues.",
+   "Lève le corps en ligne droite de la tête aux talons.",
+   "Gaine abdos et fessiers, lombaires neutres, sans laisser tomber les hanches.",
+   "Respire normalement et tiens le temps indiqué."
+  ],
+  "tips": [
+   "Commence par des séries courtes et propres avant d'allonger.",
+   "Si les lombaires s'affaissent, pose les genoux ou réduis le temps."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip thrust à la machine à disques",
+  "description": "Un hip thrust sur machine à disques : dossier et plateforme fixent la position, sans banc à installer.",
+  "instructions": [
+   "Charge les deux côtés à l'identique, haut du dos contre le dossier, pieds à plat.",
+   "Descends le coussin ou la barre sur les hanches, dans le pli de l'aine et non sur le ventre.",
+   "Place les pieds pour des tibias verticaux hanches hautes et tiens les poignées.",
+   "Monte les hanches en serrant les fessiers jusqu'à l'alignement, tiens un instant.",
+   "Redescends avec contrôle avant la fin de course et répète."
+  ],
+  "tips": [
+   "Place le coussin dans le pli de l'aine. Sur le ventre, c'est le seul vrai inconfort de la machine : déplace le coussin au lieu d'ajouter de la mousse.",
+   "Finis avec les hanches, pas les lombaires. Si les côtes s'ouvrent en haut, l'extension de hanche est finie et tu cambres : la machine n'entraîne plus les fessiers.",
+   "C'est le hip thrust quand banc et barre sont pris : dossier et plateforme font partie du bâti, rien à mal monter."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Curl au pupitre",
+  "description": "Une variante du curl au pupitre pour isoler les biceps.",
+  "instructions": [
+   "Bras posés sur le coussin du pupitre.",
+   "Tiens une barre EZ en supination.",
+   "Monte la barre vers les épaules.",
+   "Descends presque bras tendus avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Pas de rebond en bas.",
+   "Poignets neutres sur la barre EZ.",
+   "Monte sans élan des épaules ni du dos."
+  ]
+ },
+ "pull-up": {
+  "name": "Tractions",
+  "description": "Un exercice polyarticulaire au poids du corps pour dorsaux et biceps.",
+  "instructions": [
+   "Suspends-toi en pronation, un peu plus large que les épaules.",
+   "Monte le menton au-dessus de la barre.",
+   "Redescends jusqu'à la suspension complète.",
+   "Répète."
+  ],
+  "tips": [
+   "Évite le balancement et l'élan.",
+   "Active les dorsaux en tirant les coudes vers le bas."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Développé épaules avec l'aide des jambes, pour pousser plus lourd qu'au développé strict.",
+  "instructions": [
+   "Barre en haut de la poitrine, coudes un peu avancés, pieds à largeur de hanches.",
+   "Fléchis légèrement les genoux buste droit puis tends avec force.",
+   "Profite de l'élan pour pousser jusqu'aux bras tendus.",
+   "Redescends à la poitrine en amortissant avec les jambes."
+  ],
+  "tips": [
+   "L'élan vient des jambes, pas du dos qui part en arrière.",
+   "Finis barre au-dessus de la tête, corps stable."
+  ]
+ },
+ "push-up": {
+  "name": "Pompes",
+  "description": "Un exercice fondamental au poids du corps pour pectoraux, épaules et triceps.",
+  "instructions": [
+   "Planche haute, mains à largeur d'épaules.",
+   "Descends jusqu'à frôler le sol.",
+   "Repousse jusqu'au départ.",
+   "Corps en ligne droite en permanence.",
+   "Répète."
+  ],
+  "tips": [
+   "Serre abdos et fessiers pour que les hanches ne tombent pas.",
+   "Coudes près du buste, pas trop écartés.",
+   "Nuque neutre, regard au sol."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack pull",
+  "description": "Soulevé partiel depuis les genoux, qui surcharge le haut du dos et l'extension de hanche.",
+  "instructions": [
+   "Barre sur les sécurités à hauteur des genoux ou juste en dessous, pieds à largeur de hanches.",
+   "Saisis la barre, gaine dos et ventre et pousse dans le sol.",
+   "Tends hanches et genoux jusqu'à être droit, épaules en arrière.",
+   "Repose la barre avec contrôle."
+  ],
+  "tips": [
+   "Règle la hauteur pour garder le dos neutre.",
+   "Ne cambre pas à la fin."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Fente arrière aux haltères",
+  "description": "Une variante de fente avec pas en arrière, plus stable pour le genou.",
+  "instructions": [
+   "Debout, haltères le long du corps.",
+   "Recule une jambe et descends le genou vers le sol.",
+   "Descends jusqu'à la cuisse avant parallèle.",
+   "Pousse sur le talon avant pour toi relever.",
+   "Répète des deux côtés."
+  ],
+  "tips": [
+   "Recule assez pour que le genou avant ne dépasse pas le pied.",
+   "Buste droit, haltères près du corps.",
+   "Mêmes répétitions de chaque côté."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Nordic curl inversé",
+  "description": "Un exercice des quadriceps au poids du corps à genoux, buste incliné en arrière avec contrôle, hanches tendues.",
+  "instructions": [
+   "À genoux sur un coussin, genoux à largeur de hanches, tibias au sol, buste droit.",
+   "Hanches tendues, tronc gainé.",
+   "Incline lentement le buste en arrière, corps aligné.",
+   "Descends autant que les quadriceps le contrôlent.",
+   "Reviens au départ.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Hanches tendues en permanence.",
+   "Descends seulement tant que tu contrôles.",
+   "Un coussin sous les genoux pour le confort."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Soulevé de terre roumain",
+  "description": "Un mouvement de charnière de hanche qui cible ischios et fessiers.",
+  "instructions": [
+   "Debout, barre à hauteur de hanches en pronation.",
+   "Recule les hanches en penchant le buste, genoux presque fixes.",
+   "Descends la barre le long des jambes jusqu'à l'étirement des ischios.",
+   "Avance les hanches pour toi redresser.",
+   "Répète."
+  ],
+  "tips": [
+   "N'arrondis pas le bas du dos.",
+   "Descends tant que la posture tient.",
+   "Serre les dorsaux pour garder la barre près."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Rameur",
+  "description": "Un exercice cardio complet au rameur : chaque coup pousse avec les jambes, incline le buste et tire la poignée aux côtes, en cycle continu.",
+  "instructions": [
+   "Assieds-toi, sangle les pieds et saisis la poignée en pronation.",
+   "Glisse en prise d'eau : tibias verticaux, buste un peu en avant, bras tendus.",
+   "Pousse d'abord avec les jambes jusqu'à des genoux presque tendus.",
+   "Incline le buste au-delà de la verticale puis tire aux côtes basses, coudes le long du corps.",
+   "Inverse l'ordre au retour — d'abord les bras vers l'avant, puis le buste et enfin les genoux — et glisse jusqu'à la prise d'eau pour le coup suivant.",
+   "Continue selon le temps, la distance ou le nombre de coups voulu."
+  ],
+  "tips": [
+   "Respecte l'ordre : jambes, buste, bras à la traction ; bras, buste, jambes au retour. Plier les bras trop tôt gâche la phase la plus puissante.",
+   "Dos plat et gainage : arrondir les lombaires en prise d'eau transforme le rameur en mal de dos.",
+   "Tire droit et horizontal vers les côtes, et reviens environ deux fois plus lentement."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Développé militaire assis à la barre",
+  "description": "Développé assis à la barre avec dossier pour concentrer le travail sur les deltoïdes.",
+  "instructions": [
+   "Sur un banc à dossier vertical, prise un peu large, barre sur le haut de la poitrine.",
+   "Pousse droit jusqu'à tendre les coudes.",
+   "Barre au-dessus de la tête, côtes rentrées.",
+   "Redescends à la clavicule."
+  ],
+  "tips": [
+   "Serre fessiers et abdos pour ne pas cambrer.",
+   "Recule la tête pour laisser passer la barre sans forcer la nuque."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Rowing assis à la poulie",
+  "description": "Un exercice du dos au rowing poulie, assis, en tirant la poignée vers le buste.",
+  "instructions": [
+   "Assieds-toi et pose les pieds sur les appuis.",
+   "Tiens la poignée, buste droit légèrement incliné vers l'avant.",
+   "Tire les coudes en arrière vers le bas du ventre.",
+   "Serre les omoplates en fin de tirage.",
+   "Tends les bras avec contrôle.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Buste droit, balancement minimal.",
+   "Coudes droit en arrière, pas sur les côtés.",
+   "Serre les omoplates en fin de tirage."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Mollets assis à la machine",
+  "description": "Une élévation des mollets assis à la machine pour le soléaire.",
+  "instructions": [
+   "Assieds-toi, coussins sur les cuisses.",
+   "Descends les talons au maximum.",
+   "Monte sur la pointe des pieds.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Le genou fléchi détend le gastrocnémien : le soléaire travaille davantage.",
+   "Utilise toute l'amplitude."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Mollets assis aux haltères",
+  "description": "Mollets assis avec haltères sur les cuisses, pour le soléaire genou fléchi.",
+  "instructions": [
+   "Pointes des pieds sur une marche, un haltère sur chaque cuisse près des genoux.",
+   "Laisse descendre les talons pour étirer.",
+   "Monte au maximum en poussant sur l'avant du pied.",
+   "Tiens un instant en haut et redescends avec contrôle."
+  ],
+  "tips": [
+   "Tiens les haltères pour qu'ils ne glissent pas.",
+   "Le genou fléchi cible le soléaire."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Élévations latérales assis aux haltères",
+  "description": "Élévations assis sur les côtés, pour le deltoïde latéral sans élan des jambes.",
+  "instructions": [
+   "Assis, un haltère de chaque côté.",
+   "Dos droit, tronc gainé.",
+   "Monte les deux haltères à hauteur d'épaules.",
+   "Coudes légèrement fléchis.",
+   "Redescends avec contrôle.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Prends léger pour rester strict.",
+   "Mène avec les coudes.",
+   "Monte à hauteur d'épaules et redescends avec contrôle."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Leg curl assis",
+  "description": "Isolation des ischios assis à la machine, tension constante et moins de fléchisseurs de hanche qu'allongé.",
+  "instructions": [
+   "Règle dossier et boudin pour aligner les genoux sur l'axe.",
+   "Assis droit, chevilles sur le boudin, mains aux poignées.",
+   "Fléchis les jambes sous le siège aussi loin que possible.",
+   "Pause à la contraction maximale puis retour lent.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Garde le dos fermement appuyé contre le dossier pendant tout le mouvement.",
+   "Ramène un peu les pieds vers les tibias à la contraction pour mieux activer les ischios.",
+   "Contrôle le retour — ne laisse pas le poids ramener vite les jambes."
+  ]
+ },
+ "shrug": {
+  "name": "Shrugs à la barre",
+  "description": "Un exercice d'isolation du trapèze supérieur.",
+  "instructions": [
+   "Debout, barre bras tendus en pronation.",
+   "Hausse les épaules droit vers les oreilles.",
+   "Tiens brièvement en haut.",
+   "Redescends avec contrôle.",
+   "Répète."
+  ],
+  "tips": [
+   "Verticalement, sans cercles.",
+   "Les bras ne travaillent pas ; coudes tendus.",
+   "Pas d'élan des jambes."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Abduction de hanche couché sur le côté",
+  "description": "Un exercice d'isolation au poids du corps pour le moyen fessier et les abducteurs.",
+  "instructions": [
+   "Allongé sur le côté, jambes superposées.",
+   "Jambe du bas légèrement fléchie.",
+   "Lève la jambe du haut.",
+   "Redescends avec contrôle.",
+   "Répète des deux côtés."
+  ],
+  "tips": [
+   "Hanches superposées en permanence.",
+   "Ne bascule pas le bassin."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Adduction de hanche couché sur le côté",
+  "description": "Une adduction allongé sur le côté en levant la jambe du bas, au poids du corps.",
+  "instructions": [
+   "Sur le côté, jambe du bas tendue.",
+   "Fléchis la jambe du haut, pied à plat devant la cuisse du bas.",
+   "Soutiens la tête avec le bras du bas.",
+   "Lève la jambe du bas.",
+   "Redescends avec contrôle.",
+   "Fais un côté puis change."
+  ],
+  "tips": [
+   "Seule la jambe bouge.",
+   "Monte sans élan, descends lentement.",
+   "Aligne épaules, hanches et pieds avant de commencer."
+  ]
+ },
+ "side-plank": {
+  "name": "Gainage latéral",
+  "description": "Un gainage latéral pour les obliques.",
+  "instructions": [
+   "Sur le côté, avant-bras au sol, coude sous l'épaule.",
+   "Décolle les hanches en ligne droite.",
+   "Tiens, tronc serré.",
+   "Respire régulièrement.",
+   "Répète des deux côtés."
+  ],
+  "tips": [
+   "Ne laisse pas les hanches s'affaisser.",
+   "Épaules et hanches dans le même plan.",
+   "Repousse le sol avec l'avant-bras pour ne pas pendre sur l'épaule."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Rowing haltère à un bras",
+  "description": "Un exercice unilatéral du dos à l'haltère pour un développement équilibré.",
+  "instructions": [
+   "Un genou et une main sur un banc.",
+   "Un haltère dans l'autre main, bras tendu.",
+   "Tire vers la hanche en serrant l'omoplate.",
+   "Redescends avec contrôle.",
+   "Répète des deux côtés."
+  ],
+  "tips": [
+   "Ne tourne pas le buste ; bassin stable.",
+   "Ne monte pas l'épaule vers l'oreille au départ.",
+   "Mêmes répétitions de chaque bras."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Élévation latérale un bras à la machine à disques",
+  "description": "L'élévation latérale sur machine à disques, un bras à la fois, chaque côté soulevant sa propre charge.",
+  "instructions": [
+   "Règle le siège pour aligner l'axe sur l'épaule et charge seulement le côté travaillé.",
+   "Dos au dossier, face externe du bras contre le coussin.",
+   "Tiens la poignée libre ou pose la main sur la cuisse, buste aligné.",
+   "Pousse vers l'extérieur et le haut jusqu'à l'épaule, redescends avec contrôle.",
+   "Fais toutes les répétitions puis l'autre côté."
+  ],
+  "tips": [
+   "Égalise sur le bras faible, pas le fort : c'est lui qui doit fixer les répétitions.",
+   "Ne penche pas le buste vers le côté travaillé ; sinon l'élévation devient une flexion latérale.",
+   "Commence par le bras faible et accorde le même repos aux deux."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Pont fessier unilatéral",
+  "description": "Pont fessier sur une jambe, plus exigeant sans matériel.",
+  "instructions": [
+   "Sur le dos, un genou fléchi pied au sol, l'autre jambe tendue en l'air.",
+   "Pousse sur le talon et monte les hanches en ligne avec épaule et genou.",
+   "Serre le fessier un instant sans cambrer.",
+   "Redescends sans poser les hanches ; fais tes répétitions et change."
+  ],
+  "tips": [
+   "Bassin à l'horizontale.",
+   "Commence à deux jambes si c'est difficile."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Barre au front",
+  "description": "Une extension triceps allongé à la barre, en amplitude complète.",
+  "instructions": [
+   "Sur un banc plat, barre au-dessus de la poitrine, prise serrée.",
+   "Descends la barre vers le front en pliant les coudes.",
+   "Tends les bras pour revenir.",
+   "Répète."
+  ],
+  "tips": [
+   "Bras verticaux tout du long.",
+   "Descends lentement pour protéger les coudes."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Développé couché à la Smith machine",
+  "description": "Un développé couché à la Smith machine, trajectoire guidée demandant moins de stabilisation.",
+  "instructions": [
+   "Allonge-toi sur un banc plat sous la machine.",
+   "Prise un peu large, déverrouille.",
+   "Descends au milieu de la poitrine.",
+   "Courte pause sans rebond.",
+   "Pousse jusqu'à tendre les bras.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Place le banc pour que la barre arrive au milieu de la poitrine.",
+   "Pieds au sol toute la série.",
+   "Apprends la rotation de poignet pour reposer la barre avant de charger."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Mollets à la Smith machine",
+  "description": "Mollets debout avec la barre guidée sur les épaules.",
+  "instructions": [
+   "Sous la barre, pointes des pieds sur une marche, barre sur le haut du dos.",
+   "Libère la barre et laisse descendre les talons.",
+   "Monte jambes tendues sans verrouiller.",
+   "Tiens un instant puis descends avant de reposer la barre."
+  ],
+  "tips": [
+   "Le guidage te stabilise : profite-en pour charger.",
+   "Buste droit, regard devant."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Développé incliné à la Smith machine",
+  "description": "Un développé incliné guidé qui cible le haut des pectoraux et l'avant d'épaule.",
+  "instructions": [
+   "Banc incliné à 30–45 degrés sous la machine.",
+   "Prise un peu plus large que les épaules.",
+   "Déverrouille et descends au haut de la poitrine.",
+   "Courte pause en bas.",
+   "Pousse jusqu'à tendre les bras.",
+   "Répète le nombre de répétitions voulu."
+  ],
+  "tips": [
+   "Règle le banc pour que la barre arrive au haut de la poitrine.",
+   "Sans rebond sur la poitrine.",
+   "Fessiers sur le banc, pieds bien posés."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Squat à la Smith machine",
+  "description": "Squat à la Smith machine : trajectoire fixe, moins d'équilibre, jambes et fessiers travaillent, utile sans rack libre.",
+  "instructions": [
+   "Barre à hauteur d'épaules, place-toi dessous, pieds un peu en avant.",
+   "Tourne les poignets pour libérer, buste droit et gainé.",
+   "Descends jusqu'aux cuisses au moins parallèles, genoux dans l'axe.",
+   "Pousse dans tout le pied pour remonter.",
+   "En fin de série, tourne les poignets pour reposer."
+  ],
+  "tips": [
+   "Des pieds un peu avancés permettent de descendre sans lever les talons.",
+   "Règle les sécurités juste sous ton point bas."
+  ]
+ },
+ "squat": {
+  "name": "Squat barre nuque",
+  "description": "Un mouvement polyarticulaire des jambes pour quadriceps, fessiers et ischios.",
+  "instructions": [
+   "Barre sur le haut des trapèzes.",
+   "Sors la barre et recule, pieds à largeur d'épaules.",
+   "Gaine et descends jusqu'aux cuisses parallèles.",
+   "Pousse sur les talons pour remonter.",
+   "Répète."
+  ],
+  "tips": [
+   "Poitrine haute tout du long.",
+   "Genoux vers l'extérieur dans l'axe des orteils."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Roue abdominale debout",
+  "description": "Roue abdominale depuis la position debout, jambes tendues, grande amplitude.",
+  "instructions": [
+   "Debout jambes tendues, penche-toi et pose la roue à deux mains.",
+   "Roule bras tendus, gainé, presque à l'horizontale.",
+   "Hanches alignées, sans affaisser les lombaires.",
+   "Tire avec le ventre pour revenir."
+  ],
+  "tips": [
+   "Commence à genoux jusqu'à maîtriser.",
+   "Arrête avant que les lombaires cèdent."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Mollets debout",
+  "description": "Élévation des mollets debout pour le gastrocnémien en amplitude complète.",
+  "instructions": [
+   "Au bord d'une plateforme ou d'une machine.",
+   "Descends les talons sous la plateforme.",
+   "Monte sur la pointe des pieds.",
+   "Redescends lentement.",
+   "Répète."
+  ],
+  "tips": [
+   "Pause en haut pour maximiser la contraction.",
+   "Descendre complètement le talon augmente l'amplitude."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Abduction de hanche debout",
+  "description": "Une élévation latérale de jambe debout sur l'autre, pour le moyen fessier de la jambe levée et les stabilisateurs du bassin côté appui.",
+  "instructions": [
+   "Debout droit, mains sur les hanches, pieds joints.",
+   "Transfère le poids sur une jambe, genou légèrement fléchi.",
+   "Lève l'autre jambe tendue sur le côté, pieds vers l'avant, buste droit.",
+   "Monte seulement sans incliner le buste à l'opposé.",
+   "Redescends lentement la jambe jusqu'à côté du pied d'appui.",
+   "Fais tes répétitions puis l'autre jambe."
+  ],
+  "tips": [
+   "Garde le bassin droit et le buste immobile ; te pencher à l'opposé de la jambe levée soulage la hanche.",
+   "Contrôle aussi la descente.",
+   "Tiens-toi au mur au besoin ; ajoute un élastique aux cuisses quand c'est facile."
+  ]
+ },
+ "step-ups": {
+  "name": "Montée sur box",
+  "description": "Une montée sur box à une jambe qui entraîne quadriceps et fessiers.",
+  "instructions": [
+   "Face à une box ou un banc solide.",
+   "Pose un pied entier dessus.",
+   "Pousse sur ce talon pour monter.",
+   "Ramène le pied arrière sur la box.",
+   "Redescends-le avec contrôle, charge sur la jambe active.",
+   "Alterne ou fais un côté puis l'autre."
+  ],
+  "tips": [
+   "Tout le pied sur la box.",
+   "Pousse avec la jambe qui monte, pas l'arrière.",
+   "Contrôle la descente."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Pull-over bras tendus à la poulie",
+  "description": "Un exercice d'isolation des dorsaux au câble, bras tendus.",
+  "instructions": [
+   "Face à la poulie haute avec barre droite.",
+   "Bras presque tendus, pousse la barre en arc vers les cuisses.",
+   "Contracte les dorsaux en bas.",
+   "Ramène la barre lentement.",
+   "Répète."
+  ],
+  "tips": [
+   "Bras presque tendus.",
+   "Amène la barre aux cuisses en arc.",
+   "Contracte les dorsaux en bas de course."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Soulevé de terre sumo",
+  "description": "Variante du soulevé de terre pieds très écartés et prise serrée, qui cible fessiers, adducteurs et quadriceps.",
+  "instructions": [
+   "Pieds très écartés, pointes ouvertes, barre au-dessus du milieu du pied.",
+   "Mains à l'intérieur des jambes, dos neutre, poitrine haute.",
+   "Pousse en ouvrant les genoux jusqu'à être debout, barre au corps.",
+   "Verrouille en haut et redescends par le même chemin."
+  ],
+  "tips": [
+   "Barre toujours près du corps.",
+   "Genoux dans l'axe des pointes, sans rentrer."
+  ]
+ },
+ "t-bar-row": {
+  "name": "Rowing en T",
+  "description": "Un rowing en T buste penché pour dorsaux et rhomboïdes avec charges lourdes.",
+  "instructions": [
+   "À cheval sur la barre, pieds à largeur d'épaules.",
+   "Penche-toi jusqu'à environ 45 degrés.",
+   "Saisis les poignées, dos plat.",
+   "Tire vers la poitrine, coudes en arrière.",
+   "Serre les omoplates en haut.",
+   "Redescends avec contrôle et répète."
+  ],
+  "tips": [
+   "Buste à 45 degrés, dos plat.",
+   "Tire avec les coudes, pas seulement les bras.",
+   "Serre les omoplates en haut."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Extension triceps à la poulie",
+  "description": "Un exercice d'isolation des triceps à la poulie.",
+  "instructions": [
+   "Face à la poulie avec barre droite.",
+   "Saisis la barre, coudes au corps.",
+   "Pousse jusqu'à tendre les bras.",
+   "Reviens lentement.",
+   "Répète."
+  ],
+  "tips": [
+   "Buste droit.",
+   "Seuls les avant-bras bougent."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Leg curl au TRX",
+  "description": "Cet exercice aux sangles travaille ischios, fessiers et mollets en ramenant les talons aux fessiers.",
+  "instructions": [
+   "Sur le dos, talons dans les sangles, genoux à 90 degrés.",
+   "Décolle les hanches en ligne des genoux aux épaules.",
+   "Tends les jambes, hanches hautes et gainage.",
+   "Ramène les talons en contractant fort les ischios.",
+   "Contrôle sans laisser tomber les hanches."
+  ],
+  "tips": [
+   "Gaine pour que les hanches ne cèdent pas.",
+   "Vise une forte contraction au sommet.",
+   "Contrôle le retour en tendant lentement."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Tirage vertical prise serrée neutre",
+  "description": "Tirage en prise neutre avec poignée en V serrée, grand étirement des dorsaux et contraction profonde.",
+  "instructions": [
+   "Fixe une poignée en V au câble de tirage.",
+   "Cuisses calées, paumes face à face.",
+   "Bras tendus au-dessus de la tête.",
+   "Tire au sternum, coudes vers le bas et un peu en arrière.",
+   "Contracte en bas puis remonte lentement.",
+   "Répète le nombre conseillé."
+  ],
+  "tips": [
+   "La prise neutre ménage les épaules.",
+   "Imagine rapprocher les côtes des hanches : pense dorsaux, pas bras."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Fentes marchées aux haltères",
+  "description": "Fentes marchées alternées avec haltères ; quadriceps et fessiers jambe par jambe.",
+  "instructions": [
+   "Debout, un haltère par main, bras relâchés.",
+   "Grand pas en avant jusqu'aux deux genoux à 90 degrés.",
+   "Pousse avec la jambe avant et enchaîne.",
+   "Alterne les jambes en gardant le buste droit sur tout le parcours."
+  ],
+  "tips": [
+   "Pas assez longs pour que le genou avant ne dépasse pas beaucoup le pied.",
+   "Il faut de la place ; sinon fais des fentes arrière."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Dips lestés",
+  "description": "Dips lestés, un haltère entre les pieds ou un gilet.",
+  "instructions": [
+   "En appui bras tendus, haltère entre les chevilles.",
+   "Penche un peu et fléchis avec contrôle.",
+   "Arrête épaules à hauteur des coudes.",
+   "Pousse jusqu'à tendre les bras."
+  ],
+  "tips": [
+   "Maîtrise d'abord les dips au poids du corps.",
+   "Pas plus bas que l'épaule ne tolère."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Tractions lestées",
+  "description": "Traction lestée, un haltère entre les pieds ou un gilet.",
+  "instructions": [
+   "Prise un peu large, haltère entre les chevilles.",
+   "Tire les coudes jusqu'au menton au-dessus.",
+   "Corps stable, sans balancer.",
+   "Redescends jusqu'aux bras tendus."
+  ],
+  "tips": [
+   "Maîtrise d'abord les tractions au poids du corps.",
+   "Avec un gilet, charge progressivement."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Rowing assis à la poulie prise large",
+  "description": "Rowing horizontal à la poulie, barre longue prise large, haut du dos et arrière d'épaule.",
+  "instructions": [
+   "Face à la poulie basse, pieds calés, genoux légèrement fléchis, prise large.",
+   "Dos droit, tire au bas de la poitrine, coudes vers l'extérieur et l'arrière.",
+   "Serre les omoplates et tiens un instant.",
+   "Tends les bras en laissant les omoplates s'écarter sans arrondir le dos."
+  ],
+  "tips": [
+   "Pas de balancement : le dos fait le mouvement.",
+   "Vers la poitrine, pas le ventre."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Squat Zercher",
+  "description": "Squat barre au creux des coudes, charge à l'avant et gros travail du tronc.",
+  "instructions": [
+   "Barre au creux des coudes, avant-bras croisés ou poings joints.",
+   "Descends poitrine haute, coudes au corps.",
+   "Arrête cuisses parallèles ou un peu en dessous.",
+   "Pousse dans le sol pour toi redresser."
+  ],
+  "tips": [
+   "Mets une mousse ou une serviette si les coudes gênent.",
+   "Gaine pour ne pas basculer en avant."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Développé militaire assis au sol jambes tendues, sans appui, exigeant pour le tronc.",
+  "instructions": [
+   "Assis au sol, jambes tendues, barre sur le haut de la poitrine.",
+   "Buste droit, pousse droit jusqu'aux bras tendus.",
+   "Barre au-dessus de la tête sans partir en arrière.",
+   "Redescends à la clavicule."
+  ],
+  "tips": [
+   "Plus léger que debout : le tronc stabilise.",
+   "Serre fessiers et abdos tout du long."
+  ]
+ }
+}
