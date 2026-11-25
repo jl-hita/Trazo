@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Abdominal-gurpila",
+  "description": "Core ariketa bat, gurpil bat aurrera eta atzera biratuz, bizkarrezurraren antiluzapena entrenatzen duena.",
+  "instructions": [
+   "Belaunikatu lurrean eta heldu gurpilaren heldulekuak sorbalden zabaleran.",
+   "Aktibatu indartsu core-a gerrialdea neutro gera dadin.",
+   "Biratu gurpila poliki aurrerantz, gorputza kontrola dezakezun urrunen luzatuz.",
+   "Gelditu aldakak hondoratu edo bizkarra arkutu aurretik.",
+   "Tira gurpiletik belaunetara itzultzeko, abdominalak uzkurtuz."
+  ],
+  "tips": [
+   "Aktibatu core-a errepikapen bakoitzaren aurretik — ez utzi gerrialdea arkutzen.",
+   "Handitu ibilbidea pixkanaka, aldakak hondoratu aurretik geldituz.",
+   "Erabili horman topea behealdeko posizioa kontrolatzen ez baduzu."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold prentsa",
+  "description": "Mankuernekin sorbalda-prentsa eskumuturrak biratuz, deltoidea ibilbide zabalean lantzen duena.",
+  "instructions": [
+   "Bizkarralde zuzenean eserita, eutsi mankuernei bularraren parean, ahurrak zuregana eta ukondoak aurrean.",
+   "Hasi gorantz bultzatzen, ukondoak irekiz eta ahurrak aurrerantz biratuz.",
+   "Amaitu besoak buru gainean luzatuta, ukondoak blokeatu gabe.",
+   "Jaitsi ahurrak berriro zuregana biratuz hasierako posizioraino."
+  ],
+  "tips": [
+   "Egin biraketa modu arinean, bultzadarik gabe.",
+   "Mantendu bizkarra bizkarraldean bermatuta."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Domina lagunduak",
+  "description": "Makina lagunduan egindako domina, gorputz-pisuaren zati bat konpentsatzen duena, domina zorrotzetarako behar den bizkar-indarra eraikitzeko pentsatua.",
+  "instructions": [
+   "Jarri belaunak domina lagunduen makinako kuxinean.",
+   "Heldu barra ahurrak kanporantz begira, sorbaldak baino zertxobait zabalago.",
+   "Eraman bularra barrara, ukondoak beherantz bultzatuz.",
+   "Jaitsi kontrolatuta, besoak luzatuta zintzilik geratu arte.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Hasi mugimendua omoplatoak jaitsiz, ukondoak tolestu aurretik.",
+   "Saihestu kulunkatzea, bizkarrari lana ez kentzeko.",
+   "Egokitu kontrapisua errepikapen guztiak teknika onarekin osatzeko."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Hanka-curla egonkortasun-baloiarekin",
+  "description": "Gorputz-pisuarekin egindako iskiotibialen curla egonkortasun-baloia erabiliz: orpoak gluteoetarantz ekarri aldakak altxatzen diren bitartean.",
+  "instructions": [
+   "Etzan ahoz gora lurrean, orpoak eta bikien behealdea egonkortasun-baloiaren gainean eta besoak luzatuta oreka mantentzeko.",
+   "Sakatu orpoekin aldakak altxatzeko, sorbaldetatik orkatiletara lerro zuzena osatuz.",
+   "Aldakak goian mantenduz, tolestu belaunak baloia gluteoetarantz biratzeko.",
+   "Luzatu hankak berriro kontrolatuta, aldakak jaitsi gabe.",
+   "Osatu errepikapen guztiak, gero jaitsi aldakak eta aldendu baloitik."
+  ],
+  "tips": [
+   "Aldakak goian geratzen dira serie osoan: zubiaren eta curlaren konbinazioa da.",
+   "Hasi bi oinekin; egin aurrera hanka bakarrera erraza egiten zaizunean."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Zutikako hanka-curla gomarekin",
+  "description": "Zutikako hanka-curla orkatilaren inguruan goma elastikoa jarrita, bidaietarako edo iskiotibialak karga gutxirekin amaitzeko erabilgarria.",
+  "instructions": [
+   "Jarri goma elastiko bat orkatila baten inguruan eta ainguratu beste muturra euskarri-oinaren azpian edo aurrean dagoen puntu finko batean.",
+   "Egon zutik, heldu zerbaiti oreka behar baduzu, euskarri-hanka apur bat tolestuta.",
+   "Igo orpoa gomarekin gluteorantz, izterra geldi mantenduz.",
+   "Uzkurtu iskiotibiala goian eta gero jaitsi kontrolatuta erabat luzatu arte.",
+   "Osatu errepikapen guztiak alde batean eta aldatu hanka."
+  ],
+  "tips": [
+   "Mantendu izterra geldi — hankaren behealdea bakarrik mugitzen da.",
+   "Saihestu aldaka kulunkatzea bultzada hartzeko.",
+   "Erabili goma arinagoa jaitsiera kontrolatu ezin baduzu."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Bularrerako jaitsiera goma elastikoarekin",
+  "description": "Jaitsiera bertikala goian ainguratutako goma elastiko batekin, polearen alternatiba gisa.",
+  "instructions": [
+   "Zutik, goma goiko puntu batean ainguratuta (ate batean edo barra batean) eta mutur bana esku bakoitzean, besoak buru gainean luzatuta.",
+   "Eraman eskuak beherantz, ukondoak saihetsetara ekarriz, bularra goian.",
+   "Estutu bizkarra eskuak sorbalden parera iristean.",
+   "Igo besoak kontrolatuta berriro luzatu arte."
+  ],
+  "tips": [
+   "Ez okertu enborra atzerantz tiratzeko.",
+   "Ziurtatu ondo aingura hasi aurretik."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Band pull-apart",
+  "description": "Goma elastiko bat besoak luzatuta bereiztea, sorbaldaren atzealdea eta bizkarraren goialdea aktibatzeko.",
+  "instructions": [
+   "Zutik, eutsi gomari eskuak sorbalden zabaleran eta besoak aurrera luzatuta, bularraren parean.",
+   "Bereizi eskuak, besoak alboetara eramanez, goma bularra ukitu arte.",
+   "Elkartu omoplatoak mugimenduaren amaieran sorbaldak igo gabe.",
+   "Itzuli hasierako posiziora kontrolatuta, gomak zugandik tira egiten utzi gabe."
+  ],
+  "tips": [
+   "Aukeratu 15 errepikapen garbi edo gehiago egiten uzten dizun goma.",
+   "Mantendu saihetsak bilduta gerrialdea ez arkutzeko."
+  ]
+ },
+ "band-row": {
+  "name": "Arrauna goma elastikoarekin",
+  "description": "Eserikako arrauna oinetan ainguratutako goma elastiko batekin, goma besterik behar ez duena.",
+  "instructions": [
+   "Eseri lurrean hankak luzatuta eta goma oinazpien inguruan, mutur bana esku bakoitzean.",
+   "Bizkarra zuzen duzula, eraman eskuak sabelera, ukondoak atzerantz.",
+   "Elkartu omoplatoak mugimenduaren amaieran.",
+   "Luzatu besoak kontrolatuta gomaren tentsioa askatu gabe."
+  ],
+  "tips": [
+   "Ez kulunkatu enborrarekin laguntzeko.",
+   "Aukeratu 12 eta 15 errepikapen garbi artean egiten uzten dizun goma."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Sorbalda-prentsa goma elastikoarekin",
+  "description": "Zutikako sorbalda-prentsa goma elastiko baten gainean, deltoidea material oso gutxirekin lantzeko.",
+  "instructions": [
+   "Zutik gomaren erdian, oinak aldaken zabaleran eta mutur bana esku bakoitzean sorbalden parean.",
+   "Bultzatu eskuak gorantz besoak buru gainean luzatu arte.",
+   "Mantendu abdomena tinko eta saihetsak bilduta.",
+   "Jaitsi kontrolatuta sorbaldetaraino tentsioa galdu gabe."
+  ],
+  "tips": [
+   "Ez arkutu bizkarra bultzatzean.",
+   "Eman gomari bira bat gehiago erresistentzia handitzeko."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulgariar squata barrarekin",
+  "description": "Hanka bakarreko squata atzeko oina banku batean altxatuta eta barra bizkarrean.",
+  "instructions": [
+   "Bermatu oin baten oin-gaina atzean duzun banku batean, barra bizkarraren goialdean eta beste hanka aurreratuta.",
+   "Tolestu aurreko belauna eta jaitsi enborra tente, izterra lurrarekiko paralelo geratu arte.",
+   "Mantendu pisua aurreko hankaren orpoan.",
+   "Bultzatu lurra aurreko oinarekin hanka luzatu arte; osatu errepikapenak eta aldatu hanka."
+  ],
+  "tips": [
+   "Egokitu distantzia aurreko belaunak oin-punta gehiegi gaindi ez dezan.",
+   "Praktikatu lehenik kargarik gabe edo mankuernekin."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Curla barrarekin",
+  "description": "Bizepsa isolatzeko ariketa klasikoa, barra erabiliz karga handiena mugitzeko.",
+  "instructions": [
+   "Jarri zutik barra bat ahurrak gora dituzula, sorbalden zabaleran.",
+   "Igo barra sorbaldetarantz.",
+   "Estutu goian eta gero jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Saihestu enborra kulunkatzea.",
+   "Mantendu ukondoak saihetsei itsatsita."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Gluteo-zubia barrarekin",
+  "description": "Barra batekin kargatutako gluteo-zubia, erresistentzia handiagorako.",
+  "instructions": [
+   "Etzan lurrean barra bat aldaken gainean eta belaunak tolestuta.",
+   "Altxatu aldakak gluteoak estutuz.",
+   "Eutsi goian aldakak erabat luzatuta.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Saihestu gerrialdea arkutzea aldaka luzatzean.",
+   "Bultzatu orpoekin, ez oin-puntekin.",
+   "Sartu kokotsa eta mantendu bizkarraren goialdea bermatuta."
+  ]
+ },
+ "barbell-row": {
+  "name": "Makurtutako arrauna barrarekin",
+  "description": "Bizkarraren goialdea eta erdialdea lantzen dituen trakzio-mugimendu konposatua.",
+  "instructions": [
+   "Makurtu aldaketatik belaunak apur bat tolestuta.",
+   "Heldu barra sorbalden zabalera baino zertxobait zabalago.",
+   "Eraman barra bularraren behealdera, omoplatoak estutuz.",
+   "Jaitsi barra kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu enborra 45 gradu inguruan.",
+   "Ez erabili bultzada pisua kulunkatzeko."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Zutikako biki-igoera barrarekin",
+  "description": "Zutikako orpo-igoera barra libre bat bizkarrean duzula, makina berezirik behar gabe.",
+  "instructions": [
+   "Zutik barra bizkarraren goialdean eta oin-puntak maila edo disko baten gainean, aldaken zabaleran.",
+   "Utzi orpoak jaisten bikiak luzatu arte, enborra tente mantenduz.",
+   "Igo oin-puntetan ahal duzun beste, belaunak tolestu gabe.",
+   "Eutsi une batez goian eta jaitsi kontrolatuta."
+  ],
+  "tips": [
+   "Hasi pisu gutxirekin oreka kontrolatu arte.",
+   "Egin rack baten barruan, topeak altuera egokian dituzula segurtasunagatik."
+  ]
+ },
+ "bench-press": {
+  "name": "Banku-prentsa barrarekin",
+  "description": "Bularra, sorbaldak eta trizepsak lantzen dituen bultzada-mugimendu konposatua.",
+  "instructions": [
+   "Etzan bankuan, begiak barraren azpian dituzula.",
+   "Heldu barra eskuak sorbalden zabalera baino zertxobait bananduago.",
+   "Atera barra racketik eta jaitsi bularraren erdiraino.",
+   "Bultzatu barra berriro besoak erabat luzatu arte.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu oinak lurrean lau.",
+   "Mantendu kurbadura arina gerrialdean.",
+   "Bultzatu hankekin lurraren kontra egonkor mantentzeko."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Alderantzizko arrauna belaunak tolestuta",
+  "description": "Alderantzizko arraunaren bertsio errazagoa: belaunak tolestuta eta oinak gorputzetik hurbil, gutxiago pisatzen du eta errazago kontrolatzen da.",
+  "instructions": [
+   "Etzan barra baxu eta sendo baten azpian, heldu eskuak sorbaldak baino zertxobait zabalago eta mantendu enborra zuzen, belaunak tolestuta eta oinazpiak lurrean.",
+   "Eraman bularra barrara, ukondoak atzera ekarriz eta omoplatoak elkartuz.",
+   "Eutsi une batez goian aldakak erortzen utzi gabe.",
+   "Jaitsi kontrolatuta besoak luzatu arte."
+  ],
+  "tips": [
+   "Hurbildu oinak gorputzera errazago egiteko edo urrundu aurrera egiteko.",
+   "12 errepikapen menderatzen dituzunean, pasatu hankak zuzen dituen alderantzizko arraunera."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Biki-igoera gorputz-pisuarekin",
+  "description": "Gorputz-pisuarekin egindako orpo-igoera, bikiak indartzeko oinarrizko ariketa.",
+  "instructions": [
+   "Jarri zutik oinak aldaken zabaleran bananduta, gainazal lau batean.",
+   "Igo oin-puntetan ahal duzun altuen.",
+   "Estutu bikiak goian.",
+   "Jaitsi orpoak lurrera kontrolatuta.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Banatu pisua hatz guztien artean igotzean.",
+   "Mantendu hankak zuzen lana bikietan kontzentratzeko.",
+   "Finkatu begirada puntu batean oreka mantentzeko."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Atzerako zankada gorputz-pisuarekin",
+  "description": "Atzerako zankada materialik gabe, aurrerako zankada baino egonkorragoa eta belaunekin atseginagoa.",
+  "instructions": [
+   "Zutik oinak elkarrekin eta eskuak gerrian, bularra goian.",
+   "Egin urrats luze bat atzera eta jaitsi bi belaunak tolestuz, atzeko belauna lurretik hurbil geratu arte.",
+   "Mantendu enborra tente eta pisua aurreko oinean.",
+   "Bultzatu aurreko hankarekin hasierako posiziora itzultzeko; osatu errepikapenak eta aldatu hanka."
+  ],
+  "tips": [
+   "Egin urrats nahikoa luzea aurreko belaunak oin-punta gehiegi gaindi ez dezan.",
+   "Heldu euskarri bati oreka oraindik kostatzen bazaizu."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Squata gorputz-pisuarekin",
+  "description": "Materialik gabeko oinarrizko squata, mugimendu-eredua ikasteko eta hankak edonon entrenatzeko aproposa.",
+  "instructions": [
+   "Zutik oinak sorbalden zabaleran, oin-puntak apur bat irekita eta besoak aurrera luzatuta.",
+   "Eraman aldakak atzera eta behera, eseriko bazina bezala, bularra goian eta bizkarra neutro.",
+   "Jaitsi izterrak lurrarekiko paralelo geratu arte, belaunak oinen lerroari jarraituz.",
+   "Bultzatu lurra oin osoarekin berriro zutik egon arte."
+  ],
+  "tips": [
+   "Mantendu orpoak bermatuta ibilbide osoan.",
+   "Jaistea kostatzen bazaizu, eseri aulki batean eta altxatu bultzadarik gabe."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgariar squata",
+  "description": "Alde bakarreko squat aldaera, atzeko oina altxatuta.",
+  "instructions": [
+   "Jarri zutik banku baten aurrean eta bermatu oin bat atzean bankuaren gainean.",
+   "Eutsi mankuernei alboetan.",
+   "Jaitsi gorputza aurreko izterra lurrarekiko paralelo geratu arte.",
+   "Bultzatu aurreko orpoarekin zutikako posiziora itzultzeko.",
+   "Errepikatu bi aldeetan."
+  ],
+  "tips": [
+   "Mantendu ia pisu guztia aurreratutako hankan.",
+   "Egokitu bankurainoko distantzia zankada egonkorra izan arte.",
+   "Osatu errepikapen guztiak hanka batekin aldatu aurretik."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Crunch polean",
+  "description": "Belauniko abdominal-uzkurdura goiko polean sokarekin, abdomenaren muskulu zuzenaren lanari karga progresiboa gehitzeko aukera ematen duena.",
+  "instructions": [
+   "Belaunikatu polea baten aurrean, soka-osagarria goialdean.",
+   "Eutsi sokari kopetatik hurbil, ukondoak tolestuta.",
+   "Jaitsi bizkarrezurra tolestuz eta ukondoak izterretara eramanez.",
+   "Estutu indartsu abdominalak behealdean.",
+   "Itzuli hasierako posiziora eta errepikatu."
+  ],
+  "tips": [
+   "Tolestu bizkarrezurra besoekin tiratu ordez.",
+   "Saihestu aldakarekin atzera esertzea errepikapen bakoitzean.",
+   "Bota airea indartsu jaistean abdomena hobeto uzkurtzeko."
+  ]
+ },
+ "cable-curl": {
+  "name": "Curla polean",
+  "description": "Kablearen erresistentziarekin egindako bizeps-curla, tentsio konstanterako.",
+  "instructions": [
+   "Jarri zutik beheko polea baten aurrean, barra zuzen batekin edo Z barrarekin.",
+   "Heldu barra ahurrak gora dituzula eta ukondoak saihetsei itsatsita.",
+   "Igo barra sorbaldetarantz.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Saihestu ukondoak aurreratzea barra igotzean.",
+   "Ez kulunkatu enborra pisuarekin laguntzeko.",
+   "Urrundu gorputza apur bat poleatik tentsioa mantentzeko."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Kanpo-errotazioa polean",
+  "description": "Kanpo-errotazioko ariketa polean, ukondoa saihetsari itsatsita, errotadoreen mahukaren kanpo-errotadoreak indartzen dituena atzeko deltoidearen laguntzarekin.",
+  "instructions": [
+   "Egokitu polea ukondoaren altueran eta heldu heldulekua.",
+   "Jarri makinari alboz, lan egiten duen ukondoa 90 gradutara tolestuta.",
+   "Mantendu ukondoa saihetsari itsatsita eta biratu besaurrea kanporantz.",
+   "Egin etenaldi bat mugimenduaren amaieran.",
+   "Itzuli kontrolatuta. Osatu errepikapenak alde batean eta gero aldatu."
+  ],
+  "tips": [
+   "Saihestu sorbaldak igotzea besoa biratzen duzun bitartean.",
+   "Egin lan pisu gutxirekin, poliki eta kontrolatuta.",
+   "Mantendu eskumuturra tinko, besaurrearekin lerrokatuta."
+  ]
+ },
+ "cable-fly": {
+  "name": "Irekierak polean",
+  "description": "Bularra isolatzeko ariketa kablearen erresistentziarekin, tentsio konstanterako.",
+  "instructions": [
+   "Jarri bi kable-zutaberen artean, heldulekuak goiko poleetan lotuta.",
+   "Ukondoak apur bat tolestuta, ireki besoak alboetara.",
+   "Elkartu eskuak bularraren aurrean, besarkada baten antzeko mugimenduan.",
+   "Itzuli poliki hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu ukondoen angelua konstante, prentsa bihur ez dadin.",
+   "Estutu bularra segundo batez eskuak elkartzean.",
+   "Ez aurreratu sorbaldak besoak irekita daudenean."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Aurreko igoerak polean",
+  "description": "Aurreko igoera beheko polearekin, ibilbide osoan tentsio konstantea mantentzen duena.",
+  "instructions": [
+   "Beheko poleari bizkarra emanda, kablea hanken artetik pasatzen dela eta heldulekua esku batean, besoa izterraren aurrean luzatuta.",
+   "Altxatu besoa aurrerantz sorbaldaren altueraraino, ukondoa apur bat tolestuta.",
+   "Eutsi une batez goian enborra atzera okertu gabe.",
+   "Jaitsi kontrolatuta pisua pausatzen utzi gabe; errepikatu eta aldatu besoa."
+  ],
+  "tips": [
+   "Jarri nahikoa urrun kableak atzera tira egin dezan.",
+   "Mantendu abdomena tinko bizkarra ez arkutzeko."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Alboko igoerak polean",
+  "description": "Alde bakarreko alboko igoera polean, alboko deltoidean tentsio konstantea ematen duena.",
+  "instructions": [
+   "Jarri beheko polea bati alboz eta heldu heldulekua makinatik urrunen dagoen eskuarekin.",
+   "Mantendu ukondoa apur bat tolestuta eta utzi kablea gorputzaren aurretik gurutzatzen.",
+   "Igo besoa albora lurrarekiko paralelo geratu arte.",
+   "Jaitsi kontrolatuta. Egin errepikapenak alde batean eta gero aldatu.",
+   "Mantendu tentsioa — ez utzi pisua behean pausatzen."
+  ],
+  "tips": [
+   "Gidatu ukondoarekin, ez eskuarekin.",
+   "Egin etenaldi labur bat goian, kulunkarik gabe.",
+   "Erabili mankuernarekin baino karga txikiagoa — kablearen tentsioa konstantea da."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Buru gaineko trizeps-luzapena polean",
+  "description": "Trizeps-ariketa kablearekin: pisu-pilari bizkarra emanda, eutsi soka bati buruaren atzean eta luzatu ukondoak gorantz eta buru gainetik bultzatzeko. Buru gaineko posizioak trizepsaren buru luzea luzatzen du eta kableak tentsioa mantentzen du muskuluan mugimendu osoan.",
+  "instructions": [
+   "Lotu soka bat beheko poleari eta hautatu pisu arin bat.",
+   "Heldu soka bi eskuekin, biratu pilari bizkarra emanez eta egin urrats bat aurrera oin bat aurreratuta, kableak atzera tira egin diezazun.",
+   "Igo soka buru gainetik, ukondoak tolestuta eta besoen goialdea belarrietatik hurbil, eskuak buruaren atzean gera daitezen.",
+   "Estutu enborra eta mantendu besoen goialdea geldi, gero luzatu ukondoak soka gorantz bultzatzeko besoak buru gainean erabat luzatu arte.",
+   "Egin etenaldi labur bat goian eta gero tolestu ukondoak soka berriro buruaren atzera kontrolatuta jaisteko.",
+   "Errepikatu aurreikusitako errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu ukondoak aurrera begira eta besoen goialdea geldi; irekitzen edo mugitzen badira, luzapena prentsa bihurtzen da.",
+   "Egin urrats nahikoa luzea aurrera kableak egonkor eutsi diezazun, eta saihestu gerrialdea arkutzea besoak buru gainera igotzean.",
+   "Erabili luzatze osoan kontrola dezakezun pisua; karga astunek ukondoak bereizten dituzte."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof prentsa polean",
+  "description": "Errotazioaren aurkako core ariketa: poleak alde batera tira egiten dizu, heldulekua bularretik zuzen aurrera bultzatzen duzun bitartean enborra biratzen utzi gabe.",
+  "instructions": [
+   "Jarri polea bularraren altueran eta hartu heldulekua bi eskuekin, makinari alboz.",
+   "Urrundu kablean benetako tentsioa egon arte, oinak sorbalden zabaleran eta belaunak apur bat tolestuta.",
+   "Eraman heldulekua bularraren erdira eta estutu enborra eta gluteoak.",
+   "Bultzatu heldulekua zuzen aurrera besoak luzatu arte, makinarantz biratu nahi zaituen tirakadari aurre eginez.",
+   "Eutsi une batez luzatutako posizioan eta gero ekarri heldulekua berriro bularrera kontrolatuta.",
+   "Osatu nahi dituzun errepikapenak, gero eman buelta eta errepikatu beste aldera."
+  ],
+  "tips": [
+   "Ezerk ez du biratu behar. Sorbaldak polearantz biratzen badira bultzatzean, jaitsi pisua — entrenatzen duena gertatzen ez den errotazioa da.",
+   "Zenbat eta urrunago egon makinatik, orduan eta luzeagoa da palanka-besoa eta zailagoa da; beraz, zailtasuna alda dezakezu pisu-pila ukitu gabe.",
+   "Mantendu besoak bularraren altueran eta sorbaldak behean; heldulekua igotzen uzteak aurreko igoera bihurtzen du."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Alderantzizko irekierak polean",
+  "description": "Zutikako kable-ariketa atzeko deltoideetarako: bi polea-zutaberen arteko tarteari begira, eutsi kontrako heldulekuei kableak zure aurrean gurutzatuta, eta eraman besoak kanpora eta atzera sorbalden altueran geratu arte. Kableek sorbalden atzealdean tentsioa mantentzen dute arku osoan.",
+  "instructions": [
+   "Jarri bi poleak sorbalden altuera inguruan eta kokatu erdian, bi polea-zutaben artean.",
+   "Heldu ezkerreko heldulekua eskuineko eskuarekin eta eskuinekoa ezkerrekoarekin, kableak zure aurrean gurutza daitezen.",
+   "Jarri tente, besoak aurrera luzatuta sorbalden altueran eta ukondoak apur bat tolestuta.",
+   "Eraman besoak kanpora eta atzera arku zabal batean, mugimendua ukondoekin gidatuz, sorbaldekin lerrokatu arte.",
+   "Elkartu omoplatoak une batez gerrialdea arkutu gabe.",
+   "Itzuli heldulekuak poliki hasierako posizio gurutzatura eta errepikatu aurreikusitako errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu ukondoak apur bat tolestuta eta finko; tolestu eta luzatzen badituzu, irekiera arraun bihurtzen da.",
+   "Mantendu sorbaldak behean eta lepoa lasai, atzeko deltoideek lan egin dezaten eta ez goiko trapezioak.",
+   "Erabili pisu arina eta itzulera motela; kableek indar handiagoz tiratzen dute arkuaren amaieran, beraz kontrolatu posizio hori."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Belaun-igoera aulki erromatarrean",
+  "description": "Gorputz-pisuko ariketa aulki erromatarrean, beheko abdomena eta aldakako flexoreak lantzen dituena.",
+  "instructions": [
+   "Jarri aulki erromatarrean bizkarra bizkarraldean lau eta besaurreak euskarrietan.",
+   "Utzi hankak zuzen zintzilik.",
+   "Aktibatu core-a eta igo belaunak bularrerantz.",
+   "Eutsi une batez goian, gero jaitsi poliki hasierako posiziora.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Saihestu hankak kulunkatzea bultzada hartzeko.",
+   "Bota airea belaunak igotzean.",
+   "Mantendu bizkarra bizkarraldearen kontra ariketa osoan."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Bular-prentsa makinan",
+  "description": "Bularrerako bultzada-mugimendua makinan, hasiberrientzat aproposa.",
+  "instructions": [
+   "Eseri makinan bizkarra bizkarraldean lau.",
+   "Heldu heldulekuak bularraren altueran.",
+   "Bultzatu heldulekuak aurrerantz besoak erabat luzatu arte.",
+   "Itzuli poliki hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Egokitu eserlekua heldulekuak bularraren altueran gera daitezen.",
+   "Bultzatu ukondoak kolpez blokeatu gabe.",
+   "Itzuli atzera kontrolatuta, pisua kolpez askatu gabe."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Arrauna mankuernekin bularra bermatuta",
+  "description": "Mankuernekin arrauna bularra bermatuta, gerrialdeko tentsioa kentzeko eta bizkarreko muskuluak isolatzeko.",
+  "instructions": [
+   "Etzan ahoz behera banku inklinatu batean, mankuernak azpian zintzilik.",
+   "Egin arraun mankuernekin alboetarantz.",
+   "Estutu goian eta jaitsi.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Bularreko euskarriak bizkarraren nekea ezabatzen du.",
+   "Jarri arreta omoplatoak elkartzean."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Arrauna pisu errusiarrarekin bularra bermatuta",
+  "description": "Ariketa honek bizkarreko muskuluak lantzen ditu, batez ere bizkar-zabala eta erronboideak, esku bakoitzean pisu errusiar bat duzula aldaketarantz arraun eginez, enborra banku inklinatu batean bermatuta dagoela.",
+  "instructions": [
+   "Etzan ahoz behera banku inklinatu batean, besoak libre zintzilik utziz, esku bakoitzean pisu errusiar bat duzula.",
+   "Uzkurtu abdomena eta eraman omoplatoak atzera.",
+   "Tira pisu errusiarretatik aldaketarantz, omoplatoak estutuz.",
+   "Egin etenaldi labur bat goian, bizkarreko uzkurdura sentituz.",
+   "Jaitsi poliki pisu errusiarrak hasierako posiziora kontrolatuta."
+  ],
+  "tips": [
+   "Mantendu enborra egonkor mugimendu osoan; saihestu kulunkatzea.",
+   "Saiatu tirakada bizkarreko muskuluekin hasten, ez besoekin bakarrik.",
+   "Mantendu ukondoak gorputzetik hurbil bizkar-zabalari garrantzi handiagoa emateko."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Arrauna makinan bularra bermatuta",
+  "description": "Eserikako arraun-ariketa makinan, enborrari eusten dion bularreko kuxinarekin: bizkar-zabalek eta omoplatoen arteko muskuluek egiten dute tirakada eta gerrialdea kanpoan geratzen da. Eraman heldulekuak atzera ukondoak zure atzera ekarriz eta gero utzi aurrera itzultzen kontrolatuta.",
+  "instructions": [
+   "Egokitu eserlekua heldulekuak bularraren behealdearen altueran gera daitezen eta eseri bularra kuxinaren kontra eta oinak ondo bermatuta.",
+   "Luzatu aurrera eta heldu heldulekuak besoak luzatuta eta sorbaldak lasai.",
+   "Estutu enborra eta tira heldulekuetatik atzera ukondoak zure atzera eramanez.",
+   "Elkartu omoplatoak tirakadaren amaieran bularra kuxinetik bereizi gabe.",
+   "Egin etenaldi labur bat eta gero luzatu besoak heldulekuak aurrera kontrolatuta itzultzeko.",
+   "Errepikatu aurreikusitako errepikapen kopurua bularra beti kuxinean mantenduz."
+  ],
+  "tips": [
+   "Tiratu ukondoekin eskuekin beharrean, bizkar-zabalek eta bizkarraren erdialdeak eraman dezaten mugimendua eta bizepsek lagundu dezaten.",
+   "Mantendu bularra kuxinean eta sorbaldak behean; sorbaldak igotzen badituzu edo atzera botatzen bazara, arrauna goiko trapezioaren tirakada bihurtzen da.",
+   "Utzi omoplatoak aurrera bereizten errepikapen bakoitzaren hasieran, hurrengo tirakadaren aurretik luzatze osoa lortzeko."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "T arrauna bularra bermatuta",
+  "description": "T barrarekin arrauna bularra banku inklinatu batean bermatuta, bizkarra isolatzen duena gerrialdea kargatu gabe.",
+  "instructions": [
+   "Bermatu bularra banku inklinatuan, oinak lurrean tinko, eta heldu T barraren heldulekua besoak luzatuta.",
+   "Tira heldulekutik bularrerantz, ukondoak atzera eta gorputzari itsatsita eramanez.",
+   "Estutu omoplatoak goian une batez.",
+   "Jaitsi kontrolatuta besoak luzatu arte, bularra bankutik bereizi gabe."
+  ],
+  "tips": [
+   "Mantendu burua bizkarrezurrarekin lerrokatuta.",
+   "Igotzeko bularra bankutik bereizi behar baduzu, murriztu pisua."
+  ]
+ },
+ "chin-ups": {
+  "name": "Dominak supinazioan",
+  "description": "Supinazioko heldulekuarekin egindako domina-aldaera, bizepsak indartsu aktibatzen dituena bizkar-zabalarekin batera.",
+  "instructions": [
+   "Zintzilikatu barra batetik ahurrak zuregana dituzula, sorbalden zabaleran.",
+   "Igo kokotsa barra gainditu arte.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu core-a uzkurtuta ariketa osoan.",
+   "Saihestu gehiegizko kulunka."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Banku-prentsa helduleku estuarekin",
+  "description": "Banku-prentsa eskuak elkarrengandik hurbilago, trizepsaren parte-hartzea handitzen duena bularraren lana mantenduz.",
+  "instructions": [
+   "Etzan bankuan eta heldu barra eskuak sorbalden zabaleran edo zertxobait gutxiago bananduta.",
+   "Askatu barra eta eraman bularraren gainera besoak luzatuta.",
+   "Jaitsi kontrolatuta bularraren behealdea ia ukitu arte, ukondoak gorputzetik hurbil.",
+   "Bultzatu barra gorantz ukondoak luzatu arte."
+  ],
+  "tips": [
+   "Ez elkartu eskuak gehiegi: eskumuturrak sufritzen du; nahikoa da sorbalden zabalera.",
+   "Eskatu laguntza edo erabili segurtasun-topeak dituen rack bat hutsegitetik hurbil lan egitean."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Banku-prentsa mankuernekin",
+  "description": "Mankuernekin egindako bular-ariketa konposatua, barrarekin egindako banku-prentsak baino ibilbide handiagoa ahalbidetzen duena.",
+  "instructions": [
+   "Etzan banku lau batean esku bakoitzean mankuerna bat bularraren altueran duzula.",
+   "Bultzatu mankuernak gorantz besoak erabat luzatu arte.",
+   "Jaitsi poliki hasierako posizioraino.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu eskumuturrak neutro ariketa osoan.",
+   "Estutu bularra mugimenduaren goialdean."
+  ]
+ },
+ "db-fly": {
+  "name": "Irekierak mankuernekin",
+  "description": "Isolamendu-ariketa bat, bularreko muskulua mugimendu-arku zabal batean luzatu eta uzkurtzen duena.",
+  "instructions": [
+   "Etzan banku batean mankuernak bularraren gainean eta ahurrak elkarri begira.",
+   "Ukondoak apur bat tolestuta, jaitsi mankuernak alboetara.",
+   "Itzuli hasierako posiziora bularra estutuz.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu ukondoen tolesdura konstante ariketa osoan.",
+   "Ez jaitsi mankuernak gehiegi."
+  ]
+ },
+ "db-squat": {
+  "name": "Squata mankuernekin",
+  "description": "Esku bakoitzean mankuerna bat alboetan duzula egindako squat kargatua, barrarik gabe egin daitekeena.",
+  "instructions": [
+   "Oinak sorbalden zabaleran, mankuerna bat esku bakoitzean alboetan.",
+   "Aktibatu core-a eta mantendu bularra goian.",
+   "Jaitsi squatean aldakak eta belaunak tolestuz.",
+   "Jaitsi izterrak paralelo edo beherago geratu arte.",
+   "Bultzatu orpoekin berriro igotzeko."
+  ],
+  "tips": [
+   "Mantendu bularra goian eta bizkarra zuzen.",
+   "Bultzatu belaunak oin-hatzen norabidean.",
+   "Erabili uhalak heldulekua faktore mugatzaile bihurtzen bada."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "Ahoz gora egindako core ariketa, kontrako gorputz-adarren luzapena koordinatzen duena core sakonaren egonkortasuna entrenatzeko.",
+  "instructions": [
+   "Etzan ahoz gora besoak sabairantz luzatuta eta belaunak 90 gradutan.",
+   "Jaitsi eskuineko besoa eta ezkerreko hanka lurrerantz, gerrialdea lurraren kontra sakatuta mantenduz.",
+   "Itzuli hasierako posiziora.",
+   "Errepikatu beste aldean.",
+   "Txandakatu."
+  ],
+  "tips": [
+   "Sakatu gerrialdea lurraren kontra une oro.",
+   "Mugitu poliki."
+  ]
+ },
+ "deadlift": {
+  "name": "Pisu hila barrarekin",
+  "description": "Gorputz osoko altxaketa konposatua, batez ere atzeko katea lantzen duena.",
+  "instructions": [
+   "Zutik oinak aldaken zabaleran eta barra oinaren erdiaren gainean.",
+   "Egin bisagra aldaketan eta heldu barra.",
+   "Uzkurtu core-a eta altxatu aldakak eta belaunak luzatuz.",
+   "Jarri erabat tente goian eta gero jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu barra gorputzetik hurbil.",
+   "Ez biribildu gerrialdea."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Defizitdun pisu hila",
+  "description": "Plataforma baxu baten gainean egindako pisu hila, ibilbidea eta abiapuntuko eskakizuna handitzen dituena.",
+  "instructions": [
+   "Igo 2 eta 5 cm arteko plataforma batera oinak barraren azpian dituzula eta heldu barra bizkarra neutro eta sorbaldak haren gainean dituzula.",
+   "Tinkatu gorputza eta bultzatu lurra oinekin, barra hankei itsatsita igotzen hasten den bitartean.",
+   "Luzatu aldakak eta belaunak aldi berean erabat tente geratu arte.",
+   "Jaitsi barra kontrolatuta lurreraino, bizkarra neutro mantenduz."
+  ],
+  "tips": [
+   "Hasi defizit txiki batekin eta pisu gutxirekin teknika egokitzeko.",
+   "Ez biribildu bizkarra lurretik irtetean."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "Abdomeneko ariketa aurreratua: gorputza zurrun sorbaldetan soilik bermatuta, palanka baten moduan igotzen eta jaisten dena.",
+  "instructions": [
+   "Etzan banku batean, heldu ertza buruaren atzetik eta altxatu gorputza zuzen, sorbaldak eta bizkarraren goialdea bakarrik bermatuta.",
+   "Jaitsi gorputza zuzen, aldakak tolestu gabe, lurrarekiko ia paralelo geratu arte.",
+   "Mantendu abdomena eta gluteoak tinko bankua ukitu gabe.",
+   "Igo berriro gorputza zuzen bertikaleraino; ezin baduzu, hasi jaitsiera-fasearekin bakarrik."
+  ],
+  "tips": [
+   "Hasi belaunak tolestuta edo fase eszentrikoarekin bakarrik.",
+   "Aldaka ez tolestea da ariketaren gakoa."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Makurtutako arrauna mankuernekin",
+  "description": "Esku bakoitzean mankuerna bat duzula eta enborra makurtuta egindako arrauna: bizkar-zabalak eta bizkarraren goialdea lantzen ditu mankuerna batzuk besterik gabe.",
+  "instructions": [
+   "Zutik, esku bakoitzean mankuerna bat, tolestu apur bat belaunak eta makurtu enborra aldaketatik lurrarekiko ia paralelo utzi arte, bizkarra zuzen.",
+   "Utzi besoak zintzilik ahurrak elkarri begira.",
+   "Tira mankuernetatik aldaketarantz, ukondoak atzera eramanez eta omoplatoak elkartuz.",
+   "Egin etenaldi labur bat goian eta jaitsi kontrolatuta besoak luzatu arte."
+  ],
+  "tips": [
+   "Mantendu enborra finko: mankuernak igotzeko kulunkatu behar baduzu, astunegiak dira.",
+   "Mantendu lepoa bizkarrezurrarekin lerrokatuta, lurrera begira.",
+   "Gerrialdea bizkarra baino lehen nekatzen bada, erabili pisu gutxiago edo jo euskarridun arraunera."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Curla mankuernekin",
+  "description": "Ukondo-flexioa esku bakoitzean mankuerna bat duzula, bizepsa mugimendu-ibilbide librearekin lantzeko.",
+  "instructions": [
+   "Zutik, esku bakoitzean mankuerna bat, besoak gorputzaren ondoan luzatuta eta ahurrak aurrerantz.",
+   "Mantendu ukondoak enborrari itsatsita eta igo mankuernak ukondoak tolestuz, gorputza kulunkatu gabe.",
+   "Uzkurtu bizepsa goian une batez, sorbaldak igo gabe.",
+   "Jaitsi kontrolatuta ukondoa erabat luzatu arte."
+  ],
+  "tips": [
+   "Saihestu bizkarrarekin bultzatzea: behar baduzu, murriztu pisua.",
+   "Kontrolatu jaitsiera; igoerak halako bi iraun behar du gutxienez."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Baserritarraren paseoa mankuernekin",
+  "description": "Gorputz osoko ariketa honetan mankuerna astunak eutsita ibiltzen da, helduleku-indarra, core-aren egonkortasuna eta muskulu-erresistentzia orokorra eraginkortasunez garatuz.",
+  "instructions": [
+   "Jarri zutik tente esku bakoitzean mankuerna bat, besoak alboetan luzatuta.",
+   "Eraman omoplatoak atzera eta aktibatu core-a, bizkarrezurra neutro mantenduz.",
+   "Ibili poliki eta nahita distantzia edo denbora jakin batez, urrats labur eta kontrolatuak emanez.",
+   "Mantendu bularra tente eta saihestu alde batera okertzea ibiltzen zaren bitartean.",
+   "Jarri arreta jarrera sendo eta egonkorra mantentzean mugimendu osoan."
+  ],
+  "tips": [
+   "Erabili forma galdu gabe kontrola ditzakezun mankuerna astunenak.",
+   "Arnastu sakon eta erritmoz core-aren tentsioa mantentzeko.",
+   "Imajinatu ur-baso bat orekan daramazula buru gainean."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Aurreko igoerak mankuernekin",
+  "description": "Mankuernak aurrerantz altxatzea sorbalden altueraraino, deltoidearen aurreko zatia lantzeko.",
+  "instructions": [
+   "Zutik, esku bakoitzean mankuerna bat izterren aurrean eta besoak ia luzatuta.",
+   "Altxatu mankuernak aurrerantz sorbalden altueraraino, ukondoak apur bat tolestuta.",
+   "Gelditu horizontalera iristean, enborra kulunkatu gabe.",
+   "Jaitsi kontrolatuta izterretaraino."
+  ],
+  "tips": [
+   "Ez bultzatu bizkarrarekin: hala egiten baduzu, murriztu pisua.",
+   "Aurreko deltoideak lan handia egiten du prentsetan; ez gehitu bolumen gehiegi."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Alderantzizko irekierak mankuernekin",
+  "description": "Makurtuta egindako isolamendu-ariketa: mankuernak alboetara altxatzen dira, atzeko deltoideak eta bizkarraren goialdea landuz.",
+  "instructions": [
+   "Makurtu aurrerantz aldaketatik, mankuernak besoak zintzilik dituzula eutsiz.",
+   "Mantendu bizkarra zuzen eta belaunak apur bat tolestuta.",
+   "Igo mankuernak alboetara sorbalden altueraraino.",
+   "Estutu omoplatoak goian.",
+   "Jaitsi mankuernak kontrolatuta.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Erabili pisu arina atzeko deltoideek lan egin dezaten, ez bultzadak.",
+   "Elkartu ondo omoplatoak goian.",
+   "Mantendu ukondoen tolesdura leun eta finkoa une oro."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Errumaniar pisu hila mankuernekin",
+  "description": "Mankuernekin egindako errumaniar pisu hila, aldaka-bisagraren bidez iskiotibialen luzatzea azpimarratzen duena.",
+  "instructions": [
+   "Jarri zutik mankuernak izterren aurrean dituzula, belaunak apur bat tolestuta.",
+   "Makurtu aldaketatik eta bultzatu gluteoak atzerantz.",
+   "Jaitsi mankuernak hanketan zehar iskiotibialetan luzatzea sentitu arte.",
+   "Mantendu bizkarra zuzen eta sorbaldak atzera.",
+   "Bultzatu aldakak aurrerantz zutikako posiziora itzultzeko.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Jaitsi zure malgutasunak uzten dizuneraino, behartu gabe.",
+   "Mantendu belaunen tolesdura leun bera ibilbide osoan.",
+   "Ez bihurtu mugimendua squat."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Sorbalda-prentsa mankuernekin",
+  "description": "Mankuernekin egindako prentsa bertikala, eserita edo zutik, deltoidearen aurreko eta alboko zatiak garatzen dituena.",
+  "instructions": [
+   "Eseri edo jarri zutik mankuernak sorbalden altueran eutsiz, ahurrak aurrerantz.",
+   "Bultzatu bi mankuernak buru gainetik besoak erabat luzatu arte.",
+   "Mantendu core-a uzkurtuta eta saihestu gerrialdea arkutzea.",
+   "Jaitsi mankuernak kontrolatuta sorbalden altueraraino.",
+   "Ez utzi mankuernak buruaren atzera mugitzen.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Igo mankuernak lerro zuzenean, goian elkar jo gabe.",
+   "Mantendu eskumuturrak tinko, besaurreekin lerrokatuta.",
+   "Gerrialdea arkutzen bazaizu, murriztu pisua."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Sorbalda-uzkurdurak mankuernekin",
+  "description": "Sorbaldak altxatzea esku bakoitzean mankuerna bat duzula, bizkarraren goialdea eta trapezioak lantzeko.",
+  "instructions": [
+   "Zutik, esku bakoitzean mankuerna bat, besoak gorputzaren ondoan luzatuta eta begirada aurrera.",
+   "Altxatu sorbaldak belarrietarantz lerro zuzenean, biratu gabe eta ukondoak tolestu gabe.",
+   "Eutsi une batez uzkurdurari goian.",
+   "Jaitsi kontrolatuta trapezioa erabat luzatu arte."
+  ],
+  "tips": [
+   "Ez egin zirkulurik sorbaldekin: ibilbidea bertikala da.",
+   "Heldulekuak trapezioak baino lehen huts egiten badu, erabili uhalak."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Hanka bakarreko biki-igoera mankuernarekin",
+  "description": "Hanka bakarreko orpo-igoera maila baten gainean, mankuerna batekin eta beste eskua orekarako bermatuta.",
+  "instructions": [
+   "Zutik maila baten gainean oin baten puntarekin, beste hanka tolestuta eta mankuerna bat alde bereko eskuan; bermatu beste eskua horman.",
+   "Utzi orpoa mailaren azpira erortzen bikia luzatu arte.",
+   "Igo oin-puntetan ahal duzun beste, belauna tolestu gabe.",
+   "Eutsi une batez goian eta jaitsi kontrolatuta; osatu errepikapenak eta aldatu hanka."
+  ],
+  "tips": [
+   "Bultzatu behatz lodiaren oinarriarekin, orkatila kanporantz joan gabe.",
+   "Alde bakarrekoa da: egin errepikapen berak hanka bakoitzarekin."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pika-flexioak eskuak altxatuta",
+  "description": "Pika-flexioaren bertsio errazagoa, eskuak maila edo aulki egonkor baten gainean dituzula karga murrizteko.",
+  "instructions": [
+   "Bermatu eskuak maila, banku edo aulki sendo baten ertzean, sorbalden zabaleran, eta ibili oinekin atzerantz aldakak altxatu arte.",
+   "Tolestu ukondoak eta jaitsi burua euskarrirantz, aldakak goian.",
+   "Gelditu burua eskuen artean geratzen denean, posizioa galdu gabe.",
+   "Bultzatu besoekin ukondoak luzatu arte."
+  ],
+  "tips": [
+   "Hurbildu oinak euskarrira zailagoa egiteko.",
+   "Egiaztatu euskarria ez dela mugitzen hasi aurretik."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull polean",
+  "description": "Atzeko deltoideak eta kanpo-errotadoreak lantzen dituen kable-ariketa.",
+  "instructions": [
+   "Lotu soka bat goiko polea batean.",
+   "Tira sokatik aurpegirantz, muturrak bereiziz.",
+   "Estutu atzeko deltoideak eta kanpo-errotadoreak.",
+   "Itzuli hasierako posiziora kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu ukondoak goian, sorbaldekin lerrokatuta.",
+   "Elkartu eskapulak errepikapen bakoitzaren amaieran.",
+   "Egin lan pisu arinarekin teknika ez galtzeko."
+  ]
+ },
+ "front-squat": {
+  "name": "Aurreko squata",
+  "description": "Barra aurrean deltoideen gainean eutsita egindako squata, koadrizepsak eta core-a azpimarratzen dituena.",
+  "instructions": [
+   "Jarri barra aurreko deltoideen gainean ukondoak goian dituzula.",
+   "Jaitsi squatean enborra tente mantenduz, izterrak lurrarekiko paralelo egon arte.",
+   "Igo berriro.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu ukondoak goian barra egonkortzeko.",
+   "Enbor bertikalagoak koadrizepsen aktibazioa handitzen du."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Gluteo-zubia",
+  "description": "Gorputz-pisuarekin egindako gluteo-aktibazioko ariketa, lurrean etzanda.",
+  "instructions": [
+   "Etzan ahoz gora belaunak tolestuta eta oinak lurrean lau.",
+   "Altxatu aldakak gluteoak estutuz.",
+   "Eutsi une batez goian aldakak erabat luzatuta.",
+   "Jaitsi aldakak kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Bultzatu orpoekin gluteoak hobeto aktibatzeko.",
+   "Saihestu gerrialdea arkutzea aldakak luzatzean.",
+   "Mantendu belaunak oinekin lerrokatuta ibilbide osoan."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet squata",
+  "description": "Hasiberrientzako egokia den squata, pisu errusiar bat bularraren altueran eutsita, jarrera eta sakonera hobetzen dituena.",
+  "instructions": [
+   "Eutsi pisu errusiar bati bularraren altueran bi eskuekin.",
+   "Jaitsi squatean pisua bularretik hurbil mantenduz.",
+   "Igo berriro.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Goblet posizioak enbor tentea errazten du modu naturalean.",
+   "Bultzatu belaunak kanporantz behealdean."
+  ]
+ },
+ "good-morning": {
+  "name": "Good morning barrarekin",
+  "description": "Aldaka-bisagra barra bizkarrean duzula, iskiotibialak, gluteoak eta gerrialdea indartzeko.",
+  "instructions": [
+   "Zutik barra bizkarraren goialdean, oinak sorbalden zabaleran eta belaunak apur bat tolestuta.",
+   "Eraman aldakak atzera, enborra aurrerantz makurtuz bizkarra neutro.",
+   "Jaitsi iskiotibialetan tentsioa sentitu arte, enborra horizontaletik hurbil.",
+   "Bultzatu aldakak aurrerantz berriro tente jartzeko."
+  ],
+  "tips": [
+   "Hasi pisu oso gutxirekin: gerrialdeak lan handia egiten du.",
+   "Begiratu aurrera eta ez biribildu bizkarra."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack squat",
+  "description": "Hack squat makinan egindako ariketa gidatua, batez ere koadrizepsak lantzen dituena lerraren gaineko squat-eredu kontrolatu baten bidez.",
+  "instructions": [
+   "Kargatu hack squat makina eta jarri bizkarra eta sorbaldak kuxinen kontra.",
+   "Jarri oinak sorbalden zabaleran plataformaren gainean, apur bat kanporantz biratuta.",
+   "Askatu segurtasun-heldulekuak eta jaitsi lera belaunak eta aldakak tolestuz.",
+   "Jaitsi izterrak gutxienez plataformarekiko paralelo egon arte.",
+   "Bultzatu orpoekin hankak luzatzeko eta lera hasierako posiziora itzultzeko.",
+   "Lotu berriro segurtasun-heldulekuak seria amaitzean."
+  ],
+  "tips": [
+   "Mantendu gerrialdea kuxinari itsatsita mugimendu osoan.",
+   "Oinak plataforman gorago jartzeak garrantzia gluteoetara eta iskiotibialetara eramaten du.",
+   "Kontrolatu jaitsiera; ez hartu bultzada punturik baxuenetik."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Mailu-curla mankuernekin",
+  "description": "Heldulekua neutro duen bizeps-curlaren aldaera, brakiorradiala lantzen duena.",
+  "instructions": [
+   "Zutik, eutsi mankuernei alboetan ahurrak elkarri begira.",
+   "Igo mankuernak ahurrak barrurantz mantenduz.",
+   "Estutu goian eta jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu ukondoak enborrari itsatsita ibilbide osoan.",
+   "Saihestu gorputza kulunkatzea mankuernak bultzatzeko.",
+   "Eskumuturrak tinko eta neutro curl osoan."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Eskuen gaineko flexioak",
+  "description": "Flexio bertikala oinak horman bermatuta, gorputz-pisuko bultzada-ariketarik zorrotzenetako bat.",
+  "instructions": [
+   "Jarri hormari bizkarra emanda, bermatu eskuak lurrean eta igo oinak bertikal geratu arte abdomena tinko.",
+   "Tolestu ukondoak eta jaitsi burua kontrolatuta lurrerantz.",
+   "Gelditu burua lurra edo koltxoneta ia ukitzen duenean.",
+   "Bultzatu besoekin ukondoak erabat luzatu arte."
+  ],
+  "tips": [
+   "Praktikatu lehenik eskuen gaineko posizioa eta pika-flexioa.",
+   "Erabili koltxoneta bat buruaren azpian konfiantza hartzeko."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Zintzilik belaun-igoera",
+  "description": "Barra batetik zintzilik egindako core ariketa, beheko abdomena eta aldakako flexoreak belaunak tolestuta lantzen dituena.",
+  "instructions": [
+   "Zintzilikatu barra batetik helduleku pronoarekin eta besoak erabat luzatuta.",
+   "Aktibatu core-a eta igo belaunak bularrerantz.",
+   "Eutsi une batez goian.",
+   "Jaitsi hankak poliki hasierako posiziora.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Saihestu kulunka — hasi mugimendua core-etik.",
+   "Bota airea belaunak igotzean.",
+   "Hau erraza egiten zaizunean, pasatu hanka zuzenen igoeretara."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Zintzilik hanka-igoera",
+  "description": "Barra batetik zintzilik hanka zuzenak horizontaleraino altxatzea, abdomenerako eta aldakako flexoreetarako.",
+  "instructions": [
+   "Zintzilikatu barra batetik sorbaldak baino zertxobait zabalago helduta, hankak elkarrekin eta luzatuta.",
+   "Altxatu hanka zuzenak lurrarekiko paralelo geratu arte, pelbisa apur bat atzera okertuz.",
+   "Eutsi une batez goian kulunkatu gabe.",
+   "Jaitsi kontrolatuta hasierako posizioraino, gorputza kulunkatzen utzi gabe."
+  ],
+  "tips": [
+   "Hanka zuzenekin ezin baduzu, tolestu belaunak.",
+   "Saihestu kulunka: erabili abdomena, ez bultzada."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Pisu hila barra hexagonalarekin",
+  "description": "Barra hexagonal baten barruan zutik egindako pisu hila, karga erdian mantentzen duena tirakada tenteagoa eta bizkarrarekin atseginagoa izan dadin.",
+  "instructions": [
+   "Jarri kargatutako barra hexagonal baten barruan, oinak sorbalden zabaleran.",
+   "Tolestu aldakak eta belaunak heldulekuak hartzeko.",
+   "Uzkurtu core-a eta mantendu bizkarra lau.",
+   "Bultzatu orpoekin eta luzatu aldakak eta belaunak tente jartzeko.",
+   "Blokeatu goian sorbaldak atzera dituzula.",
+   "Jaitsi barra lurrera kontrolatuta."
+  ],
+  "tips": [
+   "Mantendu bularra goian eta bizkarra lau heldulekua egokitzen duzun bitartean.",
+   "Bultzatu lurra bizkarrarekin barratik tiratu ordez.",
+   "Jarri erabat tente goian atzera okertu gabe."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Aldaka-abdukzioa makinan",
+  "description": "Aldakaren kanpoaldeko muskuluak lantzen dituen makina-ariketa.",
+  "instructions": [
+   "Eseri aldaka-abdukzio makinan, euskarriak izterren kanpoaldearen kontra.",
+   "Bultzatu hankak kanporantz erresistentziaren aurka.",
+   "Eutsi une batez punturik irekienean.",
+   "Itzuli hasierako posiziora kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu bizkarra makinaren bizkarraldean bermatuta.",
+   "Ireki hankak bultzadarik gabe, erritmo kontrolatuan.",
+   "Egin aurre erdira itzultzeari pisua kolpez askatu ordez."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Aldaka-addukzioa makinan",
+  "description": "Makina-ariketa, hankak elkarren kontra estutuz erresistentziaren aurka, izterraren barnealdeko aduktoreak isolatu eta indartzen dituena.",
+  "instructions": [
+   "Eseri aldaka-addukzio makinan bizkarra bizkarraldearen kontra.",
+   "Jarri hankak kuxinen kontra, makina luzatze eroso batera egokituta.",
+   "Estutu hankak kuxinak erdian elkartu arte.",
+   "Eutsi une batez uzkurdurari erabat itxitako posizioan.",
+   "Utzi hankak berriro irekitzen kontrolatuta hasieraraino.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Aukeratu iztaia behartu gabe luzatzen duen hasierako irekiera.",
+   "Egin ibilbide osoa abiadura uniforme eta kontrolatuan.",
+   "Ez utzi pisu-plakari kolpatzen hankak irekitzean."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust barrarekin",
+  "description": "Gluteoetarako ariketa konposatua, aldaken gainean bermatutako barra erabiltzen duena.",
+  "instructions": [
+   "Eseri lurrean bizkarraren goialdea banku baten kontra eta barra aldaken gainean.",
+   "Bultzatu aldakak gorantz enborra eta izterrak lerrokatu arte.",
+   "Estutu gluteoak goian.",
+   "Jaitsi aldakak berriro kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu kokotsa bilduta eta saihetsak behean.",
+   "Bultzatu orpoetatik, ez oin-puntetatik.",
+   "Saihestu gerrialdea arkutzea goialdean."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Hanka-prentsa horizontala",
+  "description": "Posizio horizontalean egindako hanka-prentsa makinan, koadrizepsak, gluteoak eta iskiotibialak lantzen dituena.",
+  "instructions": [
+   "Eseri hanka-prentsa horizontalean bizkarra bizkarraldean bermatuta eta oinak sorbalden zabaleran plataformaren gainean.",
+   "Bultzatu oinekin hankak luzatzeko, belaunak blokeatzera iritsi gabe.",
+   "Tolestu belaunak kontrolatuta bularrera hurbildu arte.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Ez utzi gerrialdea eserlekutik bereizten.",
+   "Saihestu belaunak erabat blokeatzea."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Prentsa banku inklinatuan barrarekin",
+  "description": "Banku inklinatuan barrarekin egindako prentsa-mugimendua, bularraren goialdea lantzen duena.",
+  "instructions": [
+   "Etzan 30-45 gradura inklinatutako banku batean.",
+   "Heldu barra sorbaldak baino zertxobait zabalago eta atera euskarritik.",
+   "Jaitsi barra bularraren goialderaino.",
+   "Bultzatu barra berriro luzatze osoraino.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Eraman eskapulak atzera eta mantendu bankuari itsatsita.",
+   "Saihestu barra bularrean errebotatzea.",
+   "Eskatu laguntza karga astunekin lan egitean."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Y igoerak banku inklinatuan",
+  "description": "Mankuernak Y forman altxatzea, banku inklinatu batean ahoz behera bermatuta, beheko eta erdiko trapeziorako.",
+  "instructions": [
+   "Etzan ahoz behera banku inklinatu batean, bularra bermatuta eta mankuerna arin bat esku bakoitzean zintzilik.",
+   "Altxatu besoak aurrera eta gora Y bat osatuz, erpuruak sabairantz.",
+   "Gelditu besoak enborrarekin lerrokatzen direnean, bularra bankutik altxatu gabe.",
+   "Jaitsi kontrolatuta hasierako posizioraino."
+  ],
+  "tips": [
+   "Erabili pisu gutxi: beheko trapezioa muskulu txikia da.",
+   "Mantendu lepoa neutro, lurrera begira."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Curla mankuernekin banku inklinatuan",
+  "description": "Banku inklinatuan egindako bizeps-curla, buru luzea gehiago luzatzeko.",
+  "instructions": [
+   "Eseri 45 gradura inklinatutako banku batean mankuernak alboetan.",
+   "Utzi besoak zuzen zintzilik ahurrak aurrerantz.",
+   "Igo mankuernak sorbaldetarantz.",
+   "Jaitsi kontrolatuta luzatze osoraino.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu sorbaldak eta bizkarra bankuan bermatuta.",
+   "Ez aurreratu sorbaldak mankuernak igotzean.",
+   "Aprobetxatu behealdeko luzatzea jaitsiera motel batekin."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Prentsa mankuernekin banku inklinatuan",
+  "description": "Banku inklinatuko prentsa-mugimendua, bularraren goialdea azpimarratzen duena.",
+  "instructions": [
+   "Egokitu bankua 30 graduko inklinazioan eta eseri mankuernak sorbalden altueran dituzula.",
+   "Bultzatu mankuernak gorantz eta elkarrengana besoak erabat luzatu arte.",
+   "Jaitsi mankuernak berriro sorbalden altueraraino kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu oinak lurrean tinko eta eskapulak atzera.",
+   "Saihestu mankuernek goian elkar jotzea.",
+   "Jaitsi bularrean luzatze leun bat sentitu arte."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Flexio inklinatuak",
+  "description": "Hasiberrientzako egokia den flexio-aldaera, eskuak banku edo maila baten gainean altxatuta.",
+  "instructions": [
+   "Jarri eskuak banku edo gainazal altxatu baten gainean, sorbalden zabaleran.",
+   "Luzatu hankak atzerantz plantxa-posizioan.",
+   "Jaitsi bularra bankurantz ukondoak tolestuz.",
+   "Bultzatu berriro hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Estutu abdomena aldaka hondora ez dadin.",
+   "Zenbat eta altuagoa gainazala, orduan eta errazagoa ariketa.",
+   "Ziurtatu bankua ez dela mugitzen hasi aurretik."
+  ]
+ },
+ "inverted-row": {
+  "name": "Alderantzizko arrauna",
+  "description": "Barra finko baten azpian gorputz-pisuarekin egindako trakzio horizontaleko ariketa: eraman bularra barrara gorputza zurrun mantenduz.",
+  "instructions": [
+   "Jarri barra bat rack batean gerriaren altuera inguruan.",
+   "Etzan azpian eta heldu barra sorbaldak baino zertxobait zabalago helduleku pronoarekin.",
+   "Zintzilikatu besoak luzatuta, orpoak lurrean eta gorputza zuzen burutik orkatiletara.",
+   "Eraman bularra barrara, omoplatoak estutuz.",
+   "Jaitsi kontrolatuta besoak erabat luzatu arte.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu core-a uzkurtuta — aldakak hondoratu gabe.",
+   "Zailagoa egiteko, altxatu oinak; errazagoa egiteko, hurbildu oinak barrara.",
+   "Egin etenaldi labur bat goian bularra barraren kontra."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Tibial-igoera pisu errusiarrarekin",
+  "description": "Banku batean eserita egiten den bernen aurrealderako ariketa, oin baten aurrealdetik pisu errusiar bat zintzilik. Behatzak pisuaren aurka bernarantz altxatzeak hankaren aurrealdeko muskuluak indartzen ditu.",
+  "instructions": [
+   "Eseri banku lau baten muturrean hanka bat luzatuta eta orpoa lurrean bermatuta.",
+   "Zintzilikatu pisu errusiar bat heldulekutik oinaren aurrealdean, behatzen gainean.",
+   "Igo behatzak bernarantz eroso zaizun beste, orpoa lurrean geratzen den bitartean.",
+   "Eutsi une batez goiko posizioari.",
+   "Jaitsi oina poliki behatzak lurrera begira jarri arte.",
+   "Osatu errepikapenak eta gero aldatu hanka."
+  ],
+  "tips": [
+   "Egin mugimendua orkatiletik bakarrik; belauna eta izterra geldi geratzen dira.",
+   "Hasi pisu errusiar arin batekin eta handitu pixkanaka; bernaren muskuluak azkar nekatzen dira.",
+   "Jaitsi poliki pisua erortzen utzi ordez."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Belauniko arrauna polean",
+  "description": "Belauniko posizio tentetik egindako arrauna polean, aldakaren bultzada ezabatzen duena eta bizkarraren goialdeko tentsioa mugimendu osoan mantentzen duena.",
+  "instructions": [
+   "Egokitu polea bularraren altueran eta lotu soka edo D itxurako helduleku bikoitz bat.",
+   "Belaunikatu tente makinaren aurrean, pisua topera irits ez dadin bezain urrun.",
+   "Heldu heldulekua bi eskuekin eta eutsi zure aurrean luzatuta bularraren altueran.",
+   "Eraman heldulekua bularrezurrerantz, ukondoak atzera ekarriz eta omoplatoak estutuz.",
+   "Itzuli kontrolatuta hasierako posiziora, luzatzearekin.",
+   "Errepikatu gomendatutako errepikapen kopurua."
+  ],
+  "tips": [
+   "Egon tente: ez okertu atzera errepikapena amaitzeko.",
+   "Belauniko jarrera tenteak core-a behartzen du tirakada bakoitzean errotazioari aurre egitera."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Flexioak belaunak bermatuta",
+  "description": "Hasiberrientzako egokia den flexio-aldaera, belaunak lurrean bermatuta goiko gorputzeko karga murrizteko.",
+  "instructions": [
+   "Hasi flexio-posizioan belaunak lurrean dituzula.",
+   "Jarri eskuak lurrean sorbalden zabaleran.",
+   "Mantendu gorputza lerro zuzenean belaunetatik sorbaldetara.",
+   "Jaitsi bularra lurrerantz ukondoak tolestuz.",
+   "Bultzatu eskuekin hasierako posiziora itzultzeko.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Ez ireki ukondoak gehiegi alboetara.",
+   "Estutu gluteoak eta abdomena mugimendu osoan.",
+   "Begiratu lurrera lepoa neutro mantentzeko."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Alboko igoerak mankuernekin",
+  "description": "Alboko deltoidea lantzen duen isolamendu-mugimendua, sorbalda zabalagoak lortzeko.",
+  "instructions": [
+   "Jarri zutik mankuernak alboetan.",
+   "Altxatu mankuernak alboetara besoak lurrarekiko paralelo geratu arte.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Ukondoak apur bat tolestuta.",
+   "Gidatu ukondoekin, ez eskuekin."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Bularrerako jaitsiera",
+  "description": "Bizkar-zabala lantzen duen polea-makinako ariketa.",
+  "instructions": [
+   "Eseri jaitsiera-makinan izterrak arrabolen azpian eutsita.",
+   "Heldu barra zabala helduleku pronoarekin.",
+   "Eraman barra bularraren goialderaino, bizkar-zabalak estutuz.",
+   "Itzuli barra poliki hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Hasi tirakada omoplatoak jaitsiz, ez ukondoak tolestuz.",
+   "Saihestu enborra kulunkatzea pisua mugitzeko.",
+   "Zuzendu ukondoak behera eta atzera, ez kanpora."
+  ]
+ },
+ "leg-curl": {
+  "name": "Etzandako hanka-curla",
+  "description": "Iskiotibialetarako isolamendu-ariketa hanka-curl makina erabiliz.",
+  "instructions": [
+   "Etzan ahoz behera hanka-curl makinan orkatilak arrabolaren azpian.",
+   "Eraman orpoak gluteoetarantz.",
+   "Estutu iskiotibialak goian.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu aldakak bankuari itsatsita ibilbide osoan.",
+   "Saihestu gerrialdea arkutzea orpoak igotzean.",
+   "Aukeratu ibilbide osoa eta kontrolatua egiten uzten dizun pisua."
+  ]
+ },
+ "leg-extension": {
+  "name": "Hanka-luzapena",
+  "description": "Koadrizepsetarako isolamendu-ariketa makina bat erabiliz.",
+  "instructions": [
+   "Eseri hanka-luzapen makinan orkatilak arrabolaren atzean.",
+   "Luzatu hankak zuzen geratu arte.",
+   "Estutu koadrizepsak goian.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Lerrokatu belaunak makinaren biraketa-ardatzarekin.",
+   "Igo pisua bultzadaz jaurti gabe.",
+   "Heldu heldulekuei aldaka eserlekuan egonkor mantentzeko."
+  ]
+ },
+ "leg-press": {
+  "name": "Hanka-prentsa",
+  "description": "Koadrizepsetarako eta gluteoetarako makinako mugimendu konposatua.",
+  "instructions": [
+   "Eseri hanka-prentsan oinak sorbalden zabaleran plataformaren gainean.",
+   "Askatu segurtasunak eta jaitsi plataforma belaunak tolestuz.",
+   "Bultzatu plataforma gorantz hankak ia zuzen geratu arte.",
+   "Ez blokeatu belaunak goian.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu gerrialdea bizkarraldeari itsatsita une oro.",
+   "Jaitsi aldaka bereizten ez den lekuraino bakarrik.",
+   "Lerrokatu belaunak oin-puntekin."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Biki-igoera prentsan",
+  "description": "Orpo-igoera prentsako plataforma oin-puntekin bultzatuz.",
+  "instructions": [
+   "Eseri prentsan hankak ia luzatuta eta oinen aurrealdea bakarrik plataformaren ertzean bermatuta.",
+   "Askatu segurtasuna eta utzi orpoak jaisten bikiak luzatuz.",
+   "Bultzatu plataforma oin-puntekin puntetan geratu arte.",
+   "Eutsi une batez goian eta jaitsi berriro kontrolatuta."
+  ],
+  "tips": [
+   "Ez blokeatu belaunak erabat.",
+   "Egin ibilbide osoak eta etenaldia behean: hor irabazten da estimulua."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Etzandako hanka-igoera",
+  "description": "Ahoz gora etzanda bi hankak altxatzea, abdomenaren behealdea eta aldakako flexoreak lantzeko.",
+  "instructions": [
+   "Etzan ahoz gora hankak elkarrekin eta luzatuta, eskuak gluteoen azpian edo alboetan.",
+   "Itsatsi gerrialdea lurrera abdomena uzkurtuz.",
+   "Altxatu hankak lurrarekiko perpendikular geratu arte, kulunkatu gabe.",
+   "Jaitsi poliki oinek lurra ukitu gabe eta bizkarra arkutu gabe."
+  ],
+  "tips": [
+   "Gerrialdea lurretik bereizten bada, tolestu belaunak.",
+   "Kontrolatu jaitsiera: abdomena gehien lantzen duen zatia da."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Bizkar-luzapena makinan",
+  "description": "Gerrialderako eserikako isolamendu-ariketa: aldaka eta hankak finko, enborrak arrabol kuxindu baten kontra atzera bultzatzen du eta bizkarrezurra luzatzen du pisu-plakaren aurka.",
+  "instructions": [
+   "Eseri bizkar-luzapen makinan oinak plataforman bermatuta eta egokitu arrabola bizkarraren goialdean gera dadin, omoplatoen azpi-azpian.",
+   "Heldu alboko heldulekuak eta utzi enborra apur bat aurrera etortzen: hori da hasierako posizioa.",
+   "Bultzatu atzera arrabolaren kontra bizkarrezurra luzatuz, enborra atzera okertuta eta gerrialdea erabat uzkurtuta geratu arte.",
+   "Egin etenaldi labur bat luzatze osoan eta itzuli hasierako posiziora kontrolatuta, pisuari ibilbidean aurre eginez.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Jarri arrabola omoplatoen azpi-azpian: gorago lepoa estutzen du eta beherago ibilbidea galtzen duzu.",
+   "Luzatu gerrialdetik burua eta sorbaldak atzera bota ordez, eta mantendu mugimendua motela bi noranzkoetan.",
+   "Gelditu enborra posizio neutroan luzatuta bizkarrezurra harantzago behartu ordez, eta hasi pisu gutxirekin: gerrialdeak hobeto erantzuten die errepikapen kontrolatuei karga handiei baino."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Bizeps-curla makinan",
+  "description": "Makinako bizeps-curla, besoak modu isolatuan entrenatzeko.",
+  "instructions": [
+   "Eseri makinan eta egokitu arrabola zure besoen luzerara.",
+   "Heldu heldulekuak helduleku supinoarekin.",
+   "Eraman heldulekuak sorbaldetarantz.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu ukondoak kuxinean bermatuta une oro.",
+   "Saihestu sorbaldak igotzea heldulekuak igotzean.",
+   "Jaitsi besoak ia luzatu arte tentsioa galdu gabe."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Biki-igoera makinan",
+  "description": "Zutikako makinan egindako isolamendu-ariketa, bikiak eta soleoa lantzen dituena orkatilaren ibilbide osoan.",
+  "instructions": [
+   "Jarri biki-igoera makinan oinen aurrealdea plataformaren gainean.",
+   "Kokatu sorbaldetako arrabolak tinko.",
+   "Jaitsi orpoak plataformaren azpira luzatze osorako.",
+   "Bultzatu oinen aurrealdearekin oin-puntetan altxatzeko.",
+   "Estutu bikiak goian.",
+   "Jaitsi kontrolatuta eta errepikatu."
+  ],
+  "tips": [
+   "Saihestu behealdean errebotatzea tentsioa ez galtzeko.",
+   "Mantendu belaunak luzatuta baina blokeatu gabe.",
+   "Igo bertikalean, orkatilak kanporantz okertu gabe."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Irekierak makinan",
+  "description": "Makina batean egindako bularra isolatzeko ariketa, palankak gorputzaren aurrean arku batean elkartzen dituena.",
+  "instructions": [
+   "Eseri irekiera-makinan eta egokitu eserlekua palankak bularraren altueran gera daitezen.",
+   "Eutsi palankei ukondoak apur bat tolestuta.",
+   "Elkartu palankak bularraren aurrean arku leun batean.",
+   "Uzkurtu bularreko muskulua uzkurdura handieneko puntuan.",
+   "Itzuli kontrolatuta hasierako posiziora pisua erortzen utzi gabe.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu ukondoaren tolesdura arin eta konstantea mugimendu osoan.",
+   "Jarri arreta bularra uzkurtzean besoekin bultzatu ordez.",
+   "Kontrolatu itzulera pisu-pila erortzen utzi ordez."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Alderantzizko irekierak makinan",
+  "description": "Atzeko deltoideetarako eserikako makina-ariketa, alderantzizko pec deck izenez ere ezaguna: kuxinari begira, eraman bi heldulekuak kanpora eta atzera arku zabal batean pisu-pilaren aurka. Kuxinak enborra geldi mantentzen du, beraz lana sorbalden atzealdean eta omoplatoen arteko muskuluetan geratzen da.",
+  "instructions": [
+   "Egokitu eserlekua heldulekuak sorbalden altueran gera daitezen eta eseri makinari begira bularra kuxinaren kontra.",
+   "Heldu heldulekuak besoak aurrera luzatuta eta ukondoak apur bat tolestuta.",
+   "Mantendu sorbaldak behean eta belarrietatik urrun, eta estutu enborra.",
+   "Eraman heldulekuak kanpora eta atzera arku zabal batean, mugimendua ukondoekin gidatuz, besoak gutxi gorabehera sorbaldekin lerrokatu arte.",
+   "Elkartu omoplatoak une batez, bularra kuxinetik bereizteko atzera bota gabe.",
+   "Itzuli heldulekuak aurrera poliki eta errepikatu aurreikusitako errepikapen kopurua."
+  ],
+  "tips": [
+   "Gidatu mugimendua ukondoekin eskuekin tiratu ordez, atzeko deltoideek lan egin dezaten eta ez bizepsek.",
+   "Mantendu bularra kuxinean eta lepoa lasai; atzera botatzen bazara edo sorbaldak igotzen badituzu, karga goiko trapeziora pasatzen da.",
+   "Aukeratu kontrolatuta jaits dezakezun pisua; karga arinagoak itzulera motelarekin hobeto lantzen ditu atzeko deltoideak pisu handiko kulunkak baino."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Eserikako crunch makinan",
+  "description": "Eserikako makina batean egindako abdominal-isolamenduko ariketa, bizkarrezurra erresistentziaren aurka tolesten duena.",
+  "instructions": [
+   "Eseri abdominal-makinan eta eutsi heldulekuei.",
+   "Jarri bularreko kuxina enborraren kontra.",
+   "Uzkurtu abdomena enborra aurrera eta behera tolesteko.",
+   "Uzkurtu ibilbidearen amaieran.",
+   "Itzuli hasierako posiziora kontrolatuta.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Hasi mugimendua abdomenarekin, ez besoekin.",
+   "Bota airea enborra tolesten duzun bitartean.",
+   "Saihestu gorputza kulunkatzetik datorren bultzada."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Sorbalda-prentsa makinan",
+  "description": "Sorbaldetarako makinako buru gaineko prentsa-mugimendua.",
+  "instructions": [
+   "Eseri makinan bizkarra bizkarraldearen kontra.",
+   "Heldu heldulekuak sorbalden altueran.",
+   "Bultzatu heldulekuak buru gainera besoak erabat luzatu arte.",
+   "Jaitsi kontrolatuta hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Ez arkutu gerrialdea gorantz bultzatzean.",
+   "Saihestu ukondoak kolpez blokeatzea goialdean.",
+   "Mantendu eskumuturrak tinko eta besaurreekin lerrokatuta."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Domina negatiboak",
+  "description": "Dominaren jaitsiera motelaren fasea, domina osoak egiteko behar den indarra eraikitzeko.",
+  "instructions": [
+   "Igo banku batera edo egin salto kokotsa barraren gainetik jartzeko, sorbaldak baino zertxobait zabalago helduta.",
+   "Bermatu gabe, jaitsi gorputza oso poliki, hiru eta bost segundo inguruan.",
+   "Kontrolatu mugimendua besoak erabat luzatu arte.",
+   "Igo berriro bankuaren edo saltoaren laguntzarekin eta errepikatu."
+  ],
+  "tips": [
+   "Mantendu sorbaldak belarrietatik urrun jaitsieran.",
+   "Bost errepikapen motel menderatzen dituzunean, saiatu laguntzarik gabe igotzen."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Iskiotibialen curl nordikoa",
+  "description": "Belaun-flexioko ariketa, belauniko posiziotik enborra aurrerantz jaisten duena, iskiotibialak modu eszentrikoan landuz.",
+  "instructions": [
+   "Belaunikatu koltxoneta baten gainean orkatilak euskarri finko baten azpian ainguratuta.",
+   "Mantendu enborra tente eta aldakak luzatuta.",
+   "Jaitsi gorputza aurrerantz poliki, iskiotibialekin aurre eginez.",
+   "Leundu erorketa eskuekin lurra ukitu baino lehentxeago.",
+   "Bultzatu eskuekin itzultzeko eta bultzatu zure burua hasierako posiziora.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Jaitsi ahalik eta polikien: fase eszentrikoa da helburua.",
+   "Mantendu aldakak luzatuta; ez tolestu gerritik.",
+   "Frenatu eskuekin eta bultzatu arinki indarra irabazten duzun bitartean."
+  ]
+ },
+ "ohp": {
+  "name": "Prentsa militarra barrarekin",
+  "description": "Sorbaldak eta trizepsa lantzen dituen buru gaineko bultzada-mugimendu konposatua.",
+  "instructions": [
+   "Zutik oinak sorbalden zabaleran eta barra lepauztaien altueran.",
+   "Uzkurtu core-a eta bultzatu barra buru gainetik.",
+   "Blokeatu ukondoak goian barra oinaren erdiko puntuaren gainean.",
+   "Jaitsi barra lepauztaien altueraraino.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Ez bota atzera gehiegi.",
+   "Estutu gluteoak egonkortasun handiagorako."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Esku bakarreko eserikako arrauna polean",
+  "description": "Esku bakarreko eserikako arrauna polean, bizkar-zabaletarako eta bizkarraren goialderako, enborra aurrera begira mantentzen duena alde aktiboko omoplatoa kontrolatuta aurrera eta atzera doan bitartean.",
+  "instructions": [
+   "Eseri polea-estazioan eta eutsi heldulekuari lan egiten duen besoa luzatuta.",
+   "Bermatu ondo oinak, eseri tente eta aktibatu enborra atzera okertu gabe.",
+   "Eraman heldulekua beheko saihetsetarantz omoplatoa atzera ekarriz.",
+   "Egin etenaldi labur bat enborra biratu gabe eta sorbalda altxatu gabe.",
+   "Luzatu besoa kontrolatuta, amaitu seria eta aldatu aldea."
+  ],
+  "tips": [
+   "Mantendu bi sorbaldak aurrera begira errepikapen osoan.",
+   "Eraman ukondoa atzera gorputzetik hurbil besoa soilik tolestu ordez.",
+   "Utzi omoplatoa aurreratzen hasieran gerrialdea biribildu gabe."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Buru gaineko trizeps-luzapena mankuernarekin",
+  "description": "Trizepsa isolatzeko ariketa, buru luzea azpimarratzen duena.",
+  "instructions": [
+   "Zutik edo eserita, eutsi mankuerna bati buru gainetik bi eskuekin.",
+   "Jaitsi mankuerna buruaren atzera ukondoak tolestuz.",
+   "Luzatu besoak berriro hasierako posiziora.",
+   "Mantendu ukondoak burutik hurbil ariketa osoan.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mugitu besaurreak bakarrik eta mantendu gainerako guztia geldi.",
+   "Saihestu gerrialdea arkutzea mankuerna jaisten denean.",
+   "Heldu mankuerna goiko diskoaren azpitik bi ahurrekin."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Fondoak paraleloetan",
+  "description": "Barra paraleloetan gorputz-pisuarekin egiten den ariketa, bularra, trizepsak eta sorbaldak lantzen dituena.",
+  "instructions": [
+   "Eutsi barra paraleloetan besoak luzatuta eta gorputza zintzilik, lurra ukitu gabe.",
+   "Okertu enborra apur bat aurrerantz eta tolestu ukondoak kontrolatuta jaisteko.",
+   "Gelditu sorbaldak ukondoen altueran geratzen direnean, artikulazioan hondoratu gabe.",
+   "Bultzatu bularrarekin eta trizepsekin besoak berriro luzatu arte."
+  ],
+  "tips": [
+   "Serie garbiak osatu ezin badituzu, erabili fondo lagunduen makina edo gomak.",
+   "Ez jaitsi zure sorbaldak ondoezik gabe onartzen duena baino gehiago."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Banku-prentsa etenaldiarekin",
+  "description": "Banku-prentsa bularraren gainean segundo bat edo biko etenaldiarekin, errebotea ezabatzen duena eta abiapuntuko indarra hobetzen duena.",
+  "instructions": [
+   "Etzan bankuan oinak lurrean tinko, omoplatoak elkarrekin eta barra bularraren gainean sorbaldak baino zertxobait zabalago helduta.",
+   "Jaitsi barra kontrolatuta bularra ia ukitu arte.",
+   "Mantendu barra geldi bularraren gainean segundo batez edo biz tentsioa askatu gabe.",
+   "Bultzatu barra gorantz ukondoak luzatu arte."
+  ],
+  "tips": [
+   "Erabili prentsa arruntean baino % 10 eta 15 artean pisu gutxiago.",
+   "Eskatu norbaiti zaintzeko edo erabili rackeko topeak."
+  ]
+ },
+ "pause-squat": {
+  "name": "Squata etenaldiarekin",
+  "description": "Barrarekin egindako squata punturik baxuenean etenaldiarekin, kontrola eta errebotetik kanpoko indarra irabazteko.",
+  "instructions": [
+   "Jarri barra bizkarraren goialdean, oinak sorbalden zabaleran eta puntak apur bat irekita.",
+   "Jaitsi sakonera kontrolatuz, bizkarra neutro eta belaunak oinen lerroari jarraituz.",
+   "Eutsi posizio baxuenari segundo bat eta hiru artean, enborra askatu gabe.",
+   "Bultzatu lurra oinekin berriro tente egon arte."
+  ],
+  "tips": [
+   "Murriztu karga zure squat arruntaren aldean.",
+   "Ez errebotatu etenalditik irtetean: bultzatu etengabe."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Helduleku mugikorrak dituen bularra isolatzeko makina, bularrekoak addukzio horizontalaren bidez lantzen dituena.",
+  "instructions": [
+   "Eseri pec deck makinan eta heldu heldulekuak besoak alboetara irekita eta ukondoak apur bat tolestuta.",
+   "Egokitu eserlekua heldulekuak bularraren erdiko altueran gera daitezen.",
+   "Elkartu heldulekuak bularraren aurrean estutuz.",
+   "Eutsi une batez uzkurdurari erdian.",
+   "Itzuli kontrolatuta hasierako posiziora.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Ez utzi besoak atzeraegi joaten irekitzean.",
+   "Mantendu bizkarra eta sorbaldak bizkarraldeari itsatsita.",
+   "Bota airea heldulekuak elkartzean eta hartu irekitzean."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay arrauna",
+  "description": "Barrarekin egindako arraun lehergarria, errepikapen bakoitzean lurretik abiatzen dena, enborra lurrarekiko paralelo.",
+  "instructions": [
+   "Oinak barraren azpian eta enborra ia lurrarekiko paralelo, heldu barra eskuak sorbaldak baino zertxobait zabalago eta bizkarra neutro.",
+   "Tira barratik indarrez bularraren behealdea ukitu arte, enborra geldi mantenduz.",
+   "Jaitsi barra kontrolatuta lurrean pausatu eta une batez gelditu arte.",
+   "Egokitu berriro bizkarraren posizioa eta errepikatu lurretik."
+  ],
+  "tips": [
+   "Enborra ez da igotzen ez jaisten: mugitzen bada, karga gehiegizkoa da.",
+   "Errepikapen bakoitza barra lurrean geldi dagoela hasten da."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pika-flexioak",
+  "description": "Gorputza alderantzizko V forman duela egindako flexioa, materialik gabe karga bularretik sorbaldara eramaten duena.",
+  "instructions": [
+   "Bermatu eskuak lurrean sorbalden zabaleran eta altxatu aldakak alderantzizko V bat osatuz, hankak ia zuzen.",
+   "Tolestu ukondoak eta jaitsi burua lurrerantz eskuen artean.",
+   "Gelditu burua lurretik hurbil geratzen denean, bermatu gabe.",
+   "Bultzatu besoekin ukondoak luzatu eta hasierako posiziora itzuli arte."
+  ],
+  "tips": [
+   "Oinak eskuetatik zenbat eta hurbilago egon, orduan eta zailagoa da ariketa.",
+   "Mantendu aldakak goian ibilbide osoan."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Hanka bakarreko squata (pistol)",
+  "description": "Hanka bakarreko squat sakona, bestea aurrera luzatuta, gorputz-pisuarekin soilik.",
+  "instructions": [
+   "Zutik hanka baten gainean, bestea aurrean altxatuta eta besoak luzatuta oreka mantentzeko.",
+   "Tolestu euskarri-hankako belauna eta jaitsi kontrolatuta, orpoa lurrari itsatsita.",
+   "Jaitsi ahal duzun beste teknika galdu gabe, hanka askea aurrera luzatuta.",
+   "Bultzatu lurra oinarekin berriro zutik egon arte; errepikatu eta aldatu hanka."
+  ],
+  "tips": [
+   "Hasi euskarri bati helduta edo kutxa batean eseriz.",
+   "Mantendu belauna oinarekin lerrokatuta."
+  ]
+ },
+ "plank": {
+  "name": "Aurreko plantxa",
+  "description": "Core-aren ariketa isometrikoa, enborraren egonkortasuna entrenatzen duena gorputza zuzen mantenduz besaurreen eta oin-punten gainean.",
+  "instructions": [
+   "Bermatu besaurreak lurrean ukondoak sorbalden azpian eta hankak luzatuta.",
+   "Altxatu gorputza burutik orpoetara lerro zuzen bat osatuz.",
+   "Aktibatu abdomena eta gluteoak eta mantendu gerrialdea neutro, aldaka erortzen utzi gabe.",
+   "Arnastu normaltasunez eta eutsi posizioari adierazitako denboran."
+  ],
+  "tips": [
+   "Hasi kalitate oneko serie laburrekin denbora luzatu aurretik.",
+   "Gerrialdea hondoratzen bada, jarri belaunak lurrean edo murriztu denbora."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip thrust disko-makinan",
+  "description": "Aldaka-bultzada disko-pisuko gluteo-makina batean: bizkarraldeak eta plataforma integratuak posizioa finkatzen dute, aldakak kargaren aurka luza daitezen bankurik muntatu gabe.",
+  "instructions": [
+   "Kargatu disko-euskarriak berdin eta eseri makinan bizkarraren goialdea bizkarraldearen kontra eta oinak plataforman lau.",
+   "Jaitsi kuxina edo barra aldaken gainera eta egokitu iztaiaren tolesturan berma dadin, ez abdomenean.",
+   "Jarri oinak bernak bertikal gera daitezen aldakak goian daudenean, eta eutsi heldulekuei.",
+   "Bultzatu aldakak gorantz gluteoak estutuz izterrak enborrarekin lerrokatu arte, eta eutsi une batez goian.",
+   "Jaitsi kontrolatuta ibilbidearen amaiera baino lehentxeago arte eta errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Jarri kuxina iztaiaren tolesturan. Abdomenean uztea da makina honen gauza benetan deseroso bakarra, eta kuxina mugituz konpontzen da, ez betegarria gehituz.",
+   "Amaitu mugimendua aldakarekin, ez gerrialdearekin. Goian saihetsak irekitzen bazaizkizu, aldaka-luzapena amaitu eta arkutzen hasi zaren seinale da; hor makinak gluteoa entrenatzeari uzten dio.",
+   "Hau da bankua eta barra okupatuta daudenean erabiltzeko aldaka-bultzada: bizkarraldea eta plataforma egituraren parte dira, beraz ez dago gaizki egin daitekeen muntaketarik."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Curla Scott aulkian",
+  "description": "Scott aulkia bizepsa isolatzeko erabiltzen duen curl-aldaera.",
+  "instructions": [
+   "Eseri Scott aulkian besoak kuxinean bermatuta.",
+   "Eutsi Z barra bati helduleku supinoarekin.",
+   "Igo barra sorbaldetarantz.",
+   "Jaitsi kontrolatuta besoak ia luzatuta geratu arte.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Saihestu erreboteak ibilbidearen behealdean.",
+   "Mantendu eskumuturrak neutro Z barraren gainean.",
+   "Igo barra sorbalden edo bizkarraren bultzadarik gabe."
+  ]
+ },
+ "pull-up": {
+  "name": "Dominak",
+  "description": "Bizkar-zabala eta bizepsa lantzen dituen gorputz-pisuko ariketa konposatua.",
+  "instructions": [
+   "Zintzilikatu barra batetik helduleku pronoarekin, sorbalden zabalera baino zertxobait zabalago.",
+   "Igo kokotsa barraren gainetik geratu arte.",
+   "Jaitsi kontrolatuta erabat zintzilik geratu arte.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Saihestu kulunkatzea edo bultzada erabiltzea.",
+   "Aktibatu bizkar-zabala ukondoak beherantz eramanez."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Hanken bultzadarekin egindako sorbalda-prentsa, prentsa militar zorrotzak baino karga handiagoa mugitzeko aukera ematen duena.",
+  "instructions": [
+   "Zutik barra bularraren goialdean eta sorbaldetan bermatuta, ukondoak apur bat aurreratuta eta oinak aldaken zabaleran.",
+   "Tolestu apur bat belaunak enborra bertikal mantenduz, eta luzatu aldakak eta belaunak indarrez.",
+   "Aprobetxatu bultzada barra bultzatzeko besoak buru gainean luzatu arte.",
+   "Jaitsi barra kontrolatuta bularreraino eta leundu hankekin."
+  ],
+  "tips": [
+   "Bultzada hanketatik dator, ez bizkarra atzera okertzetik.",
+   "Amaitu barra buru-gainean eta gorputza egonkor."
+  ]
+ },
+ "push-up": {
+  "name": "Flexioak",
+  "description": "Bularrerako, sorbaldetarako eta trizepsetarako gorputz-pisuko oinarrizko ariketa.",
+  "instructions": [
+   "Hasi plantxa altuko posizioan eskuak sorbalden zabaleran.",
+   "Jaitsi gorputza bularrak ia lurra ukitu arte.",
+   "Bultzatu gorantz hasierako posizioraino.",
+   "Mantendu gorputza lerro zuzenean une oro.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Estutu abdomena eta gluteoak aldaka eror ez dadin.",
+   "Ez ireki ukondoak gehiegi; mantendu enborretik hurbil.",
+   "Mantendu lepoa neutro, lurrera begira."
+  ]
+ },
+ "rack-pull": {
+  "name": "Pisu hila rack-etik",
+  "description": "Belaunen alturatik egindako pisu hil partziala, bizkarraren goialdea eta aldaka-luzapena gainkargatzen dituena.",
+  "instructions": [
+   "Jarri barra euskarrietan belaunen altueran edo apur bat beherago, oinak aldaken zabaleran barraren azpian.",
+   "Heldu barra, tinkatu bizkarra eta abdomena eta bultzatu lurra oinekin.",
+   "Luzatu aldakak eta belaunak aldi berean tente geratu arte, sorbaldak atzera.",
+   "Jaitsi barra kontrolatuta euskarrietan pausatu arte."
+  ],
+  "tips": [
+   "Erabili euskarriak bizkarra neutro mantentzeko aukera ematen duen altueran.",
+   "Ez hiperluzatu gerrialdea amaitzean."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Atzerako zankada mankuernekin",
+  "description": "Atzera urrats bat ematen duen zankada-aldaera, belaunaren egonkortasun handiagorako.",
+  "instructions": [
+   "Jarri zutik mankuernak alboetan eutsiz.",
+   "Eman urrats bat atzera hanka batekin eta jaitsi belauna lurrerantz.",
+   "Jaitsi aurreko izterra lurrarekiko paralelo geratu arte.",
+   "Bultzatu aurreko orpoarekin zutikako posiziora itzultzeko.",
+   "Errepikatu bi aldeetan."
+  ],
+  "tips": [
+   "Egin atzera urrats nahikoa luzea aurreko belaunak oina gaindi ez dezan.",
+   "Mantendu enborra tente eta mankuernak gorputzari itsatsita.",
+   "Osatu errepikapen kopuru bera hanka bakoitzarekin."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Alderantzizko curl nordikoa",
+  "description": "Gorputz-pisuarekin belauniko egindako koadrizeps-ariketa: enborra atzera okertu kontrolatuta aldaka luzatuta mantentzen den bitartean.",
+  "instructions": [
+   "Belaunikatu kuxin baten gainean belaunak aldaken zabaleran, bernak eta oin-gaina lurrean eta enborra tente.",
+   "Mantendu aldaka luzatuta eta core-a aktibatuta.",
+   "Okertu enborra poliki atzerantz gorputza lerro zuzenean mantenduz.",
+   "Jaitsi koadrizepsarekin kontrola dezakezun beste.",
+   "Igo berriro hasierako posiziora.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu aldaka luzatuta une oro, tolestu gabe.",
+   "Jaitsi mugimendua kontrola dezakezun lekuraino bakarrik.",
+   "Erabili kuxin bat belaunen azpian erosoago egoteko."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Errumaniar pisu hila",
+  "description": "Iskiotibialak eta gluteoak azpimarratzen dituen aldaka-bisagrako mugimendua.",
+  "instructions": [
+   "Jarri zutik barra aldaken altueran eutsiz helduleku pronoarekin.",
+   "Eraman aldakak atzera enborra makurtuz, belaunak apur bat tolestuta eta ia finko.",
+   "Jaitsi barra hanketan zehar iskiotibialen luzatzea sentitu arte.",
+   "Bultzatu aldakak aurrerantz zutikako posiziora itzultzeko.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Ez biribildu bizkarraren behealdea; mantendu bizkarrezurra neutro.",
+   "Jaitsi jarrera galdu gabe irits zaitezkeen lekuraino bakarrik.",
+   "Estutu bizkar-zabalak barra gorputzetik hurbil mantentzeko."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Arraun-makina",
+  "description": "Arraun-makinako gorputz osoko ariketa kardiobaskularra: palakada bakoitzak hankekin bultzatzen du, enborra atzera eramaten du eta heldulekutik saihetsetaraino tiratzen du, hankak, bizkarra eta besoak etengabeko ziklo batean landuz.",
+  "instructions": [
+   "Eseri arraun-makinan, lotu oinak plataformetako uhalekin eta heldu heldulekua helduleku pronoarekin.",
+   "Irristatu aurrera eraso-posizioraino: bernak bertikal, enborra aldakaren apur bat aurretik eta besoak bolanterantz luzatuta.",
+   "Bultzatu lehenik hankekin eta eraman eserlekua atzera belaunak ia luzatuta utzi arte.",
+   "Eraman enborra atzera bertikala gaindituz eta orduan tiratu heldulekutik beheko saihetsetaraino, ukondoak saihetsen ondotik pasatzen direla.",
+   "Alderantzikatu ordena errekuperazioan — lehenik besoak aurrera, gero enborra eta azkenik belaunak tolestu — eta irristatu berriro eraso-posizioraino hurrengo palakadarako.",
+   "Jarraitu nahi duzun denboran, distantzian edo palakada kopuruan."
+  ],
+  "tips": [
+   "Errespetatu ordena: hankak, enborra eta besoak tirakadan, eta besoak, enborra eta hankak errekuperazioan. Besoak goizegi tolesteak palakadaren zatirik indartsuena alferrik galtzen du.",
+   "Egin arraun bizkarra lau eta core-a aktibatuta: eraso-posizioan gerrialdea biribiltzeak bihurtzen du arrauna bizkarreko min, lan kardiobaskular beharrean.",
+   "Eraman heldulekua lerro zuzen eta horizontalean beheko saihetsetaraino, eta egin errekuperazioa tirakada baino bi aldiz motelago, kolpez itzuli ordez."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Eserikako prentsa militarra barrarekin",
+  "description": "Eserita barrarekin egindako sorbalda-prentsa, bizkarralde euskarri duela lana deltoidean kontzentratzeko.",
+  "instructions": [
+   "Bizkarralde bertikaleko banku batean eserita, heldu barra sorbaldak baino zertxobait zabalago eta bermatu bularraren goialdean.",
+   "Bultzatu barra lerro zuzenean gorantz ukondoak luzatu arte.",
+   "Mantendu barra buru-gainean, saihetsak bilduta.",
+   "Jaitsi kontrolatuta lepauztairaino."
+  ],
+  "tips": [
+   "Estutu gluteoak eta abdomena bizkarra ez arkutzeko.",
+   "Mugitu burua atzera barrari bidea uzteko, lepoa behartu gabe."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Eserikako arrauna polean",
+  "description": "Polea duen arraun-makina batean egindako bizkar-ariketa, eserita heldulekutik enborrerantz tiratuz.",
+  "instructions": [
+   "Eseri arraun-estazioan eta jarri oinak euskarrietan.",
+   "Eutsi heldulekuari eta eseri tente, aurrerantz apur bat makurtuta.",
+   "Eraman ukondoak atzera eta tiratu heldulekutik abdomenaren behealderantz.",
+   "Uzkurtu omoplatoak tirakadaren amaieran.",
+   "Luzatu besoak kontrolatuta hasierako posiziora itzuliz.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu enborra tente kulunka txikienarekin.",
+   "Eraman ukondoak zuzenean atzera, ez alboetara.",
+   "Uzkurtu omoplatoak tirakadaren amaieran."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Eserikako biki-igoera makinan",
+  "description": "Eserita egindako makinako orpo-igoera, soleo muskulua bereziki lantzeko.",
+  "instructions": [
+   "Eseri orpo-igoera makinan kuxinak izterren gainean bermatuta.",
+   "Jaitsi orpoak ahalik eta gehien.",
+   "Altxatu oin-punten gainera.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Tolestutako belaunak bikia lasaitzen du, beraz soleoak lan gehiago hartzen du bere gain.",
+   "Erabili ibilbide osoa."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Eserikako biki-igoera mankuernekin",
+  "description": "Eserita egindako orpo-igoera mankuernak izterren gainean dituzula, soleoa belauna tolestuta lantzen duena.",
+  "instructions": [
+   "Eseri banku batean oin-puntak maila edo disko baten gainean eta mankuerna bat izter bakoitzaren gainean, belaunetatik hurbil.",
+   "Utzi orpoak ahal duzun beste erortzen bikia luzatzeko.",
+   "Igo orpoak oinaren aurrealdearekin bultzatuz gehieneraino.",
+   "Eutsi une batez goian eta jaitsi kontrolatuta."
+  ],
+  "tips": [
+   "Eutsi mankuernei eskuekin irrista ez daitezen.",
+   "Tolestutako belaunak lana soleora eramaten du."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Eserikako alboko igoerak mankuernekin",
+  "description": "Eserita egindako isolamendu-ariketa: mankuernak alboetara altxatzen dira, alboko deltoideak hanken bultzadarik gabe landuz.",
+  "instructions": [
+   "Eseri banku batean mankuerna bat esku bakoitzean alboetan.",
+   "Mantendu bizkarra tente eta core-a uzkurtuta.",
+   "Altxatu bi mankuernak alboetara sorbalden altueraraino.",
+   "Mantendu ukondoak apur bat tolestuta.",
+   "Jaitsi mankuernak kontrolatuta.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Erabili pisu arina igoera zorrotza mantentzeko.",
+   "Gidatu ukondoekin eskuekin beharrean.",
+   "Altxatu sorbalden altueraraino eta jaitsi kontrolatuta."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Eserikako hanka-curla",
+  "description": "Eserita egindako makinako iskiotibialen isolamendu-ariketa, tentsio konstantearekin eta etzandako aldaerak baino aldakako flexoreen parte-hartze txikiagoarekin.",
+  "instructions": [
+   "Egokitu bizkarraldea eta orkatilako kuxina belaunak makinaren biraketa-ardatzarekin lerrokatuta gera daitezen.",
+   "Eseri tente, jarri orkatilen atzealdea kuxinaren gainean eta eutsi heldulekuei.",
+   "Tolestu hankak behera eta atzera eserlekuaren azpira, makinak uzten duen lekuraino.",
+   "Egin etenaldi bat gehieneko uzkurduran eta itzuli poliki hasierako posiziora.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Mantendu bizkarra bizkarraldean tinko bermatuta mugimendu osoan.",
+   "Tolestu oinak apur bat bernetarantz gehieneko uzkurduran, iskiotibialak gehiago aktibatzeko.",
+   "Kontrolatu fase eszentrikoa — ez utzi pisuari hankak azkar itzultzen."
+  ]
+ },
+ "shrug": {
+  "name": "Sorbalda-uzkurdurak barrarekin",
+  "description": "Goiko trapeziorako isolamendu-mugimendua.",
+  "instructions": [
+   "Zutik, eutsi barra bati besoak luzatuta helduleku pronoarekin.",
+   "Igo sorbaldak zuzenean belarrietarantz.",
+   "Eutsi une batez goian.",
+   "Jaitsi sorbaldak kontrolatuta.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Igo sorbaldak bertikalean, zirkulurik egin gabe.",
+   "Ez erabili besoak; ukondoak luzatuta geratzen dira denbora osoan.",
+   "Saihestu hankekin bultzatzea pisu gehiago igotzeko."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Alboka etzandako aldaka-abdukzioa",
+  "description": "Gluteo ertaina eta aldakako abduktoreak lantzen dituen gorputz-pisuko isolamendu-ariketa.",
+  "instructions": [
+   "Etzan alboka hankak bata bestearen gainean.",
+   "Mantendu beheko hanka apur bat tolestuta.",
+   "Altxatu goiko hanka sabairantz.",
+   "Jaitsi kontrolatuta.",
+   "Errepikatu bi aldeetan."
+  ],
+  "tips": [
+   "Mantendu aldakak bata bestearen gainean ariketa osoan.",
+   "Saihestu pelbisa okertzea."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Alboka etzandako aldaka-addukzioa",
+  "description": "Alboka etzandako addukzio-ariketa, beheko hanka grabitatearen aurka altxatzen duena aldaka gorputz-pisuarekin lantzeko.",
+  "instructions": [
+   "Etzan alboka beheko hanka zuzen.",
+   "Tolestu goiko hanka eta jarri bere oina lau beheko izterraren aurrean.",
+   "Bermatu burua beheko besoan.",
+   "Altxatu beheko hanka sabairantz.",
+   "Jaitsi hanka kontrolatuta.",
+   "Osatu errepikapenak alde batean eta gero aldatu."
+  ],
+  "tips": [
+   "Mugitu hanka bakarrik; aldaka eta enborra geldi geratzen dira.",
+   "Igo hanka bultzadarik gabe eta jaitsi poliki.",
+   "Lerrokatu sorbaldak, aldaka eta oinak mugitzen hasi aurretik."
+  ]
+ },
+ "side-plank": {
+  "name": "Alboko plantxa",
+  "description": "Zeiharrak eta alboko core-a lantzen dituen alboko plantxaren aldaera.",
+  "instructions": [
+   "Etzan alboka besaurrea lurrean eta ukondoa sorbaldaren azpian.",
+   "Altxatu aldakak lurretik burutik oinetara lerro zuzen bat osatuz.",
+   "Eutsi posizioari core-a estututa.",
+   "Arnastu erritmo erregularrean.",
+   "Errepikatu bi aldeetan."
+  ],
+  "tips": [
+   "Ez utzi aldaka lurrerantz hondoratzen.",
+   "Lerrokatu sorbaldak eta aldaka plano berean, enborra biratu gabe.",
+   "Bultzatu lurra besaurrearekin sorbaldatik zintzilik ez geratzeko."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Beso bakarreko arrauna mankuernarekin",
+  "description": "Mankuernarekin egindako alde bakarreko bizkar-ariketa, garapen orekaturako.",
+  "instructions": [
+   "Jarri belaun bat eta esku bat banku batean euskarri gisa.",
+   "Eutsi mankuerna bati beste eskuan besoa luzatuta.",
+   "Tira mankuernatik aldakarantz omoplatoa estutuz.",
+   "Jaitsi mankuerna kontrolatuta.",
+   "Errepikatu bi aldeetan."
+  ],
+  "tips": [
+   "Ez biratu enborra tiratzean; mantendu aldaka egonkor.",
+   "Saihestu sorbalda belarrirantz igotzea tirakada hastean.",
+   "Egin errepikapen berak beso bakoitzarekin."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Beso bakarreko alboko igoerak disko-makinan",
+  "description": "Disko-makinako alboko igoera beso bat aldiko landuz, alde bakoitzak bere karga altxa dezan eta biak maila berera entrena daitezen.",
+  "instructions": [
+   "Egokitu eserlekuaren altuera kuxinaren ardatza zure sorbaldarekin lerrokatuta gera dadin eta kargatu landuko duzun aldea bakarrik.",
+   "Eseri bizkarra bizkarraldean bermatuta eta jarri lan egiten duen besoaren kanpoaldea bere kuxinaren kontra.",
+   "Eutsi alde libreko heldulekuari edo bermatu esku hori magalean, eta mantendu enborra eserlekuarekin lerrokatuta.",
+   "Bultzatu lan egiten duen besoa kanpora eta gora kuxinaren kontra sorbaldaren altueraraino, eta jaitsi kontrolatuta.",
+   "Osatu alde horretako errepikapen guztiak, gero kargatu eta landu beste aldea."
+  ],
+  "tips": [
+   "Berdindu aldeak beso ahularen arabera, ez indartsuaren arabera. Alde bat aldiko lantzeak desoreka bat agerian uzten du soilik alde ahulari errepikapen kopurua ezartzen uzten badiozu.",
+   "Ez utzi enborra lan egiten duen aldera okertzen. Karga beso bakarrean dagoenez, makina jada ez da bere kabuz orekatzen, eta okertzeak igoera alboko flexio bihurtzen du.",
+   "Hasi beso ahulenetik helburua hark marka dezan, eta eman atseden bera bi aldeei."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Hanka bakarreko gluteo-zubia",
+  "description": "Hanka bakarra bermatuta egindako gluteo-zubia, materialik gehitu gabe eskakizuna handitzen duena.",
+  "instructions": [
+   "Etzan ahoz gora belaun bat tolestuta eta oina lurrean bermatuta, eta beste hanka airean luzatuta.",
+   "Bultzatu euskarri-hankaren orpoarekin eta altxatu aldaka sorbalda, aldaka eta belauna lerrokatu arte.",
+   "Estutu gluteoa goian une batez gerrialdea arkutu gabe.",
+   "Jaitsi kontrolatuta aldaka bermatu gabe; osatu errepikapenak eta aldatu hanka."
+  ],
+  "tips": [
+   "Mantendu pelbisa maila berean, aldaka bat erortzen utzi gabe.",
+   "Hasi bi hankako gluteo-zubiarekin kostatzen bazaizu."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Frantziar prentsa",
+  "description": "Etzanda barrarekin egindako trizeps-luzapena, trizepsak ibilbide osoan isolatzen dituena.",
+  "instructions": [
+   "Etzan banku lau batean barra bat bularraren gainean helduleku estuarekin eutsiz.",
+   "Jaitsi barra kopetarantz ukondoak tolestuz.",
+   "Luzatu besoak berriro hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu besoen goialdea bertikal ariketa osoan.",
+   "Jaitsi poliki ukondoak babesteko."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Banku-prentsa Smith makinan",
+  "description": "Smith makinako banku-prentsa: ibilbide gidatuari esker bularra egonkortze-eskari txikiagoarekin entrena daiteke.",
+  "instructions": [
+   "Etzan banku lau batean Smith makinaren barruan.",
+   "Heldu barra eskuak sorbalden zabalera baino zertxobait bananduago eta askatu.",
+   "Jaitsi barra kontrolatuta bularraren erdiraino.",
+   "Egin etenaldi labur bat errebotatu gabe.",
+   "Bultzatu barra gorantz besoak erabat luzatu arte.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Lerrokatu bankua barra bularraren erdira jaits dadin.",
+   "Mantendu oinak lurrean tinko serie osoan.",
+   "Ikasi barra lotzeko eskumutur-biraketa pisua kargatu aurretik."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Biki-igoera Smith makinan",
+  "description": "Zutikako orpo-igoera Smith makinaren barra gidatua sorbalden gainean duzula.",
+  "instructions": [
+   "Jarri Smith makinaren barraren azpian, oin-puntak maila edo disko baten gainean eta barra bizkarraren goialdean.",
+   "Askatu barra eta utzi orpoak jaisten bikiak luzatu arte.",
+   "Igo oin-puntetan hankak luzatuta, belaunak blokeatu gabe.",
+   "Eutsi une batez goian eta jaitsi kontrolatuta barra topeetan utzi aurretik."
+  ],
+  "tips": [
+   "Gidak egonkortzen zaitu: aprobetxatu karga handiagoa erabiltzeko.",
+   "Mantendu enborra tente eta begirada aurrera."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Prentsa inklinatua Smith makinan",
+  "description": "Smith makinako prentsa inklinatua, bularraren goialdea eta aurreko deltoideak ibilbide gidatuarekin azpimarratzen dituena.",
+  "instructions": [
+   "Egokitu 30-45 gradura inklinatutako banku bat Smith makinaren barruan.",
+   "Etzan eta heldu barra sorbalden zabalera baino zertxobait zabalago.",
+   "Askatu eta jaitsi barra bularraren goialderaino.",
+   "Egin etenaldi labur bat behealdean.",
+   "Bultzatu barra gorantz besoak luzatu arte.",
+   "Errepikatu nahi duzun errepikapen kopurua."
+  ],
+  "tips": [
+   "Egokitu bankuaren posizioa barra bularraren goialdera irits dadin.",
+   "Jaitsi barra bularrean errebotatu gabe.",
+   "Mantendu gluteoak bankuan eta oinak ondo bermatuta."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Squata Smith makinan",
+  "description": "Smith makinaren barra gidatuarekin egindako squata: ibilbide finkoak oreka-eskaria murrizten du eta ahalegina hanketan eta gluteoetan uzten du; aukera ona rack librerik ez dagoenean.",
+  "instructions": [
+   "Egokitu barra sorbalden altueran eta jarri azpian, barra bizkarraren goialdean eta oinak barrarekiko apur bat aurreratuta.",
+   "Biratu eskumuturrak kakoak askatzeko eta mantendu enborra tente eta core-a aktibo.",
+   "Jaitsi belaunak eta aldakak tolestuz izterrak gutxienez lurrarekiko paralelo geratu arte, belaunak oinen norabideari jarraituz.",
+   "Bultzatu oin osoarekin lurraren kontra zutikako posiziora itzuli arte.",
+   "Seria amaitzean, biratu eskumuturrak barra topeetan lotzeko."
+  ],
+  "tips": [
+   "Oinak apur bat aurreratzeak gehiago jaisteko aukera ematen du orpoak altxatu gabe.",
+   "Jarri segurtasun-topeak zure ibilbidearen punturik baxuena baino apur bat beherago."
+  ]
+ },
+ "squat": {
+  "name": "Atzeko squata barrarekin",
+  "description": "Koadrizepsak, gluteoak eta iskiotibialak lantzen dituen beheko gorputzeko mugimendu konposatua.",
+  "instructions": [
+   "Jarri barra goiko trapezioen gainean.",
+   "Atera barra racketik eta eman urrats bat atzera, oinak sorbalden zabaleran.",
+   "Uzkurtu core-a eta jaitsi belaunak eta aldakak tolestuz izterrak lurrarekiko paralelo geratu arte.",
+   "Bultzatu orpoetatik zutikako posiziora itzultzeko.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu bularra goian mugimendu osoan.",
+   "Bultzatu belaunak kanporantz oin-hatzen norabidean."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Zutikako abdominal-gurpila",
+  "description": "Abdominal-gurpilarekin zutik abiatuta egindako rollouta, hankak zuzen eta ibilbide luzearekin.",
+  "instructions": [
+   "Zutik, hankak zuzen, makurtu aurrerantz eta bermatu abdominal-gurpila lurrean bi eskuekin.",
+   "Biratu aurrerantz besoak luzatuta eta abdomena tinko lurrarekiko ia paralelo geratu arte.",
+   "Mantendu aldakak lerrokatuta, gerrialdea erortzen utzi gabe.",
+   "Tira abdomenetik hasierako posiziora biraka itzultzeko."
+  ],
+  "tips": [
+   "Hasi belauniko bertsioarekin ibilbidea kontrolatu arte.",
+   "Gelditu ibilbidea gerrialdea hondoratu aurretik."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Zutikako orpo-igoera",
+  "description": "Zutik egindako orpo-igoera, bikia ibilbide osoan garatzeko.",
+  "instructions": [
+   "Jarri zutik plataforma edo orpo-igoera makina baten ertzean.",
+   "Jaitsi orpoak plataformaren azpira.",
+   "Bultzatu gorantz oin-puntetan.",
+   "Jaitsi poliki.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Egin etenaldi bat goian uzkurdura maximizatzeko.",
+   "Orpoa erabat jaisteak ibilbidea handitzen du."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Zutikako aldaka-abdukzioa",
+  "description": "Gorputz-pisuarekin egindako alboko hanka-igoera, beste hankaren gainean zutik. Altxatutako hankaren aldeko gluteo ertaina lantzen du eta, euskarri-hankan, aldakak maila berean mantentzen dituzten muskuluak.",
+  "instructions": [
+   "Jarri tente eskuak aldaketan eta oinak elkarrekin.",
+   "Pasatu pisua hanka batera eta mantendu belaun hori apur bat tolestuta.",
+   "Altxatu beste hanka zuzena albora, oin-puntak aurrera eta enborra tente.",
+   "Igo hanka gorputzaren goialdea kontrako aldera okertu gabe ahal duzun lekuraino bakarrik.",
+   "Jaitsi hanka poliki euskarri-oinaren ondoan jarri arte.",
+   "Osatu aurreikusitako errepikapen kopurua eta errepikatu beste hankarekin."
+  ],
+  "tips": [
+   "Mantendu aldakak zuzen eta enborra geldi; altxatutako hankaren kontrako aldera okertzeak lana kentzen dio aldakari.",
+   "Kontrolatu jaitsiera-mugimendua ere; ez utzi hanka kulunkatzen.",
+   "Heldu horma edo aulki bati oreka mantentzea lortzen ez baduzu; gehitu goma elastiko bat izterren inguruan mugimendua erraza egiten zaizunean."
+  ]
+ },
+ "step-ups": {
+  "name": "Mailara igoerak",
+  "description": "Hanka batekin kutxa edo banku batera igotzea, koadrizepsak eta gluteoak modu funtzionalean entrenatzen dituena.",
+  "instructions": [
+   "Jarri zutik kutxa edo banku sendo baten aurrean.",
+   "Jarri oin bat osorik kutxaren gainazalean.",
+   "Bultzatu orpo horretatik gorputza kutxara igotzeko.",
+   "Igo atzeko oina kutxaren gainean erabat geratzeko.",
+   "Jaitsi atzeko oina berriro lurrera kontrolatuta, karga lan egiten duen hankan mantenduz.",
+   "Txandakatu hankak edo osatu alde bateko errepikapen guztiak aldatu aurretik."
+  ],
+  "tips": [
+   "Bermatu oin osoa kutxaren gainazalean.",
+   "Bultzatu igotzen den hankaren orpoarekin, ez atzekoarekin.",
+   "Kontrolatu jaitsiera erortzen utzi ordez."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Beso zuzeneko jaitsiera",
+  "description": "Bizkar-zabaletarako isolamendu-ariketa kablearekin, besoak zuzen.",
+  "instructions": [
+   "Jarri zutik polea baten aurrean, goiko poleara lotutako barra zuzen batekin.",
+   "Besoak ia zuzen, bultzatu barra beherantz arku batean izterretarantz.",
+   "Estutu bizkar-zabalak behealdean.",
+   "Itzuli barra poliki hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu besoak ia zuzen mugimendu osoan.",
+   "Eraman barra izterretarantz arku bat deskribatuz.",
+   "Estutu bizkar-zabalak ibilbidearen behealdean."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo pisu hila",
+  "description": "Oinak oso zabalik eta helduleku estuarekin egindako pisu hilaren aldaera, lana gluteoetara, aduktoreetara eta koadrizepsetara eramaten duena.",
+  "instructions": [
+   "Jarri oinak oso zabalik, puntak apur bat kanporantz eta barra oinaren erdiaren gainean.",
+   "Heldu barra eskuak hanken barrualdetik, bizkarra neutro eta bularra goian.",
+   "Bultzatu lurra hankekin belaunak kanporantz irekiz, zutik geratu arte barra gorputzari itsatsita.",
+   "Blokeatu aldaka eta belaunak goian eta jaitsi barra kontrolatuta bide beretik."
+  ],
+  "tips": [
+   "Mantendu barra beti gorputzari itsatsita.",
+   "Belaunek oin-punten norabideari jarraitzen diote; ez utzi barrurantz erortzen."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T arrauna",
+  "description": "T barrarekin eta enborra makurtuta egindako arraun konposatua, bizkar-zabalak eta erronboideak karga handiekin garatzen dituena.",
+  "instructions": [
+   "Jarri T barraren gainean hankak zabalik, oinak sorbalden zabaleran.",
+   "Makurtu aldaketatik enborra 45 gradu inguruan geratu arte.",
+   "Heldu heldulekuak eta mantendu bizkarra lau.",
+   "Tira barratik bularrerantz ukondoak atzera eramanez.",
+   "Estutu omoplatoak goian.",
+   "Jaitsi barra kontrolatuta eta errepikatu."
+  ],
+  "tips": [
+   "Makurtu enborra 45 gradu inguru bizkarra lau mantenduz.",
+   "Tiratu ukondoak atzera eramanez, ez besoekin bakarrik.",
+   "Elkartu omoplatoak tirakadaren goialdean."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Trizeps-luzapena polean",
+  "description": "Trizepsetarako isolamendu-ariketa polea erabiliz.",
+  "instructions": [
+   "Jarri zutik barra zuzeneko osagarria duen polea baten aurrean.",
+   "Heldu barra eta itsatsi ukondoak saihetsei.",
+   "Bultzatu barra beherantz besoak erabat luzatu arte.",
+   "Itzuli poliki hasierako posiziora.",
+   "Errepikatu."
+  ],
+  "tips": [
+   "Mantendu enborra tente.",
+   "Besaurreak bakarrik mugitu behar dira."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Iskiotibialen curla TRXarekin",
+  "description": "Isolamendu-ariketa honek esekidura-entrenagailua erabiltzen du iskiotibialak, gluteoak eta bikiak lantzeko, orpoak gluteoetarantz tolestuz.",
+  "instructions": [
+   "Etzan ahoz gora orpoak esekidura-entrenagailuaren euskarrietan eta belaunak 90 gradutan tolestuta.",
+   "Altxatu aldakak lurretik, belaunetatik sorbaldetara lerro zuzen bat sortuz.",
+   "Luzatu hankak aurrerantz, aldakak altxatuta eta core-an tentsioa mantenduz.",
+   "Tiratu orpoak gluteoetarantz, iskiotibialak indarrez uzkurtuz.",
+   "Kontrolatu mugimendua, serie osoan aldakak eror ez daitezen."
+  ],
+  "tips": [
+   "Mantendu core-a uzkurtuta aldakak hondora ez daitezen.",
+   "Jarri arreta curlaren puntu gorenean iskiotibialak indartsu uzkurtzean.",
+   "Kontrolatu fase eszentrikoa hankak poliki luzatuz."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Bularrerako jaitsiera V barrarekin",
+  "description": "V barra estu batekin helduleku neutroan egindako jaitsiera, bizkar-zabalaren luzatzea maximizatzen duena eta uzkurdura sakonagoa ahalbidetzen duena.",
+  "instructions": [
+   "Jarri V barra bat (D helduleku bikoitza) bularrerako jaitsieraren kablean.",
+   "Eseri izterrak kuxinaren azpian eutsita eta heldu heldulekua ahurrak elkarri begira.",
+   "Hasi besoak buru gainean erabat luzatuta.",
+   "Tira heldulekutik bularrezurrerantz ukondoak behera eta apur bat atzera bultzatuz.",
+   "Estutu bizkar-zabalak beheko posizioan eta igo poliki kontrolatuta.",
+   "Errepikatu gomendatutako errepikapen kopurua."
+  ],
+  "tips": [
+   "Helduleku neutroa leunagoa da sorbaldekin helduleku pronoa edo supinoa baino.",
+   "Imajinatu saihetsak aldaketara hurbiltzen dituzula: pentsatu bizkar-zabaletan, ez besoetan."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Ibilikako zankada mankuernekin",
+  "description": "Aurrera eginez egindako zankada txandakatuak mankuerna bat esku bakoitzean; koadrizepsak eta gluteoak alde bakoitza bereizita lantzen ditu.",
+  "instructions": [
+   "Zutik, mankuerna bat esku bakoitzean eta besoak alboetan lasai.",
+   "Eman urrats luze bat aurrera eta jaitsi bi belaunek 90 gradu inguruko angeluak osatu arte.",
+   "Bultzatu aurreratutako hankarekin zutik jartzeko eta eraman atzeko hanka aurrera hurrengo urratsean.",
+   "Txandakatu hankak enborra tente mantenduz ibilbide osoan."
+  ],
+  "tips": [
+   "Egin urrats nahikoa luzeak aurreko belaunak oin-punta gehiegi gaindi ez dezan.",
+   "Leku librea behar duzu; ez baduzu, egin atzerako zankadak."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Fondoak lastarekin",
+  "description": "Paraleloetan pisu erantsiarekin egindako fondoak, mankuerna bat oinen artean eutsiz edo lastadun txaleko batekin.",
+  "instructions": [
+   "Eutsi paraleloetan besoak luzatuta eta mankuerna bat oinen edo orkatilen artean helduta.",
+   "Okertu enborra apur bat eta tolestu ukondoak kontrolatuta jaisteko.",
+   "Gelditu sorbaldak ukondoen altueran geratzen direnean.",
+   "Bultzatu bularrarekin eta trizepsekin besoak luzatu arte."
+  ],
+  "tips": [
+   "Menderatu lehenik gorputz-pisuko fondoak.",
+   "Ez jaitsi zure sorbaldak onartzen duena baino gehiago."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Dominak lastarekin",
+  "description": "Pisu erantsiarekin egindako domina, mankuerna bat oinen artean eutsiz edo lastadun txaleko batekin.",
+  "instructions": [
+   "Zintzilikatu barratik sorbaldak baino zertxobait zabalago helduta eta eutsi mankuerna bati oinen edo orkatilen artean.",
+   "Eraman ukondoak behera eta atzera kokotsak barra gainditu arte.",
+   "Mantendu gorputza egonkor, kulunkatu gabe.",
+   "Jaitsi kontrolatuta besoak erabat luzatu arte."
+  ],
+  "tips": [
+   "Menderatu lehenik gorputz-pisuko dominak.",
+   "Lastadun txalekoa erabiltzen baduzu, egokitu pisua pixkanaka."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Eserikako arrauna polean helduleku zabalarekin",
+  "description": "Barra luze eta helduleku zabalarekin polean egindako arraun horizontala, bizkarraren goialdea eta sorbaldaren atzealdea kargatzen dituena.",
+  "instructions": [
+   "Eseri beheko polearen aurrean oinak euskarrian, belaunak apur bat tolestuta eta barra luzea zabal helduta.",
+   "Bizkarra zuzen eta bularra goian, tiratu barratik bularraren behealderantz ukondoak kanpora eta atzera eramanez.",
+   "Elkartu omoplatoak amaieran eta eutsi une batez uzkurdurari.",
+   "Luzatu besoak kontrolatuta, omoplatoak bereizten utziz bizkarra konkortu gabe."
+  ],
+  "tips": [
+   "Ez kulunkatu: mugimendua bizkarrak egiten du, ez enborrak.",
+   "Eraman barra bularrera, ez abdomenera, bizkarraren goialdea kargatzeko."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher squata",
+  "description": "Barra ukondoen tolesturan eutsita egindako squata, karga aurrera eramaten duena eta enborrari asko eskatzen diona.",
+  "instructions": [
+   "Jarri barra abdomenaren altueran ukondoen tolesturaren gainean, besaurreak gurutzatuta edo ukabilak elkarrekin.",
+   "Jaitsi aldakak eta belaunak tolestuz, bularra goian eta ukondoak gorputzari itsatsita.",
+   "Gelditu izterrak lurrarekiko paralelo edo apur bat beherago geratzen direnean.",
+   "Bultzatu lurra oinekin berriro tente egon arte."
+  ],
+  "tips": [
+   "Erabili kuxin edo toalla bat barran ukondoetan traba egiten badizu.",
+   "Mantendu abdomena tinko aurrerantz ez okertzeko."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Lurrean hankak luzatuta eserita egindako prentsa militarra, euskarria kentzen duena eta enborraren egonkortasuna eskatzen duena.",
+  "instructions": [
+   "Eseri lurrean hankak aurrera luzatuta eta barra bularraren goialdean bermatuta.",
+   "Mantendu enborra tente eta bultzatu barra lerro zuzenean besoak luzatu arte.",
+   "Gelditu barra buru-gainean atzera okertu gabe.",
+   "Jaitsi kontrolatuta lepauztairaino."
+  ],
+  "tips": [
+   "Erabili zutik baino pisu gutxiago: enborrak egonkortzaile lana egiten du.",
+   "Estutu gluteoak eta abdomena mugimendu osoan."
+  ]
+ }
+}
