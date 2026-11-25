@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Karın Tekerleği",
+  "description": "Tekerleği öne ve geriye yuvarlayarak yapılan, omurganın geriye bükülmeye direncini çalıştıran bir core egzersizi.",
+  "instructions": [
+   "Yere diz çök ve tekerleğin tutamaklarını omuz genişliğinde kavra.",
+   "Bel nötr kalacak şekilde core'u güçlüce sık.",
+   "Tekerleği yavaşça öne yuvarla ve vücudunu kontrol edebildiğin en uzak noktaya kadar uzat.",
+   "Kalçan çökmeden veya sırtın kavislenmeden önce dur.",
+   "Karın kaslarını sıkarak tekerleği dizlerine doğru geri çek."
+  ],
+  "tips": [
+   "Her tekrardan önce core'u sık — belinin kavislenmesine izin verme.",
+   "Hareket açıklığını kademeli olarak artır, kalçan çökmeden dur.",
+   "Alt pozisyonu kontrol edemiyorsan durdurucu olarak duvarı kullan."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold Press",
+  "description": "Bilekleri döndürerek yapılan dambıl omuz press; deltoidi geniş bir açıklıkta çalıştırır.",
+  "instructions": [
+   "Dik sırtlıkta otur, dambılları avuçlar sana dönük ve dirsekler önde göğüs hizasında tut.",
+   "Dirsekleri açıp avuçları öne döndürerek yukarı itmeye başla.",
+   "Dirsekleri kilitlemeden kollar baş üstünde açık şekilde bitir.",
+   "Avuçları tekrar sana döndürerek başlangıç pozisyonuna indir."
+  ],
+  "tips": [
+   "Dönüşü savurmadan, akıcı yap.",
+   "Sırtını sırtlığa dayalı tut."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Destekli Barfiks",
+  "description": "Vücut ağırlığının bir kısmını dengeleyen destekli makinede yapılan barfiks; kurallı barfiks için gereken sırt kuvvetini geliştirir.",
+  "instructions": [
+   "Dizlerini destekli barfiks makinesinin pedine koy.",
+   "Barı avuçlar dışa bakacak şekilde, omuzlardan biraz geniş kavra.",
+   "Dirsekleri aşağı iterek göğsünü bara çek.",
+   "Kollar açık asılı kalana kadar kontrollü in.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Dirsekleri bükmeden önce kürek kemiklerini aşağı indirerek başla.",
+   "Sırtın yükünü azaltmamak için sallanma.",
+   "Tüm tekrarları iyi teknikle tamamlayacak şekilde karşı ağırlığı ayarla."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Denge Topuyla Bacak Curl",
+  "description": "Denge topuyla vücut ağırlığında arka bacak curl: kalçalar yükselirken topuklar kalçaya doğru yuvarlanır.",
+  "instructions": [
+   "Sırtüstü yat; topuklarını ve baldırlarının alt kısmını denge topuna koy, denge için kollarını yana uzat.",
+   "Topuklarla bastırıp omuzlardan ayak bileklerine düz bir çizgi olacak şekilde kalçayı kaldır.",
+   "Kalça yukarıdayken dizleri bükerek topu kalçana doğru yuvarla.",
+   "Kalçayı indirmeden bacakları kontrollü biçimde geri aç.",
+   "Tüm tekrarları tamamla, sonra kalçayı indir ve toptan uzaklaş."
+  ],
+  "tips": [
+   "Kalça set boyunca yukarıda kalır: köprü ve curl birleşimidir.",
+   "İki ayakla başla; kolaylaşınca tek bacağa geç."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Bantla Ayakta Bacak Curl",
+  "description": "Ayak bileğine bant takılarak ayakta yapılan bacak curl; seyahatte veya arka bacağı az yükle bitirmek için kullanışlıdır.",
+  "instructions": [
+   "Direnç bandını bir ayak bileğine tak, diğer ucunu destek ayağının altına veya önündeki sabit bir noktaya bağla.",
+   "Dik dur, denge gerekiyorsa bir yere tutun, destek bacağını hafif bük.",
+   "Uyluğu sabit tutarak topuğu bantla birlikte kalçaya doğru kaldır.",
+   "Yukarıda arka bacağı sık, sonra tam gerilmeye kadar kontrollü indir.",
+   "Bir tarafın tüm tekrarlarını yap ve bacak değiştir."
+  ],
+  "tips": [
+   "Uyluğu sabit tut — yalnızca bacağın alt kısmı hareket eder.",
+   "Hız almak için kalçayı sallama.",
+   "İnişi kontrol edemiyorsan daha hafif bant kullan."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Direnç Bandıyla Lat Pulldown",
+  "description": "Yüksek bir noktaya bağlanan direnç bandıyla, kablo yerine yapılan dikey çekiş.",
+  "instructions": [
+   "Ayakta, bant yüksek bir noktaya (kapı veya bar) bağlı ve her elde bir uç, kollar baş üstünde açık.",
+   "Göğüs dik, dirsekleri yanlara getirerek elleri aşağı çek.",
+   "Eller omuz hizasına gelince sırtı sık.",
+   "Kollar yeniden açılana kadar kontrollü yükselt."
+  ],
+  "tips": [
+   "Çekmek için gövdeyi geriye yatırma.",
+   "Başlamadan önce bağlantıyı iyice sağlamlaştır."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Bant Açma (Pull-Apart)",
+  "description": "Omuzun arkasını ve üst sırtı etkinleştirmek için bandı düz kollarla ayırma.",
+  "instructions": [
+   "Ayakta, bandı eller omuz genişliğinde ve kollar göğüs hizasında önde tut.",
+   "Bant göğse değene kadar kolları yana açarak elleri ayır.",
+   "Omuzları kaldırmadan hareketin sonunda kürek kemiklerini birleştir.",
+   "Bandın seni çekmesine izin vermeden kontrollü olarak başa dön."
+  ],
+  "tips": [
+   "15 veya daha fazla temiz tekrar yapabileceğin bandı seç.",
+   "Beli kavislendirmemek için kaburgaları içeride tut."
+  ]
+ },
+ "band-row": {
+  "name": "Direnç Bandıyla Kürek",
+  "description": "Ayaklara sabitlenen bantla oturarak kürek; bant dışında ekipman gerektirmez.",
+  "instructions": [
+   "Yere bacaklar uzatılmış otur, bandı ayak tabanlarından geçir ve her elde bir uç tut.",
+   "Sırtın düz, dirsekleri geriye götürerek elleri karnına çek.",
+   "Hareketin sonunda kürek kemiklerini birleştir.",
+   "Bandın gerginliğini bırakmadan kolları kontrollü aç."
+  ],
+  "tips": [
+   "Gövdeyle yardım etmek için sallanma.",
+   "12 ile 15 temiz tekrar yapabileceğin bandı seç."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Direnç Bandıyla Omuz Press",
+  "description": "Direnç bandının üzerinde ayakta omuz press; çok az ekipmanla deltoidi çalıştırır.",
+  "instructions": [
+   "Bandın ortasında dur, ayaklar kalça genişliğinde, uçlar omuz hizasında ellerde.",
+   "Kollar baş üstünde açılana kadar elleri yukarı it.",
+   "Karnı sıkı ve kaburgaları içeride tut.",
+   "Gerginliği kaybetmeden omuzlara kontrollü indir."
+  ],
+  "tips": [
+   "İterken sırtı kavislendirme.",
+   "Direnci artırmak için bandı bir tur daha dola."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Halterle Bulgar Squat",
+  "description": "Arka ayak sehpada yükseltilmiş, halter sırtta tek bacak squat.",
+  "instructions": [
+   "Bir ayağın üstünü arkandaki sehpaya koy, halter üst sırtta, diğer bacak önde.",
+   "Öndeki dizi bük ve uyluk yere paralel olana kadar gövde dik in.",
+   "Ağırlığı öndeki bacağın topuğunda tut.",
+   "Bacak açılana kadar öndeki ayakla yeri it; tekrarları tamamla ve bacak değiştir."
+  ],
+  "tips": [
+   "Öndeki diz parmak ucunu fazla geçmeyecek şekilde mesafeyi ayarla.",
+   "Önce yüksüz veya dambılla dene."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Halterle Curl",
+  "description": "En fazla yük için halter kullanılan klasik bir biseps izolasyon egzersizi.",
+  "instructions": [
+   "Halteri omuz genişliğinde alttan tutuşla tutarak ayakta dur.",
+   "Halteri omuzlara doğru kaldır.",
+   "Yukarıda sık, sonra kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Gövdeyi sallamaktan kaçın.",
+   "Dirsekleri yanlara yapışık tut."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Halterle Kalça Köprüsü",
+  "description": "Daha fazla direnç için halterle yüklenen kalça köprüsü.",
+  "instructions": [
+   "Yere yat, halter kalçanın üzerinde, dizler bükülü.",
+   "Kalçayı sıkarak yükselt.",
+   "Yukarıda kalça tam açıkken tut.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Kalçayı açarken beli kavislendirmekten kaçın.",
+   "Parmak uçlarıyla değil topuklarla it.",
+   "Çeneni içeri al ve üst sırtını destekli tut."
+  ]
+ },
+ "barbell-row": {
+  "name": "Eğilerek Halter Kürek",
+  "description": "Üst ve orta sırtı çalıştıran bileşik bir çekiş hareketi.",
+  "instructions": [
+   "Dizler hafif bükülü, kalçadan öne eğil.",
+   "Barı omuz genişliğinden biraz geniş kavra.",
+   "Kürek kemiklerini sıkarak barı alt göğse çek.",
+   "Barı kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Gövdeyi yaklaşık 45 derecede tut.",
+   "Ağırlığı savurmak için hız alma."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Halterle Ayakta Baldır Kaldırma",
+  "description": "Özel makine gerekmeden, sırtta serbest halterle ayakta topuk kaldırma.",
+  "instructions": [
+   "Halter üst sırtta, ayak uçları basamak veya plaka üzerinde, kalça genişliğinde dur.",
+   "Gövde dik, baldırlar gerilene kadar topukları indir.",
+   "Dizleri bükmeden olabildiğince parmak ucunda yüksel.",
+   "Yukarıda bir an tut ve kontrollü indir."
+  ],
+  "tips": [
+   "Dengeyi kontrol edene kadar hafif ağırlıkla başla.",
+   "Güvenlik için, durdurucuları uygun yükseklikte bir rafın içinde yap."
+  ]
+ },
+ "bench-press": {
+  "name": "Halter Bench Press",
+  "description": "Göğsü, omuzları ve trisepsi çalıştıran bileşik bir itiş hareketi.",
+  "instructions": [
+   "Gözlerin barın altında olacak şekilde sehpaya yat.",
+   "Barı omuz genişliğinden biraz geniş kavra.",
+   "Barı raftan al ve göğsün ortasına indir.",
+   "Barı kollar tam açılana kadar geri it.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Ayakları yerde düz tut.",
+   "Belde hafif bir kavis koru.",
+   "Sabit kalmak için bacaklarla yere bastır."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Dizler Bükülü Ters Kürek",
+  "description": "Ters küreğin başlangıç versiyonu: dizler bükülü ve ayaklar vücuda yakınken daha az ağırlık kalkar, kontrolü kolaydır.",
+  "instructions": [
+   "Alçak ve sağlam bir barın altına yat, omuzlardan biraz geniş kavra; gövde düz, dizler bükülü, ayak tabanları yerde.",
+   "Dirsekleri geriye alıp kürek kemiklerini birleştirerek göğsünü bara çek.",
+   "Kalçayı düşürmeden yukarıda bir an tut.",
+   "Kollar açılana kadar kontrollü in."
+  ],
+  "tips": [
+   "Kolaylaştırmak için ayakları vücuda yaklaştır, ilerlemek için uzaklaştır.",
+   "12 tekrarda ustalaşınca bacaklar düz versiyona geç."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Vücut Ağırlığıyla Baldır Kaldırma",
+  "description": "Baldırları güçlendiren temel bir vücut ağırlığı topuk kaldırma egzersizi.",
+  "instructions": [
+   "Düz bir zeminde ayaklar kalça genişliğinde dur.",
+   "Parmak ucunda olabildiğince yüksel.",
+   "Yukarıda baldırları sık.",
+   "Topukları kontrollü olarak yere indir.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Yükselirken ağırlığı tüm parmaklara dağıt.",
+   "Çalışmayı baldırda toplamak için bacakları düz tut.",
+   "Dengeyi korumak için bir noktaya bak."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Vücut Ağırlığıyla Geriye Lunge",
+  "description": "Ekipmansız geriye lunge; öne lunge'a göre daha dengeli ve dizlere daha yumuşaktır.",
+  "instructions": [
+   "Ayaklar bitişik, eller belde, göğüs dik dur.",
+   "Geriye uzun bir adım at ve arka diz yere yaklaşana kadar iki dizi bükerek in.",
+   "Gövdeyi dik, ağırlığı öndeki ayakta tut.",
+   "Öndeki bacakla itip başa dön; tekrarları tamamla ve bacak değiştir."
+  ],
+  "tips": [
+   "Öndeki diz parmak ucunu fazla geçmeyecek kadar uzun adım at.",
+   "Denge hâlâ zorsa bir desteğe tutun."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Vücut Ağırlığıyla Squat",
+  "description": "Ekipmansız temel squat; hareket kalıbını öğrenmek ve her yerde bacak çalıştırmak için idealdir.",
+  "instructions": [
+   "Ayaklar omuz genişliğinde, parmaklar hafif dışa, kollar önde dur.",
+   "Göğüs dik ve sırt nötr, oturur gibi kalçayı geri ve aşağı götür.",
+   "Uyluklar yere paralel olana kadar in, dizler ayak çizgisini izlesin.",
+   "Yeniden dik durana kadar tüm ayakla yeri it."
+  ],
+  "tips": [
+   "Tüm hareket boyunca topukları yerde tut.",
+   "İnmek zorsa bir sandalyeye otur ve hız almadan kalk."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgar Squat",
+  "description": "Arka ayağın yükseltildiği tek taraflı bir squat çeşidi.",
+  "instructions": [
+   "Bir sehpanın önünde dur ve bir ayağını arkandaki sehpaya koy.",
+   "Dambılları yanlarda tut.",
+   "Öndeki uyluk yere paralel olana kadar vücudu indir.",
+   "Öndeki topukla itip ayakta pozisyona dön.",
+   "İki tarafta da yap."
+  ],
+  "tips": [
+   "Ağırlığın neredeyse tamamını öndeki bacakta tut.",
+   "Lunge dengeli olana kadar sehpaya mesafeyi ayarla.",
+   "Bacak değiştirmeden önce tek bacağın tüm tekrarlarını yap."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Kablo Crunch",
+  "description": "Üst makarada halatla diz üstü karın crunch; rektus abdominis çalışmasına kademeli yük eklemeyi sağlar.",
+  "instructions": [
+   "Halat aparatı üstte olan bir kablonun önünde diz çök.",
+   "Halatı dirsekler bükülü, alnının yakınında tut.",
+   "Omurgayı bükerek ve dirsekleri uyluklara götürerek aşağı in.",
+   "Alt noktada karın kaslarını güçlüce sık.",
+   "Başa dön ve tekrarla."
+  ],
+  "tips": [
+   "Kollarla çekmek yerine omurgayı bük.",
+   "Her tekrarda kalçayla geriye oturmaktan kaçın.",
+   "Karnı daha iyi sıkmak için inerken güçlüce nefes ver."
+  ]
+ },
+ "cable-curl": {
+  "name": "Kablo Curl",
+  "description": "Sürekli gerilim için kabloyla biseps curl.",
+  "instructions": [
+   "Düz bar veya EZ barlı alt makaranın önünde dur.",
+   "Barı alttan tutuşla kavra, dirsekler yanlarda.",
+   "Halteri omuzlara doğru kaldır.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Barı kaldırırken dirseklerin öne kaymasına izin verme.",
+   "Ağırlığa yardım etmek için gövdeyi sallama.",
+   "Gerilimi korumak için makaradan biraz uzaklaş."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Kabloda Dış Rotasyon",
+  "description": "Dirsek yanda kablo dış rotasyon; arka deltoid yardımıyla rotator manşetin dış döndürücülerini güçlendirir.",
+  "instructions": [
+   "Makarayı dirsek yüksekliğine ayarla ve tutacağı kavra.",
+   "Çalışan dirsek 90 derece bükülü, makineye yan dur.",
+   "Dirsek yanda yapışık, ön kolu dışa döndür.",
+   "Hareketin sonunda dur.",
+   "Kontrollü dön. Bir tarafın tekrarlarını yap, sonra değiştir."
+  ],
+  "tips": [
+   "Kolu döndürürken omuz kaldırmaktan kaçın.",
+   "Hafif ağırlıkla, yavaş ve kontrollü çalış.",
+   "Bileği sabit ve ön kolla aynı hizada tut."
+  ]
+ },
+ "cable-fly": {
+  "name": "Kablo Fly",
+  "description": "Sürekli gerilim sağlayan kabloyla göğüs izolasyon egzersizi.",
+  "instructions": [
+   "Tutacaklar üst makaralara takılı iki kablo kolonunun arasında dur.",
+   "Dirsekler hafif bükülü, kolları yana aç.",
+   "Ellerini kucaklar gibi göğsün önünde birleştir.",
+   "Yavaşça başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Hareket press'e dönmesin diye dirsek açısını sabit tut.",
+   "Eller buluşunca göğsü bir saniye sık.",
+   "Kollar açıkken omuzları öne alma."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Kabloda Öne Kaldırma",
+  "description": "Tüm açıklıkta sürekli gerilim sağlayan alt makaradan öne kaldırma.",
+  "instructions": [
+   "Alt makaraya sırtını dön, kablo bacak arasından geçsin, tutacak bir elde, kol uyluğun önünde.",
+   "Dirsek hafif bükülü, kolu omuz hizasına kadar öne kaldır.",
+   "Gövdeyi geriye yatırmadan yukarıda bir an tut.",
+   "Ağırlığı dinlendirmeden kontrollü indir; tekrarla ve kol değiştir."
+  ],
+  "tips": [
+   "Kablo geriye çekecek kadar uzakta dur.",
+   "Sırtı kavislendirmemek için karnı sıkı tut."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Kabloda Yana Açış",
+  "description": "Yan deltoide sürekli gerilim veren tek kollu kablo yana açış.",
+  "instructions": [
+   "Alt makaraya yan dur ve tutacağı makineden uzak elle kavra.",
+   "Dirsekte hafif bükülme koru ve kablonun vücudun önünden geçmesine izin ver.",
+   "Kolu yere paralel olana kadar yana kaldır.",
+   "Kontrollü indir. Bir tarafın tekrarlarını yap, sonra değiştir.",
+   "Gerilimi koru — ağırlığın altta dinlenmesine izin verme."
+  ],
+  "tips": [
+   "Hareketi elle değil dirsekle yönlendir.",
+   "Yukarıda sallanmadan kısa bir durak yap.",
+   "Dambıldan daha az yük kullan — kablo gerilimi sabittir."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Kabloda Baş Üstü Triseps Extension",
+  "description": "Kabloyla triseps egzersizi: sırtın ağırlık bloğuna dönük, halatı başının arkasında tutar ve dirsekleri açarak yukarı, baş üstüne itersin. Baş üstü pozisyon trisepsin uzun başını gerer ve kablo hareket boyunca kası gergin tutar.",
+  "instructions": [
+   "Alt makaraya halat tak ve hafif ağırlık seç.",
+   "Halatı iki elle kavra, bloğa sırtını dön ve kablo seni geriye çekecek şekilde bir adım öne çık.",
+   "Dirsekler bükülü, üst kollar kulaklara yakın, eller başın arkasında olacak şekilde halatı baş üstüne kaldır.",
+   "Gövdeyi sık, üst kolları sabit tut, sonra kollar baş üstünde tam açılana kadar dirsekleri açarak halatı yukarı it.",
+   "Yukarıda kısa dur, sonra dirsekleri bükerek halatı kontrollü biçimde başın arkasına indir.",
+   "Planlanan tekrar sayısını yap."
+  ],
+  "tips": [
+   "Dirsekler öne baksın ve üst kollar sabit kalsın; açılır veya kayarsa hareket press'e döner.",
+   "Kablo seni dengede tutacak kadar öne adım at ve kolları kaldırırken beli kavislendirme.",
+   "Tüm gerilmede kontrol edebileceğin ağırlık kullan; ağır yükler dirsekleri açar."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Kabloda Pallof Press",
+  "description": "Dönmeye karşı core egzersizi: kablo seni yana çekerken tutacağı göğsünden düz iter ve gövdenin dönmesine izin vermezsin.",
+  "instructions": [
+   "Makarayı göğüs hizasına ayarla, makineye yan durup tutacağı iki elle al.",
+   "Kabloda gerçek gerilim olana kadar uzaklaş; ayaklar omuz genişliğinde, dizler hafif bükülü.",
+   "Tutacağı göğsün ortasına getir; gövdeyi ve kalçayı sık.",
+   "Seni makineye döndürmek isteyen çekişe direnerek tutacağı kollar açılana kadar düz ileri it.",
+   "Açık pozisyonu bir an tut ve tutacağı kontrollü biçimde göğse geri getir.",
+   "İstenen tekrarları yap, sonra dönüp diğer tarafa tekrarla."
+  ],
+  "tips": [
+   "Hiçbir şey dönmemeli. İterken omuzlar makaraya dönüyorsa ağırlığı azalt — çalışan şey gerçekleşmeyen rotasyondur.",
+   "Makineden uzaklaştıkça kaldıraç kolu uzar ve zorlaşır; ağırlık bloğuna dokunmadan zorluğu değiştirebilirsin.",
+   "Kolları göğüs hizasında, omuzları aşağıda tut; tutacağın yükselmesi hareketi öne kaldırmaya çevirir."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Kabloda Ters Fly",
+  "description": "Arka deltoidler için ayakta kablo egzersizi: iki makara kulesinin arasına bakarak, kablolar önünde çapraz, karşı tutacakları tutar ve kolları omuz hizasına gelene kadar dışa ve geriye götürürsün. Kablolar yay boyunca omuz arkasını gergin tutar.",
+  "instructions": [
+   "İki makarayı yaklaşık omuz hizasına ayarla ve kulelerin ortasında dur.",
+   "Sol tutacağı sağ elle, sağ tutacağı sol elle kavra; kablolar önünde çaprazlansın.",
+   "Kollar omuz hizasında önde açık, dirsekler hafif bükülü dik dur.",
+   "Dirseklerle yönlendirerek kolları omuz hizasına gelene kadar geniş bir yay ile dışa ve geriye götür.",
+   "Beli kavislendirmeden kürek kemiklerini kısaca birleştir.",
+   "Tutacakları yavaşça çapraz başlangıç pozisyonuna getir ve planlanan tekrarları yap."
+  ],
+  "tips": [
+   "Dirsekleri hafif bükülü ve sabit tut; bükülüp açılırlarsa hareket küreğe döner.",
+   "Omuzları aşağıda ve boynu gevşek tut ki üst trapez değil arka deltoidler çalışsın.",
+   "Hafif ağırlık ve yavaş dönüş kullan; kablolar yayın sonunda daha güçlü çeker, o noktayı kontrol et."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Roman Sandalyesinde Diz Çekme",
+  "description": "Roman sandalyesinde alt karın ve kalça fleksörlerini çalıştıran vücut ağırlığı egzersizi.",
+  "instructions": [
+   "Roman sandalyesine sırtın arkalığa düz, ön kollar desteklerde yerleş.",
+   "Bacaklar düz aşağı sarksın.",
+   "Core'u sık ve dizleri göğse çek.",
+   "Yukarıda kısa tut, sonra yavaşça başa indir.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Hız almak için bacakları sallama.",
+   "Dizleri kaldırırken nefes ver.",
+   "Egzersiz boyunca sırtını arkalığa dayalı tut."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Makinede Göğüs Press",
+  "description": "Makinede göğüs itiş hareketi; yeni başlayanlar için idealdir.",
+  "instructions": [
+   "Makineye sırtın arkalığa düz oturur şekilde yerleş.",
+   "Tutacakları göğüs hizasında kavra.",
+   "Kollar tam açılana kadar tutacakları ileri it.",
+   "Yavaşça başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Tutacaklar göğüs hizasında olacak şekilde koltuğu ayarla.",
+   "Dirsekleri sertçe kilitlemeden it.",
+   "Ağırlığı bırakmadan kontrollü geri dön."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Göğüs Destekli Dambıl Kürek",
+  "description": "Beldeki yükü kaldırıp sırt kaslarını izole eden göğüs destekli dambıl kürek.",
+  "instructions": [
+   "Eğimli sehpaya yüzüstü yat, dambıllar aşağıda sarksın.",
+   "Dambılları yanlardan çek.",
+   "Yukarıda sık ve indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Göğüs desteği sırt yorgunluğunu ortadan kaldırır.",
+   "Kürek kemiklerini birleştirmeye odaklan."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Göğüs Destekli Kettlebell Kürek",
+  "description": "Bu egzersiz, gövde eğimli sehpada desteklenirken her elde bir kettlebell'i kalçaya çekerek sırt kaslarını, özellikle kanat ve rhomboidleri çalıştırır.",
+  "instructions": [
+   "Eğimli sehpaya yüzüstü yat, her elde bir kettlebell ile kollar serbest sarksın.",
+   "Karnını sık ve kürek kemiklerini geri çek.",
+   "Kürek kemiklerini sıkarak kettlebell'leri kalçaya çek.",
+   "Sırttaki kasılmayı hissederek yukarıda kısa dur.",
+   "Kettlebell'leri yavaşça ve kontrollü olarak başa indir."
+  ],
+  "tips": [
+   "Hareket boyunca gövdeyi sabit tut; sallanma.",
+   "Çekişi yalnızca kollarla değil sırt kaslarıyla başlatmaya odaklan.",
+   "Kanat kaslarını vurgulamak için dirsekleri vücuda yakın tut."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Göğüs Destekli Makine Kürek",
+  "description": "Gövdeyi destekleyen göğüs pedli makinede oturarak kürek: çekişi kanatlar ve kürek arası kaslar yapar, bel devre dışı kalır. Dirsekleri arkana götürerek tutacakları çeker, sonra kontrollü geri bırakırsın.",
+  "instructions": [
+   "Tutacaklar alt göğüs hizasında olacak şekilde koltuğu ayarla; göğüs pedde, ayaklar sağlam bas.",
+   "Öne uzan ve tutacakları kollar açık, omuzlar gevşek kavra.",
+   "Gövdeyi sık ve dirsekleri arkana götürerek tutacakları çek.",
+   "Göğsü pedden ayırmadan çekişin sonunda kürek kemiklerini birleştir.",
+   "Kısa dur, sonra kolları açarak tutacakları kontrollü geri götür.",
+   "Göğsü sürekli pedde tutarak planlanan tekrarları yap."
+  ],
+  "tips": [
+   "Ellerle değil dirseklerle çek ki hareketi kanat ve orta sırt yapsın, bisepsler yardım etsin.",
+   "Göğsü pedde, omuzları aşağıda tut; omuz kaldırır veya geriye yatarsan kürek üst trapez çekişine döner.",
+   "Bir sonraki çekişten önce tam gerilme için her tekrarın başında kürek kemiklerinin açılmasına izin ver."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Göğüs Destekli T-Bar Kürek",
+  "description": "Göğüs eğimli sehpada destekli T-bar kürek; bele yük bindirmeden sırtı izole eder.",
+  "instructions": [
+   "Göğsünü eğimli sehpaya daya, ayaklar yerde sağlam, T-bar tutacağını kollar açık kavra.",
+   "Dirsekleri geriye ve vücuda yakın götürerek tutacağı göğse çek.",
+   "Yukarıda kürek kemiklerini bir an sık.",
+   "Göğsü sehpadan ayırmadan kollar açılana kadar kontrollü indir."
+  ],
+  "tips": [
+   "Başı omurgayla aynı hizada tut.",
+   "Kaldırmak için göğsü sehpadan ayırman gerekiyorsa ağırlığı azalt."
+  ]
+ },
+ "chin-ups": {
+  "name": "Ters Tutuşla Barfiks",
+  "description": "Kanat ile birlikte bisepsi güçlü biçimde çalıştıran ters tutuşlu barfiks çeşidi.",
+  "instructions": [
+   "Barda omuz genişliğinde alttan tutuşla asıl.",
+   "Çene barı geçene kadar yüksel.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Egzersiz boyunca core'u sıkı tut.",
+   "Aşırı sallanmaktan kaçın."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Dar Tutuş Bench Press",
+  "description": "Eller daha dar tutulan bench press; göğüs çalışmasını koruyarak triseps katılımını artırır.",
+  "instructions": [
+   "Sehpaya yat ve barı eller omuz genişliğinde veya biraz daha dar kavra.",
+   "Barı raftan çıkar ve kollar açık göğsün üzerine getir.",
+   "Dirsekler vücuda yakın, alt göğse hafifçe değene kadar kontrollü indir.",
+   "Dirsekler açılana kadar barı yukarı it."
+  ],
+  "tips": [
+   "Elleri aşırı yaklaştırma: bilek zorlanır; omuz genişliği yeterlidir.",
+   "Tükenişe yakın çalışırken yardım iste veya güvenlik durduruculu raf kullan."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Dambıl Bench Press",
+  "description": "Halter bench press'ten daha geniş hareket açıklığı sağlayan bileşik dambıl göğüs egzersizi.",
+  "instructions": [
+   "Düz sehpaya yat, her elde göğüs hizasında bir dambıl tut.",
+   "Kollar tam açılana kadar dambılları yukarı it.",
+   "Yavaşça başa indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Egzersiz boyunca bilekleri nötr tut.",
+   "Hareketin üstünde göğsü sık."
+  ]
+ },
+ "db-fly": {
+  "name": "Dambıl Fly",
+  "description": "Göğüs kasını geniş bir yayda geren ve kasan izolasyon egzersizi.",
+  "instructions": [
+   "Sehpaya yat, dambıllar göğsün üzerinde, avuçlar birbirine baksın.",
+   "Dirsekler hafif bükülü, dambılları yana indir.",
+   "Göğsü sıkarak başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Egzersiz boyunca dirseklerde sabit bir bükülme koru.",
+   "Dambılları fazla aşağı indirme."
+  ]
+ },
+ "db-squat": {
+  "name": "Dambıl Squat",
+  "description": "Her elde yanlarda dambılla yapılan, halter gerektirmeyen yüklü squat.",
+  "instructions": [
+   "Ayaklar omuz genişliğinde, her elde yanda bir dambıl.",
+   "Core'u sık ve göğsü dik tut.",
+   "Kalça ve dizleri bükerek squat yap.",
+   "Uyluklar paralel veya daha aşağı olana kadar in.",
+   "Topuklarla iterek yeniden yüksel."
+  ],
+  "tips": [
+   "Göğsü dik ve sırtı düz tut.",
+   "Dizleri parmak uçları doğrultusunda it.",
+   "Tutuş sınırlayıcı olursa kayış kullan."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead Bug",
+  "description": "Derin core stabilitesini çalıştırmak için karşı uzuvların açılmasını koordine eden sırtüstü core egzersizi.",
+  "instructions": [
+   "Sırtüstü yat, kollar tavana, dizler 90 derece.",
+   "Beli yere bastırarak sağ kolu ve sol bacağı yere doğru indir.",
+   "Başa dön.",
+   "Diğer tarafta tekrarla.",
+   "Sırayla yap."
+  ],
+  "tips": [
+   "Beli sürekli yere bastır.",
+   "Yavaş hareket et."
+  ]
+ },
+ "deadlift": {
+  "name": "Halter Deadlift",
+  "description": "Ağırlıklı olarak arka zinciri çalıştıran bileşik tüm vücut kaldırışı.",
+  "instructions": [
+   "Ayaklar kalça genişliğinde, bar ayağın ortasının üzerinde dur.",
+   "Kalçadan bükül ve barı kavra.",
+   "Core'u sık, kalça ve dizleri açarak kaldır.",
+   "Yukarıda tamamen dik dur, sonra kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Barı vücuda yakın tut.",
+   "Beli yuvarlama."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Yükseltiden Deadlift",
+  "description": "Alçak bir platform üzerinde yapılan deadlift; hareket açıklığını ve kalkış zorluğunu artırır.",
+  "instructions": [
+   "2–5 cm'lik platforma çık, ayaklar barın altında; sırt nötr, omuzlar barın üzerinde kavra.",
+   "Vücudu gerginleştir ve bar bacaklara yakın yükselirken ayaklarla yeri it.",
+   "Tamamen dik olana kadar kalça ve dizleri birlikte aç.",
+   "Sırtı nötr tutarak barı kontrollü yere indir."
+  ],
+  "tips": [
+   "Tekniği oturtmak için küçük yükseltiyle ve hafif ağırlıkla başla.",
+   "Yerden kalkarken sırtı yuvarlama."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon Flag",
+  "description": "Yalnızca omuzlarda desteklenen sert vücudun kaldıraç gibi inip kalktığı ileri düzey karın egzersizi.",
+  "instructions": [
+   "Sehpaya yat, kenarı başın arkasından tut ve yalnızca omuzlar ile üst sırtı dayayarak düz vücudu kaldır.",
+   "Kalçayı bükmeden vücudu neredeyse yere paralel olana kadar düz indir.",
+   "Sehpaya değmeden karın ve kalçayı sıkı tut.",
+   "Vücudu düz olarak tekrar dikeye kaldır; yapamıyorsan yalnızca iniş evresiyle başla."
+  ],
+  "tips": [
+   "Dizler bükülü veya yalnızca eksantrik evreyle başla.",
+   "Kalçayı bükmemek egzersizin anahtarıdır."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Eğilerek Dambıl Kürek",
+  "description": "Her elde dambıl, gövde eğik kürek: yalnızca dambılla kanat ve üst sırtı çalıştırır.",
+  "instructions": [
+   "Her elde dambılla ayakta, dizleri hafif bük ve sırt düz, gövdeyi kalçadan neredeyse yere paralel eğ.",
+   "Kollar avuçlar birbirine bakacak şekilde sarksın.",
+   "Dirsekleri geriye alıp kürek kemiklerini birleştirerek dambılları kalçaya çek.",
+   "Yukarıda kısa dur ve kollar açılana kadar kontrollü indir."
+  ],
+  "tips": [
+   "Gövdeyi sabit tut: kaldırmak için sallanman gerekiyorsa ağır gelmiştir.",
+   "Yere bakarak boynu omurga hizasında tut.",
+   "Bel sırttan önce yoruluyorsa ağırlığı azalt veya destekli kürek yap."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Dambıl Curl",
+  "description": "Her elde dambılla, bisepsi serbest hareket açıklığında çalıştıran dirsek bükme.",
+  "instructions": [
+   "Ayakta, her elde dambıl, kollar yanda açık, avuçlar öne.",
+   "Dirsekleri gövdeye yapışık tut ve vücudu sallamadan dirsekleri bükerek kaldır.",
+   "Omuz kaldırmadan yukarıda bisepsi bir an sık.",
+   "Dirsek tam açılana kadar kontrollü indir."
+  ],
+  "tips": [
+   "Sırtla destek alma; gerekiyorsa ağırlığı azalt.",
+   "İnişi kontrol et; kaldırışın en az iki katı sürsün."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Dambılla Çiftçi Yürüyüşü",
+  "description": "Bu tüm vücut egzersizinde ağır dambıllarla yürünür; tutuş kuvvetini, core stabilitesini ve genel kas dayanıklılığını etkili biçimde geliştirir.",
+  "instructions": [
+   "Her elde dambılla dik dur, kollar yanlarda.",
+   "Kürek kemiklerini geri al, core'u sık ve omurgayı nötr tut.",
+   "Belirli bir mesafe veya süre boyunca kısa, kontrollü adımlarla yavaşça yürü.",
+   "Göğsü dik tut ve yürürken bir yana eğilme.",
+   "Hareket boyunca güçlü ve dengeli bir duruşu korumaya odaklan."
+  ],
+  "tips": [
+   "Tekniği bozmadan kontrol edebildiğin en ağır dambılları kullan.",
+   "Core gerginliğini korumak için derin ve ritmik nefes al.",
+   "Başının üstünde bir bardak su dengelediğini hayal et."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Dambılla Öne Kaldırma",
+  "description": "Deltoidin ön kısmını çalıştırmak için dambılları omuz hizasına kadar öne kaldırma.",
+  "instructions": [
+   "Ayakta, her elde uylukların önünde dambıl, kollar neredeyse düz.",
+   "Dirsekler hafif bükülü, dambılları omuz hizasına kadar öne kaldır.",
+   "Yatay seviyede gövdeyi sallamadan dur.",
+   "Kontrollü olarak uyluklara indir."
+  ],
+  "tips": [
+   "Sırtla destek alma; alıyorsan ağırlığı azalt.",
+   "Ön deltoid press'lerde zaten çok çalışır; hacmi abartma."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Dambılla Ters Fly",
+  "description": "Eğilerek dambılları yana kaldıran, arka deltoid ve üst sırtı çalıştıran izolasyon egzersizi.",
+  "instructions": [
+   "Kollar sarkarken dambılları tutarak kalçadan öne eğil.",
+   "Sırtı düz, dizleri hafif bükülü tut.",
+   "Dambılları omuz hizasına kadar yana kaldır.",
+   "Yukarıda kürek kemiklerini sık.",
+   "Dambılları kontrollü indir.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Savurma değil arka deltoidler çalışsın diye hafif ağırlık kullan.",
+   "Yukarıda kürek kemiklerini iyice birleştir.",
+   "Dirseklerde yumuşak ve sabit bir bükülmeyi sürekli koru."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Dambıl Romen Deadlift",
+  "description": "Kalça menteşesiyle arka bacak gerilmesini vurgulayan dambıl Romen deadlift.",
+  "instructions": [
+   "Dambılları uylukların önünde tutarak dizler hafif bükülü dur.",
+   "Kalçadan eğil ve kalçanı geriye it.",
+   "Arka bacakta gerilme hissedene kadar dambılları bacaklar boyunca indir.",
+   "Sırtı düz, omuzları geride tut.",
+   "Kalçayı öne iterek ayakta pozisyona dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Zorlamadan esnekliğinin izin verdiği yere kadar in.",
+   "Hareket boyunca dizlerdeki aynı yumuşak bükülmeyi koru.",
+   "Hareketi squat'a çevirme."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Dambıl Omuz Press",
+  "description": "Deltoidin ön ve yan kısımlarını geliştiren, oturarak veya ayakta yapılan dikey dambıl press.",
+  "instructions": [
+   "Dambılları omuz hizasında, avuçlar öne bakacak şekilde tutarak otur veya ayakta dur.",
+   "Kollar tam açılana kadar iki dambılı da baş üstüne it.",
+   "Core'u sıkı tut ve beli kavislendirmekten kaçın.",
+   "Dambılları kontrollü olarak omuz hizasına indir.",
+   "Dambılların başın arkasına kaymasına izin verme.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Dambılları yukarıda çarpıştırmadan düz bir çizgide kaldır.",
+   "Bilekleri sabit ve ön kollarla aynı hizada tut.",
+   "Belin kavisleniyorsa ağırlığı azalt."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Dambıl Shrug",
+  "description": "Üst sırt ve trapezleri çalıştırmak için her elde dambılla omuz kaldırma.",
+  "instructions": [
+   "Ayakta, her elde dambıl, kollar yanda açık, bakış karşıda.",
+   "Döndürmeden ve dirsekleri bükmeden omuzları düz biçimde kulaklara kaldır.",
+   "Yukarıda kasılmayı bir an tut.",
+   "Trapez tamamen gerilene kadar kontrollü indir."
+  ],
+  "tips": [
+   "Omuzlarla daire çizme: hareket dikeydir.",
+   "Tutuş trapezden önce pes ediyorsa kayış kullan."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Dambılla Tek Bacak Baldır Kaldırma",
+  "description": "Basamak üzerinde, bir dambılla ve diğer el dengede destekli tek bacak topuk kaldırma.",
+  "instructions": [
+   "Bir basamakta tek ayağın ucunda dur, diğer bacak bükülü, aynı taraftaki elde dambıl; diğer elini duvara daya.",
+   "Baldır gerilene kadar topuğu basamağın altına indir.",
+   "Dizi bükmeden olabildiğince parmak ucunda yüksel.",
+   "Yukarıda bir an tut ve kontrollü indir; tekrarları tamamla ve bacak değiştir."
+  ],
+  "tips": [
+   "Ayak bileği dışa kaçmadan başparmak kökünden it.",
+   "Tek taraflıdır: her bacakla aynı sayıda tekrar yap."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Eller Yüksekte Pike Şınav",
+  "description": "Pike şınavın başlangıç versiyonu: yükü azaltmak için eller basamak veya sağlam bir sandalyede.",
+  "instructions": [
+   "Ellerini omuz genişliğinde sağlam bir basamak, sehpa veya sandalye kenarına koy ve kalça yükselene kadar ayaklarınla geriye yürü.",
+   "Kalça yüksekte, dirsekleri bükerek başını desteğe doğru indir.",
+   "Pozisyonu bozmadan baş ellerin arasına gelince dur.",
+   "Dirsekler açılana kadar kollarla it."
+  ],
+  "tips": [
+   "Zorlaştırmak için ayakları desteğe yaklaştır.",
+   "Başlamadan önce desteğin kaymadığını kontrol et."
+  ]
+ },
+ "face-pull": {
+  "name": "Kabloda Face Pull",
+  "description": "Arka deltoidleri ve dış döndürücüleri çalıştıran kablo egzersizi.",
+  "instructions": [
+   "Üst makaraya bir halat tak.",
+   "Uçları ayırarak halatı yüzüne doğru çek.",
+   "Arka deltoidleri ve dış döndürücüleri sık.",
+   "Kontrollü olarak başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Dirsekleri yüksekte, omuzlarla aynı hizada tut.",
+   "Her tekrarın sonunda kürek kemiklerini birleştir.",
+   "Tekniği bozmamak için hafif ağırlıkla çalış."
+  ]
+ },
+ "front-squat": {
+  "name": "Front Squat",
+  "description": "Halterin önde deltoidlerin üzerinde tutulduğu, ön bacak ve core'u vurgulayan squat.",
+  "instructions": [
+   "Barı dirsekler yüksekte ön deltoidlerin üzerine omuzla veya yerleştir.",
+   "Uyluklar yere paralel olana kadar gövde dik squat yap.",
+   "Yeniden yüksel.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Barı dengelemek için dirsekleri yüksekte tut.",
+   "Daha dik bir gövde ön bacak aktivasyonunu artırır."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Kalça Köprüsü",
+  "description": "Yerde yatarak yapılan vücut ağırlığı kalça aktivasyon egzersizi.",
+  "instructions": [
+   "Sırtüstü yat, dizler bükülü, ayaklar yerde düz.",
+   "Kalçayı sıkarak yükselt.",
+   "Yukarıda kalça tam açıkken kısa tut.",
+   "Kalçayı kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Kalçayı daha iyi çalıştırmak için topuklarla it.",
+   "Kalçayı açarken beli kavislendirmekten kaçın.",
+   "Hareket boyunca dizleri ayaklarla aynı hizada tut."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet Squat",
+  "description": "Kettlebell'i göğüs hizasında tutarak yapılan, duruşu ve derinliği geliştiren başlangıç squat'ı.",
+  "instructions": [
+   "Kettlebell'i iki elle göğüs hizasında tut.",
+   "Ağırlığı göğse yakın tutarak squat yap.",
+   "Yeniden yüksel.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Goblet pozisyonu doğal olarak dik bir gövdeyi destekler.",
+   "Alt noktada dizleri dışa it."
+  ]
+ },
+ "good-morning": {
+  "name": "Halterle Good Morning",
+  "description": "Arka bacak, kalça ve beli güçlendiren, halter sırtta kalça menteşesi.",
+  "instructions": [
+   "Halter üst sırtta, ayaklar omuz genişliğinde, dizler hafif bükülü dur.",
+   "Sırt nötr, gövdeyi öne eğerek kalçayı geri götür.",
+   "Gövde yataya yakın, arka bacakta gerilim hissedene kadar in.",
+   "Yeniden dik durmak için kalçayı öne it."
+  ],
+  "tips": [
+   "Çok hafif başla: bel yoğun çalışır.",
+   "Karşıya bak ve sırtı yuvarlama."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack Squat",
+  "description": "Kızak üzerinde kontrollü squat kalıbıyla ağırlıklı ön bacağı çalıştıran hack squat makinesinde yönlendirilmiş egzersiz.",
+  "instructions": [
+   "Hack squat makinesini yükle ve sırt ile omuzlarını pedlere daya.",
+   "Ayakları platforma omuz genişliğinde, hafif dışa dönük yerleştir.",
+   "Güvenlik kollarını aç ve diz ile kalçayı bükerek kızağı indir.",
+   "Uyluklar en az platforma paralel olana kadar in.",
+   "Bacakları açıp kızağı başlangıca döndürmek için topuklarla it.",
+   "Seti bitirince güvenlik kollarını yeniden kilitle."
+  ],
+  "tips": [
+   "Hareket boyunca beli pede yapışık tut.",
+   "Ayakları platformda yukarı koymak vurguyu kalça ve arka bacağa kaydırır.",
+   "İnişi kontrol et; en alt noktadan sekme."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Dambıl Hammer Curl",
+  "description": "Brakioradialisi çalıştıran nötr tutuşlu biseps curl çeşidi.",
+  "instructions": [
+   "Ayakta, dambılları avuçlar birbirine bakacak şekilde yanlarda tut.",
+   "Avuçları içe bakar halde tutarak dambılları kaldır.",
+   "Yukarıda sık ve kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Hareket boyunca dirsekleri gövdeye yapışık tut.",
+   "Dambılları savurmak için vücudu sallama.",
+   "Curl boyunca bilekler sabit ve nötr kalır."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Amuda Kalkarak Şınav",
+  "description": "Ayaklar duvarda, dikey pozisyonda şınav; en zorlu vücut ağırlığı itiş egzersizlerinden biridir.",
+  "instructions": [
+   "Sırtını duvara dönerek ellerini yere koy ve karın sıkı, ayaklarını dikey olana kadar yukarı yürüt.",
+   "Dirsekleri bükerek başını kontrollü yere indir.",
+   "Başın yere veya mindere değince dur.",
+   "Dirsekler tam açılana kadar kollarla it."
+  ],
+  "tips": [
+   "Önce amuda kalkma duruşu ve pike şınav çalış.",
+   "Güven için başın altına minder koy."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Asılı Diz Çekme",
+  "description": "Barda asılı, dizler bükülü alt karın ve kalça fleksörlerini çalıştıran core egzersizi.",
+  "instructions": [
+   "Üstten tutuşla barda kollar tam açık asıl.",
+   "Core'u sık ve dizleri göğse çek.",
+   "Yukarıda kısa tut.",
+   "Bacakları yavaşça başa indir.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Sallanmaktan kaçın — hareketi core'dan başlat.",
+   "Dizleri kaldırırken nefes ver.",
+   "Kolaylaşınca düz bacak kaldırmaya geç."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Asılı Bacak Kaldırma",
+  "description": "Barda asılı, düz bacakları yatay seviyeye kaldırma; karın ve kalça fleksörleri için.",
+  "instructions": [
+   "Barı omuzlardan biraz geniş kavra, bacaklar bitişik ve düz asıl.",
+   "Pelvisi hafif geriye yatırarak düz bacakları yere paralel olana kadar kaldır.",
+   "Sallanmadan yukarıda bir an tut.",
+   "Vücudun salınmasına izin vermeden kontrollü olarak başa indir."
+  ],
+  "tips": [
+   "Düz bacakla yapamıyorsan dizleri bük.",
+   "Sallanma: hızı değil karnı kullan."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Trap Bar Deadlift",
+  "description": "Trap bar içinde ayakta deadlift; yükü ortada tutarak daha dik ve sırta daha yumuşak bir çekiş sağlar.",
+  "instructions": [
+   "Yüklü trap bar'ın içinde ayaklar omuz genişliğinde dur.",
+   "Tutacakları kavramak için kalça ve dizleri bük.",
+   "Core'u sık ve sırtı düz tut.",
+   "Topuklarla iterek kalça ve dizleri açıp doğrul.",
+   "Yukarıda omuzlar geride kilitle.",
+   "Barı kontrollü yere indir."
+  ],
+  "tips": [
+   "Tutuşu ayarlarken göğsü dik ve sırtı düz tut.",
+   "Sırtınla barı çekmek yerine yeri it.",
+   "Geriye yatmadan yukarıda tamamen dik dur."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Makinede Kalça Abdüksiyonu",
+  "description": "Kalçanın dış kaslarını çalıştıran makine egzersizi.",
+  "instructions": [
+   "Kalça abdüksiyon makinesine, pedler uylukların dışında olacak şekilde otur.",
+   "Bacakları dirence karşı dışa it.",
+   "En açık noktada kısa tut.",
+   "Kontrollü olarak başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Sırtını makinenin arkalığına dayalı tut.",
+   "Savurmadan, kontrollü tempoyla bacakları aç.",
+   "Ağırlığı bırakmak yerine merkeze dönüşe diren."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Makinede Kalça Addüksiyonu",
+  "description": "Bacakları dirence karşı birbirine sıkarak iç uyluktaki addüktörleri izole edip güçlendiren makine egzersizi.",
+  "instructions": [
+   "Addüksiyon makinesine sırtın arkalıkta otur.",
+   "Makine rahat bir gerilmeye ayarlıyken bacaklarını pedlere yerleştir.",
+   "Pedler ortada birleşene kadar bacakları sık.",
+   "Tam kapalı pozisyonda kasılmayı kısa tut.",
+   "Bacakların kontrollü biçimde başlangıca açılmasına izin ver.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Kasığı zorlamadan geren bir başlangıç açıklığı seç.",
+   "Tüm açıklığı eşit ve kontrollü hızda kat et.",
+   "Bacakları açarken ağırlık plakasının çarpmasına izin verme."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Halterle Hip Thrust",
+  "description": "Kalça üzerinde halterle yapılan bileşik kalça egzersizi.",
+  "instructions": [
+   "Yere otur, üst sırt sehpaya dayalı, halter kalçanın üzerinde.",
+   "Gövde ve uyluklar aynı hizaya gelene kadar kalçayı yukarı it.",
+   "Yukarıda kalçayı sık.",
+   "Kalçayı kontrollü geri indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Çeneyi içeride, kaburgaları aşağıda tut.",
+   "Parmak uçlarından değil topuklardan it.",
+   "Üst noktada beli kavislendirmekten kaçın."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Yatay Leg Press",
+  "description": "Yatay pozisyonda yapılan, ön bacak, kalça ve arka bacağı çalıştıran makine leg press.",
+  "instructions": [
+   "Yatay leg press'e sırt arkalıkta, ayaklar platformda omuz genişliğinde otur.",
+   "Dizleri kilitlemeden ayaklarla iterek bacakları aç.",
+   "Dizleri göğse yaklaşana kadar kontrollü bük.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Belin koltuktan ayrılmasına izin verme.",
+   "Dizleri tamamen kilitlemekten kaçın."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Eğimli Sehpada Halter Press",
+  "description": "Üst göğsü çalıştıran eğimli sehpada halter press hareketi.",
+  "instructions": [
+   "30–45 derecelik eğimli sehpaya yat.",
+   "Barı omuzlardan biraz geniş kavra ve raftan çıkar.",
+   "Barı üst göğse indir.",
+   "Barı tam açıklığa kadar geri it.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Kürek kemiklerini geri çek ve sehpada tut.",
+   "Barı göğüste sektirmekten kaçın.",
+   "Ağır yüklerle çalışırken yardım iste."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Eğimli Sehpada Y Kaldırma",
+  "description": "Eğimli sehpada yüzüstü, dambılları Y şeklinde kaldırma; alt ve orta trapez için.",
+  "instructions": [
+   "Eğimli sehpaya göğsün dayalı yüzüstü yat, her elde hafif bir dambıl sarksın.",
+   "Başparmaklar tavana bakacak şekilde kolları Y oluşturarak öne ve yukarı kaldır.",
+   "Göğsü sehpadan kaldırmadan kollar gövde hizasına gelince dur.",
+   "Kontrollü olarak başa indir."
+  ],
+  "tips": [
+   "Hafif ağırlık kullan: alt trapez küçük bir kastır.",
+   "Boynu nötr tut, yere bak."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Eğimli Sehpada Dambıl Curl",
+  "description": "Uzun başı daha fazla germek için eğimli sehpada biseps curl.",
+  "instructions": [
+   "45 derecelik sehpaya dambıllar yanlarda otur.",
+   "Kollar avuçlar öne bakacak şekilde düz sarksın.",
+   "Dambılları omuzlara doğru kaldır.",
+   "Tam açıklığa kadar kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Omuz ve sırtı sehpada tut.",
+   "Dambılları kaldırırken omuzları öne alma.",
+   "Alttaki gerilmeden yavaş inişle yararlan."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Eğimli Sehpada Dambıl Press",
+  "description": "Üst göğsü vurgulayan eğimli sehpa press hareketi.",
+  "instructions": [
+   "Sehpayı 30 dereceye ayarla ve dambıllar omuz hizasında otur.",
+   "Kollar tam açılana kadar dambılları yukarı ve birbirine doğru it.",
+   "Dambılları kontrollü olarak omuz hizasına geri indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Ayakları yerde sağlam, kürek kemiklerini geride tut.",
+   "Dambılları yukarıda çarpıştırmaktan kaçın.",
+   "Göğüste hafif bir gerilme hissedene kadar in."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Eğimli Şınav",
+  "description": "Eller sehpa veya basamakta yükseltilmiş, yeni başlayanlara uygun şınav çeşidi.",
+  "instructions": [
+   "Ellerini omuz genişliğinde bir sehpa veya yüksek yüzeye koy.",
+   "Bacakları plank pozisyonunda geriye uzat.",
+   "Dirsekleri bükerek göğsü sehpaya indir.",
+   "Başlangıca geri it.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Kalça çökmesin diye karnı sık.",
+   "Yüzey ne kadar yüksekse egzersiz o kadar kolaydır.",
+   "Başlamadan önce sehpanın kaymadığından emin ol."
+  ]
+ },
+ "inverted-row": {
+  "name": "Ters Kürek",
+  "description": "Sabit bir barın altında vücut ağırlığıyla yatay çekiş: vücut sertken göğüs bara çekilir.",
+  "instructions": [
+   "Barı rafta yaklaşık bel yüksekliğine yerleştir.",
+   "Altına yat ve barı üstten tutuşla omuzlardan biraz geniş kavra.",
+   "Kollar açık, topuklar yerde, vücut baştan ayak bileğine düz asıl.",
+   "Kürek kemiklerini sıkarak göğsü bara çek.",
+   "Kollar tam açılana kadar kontrollü in.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Core'u sıkı tut — kalça çökmesin.",
+   "Zorlaştırmak için ayakları yükselt; kolaylaştırmak için ayakları bara doğru yürüt.",
+   "Göğüs barda, yukarıda kısa dur."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Kettlebell ile Tibialis Kaldırma",
+  "description": "Bir ayağın önünden asılı kettlebell ile sehpada oturarak yapılan kaval egzersizi. Parmakları ağırlığa karşı kavala doğru kaldırmak bacağın ön kaslarını güçlendirir.",
+  "instructions": [
+   "Düz sehpanın ucuna bir bacak uzatılmış, topuk yerde otur.",
+   "Kettlebell'i sapından ayağın önüne, parmakların üstüne as.",
+   "Topuk yerde kalırken parmakları rahat olduğu kadar kavala doğru kaldır.",
+   "Üst pozisyonu kısa tut.",
+   "Parmaklar yere bakana kadar ayağı yavaşça indir.",
+   "Tekrarları tamamla, sonra bacak değiştir."
+  ],
+  "tips": [
+   "Hareketi yalnızca ayak bileğinden yap; diz ve uyluk sabit kalır.",
+   "Hafif bir kettlebell ile başla ve yavaş yavaş artır; kaval kasları çabuk yorulur.",
+   "Ağırlığı düşürmek yerine yavaş indir."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Diz Üstü Kablo Kürek",
+  "description": "Dik diz üstü pozisyondan yapılan kablo kürek; kalça savurmasını önler ve üst sırtta gerilimi hareket boyunca korur.",
+  "instructions": [
+   "Makarayı göğüs hizasına ayarla ve halat veya çift D tutacak tak.",
+   "Ağırlık durdurucuya değmeyecek kadar uzakta makinenin önünde dik diz çök.",
+   "Tutacağı iki elle kavra ve göğüs hizasında önünde uzatılmış tut.",
+   "Dirsekleri geriye alıp kürek kemiklerini sıkarak tutacağı göğüs kemiğine çek.",
+   "Kontrollü olarak gerilmiş başlangıç pozisyonuna dön.",
+   "Önerilen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Dik kal: tekrarı bitirmek için geriye yatma.",
+   "Dik diz üstü duruş her çekişte core'u dönmeye direnmeye zorlar."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Diz Üstü Şınav",
+  "description": "Üst vücut yükünü azaltmak için dizler yerde, yeni başlayanlara uygun şınav çeşidi.",
+  "instructions": [
+   "Dizler yerde şınav pozisyonunda başla.",
+   "Elleri yere omuz genişliğinde koy.",
+   "Vücudu dizlerden omuzlara düz bir çizgide tut.",
+   "Dirsekleri bükerek göğsü yere indir.",
+   "Ellerle iterek başa dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Dirsekleri yanlara fazla açma.",
+   "Hareket boyunca kalça ve karnı sık.",
+   "Boynu nötr tutmak için yere bak."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Dambılla Yana Açış",
+  "description": "Omuz genişliği için yan deltoidi çalıştıran izolasyon hareketi.",
+  "instructions": [
+   "Dambıllar yanlarda ayakta dur.",
+   "Kollar yere paralel olana kadar dambılları yana kaldır.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Dirseklerde hafif bükülme.",
+   "Ellerle değil dirseklerle yönlendir."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Lat Pulldown",
+  "description": "Kanat kaslarını çalıştıran kablo makinesi egzersizi.",
+  "instructions": [
+   "Pulldown makinesine uyluklar rulolar altında sabit otur.",
+   "Geniş barı üstten tutuşla kavra.",
+   "Kanatları sıkarak barı üst göğse çek.",
+   "Barı yavaşça başa götür.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Çekişe dirsekleri bükerek değil kürek kemiklerini indirerek başla.",
+   "Ağırlığı hareket ettirmek için gövdeyi sallama.",
+   "Dirsekleri dışa değil aşağı ve geriye yönlendir."
+  ]
+ },
+ "leg-curl": {
+  "name": "Yüzüstü Bacak Curl",
+  "description": "Bacak curl makinesinde arka bacak izolasyon egzersizi.",
+  "instructions": [
+   "Bacak curl makinesine ayak bilekleri rulonun altında yüzüstü yat.",
+   "Topukları kalçaya doğru çek.",
+   "Yukarıda arka bacağı sık.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Hareket boyunca kalçayı sehpaya yapışık tut.",
+   "Topukları kaldırırken beli kavislendirmekten kaçın.",
+   "Tam ve kontrollü hareket sağlayan ağırlık seç."
+  ]
+ },
+ "leg-extension": {
+  "name": "Bacak Extension",
+  "description": "Makinede ön bacak izolasyon egzersizi.",
+  "instructions": [
+   "Bacak extension makinesine ayak bilekleri rulonun arkasında otur.",
+   "Bacakları düz olana kadar aç.",
+   "Yukarıda ön bacağı sık.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Dizleri makinenin dönme ekseniyle hizala.",
+   "Ağırlığı savurarak fırlatmadan kaldır.",
+   "Kalçayı koltukta sabit tutmak için tutacaklara tutun."
+  ]
+ },
+ "leg-press": {
+  "name": "Leg Press",
+  "description": "Ön bacak ve kalça için bileşik makine hareketi.",
+  "instructions": [
+   "Leg press'e ayaklar platformda omuz genişliğinde otur.",
+   "Güvenlikleri aç ve dizleri bükerek platformu indir.",
+   "Bacaklar neredeyse düz olana kadar platformu it.",
+   "Üstte dizleri kilitleme.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Beli her zaman arkalığa yapışık tut.",
+   "Yalnızca kalça ayrılmayacağı yere kadar in.",
+   "Dizleri parmak uçlarıyla aynı hizada tut."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Leg Press'te Baldır Kaldırma",
+  "description": "Leg press platformunu parmak uçlarıyla iterek topuk kaldırma.",
+  "instructions": [
+   "Leg press'e bacaklar neredeyse açık, yalnızca ayakların ön kısmı platform kenarında otur.",
+   "Güvenliği aç ve baldırları gererek topukların inmesine izin ver.",
+   "Parmak ucunda kalana kadar platformu ayak uçlarıyla it.",
+   "Yukarıda bir an tut ve kontrollü indir."
+  ],
+  "tips": [
+   "Dizleri tamamen kilitleme.",
+   "Tam hareket açıklığı ve altta duraklama yap: uyaran orada kazanılır."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Yatarak Bacak Kaldırma",
+  "description": "Alt karın ve kalça fleksörleri için sırtüstü iki bacağı kaldırma.",
+  "instructions": [
+   "Sırtüstü yat, bacaklar bitişik ve düz, eller kalçanın altında veya yanlarda.",
+   "Karnı sıkarak beli yere yapıştır.",
+   "Sallanmadan bacakları yere dik olana kadar kaldır.",
+   "Ayaklar yere değmeden ve sırt kavislenmeden yavaş indir."
+  ],
+  "tips": [
+   "Bel yerden ayrılıyorsa dizleri bük.",
+   "İnişi kontrol et: karnı en çok çalıştıran kısımdır."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Makinede Sırt Extension",
+  "description": "Bel için oturarak izolasyon egzersizi: kalça ve bacaklar sabitken gövde yastıklı ruloya karşı geriye iter ve ağırlığa karşı omurgayı açar.",
+  "instructions": [
+   "Sırt extension makinesine ayaklar platformda otur ve ruloyu üst sırta, kürek kemiklerinin hemen altına ayarla.",
+   "Yan tutacakları kavra ve gövdenin hafif öne gelmesine izin ver: başlangıç pozisyonu budur.",
+   "Gövde geriye yatıp bel tamamen kasılana kadar omurgayı açarak ruloya karşı geriye it.",
+   "Tam açıklıkta kısa dur ve ağırlığa direnerek kontrollü dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Ruloyu kürek kemiklerinin hemen altına koy: daha yukarısı boynu sıkıştırır, daha aşağısı hareketi kısaltır.",
+   "Baş ve omuzları geriye savurmak yerine belden aç ve iki yönde de yavaş hareket et.",
+   "Omurgayı daha ileri zorlamadan gövde nötr açıkken dur ve hafif başla: bel ağır yüklerden çok kontrollü tekrarlara iyi yanıt verir."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Makinede Biseps Curl",
+  "description": "İzole kol antrenmanı için makine biseps curl.",
+  "instructions": [
+   "Makineye otur ve ruloyu kol uzunluğuna göre ayarla.",
+   "Tutacakları alttan kavra.",
+   "Tutacakları omuzlara çek.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Dirsekleri sürekli pedde tut.",
+   "Tutacakları kaldırırken omuz kaldırmaktan kaçın.",
+   "Gerilimi kaybetmeden kollar neredeyse açılana kadar indir."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Makinede Baldır Kaldırma",
+  "description": "Tam ayak bileği açıklığıyla baldır ve soleusu çalıştıran ayakta makine izolasyon egzersizi.",
+  "instructions": [
+   "Baldır makinesine ayakların ön kısmı platformda yerleş.",
+   "Omuz rulolarını sağlam yerleştir.",
+   "Tam gerilme için topukları platformun altına indir.",
+   "Parmak ucunda yükselmek için ayakların ön kısmıyla it.",
+   "Yukarıda baldırları sık.",
+   "Kontrollü indir ve tekrarla."
+  ],
+  "tips": [
+   "Gerilimi kaybetmemek için altta sekme.",
+   "Dizleri açık ama kilitlemeden tut.",
+   "Ayak bilekleri dışa yatmadan dikey yüksel."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Makinede Göğüs Fly",
+  "description": "Kolları vücudun önünde yay çizerek birleştiren makinede göğüs izolasyon egzersizi.",
+  "instructions": [
+   "Fly makinesine otur ve tutacaklar göğüs hizasında olacak şekilde koltuğu ayarla.",
+   "Kolları dirsekler hafif bükülü tut.",
+   "Kolları göğsün önünde yumuşak bir yayla birleştir.",
+   "En yüksek kasılma noktasında göğüs kasını sık.",
+   "Ağırlığı bırakmadan kontrollü olarak başa dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Hareket boyunca dirsekte hafif ve sabit bükülme koru.",
+   "Kollarla itmek yerine göğsü kasmaya odaklan.",
+   "Ağırlığı bırakmak yerine dönüşü kontrol et."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Makinede Ters Fly",
+  "description": "Ters pec deck olarak da bilinen, arka deltoidler için oturarak makine egzersizi: pede dönük, iki tutacağı ağırlığa karşı geniş bir yayla dışa ve geriye götürürsün. Ped gövdeyi sabit tutar, böylece iş omuz arkasında ve kürek arası kaslarda kalır.",
+  "instructions": [
+   "Tutacaklar omuz hizasında olacak şekilde koltuğu ayarla ve göğüs pedde makineye dönük otur.",
+   "Tutacakları kollar önde açık, dirsekler hafif bükülü kavra.",
+   "Omuzları aşağıda ve kulaklardan uzak tut, gövdeyi sık.",
+   "Dirseklerle yönlendirerek tutacakları kollar yaklaşık omuz hizasına gelene kadar geniş yayla dışa ve geriye götür.",
+   "Göğsü pedden ayırıp geriye yatmadan kürek kemiklerini kısaca birleştir.",
+   "Tutacakları yavaşça öne getir ve planlanan tekrarları yap."
+  ],
+  "tips": [
+   "Ellerle çekmek yerine dirseklerle yönlendir ki bisepsler değil arka deltoidler çalışsın.",
+   "Göğüs pedde, boyun gevşek; geriye yatar veya omuz kaldırırsan yük üst trapeze geçer.",
+   "Kontrollü indirebileceğin ağırlık seç; yavaş dönüşlü hafif yük arka deltoidi ağır savurmadan daha iyi çalıştırır."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Makinede Oturarak Crunch",
+  "description": "Omurgayı dirence karşı büken oturarak makinede karın izolasyon egzersizi.",
+  "instructions": [
+   "Karın makinesine otur ve tutacakları kavra.",
+   "Göğüs pedini gövdene yerleştir.",
+   "Karnı sıkarak gövdeyi öne ve aşağı bük.",
+   "Hareketin sonunda sık.",
+   "Kontrollü olarak başa dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Hareketi kollarla değil karınla başlat.",
+   "Gövdeyi bükerken nefes ver.",
+   "Vücudu sallayarak hız alma."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Makinede Omuz Press",
+  "description": "Omuzlar için makinede baş üstü press hareketi.",
+  "instructions": [
+   "Makineye sırt arkalıkta otur.",
+   "Tutacakları omuz hizasında kavra.",
+   "Kollar tam açılana kadar tutacakları baş üstüne it.",
+   "Kontrollü olarak başa indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Yukarı iterken beli kavislendirme.",
+   "Üstte dirsekleri sertçe kilitlemekten kaçın.",
+   "Bilekleri sabit ve ön kollarla hizalı tut."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negatif Barfiks",
+  "description": "Tam barfiks için gereken kuvveti geliştiren, barfiksin yavaş iniş evresi.",
+  "instructions": [
+   "Çene barın üstüne gelecek şekilde sehpaya çık veya sıçra; omuzlardan biraz geniş tut.",
+   "Destek almadan vücudu yaklaşık üç ila beş saniyede çok yavaş indir.",
+   "Kollar tam açılana kadar hareketi kontrol et.",
+   "Sehpa veya sıçrama yardımıyla yeniden çık ve tekrarla."
+  ],
+  "tips": [
+   "İniş boyunca omuzları kulaklardan uzak tut.",
+   "Beş yavaş tekrarda ustalaşınca yardımsız çıkmayı dene."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic Hamstring Curl",
+  "description": "Diz üstü pozisyondan gövdeyi öne indirerek arka bacağı eksantrik çalıştıran diz bükme egzersizi.",
+  "instructions": [
+   "Ayak bilekleri sabit bir desteğin altında, minderde diz çök.",
+   "Gövdeyi dik, kalçayı açık tut.",
+   "Arka bacakla direnerek vücudu yavaşça öne indir.",
+   "Yere değmeden hemen önce ellerle düşüşü yumuşat.",
+   "Ellerle iterek başlangıç pozisyonuna dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Olabildiğince yavaş in: hedef eksantrik evredir.",
+   "Kalçayı açık tut; belden bükülme.",
+   "Güç kazanırken ellerle frenle ve hafifçe it."
+  ]
+ },
+ "ohp": {
+  "name": "Halterle Overhead Press",
+  "description": "Omuz ve trisepsi çalıştıran bileşik baş üstü itiş hareketi.",
+  "instructions": [
+   "Ayaklar omuz genişliğinde, halter köprücük kemiği hizasında dur.",
+   "Core'u sık ve halteri baş üstüne it.",
+   "Halter ayağın orta noktasının üzerindeyken dirsekleri üstte kilitle.",
+   "Barı köprücük kemiği hizasına indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Fazla geriye yatma.",
+   "Daha fazla denge için kalçayı sık."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Oturarak Tek Kol Kablo Kürek",
+  "description": "Kanat ve üst sırt için tek kol oturarak kablo kürek; gövde karşıya bakarken çalışan tarafın kürek kemiği kontrollü ileri geri hareket eder.",
+  "instructions": [
+   "Kablo istasyonuna otur ve tutacağı çalışan kol açık tut.",
+   "Ayakları sağlam bas, dik otur ve geriye yatmadan gövdeyi sık.",
+   "Kürek kemiğini geri çekerek tutacağı alt kaburgalara çek.",
+   "Gövdeyi döndürmeden ve omzu kaldırmadan kısa dur.",
+   "Kolu kontrollü aç, seti bitir ve taraf değiştir."
+  ],
+  "tips": [
+   "Tekrar boyunca iki omzu da öne dönük tut.",
+   "Yalnızca kolu bükmek yerine dirseği vücuda yakın geriye götür.",
+   "Beli yuvarlamadan başta kürek kemiğinin öne gitmesine izin ver."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Dambılla Baş Üstü Triseps Extension",
+  "description": "Uzun başı vurgulayan triseps izolasyon egzersizi.",
+  "instructions": [
+   "Ayakta veya otururken bir dambılı iki elle baş üstünde tut.",
+   "Dirsekleri bükerek dambılı başın arkasına indir.",
+   "Kolları açarak başa dön.",
+   "Egzersiz boyunca dirsekleri başa yakın tut.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Yalnızca ön kolları hareket ettir, geri kalan sabit.",
+   "Dambıl inerken beli kavislendirmekten kaçın.",
+   "Dambılı üst plakanın altından iki avuçla kavra."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Paralel Barda Dips",
+  "description": "Paralel barda göğüs, triseps ve omuzları çalıştıran vücut ağırlığı egzersizi.",
+  "instructions": [
+   "Yere değmeden, kollar açık ve vücut havada paralel barlara tutun.",
+   "Gövdeyi hafif öne eğ ve kontrollü inmek için dirsekleri bük.",
+   "Ekleme çökmeden omuzlar dirsek hizasına gelince dur.",
+   "Kollar yeniden açılana kadar göğüs ve trisepsle it."
+  ],
+  "tips": [
+   "Temiz set yapamıyorsan destekli dips makinesi veya bant kullan.",
+   "Omzunun rahatsız olmadan tolere ettiğinden aşağı inme."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Duraklamalı Bench Press",
+  "description": "Göğüste bir iki saniye duraklamalı bench press; sekmeyi ortadan kaldırır ve kalkış kuvvetini geliştirir.",
+  "instructions": [
+   "Sehpaya ayaklar yerde, kürek kemikleri birleşik, bar omuzlardan biraz geniş tutuşla göğsün üzerinde yat.",
+   "Barı göğse hafifçe değene kadar kontrollü indir.",
+   "Gerginliği bırakmadan barı göğüste bir iki saniye hareketsiz tut.",
+   "Dirsekler açılana kadar barı yukarı it."
+  ],
+  "tips": [
+   "Normal press'ten %10–15 daha az ağırlık kullan.",
+   "Birinden gözcülük iste veya rafın durdurucularını kullan."
+  ]
+ },
+ "pause-squat": {
+  "name": "Duraklamalı Squat",
+  "description": "Sekme dışında kontrol ve kuvvet için en alt noktada duraklamalı halter squat.",
+  "instructions": [
+   "Barı üst sırta yerleştir, ayaklar omuz genişliğinde, parmaklar hafif dışa.",
+   "Sırt nötr ve dizler ayak çizgisinde, derinliği kontrol ederek in.",
+   "Gövdeyi gevşetmeden en alt pozisyonu bir ila üç saniye tut.",
+   "Yeniden dik durana kadar ayaklarla yeri it."
+  ],
+  "tips": [
+   "Normal squat'ına göre yükü azalt.",
+   "Duraktan sekerek çıkma: kesintisiz it."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec Deck",
+  "description": "Göğüs kaslarını yatay addüksiyonla çalıştıran hareketli tutacaklı göğüs izolasyon makinesi.",
+  "instructions": [
+   "Pec deck makinesine otur ve kollar yana açık, dirsekler hafif bükülü tutacakları kavra.",
+   "Tutacaklar göğsün orta hizasında olacak şekilde koltuğu ayarla.",
+   "Sıkarak tutacakları göğsün önünde birleştir.",
+   "Ortada kasılmayı kısa tut.",
+   "Kontrollü olarak başlangıç pozisyonuna dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Açarken kolların fazla geriye gitmesine izin verme.",
+   "Sırt ve omuzları arkalığa yapışık tut.",
+   "Tutacakları birleştirirken nefes ver, açarken nefes al."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay Kürek",
+  "description": "Gövde yere paralelken her tekrarda yerden başlayan patlayıcı halter kürek.",
+  "instructions": [
+   "Ayaklar barın altında, gövde neredeyse yere paralel, barı omuzlardan biraz geniş ve sırt nötr kavra.",
+   "Gövdeyi hareketsiz tutarak barı alt göğse değene kadar güçle çek.",
+   "Barı kontrollü olarak yere indir ve bir an durdur.",
+   "Sırt pozisyonunu yeniden ayarla ve yerden tekrarla."
+  ],
+  "tips": [
+   "Gövde inip kalkmaz: hareket ediyorsa yük fazladır.",
+   "Her tekrar bar yerde hareketsizken başlar."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike Şınav",
+  "description": "Vücut ters V şeklinde şınav; ekipmansız olarak yükü göğüsten omuza taşır.",
+  "instructions": [
+   "Ellerini yere omuz genişliğinde koy ve bacaklar neredeyse düz, ters V oluşturacak şekilde kalçayı kaldır.",
+   "Dirsekleri bükerek başı ellerin arasında yere doğru indir.",
+   "Baş yere değmeden yaklaşınca dur.",
+   "Dirsekler açılıp başlangıca dönene kadar kollarla it."
+  ],
+  "tips": [
+   "Ayaklar ellere ne kadar yakınsa egzersiz o kadar zordur.",
+   "Hareket boyunca kalçayı yüksekte tut."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Tek Bacak Squat (Pistol)",
+  "description": "Diğer bacak öne uzatılmış, yalnızca vücut ağırlığıyla derin tek bacak squat.",
+  "instructions": [
+   "Diğer bacak önde kaldırılmış ve denge için kollar uzatılmış, tek bacak üstünde dur.",
+   "Topuk yerde, destek dizini bükerek kontrollü in.",
+   "Serbest bacak öne uzatılmış, tekniği bozmadan olabildiğince in.",
+   "Yeniden ayakta olana kadar ayakla yeri it; tekrarla ve bacak değiştir."
+  ],
+  "tips": [
+   "Bir desteğe tutunarak veya kutuya oturarak başla.",
+   "Dizi ayakla aynı hizada tut."
+  ]
+ },
+ "plank": {
+  "name": "Plank",
+  "description": "Ön kollar ve parmak uçları üzerinde vücudu düz tutarak gövde stabilitesini çalıştıran izometrik core egzersizi.",
+  "instructions": [
+   "Dirsekler omuzların altında ön kolları yere koy ve bacakları uzat.",
+   "Baştan topuklara düz bir çizgi oluşturarak vücudu kaldır.",
+   "Karın ve kalçayı sık, beli nötr tut, kalçayı düşürme.",
+   "Normal nefes al ve pozisyonu belirtilen süre tut."
+  ],
+  "tips": [
+   "Süreyi uzatmadan önce kaliteli kısa setlerle başla.",
+   "Bel çöküyorsa dizleri yere koy veya süreyi kısalt."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Plakalı Makinede Hip Thrust",
+  "description": "Plakalı kalça makinesinde kalça itişi: yerleşik sırtlık ve platform pozisyonu sabitler, sehpa kurmadan kalça yüke karşı açılır.",
+  "instructions": [
+   "Plaka yuvalarını eşit yükle ve üst sırt sırtlıkta, ayaklar platformda düz otur.",
+   "Pedi veya barı kalçanın üzerine indir ve karna değil kalça kıvrımına oturacak şekilde ayarla.",
+   "Kalça yukarıdayken kavallar dik kalacak şekilde ayakları yerleştir ve tutacakları kavra.",
+   "Uyluklar gövdeyle hizalanana kadar kalçayı sıkarak yukarı it ve yukarıda bir an tut.",
+   "Hareket sonundan hemen önceye kadar kontrollü indir ve istenen tekrarları yap."
+  ],
+  "tips": [
+   "Pedi kalça kıvrımına koy. Karnın üzerinde bırakmak bu makinenin tek gerçekten rahatsız yanıdır ve dolgu ekleyerek değil pedi kaydırarak çözülür.",
+   "Hareketi belle değil kalçayla bitir. Üstte kaburgalar açılıyorsa kalça açılması bitmiş, kavislenmeye başlamışsındır; makine orada kalçayı çalıştırmayı bırakır.",
+   "Sehpa ve halter doluyken başvurulacak kalça itişi budur: sırtlık ve platform gövdenin parçasıdır, yanlış kurulacak bir şey yoktur."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Scott Sehpasında Curl",
+  "description": "Bisepsi izole etmek için Scott sehpası kullanan curl çeşidi.",
+  "instructions": [
+   "Scott sehpasına kollar pedde otur.",
+   "EZ barı alttan tutuşla tut.",
+   "Halteri omuzlara doğru kaldır.",
+   "Kollar neredeyse açılana kadar kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Hareketin altında sekmekten kaçın.",
+   "EZ barda bilekleri nötr tut.",
+   "Omuz veya sırt itişi olmadan barı kaldır."
+  ]
+ },
+ "pull-up": {
+  "name": "Barfiks",
+  "description": "Kanat ve bisepsi çalıştıran bileşik vücut ağırlığı egzersizi.",
+  "instructions": [
+   "Barda omuz genişliğinden biraz geniş üstten tutuşla asıl.",
+   "Çene barın üstüne gelene kadar yüksel.",
+   "Tam asılmaya kadar kontrollü in.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Sallanmaktan veya hız almaktan kaçın.",
+   "Dirsekleri aşağı götürerek kanat kaslarını çalıştır."
+  ]
+ },
+ "push-press": {
+  "name": "Push Press",
+  "description": "Bacak itişli omuz press; kurallı overhead press'ten daha fazla yük kaldırmayı sağlar.",
+  "instructions": [
+   "Bar üst göğüs ve omuzlarda, dirsekler hafif önde, ayaklar kalça genişliğinde dur.",
+   "Gövde dik, dizleri hafif bük ve kalça ile dizleri güçle aç.",
+   "Bu itişten yararlanarak barı kollar baş üstünde açılana kadar it.",
+   "Barı kontrollü göğse indir ve bacaklarla yumuşat."
+  ],
+  "tips": [
+   "Güç sırtı geriye yatırmaktan değil bacaklardan gelir.",
+   "Bar tepenin üzerinde ve vücut sabit bitir."
+  ]
+ },
+ "push-up": {
+  "name": "Şınav",
+  "description": "Göğüs, omuz ve triseps için temel vücut ağırlığı egzersizi.",
+  "instructions": [
+   "Eller omuz genişliğinde yüksek plank pozisyonunda başla.",
+   "Göğüs neredeyse yere değene kadar vücudu indir.",
+   "Başlangıç pozisyonuna kadar yukarı it.",
+   "Vücudu her zaman düz bir çizgide tut.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Kalçanın düşmemesi için karın ve kalçayı sık.",
+   "Dirsekleri fazla açma; gövdeye yakın tut.",
+   "Yere bakarak boynu nötr tut."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack Pull",
+  "description": "Üst sırtı ve kalça açılmasını fazla yükleyen, diz hizasından kısmi deadlift.",
+  "instructions": [
+   "Barı diz hizasında veya hemen altında desteklere koy, ayaklar barın altında kalça genişliğinde.",
+   "Barı kavra, sırt ve karnı gerginleştir ve ayaklarla yeri it.",
+   "Omuzlar geride dik olana kadar kalça ve dizleri birlikte aç.",
+   "Barı desteklere oturana kadar kontrollü indir."
+  ],
+  "tips": [
+   "Destekleri sırtı nötr tutabileceğin yüksekliğe ayarla.",
+   "Bitirirken beli aşırı geriye bükme."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Dambılla Geriye Lunge",
+  "description": "Daha fazla diz dengesi için geriye adım atılan lunge çeşidi.",
+  "instructions": [
+   "Dambılları yanlarda tutarak ayakta dur.",
+   "Bir bacakla geriye adım at ve dizi yere indir.",
+   "Öndeki uyluk yere paralel olana kadar in.",
+   "Öndeki topukla itip ayakta pozisyona dön.",
+   "İki tarafta da yap."
+  ],
+  "tips": [
+   "Öndeki diz ayağı geçmeyecek kadar uzun geri adım at.",
+   "Gövdeyi dik, dambılları vücuda yakın tut.",
+   "Her bacakla aynı sayıda tekrar yap."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Ters Nordic Curl",
+  "description": "Diz üstü, kalça açıkken gövdeyi kontrollü geriye yatırarak yapılan vücut ağırlığı ön bacak egzersizi.",
+  "instructions": [
+   "Dizler kalça genişliğinde ped üzerinde, kaval ve ayak üstü yerde, gövde dik diz çök.",
+   "Kalçayı açık ve core'u etkin tut.",
+   "Vücudu düz bir çizgide tutarak gövdeyi yavaşça geriye yatır.",
+   "Ön bacakla kontrol edebildiğin kadar in.",
+   "Başlangıç pozisyonuna geri yüksel.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Kalçayı bükmeden sürekli açık tut.",
+   "Yalnızca hareketi kontrol edebildiğin yere kadar in.",
+   "Daha fazla rahatlık için dizlerin altına ped koy."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Romen Deadlift",
+  "description": "Arka bacak ve kalçayı vurgulayan kalça menteşesi hareketi.",
+  "instructions": [
+   "Barı üstten tutuşla kalça hizasında tutarak dur.",
+   "Dizler hafif bükülü ve neredeyse sabit, gövdeyi eğerek kalçayı geri götür.",
+   "Arka bacakta gerilme hissedene kadar barı bacaklar boyunca indir.",
+   "Kalçayı öne iterek ayakta pozisyona dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Alt sırtı yuvarlama; omurgayı nötr tut.",
+   "Duruşu bozmadan ulaşabildiğin yere kadar in.",
+   "Barı vücuda yakın tutmak için kanatları sık."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Kürek Makinesi",
+  "description": "Kürek makinesinde tüm vücut kardiyo egzersizi: her çekişte bacaklarla itilir, gövde geriye gider ve tutacak kaburgalara çekilir; bacak, sırt ve kollar kesintisiz bir döngüde çalışır.",
+  "instructions": [
+   "Kürek makinesine otur, ayakları platform kayışlarıyla bağla ve tutacağı üstten kavra.",
+   "Yakalama pozisyonuna öne kay: kavallar dik, gövde kalçanın biraz önünde, kollar volana doğru açık.",
+   "Önce bacaklarla it ve dizler neredeyse açılana kadar koltuğu geriye götür.",
+   "Gövdeyi dikeyin gerisine götür ve ancak o zaman dirsekler yanlardan geçerek tutacağı alt kaburgalara çek.",
+   "Toparlanmada sırayı tersine çevir — önce kollar öne, sonra gövde, en son dizler bükülür — ve sonraki çekiş için yeniden yakalama pozisyonuna kay.",
+   "İstediğin süre, mesafe veya çekiş sayısı boyunca devam et."
+  ],
+  "tips": [
+   "Sıraya uy: çekişte bacak, gövde, kol; toparlanmada kol, gövde, bacak. Kolları erken bükmek çekişin en güçlü kısmını boşa harcar.",
+   "Sırt düz ve core etkin kürek çek: yakalama pozisyonunda beli yuvarlamak küreği kardiyo yerine bel ağrısına çevirir.",
+   "Tutacağı düz ve yatay olarak alt kaburgalara götür; aniden dönmek yerine toparlanmayı çekişten yaklaşık iki kat yavaş yap."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Oturarak Halter Overhead Press",
+  "description": "İşi deltoidde toplamak için sırtlık destekli oturarak halter omuz press.",
+  "instructions": [
+   "Dik sırtlıklı sehpada otur, barı omuzlardan biraz geniş kavra ve üst göğse yerleştir.",
+   "Dirsekler açılana kadar barı düz yukarı it.",
+   "Barı tepenin üzerinde, kaburgaları içeride tut.",
+   "Kontrollü olarak köprücük kemiğine indir."
+  ],
+  "tips": [
+   "Sırtı kavislendirmemek için kalça ve karnı sık.",
+   "Boynu zorlamadan bara yol vermek için başı geriye al."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Oturarak Kablo Kürek",
+  "description": "Oturarak tutacağı gövdeye çekilen, kablolu kürek makinesinde sırt egzersizi.",
+  "instructions": [
+   "Kürek istasyonuna otur ve ayaklarını desteklere koy.",
+   "Tutacağı kavra ve hafif öne eğik, dik otur.",
+   "Dirsekleri geriye götür ve tutacağı alt karna doğru çek.",
+   "Çekişin sonunda kürek kemiklerini sık.",
+   "Kolları kontrollü açarak başa dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Gövdeyi minimum sallanmayla dik tut.",
+   "Dirsekleri yana değil doğrudan geriye götür.",
+   "Çekişin sonunda kürek kemiklerini sık."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Makinede Oturarak Baldır Kaldırma",
+  "description": "Soleus kasını hedefleyen oturarak makine topuk kaldırma.",
+  "instructions": [
+   "Pedler uyluklarda, topuk kaldırma makinesine otur.",
+   "Topukları olabildiğince indir.",
+   "Parmak uçlarında yüksel.",
+   "Kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Bükülü diz gastroknemiusu gevşetir, böylece soleus daha fazla iş üstlenir.",
+   "Tam hareket açıklığı kullan."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Dambılla Oturarak Baldır Kaldırma",
+  "description": "Uyluklarda dambıllarla oturarak topuk kaldırma; diz bükülüyken soleusu çalıştırır.",
+  "instructions": [
+   "Bir sehpaya otur, ayak uçları basamak veya plakada, dizlere yakın her uylukta bir dambıl.",
+   "Baldırı germek için topukları olabildiğince indir.",
+   "Ayağın ön kısmıyla iterek topukları en yükseğe kaldır.",
+   "Yukarıda bir an tut ve kontrollü indir."
+  ],
+  "tips": [
+   "Kaymaması için dambılları elle tut.",
+   "Bükülü diz işi soleusa kaydırır."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Oturarak Dambıl Yana Açış",
+  "description": "Bacak itişi olmadan yan deltoidleri çalıştıran, oturarak dambılları yana kaldırma izolasyon egzersizi.",
+  "instructions": [
+   "Yanlarda her elde bir dambılla sehpaya otur.",
+   "Sırtı dik ve core'u sıkı tut.",
+   "İki dambılı da yana omuz hizasına kaldır.",
+   "Dirseklerde hafif bükülme koru.",
+   "Dambılları kontrollü indir.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Kurallı kaldırış için hafif ağırlık kullan.",
+   "Ellerle değil dirseklerle yönlendir.",
+   "Omuz hizasına kaldır ve kontrollü indir."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Oturarak Bacak Curl",
+  "description": "Sabit gerilimli ve yüzüstü çeşide göre kalça fleksörlerinin daha az katıldığı oturarak arka bacak izolasyon egzersizi.",
+  "instructions": [
+   "Dizler makine miline hizalanacak şekilde sırtlık ve ayak bileği pedini ayarla.",
+   "Dik otur, ayak bileklerinin arkasını pede koy ve tutacakları kavra.",
+   "Bacakları makinenin izin verdiği kadar aşağı ve koltuğun altına bük.",
+   "En yüksek kasılmada dur, sonra yavaşça başa dön.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Hareket boyunca sırtı arkalığa sıkıca dayalı tut.",
+   "Arka bacağı daha fazla çalıştırmak için en yüksek kasılmada ayakları hafifçe kavala çek.",
+   "Eksantrik evreyi kontrol et — ağırlığın bacakları hızla geri götürmesine izin verme."
+  ]
+ },
+ "shrug": {
+  "name": "Halter Shrug",
+  "description": "Üst trapez için izolasyon hareketi.",
+  "instructions": [
+   "Ayakta, halteri kollar açık üstten tutuşla tut.",
+   "Omuzları doğrudan kulaklara doğru kaldır.",
+   "Üstte kısa tut.",
+   "Omuzları kontrollü indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Daire çizmeden omuzları dikey kaldır.",
+   "Kolları kullanma; dirsekler sürekli açık kalır.",
+   "Daha fazla ağırlık için bacaklarla destek alma."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Yan Yatarak Kalça Abdüksiyonu",
+  "description": "Orta kalça ve kalça abdüktörlerini çalıştıran vücut ağırlığı izolasyon egzersizi.",
+  "instructions": [
+   "Bacaklar üst üste yan yat.",
+   "Alttaki bacağı hafif bükülü tut.",
+   "Üstteki bacağı tavana doğru kaldır.",
+   "Kontrollü indir.",
+   "İki tarafta da yap."
+  ],
+  "tips": [
+   "Egzersiz boyunca kalçaları üst üste tut.",
+   "Pelvisi eğmekten kaçın."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Yan Yatarak Kalça Addüksiyonu",
+  "description": "Yan yatarak alttaki bacağı yer çekimine karşı kaldırıp kalçayı vücut ağırlığıyla çalıştıran addüksiyon egzersizi.",
+  "instructions": [
+   "Alttaki bacak düz yan yat.",
+   "Üstteki bacağı bük ve ayağını alt uyluğun önüne düz koy.",
+   "Başını alttaki kola daya.",
+   "Alttaki bacağı tavana doğru kaldır.",
+   "Bacağı kontrollü indir.",
+   "Bir tarafın tekrarlarını tamamla, sonra değiştir."
+  ],
+  "tips": [
+   "Yalnızca bacağı hareket ettir; kalça ve gövde sabit kalır.",
+   "Bacağı hız almadan kaldır ve yavaş indir.",
+   "Harekete başlamadan omuz, kalça ve ayakları hizala."
+  ]
+ },
+ "side-plank": {
+  "name": "Yan Plank",
+  "description": "Yan karın ve yan core'u çalıştıran yan plank çeşidi.",
+  "instructions": [
+   "Ön kol yerde, dirsek omuz altında yan yat.",
+   "Baştan ayaklara düz bir çizgi oluşturarak kalçayı yerden kaldır.",
+   "Core sıkı pozisyonu tut.",
+   "Düzenli nefes al.",
+   "İki tarafta da yap."
+  ],
+  "tips": [
+   "Kalçanın yere doğru çökmesine izin verme.",
+   "Gövdeyi döndürmeden omuz ve kalçayı aynı düzlemde tut.",
+   "Omuza asılmamak için ön kolla yeri it."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Tek Kol Dambıl Kürek",
+  "description": "Dengeli gelişim için dambılla tek taraflı sırt egzersizi.",
+  "instructions": [
+   "Destek olarak bir diz ve bir eli sehpaya koy.",
+   "Diğer elde kol açık bir dambıl tut.",
+   "Kürek kemiğini sıkarak dambılı kalçaya çek.",
+   "Dambılı kontrollü indir.",
+   "İki tarafta da yap."
+  ],
+  "tips": [
+   "Çekerken gövdeyi döndürme; kalçayı sabit tut.",
+   "Çekişe başlarken omzu kulağa kaldırma.",
+   "Her kolla aynı sayıda tekrar yap."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Plakalı Makinede Tek Kol Yana Açış",
+  "description": "Plakalı makinede her seferde tek kolla yana açış; her taraf kendi yükünü kaldırır ve ikisi de aynı seviyeye getirilebilir.",
+  "instructions": [
+   "Ped ekseni omzunla hizalanacak şekilde koltuk yüksekliğini ayarla ve yalnızca çalışacak tarafı yükle.",
+   "Sırt arkalıkta otur ve çalışan kolun dış yüzünü pedine daya.",
+   "Boş taraftaki tutacağı tut veya o eli kucağına koy, gövdeyi koltukla hizalı tut.",
+   "Çalışan kolu pede karşı dışa ve yukarı omuz hizasına it ve kontrollü indir.",
+   "O tarafın tüm tekrarlarını yap, sonra diğer tarafı yükle ve çalıştır."
+  ],
+  "tips": [
+   "Tarafları güçlü kola göre değil zayıf kola göre eşitle. Tek taraf çalışmak dengesizliği ancak zayıf tarafın tekrar sayısını belirlemesine izin verirsen ortaya çıkarır.",
+   "Gövdenin çalışan tarafa eğilmesine izin verme. Tek kolda yük varken makine kendi dengelenmez ve eğilmek açışı yana bükülmeye çevirir.",
+   "Hedefi belirlemesi için zayıf koldan başla ve iki tarafa aynı dinlenmeyi ver."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Tek Bacak Kalça Köprüsü",
+  "description": "Tek bacak destekli kalça köprüsü; ekipman eklemeden zorluğu artırır.",
+  "instructions": [
+   "Bir diz bükülü ve ayak yerde, diğer bacak havada uzatılmış sırtüstü yat.",
+   "Destek bacağın topuğuyla it ve omuz, kalça, diz hizalanana kadar kalçayı kaldır.",
+   "Beli kavislendirmeden yukarıda kalçayı bir an sık.",
+   "Kalçayı yere değdirmeden kontrollü indir; tekrarları tamamla ve bacak değiştir."
+  ],
+  "tips": [
+   "Bir kalça düşmeden pelvisi düz tut.",
+   "Zorsa iki bacakla kalça köprüsüyle başla."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Skull Crusher",
+  "description": "Trisepsi tam hareket açıklığında izole eden, yatarak halterle triseps extension.",
+  "instructions": [
+   "Düz sehpaya yat, halteri dar tutuşla göğsün üzerinde tut.",
+   "Dirsekleri bükerek barı alnına doğru indir.",
+   "Kolları açarak başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Egzersiz boyunca üst kolları dik tut.",
+   "Dirsekleri korumak için yavaş indir."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Smith Makinesinde Bench Press",
+  "description": "Yönlendirilmiş hareketi sayesinde göğsü daha az dengeleme gereksinimiyle çalıştıran Smith makinesinde bench press.",
+  "instructions": [
+   "Smith makinesinin içinde düz sehpaya yat.",
+   "Barı omuz genişliğinden biraz geniş kavra ve kilidi aç.",
+   "Barı kontrollü olarak göğsün ortasına indir.",
+   "Sektirmeden kısa dur.",
+   "Kollar tam açılana kadar barı yukarı it.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Bar göğsün ortasına inecek şekilde sehpayı hizala.",
+   "Set boyunca ayakları yerde sağlam tut.",
+   "Ağırlık yüklemeden önce barı takan bilek dönüşünü öğren."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Smith Makinesinde Baldır Kaldırma",
+  "description": "Smith makinesinin yönlendirilmiş barı omuzlarda, ayakta topuk kaldırma.",
+  "instructions": [
+   "Smith barının altına, ayak uçları basamak veya plakada, bar üst sırtta yerleş.",
+   "Barı serbest bırak ve baldırlar gerilene kadar topukları indir.",
+   "Dizleri kilitlemeden bacaklar açık parmak ucunda yüksel.",
+   "Yukarıda bir an tut ve barı durdurucuya bırakmadan önce kontrollü indir."
+  ],
+  "tips": [
+   "Ray seni dengeler: daha fazla yük kullanmak için yararlan.",
+   "Gövdeyi dik ve bakışı karşıda tut."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Smith Makinesinde Eğimli Press",
+  "description": "Yönlendirilmiş yolla üst göğüs ve ön deltoidleri vurgulayan Smith makinesinde eğimli press.",
+  "instructions": [
+   "Smith makinesinin içine 30–45 derecelik eğimli sehpa yerleştir.",
+   "Yat ve barı omuz genişliğinden biraz geniş kavra.",
+   "Kilidi aç ve barı üst göğse indir.",
+   "Altta kısa dur.",
+   "Kollar açılana kadar barı yukarı it.",
+   "İstenen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Bar üst göğse gelecek şekilde sehpa konumunu ayarla.",
+   "Barı göğüste sektirmeden indir.",
+   "Kalçayı sehpada, ayakları sağlam tut."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Smith Makinesinde Squat",
+  "description": "Smith makinesinin yönlendirilmiş barıyla squat: sabit yol denge gereksinimini azaltır ve yükü bacak ve kalçada bırakır; boş raf yoksa iyi bir seçenektir.",
+  "instructions": [
+   "Barı omuz hizasına ayarla ve altına yerleş: bar üst sırtta, ayaklar bardan biraz önde.",
+   "Kancaları açmak için bilekleri döndür; gövdeyi dik ve core'u etkin tut.",
+   "Dizler ayak yönünde, uyluklar en az yere paralel olana kadar diz ve kalçayı bükerek in.",
+   "Ayakta pozisyona dönene kadar tüm ayakla yeri it.",
+   "Seti bitirince barı durdurucuya takmak için bilekleri döndür."
+  ],
+  "tips": [
+   "Ayakları biraz öne almak topuklar kalkmadan daha aşağı inmeyi sağlar.",
+   "Güvenlik durdurucularını hareketin en alt noktasının hemen altına koy."
+  ]
+ },
+ "squat": {
+  "name": "Halterle Back Squat",
+  "description": "Ön bacak, kalça ve arka bacağı çalıştıran bileşik alt vücut hareketi.",
+  "instructions": [
+   "Barı üst trapezlerin üzerine yerleştir.",
+   "Barı raftan al ve ayaklar omuz genişliğinde bir adım geri çık.",
+   "Core'u sık ve uyluklar yere paralel olana kadar diz ve kalçayı bükerek in.",
+   "Ayakta pozisyona dönmek için topuklarla it.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Hareket boyunca göğsü dik tut.",
+   "Dizleri parmak uçları doğrultusunda dışa it."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Ayakta Karın Tekerleği",
+  "description": "Ayakta başlayan, bacaklar düz ve çok geniş açıklıklı karın tekerleği rollout.",
+  "instructions": [
+   "Ayakta, bacaklar düz, öne eğil ve karın tekerleğini iki elle yere koy.",
+   "Karın sıkı, kollar açık, neredeyse yere paralel olana kadar öne yuvarlan.",
+   "Beli düşürmeden kalçayı hizada tut.",
+   "Başlangıca geri yuvarlanmak için karından çek."
+  ],
+  "tips": [
+   "Hareketi kontrol edene kadar diz üstü versiyonla başla.",
+   "Bel çökmeden hareketi durdur."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Ayakta Topuk Kaldırma",
+  "description": "Gastroknemiusu tam hareket açıklığında geliştiren ayakta topuk kaldırma.",
+  "instructions": [
+   "Bir platformun veya topuk kaldırma makinesinin kenarında dur.",
+   "Topukları platformun altına indir.",
+   "Parmak ucuna yukarı it.",
+   "Yavaşça indir.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Kasılmayı en üste çıkarmak için yukarıda dur.",
+   "Topuğu tamamen indirmek hareket açıklığını artırır."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Ayakta Kalça Abdüksiyonu",
+  "description": "Diğer bacak üzerinde ayakta, vücut ağırlığıyla yana bacak kaldırma. Kaldırılan taraftaki orta kalçayı, destek bacağında ise kalçayı düz tutan kasları çalıştırır.",
+  "instructions": [
+   "Eller belde, ayaklar bitişik dik dur.",
+   "Ağırlığı bir bacağa aktar ve o dizi hafif bükülü tut.",
+   "Parmaklar öne, gövde dik, diğer düz bacağı yana kaldır.",
+   "Bacağı yalnızca gövdeyi karşı tarafa eğmeden çıkabildiğin kadar kaldır.",
+   "Bacağı destek ayağının yanına gelene kadar yavaş indir.",
+   "Planlanan tekrarları tamamla ve diğer bacakla yap."
+  ],
+  "tips": [
+   "Kalçayı düz, gövdeyi sabit tut; kaldırılan bacağın tersine eğilmek kalçanın yükünü alır.",
+   "İniş hareketini de kontrol et; bacağın sallanmasına izin verme.",
+   "Dengede kalamıyorsan duvara veya sandalyeye tutun; hareket kolaylaşınca uyluklara direnç bandı ekle."
+  ]
+ },
+ "step-ups": {
+  "name": "Basamağa Çıkış (Step-Up)",
+  "description": "Ön bacak ve kalçayı işlevsel olarak çalıştıran, tek bacakla kutuya veya sehpaya çıkış.",
+  "instructions": [
+   "Sağlam bir kutu veya sehpanın önünde dur.",
+   "Bir ayağını tamamen kutu yüzeyine koy.",
+   "Vücudu kutuya çıkarmak için o topukla it.",
+   "Tamamen kutunun üstünde olmak için arkadaki ayağı çıkar.",
+   "Yükü çalışan bacakta tutarak arkadaki ayağı kontrollü yere indir.",
+   "Bacakları sırayla yap veya değiştirmeden önce bir tarafın tüm tekrarlarını tamamla."
+  ],
+  "tips": [
+   "Tüm ayağı kutu yüzeyine bas.",
+   "Arkadaki değil çıkan bacağın topuğuyla it.",
+   "Kendini bırakmak yerine inişi kontrol et."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Düz Kol Pulldown",
+  "description": "Düz kollarla kablo kullanılan kanat izolasyon egzersizi.",
+  "instructions": [
+   "Üst makaraya düz bar takılı kablonun önünde dur.",
+   "Kollar neredeyse düz, barı yay çizerek uyluklara doğru aşağı it.",
+   "Altta kanatları sık.",
+   "Barı yavaşça başa götür.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Hareket boyunca kolları neredeyse düz tut.",
+   "Barı yay çizerek uyluklara götür.",
+   "Hareketin alt kısmında kanatları sık."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo Deadlift",
+  "description": "Çok geniş duruş ve dar tutuşlu deadlift çeşidi; yükü kalça, iç bacak ve ön bacağa kaydırır.",
+  "instructions": [
+   "Ayaklar çok açık, parmaklar hafif dışa, bar ayağın ortasında dur.",
+   "Eller bacakların içinde, sırt nötr, göğüs dik barı kavra.",
+   "Dizleri dışa açarak bacaklarla yeri it ve bar vücuda yakın ayağa kalk.",
+   "Üstte kalça ve dizleri kilitle ve barı aynı yoldan kontrollü indir."
+  ],
+  "tips": [
+   "Barı her zaman vücuda yakın tut.",
+   "Dizler parmak uçlarının yönünü izlesin; içe çökmelerine izin verme."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-Bar Kürek",
+  "description": "Eğik gövdeyle bileşik T-bar kürek; ağır yüklerle kanat ve rhomboidleri geliştirir.",
+  "instructions": [
+   "Ayaklar omuz genişliğinde T-barın üzerine bacaklarını açarak yerleş.",
+   "Gövde yaklaşık 45 dereceye gelene kadar kalçadan eğil.",
+   "Tutacakları kavra ve sırtı düz tut.",
+   "Dirsekleri geriye götürerek barı göğse çek.",
+   "Yukarıda kürek kemiklerini sık.",
+   "Barı kontrollü indir ve tekrarla."
+  ],
+  "tips": [
+   "Sırtı düz tutarak gövdeyi yaklaşık 45 derece eğ.",
+   "Yalnızca kollarla değil dirsekleri geriye götürerek çek.",
+   "Çekişin üstünde kürek kemiklerini birleştir."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Kablo Triseps Pushdown",
+  "description": "Kabloyla triseps izolasyon egzersizi.",
+  "instructions": [
+   "Düz bar aparatlı bir kablonun önünde dur.",
+   "Barı kavra ve dirsekleri yanlara yapıştır.",
+   "Kollar tam açılana kadar barı aşağı it.",
+   "Yavaşça başa dön.",
+   "Tekrarla."
+  ],
+  "tips": [
+   "Gövdeyi dik tut.",
+   "Yalnızca ön kollar hareket etmeli."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "TRX Bacak Curl",
+  "description": "Bu izolasyon egzersizi, topukları kalçaya çekerek arka bacak, kalça ve baldırları çalıştırmak için asılı antrenman setini kullanır.",
+  "instructions": [
+   "Topuklar asılı setin kayışlarında, dizler 90 derece bükülü sırtüstü yat.",
+   "Dizlerden omuzlara düz bir çizgi oluşturarak kalçayı yerden kaldır.",
+   "Kalçayı yukarıda ve core gerginliğini koruyarak bacakları öne uzat.",
+   "Arka bacağı güçlüce kasarak topukları kalçaya çek.",
+   "Set boyunca kalçanın düşmesini önleyerek hareketi kontrol et."
+  ],
+  "tips": [
+   "Kalçanın çökmemesi için core'u sıkı tut.",
+   "Curl'ün en yüksek noktasında arka bacağın güçlü kasılmasına odaklan.",
+   "Bacakları yavaşça açarak eksantrik evreyi kontrol et."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "V Barla Lat Pulldown",
+  "description": "Dar V barla nötr tutuş pulldown; kanat gerilmesini en üste çıkarır ve daha derin kasılma sağlar.",
+  "instructions": [
+   "Lat pulldown kablosuna V bar (çift D tutacak) tak.",
+   "Uyluklar pedin altında sabit otur ve tutacağı avuçlar karşılıklı kavra.",
+   "Kollar baş üstünde tam açık başla.",
+   "Dirsekleri aşağı ve hafif geriye iterek tutacağı göğüs kemiğine çek.",
+   "Alt pozisyonda kanatları sık ve yavaşça, kontrollü yüksel.",
+   "Önerilen tekrar sayısını yap."
+  ],
+  "tips": [
+   "Nötr tutuş, üstten veya alttan tutuşa göre omuzlara daha yumuşaktır.",
+   "Kaburgaları kalçaya yaklaştırdığını hayal et: kolları değil kanatları düşün."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Dambılla Yürüyen Lunge",
+  "description": "Her elde dambılla ileri doğru sırayla yürüyen lunge; ön bacak ve kalçayı tek taraflı çalıştırır.",
+  "instructions": [
+   "Her elde dambılla, kollar yanda gevşek dur.",
+   "İleri uzun bir adım at ve iki diz yaklaşık 90 derece açı yapana kadar in.",
+   "Öndeki bacakla iterek kalk ve sonraki adımda arkadaki bacağı öne getir.",
+   "Hareket boyunca gövdeyi dik tutarak bacakları sırayla kullan."
+  ],
+  "tips": [
+   "Öndeki diz parmak ucunu fazla geçmeyecek kadar uzun adımlar at.",
+   "Boş alan gerekir; yoksa geriye lunge yap."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Ağırlıklı Dips",
+  "description": "Ayaklar arasında dambıl veya ağırlık yeleğiyle paralel barda ağırlıklı dips.",
+  "instructions": [
+   "Ayaklar veya ayak bilekleri arasında dambıl, kollar açık paralel barlara tutun.",
+   "Gövdeyi hafif eğ ve kontrollü inmek için dirsekleri bük.",
+   "Omuzlar dirsek hizasına gelince dur.",
+   "Kollar açılana kadar göğüs ve trisepsle it."
+  ],
+  "tips": [
+   "Önce vücut ağırlığıyla dips'te ustalaş.",
+   "Omzunun tolere ettiğinden aşağı inme."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Ağırlıklı Barfiks",
+  "description": "Ayaklar arasında dambıl veya ağırlık yeleğiyle ağırlıklı barfiks.",
+  "instructions": [
+   "Barda omuzlardan biraz geniş asıl ve ayaklar veya bilekler arasında dambıl tut.",
+   "Çene barı geçene kadar dirsekleri aşağı ve geriye çek.",
+   "Vücudu sallanmadan sabit tut.",
+   "Kollar tam açılana kadar kontrollü in."
+  ],
+  "tips": [
+   "Önce vücut ağırlığıyla barfikste ustalaş.",
+   "Ağırlık yeleği kullanıyorsan ağırlığı kademeli ayarla."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Geniş Tutuş Oturarak Kablo Kürek",
+  "description": "Uzun bar ve geniş tutuşla yatay kablo kürek; üst sırt ve omuz arkasını yükler.",
+  "instructions": [
+   "Alt makaranın önüne ayaklar destekte, dizler hafif bükülü, uzun barı geniş tutuşla otur.",
+   "Sırt düz ve göğüs dik, dirsekleri dışa ve geriye götürerek barı alt göğse çek.",
+   "Sonda kürek kemiklerini birleştir ve kasılmayı bir an tut.",
+   "Sırtı kamburlaştırmadan kürek kemiklerinin açılmasına izin vererek kolları kontrollü uzat."
+  ],
+  "tips": [
+   "Sallanma: hareketi gövde değil sırt yapar.",
+   "Üst sırtı yüklemek için barı karna değil göğse götür."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher Squat",
+  "description": "Bar dirsek kıvrımında tutulan squat; yükü öne taşır ve gövdeden çok şey ister.",
+  "instructions": [
+   "Barı karın hizasında dirsek kıvrımlarına yerleştir, ön kollar çapraz veya yumruklar bitişik.",
+   "Göğüs dik, dirsekler vücuda yakın, kalça ve dizleri bükerek in.",
+   "Uyluklar yere paralel veya biraz altında dur.",
+   "Yeniden dik durana kadar ayaklarla yeri it."
+  ],
+  "tips": [
+   "Dirsekleri rahatsız ediyorsa bara ped veya havlu sar.",
+   "Öne eğilmemek için karnı sıkı tut."
+  ]
+ },
+ "z-press": {
+  "name": "Z Press",
+  "description": "Bacaklar düz yerde oturarak overhead press; desteği kaldırır ve gövde stabilitesi ister.",
+  "instructions": [
+   "Bacaklar önde düz yere otur, bar üst göğse dayalı.",
+   "Gövdeyi dik tut ve kollar açılana kadar barı düz bir çizgide it.",
+   "Geriye yatmadan barı tepenin üzerinde durdur.",
+   "Kontrollü olarak köprücük kemiğine indir."
+  ],
+  "tips": [
+   "Ayakta yaptığından daha az ağırlık kullan: gövde dengeleyici görevi görür.",
+   "Hareket boyunca kalça ve karnı sık."
+  ]
+ }
+}
