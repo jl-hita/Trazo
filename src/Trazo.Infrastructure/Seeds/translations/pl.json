@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Kółko do brzucha",
+  "description": "Ćwiczenie na core polegające na przetaczaniu kółka w przód i w tył, które trenuje antywyprost kręgosłupa.",
+  "instructions": [
+   "Uklęknij na podłodze i chwyć uchwyty kółka na szerokość barków.",
+   "Mocno napnij core, aby odcinek lędźwiowy pozostał neutralny.",
+   "Tocz kółko powoli do przodu, wydłużając ciało tak daleko, jak potrafisz to kontrolować.",
+   "Zatrzymaj się, zanim biodra opadną lub plecy się wygną.",
+   "Przyciągnij kółko z powrotem w stronę kolan, napinając mięśnie brzucha."
+  ],
+  "tips": [
+   "Napnij core przed każdym powtórzeniem — nie pozwól, by lędźwie się wygięły.",
+   "Stopniowo zwiększaj zakres ruchu, zatrzymując się, zanim biodra opadną.",
+   "Użyj ściany jako ogranicznika, jeśli nie kontrolujesz dolnej pozycji."
+  ]
+ },
+ "arnold-press": {
+  "name": "Wyciskanie Arnolda",
+  "description": "Wyciskanie hantli nad głowę z obrotem nadgarstków, które angażuje mięśnie naramienne w szerokim zakresie.",
+  "instructions": [
+   "Siedząc z prostym oparciem, trzymaj hantle na wysokości klatki, dłonie skierowane do siebie, łokcie z przodu.",
+   "Zacznij wyciskać w górę, rozsuwając łokcie i obracając dłonie do przodu.",
+   "Zakończ z ramionami wyprostowanymi nad głową, bez blokowania łokci.",
+   "Opuszczaj, obracając dłonie z powrotem do siebie, aż do pozycji wyjściowej."
+  ],
+  "tips": [
+   "Obrót wykonuj płynnie, bez szarpania.",
+   "Trzymaj plecy oparte o oparcie."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Podciąganie z asystą",
+  "description": "Podciąganie na maszynie z asystą, która odciąża część masy ciała; pomaga zbudować siłę pleców potrzebną do ścisłego podciągania.",
+  "instructions": [
+   "Oprzyj kolana na poduszce maszyny do podciągania z asystą.",
+   "Chwyć drążek nachwytem, nieco szerzej niż szerokość barków.",
+   "Przyciągnij klatkę do drążka, ściągając łokcie w dół.",
+   "Opuść się w kontrolowany sposób do zwisu z wyprostowanymi ramionami.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Rozpocznij ruch od obniżenia łopatek, zanim ugniesz łokcie.",
+   "Unikaj bujania się, aby nie odbierać pracy plecom.",
+   "Dobierz przeciwwagę tak, aby wykonać wszystkie powtórzenia z dobrą techniką."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Uginanie nóg na piłce stabilizacyjnej",
+  "description": "Uginanie nóg z masą ciała na piłce stabilizacyjnej: przetaczasz pięty w stronę pośladków, unosząc biodra.",
+  "instructions": [
+   "Połóż się na plecach z piętami i dolną częścią łydek na piłce stabilizacyjnej, ramiona rozłożone dla równowagi.",
+   "Dociśnij piętami, aby unieść biodra do linii prostej od barków do kostek.",
+   "Trzymając biodra w górze, ugnij kolana i przetocz piłkę w stronę pośladków.",
+   "Wyprostuj nogi z powrotem w kontrolowany sposób, nie opuszczając bioder.",
+   "Wykonaj wszystkie powtórzenia, potem opuść biodra i odsuń się od piłki."
+  ],
+  "tips": [
+   "Biodra pozostają w górze przez całą serię: to połączenie mostka i uginania.",
+   "Zacznij na obu nogach; przejdź na jedną, gdy stanie się to łatwe."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Uginanie nogi stojąc z gumą",
+  "description": "Uginanie nogi stojąc z gumą wokół kostki — przydatne w podróży lub jako lekkie zakończenie treningu dwugłowych uda.",
+  "instructions": [
+   "Załóż gumę wokół jednej kostki, a drugi koniec zakotwicz pod stopą podporową lub w stałym punkcie przed sobą.",
+   "Stań prosto, w razie potrzeby przytrzymaj się czegoś, noga podporowa lekko ugięta.",
+   "Przyciągnij piętę z gumą w stronę pośladka, nie ruszając udem.",
+   "Napnij mięsień w górze, potem opuść z kontrolą do pełnego rozciągnięcia.",
+   "Wykonaj wszystkie powtórzenia na jedną stronę i zmień nogę."
+  ],
+  "tips": [
+   "Nie ruszaj udem — pracuje tylko dolna część nogi.",
+   "Nie bujaj biodrem, aby nabrać pędu.",
+   "Użyj lżejszej gumy, jeśli nie kontrolujesz opuszczania."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Ściąganie gumy do klatki",
+  "description": "Pionowe ściąganie gumy zakotwiczonej wysoko jako zamiennik wyciągu.",
+  "instructions": [
+   "Stojąc, z gumą zakotwiczoną wysoko (na drzwiach lub drążku) i końcami w obu dłoniach, ramiona wyprostowane nad głową.",
+   "Ściągaj dłonie w dół, prowadząc łokcie do boków, z wypiętą klatką.",
+   "Ściśnij plecy, gdy dłonie dojdą na wysokość barków.",
+   "Z kontrolą unieś ramiona, aż znów będą wyprostowane."
+  ],
+  "tips": [
+   "Nie odchylaj tułowia, żeby sobie pomóc.",
+   "Przed rozpoczęciem dobrze zabezpiecz mocowanie."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Rozciąganie gumy w przód (pull-apart)",
+  "description": "Rozciąganie gumy na wyprostowanych ramionach, aktywujące tył barku i górną część pleców.",
+  "instructions": [
+   "Stojąc, trzymaj gumę dłońmi na szerokość barków, ramiona wyprostowane przed sobą na wysokości klatki.",
+   "Rozsuwaj dłonie, prowadząc ramiona na boki, aż guma dotknie klatki.",
+   "Ściągnij łopatki na końcu ruchu, nie unosząc barków.",
+   "Wróć z kontrolą do pozycji wyjściowej, nie pozwalając, by guma Cię ciągnęła."
+  ],
+  "tips": [
+   "Wybierz gumę, z którą zrobisz 15 lub więcej czystych powtórzeń.",
+   "Trzymaj żebra ściągnięte, aby nie wyginać lędźwi."
+  ]
+ },
+ "band-row": {
+  "name": "Wiosłowanie z gumą",
+  "description": "Wiosłowanie siedząc z gumą zaczepioną o stopy, które nie wymaga niczego poza gumą.",
+  "instructions": [
+   "Usiądź na podłodze z wyprostowanymi nogami i gumą wokół podeszew, po końcu w każdej dłoni.",
+   "Z prostymi plecami przyciągaj dłonie do brzucha, prowadząc łokcie w tył.",
+   "Ściągnij łopatki na końcu ruchu.",
+   "Wyprostuj ramiona z kontrolą, nie tracąc napięcia gumy."
+  ],
+  "tips": [
+   "Nie bujaj tułowiem, żeby sobie pomóc.",
+   "Wybierz gumę, z którą zrobisz od 12 do 15 czystych powtórzeń."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Wyciskanie nad głowę z gumą",
+  "description": "Wyciskanie nad głowę stojąc na gumie — trening barków przy minimum sprzętu.",
+  "instructions": [
+   "Stań na środku gumy, stopy na szerokość bioder, po końcu w każdej dłoni na wysokości barków.",
+   "Wypychaj dłonie w górę, aż wyprostujesz ramiona nad głową.",
+   "Trzymaj brzuch napięty, a żebra ściągnięte.",
+   "Opuść z kontrolą do barków, nie tracąc napięcia."
+  ],
+  "tips": [
+   "Nie wyginaj pleców przy wyciskaniu.",
+   "Owiń gumę jeszcze raz, aby zwiększyć opór."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Przysiad bułgarski ze sztangą",
+  "description": "Przysiad na jednej nodze z tylną stopą na ławce i sztangą na plecach.",
+  "instructions": [
+   "Oprzyj grzbiet jednej stopy na ławce za sobą, sztanga na górnej części pleców, druga noga wysunięta w przód.",
+   "Ugnij przednie kolano i zejdź z wyprostowanym tułowiem, aż udo będzie równoległe do podłogi.",
+   "Trzymaj ciężar na pięcie przedniej nogi.",
+   "Odepchnij podłogę przednią stopą aż do wyprostu nogi; wykonaj powtórzenia i zmień nogę."
+  ],
+  "tips": [
+   "Dobierz odległość tak, aby przednie kolano nie wychodziło daleko poza palce.",
+   "Najpierw przećwicz bez obciążenia lub z hantlami."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Uginanie ramion ze sztangą",
+  "description": "Klasyczne ćwiczenie izolowane na biceps, w którym sztanga pozwala na największy ciężar.",
+  "instructions": [
+   "Stań, trzymając sztangę podchwytem na szerokość barków.",
+   "Unieś sztangę w stronę barków.",
+   "Ściśnij w górze, potem opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie bujaj tułowiem.",
+   "Trzymaj łokcie przy bokach."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Mostek biodrowy ze sztangą",
+  "description": "Mostek biodrowy z obciążeniem sztangą dla większego oporu.",
+  "instructions": [
+   "Połóż się na podłodze ze sztangą na biodrach i ugiętymi kolanami.",
+   "Unieś biodra, ściskając pośladki.",
+   "Zatrzymaj w górze z w pełni wyprostowanymi biodrami.",
+   "Opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie wyginaj lędźwi podczas wyprostu bioder.",
+   "Pchaj piętami, nie palcami.",
+   "Cofnij brodę i trzymaj górną część pleców opartą."
+  ]
+ },
+ "barbell-row": {
+  "name": "Wiosłowanie sztangą w opadzie",
+  "description": "Wielostawowy ruch przyciągania trenujący górną i środkową część pleców.",
+  "instructions": [
+   "Pochyl się w biodrach z lekko ugiętymi kolanami.",
+   "Chwyć sztangę nieco szerzej niż szerokość barków.",
+   "Przyciągaj sztangę do dolnej części klatki, ściągając łopatki.",
+   "Opuść sztangę w kontrolowany sposób.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Utrzymuj tułów pod kątem około 45 stopni.",
+   "Nie bujaj ciężarem, aby nabrać pędu."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Wspięcia na palce stojąc ze sztangą",
+  "description": "Wspięcia na palce stojąc z wolną sztangą na plecach, bez specjalnej maszyny.",
+  "instructions": [
+   "Stań ze sztangą na górnej części pleców, przodostopie na stopniu lub talerzu, na szerokość bioder.",
+   "Pozwól piętom opaść aż do rozciągnięcia łydek, tułów wyprostowany.",
+   "Wspnij się na palce tak wysoko, jak potrafisz, bez uginania kolan.",
+   "Zatrzymaj na chwilę w górze i opuść z kontrolą."
+  ],
+  "tips": [
+   "Zacznij z małym ciężarem, dopóki nie opanujesz równowagi.",
+   "Dla bezpieczeństwa wykonuj w klatce z zabezpieczeniami na odpowiedniej wysokości."
+  ]
+ },
+ "bench-press": {
+  "name": "Wyciskanie sztangi leżąc",
+  "description": "Wielostawowy ruch pchania trenujący klatkę, barki i tricepsy.",
+  "instructions": [
+   "Połóż się na ławce z oczami pod sztangą.",
+   "Chwyć sztangę nieco szerzej niż szerokość barków.",
+   "Zdejmij sztangę ze stojaków i opuść na środek klatki.",
+   "Wyciśnij sztangę z powrotem do pełnego wyprostu ramion.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Trzymaj stopy płasko na podłodze.",
+   "Zachowaj lekkie wygięcie w odcinku lędźwiowym.",
+   "Zapieraj się nogami o podłogę, aby zachować stabilność."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Podciąganie australijskie z ugiętymi kolanami",
+  "description": "Łatwiejsza wersja podciągania australijskiego: z ugiętymi kolanami i stopami blisko ciała podnosisz mniej i łatwiej kontrolujesz ruch.",
+  "instructions": [
+   "Połóż się pod niskim, stabilnym drążkiem, chwyć go nieco szerzej niż barki i trzymaj tułów prosto, z ugiętymi kolanami i stopami płasko.",
+   "Przyciągaj klatkę do drążka, prowadząc łokcie w tył i ściągając łopatki.",
+   "Zatrzymaj na chwilę w górze, nie opuszczając bioder.",
+   "Opuść się z kontrolą do wyprostu ramion."
+  ],
+  "tips": [
+   "Przysuń stopy do ciała, aby było łatwiej, lub odsuń je, aby utrudnić.",
+   "Gdy opanujesz 12 powtórzeń, przejdź do wersji z prostymi nogami."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Wspięcia na palce z masą ciała",
+  "description": "Wspięcia na palce z masą ciała — podstawowe ćwiczenie wzmacniające łydki.",
+  "instructions": [
+   "Stań na płaskim podłożu, stopy na szerokość bioder.",
+   "Wspnij się na palce jak najwyżej.",
+   "Ściśnij łydki w górze.",
+   "Opuść pięty na podłogę z kontrolą.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Przy wspięciu rozkładaj ciężar na wszystkie palce.",
+   "Trzymaj nogi proste, aby skupić pracę na łydce.",
+   "Utkwij wzrok w jednym punkcie, aby utrzymać równowagę."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Zakrok z masą ciała",
+  "description": "Zakrok bez sprzętu — stabilniejszy i łagodniejszy dla kolan niż wykrok w przód.",
+  "instructions": [
+   "Stań ze złączonymi stopami i dłońmi na biodrach, klatka wypięta.",
+   "Zrób długi krok w tył i zejdź, uginając oba kolana, aż tylne kolano będzie blisko podłogi.",
+   "Trzymaj tułów wyprostowany, a ciężar na przedniej stopie.",
+   "Odepchnij się przednią nogą do pozycji wyjściowej; wykonaj powtórzenia i zmień nogę."
+  ],
+  "tips": [
+   "Rób krok na tyle długi, by przednie kolano nie wychodziło daleko poza palce.",
+   "Przytrzymaj się czegoś, jeśli równowaga nadal sprawia trudność."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Przysiad z masą ciała",
+  "description": "Podstawowy przysiad bez sprzętu, idealny do nauki wzorca ruchu i treningu nóg w dowolnym miejscu.",
+  "instructions": [
+   "Stań ze stopami na szerokość barków, palce lekko na zewnątrz, ramiona wyciągnięte przed siebie.",
+   "Prowadź biodra w tył i w dół, jakbyś siadał(a), z wypiętą klatką i neutralnymi plecami.",
+   "Zejdź, aż uda będą równoległe do podłogi, kolana w linii stóp.",
+   "Odpychaj podłogę całą stopą, aż znów się wyprostujesz."
+  ],
+  "tips": [
+   "Trzymaj pięty na ziemi przez cały ruch.",
+   "Jeśli trudno Ci zejść, usiądź na krześle i wstań bez rozpędu."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Przysiad bułgarski",
+  "description": "Jednonożna odmiana przysiadu z tylną stopą na podwyższeniu.",
+  "instructions": [
+   "Stań przed ławką i oprzyj na niej z tyłu jedną stopę.",
+   "Trzymaj hantle po bokach.",
+   "Opuszczaj ciało, aż przednie udo będzie równoległe do podłogi.",
+   "Odepchnij się przednią piętą do pozycji stojącej.",
+   "Powtórz na obie strony."
+  ],
+  "tips": [
+   "Trzymaj niemal cały ciężar na przedniej nodze.",
+   "Dobierz odległość od ławki, aż wykrok będzie stabilny.",
+   "Wykonaj wszystkie powtórzenia na jedną nogę, zanim zmienisz."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Spięcia brzucha na wyciągu",
+  "description": "Spięcia brzucha w klęku na górnym wyciągu z liną, które pozwalają stopniowo dokładać obciążenie mięśniowi prostemu brzucha.",
+  "instructions": [
+   "Uklęknij przed wyciągiem z liną zaczepioną u góry.",
+   "Trzymaj linę przy czole z ugiętymi łokciami.",
+   "Zejdź w dół, zginając kręgosłup i prowadząc łokcie w stronę ud.",
+   "Mocno ściśnij brzuch w dolnej pozycji.",
+   "Wróć do pozycji wyjściowej i powtórz."
+  ],
+  "tips": [
+   "Zginaj kręgosłup zamiast ciągnąć ramionami.",
+   "Unikaj siadania biodrami w tył przy każdym powtórzeniu.",
+   "Mocno wydychaj przy schodzeniu, aby lepiej napiąć brzuch."
+  ]
+ },
+ "cable-curl": {
+  "name": "Uginanie ramion na wyciągu",
+  "description": "Uginanie ramion na wyciągu dla stałego napięcia.",
+  "instructions": [
+   "Stań przed dolnym wyciągiem z prostym lub łamanym drążkiem.",
+   "Chwyć drążek podchwytem, łokcie przy bokach.",
+   "Unieś sztangę w stronę barków.",
+   "Opuszczaj z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie wysuwaj łokci w przód przy unoszeniu.",
+   "Nie bujaj tułowiem, żeby sobie pomóc.",
+   "Odsuń się trochę od wyciągu, aby utrzymać napięcie."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Rotacja zewnętrzna na wyciągu",
+  "description": "Rotacja zewnętrzna na wyciągu z łokciem przy boku, wzmacniająca rotatory zewnętrzne stożka rotatorów przy pomocy tylnego aktonu barku.",
+  "instructions": [
+   "Ustaw wyciąg na wysokości łokcia i chwyć uchwyt.",
+   "Stań bokiem do maszyny, pracujący łokieć ugięty pod kątem 90 stopni.",
+   "Trzymaj łokieć przy boku i obracaj przedramię na zewnątrz.",
+   "Zatrzymaj na końcu ruchu.",
+   "Wróć z kontrolą. Wykonaj powtórzenia na jedną stronę, potem zmień."
+  ],
+  "tips": [
+   "Nie unoś barków podczas obracania ramienia.",
+   "Pracuj z małym ciężarem, powoli i z kontrolą.",
+   "Trzymaj nadgarstek stabilnie, w linii z przedramieniem."
+  ]
+ },
+ "cable-fly": {
+  "name": "Rozpiętki na wyciągu",
+  "description": "Ćwiczenie izolowane na klatkę z wyciągiem, zapewniające stałe napięcie.",
+  "instructions": [
+   "Stań między dwiema kolumnami wyciągu z uchwytami zaczepionymi u góry.",
+   "Z lekko ugiętymi łokciami rozłóż ramiona na boki.",
+   "Złącz dłonie przed klatką ruchem przytulania.",
+   "Powoli wróć do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Utrzymuj stały kąt w łokciach, żeby ruch nie stał się wyciskaniem.",
+   "Ściskaj klatkę przez sekundę, gdy dłonie się spotkają.",
+   "Nie wysuwaj barków w przód przy rozłożonych ramionach."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Wznosy przodem na wyciągu",
+  "description": "Wznos przodem na dolnym wyciągu, utrzymujący stałe napięcie w całym zakresie.",
+  "instructions": [
+   "Stań tyłem do dolnego wyciągu, linka między nogami, uchwyt w jednej dłoni, ramię wyprostowane przed udem.",
+   "Unieś ramię w przód do wysokości barku z lekko ugiętym łokciem.",
+   "Zatrzymaj na chwilę w górze bez odchylania tułowia.",
+   "Opuść z kontrolą, nie odkładając ciężaru; powtórz i zmień rękę."
+  ],
+  "tips": [
+   "Stań na tyle daleko, by linka ciągnęła w tył.",
+   "Napnij brzuch, aby nie wyginać pleców."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Wznosy bokiem na wyciągu",
+  "description": "Jednorącz wznos bokiem na wyciągu, dający stałe napięcie bocznego aktonu barku.",
+  "instructions": [
+   "Stań bokiem do dolnego wyciągu i chwyć uchwyt dłonią dalszą od maszyny.",
+   "Lekko ugnij łokieć i pozwól lince przechodzić przed ciałem.",
+   "Unieś ramię w bok, aż będzie równoległe do podłogi.",
+   "Opuść z kontrolą. Zrób powtórzenia na jedną stronę, potem zmień.",
+   "Utrzymuj napięcie — nie odkładaj ciężaru na dole."
+  ],
+  "tips": [
+   "Prowadź łokciem, nie dłonią.",
+   "Krótko zatrzymaj w górze, bez bujania.",
+   "Użyj mniejszego ciężaru niż z hantlem — napięcie linki jest stałe."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Prostowanie ramion nad głową na wyciągu",
+  "description": "Ćwiczenie na triceps z wyciągiem: stojąc tyłem do stosu, trzymasz linę za głową i prostujesz łokcie, wypychając ją w górę nad głowę. Pozycja nad głową rozciąga głowę długą tricepsa, a linka utrzymuje napięcie przez cały ruch.",
+  "instructions": [
+   "Zaczep linę do dolnego wyciągu i wybierz lekki ciężar.",
+   "Chwyć linę oburącz, odwróć się tyłem do stosu i zrób wykrok, aby linka ciągnęła Cię w tył.",
+   "Unieś linę nad głowę z ugiętymi łokciami i ramionami blisko uszu, tak by dłonie znalazły się za głową.",
+   "Napnij tułów, nie ruszaj ramionami, potem wyprostuj łokcie i wypchnij linę w górę do pełnego wyprostu nad głową.",
+   "Krótko zatrzymaj w górze i z kontrolą ugnij łokcie, opuszczając linę znów za głowę.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Łokcie kieruj w przód, a ramion nie ruszaj; jeśli się rozchodzą lub przesuwają, prostowanie zmienia się w wyciskanie.",
+   "Zrób wystarczająco długi krok w przód, aby linka Cię stabilizowała, i nie wyginaj lędźwi, unosząc ramiona.",
+   "Używaj ciężaru, który kontrolujesz w całym rozciągnięciu; duże obciążenia rozsuwają łokcie."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof press na wyciągu",
+  "description": "Ćwiczenie antyrotacyjne na core: wyciąg ciągnie Cię w bok, a Ty wypychasz uchwyt prosto od klatki i nie pozwalasz tułowiu się obrócić.",
+  "instructions": [
+   "Ustaw wyciąg na wysokości klatki i chwyć uchwyt oburącz, stojąc bokiem do maszyny.",
+   "Odsuń się, aż linka będzie naprawdę napięta, stopy na szerokość barków, kolana lekko ugięte.",
+   "Przyciągnij uchwyt do środka klatki i napnij tułów oraz pośladki.",
+   "Wypchnij uchwyt prosto przed siebie do wyprostu ramion, opierając się sile, która chce Cię obrócić ku maszynie.",
+   "Przytrzymaj chwilę wyprostowaną pozycję i z kontrolą przyciągnij uchwyt do klatki.",
+   "Wykonaj powtórzenia, potem obróć się i powtórz na drugą stronę."
+  ],
+  "tips": [
+   "Nic nie powinno się obracać. Jeśli barki skręcają ku wyciągowi podczas wypychania, zmniejsz ciężar — trenujesz rotację, która nie ma się wydarzyć.",
+   "Im dalej od maszyny, tym dłuższe ramię dźwigni i trudniej, więc możesz zmieniać trudność bez ruszania stosu.",
+   "Trzymaj ręce na wysokości klatki i barki nisko; unoszenie uchwytu zmienia ćwiczenie we wznos przodem."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Odwrotne rozpiętki na wyciągu",
+  "description": "Ćwiczenie stojąc na tylne aktony barków: twarzą między dwie wieże wyciągu trzymasz przeciwległe uchwyty ze skrzyżowanymi linkami i prowadzisz ramiona na zewnątrz i w tył, aż znajdą się na wysokości barków. Linki utrzymują napięcie z tyłu barków przez cały łuk.",
+  "instructions": [
+   "Ustaw oba bloczki mniej więcej na wysokości barków i stań pośrodku między wieżami.",
+   "Chwyć lewy uchwyt prawą dłonią, a prawy lewą, tak by linki krzyżowały się przed Tobą.",
+   "Stań prosto z ramionami wyciągniętymi na wysokości barków i lekko ugiętymi łokciami.",
+   "Prowadź ramiona na zewnątrz i w tył szerokim łukiem, kierując łokciami, aż znajdą się w linii barków.",
+   "Krótko ściągnij łopatki bez wyginania lędźwi.",
+   "Powoli odprowadź uchwyty do skrzyżowanej pozycji wyjściowej i powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Łokcie lekko ugięte i nieruchome; jeśli je zginasz i prostujesz, rozpiętki zmieniają się w wiosłowanie.",
+   "Trzymaj barki nisko i rozluźnij szyję, aby pracował tył barków, a nie górna część czworobocznego.",
+   "Używaj małego ciężaru i powolnego powrotu; linki ciągną mocniej na końcu łuku, więc kontroluj tę pozycję."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Unoszenie kolan na krześle rzymskim",
+  "description": "Ćwiczenie z masą ciała na krześle rzymskim trenujące dolną część brzucha i zginacze bioder.",
+  "instructions": [
+   "Ustaw się na krześle rzymskim z plecami płasko na oparciu i przedramionami na podpórkach.",
+   "Pozwól nogom swobodnie zwisać.",
+   "Napnij core i przyciągnij kolana do klatki.",
+   "Zatrzymaj krótko w górze, potem powoli opuść do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Nie bujaj nogami, aby nabrać pędu.",
+   "Wydychaj przy unoszeniu kolan.",
+   "Trzymaj plecy przy oparciu przez całe ćwiczenie."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Wyciskanie na maszynie na klatkę",
+  "description": "Ruch wyciskania na klatkę na maszynie, idealny dla początkujących.",
+  "instructions": [
+   "Usiądź na maszynie z plecami płasko na oparciu.",
+   "Chwyć uchwyty na wysokości klatki.",
+   "Wypchnij uchwyty do przodu do pełnego wyprostu ramion.",
+   "Powoli wróć do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Ustaw siedzisko tak, aby uchwyty były na wysokości klatki.",
+   "Wyciskaj bez gwałtownego blokowania łokci.",
+   "Wracaj z kontrolą, nie puszczając nagle ciężaru."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Wiosłowanie hantlami z podparciem klatki",
+  "description": "Wiosłowanie hantlami z podparciem klatki, które odciąża lędźwie i izoluje mięśnie pleców.",
+  "instructions": [
+   "Połóż się przodem na ławce skośnej, hantle zwisają pod spodem.",
+   "Wiosłuj hantlami, prowadząc je po bokach.",
+   "Ściśnij w górze i opuść.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Podparcie klatki eliminuje zmęczenie pleców.",
+   "Skup się na ściąganiu łopatek."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Wiosłowanie kettlebell z podparciem klatki",
+  "description": "To ćwiczenie trenuje mięśnie pleców, głównie najszerszy grzbietu i równoległoboczne: wiosłujesz kettlebell w każdej dłoni w stronę bioder, z tułowiem opartym o ławkę skośną.",
+  "instructions": [
+   "Połóż się przodem na ławce skośnej, ręce zwisają swobodnie z kettlebell w każdej dłoni.",
+   "Napnij brzuch i ściągnij łopatki.",
+   "Przyciągaj kettlebell w stronę bioder, ściskając łopatki.",
+   "Zrób krótką pauzę w górze, czując napięcie w plecach.",
+   "Powoli i z kontrolą opuść kettlebell do pozycji wyjściowej."
+  ],
+  "tips": [
+   "Utrzymuj tułów stabilnie przez cały ruch; nie bujaj się.",
+   "Skup się na rozpoczynaniu ruchu mięśniami pleców, a nie tylko rękami.",
+   "Trzymaj łokcie blisko ciała, aby mocniej zaangażować najszerszy grzbietu."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Wiosłowanie na maszynie z podparciem klatki",
+  "description": "Wiosłowanie siedząc na maszynie z poduszką pod klatkę, która podpiera tułów: pracują najszersze i mięśnie między łopatkami, a lędźwie są odciążone. Przyciągasz uchwyty, prowadząc łokcie za siebie, a potem z kontrolą pozwalasz im wrócić.",
+  "instructions": [
+   "Ustaw siedzisko tak, aby uchwyty były na wysokości dolnej części klatki, i usiądź z klatką przy poduszce i stopami pewnie opartymi.",
+   "Sięgnij do przodu i chwyć uchwyty z wyprostowanymi ramionami i rozluźnionymi barkami.",
+   "Napnij tułów i przyciągnij uchwyty, prowadząc łokcie za siebie.",
+   "Ściągnij łopatki na końcu ruchu, nie odrywając klatki od poduszki.",
+   "Zrób krótką pauzę i z kontrolą wyprostuj ramiona, odprowadzając uchwyty.",
+   "Powtórz zaplanowaną liczbę powtórzeń, cały czas trzymając klatkę na poduszce."
+  ],
+  "tips": [
+   "Ciągnij łokciami, a nie dłońmi, aby ruch prowadziły najszersze i środek pleców, a bicepsy pomagały.",
+   "Trzymaj klatkę na poduszce i barki nisko; unoszenie barków lub odchylanie zmienia wiosłowanie w pracę górnej części czworobocznego.",
+   "Pozwól łopatkom rozsunąć się na początku każdego powtórzenia, aby w pełni rozciągnąć mięśnie przed kolejnym przyciągnięciem."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Wiosłowanie półsztangą z podparciem klatki",
+  "description": "Wiosłowanie półsztangą z klatką opartą na ławce skośnej, izolujące plecy bez obciążania lędźwi.",
+  "instructions": [
+   "Oprzyj klatkę na ławce skośnej, stopy pewnie na podłodze, i chwyć uchwyt półsztangi z wyprostowanymi ramionami.",
+   "Przyciągaj uchwyt do klatki, prowadząc łokcie w tył, blisko ciała.",
+   "Na chwilę ściśnij łopatki w górze.",
+   "Opuść z kontrolą do wyprostu ramion, nie odrywając klatki od ławki."
+  ],
+  "tips": [
+   "Trzymaj głowę w linii z kręgosłupem.",
+   "Jeśli musisz odrywać klatkę od ławki, żeby unieść ciężar, zmniejsz go."
+  ]
+ },
+ "chin-ups": {
+  "name": "Podciąganie podchwytem",
+  "description": "Odmiana podciągania podchwytem, mocno angażująca bicepsy razem z najszerszym grzbietu.",
+  "instructions": [
+   "Zawiśnij na drążku podchwytem na szerokość barków.",
+   "Podciągnij się, aż broda znajdzie się nad drążkiem.",
+   "Opuszczaj z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj core napięty przez całe ćwiczenie.",
+   "Unikaj nadmiernego bujania."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Wyciskanie sztangi wąskim chwytem",
+  "description": "Wyciskanie leżąc węższym chwytem, które zwiększa udział tricepsa przy zachowaniu pracy klatki.",
+  "instructions": [
+   "Połóż się na ławce i chwyć sztangę dłońmi na szerokość barków lub nieco węziej.",
+   "Zdejmij sztangę i ustaw ją nad klatką z wyprostowanymi ramionami.",
+   "Opuść z kontrolą do lekkiego dotknięcia dolnej części klatki, łokcie blisko ciała.",
+   "Wypchnij sztangę w górę do wyprostu łokci."
+  ],
+  "tips": [
+   "Nie zbliżaj dłoni przesadnie — cierpią nadgarstki; szerokość barków wystarczy.",
+   "Poproś o asekurację lub używaj klatki z zabezpieczeniami przy pracy blisko upadku."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Wyciskanie hantli leżąc",
+  "description": "Wielostawowe ćwiczenie na klatkę z hantlami, pozwalające na większy zakres ruchu niż wyciskanie sztangi.",
+  "instructions": [
+   "Połóż się na płaskiej ławce z hantlem w każdej dłoni na wysokości klatki.",
+   "Wypchnij hantle w górę do pełnego wyprostu ramion.",
+   "Powoli opuść je do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj nadgarstki neutralnie przez całe ćwiczenie.",
+   "Ściśnij klatkę w górnej fazie ruchu."
+  ]
+ },
+ "db-fly": {
+  "name": "Rozpiętki z hantlami",
+  "description": "Ćwiczenie izolowane rozciągające i napinające mięsień piersiowy w szerokim łuku.",
+  "instructions": [
+   "Połóż się na ławce z hantlami nad klatką, dłonie zwrócone do siebie.",
+   "Z lekko ugiętymi łokciami opuść hantle na boki.",
+   "Wróć do pozycji wyjściowej, ściskając klatkę.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Utrzymuj stałe ugięcie łokci przez całe ćwiczenie.",
+   "Nie opuszczaj hantli zbyt nisko."
+  ]
+ },
+ "db-squat": {
+  "name": "Przysiad z hantlami",
+  "description": "Przysiad z hantlem w każdej dłoni po bokach, dostępny bez sztangi.",
+  "instructions": [
+   "Stopy na szerokość barków, hantel w każdej dłoni po bokach.",
+   "Napnij core i trzymaj klatkę w górze.",
+   "Zejdź w przysiad, uginając biodra i kolana.",
+   "Schodź, aż uda będą równoległe lub niżej.",
+   "Odepchnij się piętami, aby wstać."
+  ],
+  "tips": [
+   "Trzymaj klatkę w górze i plecy prosto.",
+   "Prowadź kolana w linii palców stóp.",
+   "Użyj pasków, jeśli ogranicza Cię chwyt."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "Ćwiczenie na core w leżeniu na plecach, łączące wyprost przeciwległych kończyn dla stabilizacji mięśni głębokich.",
+  "instructions": [
+   "Połóż się na plecach z ramionami wyciągniętymi do sufitu i kolanami ugiętymi pod kątem 90 stopni.",
+   "Opuść prawą rękę i lewą nogę w stronę podłogi, dociskając lędźwie do podłoża.",
+   "Wróć do pozycji wyjściowej.",
+   "Powtórz na drugą stronę.",
+   "Wykonuj na zmianę."
+  ],
+  "tips": [
+   "Cały czas dociskaj lędźwie do podłogi.",
+   "Poruszaj się powoli."
+  ]
+ },
+ "deadlift": {
+  "name": "Martwy ciąg ze sztangą",
+  "description": "Wielostawowe ćwiczenie całego ciała, trenujące głównie łańcuch tylny.",
+  "instructions": [
+   "Stań ze stopami na szerokość bioder, sztanga nad środkiem stóp.",
+   "Zegnij się w biodrach i chwyć sztangę.",
+   "Napnij core i unieś, prostując biodra i kolana.",
+   "Wyprostuj się całkowicie w górze, potem opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj sztangę blisko ciała.",
+   "Nie zaokrąglaj lędźwi."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Martwy ciąg z deficytu",
+  "description": "Martwy ciąg ze stania na niskim podeście, zwiększający zakres ruchu i trudność startu.",
+  "instructions": [
+   "Wejdź na podest o wysokości 2–5 cm, stopy pod sztangą, chwyć ją z neutralnymi plecami i barkami nad gryfem.",
+   "Napnij ciało i odpychaj podłogę stopami, gdy sztanga zaczyna się unosić przy nogach.",
+   "Prostuj biodra i kolana jednocześnie, aż staniesz prosto.",
+   "Opuść sztangę z kontrolą na podłogę, zachowując neutralne plecy."
+  ],
+  "tips": [
+   "Zacznij od małego deficytu i lekkiego ciężaru, aby dopracować technikę.",
+   "Nie zaokrąglaj pleców przy odrywaniu od podłogi."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Smocza flaga",
+  "description": "Zaawansowane ćwiczenie na brzuch: sztywne ciało oparte tylko na barkach unosi się i opada jak dźwignia.",
+  "instructions": [
+   "Połóż się na ławce, chwyć jej krawędź za głową i unieś wyprostowane ciało, opierając się tylko na barkach i górze pleców.",
+   "Opuszczaj wyprostowane ciało, nie zginając bioder, aż będzie niemal równoległe do podłogi.",
+   "Trzymaj brzuch i pośladki napięte, nie dotykając ławki.",
+   "Unieś wyprostowane ciało z powrotem do pionu; jeśli nie dasz rady, zacznij od samego opuszczania."
+  ],
+  "tips": [
+   "Zacznij z ugiętymi kolanami lub od samej fazy ekscentrycznej.",
+   "Niezginanie bioder to klucz tego ćwiczenia."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Wiosłowanie hantlami w opadzie",
+  "description": "Wiosłowanie z hantlem w każdej dłoni w opadzie tułowia: trenuje najszersze i górę pleców przy samych hantlach.",
+  "instructions": [
+   "Stojąc z hantlem w każdej dłoni, lekko ugnij kolana i pochyl tułów z bioder niemal do poziomu, plecy proste.",
+   "Pozwól rękom zwisać, dłonie zwrócone do siebie.",
+   "Przyciągaj hantle do bioder, prowadząc łokcie w tył i ściągając łopatki.",
+   "Zrób krótką pauzę w górze i opuść z kontrolą do wyprostu ramion."
+  ],
+  "tips": [
+   "Nie ruszaj tułowiem: jeśli musisz się bujać, hantle są za ciężkie.",
+   "Trzymaj szyję w linii z kręgosłupem, patrząc w podłogę.",
+   "Jeśli lędźwie męczą się szybciej niż plecy, zmniejsz ciężar lub wybierz wiosłowanie z podparciem."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Uginanie ramion z hantlami",
+  "description": "Uginanie łokci z hantlem w każdej dłoni — trening bicepsa w swobodnym zakresie ruchu.",
+  "instructions": [
+   "Stojąc z hantlami, ramiona wyprostowane przy ciele, dłonie skierowane do przodu.",
+   "Trzymaj łokcie przy tułowiu i uginaj je, unosząc hantle bez bujania ciałem.",
+   "Na chwilę napnij biceps w górze, nie unosząc barków.",
+   "Opuść z kontrolą do pełnego wyprostu łokcia."
+  ],
+  "tips": [
+   "Nie pomagaj sobie plecami: jeśli musisz, zmniejsz ciężar.",
+   "Kontroluj opuszczanie — niech trwa co najmniej dwa razy dłużej niż unoszenie."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Spacer farmera z hantlami",
+  "description": "To ćwiczenie całego ciała polega na chodzeniu z ciężkimi hantlami; skutecznie rozwija siłę chwytu, stabilność core i ogólną wytrzymałość mięśniową.",
+  "instructions": [
+   "Stań prosto z hantlem w każdej dłoni, ramiona wzdłuż boków.",
+   "Ściągnij łopatki i napnij core, utrzymując neutralny kręgosłup.",
+   "Idź powoli i świadomie przez ustalony dystans lub czas, robiąc krótkie, kontrolowane kroki.",
+   "Trzymaj klatkę wyprostowaną i nie przechylaj się na bok podczas marszu.",
+   "Skup się na utrzymaniu mocnej i stabilnej postawy przez cały ruch."
+  ],
+  "tips": [
+   "Używaj najcięższych hantli, które kontrolujesz bez utraty techniki.",
+   "Oddychaj głęboko i rytmicznie, aby utrzymać napięcie core.",
+   "Wyobraź sobie, że balansujesz szklanką wody na głowie."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Wznosy hantli przodem",
+  "description": "Unoszenie hantli w przód do wysokości barków, trenujące przedni akton barku.",
+  "instructions": [
+   "Stojąc z hantlem w każdej dłoni przed udami, ramiona niemal wyprostowane.",
+   "Unieś hantle w przód do wysokości barków z lekko ugiętymi łokciami.",
+   "Zatrzymaj się w poziomie, nie bujając tułowiem.",
+   "Opuść z kontrolą do ud."
+  ],
+  "tips": [
+   "Nie pomagaj sobie plecami; jeśli tak robisz, zmniejsz ciężar.",
+   "Przedni akton barku mocno pracuje przy wyciskaniach; nie przesadzaj z objętością."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Odwrotne rozpiętki z hantlami",
+  "description": "Ćwiczenie izolowane w opadzie: unosisz hantle na boki, trenując tylne aktony barków i górę pleców.",
+  "instructions": [
+   "Pochyl się z bioder, trzymając hantle na zwisających rękach.",
+   "Trzymaj plecy prosto, kolana lekko ugięte.",
+   "Unieś hantle na boki do wysokości barków.",
+   "Ściśnij łopatki w górze.",
+   "Opuść hantle z kontrolą.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Używaj lekkiego ciężaru, aby pracował tył barków, a nie rozpęd.",
+   "Mocno ściągnij łopatki w górze.",
+   "Cały czas utrzymuj lekkie, stałe ugięcie łokci."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Rumuński martwy ciąg z hantlami",
+  "description": "Rumuński martwy ciąg z hantlami, akcentujący rozciągnięcie tylnej części uda przez zawias biodrowy.",
+  "instructions": [
+   "Stań z hantlami przed udami i lekko ugiętymi kolanami.",
+   "Pochyl się z bioder, wypychając pośladki w tył.",
+   "Opuszczaj hantle wzdłuż nóg, aż poczujesz rozciągnięcie z tyłu ud.",
+   "Trzymaj plecy prosto, a barki cofnięte.",
+   "Wypchnij biodra do przodu, aby wrócić do stania.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Schodź tak nisko, na ile pozwala gibkość, bez forsowania.",
+   "Utrzymuj to samo lekkie ugięcie kolan w całym ruchu.",
+   "Nie zamieniaj ruchu w przysiad."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Wyciskanie hantli nad głowę",
+  "description": "Pionowe wyciskanie hantli, siedząc lub stojąc, rozwijające przedni i boczny akton barków.",
+  "instructions": [
+   "Usiądź lub stań, trzymając hantle na wysokości barków, dłonie skierowane do przodu.",
+   "Wypchnij oba hantle nad głowę do pełnego wyprostu ramion.",
+   "Trzymaj core napięty i nie wyginaj lędźwi.",
+   "Opuść hantle z kontrolą do wysokości barków.",
+   "Nie pozwól, by hantle uciekały za głowę.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Unoś hantle w linii prostej, nie uderzając nimi w górze.",
+   "Trzymaj nadgarstki stabilnie, w linii z przedramionami.",
+   "Jeśli lędźwie się wyginają, zmniejsz ciężar."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Szrugsy z hantlami",
+  "description": "Unoszenie barków z hantlem w każdej dłoni — trening górnej części pleców i czworobocznych.",
+  "instructions": [
+   "Stojąc z hantlami, ramiona wyprostowane przy ciele, wzrok przed siebie.",
+   "Unieś barki prosto w stronę uszu, bez krążenia i bez uginania łokci.",
+   "Przytrzymaj chwilę napięcie w górze.",
+   "Opuść z kontrolą do pełnego rozciągnięcia mięśnia."
+  ],
+  "tips": [
+   "Nie krąż barkami — ruch jest pionowy.",
+   "Jeśli chwyt puszcza szybciej niż mięsień, użyj pasków."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Wspięcia na palce na jednej nodze z hantlem",
+  "description": "Wspięcie na palce na jednej nodze na stopniu, z hantlem i drugą ręką opartą dla równowagi.",
+  "instructions": [
+   "Stań na stopniu na przodostopiu jednej nogi, druga ugięta, hantel w dłoni po tej samej stronie; drugą dłoń oprzyj o ścianę.",
+   "Opuść piętę poniżej stopnia, aż rozciągniesz łydkę.",
+   "Wspnij się na palce jak najwyżej, nie uginając kolana.",
+   "Zatrzymaj chwilę w górze i opuść z kontrolą; wykonaj powtórzenia i zmień nogę."
+  ],
+  "tips": [
+   "Pchaj przez nasadę dużego palca, nie pozwalając kostce uciekać na zewnątrz.",
+   "To ćwiczenie jednostronne: wykonaj tyle samo powtórzeń na każdą nogę."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pompki pike z dłońmi na podwyższeniu",
+  "description": "Łatwiejsza wersja pompek pike z dłońmi na stopniu lub stabilnym krześle dla mniejszego obciążenia.",
+  "instructions": [
+   "Oprzyj dłonie na krawędzi stopnia, ławki lub stabilnego krzesła na szerokość barków i przejdź stopami w tył, unosząc biodra.",
+   "Ugnij łokcie i opuść głowę w stronę podpory, biodra wysoko.",
+   "Zatrzymaj się, gdy głowa znajdzie się między dłońmi, nie tracąc pozycji.",
+   "Wypchnij się rękami do wyprostu łokci."
+  ],
+  "tips": [
+   "Przysuń stopy do podpory, aby było trudniej.",
+   "Przed rozpoczęciem sprawdź, czy podpora się nie przesuwa."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull na wyciągu",
+  "description": "Ćwiczenie na wyciągu trenujące tylne aktony barków i rotatory zewnętrzne.",
+  "instructions": [
+   "Zaczep linę do górnego wyciągu.",
+   "Przyciągaj linę do twarzy, rozdzielając końce.",
+   "Ściśnij tylne aktony barków i rotatory zewnętrzne.",
+   "Wróć z kontrolą do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj łokcie wysoko, w linii z barkami.",
+   "Ściągnij łopatki na końcu każdego powtórzenia.",
+   "Pracuj z lekkim ciężarem, aby nie stracić techniki."
+  ]
+ },
+ "front-squat": {
+  "name": "Przysiad przedni",
+  "description": "Przysiad ze sztangą trzymaną z przodu na barkach, akcentujący czworogłowe i core.",
+  "instructions": [
+   "Zarzuć lub ułóż sztangę na przednich aktonach barków z łokciami wysoko.",
+   "Zejdź w przysiad z wyprostowanym tułowiem, aż uda będą równoległe do podłogi.",
+   "Wstań.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj łokcie wysoko, aby ustabilizować sztangę.",
+   "Bardziej pionowy tułów zwiększa zaangażowanie czworogłowych."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Mostek biodrowy",
+  "description": "Ćwiczenie aktywujące pośladki z masą ciała w leżeniu na podłodze.",
+  "instructions": [
+   "Połóż się na plecach z ugiętymi kolanami i stopami płasko na podłodze.",
+   "Unieś biodra, ściskając pośladki.",
+   "Zatrzymaj krótko w górze z w pełni wyprostowanymi biodrami.",
+   "Opuść biodra z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Pchaj piętami, aby lepiej zaangażować pośladki.",
+   "Nie wyginaj lędźwi przy wyproście bioder.",
+   "Utrzymuj kolana w linii stóp przez cały ruch."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Przysiad goblet",
+  "description": "Przysiad dla początkujących z kettlebell na wysokości klatki, poprawiający postawę i głębokość.",
+  "instructions": [
+   "Trzymaj kettlebell oburącz na wysokości klatki.",
+   "Zejdź w przysiad, trzymając ciężar blisko klatki.",
+   "Wstań.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Pozycja goblet naturalnie sprzyja wyprostowanemu tułowiu.",
+   "Wypychaj kolana na zewnątrz w dolnej pozycji."
+  ]
+ },
+ "good-morning": {
+  "name": "Dzień dobry ze sztangą",
+  "description": "Zawias biodrowy ze sztangą na plecach, wzmacniający tył uda, pośladki i lędźwie.",
+  "instructions": [
+   "Stań ze sztangą na górze pleców, stopy na szerokość barków, kolana lekko ugięte.",
+   "Cofaj biodra, pochylając tułów z neutralnymi plecami.",
+   "Schodź, aż poczujesz napięcie z tyłu ud, z tułowiem blisko poziomu.",
+   "Wypchnij biodra do przodu, aby się wyprostować."
+  ],
+  "tips": [
+   "Zacznij od bardzo małego ciężaru: lędźwie mocno pracują.",
+   "Patrz przed siebie i nie zaokrąglaj pleców."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack squat",
+  "description": "Prowadzone ćwiczenie na maszynie hack squat, trenujące głównie czworogłowe w kontrolowanym wzorcu przysiadu na sankach.",
+  "instructions": [
+   "Załóż obciążenie na maszynę hack squat i ustaw plecy i barki przy poduszkach.",
+   "Postaw stopy na platformie na szerokość barków, lekko na zewnątrz.",
+   "Zwolnij zabezpieczenia i opuść sanki, uginając kolana i biodra.",
+   "Schodź, aż uda będą co najmniej równoległe do platformy.",
+   "Wypchnij się piętami, prostując nogi i wracając sankami do pozycji wyjściowej.",
+   "Po serii ponownie załóż zabezpieczenia."
+  ],
+  "tips": [
+   "Przez cały ruch trzymaj lędźwie przy poduszce.",
+   "Wyższe ustawienie stóp przenosi akcent na pośladki i tył uda.",
+   "Kontroluj opuszczanie; nie wybijaj się z dolnej pozycji."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Uginanie młotkowe z hantlami",
+  "description": "Odmiana uginania ramion chwytem neutralnym, trenująca mięsień ramienno-promieniowy.",
+  "instructions": [
+   "Stojąc, trzymaj hantle po bokach, dłonie zwrócone do siebie.",
+   "Unieś hantle, utrzymując dłonie skierowane do środka.",
+   "Ściśnij w górze i opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj łokcie przy tułowiu przez cały ruch.",
+   "Nie bujaj ciałem, żeby podrzucić hantle.",
+   "Nadgarstki stabilne i neutralne przez całe uginanie."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Pompki w staniu na rękach",
+  "description": "Pompki w pionie ze stopami opartymi o ścianę — jedno z najtrudniejszych ćwiczeń pchających z masą ciała.",
+  "instructions": [
+   "Stań tyłem do ściany, oprzyj dłonie na podłodze i wejdź stopami do pionu z napiętym brzuchem.",
+   "Ugnij łokcie i z kontrolą opuść głowę w stronę podłogi.",
+   "Zatrzymaj się, gdy głowa dotknie podłogi lub maty.",
+   "Wypchnij się rękami do pełnego wyprostu łokci."
+  ],
+  "tips": [
+   "Najpierw przećwicz stanie na rękach i pompki pike.",
+   "Połóż matę pod głową, aby czuć się pewniej."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Unoszenie kolan w zwisie",
+  "description": "Ćwiczenie na core w zwisie na drążku, trenujące dolną część brzucha i zginacze bioder z ugiętymi kolanami.",
+  "instructions": [
+   "Zawiśnij na drążku nachwytem z w pełni wyprostowanymi ramionami.",
+   "Napnij core i przyciągnij kolana do klatki.",
+   "Zatrzymaj krótko w górze.",
+   "Powoli opuść nogi do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Unikaj bujania — ruch zaczyna się z core.",
+   "Wydychaj przy unoszeniu kolan.",
+   "Przejdź do prostych nóg, gdy stanie się to łatwe."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Unoszenie nóg w zwisie",
+  "description": "Unoszenie prostych nóg do poziomu w zwisie na drążku, na brzuch i zginacze bioder.",
+  "instructions": [
+   "Zawiśnij na drążku nieco szerzej niż barki, nogi złączone i wyprostowane.",
+   "Unieś proste nogi do poziomu, lekko podwijając miednicę.",
+   "Zatrzymaj chwilę w górze bez bujania.",
+   "Opuść z kontrolą do pozycji wyjściowej, nie pozwalając ciału się kołysać."
+  ],
+  "tips": [
+   "Jeśli proste nogi są za trudne, ugnij kolana.",
+   "Unikaj bujania: pracuj brzuchem, nie rozpędem."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Martwy ciąg z gryfem sześciokątnym",
+  "description": "Martwy ciąg stojąc wewnątrz gryfu sześciokątnego, z ciężarem w osi ciała, bardziej wyprostowany i łagodniejszy dla pleców.",
+  "instructions": [
+   "Stań wewnątrz załadowanego gryfu sześciokątnego, stopy na szerokość barków.",
+   "Ugnij biodra i kolana i chwyć uchwyty.",
+   "Napnij core i trzymaj plecy płasko.",
+   "Odepchnij się piętami, prostując biodra i kolana.",
+   "Zablokuj w górze z cofniętymi barkami.",
+   "Opuść sztangę na podłogę z kontrolą."
+  ],
+  "tips": [
+   "Trzymaj klatkę w górze i plecy płasko, poprawiając chwyt.",
+   "Odpychaj podłogę zamiast ciągnąć sztangę plecami.",
+   "Wyprostuj się całkowicie w górze, bez odchylania w tył."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Odwodzenie bioder na maszynie",
+  "description": "Ćwiczenie na maszynie trenujące mięśnie po zewnętrznej stronie bioder.",
+  "instructions": [
+   "Usiądź na maszynie do odwodzenia z podpórkami po zewnętrznej stronie ud.",
+   "Wypychaj nogi na zewnątrz przeciw oporowi.",
+   "Zatrzymaj krótko w najszerszym punkcie.",
+   "Wróć z kontrolą do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj plecy oparte o oparcie maszyny.",
+   "Rozchylaj nogi bez szarpania, w kontrolowanym tempie.",
+   "Opieraj się powrotowi zamiast nagle puszczać ciężar."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Przywodzenie bioder na maszynie",
+  "description": "Ćwiczenie na maszynie polegające na ściskaniu nóg przeciw oporowi; izoluje i wzmacnia przywodziciele po wewnętrznej stronie uda.",
+  "instructions": [
+   "Usiądź na maszynie do przywodzenia z plecami przy oparciu.",
+   "Ułóż nogi przy poduszkach, ustawiając maszynę na wygodne rozciągnięcie.",
+   "Ściskaj nogi, aż poduszki spotkają się pośrodku.",
+   "Przytrzymaj krótko napięcie w pozycji całkowicie zamkniętej.",
+   "Z kontrolą pozwól nogom wrócić do pozycji startowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Wybierz rozwarcie startowe, które rozciąga bez forsowania pachwiny.",
+   "Wykonuj pełny zakres w równym, kontrolowanym tempie.",
+   "Nie pozwól, by stos uderzał przy rozchylaniu nóg."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust ze sztangą",
+  "description": "Wielostawowe ćwiczenie na pośladki ze sztangą opartą na biodrach.",
+  "instructions": [
+   "Usiądź na podłodze z górą pleców przy ławce i sztangą na biodrach.",
+   "Wypchnij biodra w górę, aż tułów i uda będą w jednej linii.",
+   "Ściśnij pośladki w górze.",
+   "Opuść biodra z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj brodę przy sobie, a żebra nisko.",
+   "Pchaj przez pięty, nie przez palce.",
+   "Nie wyginaj lędźwi w górze."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Wypychanie nóg na suwnicy poziomej",
+  "description": "Wypychanie nóg na maszynie w pozycji poziomej, trenujące czworogłowe, pośladki i tył uda.",
+  "instructions": [
+   "Usiądź na suwnicy poziomej z plecami przy oparciu i stopami na platformie na szerokość barków.",
+   "Wypychaj stopami, prostując nogi, bez blokowania kolan.",
+   "Z kontrolą ugnij kolana, aż zbliżą się do klatki.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie pozwól, by lędźwie odrywały się od siedziska.",
+   "Unikaj całkowitego blokowania kolan."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Wyciskanie sztangi na ławce skośnej",
+  "description": "Wyciskanie sztangi na ławce skośnej, trenujące górną część klatki.",
+  "instructions": [
+   "Połóż się na ławce skośnej pod kątem 30–45 stopni.",
+   "Chwyć sztangę nieco szerzej niż barki i zdejmij ją ze stojaków.",
+   "Opuść sztangę do górnej części klatki.",
+   "Wyciśnij sztangę z powrotem do pełnego wyprostu.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Ściągnij łopatki i trzymaj je przy ławce.",
+   "Nie odbijaj sztangi od klatki.",
+   "Przy dużych ciężarach poproś o asekurację."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Wznosy Y na ławce skośnej",
+  "description": "Unoszenie hantli w kształt Y w leżeniu przodem na ławce skośnej, na dolną i środkową część czworobocznego.",
+  "instructions": [
+   "Połóż się przodem na ławce skośnej, klatka oparta, w każdej dłoni lekki hantel zwisa.",
+   "Unieś ramiona w przód i w górę w kształt Y, kciuki w stronę sufitu.",
+   "Zatrzymaj się, gdy ramiona będą w linii tułowia, nie odrywając klatki od ławki.",
+   "Opuść z kontrolą do pozycji wyjściowej."
+  ],
+  "tips": [
+   "Używaj małego ciężaru: dolna część czworobocznego to mały mięsień.",
+   "Trzymaj szyję neutralnie, patrząc w podłogę."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Uginanie hantli na ławce skośnej",
+  "description": "Uginanie ramion na ławce skośnej dla większego rozciągnięcia głowy długiej.",
+  "instructions": [
+   "Usiądź na ławce skośnej 45 stopni z hantlami po bokach.",
+   "Pozwól rękom zwisać prosto, dłonie do przodu.",
+   "Unieś hantle w stronę barków.",
+   "Opuść z kontrolą do pełnego wyprostu.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj barki i plecy oparte o ławkę.",
+   "Nie wysuwaj barków w przód przy unoszeniu hantli.",
+   "Wykorzystaj rozciągnięcie na dole, opuszczając powoli."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Wyciskanie hantli na ławce skośnej",
+  "description": "Wyciskanie na ławce skośnej akcentujące górną część klatki.",
+  "instructions": [
+   "Ustaw ławkę pod kątem 30 stopni i usiądź z hantlami na wysokości barków.",
+   "Wypychaj hantle w górę i do siebie do pełnego wyprostu ramion.",
+   "Z kontrolą opuść hantle z powrotem na wysokość barków.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj stopy pewnie na podłodze i ściągnięte łopatki.",
+   "Nie uderzaj hantlami w górze.",
+   "Schodź do lekkiego rozciągnięcia klatki."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Pompki na podwyższeniu",
+  "description": "Łatwiejsza odmiana pompek z dłońmi na ławce lub stopniu.",
+  "instructions": [
+   "Oprzyj dłonie na ławce lub podwyższeniu na szerokość barków.",
+   "Wyprostuj nogi w tył do pozycji deski.",
+   "Opuść klatkę w stronę ławki, uginając łokcie.",
+   "Wypchnij się z powrotem do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Napnij brzuch, aby biodra nie opadały.",
+   "Im wyższe podparcie, tym łatwiejsze ćwiczenie.",
+   "Przed rozpoczęciem upewnij się, że ławka się nie rusza."
+  ]
+ },
+ "inverted-row": {
+  "name": "Podciąganie australijskie",
+  "description": "Poziome przyciąganie z masą ciała pod stałym drążkiem: przyciągasz klatkę do drążka, utrzymując sztywne ciało.",
+  "instructions": [
+   "Ustaw drążek na stojaku mniej więcej na wysokości pasa.",
+   "Połóż się pod nim i chwyć nachwytem nieco szerzej niż barki.",
+   "Zawiśnij na wyprostowanych ramionach, pięty na ziemi, ciało proste od głowy do kostek.",
+   "Przyciągnij klatkę do drążka, ściskając łopatki.",
+   "Opuść się z kontrolą do pełnego wyprostu ramion.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj core napięty — bez opadania bioder.",
+   "Aby utrudnić, unieś stopy; aby ułatwić, przysuń stopy w stronę drążka.",
+   "Zrób krótką pauzę w górze z klatką przy drążku."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Unoszenie palców z kettlebell (piszczelowe)",
+  "description": "Ćwiczenie na przód goleni wykonywane siedząc na ławce z kettlebell zawieszonym na przodzie stopy. Unoszenie palców w stronę goleni przeciw ciężarowi wzmacnia mięśnie przedniej części podudzia.",
+  "instructions": [
+   "Usiądź na końcu płaskiej ławki z jedną nogą wyprostowaną i piętą opartą o podłogę.",
+   "Zawieś kettlebell za uchwyt na przodzie stopy, nad palcami.",
+   "Unoś palce w stronę goleni, jak daleko jest wygodnie, pięta zostaje na podłodze.",
+   "Przytrzymaj krótko górną pozycję.",
+   "Powoli opuść stopę, aż palce będą skierowane w podłogę.",
+   "Wykonaj powtórzenia i zmień nogę."
+  ],
+  "tips": [
+   "Ruch wychodzi tylko z kostki; kolano i udo pozostają nieruchome.",
+   "Zacznij od lekkiego kettlebell i zwiększaj stopniowo; mięśnie goleni szybko się męczą.",
+   "Opuszczaj powoli, zamiast pozwalać ciężarowi spaść."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Wiosłowanie na wyciągu w klęku",
+  "description": "Wiosłowanie na wyciągu w klęku wyprostnym, które wyklucza pęd z bioder i utrzymuje napięcie góry pleców przez cały ruch.",
+  "instructions": [
+   "Ustaw wyciąg na wysokości klatki i zaczep linę lub podwójny uchwyt D.",
+   "Uklęknij prosto przed maszyną na tyle daleko, by stos nie opierał się o ogranicznik.",
+   "Chwyć uchwyt oburącz i trzymaj go przed sobą na wysokości klatki.",
+   "Przyciągaj uchwyt do mostka, prowadząc łokcie w tył i ściskając łopatki.",
+   "Z kontrolą wróć do rozciągniętej pozycji wyjściowej.",
+   "Powtórz zalecaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Trzymaj się prosto: nie odchylaj się, żeby dokończyć powtórzenie.",
+   "Klęk wyprostny zmusza core do przeciwstawiania się rotacji przy każdym przyciągnięciu."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Pompki na kolanach",
+  "description": "Łatwiejsza odmiana pompek z kolanami na podłodze, zmniejszająca obciążenie góry ciała.",
+  "instructions": [
+   "Zacznij w pozycji pompki z kolanami na podłodze.",
+   "Ustaw dłonie na podłodze na szerokość barków.",
+   "Trzymaj ciało w linii prostej od kolan do barków.",
+   "Opuść klatkę do podłogi, uginając łokcie.",
+   "Wypchnij się dłońmi do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Nie rozstawiaj łokci przesadnie na boki.",
+   "Napnij pośladki i brzuch przez cały ruch.",
+   "Patrz w podłogę, aby szyja była neutralna."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Wznosy hantli bokiem",
+  "description": "Ruch izolowany na boczny akton barku, budujący szerokość ramion.",
+  "instructions": [
+   "Stań z hantlami po bokach.",
+   "Unieś hantle na boki, aż ramiona będą równoległe do podłogi.",
+   "Opuszczaj z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Lekko ugięte łokcie.",
+   "Prowadź łokciami, nie dłońmi."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Ściąganie drążka do klatki",
+  "description": "Ćwiczenie na wyciągu trenujące najszerszy grzbietu.",
+  "instructions": [
+   "Usiądź na maszynie do ściągania z udami zablokowanymi pod wałkami.",
+   "Chwyć szeroki drążek nachwytem.",
+   "Ściągnij drążek do górnej części klatki, ściskając najszersze.",
+   "Powoli odprowadź drążek do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Zacznij ruch od obniżenia łopatek, a nie zginania łokci.",
+   "Nie bujaj tułowiem, aby ruszyć ciężar.",
+   "Prowadź łokcie w dół i w tył, nie na zewnątrz."
+  ]
+ },
+ "leg-curl": {
+  "name": "Uginanie nóg leżąc",
+  "description": "Ćwiczenie izolowane na tył uda na maszynie do uginania nóg.",
+  "instructions": [
+   "Połóż się przodem na maszynie z kostkami pod wałkiem.",
+   "Przyciągaj pięty do pośladków.",
+   "Ściśnij tył uda w górze.",
+   "Opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Przez cały ruch trzymaj biodra przy ławce.",
+   "Nie wyginaj lędźwi przy unoszeniu pięt.",
+   "Wybierz ciężar pozwalający na pełny, kontrolowany zakres."
+  ]
+ },
+ "leg-extension": {
+  "name": "Prostowanie nóg",
+  "description": "Ćwiczenie izolowane na czworogłowe na maszynie.",
+  "instructions": [
+   "Usiądź na maszynie do prostowania nóg z kostkami za wałkiem.",
+   "Wyprostuj nogi, aż będą zupełnie proste.",
+   "Ściśnij czworogłowe w górze.",
+   "Opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Ustaw kolana w osi obrotu maszyny.",
+   "Unoś ciężar bez wyrzucania go rozpędem.",
+   "Trzymaj się uchwytów, aby biodra stabilnie siedziały."
+  ]
+ },
+ "leg-press": {
+  "name": "Wypychanie nóg na suwnicy",
+  "description": "Wielostawowy ruch na maszynie na czworogłowe i pośladki.",
+  "instructions": [
+   "Usiądź na suwnicy ze stopami na platformie na szerokość barków.",
+   "Zwolnij zabezpieczenia i opuść platformę, uginając kolana.",
+   "Wypchnij platformę w górę, aż nogi będą niemal proste.",
+   "Nie blokuj kolan w górze.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Cały czas trzymaj lędźwie przy oparciu.",
+   "Schodź tylko tak nisko, by biodra nie odrywały się.",
+   "Ustaw kolana w linii palców stóp."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Wspięcia na palce na suwnicy",
+  "description": "Wspięcia na palce przez wypychanie platformy suwnicy przodostopiem.",
+  "instructions": [
+   "Usiądź na suwnicy z niemal wyprostowanymi nogami i tylko przodostopiem na krawędzi platformy.",
+   "Zwolnij zabezpieczenie i pozwól piętom opaść, rozciągając łydki.",
+   "Wypchnij platformę przodostopiem, aż staniesz na palcach.",
+   "Zatrzymaj chwilę w górze i opuść z kontrolą."
+  ],
+  "tips": [
+   "Nie blokuj całkowicie kolan.",
+   "Rób pełny zakres z pauzą na dole: tam powstaje bodziec."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Unoszenie nóg leżąc",
+  "description": "Unoszenie obu nóg w leżeniu na plecach na dolną część brzucha i zginacze bioder.",
+  "instructions": [
+   "Połóż się na plecach z nogami złączonymi i wyprostowanymi, dłonie pod pośladkami lub po bokach.",
+   "Dociśnij lędźwie do podłogi, napinając brzuch.",
+   "Unieś nogi do pionu bez bujania.",
+   "Opuszczaj powoli, nie dotykając stopami podłogi i nie wyginając pleców."
+  ],
+  "tips": [
+   "Jeśli lędźwie odrywają się od podłogi, ugnij kolana.",
+   "Kontroluj opuszczanie: to ono najbardziej obciąża brzuch."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Prostowanie grzbietu na maszynie",
+  "description": "Ćwiczenie izolowane na dolny grzbiet siedząc: biodra i nogi unieruchomione, tułów odpycha miękki wałek i prostuje kręgosłup przeciw stosowi.",
+  "instructions": [
+   "Usiądź na maszynie do prostowania grzbietu ze stopami na platformie i ustaw wałek na górze pleców, tuż pod łopatkami.",
+   "Chwyć boczne uchwyty i pozwól tułowiowi lekko pochylić się w przód: to pozycja wyjściowa.",
+   "Odpychaj wałek, prostując kręgosłup, aż tułów będzie odchylony, a dolny grzbiet w pełni napięty.",
+   "Zrób krótką pauzę w pełnym wyproście i wróć z kontrolą, opierając się ciężarowi.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Ustaw wałek tuż pod łopatkami: wyżej uciska szyję, niżej tracisz zakres.",
+   "Prostuj od lędźwi zamiast odrzucać głowę i barki, w obie strony powoli.",
+   "Zatrzymaj się z tułowiem w pozycji neutralnie wyprostowanej, nie forsując dalej, i zacznij od małego ciężaru: lędźwie lepiej reagują na kontrolowane powtórzenia niż na duże obciążenia."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Uginanie ramion na maszynie",
+  "description": "Uginanie ramion na maszynie do izolowanego treningu rąk.",
+  "instructions": [
+   "Usiądź na maszynie i dopasuj wałek do długości rąk.",
+   "Chwyć uchwyty podchwytem.",
+   "Przyciągaj uchwyty do barków.",
+   "Opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Cały czas trzymaj łokcie na poduszce.",
+   "Nie unoś barków przy unoszeniu uchwytów.",
+   "Opuść niemal do wyprostu, nie tracąc napięcia."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Wspięcia na palce na maszynie",
+  "description": "Ćwiczenie izolowane na maszynie stojąc, trenujące łydki i płaszczkowaty w pełnym zakresie kostki.",
+  "instructions": [
+   "Ustaw się na maszynie z przodostopiem na platformie.",
+   "Pewnie ułóż barki pod wałkami.",
+   "Opuść pięty poniżej platformy dla pełnego rozciągnięcia.",
+   "Wypchnij się przodostopiem na palce.",
+   "Ściśnij łydki w górze.",
+   "Opuść z kontrolą i powtórz."
+  ],
+  "tips": [
+   "Nie odbijaj się na dole, aby nie tracić napięcia.",
+   "Kolana wyprostowane, ale niezablokowane.",
+   "Unoś się pionowo, nie wykręcając kostek na zewnątrz."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Rozpiętki na maszynie",
+  "description": "Ćwiczenie izolowane na klatkę na maszynie, która zbliża ramiona dźwigni łukiem przed ciałem.",
+  "instructions": [
+   "Usiądź na maszynie do rozpiętek i ustaw siedzisko tak, by uchwyty były na wysokości klatki.",
+   "Trzymaj uchwyty z lekko ugiętymi łokciami.",
+   "Zbliż uchwyty przed klatką płynnym łukiem.",
+   "Napnij piersiowe w punkcie największego skurczu.",
+   "Wróć z kontrolą do pozycji wyjściowej, nie opuszczając ciężaru.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Utrzymuj lekkie, stałe ugięcie łokci w całym ruchu.",
+   "Skup się na napinaniu klatki zamiast pchania rękami.",
+   "Kontroluj powrót zamiast upuszczać stos."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Odwrotne rozpiętki na maszynie",
+  "description": "Ćwiczenie siedząc na maszynie na tylne aktony barków, zwane też odwróconym pec deck: twarzą do poduszki prowadzisz oba uchwyty na zewnątrz i w tył szerokim łukiem przeciw stosowi. Poduszka unieruchamia tułów, więc pracuje tył barków i mięśnie między łopatkami.",
+  "instructions": [
+   "Ustaw siedzisko tak, by uchwyty były na wysokości barków, i usiądź twarzą do maszyny z klatką przy poduszce.",
+   "Chwyć uchwyty z ramionami wyciągniętymi w przód i lekko ugiętymi łokciami.",
+   "Trzymaj barki nisko, z dala od uszu, i napnij tułów.",
+   "Prowadź uchwyty na zewnątrz i w tył szerokim łukiem, kierując łokciami, aż ramiona będą mniej więcej w linii barków.",
+   "Krótko ściągnij łopatki, nie odchylając się od poduszki.",
+   "Powoli odprowadź uchwyty w przód i powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Prowadź ruch łokciami zamiast ciągnąć dłońmi, aby pracował tył barków, a nie bicepsy.",
+   "Trzymaj klatkę na poduszce i rozluźnioną szyję; odchylanie lub unoszenie barków przenosi obciążenie na górną część czworobocznego.",
+   "Wybierz ciężar, który opuścisz z kontrolą; lżejszy z powolnym powrotem trenuje tył barków lepiej niż bujanie dużym."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Spięcia brzucha na maszynie siedząc",
+  "description": "Ćwiczenie izolowane na brzuch na maszynie siedzącej, zginające kręgosłup przeciw oporowi.",
+  "instructions": [
+   "Usiądź na maszynie do brzucha i chwyć uchwyty.",
+   "Ułóż poduszkę przy tułowiu.",
+   "Napnij brzuch, zginając tułów w przód i w dół.",
+   "Napnij na końcu zakresu.",
+   "Wróć z kontrolą do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Zaczynaj ruch brzuchem, nie rękami.",
+   "Wydychaj podczas zginania tułowia.",
+   "Nie nabieraj rozpędu, bujając ciałem."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Wyciskanie nad głowę na maszynie",
+  "description": "Wyciskanie nad głowę na maszynie na barki.",
+  "instructions": [
+   "Usiądź na maszynie z plecami przy oparciu.",
+   "Chwyć uchwyty na wysokości barków.",
+   "Wypchnij uchwyty nad głowę do pełnego wyprostu ramion.",
+   "Opuść z kontrolą do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie wyginaj lędźwi przy wypychaniu.",
+   "Unikaj gwałtownego blokowania łokci w górze.",
+   "Trzymaj nadgarstki stabilnie, w linii z przedramionami."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Podciąganie negatywne",
+  "description": "Powolna faza opuszczania w podciąganiu, budująca siłę potrzebną do pełnych powtórzeń.",
+  "instructions": [
+   "Wejdź na ławkę lub wyskocz, aby broda znalazła się nad drążkiem, chwyt nieco szerzej niż barki.",
+   "Bez podparcia opuszczaj ciało bardzo powoli, przez około trzy do pięciu sekund.",
+   "Kontroluj ruch aż do pełnego wyprostu ramion.",
+   "Wróć na górę z pomocą ławki lub wyskoku i powtórz."
+  ],
+  "tips": [
+   "Podczas opuszczania trzymaj barki z dala od uszu.",
+   "Gdy opanujesz pięć powolnych powtórzeń, spróbuj podciągnąć się bez pomocy."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordyckie uginanie nóg",
+  "description": "Ćwiczenie na zginanie kolan: z klęku opuszczasz tułów do przodu, trenując tył uda ekscentrycznie.",
+  "instructions": [
+   "Uklęknij na macie z kostkami zakotwiczonymi pod stabilną podporą.",
+   "Trzymaj tułów wyprostowany i biodra wyprostowane.",
+   "Powoli opuszczaj ciało w przód, hamując tyłem uda.",
+   "Zamortyzuj upadek dłońmi tuż przed podłogą.",
+   "Odepchnij się dłońmi i wróć do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Opuszczaj jak najwolniej: celem jest faza ekscentryczna.",
+   "Trzymaj biodra wyprostowane; nie zginaj się w pasie.",
+   "Hamuj dłońmi i lekko się nimi odpychaj, dopóki nie nabierzesz siły."
+  ]
+ },
+ "ohp": {
+  "name": "Wyciskanie żołnierskie ze sztangą",
+  "description": "Wielostawowe wyciskanie nad głowę trenujące barki i triceps.",
+  "instructions": [
+   "Stań ze stopami na szerokość barków i sztangą na wysokości obojczyków.",
+   "Napnij core i wyciśnij sztangę nad głowę.",
+   "Zablokuj łokcie w górze ze sztangą nad środkiem stóp.",
+   "Opuść sztangę do wysokości obojczyków.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie odchylaj się zbyt mocno.",
+   "Ściśnij pośladki dla większej stabilności."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Wiosłowanie jednorącz na wyciągu siedząc",
+  "description": "Wiosłowanie jednorącz na wyciągu siedząc na najszersze i górę pleców: tułów zwrócony w przód, a łopatka pracującej strony przesuwa się w przód i w tył z kontrolą.",
+  "instructions": [
+   "Usiądź przy wyciągu i chwyć uchwyt wyprostowaną pracującą ręką.",
+   "Pewnie oprzyj stopy, siedź prosto i napnij tułów bez odchylania.",
+   "Przyciągaj uchwyt do dolnych żeber, ściągając łopatkę.",
+   "Zrób krótką pauzę bez skręcania tułowia i unoszenia barku.",
+   "Z kontrolą wyprostuj rękę, dokończ serię i zmień stronę."
+  ],
+  "tips": [
+   "Przez całe powtórzenie trzymaj oba barki skierowane w przód.",
+   "Prowadź łokieć w tył blisko ciała, zamiast tylko zginać rękę.",
+   "Pozwól łopatce wysunąć się na początku, nie zaokrąglając lędźwi."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Prostowanie ramion nad głową z hantlem",
+  "description": "Ćwiczenie izolowane na triceps, akcentujące głowę długą.",
+  "instructions": [
+   "Stojąc lub siedząc, trzymaj hantel nad głową oburącz.",
+   "Opuść hantel za głowę, uginając łokcie.",
+   "Wyprostuj ręce z powrotem do pozycji wyjściowej.",
+   "Trzymaj łokcie blisko głowy przez całe ćwiczenie.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Ruszaj tylko przedramionami, reszta nieruchoma.",
+   "Nie wyginaj lędźwi, gdy hantel opada.",
+   "Chwyć hantel pod górnym talerzem obiema dłońmi."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dipy na poręczach",
+  "description": "Ćwiczenie z masą ciała na poręczach, trenujące klatkę, tricepsy i barki.",
+  "instructions": [
+   "Podeprzyj się na poręczach z wyprostowanymi ramionami, ciało w powietrzu.",
+   "Lekko pochyl tułów i ugnij łokcie, opuszczając się z kontrolą.",
+   "Zatrzymaj się, gdy barki będą na wysokości łokci, bez zapadania w staw.",
+   "Wypchnij się klatką i tricepsami do wyprostu ramion."
+  ],
+  "tips": [
+   "Jeśli nie robisz czystych serii, użyj maszyny z asystą lub gum.",
+   "Nie schodź niżej, niż pozwala bark bez dyskomfortu."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Wyciskanie leżąc z pauzą",
+  "description": "Wyciskanie leżąc z pauzą 1–2 sekundy na klatce, eliminującą odbicie i poprawiającą siłę ze startu.",
+  "instructions": [
+   "Połóż się na ławce ze stopami na podłodze, ściągniętymi łopatkami i sztangą nad klatką, chwyt nieco szerzej niż barki.",
+   "Opuść sztangę z kontrolą do lekkiego dotknięcia klatki.",
+   "Przytrzymaj sztangę nieruchomo na klatce przez sekundę lub dwie, nie tracąc napięcia.",
+   "Wypchnij sztangę w górę do wyprostu łokci."
+  ],
+  "tips": [
+   "Użyj o 10–15 % mniejszego ciężaru niż w zwykłym wyciskaniu.",
+   "Poproś kogoś o asekurację lub użyj zabezpieczeń w klatce."
+  ]
+ },
+ "pause-squat": {
+  "name": "Przysiad z pauzą",
+  "description": "Przysiad ze sztangą z pauzą w najniższym punkcie dla większej kontroli i siły bez odbicia.",
+  "instructions": [
+   "Ułóż sztangę na górze pleców, stopy na szerokość barków, palce lekko na zewnątrz.",
+   "Schodź, kontrolując głębokość, z neutralnymi plecami i kolanami w linii stóp.",
+   "Utrzymaj najniższą pozycję od jednej do trzech sekund, nie rozluźniając tułowia.",
+   "Odpychaj podłogę stopami, aż się wyprostujesz."
+  ],
+  "tips": [
+   "Zmniejsz ciężar w porównaniu ze zwykłym przysiadem.",
+   "Nie odbijaj się po pauzie: pchaj płynnie."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Maszyna do izolacji klatki z ruchomymi uchwytami, trenująca piersiowe przez przywodzenie poziome.",
+  "instructions": [
+   "Usiądź na maszynie pec deck i chwyć uchwyty z ramionami rozłożonymi na boki i lekko ugiętymi łokciami.",
+   "Ustaw siedzisko tak, by uchwyty były na wysokości środka klatki.",
+   "Zbliż uchwyty przed klatką, ściskając.",
+   "Przytrzymaj krótko napięcie pośrodku.",
+   "Wróć z kontrolą do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Nie pozwól ramionom cofać się zbyt daleko przy rozkładaniu.",
+   "Trzymaj plecy i barki przy oparciu.",
+   "Wydychaj przy zbliżaniu uchwytów i wdychaj przy rozkładaniu."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Wiosłowanie Pendlaya",
+  "description": "Dynamiczne wiosłowanie sztangą startujące z podłogi w każdym powtórzeniu, z tułowiem równolegle do ziemi.",
+  "instructions": [
+   "Ze stopami pod sztangą i tułowiem niemal równolegle do podłogi chwyć ją nieco szerzej niż barki, plecy neutralne.",
+   "Mocno przyciągnij sztangę do dolnej części klatki, nie ruszając tułowiem.",
+   "Opuść sztangę z kontrolą na podłogę i zatrzymaj na chwilę.",
+   "Popraw ustawienie pleców i powtórz z podłogi."
+  ],
+  "tips": [
+   "Tułów się nie unosi ani nie opada: jeśli się rusza, ciężar jest za duży.",
+   "Każde powtórzenie zaczyna się od sztangi leżącej nieruchomo na podłodze."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pompki pike",
+  "description": "Pompka z ciałem w kształcie odwróconej litery V, która przenosi obciążenie z klatki na barki bez sprzętu.",
+  "instructions": [
+   "Oprzyj dłonie na podłodze na szerokość barków i unieś biodra w odwrócone V, nogi niemal proste.",
+   "Ugnij łokcie i opuść głowę w stronę podłogi między dłońmi.",
+   "Zatrzymaj się tuż nad podłogą, nie opierając głowy.",
+   "Wypchnij się rękami do wyprostu łokci i pozycji wyjściowej."
+  ],
+  "tips": [
+   "Im bliżej dłoni są stopy, tym trudniejsze ćwiczenie.",
+   "Trzymaj biodra wysoko w całym ruchu."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Przysiad na jednej nodze (pistol)",
+  "description": "Głęboki przysiad na jednej nodze z drugą wyciągniętą w przód, tylko z masą ciała.",
+  "instructions": [
+   "Stań na jednej nodze, drugą unieś przed siebie, ramiona wyciągnięte dla równowagi.",
+   "Ugnij nogę podporową i zejdź z kontrolą, z piętą przy podłodze.",
+   "Zejdź tak nisko, jak potrafisz bez utraty techniki, wolna noga wyprostowana w przód.",
+   "Odepchnij podłogę stopą, aż znów staniesz; powtórz i zmień nogę."
+  ],
+  "tips": [
+   "Zacznij, trzymając się podpory lub siadając na skrzyni.",
+   "Utrzymuj kolano w linii stopy."
+  ]
+ },
+ "plank": {
+  "name": "Plank przodem",
+  "description": "Izometryczne ćwiczenie na core, trenujące stabilność tułowia przez utrzymywanie prostego ciała na przedramionach i palcach stóp.",
+  "instructions": [
+   "Oprzyj przedramiona na podłodze, łokcie pod barkami, nogi wyprostowane.",
+   "Unieś ciało w linii prostej od głowy do pięt.",
+   "Napnij brzuch i pośladki, utrzymuj neutralne lędźwie, nie opuszczając bioder.",
+   "Oddychaj normalnie i utrzymaj pozycję przez wskazany czas."
+  ],
+  "tips": [
+   "Zacznij od krótkich serii dobrej jakości, zanim wydłużysz czas.",
+   "Jeśli lędźwie się zapadają, oprzyj kolana lub skróć czas."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip thrust na maszynie na talerze",
+  "description": "Wypychanie bioder na maszynie pośladkowej na talerze: wbudowane oparcie i platforma ustalają pozycję, więc biodra prostują się przeciw obciążeniu bez ustawiania ławki.",
+  "instructions": [
+   "Załóż talerze równo i usiądź z górą pleców przy oparciu i stopami płasko na platformie.",
+   "Opuść poduszkę lub drążek na biodra i ustaw tak, by opierał się w zgięciu bioder, a nie na brzuchu.",
+   "Ustaw stopy tak, by golenie były pionowo, gdy biodra są w górze, i chwyć uchwyty.",
+   "Wypchnij biodra w górę, ściskając pośladki, aż uda będą w linii tułowia, i zatrzymaj na chwilę.",
+   "Opuszczaj z kontrolą prawie do końca zakresu i powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Ułóż poduszkę w zgięciu bioder. Zostawienie jej na brzuchu to jedyna naprawdę niewygodna rzecz w tej maszynie — rozwiązuje ją przesunięcie poduszki, a nie dodatkowa wyściółka.",
+   "Kończ ruch biodrami, nie lędźwiami. Jeśli w górze rozchodzą się żebra, wyprost bioder się skończył i zaczynasz wyginać plecy — wtedy maszyna przestaje trenować pośladki.",
+   "To wypychanie bioder na czas, gdy ławka i sztanga są zajęte: oparcie i platforma są częścią ramy, więc nie ma czego źle ustawić."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Uginanie ramion na modlitewniku",
+  "description": "Odmiana uginania ramion na modlitewniku, który izoluje biceps.",
+  "instructions": [
+   "Usiądź na modlitewniku z rękami opartymi na poduszce.",
+   "Trzymaj gryf łamany podchwytem.",
+   "Unieś sztangę w stronę barków.",
+   "Opuszczaj z kontrolą niemal do wyprostu.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Unikaj odbijania w dolnej pozycji.",
+   "Trzymaj nadgarstki neutralnie na gryfie łamanym.",
+   "Unoś sztangę bez pomocy barków i pleców."
+  ]
+ },
+ "pull-up": {
+  "name": "Podciąganie na drążku",
+  "description": "Wielostawowe ćwiczenie z masą ciała trenujące najszerszy grzbietu i biceps.",
+  "instructions": [
+   "Zawiśnij na drążku nachwytem nieco szerzej niż barki.",
+   "Podciągnij się, aż broda będzie nad drążkiem.",
+   "Opuść się z kontrolą do pełnego zwisu.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie bujaj się i nie używaj pędu.",
+   "Uruchom najszerszy grzbietu, ściągając łokcie w dół."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Wyciskanie nad głowę z pomocą nóg, pozwalające na większy ciężar niż ścisłe wyciskanie żołnierskie.",
+  "instructions": [
+   "Stań ze sztangą opartą na górze klatki i barkach, łokcie lekko wysunięte, stopy na szerokość bioder.",
+   "Lekko ugnij kolana z pionowym tułowiem i dynamicznie wyprostuj biodra i kolana.",
+   "Wykorzystaj pęd, aby wypchnąć sztangę do wyprostu ramion nad głową.",
+   "Opuść sztangę z kontrolą na klatkę i zamortyzuj nogami."
+  ],
+  "tips": [
+   "Pęd pochodzi z nóg, nie z odchylania pleców.",
+   "Zakończ ze sztangą nad czubkiem głowy i stabilnym ciałem."
+  ]
+ },
+ "push-up": {
+  "name": "Pompki",
+  "description": "Podstawowe ćwiczenie z masą ciała na klatkę, barki i tricepsy.",
+  "instructions": [
+   "Zacznij w wysokiej desce z dłońmi na szerokość barków.",
+   "Opuszczaj ciało, aż klatka niemal dotknie podłogi.",
+   "Wypchnij się do pozycji wyjściowej.",
+   "Cały czas utrzymuj ciało w linii prostej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Napnij brzuch i pośladki, aby biodra nie opadały.",
+   "Nie rozstawiaj łokci przesadnie; trzymaj je blisko tułowia.",
+   "Trzymaj szyję neutralnie, patrząc w podłogę."
+  ]
+ },
+ "rack-pull": {
+  "name": "Martwy ciąg ze stojaków",
+  "description": "Częściowy martwy ciąg z wysokości kolan, mocno obciążający górę pleców i wyprost bioder.",
+  "instructions": [
+   "Ustaw sztangę na zabezpieczeniach na wysokości kolan lub tuż poniżej, stopy na szerokość bioder pod gryfem.",
+   "Chwyć sztangę, napnij plecy i brzuch i odpychaj podłogę stopami.",
+   "Prostuj biodra i kolana jednocześnie, aż staniesz prosto z cofniętymi barkami.",
+   "Opuść sztangę z kontrolą na zabezpieczenia."
+  ],
+  "tips": [
+   "Ustaw zabezpieczenia na wysokości pozwalającej utrzymać neutralne plecy.",
+   "Nie przeprostowuj lędźwi na końcu."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Zakrok z hantlami",
+  "description": "Odmiana wykroku z krokiem w tył dla większej stabilności kolana.",
+  "instructions": [
+   "Stań z hantlami po bokach.",
+   "Zrób krok w tył jedną nogą i opuść kolano w stronę podłogi.",
+   "Zejdź, aż przednie udo będzie równoległe do podłogi.",
+   "Odepchnij się przednią piętą do pozycji stojącej.",
+   "Powtórz na obie strony."
+  ],
+  "tips": [
+   "Rób krok w tył na tyle długi, by przednie kolano nie wychodziło poza stopę.",
+   "Trzymaj tułów wyprostowany, a hantle przy ciele.",
+   "Wykonaj tyle samo powtórzeń na każdą nogę."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Odwrotne nordyckie uginanie",
+  "description": "Ćwiczenie na czworogłowe z masą ciała w klęku: odchylasz tułów z kontrolą, utrzymując wyprostowane biodra.",
+  "instructions": [
+   "Uklęknij na poduszce, kolana na szerokość bioder, golenie i grzbiety stóp na podłodze, tułów wyprostowany.",
+   "Trzymaj biodra wyprostowane i napięty core.",
+   "Powoli odchylaj tułów, utrzymując ciało w linii prostej.",
+   "Schodź tak nisko, jak kontrolują czworogłowe.",
+   "Wróć do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Cały czas trzymaj biodra wyprostowane, bez zginania.",
+   "Schodź tylko tak daleko, jak kontrolujesz ruch.",
+   "Połóż poduszkę pod kolana dla wygody."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Rumuński martwy ciąg",
+  "description": "Zawias biodrowy akcentujący tył uda i pośladki.",
+  "instructions": [
+   "Stań ze sztangą na wysokości bioder trzymaną nachwytem.",
+   "Cofaj biodra, pochylając tułów, z lekko ugiętymi i niemal nieruchomymi kolanami.",
+   "Opuszczaj sztangę wzdłuż nóg, aż poczujesz rozciągnięcie tyłu ud.",
+   "Wypchnij biodra do przodu, aby wrócić do stania.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Nie zaokrąglaj dolnych pleców; trzymaj neutralny kręgosłup.",
+   "Schodź tylko tak nisko, jak potrafisz bez utraty postawy.",
+   "Napnij najszersze, aby sztanga była blisko ciała."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Ergometr wioślarski",
+  "description": "Całościowe ćwiczenie cardio na ergometrze wioślarskim: w każdym pociągnięciu odpychasz się nogami, odchylasz tułów i przyciągasz rączkę do żeber, angażując nogi, plecy i ręce w ciągłym cyklu.",
+  "instructions": [
+   "Usiądź na ergometrze, zapnij stopy paskami i chwyć rączkę nachwytem.",
+   "Podjedź do pozycji chwytu: golenie pionowo, tułów lekko przed biodrami, ręce wyprostowane w stronę koła.",
+   "Najpierw pchaj nogami, przesuwając siedzisko w tył, aż kolana będą niemal proste.",
+   "Odchyl tułów za pion i dopiero wtedy przyciągnij rączkę do dolnych żeber, prowadząc łokcie obok boków.",
+   "W powrocie odwróć kolejność — najpierw ręce w przód, potem tułów, na końcu ugięcie kolan — i podjedź znów do pozycji chwytu.",
+   "Kontynuuj przez wybrany czas, dystans lub liczbę pociągnięć."
+  ],
+  "tips": [
+   "Zachowaj kolejność: nogi, tułów, ręce w pociągnięciu i ręce, tułów, nogi w powrocie. Zbyt wczesne uginanie rąk marnuje najmocniejszą część pociągnięcia.",
+   "Wiosłuj z płaskimi plecami i napiętym core: zaokrąglanie lędźwi w pozycji chwytu zmienia wiosłowanie z cardio w ból pleców.",
+   "Prowadź rączkę prosto i poziomo do dolnych żeber, a powrót rób około dwa razy wolniej niż pociągnięcie, zamiast wracać gwałtownie."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Wyciskanie żołnierskie siedząc",
+  "description": "Wyciskanie sztangi nad głowę siedząc z oparciem, aby skupić pracę na barkach.",
+  "instructions": [
+   "Siedząc na ławce z pionowym oparciem, chwyć sztangę nieco szerzej niż barki i oprzyj ją na górze klatki.",
+   "Wyciśnij sztangę prosto w górę do wyprostu łokci.",
+   "Trzymaj sztangę nad czubkiem głowy, żebra ściągnięte.",
+   "Opuść z kontrolą do obojczyka."
+  ],
+  "tips": [
+   "Napnij pośladki i brzuch, aby nie wyginać pleców.",
+   "Cofnij głowę, aby zrobić miejsce sztandze, bez forsowania szyi."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Wiosłowanie na wyciągu siedząc",
+  "description": "Ćwiczenie na plecy na wyciągu do wiosłowania: siedząc przyciągasz uchwyt do tułowia.",
+  "instructions": [
+   "Usiądź na stanowisku i oprzyj stopy na podpórkach.",
+   "Chwyć uchwyt i usiądź prosto z lekkim pochyleniem do przodu.",
+   "Prowadź łokcie w tył i przyciągaj uchwyt do dolnej części brzucha.",
+   "Ściągnij łopatki na końcu ruchu.",
+   "Z kontrolą wyprostuj ręce, wracając do pozycji wyjściowej.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Trzymaj tułów wyprostowany z minimalnym bujaniem.",
+   "Prowadź łokcie prosto w tył, nie na boki.",
+   "Ściągnij łopatki na końcu ruchu."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Wspięcia na palce siedząc na maszynie",
+  "description": "Wspięcia na palce na maszynie siedząc, celujące w mięsień płaszczkowaty.",
+  "instructions": [
+   "Usiądź na maszynie z poduszkami na udach.",
+   "Opuść pięty jak najniżej.",
+   "Wspnij się na palce.",
+   "Opuść z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Zgięte kolano rozluźnia brzuchaty łydki, więc płaszczkowaty przejmuje więcej pracy.",
+   "Wykorzystuj pełny zakres ruchu."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Wspięcia na palce siedząc z hantlami",
+  "description": "Wspięcia na palce siedząc z hantlami na udach, trenujące płaszczkowaty przy zgiętym kolanie.",
+  "instructions": [
+   "Usiądź na ławce z przodostopiem na stopniu lub talerzu i hantlem na każdym udzie blisko kolan.",
+   "Opuść pięty jak najniżej, aby rozciągnąć łydkę.",
+   "Unieś pięty, pchając przodostopiem, najwyżej jak się da.",
+   "Zatrzymaj na chwilę w górze i opuść z kontrolą."
+  ],
+  "tips": [
+   "Przytrzymuj hantle dłońmi, aby się nie zsunęły.",
+   "Zgięte kolano przenosi pracę na płaszczkowaty."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Wznosy hantli bokiem siedząc",
+  "description": "Ćwiczenie izolowane siedząc: unosisz hantle na boki, trenując boczne aktony barków bez pomocy nóg.",
+  "instructions": [
+   "Usiądź na ławce z hantlem w każdej dłoni po bokach.",
+   "Trzymaj plecy prosto i core napięty.",
+   "Unieś oba hantle na boki do wysokości barków.",
+   "Utrzymuj lekkie ugięcie łokci.",
+   "Opuść hantle z kontrolą.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Używaj lekkiego ciężaru, aby ruch pozostał ścisły.",
+   "Prowadź łokciami zamiast dłońmi.",
+   "Unieś do wysokości barków i opuść z kontrolą."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Uginanie nóg siedząc",
+  "description": "Ćwiczenie izolowane na tył uda na maszynie siedząc, ze stałym napięciem i mniejszym udziałem zginaczy bioder niż w leżeniu.",
+  "instructions": [
+   "Ustaw oparcie i wałek przy kostkach tak, by kolana były w osi obrotu maszyny.",
+   "Usiądź prosto, oprzyj tył kostek na wałku i chwyć uchwyty.",
+   "Uginaj nogi w dół i w tył pod siedzisko, jak pozwala maszyna.",
+   "Zatrzymaj w maksymalnym skurczu i powoli wróć.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Przez cały ruch trzymaj plecy mocno przy oparciu.",
+   "W maksymalnym skurczu lekko zadrzyj stopy, aby mocniej zaangażować tył uda.",
+   "Kontroluj fazę ekscentryczną — nie pozwól ciężarowi szybko wyprostować nóg."
+  ]
+ },
+ "shrug": {
+  "name": "Szrugsy ze sztangą",
+  "description": "Ruch izolowany na górną część mięśnia czworobocznego.",
+  "instructions": [
+   "Stojąc, trzymaj sztangę na wyprostowanych rękach nachwytem.",
+   "Unieś barki prosto w stronę uszu.",
+   "Zatrzymaj krótko w górze.",
+   "Opuść barki z kontrolą.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Unoś barki pionowo, bez krążenia.",
+   "Nie pracuj rękami; łokcie cały czas proste.",
+   "Nie pomagaj sobie nogami, aby unieść więcej."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Odwodzenie biodra leżąc na boku",
+  "description": "Ćwiczenie izolowane z masą ciała na pośladkowy średni i odwodziciele bioder.",
+  "instructions": [
+   "Połóż się na boku z nogami jedna na drugiej.",
+   "Dolną nogę lekko ugnij.",
+   "Unieś górną nogę w stronę sufitu.",
+   "Opuść z kontrolą.",
+   "Powtórz na obie strony."
+  ],
+  "tips": [
+   "Trzymaj biodra jedno nad drugim przez całe ćwiczenie.",
+   "Nie przechylaj miednicy."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Przywodzenie biodra leżąc na boku",
+  "description": "Przywodzenie w leżeniu na boku: unosisz dolną nogę wbrew grawitacji, trenując biodro masą ciała.",
+  "instructions": [
+   "Połóż się na boku z prostą dolną nogą.",
+   "Ugnij górną nogę i postaw jej stopę płasko przed dolnym udem.",
+   "Oprzyj głowę na dolnym ramieniu.",
+   "Unieś dolną nogę w stronę sufitu.",
+   "Opuść nogę z kontrolą.",
+   "Wykonaj powtórzenia na jedną stronę, potem zmień."
+  ],
+  "tips": [
+   "Ruszaj tylko nogą; biodro i tułów nieruchome.",
+   "Unoś nogę bez rozpędu i opuszczaj powoli.",
+   "Ustaw barki, biodra i stopy w linii, zanim zaczniesz."
+  ]
+ },
+ "side-plank": {
+  "name": "Plank bokiem",
+  "description": "Odmiana deski bocznej trenująca skośne brzucha i boczny core.",
+  "instructions": [
+   "Połóż się na boku z przedramieniem na podłodze i łokciem pod barkiem.",
+   "Unieś biodra, tworząc linię prostą od głowy do stóp.",
+   "Utrzymaj pozycję z napiętym core.",
+   "Oddychaj równomiernie.",
+   "Powtórz na obie strony."
+  ],
+  "tips": [
+   "Nie pozwól, by biodro opadało.",
+   "Utrzymuj barki i biodra w jednej płaszczyźnie, bez skręcania tułowia.",
+   "Odpychaj podłogę przedramieniem, aby nie zawisać na barku."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Wiosłowanie hantlem jednorącz",
+  "description": "Jednostronne ćwiczenie na plecy z hantlem dla równomiernego rozwoju.",
+  "instructions": [
+   "Oprzyj jedno kolano i dłoń na ławce.",
+   "W drugiej dłoni trzymaj hantel na wyprostowanej ręce.",
+   "Przyciągaj hantel do biodra, ściskając łopatkę.",
+   "Opuść hantel z kontrolą.",
+   "Powtórz na obie strony."
+  ],
+  "tips": [
+   "Nie skręcaj tułowia przy przyciąganiu; biodro stabilne.",
+   "Nie unoś barku do ucha na początku ruchu.",
+   "Wykonaj tyle samo powtórzeń każdą ręką."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Wznosy bokiem jednorącz na maszynie na talerze",
+  "description": "Wznos bokiem na maszynie na talerze, jedną ręką naraz, tak że każda strona unosi własny ciężar i obie można wytrenować do tego samego poziomu.",
+  "instructions": [
+   "Ustaw wysokość siedziska tak, by oś poduszki była w linii barku, i załóż talerze tylko na pracującą stronę.",
+   "Usiądź z plecami przy oparciu i przyłóż zewnętrzną stronę pracującej ręki do jej poduszki.",
+   "Chwyć uchwyt po wolnej stronie lub oprzyj tę dłoń na udach, tułów w linii siedziska.",
+   "Wypychaj pracującą rękę w bok i w górę w poduszkę do wysokości barku i opuszczaj z kontrolą.",
+   "Wykonaj wszystkie powtórzenia na tę stronę, potem załóż talerze i trenuj drugą."
+  ],
+  "tips": [
+   "Wyrównuj strony według słabszej ręki, nie silniejszej. Trening jednej strony naraz ujawnia dysproporcję tylko wtedy, gdy słabsza strona wyznacza liczbę powtórzeń.",
+   "Nie pochylaj tułowia w stronę pracującą. Przy obciążeniu jednej ręki maszyna nie równoważy się sama, a pochylenie zamienia wznos w skłon boczny.",
+   "Zaczynaj słabszą ręką, aby wyznaczyła cel, i daj obu stronom taką samą przerwę."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Mostek biodrowy na jednej nodze",
+  "description": "Mostek biodrowy z jedną podpartą nogą, zwiększający trudność bez dodatkowego sprzętu.",
+  "instructions": [
+   "Połóż się na plecach z jednym kolanem ugiętym i stopą na podłodze, drugą nogę wyprostuj w powietrzu.",
+   "Pchaj piętą nogi podporowej i unieś biodra do linii bark–biodro–kolano.",
+   "Na chwilę ściśnij pośladek w górze bez wyginania lędźwi.",
+   "Opuść z kontrolą, nie kładąc bioder; wykonaj powtórzenia i zmień nogę."
+  ],
+  "tips": [
+   "Trzymaj miednicę poziomo, bez opadania biodra.",
+   "Zacznij od mostka na dwóch nogach, jeśli to za trudne."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Wyciskanie francuskie",
+  "description": "Prostowanie ramion ze sztangą w leżeniu, izolujące tricepsy w pełnym zakresie ruchu.",
+  "instructions": [
+   "Połóż się na płaskiej ławce ze sztangą nad klatką, chwyt wąski.",
+   "Opuść sztangę w stronę czoła, uginając łokcie.",
+   "Wyprostuj ręce z powrotem do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj ramiona pionowo przez całe ćwiczenie.",
+   "Opuszczaj powoli, aby chronić łokcie."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Wyciskanie leżąc na suwnicy Smitha",
+  "description": "Wyciskanie leżąc na suwnicy Smitha: prowadzony tor pozwala trenować klatkę przy mniejszym wymogu stabilizacji.",
+  "instructions": [
+   "Połóż się na płaskiej ławce w suwnicy Smitha.",
+   "Chwyć sztangę nieco szerzej niż barki i odblokuj ją.",
+   "Opuść sztangę z kontrolą do środka klatki.",
+   "Zrób krótką pauzę bez odbijania.",
+   "Wypchnij sztangę do pełnego wyprostu ramion.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Ustaw ławkę tak, by sztanga schodziła na środek klatki.",
+   "Trzymaj stopy pewnie na podłodze przez całą serię.",
+   "Naucz się obrotu nadgarstków blokującego sztangę, zanim dołożysz ciężar."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Wspięcia na palce na suwnicy Smitha",
+  "description": "Wspięcia na palce stojąc z prowadzoną sztangą suwnicy Smitha na barkach.",
+  "instructions": [
+   "Stań pod sztangą suwnicy z przodostopiem na stopniu lub talerzu i sztangą na górze pleców.",
+   "Odblokuj sztangę i pozwól piętom opaść, rozciągając łydki.",
+   "Wspnij się na palce z wyprostowanymi nogami, nie blokując kolan.",
+   "Zatrzymaj chwilę w górze i opuść z kontrolą, zanim odłożysz sztangę."
+  ],
+  "tips": [
+   "Prowadnica stabilizuje: wykorzystaj to, używając większego ciężaru.",
+   "Trzymaj tułów wyprostowany i patrz przed siebie."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Wyciskanie skośne na suwnicy Smitha",
+  "description": "Wyciskanie skośne na suwnicy Smitha, akcentujące górę klatki i przednie aktony barków po prowadzonym torze.",
+  "instructions": [
+   "Ustaw ławkę skośną 30–45 stopni w suwnicy Smitha.",
+   "Połóż się i chwyć sztangę nieco szerzej niż barki.",
+   "Odblokuj i opuść sztangę do górnej części klatki.",
+   "Zrób krótką pauzę na dole.",
+   "Wypchnij sztangę do wyprostu ramion.",
+   "Powtórz zaplanowaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Ustaw ławkę tak, by sztanga trafiała w górę klatki.",
+   "Opuszczaj sztangę bez odbijania od klatki.",
+   "Trzymaj pośladki na ławce, a stopy pewnie oparte."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Przysiad na suwnicy Smitha",
+  "description": "Przysiad z prowadzoną sztangą suwnicy Smitha: stały tor zmniejsza wymóg równowagi i zostawia wysiłek nogom i pośladkom — dobra opcja, gdy brak wolnej klatki.",
+  "instructions": [
+   "Ustaw sztangę na wysokości barków i wejdź pod nią: gryf na górze pleców, stopy lekko przed sztangą.",
+   "Obróć nadgarstki, aby zwolnić haki, trzymaj tułów prosto i core napięty.",
+   "Zejdź, uginając kolana i biodra, aż uda będą co najmniej równoległe do podłogi, kolana w kierunku stóp.",
+   "Pchaj całą stopą w podłogę, aż wrócisz do stania.",
+   "Po serii obróć nadgarstki, aby zaczepić sztangę na hakach."
+  ],
+  "tips": [
+   "Lekkie wysunięcie stóp pozwala zejść niżej bez odrywania pięt.",
+   "Ustaw zabezpieczenia tuż poniżej najniższego punktu ruchu."
+  ]
+ },
+ "squat": {
+  "name": "Przysiad ze sztangą na plecach",
+  "description": "Wielostawowy ruch dolnej części ciała trenujący czworogłowe, pośladki i tył uda.",
+  "instructions": [
+   "Ułóż sztangę na górnej części mięśni czworobocznych.",
+   "Zdejmij sztangę ze stojaków i zrób krok w tył, stopy na szerokość barków.",
+   "Napnij core i zejdź, uginając kolana i biodra, aż uda będą równoległe do podłogi.",
+   "Odepchnij się piętami do pozycji stojącej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj klatkę w górze przez cały ruch.",
+   "Wypychaj kolana na zewnątrz w linii palców stóp."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Kółko do brzucha w staniu",
+  "description": "Rollout kółkiem z pozycji stojącej, z prostymi nogami i bardzo dużym zakresem.",
+  "instructions": [
+   "Stojąc z prostymi nogami, pochyl się i oprzyj kółko o podłogę oburącz.",
+   "Tocz w przód na wyprostowanych rękach z napiętym brzuchem, aż będziesz niemal równolegle do podłogi.",
+   "Trzymaj biodra w linii, nie zapadając lędźwi.",
+   "Przyciągnij brzuchem, aby wrócić tocząc do pozycji wyjściowej."
+  ],
+  "tips": [
+   "Zacznij od wersji na kolanach, aż opanujesz zakres.",
+   "Zatrzymaj ruch, zanim lędźwie się zapadną."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Wspięcia na pięty stojąc",
+  "description": "Wspięcia na palce stojąc, rozwijające brzuchaty łydki w pełnym zakresie.",
+  "instructions": [
+   "Stań na krawędzi platformy lub maszyny do wspięć.",
+   "Opuść pięty poniżej platformy.",
+   "Wypchnij się w górę na palce.",
+   "Opuść powoli.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Zatrzymaj w górze, aby zmaksymalizować skurcz.",
+   "Pełne opuszczenie pięt zwiększa zakres ruchu."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Odwodzenie biodra stojąc",
+  "description": "Boczne unoszenie nogi z masą ciała w staniu na drugiej. Trenuje pośladkowy średni po stronie unoszonej nogi, a w nodze podporowej mięśnie utrzymujące biodra w poziomie.",
+  "instructions": [
+   "Stań prosto z dłońmi na biodrach i złączonymi stopami.",
+   "Przenieś ciężar na jedną nogę i lekko ugnij to kolano.",
+   "Unieś drugą, prostą nogę w bok, palce w przód, tułów prosto.",
+   "Unoś nogę tylko tak wysoko, jak potrafisz bez przechylania tułowia w przeciwną stronę.",
+   "Powoli opuść nogę obok stopy podporowej.",
+   "Wykonaj zaplanowaną liczbę powtórzeń i powtórz na drugą nogę."
+  ],
+  "tips": [
+   "Biodra prosto, tułów nieruchomo; przechylanie się od unoszonej nogi odbiera pracę biodru.",
+   "Kontroluj też opuszczanie; nie pozwól nodze się bujać.",
+   "Przytrzymaj się ściany lub krzesła, jeśli tracisz równowagę; gdy stanie się łatwo, załóż gumę na uda."
+  ]
+ },
+ "step-ups": {
+  "name": "Wejścia na podest",
+  "description": "Wejście na skrzynię lub ławkę jedną nogą, funkcjonalnie trenujące czworogłowe i pośladki.",
+  "instructions": [
+   "Stań przed solidną skrzynią lub ławką.",
+   "Postaw całą stopę na powierzchni skrzyni.",
+   "Pchaj przez tę piętę, aby wejść na skrzynię.",
+   "Dostaw tylną stopę, stając całkowicie na skrzyni.",
+   "Opuść tylną stopę z kontrolą na podłogę, utrzymując obciążenie na pracującej nodze.",
+   "Zmieniaj nogi lub wykonaj wszystkie powtórzenia na jedną stronę przed zmianą."
+  ],
+  "tips": [
+   "Stawiaj całą stopę na powierzchni skrzyni.",
+   "Odpychaj się piętą wchodzącej nogi, nie tylną.",
+   "Kontroluj zejście zamiast spadać."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Ściąganie na prostych ramionach",
+  "description": "Ćwiczenie izolowane na najszersze na wyciągu z prostymi rękami.",
+  "instructions": [
+   "Stań przodem do wyciągu z prostym drążkiem zaczepionym u góry.",
+   "Z niemal prostymi rękami pchaj drążek w dół łukiem w stronę ud.",
+   "Ściśnij najszersze na dole.",
+   "Powoli odprowadź drążek do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj ręce niemal proste przez cały ruch.",
+   "Prowadź drążek do ud po łuku.",
+   "Ściśnij najszersze w dolnej części zakresu."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Martwy ciąg sumo",
+  "description": "Odmiana martwego ciągu z bardzo szerokim rozstawem i wąskim chwytem, przenosząca pracę na pośladki, przywodziciele i czworogłowe.",
+  "instructions": [
+   "Stań bardzo szeroko, palce lekko na zewnątrz, sztanga nad środkiem stóp.",
+   "Chwyć sztangę dłońmi między nogami, plecy neutralne, klatka w górze.",
+   "Odpychaj podłogę nogami, rozchylając kolana, aż staniesz ze sztangą przy ciele.",
+   "Zablokuj biodra i kolana w górze i opuść sztangę z kontrolą tą samą drogą."
+  ],
+  "tips": [
+   "Sztanga zawsze blisko ciała.",
+   "Kolana podążają w kierunku palców; nie pozwól im schodzić do środka."
+  ]
+ },
+ "t-bar-row": {
+  "name": "Wiosłowanie półsztangą",
+  "description": "Wielostawowe wiosłowanie półsztangą w opadzie, rozwijające najszersze i równoległoboczne dużymi ciężarami.",
+  "instructions": [
+   "Stań okrakiem nad półsztangą, stopy na szerokość barków.",
+   "Pochyl się z bioder, aż tułów będzie pod kątem około 45 stopni.",
+   "Chwyć uchwyty i trzymaj plecy płasko.",
+   "Przyciągaj gryf do klatki, prowadząc łokcie w tył.",
+   "Ściśnij łopatki w górze.",
+   "Opuść z kontrolą i powtórz."
+  ],
+  "tips": [
+   "Pochyl tułów około 45 stopni, trzymając plecy płasko.",
+   "Ciągnij, prowadząc łokcie w tył, nie tylko rękami.",
+   "Ściągnij łopatki w górnej fazie."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Prostowanie ramion na wyciągu",
+  "description": "Ćwiczenie izolowane na tricepsy na wyciągu.",
+  "instructions": [
+   "Stań przed wyciągiem z prostym drążkiem.",
+   "Chwyć drążek i przyciśnij łokcie do boków.",
+   "Pchaj drążek w dół do pełnego wyprostu ramion.",
+   "Powoli wróć do pozycji wyjściowej.",
+   "Powtórz."
+  ],
+  "tips": [
+   "Trzymaj tułów wyprostowany.",
+   "Ruszają się tylko przedramiona."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Uginanie nóg na TRX",
+  "description": "To ćwiczenie izolowane wykorzystuje taśmy do podwieszenia, trenując tył uda, pośladki i łydki przez przyciąganie pięt do pośladków.",
+  "instructions": [
+   "Połóż się na plecach z piętami w uchwytach taśm, kolana ugięte pod kątem 90 stopni.",
+   "Unieś biodra, tworząc linię prostą od kolan do barków.",
+   "Wyprostuj nogi w przód, utrzymując biodra w górze i napięty core.",
+   "Przyciągnij pięty do pośladków, mocno napinając tył uda.",
+   "Kontroluj ruch i nie pozwalaj biodrom opadać przez całą serię."
+  ],
+  "tips": [
+   "Trzymaj core napięty, aby biodra się nie zapadały.",
+   "Skup się na mocnym skurczu tyłu uda w szczytowym punkcie.",
+   "Kontroluj fazę ekscentryczną, powoli prostując nogi."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Ściąganie uchwytu V do klatki",
+  "description": "Ściąganie chwytem neutralnym wąskim uchwytem V, maksymalizujące rozciągnięcie najszerszego i pozwalające na głębszy skurcz.",
+  "instructions": [
+   "Załóż uchwyt V (podwójny D) na linkę wyciągu górnego.",
+   "Usiądź z udami zablokowanymi pod poduszką i chwyć uchwyt, dłonie zwrócone do siebie.",
+   "Zacznij z rękami w pełni wyprostowanymi nad głową.",
+   "Przyciągaj uchwyt do mostka, prowadząc łokcie w dół i lekko w tył.",
+   "Ściśnij najszersze na dole i powoli, z kontrolą wracaj w górę.",
+   "Powtórz zalecaną liczbę powtórzeń."
+  ],
+  "tips": [
+   "Chwyt neutralny jest łagodniejszy dla barków niż nachwyt czy podchwyt.",
+   "Wyobraź sobie, że zbliżasz żebra do bioder: myśl o najszerszych, nie o rękach."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Wykroki chodzone z hantlami",
+  "description": "Wykroki do przodu na zmianę z hantlem w każdej dłoni; trenują czworogłowe i pośladki jednostronnie.",
+  "instructions": [
+   "Stań z hantlami i rękami swobodnie po bokach.",
+   "Zrób długi krok w przód i zejdź, aż oba kolana utworzą kąty około 90 stopni.",
+   "Odepchnij się przednią nogą do stania i przenieś tylną w przód w kolejnym kroku.",
+   "Zmieniaj nogi, trzymając tułów prosto przez cały ruch."
+  ],
+  "tips": [
+   "Rób kroki na tyle długie, by przednie kolano nie wychodziło daleko poza palce.",
+   "Potrzebujesz wolnej przestrzeni; jeśli jej nie masz, rób zakroki."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Dipy z obciążeniem",
+  "description": "Dipy na poręczach z dodatkowym ciężarem: hantel między stopami lub kamizelka obciążeniowa.",
+  "instructions": [
+   "Podeprzyj się na poręczach z wyprostowanymi rękami i hantlem trzymanym stopami lub kostkami.",
+   "Lekko pochyl tułów i ugnij łokcie, opuszczając się z kontrolą.",
+   "Zatrzymaj się, gdy barki będą na wysokości łokci.",
+   "Wypchnij się klatką i tricepsami do wyprostu rąk."
+  ],
+  "tips": [
+   "Najpierw opanuj dipy z masą ciała.",
+   "Nie schodź niżej, niż pozwala bark."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Podciąganie z obciążeniem",
+  "description": "Podciąganie z dodatkowym ciężarem: hantel między stopami lub kamizelka obciążeniowa.",
+  "instructions": [
+   "Zawiśnij nieco szerzej niż barki i przytrzymaj hantel stopami lub kostkami.",
+   "Ściągaj łokcie w dół i w tył, aż broda będzie nad drążkiem.",
+   "Utrzymuj ciało stabilnie, bez bujania.",
+   "Opuść się z kontrolą do pełnego wyprostu rąk."
+  ],
+  "tips": [
+   "Najpierw opanuj podciąganie z masą ciała.",
+   "Z kamizelką obciążeniową zwiększaj ciężar stopniowo."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Wiosłowanie na wyciągu szerokim chwytem",
+  "description": "Poziome wiosłowanie na wyciągu długim drążkiem szerokim chwytem, obciążające górę pleców i tył barków.",
+  "instructions": [
+   "Usiądź przed dolnym wyciągiem ze stopami na podpórce, kolana lekko ugięte, długi drążek szerokim chwytem.",
+   "Z prostymi plecami i klatką w górze przyciągaj drążek do dolnej części klatki, prowadząc łokcie na zewnątrz i w tył.",
+   "Ściągnij łopatki na końcu i przytrzymaj chwilę.",
+   "Z kontrolą wyprostuj ręce, pozwalając łopatkom się rozsunąć bez garbienia."
+  ],
+  "tips": [
+   "Nie bujaj się: pracują plecy, nie tułów.",
+   "Prowadź drążek do klatki, nie do brzucha, aby obciążyć górę pleców."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Przysiad Zerchera",
+  "description": "Przysiad ze sztangą w zgięciu łokci, przenoszący obciążenie na przód i mocno angażujący tułów.",
+  "instructions": [
+   "Ułóż sztangę na wysokości brzucha w zgięciu łokci, przedramiona skrzyżowane lub pięści razem.",
+   "Zejdź, uginając biodra i kolana, klatka w górze, łokcie przy ciele.",
+   "Zatrzymaj się, gdy uda będą równoległe do podłogi lub nieco niżej.",
+   "Odpychaj podłogę stopami, aż się wyprostujesz."
+  ],
+  "tips": [
+   "Owiń sztangę poduszką lub ręcznikiem, jeśli uwiera w łokcie.",
+   "Trzymaj brzuch napięty, aby nie pochylać się w przód."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Wyciskanie nad głowę w siadzie na podłodze z prostymi nogami: bez podparcia, wymaga stabilności tułowia.",
+  "instructions": [
+   "Usiądź na podłodze z nogami wyprostowanymi przed sobą i sztangą na górze klatki.",
+   "Trzymaj tułów prosto i wyciśnij sztangę w linii prostej do wyprostu rąk.",
+   "Zatrzymaj sztangę nad czubkiem głowy bez odchylania w tył.",
+   "Opuść z kontrolą do obojczyka."
+  ],
+  "tips": [
+   "Użyj mniejszego ciężaru niż na stojąco: tułów pełni rolę stabilizatora.",
+   "Napnij pośladki i brzuch przez cały ruch."
+  ]
+ }
+}
