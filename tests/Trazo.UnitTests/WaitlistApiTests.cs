@@ -197,7 +197,7 @@ public sealed class WaitlistApiTests : IDisposable
     {
         var client = _factory.CreateClient();
         Assert.Equal(HttpStatusCode.BadRequest, (await Join(client, "a@example.com", consent: false)).StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, (await Join(client, "a@example.com", language: "fr")).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await Join(client, "a@example.com", language: "vi")).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await Join(client, "a@example.com", language: null)).StatusCode);
         Assert.Empty(await Stored());
     }
