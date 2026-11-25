@@ -91,7 +91,8 @@ export const LANDING_LANGUAGES: LandingLanguage[] = [
   { code: 'de', path: 'de', name: 'Deutsch', load: () => import('./i18n/de').then(m => m.default) },
   { code: 'pt', path: 'pt-br', name: 'Português (Brasil)', load: () => import('./i18n/pt').then(m => m.default) },
   { code: 'fr', path: 'fr', name: 'Français', load: () => import('./i18n/fr').then(m => m.default) },
-  { code: 'it', path: 'it', name: 'Italiano', load: () => import('./i18n/it').then(m => m.default) }
+  { code: 'it', path: 'it', name: 'Italiano', load: () => import('./i18n/it').then(m => m.default) },
+  { code: 'nl', path: 'nl', name: 'Nederlands', load: () => import('./i18n/nl').then(m => m.default) }
 ];
 
 export const landingLanguage = (code: string | null | undefined): LandingLanguage =>

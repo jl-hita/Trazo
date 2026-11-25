@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Ab wheel rollout",
+  "description": "Een core-oefening waarbij je een wiel naar voren en terug rolt en de anti-extensie van de wervelkolom traint.",
+  "instructions": [
+   "Kniel op de grond en pak de handvatten van het wiel op schouderbreedte.",
+   "Span de core stevig aan zodat de onderrug neutraal blijft.",
+   "Rol het wiel langzaam naar voren en strek je zo ver als je kunt controleren.",
+   "Stop voordat je heupen doorzakken of je rug hol trekt.",
+   "Trek het wiel terug naar je knieën door je buikspieren aan te spannen."
+  ],
+  "tips": [
+   "Span je core vóór elke herhaling — laat je onderrug niet doorhangen.",
+   "Vergroot het bereik geleidelijk en stop voordat de heupen zakken.",
+   "Gebruik een muur als stop als je de onderste positie niet beheerst."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold press",
+  "description": "Shoulder press met dumbbells met draaiende polsen, die de deltaspier over een groot bereik aanspreekt.",
+  "instructions": [
+   "Zit met rechte rugleuning, houd de dumbbells op borsthoogte met de palmen naar je toe en de ellebogen naar voren.",
+   "Begin omhoog te duwen terwijl je de ellebogen opent en de palmen naar voren draait.",
+   "Eindig met gestrekte armen boven je hoofd zonder de ellebogen op slot te zetten.",
+   "Laat zakken en draai de palmen weer naar je toe tot de beginpositie."
+  ],
+  "tips": [
+   "Draai vloeiend, zonder zwaai.",
+   "Houd je rug tegen de leuning."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Geassisteerd optrekken",
+  "description": "Een optrekoefening op de geassisteerde machine, die een deel van je lichaamsgewicht compenseert om de rugkracht voor strikte pull-ups op te bouwen.",
+  "instructions": [
+   "Zet je knieën op het kussen van de geassisteerde optrekmachine.",
+   "Pak de stang met de palmen naar voren, iets breder dan schouderbreedte.",
+   "Trek je borst naar de stang door de ellebogen omlaag te duwen.",
+   "Laat je gecontroleerd zakken tot je met gestrekte armen hangt.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Begin met het zakken van de schouderbladen voordat je de ellebogen buigt.",
+   "Zwaai niet, zodat de rug het werk doet.",
+   "Stel het contragewicht zo in dat je alle herhalingen netjes haalt."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Leg curl op fitnessbal",
+  "description": "Een leg curl met lichaamsgewicht op een fitnessbal: rol je hielen naar je billen terwijl je heupen omhoog komen.",
+  "instructions": [
+   "Lig op je rug met hielen en onderkuiten op de bal en de armen wijd voor balans.",
+   "Duw via de hielen je heupen omhoog tot een rechte lijn van schouders tot enkels.",
+   "Houd de heupen hoog en buig de knieën om de bal naar je billen te rollen.",
+   "Strek de benen gecontroleerd zonder de heupen te laten zakken.",
+   "Maak alle herhalingen, laat dan de heupen zakken en stap van de bal."
+  ],
+  "tips": [
+   "De heupen blijven de hele set hoog: het is een combinatie van bridge en curl.",
+   "Begin met twee voeten; ga naar één been als het makkelijk wordt."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Staande leg curl met band",
+  "description": "Een staande leg curl met een band om de enkel, handig op reis of als lichte afsluiter voor de hamstrings.",
+  "instructions": [
+   "Doe een band om één enkel en zet het andere eind onder je standvoet of aan een vast punt voor je.",
+   "Sta rechtop, houd je vast als nodig, met een licht gebogen standbeen.",
+   "Breng je hiel met de band naar je bil en houd het bovenbeen stil.",
+   "Span de hamstring boven aan en laat gecontroleerd zakken tot volledige rek.",
+   "Maak alle herhalingen aan één kant en wissel van been."
+  ],
+  "tips": [
+   "Houd het bovenbeen stil — alleen het onderbeen beweegt.",
+   "Zwaai niet vanuit de heup.",
+   "Neem een lichtere band als je het zakken niet beheerst."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Lat pulldown met weerstandsband",
+  "description": "Verticale trekoefening met een hoog bevestigde weerstandsband, als alternatief voor de kabel.",
+  "instructions": [
+   "Sta met de band hoog vast (deur of stang), een eind in elke hand, armen gestrekt boven je hoofd.",
+   "Trek de handen omlaag en breng de ellebogen naar je zij, borst hoog.",
+   "Span je rug aan als de handen op schouderhoogte zijn.",
+   "Breng de armen gecontroleerd omhoog tot ze weer gestrekt zijn."
+  ],
+  "tips": [
+   "Leun niet achterover om te trekken.",
+   "Controleer of de bevestiging stevig zit voordat je begint."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Band pull-apart",
+  "description": "Een weerstandsband uit elkaar trekken met gestrekte armen om achterste schouder en bovenrug te activeren.",
+  "instructions": [
+   "Sta en houd de band met handen op schouderbreedte en gestrekte armen voor je borst.",
+   "Trek de handen naar buiten tot de band je borst raakt.",
+   "Breng aan het eind de schouderbladen samen zonder de schouders op te trekken.",
+   "Ga gecontroleerd terug zonder dat de band je trekt."
+  ],
+  "tips": [
+   "Kies een band waarmee je 15 of meer nette herhalingen haalt.",
+   "Houd je ribben laag zodat je onderrug niet hol trekt."
+  ]
+ },
+ "band-row": {
+  "name": "Roeien met weerstandsband",
+  "description": "Zittend roeien met een band om de voeten, zonder verder materiaal.",
+  "instructions": [
+   "Zit op de grond met gestrekte benen, band om de voetzolen, een eind in elke hand.",
+   "Trek met rechte rug de handen naar je buik en breng de ellebogen naar achteren.",
+   "Breng aan het eind de schouderbladen samen.",
+   "Strek de armen gecontroleerd zonder de spanning te verliezen."
+  ],
+  "tips": [
+   "Help niet mee door met je romp te wiegen.",
+   "Kies een band voor 12 tot 15 nette herhalingen."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Shoulder press met weerstandsband",
+  "description": "Staande shoulder press op een weerstandsband, voor de deltaspier met heel weinig materiaal.",
+  "instructions": [
+   "Sta op het midden van de band, voeten op heupbreedte, een eind in elke hand op schouderhoogte.",
+   "Duw de handen omhoog tot de armen boven je hoofd gestrekt zijn.",
+   "Houd je buik stevig en je ribben laag.",
+   "Zak gecontroleerd tot de schouders zonder spanning te verliezen."
+  ],
+  "tips": [
+   "Trek je rug niet hol bij het duwen.",
+   "Sla de band een keer extra om voor meer weerstand."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulgaarse split squat met halterstang",
+  "description": "Eenbenige squat met de achterste voet op een bank en de stang op de rug.",
+  "instructions": [
+   "Leg de wreef van één voet op een bank achter je, stang op de bovenrug, het andere been voor.",
+   "Buig de voorste knie en zak met rechte romp tot je bovenbeen evenwijdig aan de grond is.",
+   "Houd het gewicht op de hiel van het voorste been.",
+   "Duw met de voorste voet tot het been gestrekt is; maak de herhalingen en wissel."
+  ],
+  "tips": [
+   "Stel de afstand zo in dat de voorste knie niet ver voorbij de tenen komt.",
+   "Oefen eerst zonder gewicht of met dumbbells."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Bicepscurl met halterstang",
+  "description": "Een klassieke isolatieoefening voor de biceps met de stang voor maximale belasting.",
+  "instructions": [
+   "Sta en houd de stang onderhands op schouderbreedte.",
+   "Breng de stang naar je schouders.",
+   "Span boven aan en zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Zwaai niet met je romp.",
+   "Houd de ellebogen dicht bij je zij."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Glute bridge met halterstang",
+  "description": "Een glute bridge met halterstang voor meer weerstand.",
+  "instructions": [
+   "Lig met de stang op je heupen en gebogen knieën.",
+   "Til de heupen op door je billen aan te spannen.",
+   "Houd boven vast met volledig gestrekte heupen.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Trek je onderrug niet hol bij het strekken.",
+   "Duw via de hielen, niet via de tenen.",
+   "Kin in en houd de bovenrug op de grond."
+  ]
+ },
+ "barbell-row": {
+  "name": "Voorovergebogen roeien met halterstang",
+  "description": "Een samengestelde trekoefening voor boven- en middenrug.",
+  "instructions": [
+   "Buig vanuit de heupen met licht gebogen knieën.",
+   "Pak de stang iets breder dan schouderbreedte.",
+   "Trek de stang naar de onderborst en knijp de schouderbladen samen.",
+   "Laat de stang gecontroleerd zakken.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de romp op ongeveer 45 graden.",
+   "Gebruik geen zwaai."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Staande calf raise met halterstang",
+  "description": "Staande calf raise met een vrije stang op de rug, zonder speciale machine.",
+  "instructions": [
+   "Sta met de stang op de bovenrug en de voorvoeten op een step of schijf, op heupbreedte.",
+   "Laat de hielen zakken tot de kuiten rekken, romp rechtop.",
+   "Kom zo hoog mogelijk op je tenen zonder de knieën te buigen.",
+   "Houd boven even vast en zak gecontroleerd."
+  ],
+  "tips": [
+   "Begin licht tot je de balans beheerst.",
+   "Doe het in een rek met de pennen op de juiste hoogte."
+  ]
+ },
+ "bench-press": {
+  "name": "Bankdrukken met halterstang",
+  "description": "Een samengestelde drukoefening voor borst, schouders en triceps.",
+  "instructions": [
+   "Lig op de bank met je ogen onder de stang.",
+   "Pak de stang iets breder dan schouderbreedte.",
+   "Haal de stang uit het rek en breng hem naar het midden van de borst.",
+   "Duw terug tot de armen volledig gestrekt zijn.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Houd je voeten plat op de grond.",
+   "Behoud een lichte holling in de onderrug.",
+   "Duw met je benen tegen de grond voor stabiliteit."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Omgekeerd roeien met gebogen knieën",
+  "description": "Beginnersversie van omgekeerd roeien: met gebogen knieën en voeten dichtbij is het lichter en beter te sturen.",
+  "instructions": [
+   "Lig onder een lage, stevige stang, pak iets breder dan schouderbreedte en houd de romp recht, knieën gebogen, voeten plat.",
+   "Trek je borst naar de stang met de ellebogen naar achteren en de schouderbladen samen.",
+   "Houd boven even vast zonder de heupen te laten zakken.",
+   "Zak gecontroleerd tot de armen gestrekt zijn."
+  ],
+  "tips": [
+   "Zet de voeten dichterbij voor makkelijker of verder voor zwaarder.",
+   "Beheers je 12 herhalingen, ga dan naar gestrekte benen."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Calf raise met lichaamsgewicht",
+  "description": "Een calf raise met lichaamsgewicht, een basisoefening voor sterke kuiten.",
+  "instructions": [
+   "Sta met de voeten op heupbreedte op een vlakke ondergrond.",
+   "Kom zo hoog mogelijk op je tenen.",
+   "Span de kuiten boven aan.",
+   "Zet de hielen gecontroleerd neer.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Verdeel het gewicht over alle tenen.",
+   "Houd de benen gestrekt om de kuiten te raken.",
+   "Kijk naar een vast punt voor je balans."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Reverse lunge met lichaamsgewicht",
+  "description": "Achterwaartse uitvalspas zonder materiaal, stabieler en knievriendelijker dan voorwaarts.",
+  "instructions": [
+   "Sta met voeten bij elkaar, handen in de zij, borst hoog.",
+   "Stap ver naar achteren en buig beide knieën tot de achterste bijna de grond raakt.",
+   "Houd de romp rechtop en het gewicht op de voorste voet.",
+   "Duw met het voorste been terug; maak de herhalingen en wissel."
+  ],
+  "tips": [
+   "Stap ver genoeg zodat de voorste knie niet ver voorbij de tenen komt.",
+   "Houd je vast als balans nog lastig is."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Squat met lichaamsgewicht",
+  "description": "Basissquat zonder materiaal, ideaal om het patroon te leren en overal je benen te trainen.",
+  "instructions": [
+   "Sta op schouderbreedte, tenen licht naar buiten, armen vooruit.",
+   "Breng de heupen naar achteren en omlaag alsof je gaat zitten, borst hoog, rug neutraal.",
+   "Zak tot de bovenbenen evenwijdig zijn, knieën in lijn met de voeten.",
+   "Duw met de hele voet tot je weer rechtop staat."
+  ],
+  "tips": [
+   "Houd de hielen de hele beweging aan de grond.",
+   "Is zakken lastig, ga dan op een stoel zitten en sta zonder zwaai op."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgaarse split squat",
+  "description": "Een eenbenige squatvariant met verhoogde achterste voet.",
+  "instructions": [
+   "Sta voor een bank en leg een voet erachter op de bank.",
+   "Houd dumbbells langs je zij.",
+   "Zak tot het voorste bovenbeen evenwijdig is.",
+   "Duw via de voorste hiel terug omhoog.",
+   "Herhaal aan beide kanten."
+  ],
+  "tips": [
+   "Houd bijna al het gewicht op het voorste been.",
+   "Stel de afstand tot de bank af tot de uitvalspas stabiel is.",
+   "Maak alle herhalingen met één been voor je wisselt."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Cable crunch",
+  "description": "Een knielende crunch aan de hoge kabel met touw, om de rechte buikspier geleidelijk zwaarder te belasten.",
+  "instructions": [
+   "Kniel voor de kabel met het touw bovenaan.",
+   "Houd het touw bij je voorhoofd met gebogen ellebogen.",
+   "Zak door je wervelkolom te buigen en de ellebogen naar de bovenbenen te brengen.",
+   "Span onderaan de buik hard aan.",
+   "Ga terug naar de start en herhaal."
+  ],
+  "tips": [
+   "Buig de wervelkolom in plaats van met de armen te trekken.",
+   "Zak niet bij elke herhaling met de heupen naar achteren.",
+   "Adem krachtig uit bij het zakken."
+  ]
+ },
+ "cable-curl": {
+  "name": "Bicepscurl aan de kabel",
+  "description": "Een bicepscurl aan de kabel met constante spanning.",
+  "instructions": [
+   "Sta voor een lage kabel met een rechte of EZ-stang.",
+   "Pak de stang onderhands, ellebogen tegen je zij.",
+   "Breng de stang naar je schouders.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Laat de ellebogen niet naar voren komen.",
+   "Zwaai niet met je romp.",
+   "Ga iets van de kabel af om spanning te houden."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Externe rotatie aan de kabel",
+  "description": "Een externe rotatie aan de kabel met de elleboog tegen de zij, die de buitenrotatoren van de rotatorcuff versterkt met hulp van de achterste schouder.",
+  "instructions": [
+   "Zet de katrol op ellebooghoogte en pak het handvat.",
+   "Sta zijwaarts, werkende elleboog 90 graden gebogen.",
+   "Houd de elleboog tegen de zij en draai de onderarm naar buiten.",
+   "Pauzeer aan het eind.",
+   "Ga gecontroleerd terug. Eén kant afmaken en wisselen."
+  ],
+  "tips": [
+   "Trek de schouder niet op bij het draaien.",
+   "Werk licht, langzaam en gecontroleerd.",
+   "Houd de pols vast en in lijn met de onderarm."
+  ]
+ },
+ "cable-fly": {
+  "name": "Cable fly",
+  "description": "Een isolatieoefening voor de borst aan de kabel met constante spanning.",
+  "instructions": [
+   "Sta tussen twee kabelzuilen met de grepen aan de hoge katrollen.",
+   "Open met licht gebogen ellebogen de armen opzij.",
+   "Breng de handen voor de borst samen in een omhelzing.",
+   "Ga langzaam terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de elleboogshoek gelijk zodat het geen drukken wordt.",
+   "Span de borst een seconde aan als de handen elkaar raken.",
+   "Laat de schouders niet naar voren komen bij open armen."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Front raise aan de kabel",
+  "description": "Front raise aan de lage kabel met constante spanning over het hele bereik.",
+  "instructions": [
+   "Sta met de rug naar de lage kabel, kabel tussen de benen, greep in één hand, arm gestrekt voor het bovenbeen.",
+   "Til de arm naar voren tot schouderhoogte, elleboog licht gebogen.",
+   "Houd even vast zonder achterover te leunen.",
+   "Zak gecontroleerd zonder het gewicht neer te zetten; herhaal en wissel."
+  ],
+  "tips": [
+   "Sta ver genoeg zodat de kabel naar achteren trekt.",
+   "Houd de buik stevig tegen hol trekken."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Zijwaarts heffen aan de kabel",
+  "description": "Eenarmig zijwaarts heffen aan de kabel met constante spanning op de zijkant van de schouder.",
+  "instructions": [
+   "Sta zijwaarts bij een lage katrol en pak de greep met de verste hand.",
+   "Houd de elleboog licht gebogen en laat de kabel voor je lichaam lopen.",
+   "Breng de arm opzij tot horizontaal.",
+   "Zak gecontroleerd. Herhalingen per kant, dan wisselen.",
+   "Houd de spanning — zet het gewicht onderaan niet neer."
+  ],
+  "tips": [
+   "Leid met de elleboog, niet met de hand.",
+   "Pauzeer kort boven, zonder zwaai.",
+   "Neem minder dan met een dumbbell — de kabelspanning is constant."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Overhead triceps extension aan de kabel",
+  "description": "Een triceps-oefening aan de kabel: met de rug naar het gewicht houd je een touw achter je hoofd en strek je de ellebogen om het boven je hoofd te duwen. De houding rekt de lange kop en de kabel houdt de spanning de hele beweging.",
+  "instructions": [
+   "Haak een touw aan de lage katrol en kies een licht gewicht.",
+   "Pak het touw met twee handen, draai de rug naar het gewicht en stap in spreidstand naar voren zodat de kabel je terugtrekt.",
+   "Breng het touw boven je hoofd met gebogen ellebogen en bovenarmen bij de oren, handen achter het hoofd.",
+   "Span de romp aan, houd de bovenarmen stil en strek de ellebogen tot de armen volledig gestrekt zijn.",
+   "Pauzeer kort boven en buig dan de ellebogen om het touw gecontroleerd achter je hoofd te laten zakken.",
+   "Herhaal het geplande aantal."
+  ],
+  "tips": [
+   "Houd de ellebogen naar voren en de bovenarmen stil; gaan ze open of schuiven ze, dan wordt het drukken.",
+   "Stap ver genoeg naar voren zodat de kabel je stabiel houdt en trek je onderrug niet hol.",
+   "Gebruik een gewicht dat je in de volle rek beheerst; zwaar duwt de ellebogen uit elkaar."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof press aan de kabel",
+  "description": "Een anti-rotatie-oefening: de kabel trekt je opzij terwijl je de greep recht vooruit duwt zonder je romp te laten draaien.",
+  "instructions": [
+   "Zet de katrol op borsthoogte en pak de greep met twee handen, zijwaarts.",
+   "Stap weg tot er echte spanning staat, voeten op schouderbreedte, knieën licht gebogen.",
+   "Breng de greep naar het midden van de borst en span romp en billen aan.",
+   "Duw de greep recht vooruit tot de armen gestrekt zijn en weersta de draaiing.",
+   "Houd even vast en breng de greep gecontroleerd terug.",
+   "Maak de herhalingen, draai om en herhaal aan de andere kant."
+  ],
+  "tips": [
+   "Niets mag draaien. Draaien de schouders mee, verlaag het gewicht — je traint de draaiing die niet gebeurt.",
+   "Hoe verder van de machine, hoe langer de hefboom en hoe zwaarder: zo verander je de moeilijkheid zonder het gewicht aan te passen.",
+   "Houd de armen op borsthoogte en de schouders laag; stijgt de greep, dan wordt het een front raise."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Reverse fly aan de kabel",
+  "description": "Een staande kabeloefening voor de achterste schouders: tussen twee torens houd je de tegenoverliggende grepen met gekruiste kabels en breng je de armen naar buiten en achter tot schouderhoogte. De kabels houden de spanning over de hele boog.",
+  "instructions": [
+   "Zet beide katrollen ongeveer op schouderhoogte en ga in het midden staan.",
+   "Pak de linkergreep met rechts en de rechter met links, kabels gekruist voor je.",
+   "Sta rechtop met armen vooruit op schouderhoogte en licht gebogen ellebogen.",
+   "Breng de armen in een wijde boog naar buiten en achter, geleid door de ellebogen, tot in lijn met de schouders.",
+   "Knijp de schouderbladen kort samen zonder hol te trekken.",
+   "Breng de grepen langzaam terug gekruist en herhaal."
+  ],
+  "tips": [
+   "Houd de ellebogen licht gebogen en vast; buig en strek je ze, dan wordt het roeien.",
+   "Schouders laag en nek ontspannen zodat de achterste schouders werken en niet de trapezius.",
+   "Neem licht en ga langzaam terug; aan het eind trekt de kabel het hardst, controleer daar."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Knieheffen in de captain's chair",
+  "description": "Een lichaamsgewichtoefening in de captain's chair voor onderbuik en heupbuigers.",
+  "instructions": [
+   "Ga in de stoel met de rug tegen de leuning en onderarmen op de steunen.",
+   "Laat de benen recht hangen.",
+   "Span de core en breng de knieën naar de borst.",
+   "Houd kort vast en zak langzaam.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Zwaai niet met de benen.",
+   "Adem uit bij het optrekken.",
+   "Houd de rug tegen de leuning."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Chest press machine",
+  "description": "Een drukbeweging voor de borst op de machine, ideaal voor beginners.",
+  "instructions": [
+   "Zit met de rug tegen de leuning.",
+   "Pak de grepen op borsthoogte.",
+   "Duw de grepen naar voren tot de armen gestrekt zijn.",
+   "Ga langzaam terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Stel de stoel zo in dat de grepen op borsthoogte zijn.",
+   "Duw zonder de ellebogen met een klap te strekken.",
+   "Ga gecontroleerd terug zonder het gewicht te laten vallen."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Dumbbell row met borststeun",
+  "description": "Dumbbell row met borststeun die de onderrug ontlast en de rug isoleert.",
+  "instructions": [
+   "Lig op je buik op een schuine bank met de dumbbells eronder.",
+   "Roei de dumbbells langs je zij.",
+   "Span boven aan en zak.",
+   "Herhaal."
+  ],
+  "tips": [
+   "De borststeun voorkomt vermoeidheid van de onderrug.",
+   "Richt je op het samenbrengen van de schouderbladen."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Kettlebell row met borststeun",
+  "description": "Deze oefening traint de rug, vooral de latissimus en rhomboïden, door met in elke hand een kettlebell naar de heupen te roeien met de romp op een schuine bank.",
+  "instructions": [
+   "Lig op je buik op een schuine bank met een kettlebell in elke hand.",
+   "Span de buik aan en trek de schouderbladen naar achteren.",
+   "Trek de kettlebells naar de heupen en knijp de schouderbladen samen.",
+   "Pauzeer kort boven en voel de spanning in je rug.",
+   "Zak langzaam en gecontroleerd terug."
+  ],
+  "tips": [
+   "Houd de romp stabiel; zwaai niet.",
+   "Begin de trek vanuit de rug, niet alleen met de armen.",
+   "Houd de ellebogen dicht bij het lichaam voor de lats."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Machine row met borststeun",
+  "description": "Zittend roeien op de machine met borstkussen: lats en spieren tussen de schouderbladen trekken, de onderrug doet niet mee. Je trekt de grepen naar achteren en laat ze gecontroleerd terugkomen.",
+  "instructions": [
+   "Stel de stoel zo in dat de grepen op de onderborst zijn, borst tegen het kussen, voeten stevig.",
+   "Reik naar voren en pak de grepen met gestrekte armen en ontspannen schouders.",
+   "Span de romp aan en trek de grepen met de ellebogen naar achteren.",
+   "Breng aan het eind de schouderbladen samen zonder de borst los te laten.",
+   "Pauzeer kort en strek de armen gecontroleerd.",
+   "Herhaal met de borst steeds tegen het kussen."
+  ],
+  "tips": [
+   "Trek met de ellebogen in plaats van met de handen, zodat lats en middenrug leiden en de biceps helpen.",
+   "Borst tegen het kussen en schouders laag; optrekken of achterover leunen maakt er trapeziuswerk van.",
+   "Laat de schouderbladen aan het begin uit elkaar gaan voor volledige rek."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "T-bar row met borststeun",
+  "description": "T-bar row met de borst op een schuine bank, die de rug isoleert zonder belasting van de onderrug.",
+  "instructions": [
+   "Leg de borst op de bank, voeten stevig, en pak de greep met gestrekte armen.",
+   "Trek de greep naar de borst met de ellebogen naar achteren en dichtbij.",
+   "Knijp boven even de schouderbladen samen.",
+   "Zak gecontroleerd tot gestrekte armen zonder de borst los te laten."
+  ],
+  "tips": [
+   "Houd het hoofd in lijn met de wervelkolom.",
+   "Moet je de borst losmaken om te trekken, verlaag dan het gewicht."
+  ]
+ },
+ "chin-ups": {
+  "name": "Chin-ups",
+  "description": "Een pull-upvariant onderhands die samen met de lats de biceps sterk aanspreekt.",
+  "instructions": [
+   "Hang onderhands aan een stang op schouderbreedte.",
+   "Trek tot je kin boven de stang is.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de core aangespannen.",
+   "Vermijd veel zwaaien."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Close-grip bankdrukken",
+  "description": "Bankdrukken met smallere greep, dat de triceps meer inzet en de borst blijft trainen.",
+  "instructions": [
+   "Lig op de bank en pak op schouderbreedte of iets smaller.",
+   "Haal de stang uit het rek en breng hem met gestrekte armen boven de borst.",
+   "Zak gecontroleerd tot de onderborst, ellebogen dichtbij.",
+   "Duw omhoog tot de ellebogen gestrekt zijn."
+  ],
+  "tips": [
+   "Pak niet te smal: de polsen lijden; schouderbreedte volstaat.",
+   "Vraag hulp of gebruik een rek met pennen dicht bij falen."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Bankdrukken met dumbbells",
+  "description": "Een samengestelde borstoefening met dumbbells met meer bereik dan met de stang.",
+  "instructions": [
+   "Lig op een vlakke bank met in elke hand een dumbbell op borsthoogte.",
+   "Duw omhoog tot de armen gestrekt zijn.",
+   "Zak langzaam terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de polsen neutraal.",
+   "Span de borst boven aan."
+  ]
+ },
+ "db-fly": {
+  "name": "Dumbbell fly",
+  "description": "Een isolatieoefening die de borstspier over een wijde boog rekt en aanspant.",
+  "instructions": [
+   "Lig op een bank met de dumbbells boven de borst, palmen naar elkaar.",
+   "Zak met licht gebogen ellebogen opzij.",
+   "Ga terug en span de borst aan.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de buiging van de ellebogen gelijk.",
+   "Zak niet te diep."
+  ]
+ },
+ "db-squat": {
+  "name": "Squat met dumbbells",
+  "description": "Een squat met een dumbbell in elke hand langs de zij, haalbaar zonder stang.",
+  "instructions": [
+   "Voeten op schouderbreedte, een dumbbell aan elke kant.",
+   "Span de core en houd de borst hoog.",
+   "Zak door heupen en knieën te buigen.",
+   "Zak tot de bovenbenen evenwijdig zijn of lager.",
+   "Duw via de hielen omhoog."
+  ],
+  "tips": [
+   "Borst hoog en rug recht.",
+   "Knieën in lijn met de tenen.",
+   "Gebruik straps als je grip beperkt."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "Een core-oefening op de rug die tegenovergestelde ledematen strekt voor diepe stabiliteit.",
+  "instructions": [
+   "Lig op je rug met armen naar het plafond en knieën 90 graden.",
+   "Laat rechterarm en linkerbeen zakken met de onderrug tegen de grond.",
+   "Ga terug naar de start.",
+   "Herhaal aan de andere kant.",
+   "Wissel af."
+  ],
+  "tips": [
+   "Druk de onderrug steeds tegen de grond.",
+   "Beweeg langzaam."
+  ]
+ },
+ "deadlift": {
+  "name": "Deadlift met halterstang",
+  "description": "Een samengestelde tiloefening voor het hele lichaam, vooral de achterste keten.",
+  "instructions": [
+   "Sta op heupbreedte met de stang boven het midden van de voet.",
+   "Buig in de heupen en pak de stang.",
+   "Span de core en til door heupen en knieën te strekken.",
+   "Kom volledig rechtop en zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de stang dicht bij je lichaam.",
+   "Maak je onderrug niet rond."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Deficit deadlift",
+  "description": "Deadlift vanaf een laag platform, dat het bereik en de zwaarte bij de start vergroot.",
+  "instructions": [
+   "Ga op een platform van 2 tot 5 cm staan, voeten onder de stang, en pak met neutrale rug en schouders erboven.",
+   "Zet spanning en duw de grond weg terwijl de stang langs de benen omhoog gaat.",
+   "Strek heupen en knieën tegelijk tot rechtop.",
+   "Laat de stang gecontroleerd zakken met neutrale rug."
+  ],
+  "tips": [
+   "Begin met weinig deficit en licht gewicht.",
+   "Maak de rug niet rond bij de start."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "Zware buikoefening: het stijve lichaam steunt alleen op de schouders en gaat als een hefboom op en neer.",
+  "instructions": [
+   "Lig op een bank, pak de rand achter je hoofd en til het rechte lichaam op.",
+   "Laat het rechte lichaam zakken zonder in de heup te knikken, tot bijna horizontaal.",
+   "Houd buik en billen strak zonder de bank te raken.",
+   "Til terug tot verticaal; lukt dat niet, begin met alleen zakken."
+  ],
+  "tips": [
+   "Begin met gebogen knieën of alleen excentrisch.",
+   "Niet in de heup knikken is de sleutel."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Voorovergebogen dumbbell row",
+  "description": "Roeien met in elke hand een dumbbell en voorovergebogen romp: lats en bovenrug met alleen dumbbells.",
+  "instructions": [
+   "Sta, buig de knieën licht en kantel de romp vanuit de heup bijna horizontaal, rug recht.",
+   "Laat de armen hangen, palmen naar elkaar.",
+   "Trek naar de heupen met de ellebogen naar achteren, schouderbladen samen.",
+   "Pauzeer kort en zak gecontroleerd."
+  ],
+  "tips": [
+   "Houd de romp stil: heb je zwaai nodig, dan is het te zwaar.",
+   "Houd de nek in lijn, blik naar de grond.",
+   "Wordt de onderrug eerder moe, neem lichter of steun je borst."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Dumbbell curl",
+  "description": "Armbuigen met een dumbbell in elke hand voor de biceps met vrij bereik.",
+  "instructions": [
+   "Sta met gestrekte armen langs het lichaam, palmen naar voren.",
+   "Ellebogen tegen de romp, breng omhoog zonder zwaai.",
+   "Span de biceps even aan zonder de schouders op te trekken.",
+   "Zak gecontroleerd tot volledig gestrekt."
+  ],
+  "tips": [
+   "Zwaai niet met de rug: verlaag het gewicht.",
+   "Controleer het zakken, minstens twee keer zo lang als het heffen."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmer's walk met dumbbells",
+  "description": "Deze oefening voor het hele lichaam is lopen met zware dumbbells: grijpkracht, rompstabiliteit en algemeen uithoudingsvermogen.",
+  "instructions": [
+   "Sta rechtop met een dumbbell in elke hand, armen langs het lichaam.",
+   "Trek de schouderbladen terug en span de core, wervelkolom neutraal.",
+   "Loop langzaam en bewust een afstand of tijd met korte stappen.",
+   "Borst hoog, niet opzij hangen.",
+   "Houd een sterke, stabiele houding."
+  ],
+  "tips": [
+   "Neem de zwaarste dumbbells die je netjes beheerst.",
+   "Adem diep en ritmisch om de spanning in de core te behouden.",
+   "Stel je een glas water op je hoofd voor."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Dumbbell front raise",
+  "description": "De dumbbells voorwaarts heffen tot schouderhoogte voor de voorste schouder.",
+  "instructions": [
+   "Sta met de dumbbells voor je bovenbenen, armen bijna gestrekt.",
+   "Til naar voren tot schouderhoogte, ellebogen licht gebogen.",
+   "Stop horizontaal zonder te zwaaien.",
+   "Zak gecontroleerd."
+  ],
+  "tips": [
+   "Geen zwaai uit de rug: anders lichter.",
+   "De voorste schouder werkt al veel bij drukken; overdrijf het volume niet."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Dumbbell reverse fly",
+  "description": "Een voorovergebogen isolatie waarbij de dumbbells opzij gaan, voor achterste schouders en bovenrug.",
+  "instructions": [
+   "Buig vanuit de heupen met hangende armen.",
+   "Rug recht, knieën licht gebogen.",
+   "Til opzij tot schouderhoogte.",
+   "Knijp boven de schouderbladen samen.",
+   "Zak gecontroleerd.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Licht gewicht zodat de achterste schouders werken, niet de zwaai.",
+   "Breng boven de schouderbladen samen.",
+   "Ellebogen licht en vast gebogen."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Roemeense deadlift met dumbbells",
+  "description": "Roemeense deadlift met dumbbells die de rek in de hamstrings benadrukt via de heupscharnier.",
+  "instructions": [
+   "Sta met de dumbbells voor je bovenbenen, knieën licht gebogen.",
+   "Buig vanuit de heupen en duw de billen naar achteren.",
+   "Laat de dumbbells langs de benen zakken tot je de hamstrings voelt.",
+   "Rug recht, schouders naar achteren.",
+   "Duw de heupen naar voren om op te staan.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Zak zover je souplesse toelaat, zonder te forceren.",
+   "Houd dezelfde lichte kniebuiging.",
+   "Maak er geen squat van."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Dumbbell shoulder press",
+  "description": "Een overheadpress met dumbbells, zittend of staand, voor de voorste en zijkant van de deltaspier.",
+  "instructions": [
+   "Zit of sta met de dumbbells op schouderhoogte, palmen naar voren.",
+   "Duw beide dumbbells boven je hoofd tot de armen volledig gestrekt zijn.",
+   "Houd de core aangespannen en trek je onderrug niet hol.",
+   "Laat de dumbbells gecontroleerd zakken tot schouderhoogte.",
+   "Laat de dumbbells niet achter het hoofd komen.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Duw recht omhoog zonder ze boven tegen elkaar te tikken.",
+   "Houd de polsen vast, in lijn met de onderarmen.",
+   "Trekt je onderrug hol, verlaag dan het gewicht."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Dumbbell shrug",
+  "description": "Schouders optrekken met een dumbbell in elke hand voor bovenrug en trapezius.",
+  "instructions": [
+   "Sta met een dumbbell in elke hand, armen langs het lichaam, blik vooruit.",
+   "Trek de schouders recht naar de oren, zonder te draaien of de ellebogen te buigen.",
+   "Houd de spanning boven even vast.",
+   "Zak gecontroleerd tot de trapezius volledig rekt."
+  ],
+  "tips": [
+   "Geen cirkels: de beweging is verticaal.",
+   "Faalt je grip eerder dan de trapezius, gebruik straps."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Eenbenige calf raise met dumbbell",
+  "description": "Eenbenige calf raise op een step met een dumbbell, de andere hand als steun.",
+  "instructions": [
+   "Sta op de voorvoet op een step, het andere been gebogen, dumbbell aan dezelfde kant; andere hand tegen de muur.",
+   "Laat de hiel onder de step zakken tot de kuit rekt.",
+   "Kom zo hoog mogelijk zonder de knie te buigen.",
+   "Houd boven even vast en zak gecontroleerd; maak de herhalingen en wissel."
+  ],
+  "tips": [
+   "Duw via de bal van de grote teen zonder dat de enkel naar buiten gaat.",
+   "Het is eenzijdig: doe evenveel herhalingen per been."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pike push-up met verhoogde handen",
+  "description": "Beginnersversie van de pike push-up, handen op een step of stevige stoel om te verlichten.",
+  "instructions": [
+   "Zet de handen op de rand van een step, bank of stevige stoel op schouderbreedte en loop naar achteren tot de heupen omhoog zijn.",
+   "Buig de ellebogen en breng het hoofd naar de steun, heupen hoog.",
+   "Stop als je hoofd tussen je handen is, zonder de houding te verliezen.",
+   "Duw tot de ellebogen gestrekt zijn."
+  ],
+  "tips": [
+   "Zet de voeten dichter bij de steun voor zwaarder.",
+   "Controleer dat de steun niet schuift."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull aan de kabel",
+  "description": "Een kabeloefening voor de achterste schouders en externe rotatoren.",
+  "instructions": [
+   "Haak een touw aan een hoge katrol.",
+   "Trek het touw naar je gezicht en trek de uiteinden uit elkaar.",
+   "Span achterste schouders en externe rotatoren aan.",
+   "Ga gecontroleerd terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de ellebogen hoog, op schouderhoogte.",
+   "Breng na elke herhaling de schouderbladen samen.",
+   "Werk licht om de techniek te houden."
+  ]
+ },
+ "front-squat": {
+  "name": "Front squat",
+  "description": "Een squat met de stang vóór op de schouders, met nadruk op quadriceps en core.",
+  "instructions": [
+   "Leg de stang op de voorste schouders met hoge ellebogen.",
+   "Zak met rechte romp tot de bovenbenen evenwijdig zijn.",
+   "Kom weer omhoog.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de ellebogen hoog om de stang te stabiliseren.",
+   "Een rechtere romp activeert de quadriceps meer."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Glute bridge",
+  "description": "Een activatie-oefening voor de billen met lichaamsgewicht, liggend.",
+  "instructions": [
+   "Lig op je rug, knieën gebogen, voeten plat.",
+   "Til de heupen op door je billen aan te spannen.",
+   "Houd boven kort vast met volledig gestrekte heupen.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Duw via de hielen om de billen beter te activeren.",
+   "Trek de onderrug niet hol.",
+   "Houd de knieën in lijn met de voeten."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet squat",
+  "description": "Een beginnersvriendelijke squat met een kettlebell voor de borst die houding en diepte verbetert.",
+  "instructions": [
+   "Houd een kettlebell met twee handen op borsthoogte.",
+   "Zak met het gewicht dicht bij de borst.",
+   "Kom weer omhoog.",
+   "Herhaal."
+  ],
+  "tips": [
+   "De gobletpositie houdt de romp vanzelf recht.",
+   "Duw onderin de knieën naar buiten."
+  ]
+ },
+ "good-morning": {
+  "name": "Good morning",
+  "description": "Heupscharnier met de stang op de rug om hamstrings, billen en onderrug te versterken.",
+  "instructions": [
+   "Sta met de stang op de bovenrug, voeten op schouderbreedte, knieën licht gebogen.",
+   "Breng de heupen naar achteren en buig de romp naar voren met neutrale rug.",
+   "Zak tot je de hamstrings voelt, romp bijna horizontaal.",
+   "Duw de heupen naar voren om op te staan."
+  ],
+  "tips": [
+   "Begin heel licht: de onderrug werkt hard.",
+   "Kijk vooruit en maak de rug niet rond."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hacksquat",
+  "description": "Een geleide oefening op de hacksquatmachine, vooral voor de quadriceps, met een gecontroleerde squat op de slede.",
+  "instructions": [
+   "Belaad de machine en zet rug en schouders tegen de kussens.",
+   "Voeten op schouderbreedte op de plaat, licht naar buiten.",
+   "Ontgrendel en laat de slede zakken door knieën en heupen te buigen.",
+   "Zak tot de bovenbenen minstens evenwijdig aan de plaat zijn.",
+   "Duw via de hielen terug naar de start.",
+   "Vergrendel weer na de set."
+  ],
+  "tips": [
+   "Houd de onderrug steeds tegen het kussen.",
+   "Hogere voeten verleggen de nadruk naar billen en hamstrings.",
+   "Controleer het zakken; geen vering onderin."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Hammer curl met dumbbells",
+  "description": "Een curlvariant met neutrale greep die de brachioradialis traint.",
+  "instructions": [
+   "Sta met de dumbbells langs je zij, palmen naar elkaar.",
+   "Breng ze omhoog met de palmen naar binnen.",
+   "Span boven aan en zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de ellebogen steeds tegen de romp.",
+   "Zwaai niet met het lichaam.",
+   "De polsen blijven vast en neutraal."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Handstand push-up",
+  "description": "Handstand push-up met de voeten tegen de muur, een van de zwaarste drukoefeningen met lichaamsgewicht.",
+  "instructions": [
+   "Sta met de rug naar de muur, handen op de grond, en loop omhoog tot verticaal met strakke buik.",
+   "Buig de ellebogen en laat het hoofd gecontroleerd zakken.",
+   "Stop als het hoofd de grond of een mat raakt.",
+   "Duw tot de ellebogen gestrekt zijn."
+  ],
+  "tips": [
+   "Oefen eerst handstand en pike push-up.",
+   "Een matje onder het hoofd geeft vertrouwen."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Hangend knieheffen",
+  "description": "Een hangende core-oefening voor onderbuik en heupbuigers met gebogen knieën.",
+  "instructions": [
+   "Hang bovenhands met volledig gestrekte armen.",
+   "Span de core en breng de knieën naar de borst.",
+   "Houd boven kort vast.",
+   "Laat de benen langzaam zakken.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Zwaai niet — begin vanuit de core.",
+   "Adem uit bij het optrekken.",
+   "Ga naar gestrekte benen als dit makkelijk wordt."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Hangend beenheffen",
+  "description": "Gestrekte benen heffen tot horizontaal aan de stang, voor buik en heupbuigers.",
+  "instructions": [
+   "Hang iets breder dan schouderbreedte, benen samen en gestrekt.",
+   "Til de gestrekte benen tot evenwijdig en kantel het bekken licht naar achteren.",
+   "Houd even vast zonder te zwaaien.",
+   "Zak gecontroleerd zonder te pendelen."
+  ],
+  "tips": [
+   "Lukt het niet gestrekt, buig de knieën.",
+   "Niet zwaaien: gebruik je buik."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Hexbar deadlift",
+  "description": "Een deadlift staand in een hexbar, met de last in het midden voor een rechtere en rugvriendelijke trek.",
+  "instructions": [
+   "Sta in de beladen hexbar met de voeten op schouderbreedte.",
+   "Buig heupen en knieën om de grepen te pakken.",
+   "Span de core en houd de rug vlak.",
+   "Duw via de hielen en strek heupen en knieën.",
+   "Sluit boven af met de schouders naar achteren.",
+   "Zet de stang gecontroleerd neer."
+  ],
+  "tips": [
+   "Borst hoog en rug vlak bij het vastpakken.",
+   "Duw de vloer weg in plaats van met de rug te trekken.",
+   "Kom volledig rechtop zonder achterover te leunen."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Heupabductie op de machine",
+  "description": "Een machine-oefening voor de buitenste heupspieren.",
+  "instructions": [
+   "Zit in de abductiemachine met de kussens tegen de buitenkant van de bovenbenen.",
+   "Duw de benen naar buiten tegen de weerstand.",
+   "Houd kort vast op het wijdste punt.",
+   "Ga gecontroleerd terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de rug tegen de leuning.",
+   "Open zonder zwaai in een rustig tempo.",
+   "Rem de terugweg naar het midden af in plaats van het gewicht los te laten."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Heupadductie op de machine",
+  "description": "Een machine-oefening waarbij je de benen naar elkaar duwt en de adductoren aan de binnenkant isoleert.",
+  "instructions": [
+   "Zit in de adductiemachine met de rug tegen de leuning.",
+   "Plaats de benen tegen de kussens met een prettige rek.",
+   "Knijp tot de kussens elkaar raken.",
+   "Houd de spanning kort vast.",
+   "Laat de benen gecontroleerd openen.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Kies een startstand die rekt zonder de lies te forceren.",
+   "Gebruik het volle bereik in gelijkmatig tempo.",
+   "Laat de gewichten niet klappen."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust met halterstang",
+  "description": "Een samengestelde bilspieroefening met een stang op de heupen.",
+  "instructions": [
+   "Zit op de grond met de bovenrug tegen een bank en de stang op de heupen.",
+   "Duw de heupen omhoog tot romp en bovenbenen in lijn zijn.",
+   "Span boven de billen aan.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Kin in en ribben laag.",
+   "Duw via de hielen, niet de tenen.",
+   "Trek boven de onderrug niet hol."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Horizontale legpress",
+  "description": "Een horizontale legpress voor quadriceps, billen en hamstrings.",
+  "instructions": [
+   "Zit met de rug tegen de leuning en voeten op schouderbreedte op de plaat.",
+   "Duw tot de benen gestrekt zijn zonder de knieën op slot.",
+   "Buig gecontroleerd tot de knieën dicht bij de borst zijn.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Laat de onderrug niet loskomen.",
+   "Zet de knieën niet op slot."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Schuinbankdrukken met halterstang",
+  "description": "Een drukbeweging met de stang op een schuine bank voor de bovenborst.",
+  "instructions": [
+   "Lig op een bank van 30 tot 45 graden.",
+   "Pak iets breder dan de schouders en haal de stang uit het rek.",
+   "Zak naar de bovenborst.",
+   "Duw terug tot volledig gestrekt.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de schouderbladen terug op de bank.",
+   "Stuiter niet op de borst.",
+   "Vraag hulp bij zwaar gewicht."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Y-raise op schuine bank",
+  "description": "Y-heffen met dumbbells op je buik op een schuine bank, voor onderste en middelste trapezius.",
+  "instructions": [
+   "Lig op je buik, borst gesteund, een lichte dumbbell in elke hand.",
+   "Til de armen in Y-vorm naar voren en omhoog, duimen naar het plafond.",
+   "Stop in lijn met de romp zonder de borst los te laten.",
+   "Zak gecontroleerd."
+  ],
+  "tips": [
+   "Neem licht: de onderste trapezius is klein.",
+   "Nek neutraal, blik naar beneden."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Incline dumbbell curl",
+  "description": "Een curl op een schuine bank voor meer rek in de lange kop.",
+  "instructions": [
+   "Zit op een bank van 45 graden met de dumbbells langs de zij.",
+   "Laat de armen recht hangen, palmen naar voren.",
+   "Breng de dumbbells naar de schouders.",
+   "Zak tot volledig gestrekt.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Schouders en rug tegen de bank.",
+   "Breng de schouders niet naar voren.",
+   "Benut de rek met langzaam zakken."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Schuinbankdrukken met dumbbells",
+  "description": "Een drukbeweging op een schuine bank met nadruk op de bovenborst.",
+  "instructions": [
+   "Zet de bank op 30 graden, dumbbells op schouderhoogte.",
+   "Duw omhoog en naar elkaar tot gestrekte armen.",
+   "Zak gecontroleerd tot schouderhoogte.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Voeten vast en schouderbladen terug.",
+   "Tik de dumbbells niet tegen elkaar.",
+   "Zak tot een lichte rek in de borst."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Incline push-up",
+  "description": "Een beginnersvriendelijke push-up met de handen op een bank of step.",
+  "instructions": [
+   "Zet de handen op schouderbreedte op een verhoging.",
+   "Strek de benen naar achteren in plankhouding.",
+   "Breng de borst naar de bank door de ellebogen te buigen.",
+   "Duw terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Span de buik zodat de heupen niet zakken.",
+   "Hoe hoger het vlak, hoe makkelijker.",
+   "Controleer dat de bank niet schuift."
+  ]
+ },
+ "inverted-row": {
+  "name": "Omgekeerd roeien",
+  "description": "Een horizontale trekoefening onder een vaste stang, met de borst naar de stang en een stijf lichaam.",
+  "instructions": [
+   "Zet een stang op ongeveer taillehoogte in het rek.",
+   "Lig eronder en pak bovenhands iets breder dan de schouders.",
+   "Hang met gestrekte armen, hielen op de grond, lichaam recht.",
+   "Trek de borst naar de stang en knijp de schouderbladen samen.",
+   "Zak gecontroleerd tot gestrekt.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Core aangespannen — heupen niet laten zakken.",
+   "Zwaarder: voeten hoger; lichter: voeten dichter bij de stang.",
+   "Pauzeer boven met de borst aan de stang."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Tibialis raise met kettlebell",
+  "description": "Een scheenoefening zittend op een bank met een kettlebell aan de voorvoet. De tenen tegen het gewicht optrekken versterkt de voorkant van het onderbeen.",
+  "instructions": [
+   "Zit op het uiteinde van een bank met één been gestrekt, hiel op de grond.",
+   "Hang een kettlebell aan de handgreep over de voorvoet.",
+   "Trek de tenen zo ver als prettig naar het scheenbeen, hiel op de grond.",
+   "Houd boven kort vast.",
+   "Laat de voet langzaam zakken tot de tenen omlaag wijzen.",
+   "Maak de herhalingen en wissel."
+  ],
+  "tips": [
+   "Beweeg alleen de enkel; knie en bovenbeen stil.",
+   "Begin licht en bouw langzaam op; deze spieren vermoeien snel.",
+   "Zak langzaam in plaats van te laten vallen."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Knielend roeien aan de kabel",
+  "description": "Kabelroeien geknield rechtop, zonder zwaai uit de heupen, met constante spanning in de bovenrug.",
+  "instructions": [
+   "Zet de katrol op borsthoogte met een touw of dubbele D-greep.",
+   "Kniel rechtop ver genoeg dat de gewichten niet raken.",
+   "Houd de greep met twee handen gestrekt voor de borst.",
+   "Trek naar het borstbeen met de ellebogen naar achteren en schouderbladen samen.",
+   "Ga gecontroleerd terug in de rek.",
+   "Herhaal het aanbevolen aantal."
+  ],
+  "tips": [
+   "Blijf rechtop: leun niet achterover.",
+   "Geknield moet de core de rotatie bij elke trek weerstaan."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Push-up op de knieën",
+  "description": "Een beginnersvriendelijke push-up met de knieën op de grond om het bovenlichaam te ontlasten.",
+  "instructions": [
+   "Begin in push-uphouding met de knieën op de grond.",
+   "Handen op schouderbreedte.",
+   "Lichaam recht van knieën tot schouders.",
+   "Breng de borst naar de grond.",
+   "Duw terug naar de start.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Spreid de ellebogen niet te ver.",
+   "Span billen en buik aan.",
+   "Kijk naar de grond voor een neutrale nek."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Zijwaarts heffen met dumbbells",
+  "description": "Een isolatie voor de zijkant van de schouder voor meer breedte.",
+  "instructions": [
+   "Sta met de dumbbells langs je zij.",
+   "Til de dumbbells opzij tot de armen evenwijdig aan de grond zijn.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Ellebogen licht gebogen.",
+   "Leid met de ellebogen, niet de handen."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Lat pulldown",
+  "description": "Een oefening aan de katrol voor de latissimus.",
+  "instructions": [
+   "Zit met de bovenbenen onder de rollen.",
+   "Pak de brede stang bovenhands.",
+   "Trek naar de bovenborst en span de lats aan.",
+   "Breng langzaam terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Begin met de schouderbladen omlaag, niet met de ellebogen.",
+   "Niet wiegen met de romp.",
+   "Ellebogen omlaag en naar achteren, niet naar buiten."
+  ]
+ },
+ "leg-curl": {
+  "name": "Liggende leg curl",
+  "description": "Een isolatie voor de hamstrings op de legcurlmachine.",
+  "instructions": [
+   "Lig op je buik met de enkels onder de rol.",
+   "Breng de hielen naar de billen.",
+   "Span boven de hamstrings aan.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de heupen op de bank.",
+   "Trek de onderrug niet hol.",
+   "Kies een gewicht voor volledig bereik."
+  ]
+ },
+ "leg-extension": {
+  "name": "Leg extension",
+  "description": "Een isolatie voor de quadriceps op de machine.",
+  "instructions": [
+   "Zit met de enkels achter de rol.",
+   "Strek de benen tot ze recht zijn.",
+   "Span boven de quadriceps aan.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Lijn de knieën uit met de draaias.",
+   "Til zonder te slingeren.",
+   "Houd de grepen vast voor een stabiel bekken."
+  ]
+ },
+ "leg-press": {
+  "name": "Legpress",
+  "description": "Een samengestelde machinebeweging voor quadriceps en billen.",
+  "instructions": [
+   "Zit in de legpress, voeten op schouderbreedte.",
+   "Ontgrendel en zak door de knieën te buigen.",
+   "Duw tot bijna gestrekte benen.",
+   "Zet de knieën niet op slot.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Onderrug steeds tegen de leuning.",
+   "Zak zolang het bekken blijft liggen.",
+   "Knieën in lijn met de tenen."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Calf raise op de legpress",
+  "description": "Calf raise door de plaat van de legpress met de voorvoeten te duwen.",
+  "instructions": [
+   "Benen bijna gestrekt, alleen de voorvoet op de rand.",
+   "Ontgrendel en laat de hielen zakken.",
+   "Duw met de voorvoeten tot op de tenen.",
+   "Houd even vast en zak gecontroleerd."
+  ],
+  "tips": [
+   "Zet de knieën niet op slot.",
+   "Volledig bereik en pauze onderin: daar zit de prikkel."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Liggend beenheffen",
+  "description": "Beide benen heffen op je rug voor onderbuik en heupbuigers.",
+  "instructions": [
+   "Lig op je rug, benen samen en gestrekt, handen onder de billen of opzij.",
+   "Druk de onderrug in de grond door de buik aan te spannen.",
+   "Til de benen tot verticaal zonder zwaai.",
+   "Zak langzaam zonder de grond te raken of hol te trekken."
+  ],
+  "tips": [
+   "Komt de onderrug los, buig de knieën.",
+   "Controleer het zakken: dat traint de buik het meest."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Rugstrekken op de machine",
+  "description": "Een zittende isolatie voor de onderrug: met vaste heupen en benen duwt de romp een rol naar achteren en strekt de wervelkolom tegen het gewicht.",
+  "instructions": [
+   "Zit met de voeten op de plaat en zet de rol op de bovenrug, net onder de schouderbladen.",
+   "Pak de grepen en laat de romp iets naar voren komen: de start.",
+   "Duw tegen de rol en strek tot de onderrug volledig aanspant.",
+   "Pauzeer kort en ga gecontroleerd terug tegen het gewicht.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Rol net onder de schouderbladen: hoger drukt op de nek, lager verlies je bereik.",
+   "Strek vanuit de onderrug zonder hoofd en schouders te gooien, langzaam in beide richtingen.",
+   "Stop in neutrale stand zonder verder te forceren en begin licht: de onderrug reageert beter op gecontroleerde herhalingen."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Bicepscurl op de machine",
+  "description": "Een bicepscurl op de machine voor geïsoleerde armtraining.",
+  "instructions": [
+   "Zit en stel het kussen af op je armlengte.",
+   "Pak de grepen onderhands.",
+   "Breng de grepen naar de schouders.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Ellebogen steeds op het kussen.",
+   "Trek de schouders niet op.",
+   "Zak tot bijna gestrekt zonder spanning te verliezen."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Calf raise op de machine",
+  "description": "Een staande machine-isolatie voor de kuiten over het volle enkelbereik.",
+  "instructions": [
+   "Ga op de kuitmachine staan met de voorvoeten op de plaat.",
+   "Zet de schouderkussens stevig.",
+   "Zak met de hielen onder de plaat voor volle rek.",
+   "Duw via de voorvoet omhoog.",
+   "Span de kuiten boven aan.",
+   "Zak gecontroleerd en herhaal."
+  ],
+  "tips": [
+   "Niet stuiteren onderin.",
+   "Knieën gestrekt zonder op slot.",
+   "Kom recht omhoog zonder de enkels naar buiten te kantelen."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Butterfly machine",
+  "description": "Een machine-isolatie voor de borst die de armen in een boog samenbrengt.",
+  "instructions": [
+   "Stel de stoel zo dat de armen op borsthoogte zijn.",
+   "Houd de armen met licht gebogen ellebogen.",
+   "Breng ze voor de borst samen in een vloeiende boog.",
+   "Span de borst maximaal aan.",
+   "Ga gecontroleerd terug zonder het gewicht te laten vallen.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Houd de lichte buiging constant.",
+   "Richt je op de borst in plaats van met de armen te duwen.",
+   "Controleer de terugweg."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Reverse fly machine",
+  "description": "Een zittende machine voor de achterste schouders, ook reverse pec deck: met het gezicht naar het kussen breng je de grepen naar buiten en achter. Het kussen houdt de romp stil zodat achterste schouders en spieren tussen de schouderbladen werken.",
+  "instructions": [
+   "Stel de stoel zo dat de grepen op schouderhoogte zijn, borst tegen het kussen.",
+   "Armen gestrekt vooruit, ellebogen licht gebogen.",
+   "Schouders laag, romp aangespannen.",
+   "Breng de grepen in een wijde boog naar achteren tot in lijn met de schouders.",
+   "Knijp de schouderbladen samen zonder de borst los te laten.",
+   "Breng de grepen langzaam terug naar voren en herhaal het geplande aantal."
+  ],
+  "tips": [
+   "Leid met de ellebogen zodat de achterste schouders werken en niet de biceps.",
+   "Borst op het kussen, nek ontspannen; anders gaat de last naar de trapezius.",
+   "Kies een gewicht dat je gecontroleerd terugbrengt; licht en langzaam werkt beter dan zwaar en zwaaiend."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Zittende crunch op de machine",
+  "description": "Een buikisolatie op een zittende machine die de wervelkolom tegen weerstand buigt.",
+  "instructions": [
+   "Zit en pak de grepen.",
+   "Zet het borstkussen tegen de romp.",
+   "Span de buik en buig naar voren en omlaag.",
+   "Span aan het eind aan.",
+   "Ga gecontroleerd terug.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Begin met de buik, niet met de armen.",
+   "Adem uit bij het buigen.",
+   "Geen zwaai."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Shoulder press machine",
+  "description": "Een overhead drukbeweging op de machine voor de schouders.",
+  "instructions": [
+   "Zit met de rug tegen het kussen.",
+   "Pak de grepen op schouderhoogte.",
+   "Duw boven het hoofd tot gestrekte armen.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Trek de onderrug niet hol.",
+   "Zet de ellebogen boven niet met een klap op slot.",
+   "Polsen vast, in lijn met de onderarmen."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negatieve pull-ups",
+  "description": "De langzame daalfase van de pull-up, om kracht voor volledige pull-ups op te bouwen.",
+  "instructions": [
+   "Stap op een bank of spring tot de kin boven de stang is, greep iets breder dan de schouders.",
+   "Zak zonder steun heel langzaam, in drie tot vijf seconden.",
+   "Controleer tot de armen gestrekt zijn.",
+   "Kom met de bank of een sprong weer omhoog en herhaal."
+  ],
+  "tips": [
+   "Schouders weg van de oren.",
+   "Lukken vijf langzame herhalingen, probeer dan zonder hulp omhoog."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic hamstring curl",
+  "description": "Een kniebuigoefening waarbij je de romp vanuit kniestand naar voren laat zakken, excentrisch voor de hamstrings.",
+  "instructions": [
+   "Kniel op een matje met de enkels onder een vaste steun.",
+   "Romp rechtop en heupen gestrekt.",
+   "Laat je langzaam naar voren zakken en rem met de hamstrings.",
+   "Vang jezelf op met de handen vlak boven de grond.",
+   "Duw met de handen en trek jezelf terug.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Zak zo langzaam mogelijk: dat is het doel.",
+   "Heupen gestrekt; niet in de taille buigen.",
+   "Rem met de handen en duw licht terwijl je sterker wordt."
+  ]
+ },
+ "ohp": {
+  "name": "Overhead press met halterstang",
+  "description": "Een samengestelde overhead drukbeweging voor schouders en triceps.",
+  "instructions": [
+   "Sta op schouderbreedte met de stang bij de sleutelbeenderen.",
+   "Span de core en duw boven het hoofd.",
+   "Strek de ellebogen met de stang boven het midden van de voet.",
+   "Zak tot de sleutelbeenderen.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Leun niet te ver achterover.",
+   "Span de billen voor stabiliteit."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Eenarmig zittend kabelroeien",
+  "description": "Eenarmig zittend kabelroeien voor lats en bovenrug, romp recht terwijl het schouderblad gecontroleerd voor en achter schuift.",
+  "instructions": [
+   "Zit met gestrekte werkarm aan de greep.",
+   "Voeten stevig, rechtop en aangespannen zonder achterover te leunen.",
+   "Trek naar de onderste ribben en trek het schouderblad terug.",
+   "Pauzeer zonder te draaien of de schouder op te trekken.",
+   "Strek gecontroleerd, maak de set af en wissel."
+  ],
+  "tips": [
+   "Houd beide schouders naar voren.",
+   "Breng de elleboog dicht langs het lichaam naar achteren.",
+   "Laat het schouderblad aan het begin naar voren zonder de onderrug rond te maken."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Overhead triceps extension met dumbbell",
+  "description": "Een triceps-isolatie met nadruk op de lange kop.",
+  "instructions": [
+   "Sta of zit met een dumbbell met twee handen boven het hoofd.",
+   "Laat hem achter het hoofd zakken door de ellebogen te buigen.",
+   "Strek de armen terug.",
+   "Ellebogen dicht bij het hoofd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Alleen de onderarmen bewegen.",
+   "Trek de onderrug niet hol bij het zakken.",
+   "Pak de dumbbell met beide handpalmen onder de bovenste schijf."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dips aan de brug",
+  "description": "Een lichaamsgewichtoefening aan de brug voor borst, triceps en schouders.",
+  "instructions": [
+   "Steun met gestrekte armen op de brug, lichaam vrij.",
+   "Leun iets naar voren en buig gecontroleerd.",
+   "Stop met de schouders op ellebooghoogte, zonder in het gewricht te zakken.",
+   "Duw met borst en triceps tot gestrekt."
+  ],
+  "tips": [
+   "Lukken nette sets niet, gebruik de geassisteerde machine of banden.",
+   "Zak niet verder dan je schouder pijnvrij toelaat."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Bankdrukken met pauze",
+  "description": "Bankdrukken met een pauze van een tot twee seconden op de borst, zonder stuiter, voor meer kracht uit de start.",
+  "instructions": [
+   "Lig met voeten vast, schouderbladen samen, stang boven de borst, iets breder dan de schouders.",
+   "Zak gecontroleerd tot op de borst.",
+   "Houd de stang een tot twee seconden stil zonder te ontspannen.",
+   "Duw omhoog tot de ellebogen gestrekt zijn."
+  ],
+  "tips": [
+   "Neem 10 tot 15 % minder dan normaal.",
+   "Laat iemand spotten of gebruik de pennen."
+  ]
+ },
+ "pause-squat": {
+  "name": "Squat met pauze",
+  "description": "Squat met pauze op het diepste punt, voor controle en kracht zonder vering.",
+  "instructions": [
+   "Stang op de bovenrug, voeten op schouderbreedte, tenen licht naar buiten.",
+   "Zak gecontroleerd, rug neutraal, knieën in lijn met de voeten.",
+   "Houd het diepste punt een tot drie seconden vast zonder te ontspannen.",
+   "Duw met de voeten tot rechtop."
+  ],
+  "tips": [
+   "Verlaag het gewicht ten opzichte van je gewone squat.",
+   "Niet veren na de pauze: duw gelijkmatig."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Een isolatiemachine voor de borst met beweegbare grepen via horizontale adductie.",
+  "instructions": [
+   "Zit in de pec deck met open armen en licht gebogen ellebogen.",
+   "Stel de stoel zo dat de grepen op het midden van de borst zijn.",
+   "Breng de grepen voor de borst samen.",
+   "Houd de spanning kort vast.",
+   "Ga gecontroleerd terug naar de start.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Laat de armen niet te ver naar achteren gaan.",
+   "Houd rug en schouders tegen de leuning.",
+   "Adem uit bij het sluiten en in bij het openen."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay row",
+  "description": "Explosief roeien met de stang, elke herhaling vanaf de grond, romp evenwijdig aan de grond.",
+  "instructions": [
+   "Voeten onder de stang, romp bijna horizontaal, pak iets breder dan de schouders met neutrale rug.",
+   "Trek krachtig tot de onderborst met een stille romp.",
+   "Zet de stang gecontroleerd neer en pauzeer even.",
+   "Zet je rug opnieuw en herhaal vanaf de grond."
+  ],
+  "tips": [
+   "De romp gaat niet op en neer: beweegt hij, dan is het te zwaar.",
+   "Elke herhaling begint met een stille stang op de grond."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike push-up",
+  "description": "Push-up in omgekeerde V, die de last zonder materiaal van borst naar schouders verlegt.",
+  "instructions": [
+   "Handen op schouderbreedte en heupen omhoog in een omgekeerde V, benen bijna gestrekt.",
+   "Buig de ellebogen en breng het hoofd tussen de handen.",
+   "Stop vlak boven de grond zonder te rusten.",
+   "Duw tot de ellebogen gestrekt zijn."
+  ],
+  "tips": [
+   "Hoe dichter de voeten bij de handen, hoe zwaarder.",
+   "Houd de heupen hoog."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol squat",
+  "description": "Diepe eenbenige squat met het andere been vooruit, alleen lichaamsgewicht.",
+  "instructions": [
+   "Sta op één been, het andere vooruit, armen gestrekt voor balans.",
+   "Buig het standbeen gecontroleerd, hiel aan de grond.",
+   "Zak zo diep als de techniek toelaat, vrije been vooruit.",
+   "Duw met de voet terug tot stand; herhaal en wissel."
+  ],
+  "tips": [
+   "Begin met een steun vasthouden of op een box gaan zitten.",
+   "Knie in lijn met de voet."
+  ]
+ },
+ "plank": {
+  "name": "Plank",
+  "description": "Isometrische core-oefening: houd het lichaam recht op onderarmen en tenen.",
+  "instructions": [
+   "Onderarmen op de grond, ellebogen onder de schouders, benen gestrekt.",
+   "Til het lichaam tot een rechte lijn van hoofd tot hielen.",
+   "Span buik en billen aan, onderrug neutraal, heupen niet laten zakken.",
+   "Adem normaal en houd de aangegeven tijd vast."
+  ],
+  "tips": [
+   "Begin met korte, nette sets voordat je verlengt.",
+   "Zakt de onderrug door, knieën neer of korter vasthouden."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip thrust op schijvenmachine",
+  "description": "Een hip thrust op een schijvenmachine: leuning en plaat zetten je positie vast, zonder bank op te bouwen.",
+  "instructions": [
+   "Belaad beide kanten gelijk, bovenrug tegen de leuning, voeten plat op de plaat.",
+   "Breng het kussen of de stang op de heupen, in de heupplooi en niet op de buik.",
+   "Zet de voeten zo dat de schenen verticaal zijn met de heupen boven, en houd de grepen vast.",
+   "Duw de heupen omhoog en knijp de billen tot bovenbenen en romp in lijn zijn, houd even vast.",
+   "Zak gecontroleerd tot vlak voor het eind en herhaal."
+  ],
+  "tips": [
+   "Leg het kussen in de heupplooi. Op de buik is het enige echte ongemak van deze machine, en dat los je op door te verschuiven, niet met meer vulling.",
+   "Eindig met de heupen, niet met de onderrug. Gaan de ribben boven open, dan is de heupstrekking klaar en trek je hol: dan traint de machine de billen niet meer.",
+   "Dit is de hip thrust als bank en stang bezet zijn: leuning en plaat horen bij het frame, dus je kunt niets verkeerd opbouwen."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Preacher curl",
+  "description": "Een curlvariant op de preacherbank om de biceps te isoleren.",
+  "instructions": [
+   "Zit met de armen op het kussen van de preacherbank.",
+   "Houd een EZ-stang onderhands.",
+   "Breng de stang naar je schouders.",
+   "Zak gecontroleerd tot bijna gestrekt.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Niet stuiteren onderin.",
+   "Houd de polsen neutraal op de EZ-stang.",
+   "Til zonder zwaai van schouders of rug."
+  ]
+ },
+ "pull-up": {
+  "name": "Pull-up",
+  "description": "Een samengestelde lichaamsgewichtoefening voor lats en biceps.",
+  "instructions": [
+   "Hang bovenhands, iets breder dan de schouders.",
+   "Trek tot de kin boven de stang is.",
+   "Zak gecontroleerd tot volledig hangen.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Niet zwaaien of vaart gebruiken.",
+   "Activeer de lats door de ellebogen omlaag te trekken."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Schouderdrukken met beenzet, waarmee je meer beweegt dan bij een strikte overhead press.",
+  "instructions": [
+   "Sta met de stang op bovenborst en schouders, ellebogen iets naar voren, voeten op heupbreedte.",
+   "Buig licht de knieën met rechte romp en strek krachtig.",
+   "Benut de zet om tot gestrekte armen te duwen.",
+   "Laat de stang gecontroleerd naar de borst zakken en veer met de benen."
+  ],
+  "tips": [
+   "De zet komt uit de benen, niet uit achterover leunen.",
+   "Eindig met de stang boven de kruin en een stabiel lichaam."
+  ]
+ },
+ "push-up": {
+  "name": "Push-up",
+  "description": "Een basisoefening met lichaamsgewicht voor borst, schouders en triceps.",
+  "instructions": [
+   "Begin in hoge plank, handen op schouderbreedte.",
+   "Zak tot de borst bijna de grond raakt.",
+   "Duw terug omhoog.",
+   "Houd het lichaam steeds recht.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Span buik en billen aan zodat de heupen niet zakken.",
+   "Ellebogen dicht bij de romp, niet te wijd.",
+   "Nek neutraal, blik naar de grond."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack pull",
+  "description": "Gedeeltelijke deadlift vanaf kniehoogte, die bovenrug en heupstrekking overbelast.",
+  "instructions": [
+   "Leg de stang op pennen op kniehoogte of iets lager, voeten op heupbreedte.",
+   "Pak vast, span rug en buik en duw de grond weg.",
+   "Strek heupen en knieën tegelijk tot rechtop, schouders naar achteren.",
+   "Zet gecontroleerd terug op de pennen."
+  ],
+  "tips": [
+   "Zet de pennen zo hoog dat de rug neutraal kan blijven.",
+   "Overstrek de onderrug niet aan het eind."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Reverse lunge met dumbbells",
+  "description": "Een uitvalspasvariant met stap achteruit voor stabielere knieën.",
+  "instructions": [
+   "Sta met dumbbells langs je zij.",
+   "Stap met één been achteruit en zak met de knie naar de grond.",
+   "Zak tot het voorste bovenbeen evenwijdig is.",
+   "Duw via de voorste hiel terug omhoog.",
+   "Herhaal aan beide kanten."
+  ],
+  "tips": [
+   "Stap ver genoeg dat de voorste knie niet voorbij de voet komt.",
+   "Romp rechtop, dumbbells dichtbij.",
+   "Doe evenveel herhalingen per been."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Reverse nordic curl",
+  "description": "Een quadricepsoefening met lichaamsgewicht op de knieën, romp gecontroleerd achterover met gestrekte heupen.",
+  "instructions": [
+   "Kniel op een kussen, knieën op heupbreedte, schenen op de grond, romp rechtop.",
+   "Heupen gestrekt en core aan.",
+   "Leun langzaam achterover met het lichaam in lijn.",
+   "Zak zover je quadriceps controleren.",
+   "Kom terug.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Heupen steeds gestrekt, niet knikken.",
+   "Zak alleen zolang je controleert.",
+   "Gebruik een kussen onder de knieën."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Roemeense deadlift",
+  "description": "Een heupscharnierbeweging met nadruk op hamstrings en billen.",
+  "instructions": [
+   "Sta met de stang op heuphoogte, bovenhands.",
+   "Breng de heupen naar achteren en buig de romp, knieën bijna vast.",
+   "Laat de stang langs de benen zakken tot je de hamstrings voelt.",
+   "Duw de heupen naar voren om op te staan.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Maak de onderrug niet rond.",
+   "Zak alleen zover je houding blijft.",
+   "Span de lats aan om de stang dichtbij te houden."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Roeimachine",
+  "description": "Een cardio-oefening voor het hele lichaam op de roeimachine: elke haal duwt met de benen, leunt de romp achterover en trekt de greep naar de ribben, in een doorlopende cyclus.",
+  "instructions": [
+   "Zit, maak de voeten vast met de banden en pak de greep bovenhands.",
+   "Glijd naar voren in de inpik: schenen verticaal, romp iets voor de heupen, armen gestrekt.",
+   "Duw eerst met de benen tot ze bijna gestrekt zijn.",
+   "Leun voorbij verticaal en trek dan naar de onderste ribben, ellebogen langs de zij.",
+   "Keer de volgorde om bij het terugglijden — armen, romp, dan knieën — tot de volgende inpik.",
+   "Ga door voor de gewenste tijd, afstand of aantal halen."
+  ],
+  "tips": [
+   "Houd de volgorde aan: benen, romp, armen bij de haal; armen, romp, benen bij het herstel. Te vroeg armen buigen verspilt het sterkste deel.",
+   "Rug vlak en core aan: een ronde onderrug in de inpik maakt van roeien rugpijn in plaats van conditie.",
+   "Trek recht en horizontaal naar de onderste ribben en herstel ongeveer twee keer zo langzaam."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Zittende overhead press met halterstang",
+  "description": "Zittend schouderdrukken met de stang met rugsteun, om het werk op de schouders te richten.",
+  "instructions": [
+   "Zit op een bank met verticale leuning, pak iets breder en leg de stang op de bovenborst.",
+   "Duw recht omhoog tot gestrekte ellebogen.",
+   "Stang boven de kruin, ribben laag.",
+   "Zak gecontroleerd tot het sleutelbeen."
+  ],
+  "tips": [
+   "Span billen en buik zodat je niet hol trekt.",
+   "Beweeg het hoofd naar achteren voor de stang, zonder de nek te forceren."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Zittend kabelroeien",
+  "description": "Een rugoefening op de kabelroeier: zittend een greep naar de romp trekken.",
+  "instructions": [
+   "Zit en zet de voeten op de steunen.",
+   "Houd de greep en zit rechtop met lichte voorwaartse hoek.",
+   "Trek de ellebogen naar achteren tot de onderbuik.",
+   "Knijp aan het eind de schouderbladen samen.",
+   "Strek de armen gecontroleerd terug.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Romp rechtop met weinig zwaai.",
+   "Ellebogen recht naar achteren, niet opzij.",
+   "Knijp aan het eind de schouderbladen samen."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Zittende calf raise op de machine",
+  "description": "Zittende calf raise op de machine, gericht op de soleus.",
+  "instructions": [
+   "Zit met de kussens op de bovenbenen.",
+   "Laat de hielen zo ver mogelijk zakken.",
+   "Kom op de voorvoeten.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "De gebogen knie ontspant de gastrocnemius, dus werkt de soleus meer.",
+   "Gebruik het volle bereik."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Zittende calf raise met dumbbells",
+  "description": "Zittende calf raise met dumbbells op de bovenbenen, voor de soleus met gebogen knie.",
+  "instructions": [
+   "Zit met de voorvoeten op een step, een dumbbell op elk bovenbeen bij de knie.",
+   "Laat de hielen diep zakken voor rek.",
+   "Til de hielen via de voorvoet zo hoog mogelijk.",
+   "Houd boven even vast en zak gecontroleerd."
+  ],
+  "tips": [
+   "Houd de dumbbells vast zodat ze niet schuiven.",
+   "De gebogen knie verlegt het werk naar de soleus."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Zittend zijwaarts heffen met dumbbells",
+  "description": "Zittend zijwaarts heffen voor de zijkant van de schouder zonder beenzwaai.",
+  "instructions": [
+   "Zit met een dumbbell aan elke kant.",
+   "Rug rechtop en core aan.",
+   "Til beide tot schouderhoogte.",
+   "Ellebogen licht gebogen.",
+   "Zak gecontroleerd.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Neem licht om strikt te blijven.",
+   "Leid met de ellebogen.",
+   "Til tot schouderhoogte en zak gecontroleerd."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Zittende leg curl",
+  "description": "Een zittende hamstringisolatie op de machine met constante spanning en minder heupbuiger dan liggend.",
+  "instructions": [
+   "Stel leuning en enkelrol zo dat de knieën op de draaias liggen.",
+   "Zit rechtop, achterkant van de enkels op de rol, handen aan de grepen.",
+   "Buig de benen omlaag en achter onder de stoel zover mogelijk.",
+   "Pauzeer bij maximale spanning en ga langzaam terug.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Houd de rug stevig tegen de leuning.",
+   "Trek de voeten licht naar de schenen voor meer activatie.",
+   "Controleer de excentrische fase — laat het gewicht de benen niet terugsnellen."
+  ]
+ },
+ "shrug": {
+  "name": "Shrug met halterstang",
+  "description": "Een isolatie voor de bovenste trapezius.",
+  "instructions": [
+   "Sta met de stang aan gestrekte armen, bovenhands.",
+   "Trek de schouders recht naar de oren.",
+   "Houd boven kort vast.",
+   "Zak gecontroleerd.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Verticaal, zonder cirkels.",
+   "Gebruik de armen niet; ellebogen gestrekt.",
+   "Geen beenzet om meer te tillen."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Heupabductie in zijligging",
+  "description": "Een lichaamsgewichtisolatie voor de middelste bilspier en abductoren.",
+  "instructions": [
+   "Lig op je zij met de benen gestapeld.",
+   "Onderste been licht gebogen.",
+   "Til het bovenste been naar het plafond.",
+   "Zak gecontroleerd.",
+   "Herhaal aan beide kanten."
+  ],
+  "tips": [
+   "Heupen gestapeld houden.",
+   "Kantel het bekken niet."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Heupadductie in zijligging",
+  "description": "Een adductie in zijligging waarbij het onderste been tegen de zwaartekracht omhoog gaat.",
+  "instructions": [
+   "Lig op je zij met het onderste been gestrekt.",
+   "Buig het bovenste been en zet de voet voor het onderste bovenbeen.",
+   "Steun het hoofd met de onderste arm.",
+   "Til het onderste been.",
+   "Zak gecontroleerd.",
+   "Maak één kant af en wissel."
+  ],
+  "tips": [
+   "Alleen het been beweegt.",
+   "Til zonder zwaai en zak langzaam.",
+   "Lijn schouders, heupen en voeten uit voor je begint."
+  ]
+ },
+ "side-plank": {
+  "name": "Side plank",
+  "description": "Een side plank voor de schuine buikspieren en zijcore.",
+  "instructions": [
+   "Lig op je zij met de onderarm op de grond, elleboog onder de schouder.",
+   "Til de heupen tot een rechte lijn.",
+   "Houd vast met aangespannen core.",
+   "Adem rustig.",
+   "Herhaal aan beide kanten."
+  ],
+  "tips": [
+   "Laat de heupen niet zakken.",
+   "Schouders en heupen in één vlak.",
+   "Duw de grond weg met de onderarm zodat je niet in de schouder hangt."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Eenarmige dumbbell row",
+  "description": "Een eenzijdige rugoefening met dumbbell voor gelijke ontwikkeling.",
+  "instructions": [
+   "Steun met één knie en hand op een bank.",
+   "Dumbbell in de andere hand met gestrekte arm.",
+   "Trek naar de heup en knijp het schouderblad.",
+   "Zak gecontroleerd.",
+   "Herhaal aan beide kanten."
+  ],
+  "tips": [
+   "Draai de romp niet; bekken stabiel.",
+   "Trek de schouder niet naar het oor.",
+   "Evenveel herhalingen per arm."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Eenarmig zijwaarts heffen op schijvenmachine",
+  "description": "Zijwaarts heffen op de schijvenmachine, één arm tegelijk, zodat elke kant zijn eigen last tilt.",
+  "instructions": [
+   "Stel de stoelhoogte zo dat de draaias bij de schouder ligt en belaad alleen de werkkant.",
+   "Zit tegen de leuning met de buitenkant van de werkarm tegen het kussen.",
+   "Houd met de vrije hand de greep of leg hem op schoot, romp recht op de stoel.",
+   "Duw naar buiten en omhoog tot schouderhoogte en zak gecontroleerd.",
+   "Maak die kant af, belaad dan de andere."
+  ],
+  "tips": [
+   "Maak de kanten gelijk op de zwakke arm, niet op de sterke: die bepaalt het aantal.",
+   "Laat de romp niet naar de werkkant leunen, anders wordt het een zijbuiging.",
+   "Begin met de zwakke arm en geef beide evenveel rust."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Eenbenige glute bridge",
+  "description": "Eenbenige glute bridge, zwaarder zonder extra materiaal.",
+  "instructions": [
+   "Lig op je rug, één knie gebogen met voet op de grond, ander been gestrekt in de lucht.",
+   "Duw via de hiel en til de heupen in lijn met schouder en knie.",
+   "Span de bil boven even aan zonder hol te trekken.",
+   "Zak zonder neer te leggen; maak de herhalingen en wissel."
+  ],
+  "tips": [
+   "Houd het bekken recht.",
+   "Is het lastig, begin met twee benen."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Skull crusher",
+  "description": "Een liggende triceps-extensie met de stang over het volle bereik.",
+  "instructions": [
+   "Lig op een vlakke bank met de stang boven de borst, smalle greep.",
+   "Breng de stang naar het voorhoofd door de ellebogen te buigen.",
+   "Strek de armen terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Houd de bovenarmen verticaal.",
+   "Zak langzaam voor de ellebogen."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Bankdrukken in de smithmachine",
+  "description": "Bankdrukken in de smithmachine, geleide baan met minder stabilisatie.",
+  "instructions": [
+   "Lig op een vlakke bank in de smithmachine.",
+   "Pak iets breder dan de schouders en ontgrendel.",
+   "Zak gecontroleerd naar het midden van de borst.",
+   "Pauzeer kort zonder stuiter.",
+   "Duw de stang omhoog tot de armen volledig gestrekt zijn.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Zet de bank zo dat de stang midden op de borst komt.",
+   "Voeten vast de hele set.",
+   "Leer de polsdraai om de stang te haken voordat je zwaar gaat."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Calf raise in de smithmachine",
+  "description": "Staande calf raise met de geleide stang op de schouders.",
+  "instructions": [
+   "Sta onder de stang, voorvoeten op een step, stang op de bovenrug.",
+   "Ontgrendel en laat de hielen zakken.",
+   "Kom op de tenen met gestrekte benen zonder op slot.",
+   "Houd even vast en zak voor je de stang haakt."
+  ],
+  "tips": [
+   "De geleiding stabiliseert: gebruik dat voor meer gewicht.",
+   "Romp rechtop, blik vooruit."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Schuinbankdrukken in de smithmachine",
+  "description": "Een geleide schuinbankpress voor bovenborst en voorste schouder.",
+  "instructions": [
+   "Zet een bank van 30 tot 45 graden in de smithmachine.",
+   "Pak iets breder dan de schouders.",
+   "Ontgrendel en zak naar de bovenborst.",
+   "Pauzeer kort onderin.",
+   "Duw tot gestrekte armen.",
+   "Herhaal het gewenste aantal keren."
+  ],
+  "tips": [
+   "Stel de bank zo dat de stang bovenaan de borst komt.",
+   "Zonder stuiter op de borst.",
+   "Billen op de bank en voeten stevig."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Squat in de smithmachine",
+  "description": "Squat in de smithmachine: vaste baan, minder balans, benen en billen werken; handig zonder vrij rek.",
+  "instructions": [
+   "Zet de stang op schouderhoogte en ga eronder, voeten iets voor de stang.",
+   "Draai de polsen om te ontgrendelen, romp rechtop, core aan.",
+   "Zak tot de bovenbenen minstens evenwijdig zijn, knieën in lijn met de voeten.",
+   "Duw met de hele voet terug.",
+   "Draai na de set de polsen om te haken."
+  ],
+  "tips": [
+   "Voeten iets naar voren laat je dieper zakken zonder de hielen te tillen.",
+   "Zet de veiligheidsstops net onder je diepste punt."
+  ]
+ },
+ "squat": {
+  "name": "Back squat met halterstang",
+  "description": "Een samengestelde beenbeweging voor quadriceps, billen en hamstrings.",
+  "instructions": [
+   "Leg de stang op de bovenste trapezius.",
+   "Haal uit het rek, stap terug, voeten op schouderbreedte.",
+   "Span de core en zak tot de bovenbenen evenwijdig zijn.",
+   "Duw via de hielen terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Borst hoog de hele beweging.",
+   "Knieën naar buiten in lijn met de tenen."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Staande ab wheel rollout",
+  "description": "Ab wheel rollout vanuit stand met gestrekte benen en groot bereik.",
+  "instructions": [
+   "Sta met gestrekte benen, buig en zet het wiel met twee handen neer.",
+   "Rol met gestrekte armen en strakke buik bijna horizontaal.",
+   "Heupen in lijn zonder doorzakken.",
+   "Trek met de buik terug."
+  ],
+  "tips": [
+   "Begin geknield tot je het beheerst.",
+   "Stop voordat de onderrug doorzakt."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Staande calf raise",
+  "description": "Staande calf raise voor de gastrocnemius over het volle bereik.",
+  "instructions": [
+   "Sta op de rand van een plaat of kuitmachine.",
+   "Laat de hielen onder de plaat zakken.",
+   "Duw op de tenen.",
+   "Zak langzaam.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Pauzeer boven voor maximale spanning.",
+   "Helemaal zakken vergroot het bereik."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Staande heupabductie",
+  "description": "Zijwaarts beenheffen staand op één been, voor de middelste bilspier van het geheven been en de bekkenstabilisatoren.",
+  "instructions": [
+   "Sta rechtop, handen in de zij, voeten samen.",
+   "Verplaats het gewicht naar één been, knie licht gebogen.",
+   "Til het andere gestrekt opzij, tenen vooruit, romp rechtop.",
+   "Til alleen zo hoog als zonder naar de andere kant te leunen.",
+   "Zak langzaam naast de standvoet.",
+   "Maak de herhalingen en wissel."
+  ],
+  "tips": [
+   "Heupen recht en romp stil; weg leunen haalt werk van de heup.",
+   "Controleer ook de neergaande beweging; laat het been niet zwaaien.",
+   "Houd je vast aan muur of stoel; doe een band om de bovenbenen als het makkelijk wordt."
+  ]
+ },
+ "step-ups": {
+  "name": "Step-up",
+  "description": "Een eenbenige step-up op box of bank die quadriceps en billen functioneel traint.",
+  "instructions": [
+   "Sta voor een stevige box of bank.",
+   "Zet een hele voet erop.",
+   "Duw via die hiel omhoog.",
+   "Haal de achterste voet erbij.",
+   "Zet de achterste voet gecontroleerd terug, last op het werkbeen.",
+   "Wissel af of doe eerst één kant."
+  ],
+  "tips": [
+   "Hele voet op de box.",
+   "Zet af met het stijgende been, niet het achterste.",
+   "Controleer het dalen."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Straight-arm pulldown",
+  "description": "Een lat-isolatie aan de kabel met gestrekte armen.",
+  "instructions": [
+   "Sta voor de hoge katrol met een rechte stang.",
+   "Duw met bijna gestrekte armen in een boog naar de bovenbenen.",
+   "Span onderaan de lats aan.",
+   "Breng langzaam terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Armen bijna gestrekt.",
+   "Breng de stang in een boog naar de bovenbenen.",
+   "Span de lats aan in de laagste stand."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo deadlift",
+  "description": "Sumovariant met heel brede stand en smalle greep voor billen, adductoren en quadriceps.",
+  "instructions": [
+   "Voeten wijd, tenen naar buiten, stang boven het midden van de voet.",
+   "Handen binnen de benen, rug neutraal, borst hoog.",
+   "Duw de grond weg met de knieën naar buiten tot stand met de stang tegen je aan.",
+   "Sluit boven af en zak via dezelfde weg."
+  ],
+  "tips": [
+   "Stang steeds dichtbij.",
+   "Knieën volgen de tenen, niet naar binnen."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-bar row",
+  "description": "Een voorovergebogen T-bar row voor lats en rhomboïden met zware last.",
+  "instructions": [
+   "Sta over de stang op schouderbreedte.",
+   "Buig tot ongeveer 45 graden.",
+   "Pak de grepen, rug vlak.",
+   "Trek naar de borst met de ellebogen naar achteren.",
+   "Knijp boven de schouderbladen samen.",
+   "Zak gecontroleerd en herhaal."
+  ],
+  "tips": [
+   "Romp 45 graden, rug vlak.",
+   "Trek met de ellebogen, niet alleen de armen.",
+   "Schouderbladen samen bovenin."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Triceps pushdown aan de kabel",
+  "description": "Een triceps-isolatie aan de kabel.",
+  "instructions": [
+   "Sta voor de katrol met een rechte stang.",
+   "Pak de stang en zet de ellebogen in de zij.",
+   "Duw de stang omlaag tot de armen volledig gestrekt zijn.",
+   "Ga langzaam terug.",
+   "Herhaal."
+  ],
+  "tips": [
+   "Romp rechtop.",
+   "Alleen de onderarmen bewegen."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "TRX hamstring curl",
+  "description": "Deze suspensie-isolatie traint hamstrings, billen en kuiten door de hielen naar de billen te trekken.",
+  "instructions": [
+   "Lig op je rug met de hielen in de lussen, knieën 90 graden.",
+   "Til de heupen in lijn van knieën tot schouders.",
+   "Strek de benen met heupen hoog en core aan.",
+   "Trek de hielen naar de billen en span de hamstrings hard aan.",
+   "Controleer zonder de heupen te laten zakken."
+  ],
+  "tips": [
+   "Core aan zodat de heupen niet doorzakken.",
+   "Richt je op een sterke contractie aan het eind.",
+   "Controleer het strekken."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Lat pulldown met V-greep",
+  "description": "Lat pulldown met neutrale V-greep voor maximale rek en diepe contractie.",
+  "instructions": [
+   "Haak een V-greep aan de kabel van de lat pulldown.",
+   "Zit met vaste bovenbenen, palmen naar elkaar.",
+   "Begin met gestrekte armen boven je.",
+   "Trek naar het borstbeen, ellebogen omlaag en iets achter.",
+   "Span de lats onderaan en ga langzaam terug.",
+   "Herhaal het aanbevolen aantal."
+  ],
+  "tips": [
+   "De neutrale greep is vriendelijker voor de schouders.",
+   "Stel je voor dat je ribben naar de heupen gaan: denk aan de lats, niet de armen."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Walking lunge met dumbbells",
+  "description": "Afwisselende lopende uitvalspassen met dumbbells; quadriceps en billen per been.",
+  "instructions": [
+   "Een dumbbell in elke hand, armen ontspannen.",
+   "Stap ver en zak tot beide knieën 90 graden.",
+   "Duw met het voorste been en stap door.",
+   "Wissel de benen af en houd de romp rechtop over het hele traject."
+  ],
+  "tips": [
+   "Stappen lang genoeg dat de voorste knie niet ver voorbij de tenen komt.",
+   "Je hebt ruimte nodig; anders reverse lunges."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Dips met extra gewicht",
+  "description": "Dips met extra gewicht, dumbbell tussen de voeten of gewichtsvest.",
+  "instructions": [
+   "Steun met gestrekte armen, dumbbell tussen de enkels.",
+   "Leun iets en buig gecontroleerd.",
+   "Stop met de schouders op ellebooghoogte.",
+   "Duw tot gestrekte armen."
+  ],
+  "tips": [
+   "Beheers eerst dips met lichaamsgewicht.",
+   "Niet dieper dan je schouder verdraagt."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Pull-ups met extra gewicht",
+  "description": "Pull-up met extra gewicht, dumbbell tussen de voeten of vest.",
+  "instructions": [
+   "Pak iets breder, dumbbell tussen de enkels.",
+   "Trek de ellebogen tot de kin boven de stang is.",
+   "Lichaam stabiel.",
+   "Zak tot gestrekte armen."
+  ],
+  "tips": [
+   "Beheers eerst gewone pull-ups.",
+   "Met een vest: verhoog geleidelijk."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Zittend roeien met brede greep",
+  "description": "Kabelroeien met lange stang en brede greep voor bovenrug en achterste schouder.",
+  "instructions": [
+   "Zit bij de lage katrol, voeten gesteund, knieën licht gebogen, brede greep.",
+   "Rug recht, trek naar de onderborst met ellebogen naar buiten en achter.",
+   "Schouderbladen samen en even vasthouden.",
+   "Strek en laat de schouderbladen uit elkaar zonder te bollen."
+  ],
+  "tips": [
+   "Niet wiegen: de rug doet het werk.",
+   "Naar de borst, niet de buik."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher squat",
+  "description": "Squat met de stang in de elleboogplooi, last voorop en veel rompwerk.",
+  "instructions": [
+   "Stang in de elleboogplooien, onderarmen gekruist of vuisten samen.",
+   "Zak met borst hoog en ellebogen tegen je aan.",
+   "Stop met bovenbenen evenwijdig of iets lager.",
+   "Duw met de voeten tot rechtop."
+  ],
+  "tips": [
+   "Gebruik een pad of handdoek als het zeer doet.",
+   "Buik strak zodat je niet voorover kantelt."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Overhead press zittend op de grond met gestrekte benen, zonder steun, vraagt veel van de romp.",
+  "instructions": [
+   "Zit met gestrekte benen, stang op de bovenborst.",
+   "Romp rechtop en duw recht tot gestrekte armen.",
+   "Stang boven de kruin zonder achterover te leunen.",
+   "Zak gecontroleerd tot het sleutelbeen."
+  ],
+  "tips": [
+   "Minder gewicht dan staand: de romp stabiliseert.",
+   "Span billen en buik aan."
+  ]
+ }
+}
