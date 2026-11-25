@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Ruota per addominali",
+  "description": "Un esercizio per il core in cui si fa rotolare una ruota avanti e indietro, allenando l'antiestensione della colonna.",
+  "instructions": [
+   "Inginocchiati a terra e afferra le maniglie della ruota alla larghezza delle spalle.",
+   "Attiva con forza il core per tenere neutra la zona lombare.",
+   "Fai rotolare lentamente la ruota in avanti, allungando il corpo finché riesci a controllare.",
+   "Fermati prima che i fianchi cedano o la schiena si inarchi.",
+   "Riporta la ruota verso le ginocchia contraendo gli addominali."
+  ],
+  "tips": [
+   "Attiva il core prima di ogni ripetizione — non lasciare inarcare la zona lombare.",
+   "Aumenta l'ampiezza gradualmente, fermandoti prima che i fianchi cedano.",
+   "Usa una parete come fine corsa se non controlli la posizione bassa."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold press",
+  "description": "Lento con manubri con rotazione dei polsi, che coinvolge il deltoide in un'ampia escursione.",
+  "instructions": [
+   "Seduto con lo schienale dritto, tieni i manubri all'altezza del petto con i palmi verso di te e i gomiti in avanti.",
+   "Inizia a spingere in alto mentre apri i gomiti e ruoti i palmi in avanti.",
+   "Termina con le braccia distese sopra la testa senza bloccare i gomiti.",
+   "Scendi ruotando di nuovo i palmi verso di te fino alla posizione iniziale."
+  ],
+  "tips": [
+   "Esegui la rotazione in modo fluido, senza slanci.",
+   "Tieni la schiena appoggiata allo schienale."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Trazioni assistite",
+  "description": "Una trazione alla macchina assistita, che compensa parte del peso corporeo, per costruire la forza della schiena necessaria alle trazioni libere.",
+  "instructions": [
+   "Appoggia le ginocchia sul cuscino della macchina per trazioni assistite.",
+   "Afferra la sbarra con i palmi in avanti, poco più larga delle spalle.",
+   "Porta il petto verso la sbarra spingendo i gomiti in basso.",
+   "Scendi con controllo fino a restare appeso a braccia tese.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Inizia il movimento abbassando le scapole prima di piegare i gomiti.",
+   "Evita di dondolare per non togliere lavoro alla schiena.",
+   "Regola il contrappeso per completare tutte le ripetizioni con buona tecnica."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Leg curl con fitball",
+  "description": "Un leg curl a corpo libero con la fitball, portando i talloni verso i glutei mentre sollevi i fianchi.",
+  "instructions": [
+   "Sdraiati a terra con talloni e parte bassa dei polpacci sulla fitball e le braccia aperte per l'equilibrio.",
+   "Spingi sui talloni per sollevare i fianchi, in linea retta dalle spalle alle caviglie.",
+   "Tenendo i fianchi alti, piega le ginocchia per far rotolare la palla verso i glutei.",
+   "Distendi le gambe con controllo senza abbassare i fianchi.",
+   "Completa tutte le ripetizioni, poi abbassa i fianchi e lascia la palla."
+  ],
+  "tips": [
+   "I fianchi restano alti per tutta la serie: è un misto di ponte e curl.",
+   "Inizia con entrambi i piedi; passa a una gamba quando diventa facile."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Leg curl in piedi con elastico",
+  "description": "Un leg curl in piedi con un elastico alla caviglia, utile in viaggio o come finisher leggero per i femorali.",
+  "instructions": [
+   "Passa un elastico attorno a una caviglia e fissa l'altro capo sotto il piede d'appoggio o a un punto fisso davanti a te.",
+   "Stai dritto, tieniti a qualcosa se serve, con la gamba d'appoggio leggermente flessa.",
+   "Porta il tallone con l'elastico verso il gluteo tenendo ferma la coscia.",
+   "Contrai il femorale in alto, poi scendi con controllo fino al completo allungamento.",
+   "Completa tutte le ripetizioni da un lato e cambia gamba."
+  ],
+  "tips": [
+   "Tieni ferma la coscia — si muove solo la parte bassa della gamba.",
+   "Evita di far oscillare l'anca per slanciarti.",
+   "Usa un elastico più leggero se non controlli la discesa."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Lat pulldown con elastico",
+  "description": "Trazione verticale con un elastico fissato in alto, come alternativa al cavo.",
+  "instructions": [
+   "In piedi, con l'elastico fissato in alto (porta o sbarra) e un capo per mano, braccia tese sopra la testa.",
+   "Tira le mani in basso portando i gomiti ai fianchi, petto alto.",
+   "Stringi la schiena quando le mani arrivano all'altezza delle spalle.",
+   "Risali con controllo fino a distendere le braccia."
+  ],
+  "tips": [
+   "Non inclinare il busto indietro per tirare.",
+   "Controlla che l'ancoraggio sia saldo prima di iniziare."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Aperture con elastico",
+  "description": "Apertura di un elastico a braccia tese per attivare il retro della spalla e la parte alta della schiena.",
+  "instructions": [
+   "In piedi, tieni l'elastico con le mani alla larghezza delle spalle e le braccia tese davanti al petto.",
+   "Allarga le mani portando le braccia ai lati finché l'elastico tocca il petto.",
+   "Avvicina le scapole alla fine senza alzare le spalle.",
+   "Torna con controllo senza lasciarti tirare dall'elastico."
+  ],
+  "tips": [
+   "Scegli un elastico che consenta 15 o più ripetizioni pulite.",
+   "Tieni le costole chiuse per non inarcare la zona lombare."
+  ]
+ },
+ "band-row": {
+  "name": "Rematore con elastico",
+  "description": "Rematore seduto con un elastico fissato ai piedi, senza altro materiale.",
+  "instructions": [
+   "Seduto a terra con le gambe tese e l'elastico sotto le piante, un capo per mano.",
+   "Con la schiena dritta, tira le mani verso l'addome portando i gomiti indietro.",
+   "Avvicina le scapole alla fine del movimento.",
+   "Distendi le braccia con controllo senza perdere tensione."
+  ],
+  "tips": [
+   "Non dondolare per aiutarti con il busto.",
+   "Scegli un elastico per 12–15 ripetizioni pulite."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Lento avanti con elastico",
+  "description": "Lento in piedi su un elastico, per allenare il deltoide con pochissimo materiale.",
+  "instructions": [
+   "In piedi al centro dell'elastico, piedi alla larghezza dei fianchi e un capo per mano all'altezza delle spalle.",
+   "Spingi le mani in alto fino a distendere le braccia sopra la testa.",
+   "Tieni l'addome saldo e le costole chiuse.",
+   "Scendi con controllo alle spalle senza perdere tensione."
+  ],
+  "tips": [
+   "Non inarcare la schiena spingendo.",
+   "Fai un giro in più con l'elastico per aumentare la resistenza."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulgarian split squat con bilanciere",
+  "description": "Squat su una gamba con il piede dietro su una panca e il bilanciere sulla schiena.",
+  "instructions": [
+   "Appoggia il collo di un piede su una panca dietro di te, bilanciere sulla parte alta della schiena, l'altra gamba avanti.",
+   "Piega il ginocchio anteriore e scendi a busto eretto finché la coscia è parallela al suolo.",
+   "Tieni il peso sul tallone della gamba avanti.",
+   "Spingi con il piede avanti fino a distendere la gamba; completa le ripetizioni e cambia."
+  ],
+  "tips": [
+   "Regola la distanza perché il ginocchio avanti non superi molto la punta del piede.",
+   "Prova prima senza carico o con manubri."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Curl con bilanciere",
+  "description": "Un classico esercizio di isolamento per i bicipiti, con il bilanciere per il carico massimo.",
+  "instructions": [
+   "In piedi, tieni il bilanciere con presa supina alla larghezza delle spalle.",
+   "Porta il bilanciere verso le spalle.",
+   "Contrai in alto, poi scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Evita di oscillare con il busto.",
+   "Tieni i gomiti vicini ai fianchi."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Ponte per glutei con bilanciere",
+  "description": "Un ponte per glutei con bilanciere per più resistenza.",
+  "instructions": [
+   "Sdraiati con il bilanciere sui fianchi e le ginocchia flesse.",
+   "Solleva i fianchi stringendo i glutei.",
+   "Tieni in alto con le anche completamente estese.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Evita di inarcare la zona lombare estendendo le anche.",
+   "Spingi con i talloni, non con le punte.",
+   "Ritrai il mento e tieni appoggiata la parte alta della schiena."
+  ]
+ },
+ "barbell-row": {
+  "name": "Rematore con bilanciere busto flesso",
+  "description": "Un movimento di trazione multiarticolare per la parte alta e centrale della schiena.",
+  "instructions": [
+   "Inclinati dalle anche con le ginocchia leggermente flesse.",
+   "Afferra il bilanciere poco più largo delle spalle.",
+   "Tira il bilanciere verso la parte bassa del petto stringendo le scapole.",
+   "Abbassa il bilanciere con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni il busto a circa 45 gradi.",
+   "Non usare slanci."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Calf in piedi con bilanciere",
+  "description": "Calf in piedi con bilanciere libero sulla schiena, senza macchina.",
+  "instructions": [
+   "In piedi con il bilanciere sulla schiena alta e le punte su uno step o un disco, alla larghezza dei fianchi.",
+   "Lascia scendere i talloni fino ad allungare i polpacci, busto eretto.",
+   "Sali sulle punte più che puoi senza piegare le ginocchia.",
+   "Tieni un istante in alto e scendi con controllo."
+  ],
+  "tips": [
+   "Inizia leggero finché non controlli l'equilibrio.",
+   "Fallo in un rack con le sicure all'altezza giusta."
+  ]
+ },
+ "bench-press": {
+  "name": "Panca piana con bilanciere",
+  "description": "Un movimento di spinta multiarticolare per petto, spalle e tricipiti.",
+  "instructions": [
+   "Sdraiati sulla panca con gli occhi sotto il bilanciere.",
+   "Afferra poco più largo delle spalle.",
+   "Stacca il bilanciere e portalo al centro del petto.",
+   "Spingi fino a distendere completamente le braccia.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Tieni i piedi piatti a terra.",
+   "Mantieni una leggera curva lombare.",
+   "Spingi a terra con le gambe per restare stabile."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Rematore inverso a ginocchia flesse",
+  "description": "Versione principianti del rematore inverso: ginocchia flesse e piedi vicini al corpo, è più leggera e controllabile.",
+  "instructions": [
+   "Sdraiati sotto una sbarra bassa e solida, mani poco più larghe delle spalle, busto dritto, ginocchia flesse e piedi piatti.",
+   "Porta il petto alla sbarra con i gomiti indietro e le scapole unite.",
+   "Tieni un istante in alto senza far cadere i fianchi.",
+   "Scendi con controllo fino a braccia tese."
+  ],
+  "tips": [
+   "Avvicina i piedi per facilitare o allontanali per progredire.",
+   "Quando fai 12 ripetizioni, passa a gambe tese."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Calf a corpo libero",
+  "description": "Un calf raise a corpo libero, esercizio base per rinforzare i polpacci.",
+  "instructions": [
+   "In piedi, piedi alla larghezza dei fianchi su superficie piana.",
+   "Sali sulle punte il più in alto possibile.",
+   "Contrai i polpacci in alto.",
+   "Appoggia i talloni con controllo.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Distribuisci il peso su tutte le dita salendo.",
+   "Tieni le gambe tese per concentrare il lavoro sul polpaccio.",
+   "Fissa un punto per l'equilibrio."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Affondo indietro a corpo libero",
+  "description": "Affondo indietro senza attrezzi, più stabile e delicato sulle ginocchia dell'affondo avanti.",
+  "instructions": [
+   "In piedi a piedi uniti, mani sui fianchi, petto alto.",
+   "Fai un passo lungo indietro e scendi piegando entrambe le ginocchia finché quella dietro sfiora terra.",
+   "Tieni il busto eretto e il peso sul piede avanti.",
+   "Spingi con la gamba avanti per tornare; completa le ripetizioni e cambia."
+  ],
+  "tips": [
+   "Fai un passo abbastanza lungo perché il ginocchio avanti non superi molto la punta.",
+   "Tieniti a un sostegno se l'equilibrio è difficile."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Squat a corpo libero",
+  "description": "Squat base senza attrezzi, ideale per imparare il movimento e allenare le gambe ovunque.",
+  "instructions": [
+   "In piedi, piedi alla larghezza delle spalle, punte leggermente aperte, braccia tese avanti.",
+   "Porta i fianchi indietro e in basso come per sederti, petto alto, schiena neutra.",
+   "Scendi finché le cosce sono parallele al suolo, ginocchia in linea con i piedi.",
+   "Spingi con tutto il piede fino a tornare in piedi."
+  ],
+  "tips": [
+   "Tieni i talloni a terra per tutta l'escursione.",
+   "Se scendere è difficile, siediti su una sedia e rialzati senza slancio."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgarian split squat",
+  "description": "Una variante monopodalica dello squat con il piede dietro rialzato.",
+  "instructions": [
+   "Mettiti davanti a una panca e appoggia un piede dietro su di essa.",
+   "Tieni i manubri ai lati.",
+   "Scendi finché la coscia avanti è parallela al suolo.",
+   "Spingi sul tallone avanti per tornare in piedi.",
+   "Ripeti su entrambi i lati."
+  ],
+  "tips": [
+   "Tieni quasi tutto il peso sulla gamba avanti.",
+   "Regola la distanza dalla panca per un affondo stabile.",
+   "Completa tutte le ripetizioni di una gamba prima di cambiare."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Crunch ai cavi",
+  "description": "Un crunch in ginocchio al cavo alto con corda, per aumentare gradualmente il carico sul retto dell'addome.",
+  "instructions": [
+   "Inginocchiati davanti al cavo con la corda in alto.",
+   "Tieni la corda vicino alla fronte con i gomiti flessi.",
+   "Scendi flettendo la colonna e portando i gomiti verso le cosce.",
+   "Contrai forte gli addominali in basso.",
+   "Torna alla posizione iniziale e ripeti."
+  ],
+  "tips": [
+   "Fletti la colonna invece di tirare con le braccia.",
+   "Evita di sederti indietro a ogni ripetizione.",
+   "Espira con forza scendendo per contrarre meglio l'addome."
+  ]
+ },
+ "cable-curl": {
+  "name": "Curl ai cavi",
+  "description": "Un curl per bicipiti al cavo, a tensione costante.",
+  "instructions": [
+   "In piedi davanti al cavo basso con barra dritta o EZ.",
+   "Afferra la barra in supinazione, gomiti ai fianchi.",
+   "Porta il bilanciere verso le spalle.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Evita che i gomiti avanzino salendo.",
+   "Non oscillare con il busto.",
+   "Allontanati un po' dal cavo per mantenere la tensione."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Extrarotazione ai cavi",
+  "description": "Un'extrarotazione al cavo con il gomito al fianco, che rinforza gli extrarotatori della cuffia con il deltoide posteriore.",
+  "instructions": [
+   "Regola il cavo all'altezza del gomito e impugna la maniglia.",
+   "Mettiti di fianco con il gomito attivo a 90 gradi.",
+   "Tieni il gomito al fianco e ruota l'avambraccio in fuori.",
+   "Fai una pausa a fine movimento.",
+   "Torna con controllo. Completa un lato e cambia."
+  ],
+  "tips": [
+   "Non alzare le spalle ruotando.",
+   "Lavora leggero, lento e controllato.",
+   "Tieni il polso saldo, in linea con l'avambraccio."
+  ]
+ },
+ "cable-fly": {
+  "name": "Croci ai cavi",
+  "description": "Un esercizio di isolamento per il petto ai cavi, a tensione costante.",
+  "instructions": [
+   "Mettiti tra due colonne con le maniglie sulle carrucole alte.",
+   "Con i gomiti leggermente flessi, apri le braccia ai lati.",
+   "Unisci le mani davanti al petto come in un abbraccio.",
+   "Torna lentamente alla posizione iniziale.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni costante l'angolo dei gomiti perché non diventi una spinta.",
+   "Contrai il petto un secondo quando le mani si toccano.",
+   "Non portare avanti le spalle a braccia aperte."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Alzata frontale ai cavi",
+  "description": "Alzata frontale al cavo basso, a tensione costante.",
+  "instructions": [
+   "Di spalle al cavo basso, cavo tra le gambe, maniglia in una mano, braccio teso davanti alla coscia.",
+   "Alza il braccio in avanti fino all'altezza della spalla, gomito leggermente flesso.",
+   "Tieni un istante senza inclinare il busto indietro.",
+   "Scendi con controllo senza appoggiare il peso; ripeti e cambia braccio."
+  ],
+  "tips": [
+   "Stai abbastanza lontano perché il cavo tiri indietro.",
+   "Tieni l'addome saldo per non inarcare."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Alzata laterale ai cavi",
+  "description": "Un'alzata laterale a un braccio al cavo, tensione costante sul deltoide laterale.",
+  "instructions": [
+   "Di fianco al cavo basso, impugna con la mano più lontana.",
+   "Gomito leggermente flesso, cavo che passa davanti al corpo.",
+   "Alza il braccio di lato fino al parallelo.",
+   "Scendi con controllo. Ripetizioni per lato, poi cambia.",
+   "Mantieni la tensione — non appoggiare il peso in basso."
+  ],
+  "tips": [
+   "Guida con il gomito, non con la mano.",
+   "Breve pausa in alto, senza oscillare.",
+   "Usa meno carico che con il manubrio — la tensione del cavo è costante."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Estensione tricipiti sopra la testa ai cavi",
+  "description": "Un esercizio per i tricipiti al cavo: di spalle al pacco pesi, tieni una corda dietro la testa ed estendi i gomiti spingendola in alto sopra la testa. La posizione allunga il capo lungo e il cavo mantiene la tensione per tutto il movimento.",
+  "instructions": [
+   "Aggancia una corda al cavo basso e scegli un peso leggero.",
+   "Afferra la corda a due mani, girati di spalle e fai un passo avanti in posizione sfalsata perché il cavo ti tiri indietro.",
+   "Porta la corda sopra la testa con i gomiti flessi e le braccia vicine alle orecchie, mani dietro la testa.",
+   "Contrai il tronco, tieni ferme le braccia ed estendi i gomiti fino a braccia completamente tese.",
+   "Breve pausa in alto, poi piega i gomiti riportando la corda dietro la testa con controllo.",
+   "Ripeti il numero di ripetizioni previsto."
+  ],
+  "tips": [
+   "Tieni i gomiti in avanti e le braccia ferme; se si aprono o si spostano, diventa una spinta.",
+   "Avanza abbastanza perché il cavo ti stabilizzi e non inarcare la schiena.",
+   "Usa un peso controllabile per tutto l'allungamento; carichi pesanti allargano i gomiti."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof press ai cavi",
+  "description": "Un esercizio di antirotazione: il cavo ti tira di lato mentre spingi la maniglia dal petto senza far ruotare il busto.",
+  "instructions": [
+   "Regola il cavo all'altezza del petto e impugna a due mani, di fianco.",
+   "Allontanati finché c'è tensione vera, piedi alla larghezza delle spalle, ginocchia leggermente flesse.",
+   "Porta la maniglia al centro del petto e contrai tronco e glutei.",
+   "Spingi la maniglia dritta fino a braccia tese resistendo alla rotazione.",
+   "Tieni un istante poi riporta al petto con controllo.",
+   "Fai le ripetizioni volute, girati e ripeti dall'altro lato."
+  ],
+  "tips": [
+   "Nulla deve ruotare. Se le spalle girano verso il cavo, scala il peso — si allena la rotazione che non avviene.",
+   "Più sei lontano, più lunga è la leva e più è difficile: cambi la difficoltà senza toccare i pesi.",
+   "Braccia all'altezza del petto e spalle basse; se la maniglia sale diventa un'alzata frontale."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Croci inverse ai cavi",
+  "description": "Un esercizio in piedi ai cavi per i deltoidi posteriori: tra due torri tieni le maniglie opposte con i cavi incrociati e porti le braccia in fuori e indietro fino alle spalle. I cavi mantengono la tensione per tutto l'arco.",
+  "instructions": [
+   "Metti entrambe le carrucole circa all'altezza delle spalle e mettiti al centro.",
+   "Afferra la maniglia sinistra con la destra e viceversa, cavi incrociati davanti.",
+   "Stai eretto con le braccia tese davanti all'altezza delle spalle e i gomiti leggermente flessi.",
+   "Porta le braccia in fuori e indietro in un ampio arco guidando con i gomiti, fino alla linea delle spalle.",
+   "Stringi brevemente le scapole senza inarcare.",
+   "Riporta lentamente le maniglie incrociate e ripeti."
+  ],
+  "tips": [
+   "Gomiti leggermente flessi e fissi; se li pieghi e distendi diventa un rematore.",
+   "Spalle basse e collo rilassato perché lavorino i deltoidi posteriori e non il trapezio.",
+   "Usa poco peso e torna lentamente; la trazione è massima a fine arco, controlla."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Ginocchia al petto alla sedia romana",
+  "description": "Un esercizio a corpo libero alla sedia romana per addome basso e flessori dell'anca.",
+  "instructions": [
+   "Mettiti con la schiena contro lo schienale e gli avambracci sugli appoggi.",
+   "Lascia le gambe tese in giù.",
+   "Attiva il core e porta le ginocchia al petto.",
+   "Tieni brevemente in alto, poi scendi lentamente.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Evita di oscillare le gambe per slanciarti.",
+   "Espira salendo.",
+   "Tieni la schiena contro lo schienale."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Chest press",
+  "description": "Una spinta per il petto alla macchina, ideale per principianti.",
+  "instructions": [
+   "Siediti con la schiena contro lo schienale.",
+   "Impugna le maniglie all'altezza del petto.",
+   "Spingi in avanti fino a braccia completamente tese.",
+   "Torna lentamente alla posizione iniziale.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Regola il sedile perché le maniglie siano all'altezza del petto.",
+   "Spingi senza bloccare di scatto i gomiti.",
+   "Torna con controllo senza mollare il peso."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Rematore con manubri a petto appoggiato",
+  "description": "Un rematore con manubri a petto appoggiato, che scarica la zona lombare e isola la schiena.",
+  "instructions": [
+   "Sdraiati prono su una panca inclinata con i manubri che pendono.",
+   "Tira i manubri ai lati.",
+   "Contrai in alto e scendi.",
+   "Ripeti."
+  ],
+  "tips": [
+   "L'appoggio sul petto elimina la fatica lombare.",
+   "Concentrati nell'unire le scapole."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Rematore con kettlebell a petto appoggiato",
+  "description": "Questo esercizio allena la schiena, soprattutto gran dorsale e romboidi, remando un kettlebell per mano verso i fianchi con il busto appoggiato alla panca inclinata.",
+  "instructions": [
+   "Sdraiati prono sulla panca inclinata, braccia libere con un kettlebell per mano.",
+   "Contrai l'addome e retrai le scapole.",
+   "Tira i kettlebell verso i fianchi stringendo le scapole.",
+   "Breve pausa in alto sentendo la contrazione.",
+   "Abbassa lentamente e con controllo."
+  ],
+  "tips": [
+   "Busto stabile; evita di oscillare.",
+   "Inizia la trazione con la schiena, non solo con le braccia.",
+   "Gomiti vicini al corpo per enfatizzare il gran dorsale."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Rematore alla macchina a petto appoggiato",
+  "description": "Un rematore seduto alla macchina con cuscino sul petto: dorsali e muscoli tra le scapole tirano e la zona lombare resta fuori. Porti le maniglie indietro con i gomiti e le lasci tornare con controllo.",
+  "instructions": [
+   "Regola il sedile con le maniglie al basso petto, petto sul cuscino e piedi saldi.",
+   "Allungati e impugna a braccia tese, spalle rilassate.",
+   "Contrai il tronco e tira portando i gomiti indietro.",
+   "Unisci le scapole a fine trazione senza staccare il petto.",
+   "Breve pausa, poi distendi con controllo.",
+   "Ripeti tenendo il petto sul cuscino."
+  ],
+  "tips": [
+   "Tira con i gomiti, non con le mani, perché guidino dorsali e centro schiena.",
+   "Petto sul cuscino e spalle basse; alzarle o sporgersi indietro lo trasforma in un lavoro del trapezio.",
+   "Lascia che le scapole si aprano a inizio ripetizione per un allungamento completo."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Rematore a T a petto appoggiato",
+  "description": "Rematore a T con il petto su panca inclinata, che isola la schiena senza carico lombare.",
+  "instructions": [
+   "Appoggia il petto sulla panca, piedi saldi, e impugna a braccia tese.",
+   "Tira verso il petto con i gomiti indietro e vicini.",
+   "Stringi le scapole un istante in alto.",
+   "Scendi con controllo senza staccare il petto."
+  ],
+  "tips": [
+   "Testa in linea con la colonna.",
+   "Se devi staccare il petto, riduci il peso."
+  ]
+ },
+ "chin-ups": {
+  "name": "Trazioni supine",
+  "description": "Una variante delle trazioni in supinazione che attiva molto i bicipiti con il gran dorsale.",
+  "instructions": [
+   "Appenditi con presa supina alla larghezza delle spalle.",
+   "Sali finché il mento supera la sbarra.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Core contratto per tutto l'esercizio.",
+   "Evita oscillazioni eccessive."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Panca presa stretta",
+  "description": "Panca con le mani più strette, che coinvolge di più i tricipiti mantenendo il petto.",
+  "instructions": [
+   "Sdraiati e impugna alla larghezza delle spalle o poco meno.",
+   "Stacca il bilanciere e portalo sopra il petto a braccia tese.",
+   "Scendi con controllo fino al basso petto, gomiti vicini.",
+   "Spingi fino a distendere i gomiti."
+  ],
+  "tips": [
+   "Non stringere troppo: i polsi soffrono; basta la larghezza delle spalle.",
+   "Fatti assistere o usa un rack con sicure vicino al cedimento."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Panca piana con manubri",
+  "description": "Un esercizio multiarticolare per il petto con manubri, con più escursione del bilanciere.",
+  "instructions": [
+   "Sdraiati su panca piana con un manubrio per mano al petto.",
+   "Spingi fino a braccia completamente tese.",
+   "Scendi lentamente.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni i polsi neutri.",
+   "Contrai il petto in alto."
+  ]
+ },
+ "db-fly": {
+  "name": "Croci con manubri",
+  "description": "Un esercizio di isolamento che allunga e contrae il pettorale in un ampio arco.",
+  "instructions": [
+   "Sdraiati con i manubri sopra il petto, palmi che si guardano.",
+   "Con i gomiti leggermente flessi, apri i manubri ai lati.",
+   "Torna contraendo il petto.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Mantieni la stessa flessione dei gomiti.",
+   "Non scendere troppo."
+  ]
+ },
+ "db-squat": {
+  "name": "Squat con manubri",
+  "description": "Uno squat con un manubrio per mano ai lati, fattibile senza bilanciere.",
+  "instructions": [
+   "Piedi alla larghezza delle spalle, un manubrio per lato.",
+   "Attiva il core e tieni alto il petto.",
+   "Accosciati flettendo anche e ginocchia.",
+   "Scendi fino alle cosce parallele o più giù.",
+   "Spingi sui talloni per risalire."
+  ],
+  "tips": [
+   "Petto alto e schiena dritta.",
+   "Ginocchia in linea con le dita.",
+   "Usa le fasce se la presa diventa il limite."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "Un esercizio supino che coordina l'estensione di arti opposti per la stabilità profonda.",
+  "instructions": [
+   "Supino con le braccia tese al soffitto e le ginocchia a 90 gradi.",
+   "Abbassa braccio destro e gamba sinistra tenendo la zona lombare a terra.",
+   "Torna alla posizione iniziale.",
+   "Ripeti dall'altro lato.",
+   "Alterna."
+  ],
+  "tips": [
+   "Schiaccia sempre la zona lombare a terra.",
+   "Muoviti lentamente."
+  ]
+ },
+ "deadlift": {
+  "name": "Stacco da terra con bilanciere",
+  "description": "Un'alzata multiarticolare che allena soprattutto la catena posteriore.",
+  "instructions": [
+   "Piedi alla larghezza dei fianchi, bilanciere sopra metà piede.",
+   "Fletti le anche e afferra il bilanciere.",
+   "Contrai il core e solleva estendendo anche e ginocchia.",
+   "Raddrizzati completamente, poi scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Bilanciere vicino al corpo.",
+   "Non arrotondare la zona lombare."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Stacco in deficit",
+  "description": "Stacco da una piccola pedana, che aumenta escursione e difficoltà in partenza.",
+  "instructions": [
+   "Sali su una pedana di 2–5 cm con i piedi sotto il bilanciere e afferra a schiena neutra, spalle sopra.",
+   "Metti in tensione e spingi a terra mentre il bilanciere sale lungo le gambe.",
+   "Estendi insieme anche e ginocchia fino in piedi.",
+   "Scendi con controllo a schiena neutra."
+  ],
+  "tips": [
+   "Inizia con poco deficit e poco peso.",
+   "Non arrotondare la schiena in partenza."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "Esercizio addominale avanzato: corpo rigido appoggiato solo sulle spalle che sale e scende come una leva.",
+  "instructions": [
+   "Sdraiato su una panca, afferra il bordo dietro la testa e solleva il corpo dritto.",
+   "Scendi con il corpo dritto, senza piegare le anche, quasi parallelo.",
+   "Addome e glutei saldi senza toccare la panca.",
+   "Risali in verticale; se non riesci, inizia solo con la discesa."
+  ],
+  "tips": [
+   "Inizia con le ginocchia flesse o solo in eccentrica.",
+   "Non piegare le anche è la chiave."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Rematore con manubri busto flesso",
+  "description": "Rematore con un manubrio per mano a busto inclinato: dorsali e schiena alta con soli manubri.",
+  "instructions": [
+   "In piedi, fletti le ginocchia e inclina il busto dalle anche quasi parallelo, schiena dritta.",
+   "Braccia penzoloni, palmi che si guardano.",
+   "Tira verso i fianchi con i gomiti indietro, scapole unite.",
+   "Breve pausa e scendi con controllo."
+  ],
+  "tips": [
+   "Busto fermo: se serve slancio, pesa troppo.",
+   "Collo in linea, sguardo a terra.",
+   "Se si stanca prima la zona lombare, riduci il peso o appoggiati."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Curl con manubri",
+  "description": "Flessione dei gomiti con un manubrio per mano per i bicipiti, a escursione libera.",
+  "instructions": [
+   "In piedi, braccia tese ai lati, palmi avanti.",
+   "Gomiti al busto, sali senza oscillare.",
+   "Contrai i bicipiti un istante senza alzare le spalle.",
+   "Scendi con controllo fino a gomito esteso."
+  ],
+  "tips": [
+   "Niente slancio di schiena: riduci il peso.",
+   "Controlla la discesa, almeno il doppio della salita."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmer's walk con manubri",
+  "description": "Questo esercizio per tutto il corpo consiste nel camminare con manubri pesanti: forza di presa, stabilità del core e resistenza generale.",
+  "instructions": [
+   "Stai eretto con un manubrio per mano, braccia lungo i fianchi.",
+   "Retrai le scapole e attiva il core, colonna neutra.",
+   "Cammina lento e deciso per una distanza o un tempo, a passi brevi.",
+   "Petto alto, senza pendere di lato.",
+   "Mantieni una postura forte e stabile."
+  ],
+  "tips": [
+   "Usa i manubri più pesanti che controlli senza perdere la forma.",
+   "Respira profondo e ritmico.",
+   "Immagina un bicchiere d'acqua in equilibrio sulla testa."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Alzate frontali con manubri",
+  "description": "Alzata dei manubri in avanti fino alle spalle per il deltoide anteriore.",
+  "instructions": [
+   "In piedi, un manubrio per mano davanti alle cosce, braccia quasi tese.",
+   "Alza in avanti fino alle spalle, gomiti leggermente flessi.",
+   "Fermati all'orizzontale senza oscillare.",
+   "Scendi con controllo."
+  ],
+  "tips": [
+   "Niente slancio: se serve, riduci.",
+   "Il deltoide anteriore lavora già nelle spinte; non esagerare col volume."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Alzate posteriori con manubri",
+  "description": "Un isolamento a busto flesso alzando i manubri ai lati, per deltoidi posteriori e schiena alta.",
+  "instructions": [
+   "Inclinati dalle anche con i manubri penzoloni.",
+   "Schiena dritta, ginocchia morbide.",
+   "Alza ai lati fino alle spalle.",
+   "Stringi le scapole in alto.",
+   "Scendi con controllo.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Peso leggero: lavorano i posteriori, non lo slancio.",
+   "Unisci le scapole in alto.",
+   "Gomiti leggermente flessi e fissi."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Stacco rumeno con manubri",
+  "description": "Stacco rumeno con manubri che enfatizza l'allungamento dei femorali con la cerniera d'anca.",
+  "instructions": [
+   "In piedi, manubri davanti alle cosce, ginocchia morbide.",
+   "Inclinati dalle anche spingendo indietro i glutei.",
+   "Scendi lungo le gambe fino a sentire i femorali.",
+   "Schiena dritta, spalle indietro.",
+   "Spingi le anche avanti per risalire.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Scendi quanto consente la mobilità, senza forzare.",
+   "Mantieni la stessa flessione delle ginocchia.",
+   "Non trasformarlo in uno squat."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Lento avanti con manubri",
+  "description": "Un lento con manubri, seduto o in piedi, per i fasci anteriore e laterale del deltoide.",
+  "instructions": [
+   "Seduto o in piedi, tieni i manubri all'altezza delle spalle con i palmi avanti.",
+   "Spingi entrambi i manubri sopra la testa fino a braccia completamente tese.",
+   "Core contratto, senza inarcare la zona lombare.",
+   "Abbassa i manubri con controllo fino alle spalle.",
+   "Non lasciare che i manubri vadano dietro la testa.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Sali in linea retta senza farli urtare in alto.",
+   "Polsi saldi, in linea con gli avambracci.",
+   "Se la zona lombare si inarca, riduci il peso."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Scrollate con manubri",
+  "description": "Sollevamento delle spalle con un manubrio per mano per la schiena alta e il trapezio.",
+  "instructions": [
+   "In piedi, un manubrio per mano, braccia lungo i fianchi, sguardo avanti.",
+   "Alza le spalle verso le orecchie in linea retta, senza ruotarle né piegare i gomiti.",
+   "Tieni un istante la contrazione.",
+   "Scendi con controllo fino ad allungare il trapezio."
+  ],
+  "tips": [
+   "Niente cerchi con le spalle: il movimento è verticale.",
+   "Se la presa cede prima del trapezio, usa le fasce."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Calf monopodalico con manubrio",
+  "description": "Calf su una gamba su uno step, con un manubrio e l'altra mano d'appoggio per l'equilibrio.",
+  "instructions": [
+   "In piedi sullo step sulla punta di un piede, l'altra gamba flessa, manubrio nella mano dello stesso lato; l'altra al muro.",
+   "Lascia scendere il tallone sotto lo step fino ad allungare il polpaccio.",
+   "Sali sulla punta più che puoi senza piegare il ginocchio.",
+   "Tieni un istante e scendi con controllo; completa e cambia gamba."
+  ],
+  "tips": [
+   "Spingi con la base dell'alluce senza far cedere la caviglia in fuori.",
+   "È monolaterale: stesse ripetizioni per gamba."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pike push-up con mani rialzate",
+  "description": "Versione principianti del pike push-up, mani su uno step o una sedia stabile per ridurre il carico.",
+  "instructions": [
+   "Mani sul bordo di uno step, panca o sedia salda, alla larghezza delle spalle, e cammina indietro fino ad alzare i fianchi.",
+   "Piega i gomiti e porta la testa verso il sostegno, fianchi alti.",
+   "Fermati quando la testa è tra le mani, senza perdere la posizione.",
+   "Spingi fino a distendere i gomiti."
+  ],
+  "tips": [
+   "Avvicina i piedi al sostegno per aumentare la difficoltà.",
+   "Controlla che il sostegno non si muova."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull ai cavi",
+  "description": "Un esercizio ai cavi per deltoidi posteriori ed extrarotatori.",
+  "instructions": [
+   "Aggancia una corda al cavo alto.",
+   "Tira la corda verso il viso aprendo le estremità.",
+   "Contrai deltoidi posteriori ed extrarotatori.",
+   "Torna con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Gomiti alti, in linea con le spalle.",
+   "Unisci le scapole a fine ripetizione.",
+   "Peso leggero per non perdere la tecnica."
+  ]
+ },
+ "front-squat": {
+  "name": "Front squat",
+  "description": "Uno squat con il bilanciere davanti sui deltoidi, che enfatizza quadricipiti e core.",
+  "instructions": [
+   "Posiziona il bilanciere sui deltoidi anteriori con i gomiti alti.",
+   "Scendi a busto eretto fino alle cosce parallele.",
+   "Risali.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Gomiti alti per stabilizzare il bilanciere.",
+   "Un busto più verticale attiva di più i quadricipiti."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Ponte per glutei",
+  "description": "Un esercizio di attivazione dei glutei a corpo libero, sdraiato.",
+  "instructions": [
+   "Supino, ginocchia flesse, piedi a terra.",
+   "Solleva i fianchi stringendo i glutei.",
+   "Tieni brevemente in alto con le anche estese.",
+   "Abbassa i fianchi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Spingi sui talloni per attivare meglio i glutei.",
+   "Non inarcare la zona lombare.",
+   "Ginocchia in linea con i piedi."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet squat",
+  "description": "Uno squat per principianti con un kettlebell al petto, che migliora postura e profondità.",
+  "instructions": [
+   "Tieni un kettlebell al petto con due mani.",
+   "Accosciati tenendo il peso vicino al petto.",
+   "Risali.",
+   "Ripeti."
+  ],
+  "tips": [
+   "La posizione goblet favorisce un busto eretto.",
+   "Spingi le ginocchia in fuori in basso."
+  ]
+ },
+ "good-morning": {
+  "name": "Good morning",
+  "description": "Cerniera d'anca con il bilanciere sulla schiena per femorali, glutei e lombari.",
+  "instructions": [
+   "Bilanciere sulla schiena alta, piedi alla larghezza delle spalle, ginocchia morbide.",
+   "Porta i fianchi indietro inclinando il busto a schiena neutra.",
+   "Scendi finché senti i femorali, busto quasi orizzontale.",
+   "Spingi avanti le anche per risalire."
+  ],
+  "tips": [
+   "Inizia molto leggero: la zona lombare lavora tanto.",
+   "Guarda avanti e non arrotondare la schiena."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack squat",
+  "description": "Un esercizio guidato all'hack squat, soprattutto per i quadricipiti, con uno squat controllato sul carrello.",
+  "instructions": [
+   "Carica la macchina e appoggia schiena e spalle ai cuscini.",
+   "Piedi alla larghezza delle spalle sulla pedana, punte leggermente in fuori.",
+   "Sblocca le sicure e scendi flettendo ginocchia e anche.",
+   "Scendi almeno fino alle cosce parallele alla pedana.",
+   "Spingi sui talloni per tornare su.",
+   "Riaggancia le sicure a fine serie."
+  ],
+  "tips": [
+   "Zona lombare aderente al cuscino.",
+   "Piedi più alti spostano il lavoro su glutei e femorali.",
+   "Controlla la discesa; niente rimbalzo in basso."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Curl a martello con manubri",
+  "description": "Una variante del curl in presa neutra che allena il brachioradiale.",
+  "instructions": [
+   "In piedi, manubri ai lati, palmi che si guardano.",
+   "Sali con i palmi all'interno.",
+   "Contrai in alto e scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni i gomiti attaccati al busto per tutta l'escursione.",
+   "Non oscillare per slanciare i manubri.",
+   "Polsi saldi e neutri."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Piegamenti in verticale",
+  "description": "Piegamenti in verticale con i piedi al muro, una delle spinte a corpo libero più dure.",
+  "instructions": [
+   "Di spalle al muro, mani a terra, sali con i piedi fino in verticale con l'addome saldo.",
+   "Piega i gomiti e porta la testa verso terra con controllo.",
+   "Fermati quando la testa sfiora terra o un tappetino.",
+   "Spingi fino a distendere i gomiti."
+  ],
+  "tips": [
+   "Allena prima verticale e pike push-up.",
+   "Un tappetino sotto la testa dà sicurezza."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Ginocchia al petto alla sbarra",
+  "description": "Un esercizio per il core appeso alla sbarra, per addome basso e flessori dell'anca, a ginocchia piegate.",
+  "instructions": [
+   "Appenditi in presa prona a braccia tese.",
+   "Attiva il core e porta le ginocchia al petto.",
+   "Tieni brevemente in alto.",
+   "Abbassa lentamente le gambe.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Evita di dondolare — parti dal core.",
+   "Espira salendo.",
+   "Passa a gambe tese quando diventa facile."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Gambe tese alla sbarra",
+  "description": "Sollevamento a gambe tese fino all'orizzontale alla sbarra, per addome e flessori.",
+  "instructions": [
+   "Presa poco più larga delle spalle, gambe unite e tese.",
+   "Alza le gambe tese al parallelo inclinando leggermente il bacino.",
+   "Tieni un istante senza oscillare.",
+   "Scendi con controllo senza far oscillare il corpo."
+  ],
+  "tips": [
+   "Se a gambe tese è troppo, piega le ginocchia.",
+   "Niente slancio: usa l'addome."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Stacco con trap bar",
+  "description": "Uno stacco in piedi dentro la trap bar, con il carico centrato per una trazione più eretta e amica della schiena.",
+  "instructions": [
+   "Entra nel bilanciere carico, piedi alla larghezza delle spalle.",
+   "Fletti anche e ginocchia per prendere le maniglie.",
+   "Contrai il core, schiena piatta.",
+   "Spingi sui talloni estendendo anche e ginocchia.",
+   "Chiudi in alto con le spalle indietro.",
+   "Riporta a terra con controllo."
+  ],
+  "tips": [
+   "Petto alto e schiena piatta mentre regoli la presa.",
+   "Spingi via il pavimento invece di tirare con la schiena.",
+   "Raddrizzati senza inclinarti indietro."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Abductor machine",
+  "description": "Un esercizio alla macchina per i muscoli esterni dell'anca.",
+  "instructions": [
+   "Siediti con i cuscini all'esterno delle cosce.",
+   "Spingi le gambe in fuori contro la resistenza.",
+   "Tieni brevemente nel punto più aperto.",
+   "Torna con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Schiena contro lo schienale.",
+   "Apri senza slancio, a ritmo controllato.",
+   "Frena il ritorno invece di mollare."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Adductor machine",
+  "description": "Un esercizio alla macchina stringendo le gambe contro resistenza, che isola gli adduttori.",
+  "instructions": [
+   "Siediti con la schiena allo schienale.",
+   "Appoggia le gambe ai cuscini con un allungamento comodo.",
+   "Stringi finché i cuscini si incontrano.",
+   "Tieni brevemente la contrazione.",
+   "Lascia riaprire con controllo.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Scegli un'apertura che allunghi senza forzare l'inguine.",
+   "Usa tutta l'escursione a velocità costante.",
+   "Non far sbattere i pesi."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust con bilanciere",
+  "description": "Un esercizio multiarticolare per i glutei con bilanciere sui fianchi.",
+  "instructions": [
+   "Seduto a terra con la schiena alta contro una panca e il bilanciere sui fianchi.",
+   "Spingi i fianchi in alto fino ad allineare busto e cosce.",
+   "Stringi i glutei in alto.",
+   "Abbassa con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Mento raccolto e costole basse.",
+   "Spingi sui talloni, non sulle punte.",
+   "Non inarcare in alto."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Pressa orizzontale",
+  "description": "Una pressa orizzontale per quadricipiti, glutei e femorali.",
+  "instructions": [
+   "Schiena allo schienale, piedi alla larghezza delle spalle sulla pedana.",
+   "Spingi fino a gambe tese senza bloccare le ginocchia.",
+   "Piega le ginocchia con controllo verso il petto.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Non staccare la zona lombare.",
+   "Non bloccare le ginocchia."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Panca inclinata con bilanciere",
+  "description": "Una spinta con bilanciere su panca inclinata per il petto alto.",
+  "instructions": [
+   "Sdraiati su panca a 30–45 gradi.",
+   "Presa poco larga e stacca.",
+   "Scendi al petto alto.",
+   "Spingi fino alla completa estensione.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Scapole retratte sulla panca.",
+   "Non rimbalzare sul petto.",
+   "Fatti assistere con carichi pesanti."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Alzate a Y su panca inclinata",
+  "description": "Alzata a Y dei manubri proni su panca inclinata per trapezio inferiore e medio.",
+  "instructions": [
+   "Prono sulla panca, petto appoggiato, un manubrio leggero per mano.",
+   "Alza le braccia in avanti a Y con i pollici al soffitto.",
+   "Fermati in linea col busto senza staccare il petto.",
+   "Scendi con controllo."
+  ],
+  "tips": [
+   "Peso leggero: il trapezio inferiore è piccolo.",
+   "Collo neutro, sguardo a terra."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Curl su panca inclinata",
+  "description": "Un curl su panca inclinata per allungare di più il capo lungo.",
+  "instructions": [
+   "Seduto su panca a 45 gradi con i manubri ai lati.",
+   "Braccia penzoloni, palmi avanti.",
+   "Porta i manubri alle spalle.",
+   "Scendi fino alla completa estensione.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Spalle e schiena sulla panca.",
+   "Non portare avanti le spalle.",
+   "Sfrutta l'allungamento con una discesa lenta."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Panca inclinata con manubri",
+  "description": "Una spinta inclinata che enfatizza il petto alto.",
+  "instructions": [
+   "Panca a 30 gradi, manubri alle spalle.",
+   "Spingi in alto e verso il centro fino a braccia tese.",
+   "Torna alle spalle con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Piedi saldi e scapole retratte.",
+   "Non far urtare i manubri.",
+   "Scendi fino a un leggero allungamento del petto."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Piegamenti inclinati",
+  "description": "Una variante di piegamenti per principianti con le mani rialzate su panca o step.",
+  "instructions": [
+   "Mani su una superficie rialzata, alla larghezza delle spalle.",
+   "Gambe indietro in plank.",
+   "Porta il petto verso la panca piegando i gomiti.",
+   "Spingi per tornare.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Contrai l'addome perché i fianchi non cedano.",
+   "Più alta la superficie, più facile.",
+   "Controlla che la panca non si muova."
+  ]
+ },
+ "inverted-row": {
+  "name": "Rematore inverso",
+  "description": "Una trazione orizzontale a corpo libero sotto una sbarra fissa, portando il petto alla sbarra col corpo rigido.",
+  "instructions": [
+   "Metti una sbarra nel rack circa all'altezza della vita.",
+   "Sdraiati sotto e afferra poco più largo, in presa prona.",
+   "Appeso a braccia tese, talloni a terra, corpo dritto.",
+   "Tira il petto alla sbarra stringendo le scapole.",
+   "Scendi con controllo a braccia tese.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Core contratto — fianchi non cedono.",
+   "Più difficile: piedi rialzati; più facile: avvicinali.",
+   "Breve pausa in alto col petto alla sbarra."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Tibiale con kettlebell",
+  "description": "Un esercizio per il tibiale seduto su una panca con un kettlebell appeso alla punta del piede. Sollevare le dita contro il peso rinforza la parte anteriore della gamba.",
+  "instructions": [
+   "Seduto in fondo a una panca con una gamba tesa e il tallone a terra.",
+   "Appendi il kettlebell per il manico sulla parte anteriore del piede.",
+   "Porta le dita verso lo stinco quanto è comodo, tallone a terra.",
+   "Tieni brevemente in alto.",
+   "Abbassa lentamente finché le dita puntano a terra.",
+   "Completa e cambia gamba."
+  ],
+  "tips": [
+   "Muovi solo la caviglia; ginocchio e coscia fermi.",
+   "Inizia leggero e aumenta piano; si affaticano presto.",
+   "Scendi lentamente invece di lasciar cadere."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Rematore ai cavi in ginocchio",
+  "description": "Un rematore al cavo in ginocchio eretto, senza slancio d'anca, con tensione costante sulla schiena alta.",
+  "instructions": [
+   "Cavo all'altezza del petto con corda o doppia maniglia a D.",
+   "In ginocchio eretto, abbastanza lontano perché i pesi non tocchino.",
+   "Impugna a due mani, braccia tese davanti al petto.",
+   "Porta la maniglia allo sterno con i gomiti indietro e le scapole unite.",
+   "Torna con controllo in allungamento.",
+   "Ripeti il numero consigliato."
+  ],
+  "tips": [
+   "Resta eretto: non inclinarti per chiudere.",
+   "In ginocchio il core deve resistere alla rotazione."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Piegamenti sulle ginocchia",
+  "description": "Una variante di piegamenti per principianti, ginocchia a terra, per alleggerire il busto.",
+  "instructions": [
+   "Posizione di piegamento con le ginocchia a terra.",
+   "Mani alla larghezza delle spalle.",
+   "Corpo dritto dalle ginocchia alle spalle.",
+   "Porta il petto verso terra piegando i gomiti.",
+   "Spingi con le mani per tornare alla posizione iniziale.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Non aprire troppo i gomiti.",
+   "Contrai glutei e addome.",
+   "Guarda a terra per il collo neutro."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Alzate laterali con manubri",
+  "description": "Un isolamento del deltoide laterale per spalle più larghe.",
+  "instructions": [
+   "In piedi con i manubri ai lati.",
+   "Alza ai lati fino al parallelo.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Gomiti leggermente flessi.",
+   "Guida con i gomiti, non con le mani."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Lat machine avanti",
+  "description": "Un esercizio alla lat machine per il gran dorsale.",
+  "instructions": [
+   "Siediti con le cosce sotto i rulli.",
+   "Impugna la barra larga in presa prona.",
+   "Tira al petto alto contraendo i dorsali.",
+   "Riporta lentamente.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Inizia abbassando le scapole, non piegando i gomiti.",
+   "Non oscillare col busto.",
+   "Gomiti in basso e indietro, non in fuori."
+  ]
+ },
+ "leg-curl": {
+  "name": "Leg curl sdraiato",
+  "description": "Un isolamento dei femorali al leg curl.",
+  "instructions": [
+   "Prono con le caviglie sotto il rullo.",
+   "Porta i talloni ai glutei.",
+   "Contrai i femorali nella parte alta del movimento.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni i fianchi aderenti alla panca per tutta l'escursione.",
+   "Non inarcare salendo.",
+   "Peso che consenta escursione completa."
+  ]
+ },
+ "leg-extension": {
+  "name": "Leg extension",
+  "description": "Un isolamento dei quadricipiti alla macchina.",
+  "instructions": [
+   "Seduto con le caviglie dietro il rullo.",
+   "Distendi le gambe.",
+   "Contrai in alto.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Ginocchia allineate al perno.",
+   "Sali senza lanciare il peso.",
+   "Tieni le maniglie per stabilizzare il bacino."
+  ]
+ },
+ "leg-press": {
+  "name": "Pressa",
+  "description": "Un movimento multiarticolare per quadricipiti e glutei.",
+  "instructions": [
+   "Piedi alla larghezza delle spalle sulla pedana.",
+   "Sblocca e scendi piegando le ginocchia.",
+   "Spingi fino a gambe quasi tese.",
+   "Non bloccare le ginocchia.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Zona lombare sempre appoggiata.",
+   "Scendi solo finché il bacino resta giù.",
+   "Ginocchia in linea con le punte."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Calf alla pressa",
+  "description": "Calf spingendo la pedana della pressa con le punte.",
+  "instructions": [
+   "Gambe quasi tese, solo l'avampiede sul bordo della pedana.",
+   "Sblocca e lascia scendere i talloni.",
+   "Spingi con le punte fino in cima.",
+   "Tieni un istante e torna con controllo."
+  ],
+  "tips": [
+   "Non bloccare le ginocchia.",
+   "Escursione completa e pausa in basso: lì si guadagna lo stimolo."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Sollevamento gambe da sdraiato",
+  "description": "Sollevamento di entrambe le gambe da supino per addome basso e flessori.",
+  "instructions": [
+   "Supino, gambe unite e tese, mani sotto i glutei o ai lati.",
+   "Premi la zona lombare a terra contraendo l'addome.",
+   "Alza le gambe in verticale senza slancio.",
+   "Scendi lentamente senza toccare terra né inarcare."
+  ],
+  "tips": [
+   "Se la zona lombare si stacca, piega le ginocchia.",
+   "Controlla la discesa: è la parte più impegnativa."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Estensione lombare alla macchina",
+  "description": "Un isolamento seduto per la zona lombare: con anche e gambe fisse, il busto spinge indietro un rullo ed estende la colonna contro i pesi.",
+  "instructions": [
+   "Siediti alla macchina con i piedi sulla pedana e regola il rullo sulla parte alta della schiena, appena sotto le scapole.",
+   "Impugna le maniglie e lascia venire un po' avanti il busto: partenza.",
+   "Spingi indietro estendendo fino a contrarre del tutto i lombari.",
+   "Fai una breve pausa in massima estensione e torna alla partenza con controllo, resistendo al peso.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Rullo sotto le scapole: più alto preme il collo, più basso perdi escursione.",
+   "Estendi dalla zona lombare senza lanciare testa e spalle, lento nei due sensi.",
+   "Fermati in posizione neutra senza forzare oltre e parti leggero: la zona lombare risponde meglio a ripetizioni controllate."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Curl bicipiti alla macchina",
+  "description": "Un curl alla macchina per isolare le braccia.",
+  "instructions": [
+   "Siediti e regola l'appoggio alla lunghezza delle braccia.",
+   "Impugna in supinazione.",
+   "Porta le maniglie alle spalle.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Gomiti sempre sul cuscino.",
+   "Non alzare le spalle.",
+   "Scendi quasi a braccia tese senza perdere tensione."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Calf machine",
+  "description": "Un isolamento in piedi alla calf machine, con escursione completa della caviglia.",
+  "instructions": [
+   "Mettiti sulla calf machine con l'avampiede appoggiato sulla pedana.",
+   "Sistema bene i cuscini sulle spalle.",
+   "Abbassa i talloni sotto la pedana.",
+   "Spingi sull'avampiede per salire.",
+   "Contrai i polpacci in alto.",
+   "Scendi con controllo e ripeti."
+  ],
+  "tips": [
+   "Niente rimbalzi in basso.",
+   "Ginocchia tese senza bloccarle.",
+   "Sali in verticale senza ruotare le caviglie in fuori."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Pectoral machine",
+  "description": "Un isolamento del petto alla macchina che avvicina i bracci ad arco.",
+  "instructions": [
+   "Regola il sedile con i bracci all'altezza del petto.",
+   "Tieni i bracci con i gomiti leggermente flessi.",
+   "Uniscili davanti al petto in un arco morbido.",
+   "Contrai al punto massimo.",
+   "Torna senza far cadere il peso.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Flessione dei gomiti leggera e costante.",
+   "Concentrati sul petto più che sulle braccia.",
+   "Controlla il ritorno."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Croci inverse alla macchina",
+  "description": "Un esercizio seduto per i deltoidi posteriori, o pec deck inverso: di fronte al cuscino porti le maniglie in fuori e indietro. Il cuscino blocca il busto e lavorano il retro delle spalle e i muscoli tra le scapole.",
+  "instructions": [
+   "Regola il sedile con le maniglie alle spalle e il petto sul cuscino.",
+   "Braccia tese davanti, gomiti leggermente flessi.",
+   "Spalle basse e tronco contratto.",
+   "Apri in ampio arco guidando con i gomiti fino alla linea delle spalle.",
+   "Unisci le scapole senza staccare il petto.",
+   "Riporta lentamente le maniglie in avanti e ripeti il numero di ripetizioni previsto."
+  ],
+  "tips": [
+   "Guida con i gomiti perché lavorino i deltoidi posteriori e non i bicipiti.",
+   "Petto sul cuscino e collo rilassato; altrimenti lavora il trapezio.",
+   "Peso controllabile al ritorno; leggero e lento è meglio che pesante e slanciato."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Crunch alla macchina",
+  "description": "Un isolamento addominale alla macchina che flette la colonna contro resistenza.",
+  "instructions": [
+   "Siediti e impugna le maniglie.",
+   "Appoggia il cuscino al busto.",
+   "Contrai l'addome flettendo in avanti e in basso.",
+   "Contrai a fine corsa.",
+   "Torna con controllo.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Parti dall'addome, non dalle braccia.",
+   "Espira flettendo.",
+   "Niente slancio."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Shoulder press",
+  "description": "Una spinta sopra la testa alla macchina per le spalle.",
+  "instructions": [
+   "Schiena contro il cuscino.",
+   "Maniglie all'altezza delle spalle.",
+   "Spingi sopra la testa fino a braccia tese.",
+   "Torna con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Non inarcare spingendo.",
+   "Non bloccare di scatto i gomiti.",
+   "Polsi saldi, in linea."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Trazioni negative",
+  "description": "La discesa lenta delle trazioni, per costruire la forza per quelle complete.",
+  "instructions": [
+   "Sali su una panca o salta con il mento sopra la sbarra, presa poco larga.",
+   "Senza appoggio, scendi lentissimo in tre-cinque secondi.",
+   "Controlla fino a braccia tese.",
+   "Risali con panca o salto e ripeti."
+  ],
+  "tips": [
+   "Spalle lontane dalle orecchie.",
+   "Con cinque discese lente, prova a salire senza aiuto."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic curl",
+  "description": "Un esercizio di flessione del ginocchio abbassando il busto in avanti dalla posizione in ginocchio, eccentrico per i femorali.",
+  "instructions": [
+   "In ginocchio su un tappetino con le caviglie bloccate.",
+   "Busto eretto, anche estese.",
+   "Scendi lentamente in avanti resistendo con i femorali.",
+   "Ammortizza con le mani prima di toccare.",
+   "Spingi con le mani e risali.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Scendi il più lentamente possibile: è l'obiettivo.",
+   "Anche estese; non piegare in vita.",
+   "Frena con le mani e spingi poco mentre migliori."
+  ]
+ },
+ "ohp": {
+  "name": "Military press con bilanciere",
+  "description": "Una spinta multiarticolare sopra la testa per spalle e tricipiti.",
+  "instructions": [
+   "In piedi, piedi alla larghezza delle spalle, bilanciere alle clavicole.",
+   "Contrai il core e spingi sopra la testa.",
+   "Blocca i gomiti con il bilanciere sopra metà piede.",
+   "Scendi alle clavicole.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Non inclinarti troppo indietro.",
+   "Contrai i glutei per stabilità."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Pulley a un braccio seduto",
+  "description": "Un rematore seduto a un braccio al cavo per dorsali e schiena alta, busto frontale mentre la scapola avanza e arretra.",
+  "instructions": [
+   "Seduto con il braccio teso sulla maniglia.",
+   "Piedi saldi, busto eretto e contratto.",
+   "Porta la maniglia alle costole basse retraendo la scapola.",
+   "Breve pausa senza ruotare né alzare la spalla.",
+   "Distendi, finisci la serie e cambia."
+  ],
+  "tips": [
+   "Entrambe le spalle in avanti.",
+   "Gomito indietro vicino al corpo, non solo flessione del braccio.",
+   "Lascia avanzare la scapola senza arrotondare la zona lombare."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Estensione tricipiti sopra la testa con manubrio",
+  "description": "Un isolamento dei tricipiti che enfatizza il capo lungo.",
+  "instructions": [
+   "In piedi o seduto, un manubrio sopra la testa con due mani.",
+   "Abbassalo dietro la testa piegando i gomiti.",
+   "Distendi per tornare.",
+   "Gomiti vicini alla testa.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Si muovono solo gli avambracci.",
+   "Non inarcare quando il manubrio scende.",
+   "Impugna sotto il disco superiore con i palmi."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dip alle parallele",
+  "description": "Esercizio a corpo libero alle parallele per petto, tricipiti e spalle.",
+  "instructions": [
+   "In appoggio a braccia tese, corpo sospeso.",
+   "Inclina leggermente il busto e piega i gomiti con controllo.",
+   "Fermati con le spalle all'altezza dei gomiti.",
+   "Spingi con petto e tricipiti."
+  ],
+  "tips": [
+   "Se non fai serie pulite, usa la macchina assistita o elastici.",
+   "Non scendere oltre quanto la spalla tollera."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Panca con fermo",
+  "description": "Panca con fermo di uno-due secondi al petto, senza rimbalzo, per la forza in partenza.",
+  "instructions": [
+   "Piedi saldi, scapole unite, bilanciere sopra il petto, presa poco larga.",
+   "Scendi fino a sfiorare il petto.",
+   "Tienilo fermo uno-due secondi senza rilassarti.",
+   "Spingi fino a distendere i gomiti."
+  ],
+  "tips": [
+   "Usa il 10–15 % in meno del solito.",
+   "Fatti controllare o usa le sicure."
+  ]
+ },
+ "pause-squat": {
+  "name": "Squat con fermo",
+  "description": "Squat con fermo nel punto basso, per controllo e forza senza rimbalzo.",
+  "instructions": [
+   "Bilanciere sulla schiena alta, piedi alla larghezza delle spalle, punte aperte.",
+   "Scendi controllando, schiena neutra, ginocchia in linea.",
+   "Tieni il punto basso uno-tre secondi senza rilassarti.",
+   "Spingi a terra fino in piedi."
+  ],
+  "tips": [
+   "Riduci il carico rispetto al tuo squat.",
+   "Niente rimbalzo dopo il fermo."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Una macchina di isolamento per il petto con maniglie mobili, adduzione orizzontale.",
+  "instructions": [
+   "Al pec deck con braccia aperte e gomiti leggermente flessi.",
+   "Regola il sedile con le maniglie a metà petto.",
+   "Unisci le maniglie davanti al petto.",
+   "Tieni brevemente la contrazione.",
+   "Torna con controllo alla posizione iniziale.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Non lasciare le braccia troppo indietro aprendo.",
+   "Schiena e spalle allo schienale.",
+   "Espira unendo le maniglie e inspira aprendo."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Rematore Pendlay",
+  "description": "Rematore esplosivo che parte da terra a ogni ripetizione, busto parallelo al suolo.",
+  "instructions": [
+   "Piedi sotto il bilanciere, busto quasi orizzontale, presa poco larga, schiena neutra.",
+   "Tira con forza fino al basso petto senza muovere il busto.",
+   "Riporta a terra con controllo e fermati un istante.",
+   "Risistema la schiena e riparti da terra."
+  ],
+  "tips": [
+   "Il busto non sale né scende: se si muove, il carico è troppo.",
+   "Ogni ripetizione parte col bilanciere fermo a terra."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike push-up",
+  "description": "Piegamento a V rovesciata, che sposta il carico dal petto alle spalle senza attrezzi.",
+  "instructions": [
+   "Mani a terra alla larghezza delle spalle e fianchi alti a V rovesciata, gambe quasi tese.",
+   "Piega i gomiti e porta la testa tra le mani.",
+   "Fermati vicino a terra senza appoggiare la testa.",
+   "Spingi fino a distendere i gomiti."
+  ],
+  "tips": [
+   "Più i piedi sono vicini alle mani, più è difficile.",
+   "Tieni i fianchi alti."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol squat",
+  "description": "Squat profondo su una gamba con l'altra tesa avanti, a corpo libero.",
+  "instructions": [
+   "Su una gamba, l'altra sollevata avanti, braccia tese per l'equilibrio.",
+   "Piega il ginocchio d'appoggio con controllo, tallone a terra.",
+   "Scendi quanto permette la tecnica, gamba libera tesa.",
+   "Spingi col piede fino a rialzarti; ripeti e cambia."
+  ],
+  "tips": [
+   "Inizia tenendoti a un sostegno o sedendoti su un box.",
+   "Ginocchio in linea col piede."
+  ]
+ },
+ "plank": {
+  "name": "Plank",
+  "description": "Esercizio isometrico per il core: corpo dritto su avambracci e punte dei piedi.",
+  "instructions": [
+   "Avambracci a terra, gomiti sotto le spalle, gambe tese.",
+   "Solleva il corpo in linea retta dalla testa ai talloni.",
+   "Attiva addome e glutei, zona lombare neutra, fianchi su.",
+   "Respira normalmente e tieni per il tempo indicato."
+  ],
+  "tips": [
+   "Inizia con serie brevi e pulite prima di allungare.",
+   "Se la zona lombare cede, appoggia le ginocchia o riduci il tempo."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip thrust alla macchina a dischi",
+  "description": "Un hip thrust alla macchina a dischi: schienale e pedana fissano la posizione, senza montare una panca.",
+  "instructions": [
+   "Carica i due lati allo stesso modo, schiena alta allo schienale, piedi sulla pedana.",
+   "Porta il cuscino o la barra sui fianchi, nella piega dell'anca e non sull'addome.",
+   "Sistema i piedi con le tibie verticali in alto e tieni le maniglie.",
+   "Spingi i fianchi stringendo i glutei fino ad allineare cosce e busto, tieni un istante.",
+   "Scendi con controllo fin quasi a fine corsa e ripeti."
+  ],
+  "tips": [
+   "Metti il cuscino nella piega dell'anca. Sull'addome è l'unico vero fastidio di questa macchina: si risolve spostandolo, non aggiungendo imbottitura.",
+   "Chiudi con le anche, non con la zona lombare. Se in alto si aprono le costole, l'estensione è finita e stai inarcando: lì la macchina non allena più i glutei.",
+   "È l'hip thrust per quando panca e bilanciere sono occupati: schienale e pedana fanno parte del telaio, non c'è nulla da montare male."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Curl alla panca Scott",
+  "description": "Una variante del curl alla panca Scott per isolare i bicipiti.",
+  "instructions": [
+   "Braccia appoggiate sul cuscino della panca Scott.",
+   "Impugna un bilanciere EZ in supinazione.",
+   "Porta il bilanciere verso le spalle.",
+   "Scendi con controllo quasi a braccia tese.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Niente rimbalzi in basso.",
+   "Polsi neutri sul bilanciere EZ.",
+   "Sali senza slancio di spalle o schiena."
+  ]
+ },
+ "pull-up": {
+  "name": "Trazioni alla sbarra",
+  "description": "Un esercizio multiarticolare a corpo libero per dorsali e bicipiti.",
+  "instructions": [
+   "Appenditi in presa prona, poco più larga delle spalle.",
+   "Sali col mento sopra la sbarra.",
+   "Scendi con controllo fino a braccia tese.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Evita di oscillare o slanciarti.",
+   "Attiva i dorsali portando i gomiti in basso."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Lento con spinta di gambe, che permette più carico del military press.",
+  "instructions": [
+   "Bilanciere sulla parte alta del petto, gomiti un po' avanti, piedi alla larghezza dei fianchi.",
+   "Fletti leggermente le ginocchia a busto verticale ed estendi con forza.",
+   "Sfrutta lo slancio per spingere fino a braccia tese.",
+   "Scendi al petto ammortizzando con le gambe."
+  ],
+  "tips": [
+   "La spinta viene dalle gambe, non inclinando la schiena.",
+   "Chiudi col bilanciere sopra la testa e corpo stabile."
+  ]
+ },
+ "push-up": {
+  "name": "Piegamenti sulle braccia",
+  "description": "Un esercizio fondamentale a corpo libero per petto, spalle e tricipiti.",
+  "instructions": [
+   "Plank alto, mani alla larghezza delle spalle.",
+   "Scendi quasi a toccare terra col petto.",
+   "Spingi fino alla partenza.",
+   "Corpo sempre in linea.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Contrai addome e glutei.",
+   "Gomiti vicini al busto, non troppo aperti.",
+   "Collo neutro, sguardo a terra."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack pull",
+  "description": "Stacco parziale dalle ginocchia, che sovraccarica schiena alta ed estensione d'anca.",
+  "instructions": [
+   "Bilanciere sulle sicure a livello ginocchia o poco sotto, piedi alla larghezza dei fianchi.",
+   "Afferra, contrai schiena e addome e spingi a terra.",
+   "Estendi insieme anche e ginocchia, spalle indietro.",
+   "Riporta sulle sicure con controllo."
+  ],
+  "tips": [
+   "Regola l'altezza per tenere la schiena neutra.",
+   "Non iperestendere a fine movimento."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Affondi indietro con manubri",
+  "description": "Una variante dell'affondo con passo indietro, più stabile per il ginocchio.",
+  "instructions": [
+   "In piedi con i manubri ai lati.",
+   "Fai un passo indietro e abbassa il ginocchio verso terra.",
+   "Scendi finché la coscia avanti è parallela.",
+   "Spingi sul tallone avanti per tornare in piedi.",
+   "Ripeti su entrambi i lati."
+  ],
+  "tips": [
+   "Passo abbastanza lungo perché il ginocchio non superi il piede.",
+   "Busto eretto, manubri vicini.",
+   "Stesse ripetizioni per gamba."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Reverse nordic curl",
+  "description": "Un esercizio per i quadricipiti a corpo libero in ginocchio, inclinando indietro il busto con le anche estese.",
+  "instructions": [
+   "In ginocchio su un cuscino, ginocchia alla larghezza dei fianchi, tibie a terra, busto eretto.",
+   "Anche estese e core attivo.",
+   "Inclina lentamente indietro il busto in linea.",
+   "Scendi quanto i quadricipiti controllano.",
+   "Torna alla partenza.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Tieni le anche estese per tutto il tempo, senza piegarle.",
+   "Scendi solo finché controlli.",
+   "Un cuscino sotto le ginocchia per comodità."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Stacco rumeno",
+  "description": "Un movimento di cerniera d'anca per femorali e glutei.",
+  "instructions": [
+   "Bilanciere all'altezza dei fianchi in presa prona.",
+   "Porta indietro i fianchi inclinando il busto, ginocchia quasi fisse.",
+   "Scendi lungo le gambe fino a sentire i femorali.",
+   "Spingi le anche avanti per risalire.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Non arrotondare la zona lombare.",
+   "Scendi finché tieni la postura.",
+   "Contrai i dorsali per tenere il bilanciere vicino."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Vogatore",
+  "description": "Un esercizio cardio per tutto il corpo al vogatore: ogni colpo spinge con le gambe, inclina il busto e tira la maniglia alle costole, in ciclo continuo.",
+  "instructions": [
+   "Siediti, fissa i piedi con le cinghie e impugna in presa prona.",
+   "Scorri avanti in attacco: tibie verticali, busto un po' avanti, braccia tese.",
+   "Spingi prima con le gambe fino quasi a distenderle.",
+   "Inclina il busto oltre la verticale e tira alle costole basse, gomiti lungo i fianchi.",
+   "Inverti nel ritorno — braccia, busto, poi ginocchia — fino al prossimo attacco.",
+   "Continua per il tempo, la distanza o i colpi che vuoi."
+  ],
+  "tips": [
+   "Rispetta l'ordine: gambe, busto, braccia in trazione; braccia, busto, gambe nel ritorno. Piegare presto le braccia spreca la fase più forte.",
+   "Schiena piatta e core attivo: arrotondare in attacco trasforma il vogatore in mal di schiena.",
+   "Porta la maniglia dritta alle costole e torna circa due volte più lentamente."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Military press seduto",
+  "description": "Lento con bilanciere seduto con schienale, per concentrare il lavoro sui deltoidi.",
+  "instructions": [
+   "Su panca con schienale verticale, presa poco larga, bilanciere sul petto alto.",
+   "Spingi dritto fino a distendere i gomiti.",
+   "Bilanciere sopra la testa, costole chiuse.",
+   "Scendi con controllo alla clavicola."
+  ],
+  "tips": [
+   "Contrai glutei e addome per non inarcare.",
+   "Porta indietro la testa per far passare il bilanciere senza forzare il collo."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Pulley seduto",
+  "description": "Un esercizio per la schiena al pulley, tirando la maniglia verso il busto da seduto.",
+  "instructions": [
+   "Siediti e appoggia i piedi.",
+   "Tieni la maniglia, busto eretto leggermente avanti.",
+   "Porta i gomiti indietro tirando al basso addome.",
+   "Unisci le scapole a fine trazione.",
+   "Distendi con controllo.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Busto eretto, minima oscillazione.",
+   "Gomiti dritti indietro, non ai lati.",
+   "Unisci le scapole a fine trazione."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Calf seduto alla macchina",
+  "description": "Un calf alla macchina da seduto per il soleo.",
+  "instructions": [
+   "Siediti alla macchina con i cuscini appoggiati sulle cosce.",
+   "Abbassa i talloni il più possibile.",
+   "Sali sulle punte.",
+   "Scendi con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Il ginocchio flesso scarica il gastrocnemio e il soleo lavora di più.",
+   "Escursione completa."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Calf seduto con manubri",
+  "description": "Calf seduto con manubri sulle cosce, per il soleo a ginocchio flesso.",
+  "instructions": [
+   "Punte su uno step, un manubrio su ogni coscia vicino alle ginocchia.",
+   "Lascia scendere i talloni per allungare.",
+   "Sali al massimo spingendo sull'avampiede.",
+   "Tieni un istante in alto e scendi con controllo."
+  ],
+  "tips": [
+   "Tieni i manubri perché non scivolino.",
+   "Il ginocchio flesso sposta il lavoro sul soleo."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Alzate laterali da seduto",
+  "description": "Alzate laterali da seduto, per il deltoide laterale senza slancio di gambe.",
+  "instructions": [
+   "Seduto con un manubrio per lato.",
+   "Schiena eretta, core contratto.",
+   "Alza entrambi fino alle spalle.",
+   "Gomiti leggermente flessi.",
+   "Scendi con controllo.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Peso leggero per un'esecuzione stretta.",
+   "Guida con i gomiti.",
+   "Alza fino alle spalle e scendi controllando."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Leg curl seduto",
+  "description": "Isolamento dei femorali da seduto alla macchina, tensione costante e meno flessori dell'anca che da sdraiato.",
+  "instructions": [
+   "Regola schienale e rullo con le ginocchia allineate al perno.",
+   "Seduto eretto, caviglie sul rullo, mani alle maniglie.",
+   "Piega le gambe sotto il sedile fin dove consente.",
+   "Pausa nella contrazione e torna lentamente.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Tieni la schiena ben appoggiata allo schienale per tutto il movimento.",
+   "Porta un po' i piedi verso gli stinchi in contrazione per attivare di più.",
+   "Controlla l'eccentrica — non farti riportare le gambe di scatto."
+  ]
+ },
+ "shrug": {
+  "name": "Scrollate con bilanciere",
+  "description": "Un isolamento del trapezio superiore.",
+  "instructions": [
+   "Bilanciere a braccia tese in presa prona.",
+   "Alza le spalle dritte verso le orecchie.",
+   "Tieni brevemente.",
+   "Abbassa con controllo.",
+   "Ripeti."
+  ],
+  "tips": [
+   "In verticale, senza cerchi.",
+   "Le braccia non lavorano; gomiti tesi.",
+   "Niente slancio di gambe."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Abduzione dell'anca sul fianco",
+  "description": "Un isolamento a corpo libero per medio gluteo e abduttori.",
+  "instructions": [
+   "Sdraiati sul fianco con le gambe sovrapposte.",
+   "Gamba sotto leggermente flessa.",
+   "Solleva la gamba sopra.",
+   "Scendi con controllo.",
+   "Ripeti da entrambi i lati."
+  ],
+  "tips": [
+   "Tieni le anche sovrapposte per tutto l'esercizio.",
+   "Non inclinare il bacino."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Adduzione dell'anca sul fianco",
+  "description": "Un'adduzione sul fianco sollevando la gamba sotto, a corpo libero.",
+  "instructions": [
+   "Sul fianco, gamba sotto tesa.",
+   "Piega la gamba sopra col piede davanti alla coscia sotto.",
+   "Sostieni la testa col braccio sotto.",
+   "Solleva la gamba sotto.",
+   "Abbassa con controllo.",
+   "Completa un lato e cambia."
+  ],
+  "tips": [
+   "Si muove solo la gamba.",
+   "Sali senza slancio e scendi lentamente.",
+   "Allinea spalle, anche e piedi prima di iniziare."
+  ]
+ },
+ "side-plank": {
+  "name": "Plank laterale",
+  "description": "Un plank laterale per obliqui e core.",
+  "instructions": [
+   "Sul fianco, avambraccio a terra, gomito sotto la spalla.",
+   "Stacca i fianchi formando una linea retta.",
+   "Tieni con il core contratto.",
+   "Respira regolarmente.",
+   "Ripeti da entrambi i lati."
+  ],
+  "tips": [
+   "Non far cedere i fianchi.",
+   "Spalle e anche sullo stesso piano.",
+   "Spingi a terra con l'avambraccio per non appenderti alla spalla."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Rematore con manubrio a un braccio",
+  "description": "Un esercizio monolaterale per la schiena con manubrio, per uno sviluppo equilibrato.",
+  "instructions": [
+   "Un ginocchio e una mano sulla panca.",
+   "Manubrio nell'altra mano a braccio teso.",
+   "Tira verso il fianco stringendo la scapola.",
+   "Abbassa con controllo.",
+   "Ripeti da entrambi i lati."
+  ],
+  "tips": [
+   "Non ruotare il busto; bacino stabile.",
+   "Non alzare la spalla all'inizio.",
+   "Stesse ripetizioni per braccio."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Alzata laterale a un braccio alla macchina a dischi",
+  "description": "L'alzata laterale alla macchina a dischi, un braccio alla volta, così ogni lato solleva il proprio carico.",
+  "instructions": [
+   "Regola il sedile con il perno all'altezza della spalla e carica solo il lato di lavoro.",
+   "Schiena allo schienale, esterno del braccio contro il cuscino.",
+   "Tieni la maniglia libera o la mano in grembo, busto allineato.",
+   "Spingi in fuori e in alto fino alla spalla e scendi con controllo.",
+   "Completa quel lato, poi carica e allena l'altro."
+  ],
+  "tips": [
+   "Pareggia i lati sul braccio debole, non sul forte: è lui che deve decidere le ripetizioni.",
+   "Non inclinare il busto verso il lato di lavoro, o diventa una flessione laterale.",
+   "Parti dal braccio debole e dai lo stesso recupero."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Ponte per glutei monopodalico",
+  "description": "Ponte per glutei su una gamba, più impegnativo senza attrezzi.",
+  "instructions": [
+   "Supino, un ginocchio flesso col piede a terra, l'altra gamba tesa in aria.",
+   "Spingi sul tallone e solleva i fianchi in linea con spalla e ginocchio.",
+   "Stringi il gluteo un istante senza inarcare.",
+   "Scendi senza appoggiare; completa e cambia."
+  ],
+  "tips": [
+   "Bacino orizzontale.",
+   "Se è difficile, inizia con due gambe."
+  ]
+ },
+ "skull-crusher": {
+  "name": "French press sdraiato",
+  "description": "Un'estensione dei tricipiti sdraiato con bilanciere, a escursione completa.",
+  "instructions": [
+   "Su panca piana, bilanciere sopra il petto, presa stretta.",
+   "Scendi verso la fronte piegando i gomiti.",
+   "Distendi per tornare.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni le braccia verticali per tutta la durata dell'esercizio.",
+   "Scendi lentamente per i gomiti."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Panca al multipower",
+  "description": "Panca al multipower, traiettoria guidata con meno stabilizzazione.",
+  "instructions": [
+   "Sdraiati su panca piana nel multipower.",
+   "Afferra il bilanciere con le mani poco più larghe delle spalle e sbloccalo.",
+   "Scendi al centro del petto.",
+   "Breve pausa senza rimbalzo.",
+   "Spingi fino a braccia tese.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Posiziona la panca perché il bilanciere scenda a metà petto.",
+   "Piedi saldi per tutta la serie.",
+   "Impara la rotazione del polso per agganciare prima di caricare."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Calf al multipower",
+  "description": "Calf in piedi col bilanciere guidato sulle spalle.",
+  "instructions": [
+   "Sotto il bilanciere, punte su uno step, bilanciere sulla schiena alta.",
+   "Sblocca e lascia scendere i talloni.",
+   "Sali a gambe tese senza bloccare.",
+   "Tieni un istante e scendi prima di riagganciare."
+  ],
+  "tips": [
+   "La guida ti stabilizza: usala per più carico.",
+   "Busto eretto, sguardo avanti."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Panca inclinata al multipower",
+  "description": "Una panca inclinata guidata per petto alto e deltoide anteriore.",
+  "instructions": [
+   "Panca a 30–45 gradi nel multipower.",
+   "Presa poco più larga delle spalle.",
+   "Sblocca e scendi al petto alto.",
+   "Breve pausa in basso.",
+   "Spingi fino a braccia tese.",
+   "Ripeti il numero di ripetizioni desiderato."
+  ],
+  "tips": [
+   "Regola la panca perché arrivi al petto alto.",
+   "Senza rimbalzo sul petto.",
+   "Glutei sulla panca, piedi saldi."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Squat al multipower",
+  "description": "Squat al multipower: traiettoria fissa, meno equilibrio, lavorano gambe e glutei; utile senza rack libero.",
+  "instructions": [
+   "Bilanciere all'altezza delle spalle, entra sotto, piedi un po' avanti.",
+   "Ruota i polsi per sbloccare, busto eretto e core attivo.",
+   "Scendi fino alle cosce almeno parallele, ginocchia in linea coi piedi.",
+   "Spingi con tutto il piede fino in piedi.",
+   "A fine serie ruota i polsi per agganciare."
+  ],
+  "tips": [
+   "Piedi un po' avanti permettono di scendere senza alzare i talloni.",
+   "Metti le sicure appena sotto il punto più basso."
+  ]
+ },
+ "squat": {
+  "name": "Back squat con bilanciere",
+  "description": "Un movimento multiarticolare per quadricipiti, glutei e femorali.",
+  "instructions": [
+   "Bilanciere sul trapezio alto.",
+   "Stacca, fai un passo indietro, piedi alla larghezza delle spalle.",
+   "Contrai il core e scendi fino alle cosce parallele.",
+   "Spingi sui talloni per risalire.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Petto alto per tutto il movimento.",
+   "Ginocchia in fuori in linea con le dita."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Ruota per addominali in piedi",
+  "description": "Rollout con la ruota partendo in piedi, gambe tese, grande escursione.",
+  "instructions": [
+   "In piedi a gambe tese, piegati e appoggia la ruota con due mani.",
+   "Rotola a braccia tese, addome saldo, quasi parallelo.",
+   "Fianchi allineati, senza cedere in basso.",
+   "Tira con l'addome per tornare."
+  ],
+  "tips": [
+   "Inizia in ginocchio finché controlli.",
+   "Fermati prima che la zona lombare ceda."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Calf in piedi",
+  "description": "Un calf in piedi per il gastrocnemio a escursione completa.",
+  "instructions": [
+   "Sul bordo di una pedana o macchina.",
+   "Abbassa i talloni sotto la pedana.",
+   "Sali sulle punte.",
+   "Scendi lentamente.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Pausa in alto per massimizzare la contrazione.",
+   "Scendere del tutto aumenta l'escursione."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Abduzione dell'anca in piedi",
+  "description": "Un'abduzione di gamba in piedi sull'altra, per il medio gluteo della gamba sollevata e gli stabilizzatori del bacino.",
+  "instructions": [
+   "In piedi, mani ai fianchi, piedi uniti.",
+   "Sposta il peso su una gamba, ginocchio morbido.",
+   "Solleva l'altra tesa di lato, punta avanti, busto eretto.",
+   "Sali solo finché non inclini il busto dall'altra parte.",
+   "Abbassa lentamente accanto al piede d'appoggio.",
+   "Completa le ripetizioni previste e ripeti con l'altra gamba."
+  ],
+  "tips": [
+   "Bacino dritto e busto fermo; inclinarti toglie lavoro all'anca.",
+   "Controlla anche la discesa.",
+   "Tieniti al muro se serve; aggiungi un elastico alle cosce quando diventa facile."
+  ]
+ },
+ "step-ups": {
+  "name": "Step-up",
+  "description": "Uno step-up a una gamba che allena quadricipiti e glutei in modo funzionale.",
+  "instructions": [
+   "Davanti a un box o una panca solida.",
+   "Appoggia tutto un piede sopra.",
+   "Spingi su quel tallone per salire.",
+   "Porta su il piede dietro.",
+   "Riporta giù il piede dietro con controllo, carico sulla gamba di lavoro.",
+   "Alterna o completa un lato alla volta."
+  ],
+  "tips": [
+   "Tutto il piede sul box.",
+   "Spingi con la gamba che sale, non con quella dietro.",
+   "Controlla la discesa."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Pulldown a braccia tese",
+  "description": "Un isolamento dei dorsali al cavo a braccia tese.",
+  "instructions": [
+   "Davanti al cavo alto con barra dritta.",
+   "A braccia quasi tese, spingi la barra ad arco verso le cosce.",
+   "Contrai i dorsali in basso.",
+   "Riporta lentamente.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Tieni le braccia quasi tese per tutto il movimento.",
+   "Porta la barra alle cosce con un arco.",
+   "Contrai i dorsali a fondo corsa."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Stacco sumo",
+  "description": "Variante dello stacco a gambe molto larghe e presa stretta, per glutei, adduttori e quadricipiti.",
+  "instructions": [
+   "Piedi molto larghi, punte in fuori, bilanciere sopra metà piede.",
+   "Mani all'interno delle gambe, schiena neutra, petto alto.",
+   "Spingi aprendo le ginocchia fino in piedi col bilanciere al corpo.",
+   "Chiudi in alto e scendi per la stessa via."
+  ],
+  "tips": [
+   "Bilanciere sempre vicino.",
+   "Ginocchia in linea con le punte, senza cedere in dentro."
+  ]
+ },
+ "t-bar-row": {
+  "name": "Rematore a T",
+  "description": "Un rematore a T a busto inclinato per dorsali e romboidi con carichi alti.",
+  "instructions": [
+   "A cavallo della barra, piedi alla larghezza delle spalle.",
+   "Inclinati fino a circa 45 gradi.",
+   "Impugna, schiena piatta.",
+   "Tira al petto con i gomiti indietro.",
+   "Stringi le scapole in alto.",
+   "Scendi con controllo e ripeti."
+  ],
+  "tips": [
+   "Busto a 45 gradi, schiena piatta.",
+   "Tira con i gomiti, non solo con le braccia.",
+   "Unisci le scapole in alto."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Pushdown tricipiti ai cavi",
+  "description": "Un isolamento dei tricipiti al cavo.",
+  "instructions": [
+   "Davanti al cavo con barra dritta.",
+   "Impugna con i gomiti ai fianchi.",
+   "Spingi la barra in basso finché le braccia sono completamente distese.",
+   "Torna lentamente.",
+   "Ripeti."
+  ],
+  "tips": [
+   "Busto eretto.",
+   "Si muovono solo gli avambracci."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Leg curl al TRX",
+  "description": "Questo isolamento in sospensione allena femorali, glutei e polpacci portando i talloni ai glutei.",
+  "instructions": [
+   "Supino con i talloni nelle cinghie, ginocchia a 90 gradi.",
+   "Solleva i fianchi in linea dalle ginocchia alle spalle.",
+   "Distendi le gambe con i fianchi alti e il core contratto.",
+   "Porta i talloni ai glutei contraendo forte i femorali.",
+   "Controlla senza far cadere i fianchi."
+  ],
+  "tips": [
+   "Core contratto perché i fianchi non cedano.",
+   "Cerca una forte contrazione al culmine.",
+   "Controlla l'eccentrica distendendo piano."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Lat machine con triangolo",
+  "description": "Una lat machine in presa neutra col triangolo, grande allungamento e contrazione profonda.",
+  "instructions": [
+   "Aggancia un triangolo al cavo della lat machine.",
+   "Cosce bloccate, palmi che si guardano.",
+   "Parti con le braccia tese sopra la testa.",
+   "Tira allo sterno, gomiti in basso e un po' indietro.",
+   "Contrai in basso e risali lentamente.",
+   "Ripeti il numero consigliato."
+  ],
+  "tips": [
+   "La presa neutra è più gentile con le spalle.",
+   "Immagina di avvicinare le costole ai fianchi: pensa ai dorsali, non alle braccia."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Affondi camminati con manubri",
+  "description": "Affondi camminati alternati con manubri; quadricipiti e glutei una gamba alla volta.",
+  "instructions": [
+   "Un manubrio per mano, braccia rilassate.",
+   "Passo lungo e scendi con entrambe le ginocchia a 90 gradi.",
+   "Spingi con la gamba avanti e passa al passo successivo.",
+   "Alterna le gambe tenendo il busto eretto per tutto il percorso."
+  ],
+  "tips": [
+   "Passi lunghi perché il ginocchio non superi molto la punta.",
+   "Serve spazio; altrimenti fai affondi indietro."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Dip zavorrati",
+  "description": "Dip con zavorra, un manubrio tra i piedi o un giubbotto.",
+  "instructions": [
+   "In appoggio a braccia tese, manubrio tra le caviglie.",
+   "Inclina leggermente e piega i gomiti con controllo.",
+   "Fermati con le spalle all'altezza dei gomiti.",
+   "Spingi fino a braccia tese."
+  ],
+  "tips": [
+   "Padroneggia prima i dip a corpo libero.",
+   "Non oltre quanto tollera la spalla."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Trazioni zavorrate",
+  "description": "Trazione zavorrata, un manubrio tra i piedi o un giubbotto.",
+  "instructions": [
+   "Presa poco larga, manubrio tra le caviglie.",
+   "Tira i gomiti finché il mento supera la sbarra.",
+   "Tieni il corpo stabile, senza dondolare.",
+   "Scendi fino a braccia tese."
+  ],
+  "tips": [
+   "Padroneggia prima le trazioni a corpo libero.",
+   "Con il giubbotto, aumenta gradualmente."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Pulley presa larga",
+  "description": "Pulley con barra lunga presa larga, per schiena alta e retro spalla.",
+  "instructions": [
+   "Al cavo basso, piedi saldi, ginocchia morbide, presa larga.",
+   "Schiena dritta, tira al basso petto con i gomiti in fuori e indietro.",
+   "Unisci le scapole e tieni un istante.",
+   "Distendi lasciando aprire le scapole senza incurvare la schiena."
+  ],
+  "tips": [
+   "Niente oscillazioni: lavora la schiena.",
+   "Al petto, non all'addome."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher squat",
+  "description": "Squat col bilanciere nell'incavo dei gomiti, carico avanti e molto lavoro del tronco.",
+  "instructions": [
+   "Bilanciere nell'incavo dei gomiti, avambracci incrociati o pugni uniti.",
+   "Scendi col petto alto, gomiti al corpo.",
+   "Fermati con le cosce parallele o poco sotto.",
+   "Spingi a terra fino in piedi."
+  ],
+  "tips": [
+   "Usa un cuscino o un asciugamano se dà fastidio.",
+   "Addome saldo per non piegarti avanti."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Military press seduto a terra a gambe tese, senza appoggi, impegnativo per il tronco.",
+  "instructions": [
+   "Seduto a terra con le gambe tese, bilanciere sul petto alto.",
+   "Busto eretto, spingi dritto fino a braccia tese.",
+   "Bilanciere sopra la testa senza inclinarti.",
+   "Scendi con controllo alla clavicola."
+  ],
+  "tips": [
+   "Meno peso che in piedi: il tronco stabilizza.",
+   "Contrai glutei e addome."
+  ]
+ }
+}
