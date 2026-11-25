@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Roda abdominal",
+  "description": "Un exercicio de core facendo rodar unha roda adiante e atrás, que adestra a antiextensión da columna.",
+  "instructions": [
+   "Axeónllate no chan e agarra as asas da roda á largura dos ombros.",
+   "Activa con forza o core para que a zona lumbar quede neutra.",
+   "Fai rodar a roda amodo cara adiante, estendendo o corpo o máis lonxe que poidas controlar.",
+   "Detente antes de que as cadeiras se afundan ou as costas se arqueen.",
+   "Tira da roda de volta cara aos xeonllos contraendo os abdominais."
+  ],
+  "tips": [
+   "Activa o core antes de cada repetición — non deixes que a zona lumbar se arquee.",
+   "Aumenta o percorrido progresivamente, parando antes de que as cadeiras se afundan.",
+   "Usa un tope contra a parede se non podes controlar a posición baixa."
+  ]
+ },
+ "arnold-press": {
+  "name": "Press Arnold",
+  "description": "Press de ombros con mancornas con xiro dos pulsos, que recruta o deltoide nun percorrido amplo.",
+  "instructions": [
+   "Sentado co respaldo recto, suxeita as mancornas á altura do peito coas palmas cara a ti e os cóbados diante.",
+   "Comeza a empuxar cara arriba mentres abres os cóbados e xiras as palmas cara adiante.",
+   "Remata cos brazos estendidos sobre a cabeza sen bloquear os cóbados.",
+   "Baixa xirando de novo as palmas cara a ti ata a posición inicial."
+  ],
+  "tips": [
+   "Fai o xiro de forma fluída, sen impulsos.",
+   "Mantén as costas apoiadas no respaldo."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Dominadas asistidas",
+  "description": "Unha dominada en máquina asistida que contrarresta parte do peso corporal, pensada para construír a forza de costas necesaria para as dominadas estritas.",
+  "instructions": [
+   "Coloca os xeonllos na almofada da máquina de dominadas asistidas.",
+   "Agarra a barra coas palmas mirando cara a fóra, lixeiramente máis ancho ca os ombros.",
+   "Tira do peito cara á barra levando os cóbados cara abaixo.",
+   "Baixa de forma controlada ata quedar colgado cos brazos estendidos.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Comeza o movemento baixando as omoplatas antes de dobrar os cóbados.",
+   "Evita balancearte para non restar traballo ás costas.",
+   "Axusta o contrapeso para completar todas as repeticións con boa técnica."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Curl de pernas con balón de estabilidade",
+  "description": "Un curl de isquiotibiais co propio peso usando un balón de estabilidade, rodando os talóns cara aos glúteos mentres se eleva a cadeira.",
+  "instructions": [
+   "Déitate boca arriba no chan cos talóns e a parte inferior dos xemelgos sobre o balón de estabilidade e os brazos estirados para facer equilibrio.",
+   "Preme cos talóns para elevar as cadeiras formando unha liña recta desde os ombros ata os nocellos.",
+   "Mantendo as cadeiras arriba, flexiona os xeonllos para rodar o balón cara aos glúteos.",
+   "Estende as pernas de volta de forma controlada sen baixar as cadeiras.",
+   "Completa todas as repeticións, despois baixa as cadeiras e sepárate do balón."
+  ],
+  "tips": [
+   "As cadeiras seguen arriba durante toda a serie: é unha combinación de ponte e curl.",
+   "Comeza cos dous pés; progresa a unha soa perna cando resulte fácil."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Curl de perna de pé con banda",
+  "description": "Un curl femoral de pé cunha banda elástica arredor do nocello, útil para viaxes ou como remate con pouca carga para os isquiotibiais.",
+  "instructions": [
+   "Coloca unha banda elástica arredor dun nocello e ancora o outro extremo baixo o pé de apoio ou nun punto fixo diante de ti.",
+   "Mantente ergueito, suxéitate a algo se precisas equilibrio, con lixeira flexión na perna de apoio.",
+   "Sobe o talón coa banda cara ao glúteo, mantendo a coxa quieta.",
+   "Contrae o isquiotibial arriba e baixa con control ata o estiramento completo.",
+   "Completa todas as repeticións dun lado e cambia de perna."
+  ],
+  "tips": [
+   "Mantén a coxa quieta — só se move a parte inferior da perna.",
+   "Evita balancear a cadeira para coller impulso.",
+   "Usa unha banda máis lixeira se non podes controlar o descenso."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Xalón con banda elástica",
+  "description": "Xalón vertical cunha banda elástica ancorada nun punto alto, como alternativa á polea.",
+  "instructions": [
+   "De pé, coa banda ancorada a un punto alto (unha porta ou unha barra) e un extremo en cada man, brazos estendidos sobre a cabeza.",
+   "Tira das mans cara abaixo levando os cóbados aos costados, co peito alto.",
+   "Aperta as costas cando as mans cheguen á altura dos ombros.",
+   "Sobe os brazos con control ata estendelos de novo."
+  ],
+  "tips": [
+   "Non inclines o tronco cara atrás para tirar.",
+   "Asegura ben a ancoraxe antes de comezar."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Band pull-apart",
+  "description": "Separación dunha banda elástica cos brazos estendidos para activar a parte posterior do ombro e a parte alta das costas.",
+  "instructions": [
+   "De pé, suxeita a banda coas mans á largura dos ombros e os brazos estendidos diante, á altura do peito.",
+   "Separa as mans levando os brazos cara aos lados ata que a banda toque o peito.",
+   "Xunta as omoplatas ao final do movemento sen encoller os ombros.",
+   "Volve á posición inicial con control, sen deixar que a banda tire de ti."
+  ],
+  "tips": [
+   "Escolle unha banda que permita 15 ou máis repeticións limpas.",
+   "Mantén as costelas recollidas para non arquear a zona lumbar."
+  ]
+ },
+ "band-row": {
+  "name": "Remo con banda elástica",
+  "description": "Remo sentado cunha banda elástica ancorada nos pés, que non require máis material ca a banda.",
+  "instructions": [
+   "Senta no chan coas pernas estendidas e a banda rodeando as plantas dos pés, suxeitando un extremo con cada man.",
+   "Coas costas rectas, tira das mans cara ao abdome levando os cóbados atrás.",
+   "Xunta as omoplatas ao final do movemento.",
+   "Estira os brazos con control sen soltar a tensión da banda."
+  ],
+  "tips": [
+   "Non te balancees para axudarte co tronco.",
+   "Escolle unha banda que permita de 12 a 15 repeticións limpas."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Press de ombros con banda elástica",
+  "description": "Press de ombros de pé sobre unha banda elástica, para traballar o deltoide con moi pouco material.",
+  "instructions": [
+   "De pé sobre o centro da banda, cos pés á largura das cadeiras e un extremo en cada man á altura dos ombros.",
+   "Empuxa as mans cara arriba ata estender os brazos sobre a cabeza.",
+   "Mantén o abdome firme e as costelas recollidas.",
+   "Baixa con control ata os ombros sen perder tensión."
+  ],
+  "tips": [
+   "Non arquees as costas ao empuxar.",
+   "Dá unha volta máis á banda para aumentar a resistencia."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Agachamento búlgaro con barra",
+  "description": "Agachamento a unha perna co pé traseiro elevado nun banco e a barra sobre as costas.",
+  "instructions": [
+   "Apoia o empeine dun pé nun banco detrás de ti, coa barra sobre a parte alta das costas e a outra perna adiantada.",
+   "Flexiona o xeonllo dianteiro e baixa co tronco ergueito ata que a coxa quede paralela ao chan.",
+   "Mantén o peso sobre o talón da perna dianteira.",
+   "Empuxa o chan co pé dianteiro ata estender a perna; completa as repeticións e cambia de perna."
+  ],
+  "tips": [
+   "Axusta a distancia para que o xeonllo dianteiro non sobrepase moito a punta do pé.",
+   "Practica primeiro sen carga ou con mancornas."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Curl con barra",
+  "description": "Un exercicio clásico de illamento de bíceps que usa a barra para unha carga máxima.",
+  "instructions": [
+   "Ponte de pé suxeitando unha barra con agarre supino á largura dos ombros.",
+   "Sobe a barra cara aos ombros.",
+   "Aperta na parte superior e baixa de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Evita balancear o torso.",
+   "Mantén os cóbados pegados aos costados."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Ponte de glúteos con barra",
+  "description": "Unha ponte de glúteos con carga usando unha barra para maior resistencia.",
+  "instructions": [
+   "Déitate no chan cunha barra sobre as cadeiras e os xeonllos flexionados.",
+   "Eleva as cadeiras apertando os glúteos.",
+   "Aguanta na parte superior coas cadeiras completamente estendidas.",
+   "Baixa con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Evita arquear a zona lumbar ao estender a cadeira.",
+   "Empuxa cos talóns, non coas puntas dos pés.",
+   "Mete o queixo e mantén a parte alta das costas apoiada."
+  ]
+ },
+ "barbell-row": {
+  "name": "Remo con barra inclinado",
+  "description": "Un movemento composto de tracción que traballa a parte superior e media das costas.",
+  "instructions": [
+   "Inclínate desde as cadeiras cunha lixeira flexión de xeonllos.",
+   "Agarra a barra lixeiramente máis ancho ca a largura dos ombros.",
+   "Tira da barra cara á parte baixa do peito apertando as omoplatas.",
+   "Baixa a barra de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén o torso a uns 45 graos.",
+   "Non uses o impulso para balancear o peso."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Elevación de xemelgos de pé con barra",
+  "description": "Elevación de talóns de pé cunha barra libre sobre as costas, sen necesidade de máquina específica.",
+  "instructions": [
+   "De pé coa barra sobre a parte alta das costas e a punta dos pés sobre un chanzo ou disco, á largura das cadeiras.",
+   "Deixa baixar os talóns ata estirar os xemelgos, mantendo o tronco ergueito.",
+   "Sobe de puntas todo o que poidas, sen flexionar os xeonllos.",
+   "Mantén un instante arriba e baixa con control."
+  ],
+  "tips": [
+   "Comeza con pouco peso ata controlar o equilibrio.",
+   "Faino dentro dun rack cos topes á altura axeitada por seguridade."
+  ]
+ },
+ "bench-press": {
+  "name": "Press de banca con barra",
+  "description": "Un movemento composto de empuxe que traballa o peito, os ombros e os tríceps.",
+  "instructions": [
+   "Déitate no banco cos ollos baixo a barra.",
+   "Agarra a barra coas mans algo máis separadas ca a largura dos ombros.",
+   "Saca a barra do rack e báixaa ata o centro do peito.",
+   "Empuxa a barra de volta ata a extensión completa dos brazos.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Mantén os pés planos no chan.",
+   "Conserva unha lixeira curvatura na zona lumbar.",
+   "Empuxa coas pernas contra o chan para manterte estable."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Remo invertido cos xeonllos flexionados",
+  "description": "Versión para principiantes do remo invertido: cos xeonllos flexionados e os pés preto do corpo, pesa menos e é máis doado de controlar.",
+  "instructions": [
+   "Déitate baixo unha barra baixa e firme, agárraa coas mans algo máis anchas ca os ombros e mantén o tronco recto cos xeonllos flexionados e as plantas dos pés apoiadas.",
+   "Tira do peito cara á barra levando os cóbados cara atrás e xuntando as omoplatas.",
+   "Mantén un instante arriba sen deixar caer as cadeiras.",
+   "Baixa de forma controlada ata estender os brazos."
+  ],
+  "tips": [
+   "Achega os pés ao corpo para facelo máis doado ou afástaos para progresar.",
+   "Cando domines 12 repeticións, pasa ao remo invertido coas pernas rectas."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Elevación de xemelgos con peso corporal",
+  "description": "Unha elevación de talóns co propio peso corporal, un exercicio básico para fortalecer os xemelgos.",
+  "instructions": [
+   "Colócate de pé cos pés separados á largura das cadeiras sobre unha superficie plana.",
+   "Sobe de puntas o máis alto posible.",
+   "Aperta os xemelgos na parte superior.",
+   "Baixa os talóns ao chan de forma controlada.",
+   "Repite o número desexado de repeticións."
+  ],
+  "tips": [
+   "Reparte o peso entre todos os dedos ao subir.",
+   "Mantén as pernas rectas para centrar o traballo no xemelgo.",
+   "Fixa a mirada nun punto para manter o equilibrio."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Zancada inversa con peso corporal",
+  "description": "Zancada cara atrás sen material, máis estable e amable cos xeonllos ca a zancada cara adiante.",
+  "instructions": [
+   "De pé cos pés xuntos e as mans na cintura, co peito alto.",
+   "Dá un paso longo cara atrás e baixa flexionando ambos os xeonllos ata que o xeonllo traseiro quede preto do chan.",
+   "Mantén o tronco ergueito e o peso sobre o pé dianteiro.",
+   "Empuxa coa perna dianteira para volver á posición inicial; completa as repeticións e cambia de perna."
+  ],
+  "tips": [
+   "Dá un paso abondo longo para que o xeonllo dianteiro non pase moito da punta do pé.",
+   "Agárrate a un apoio se aínda che custa o equilibrio."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Agachamento con peso corporal",
+  "description": "Agachamento básico sen material, ideal para aprender o patrón de movemento e adestrar pernas en calquera lugar.",
+  "instructions": [
+   "De pé cos pés á largura dos ombros, as puntas lixeiramente abertas e os brazos estendidos diante.",
+   "Leva as cadeiras atrás e abaixo coma se sentases, co peito alto e as costas neutras.",
+   "Baixa ata que as coxas queden paralelas ao chan, cos xeonllos seguindo a liña dos pés.",
+   "Empuxa o chan con todo o pé ata estar de novo ergueito."
+  ],
+  "tips": [
+   "Mantén os talóns apoiados durante todo o percorrido.",
+   "Se che custa baixar, senta nunha cadeira e levántate sen impulso."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Agachamento búlgaro",
+  "description": "Unha variante de agachamento unilateral co pé traseiro elevado.",
+  "instructions": [
+   "Colócate de pé diante dun banco e apoia un pé detrás sobre o banco.",
+   "Suxeita mancornas aos lados.",
+   "Baixa o corpo ata que a coxa dianteira quede paralela ao chan.",
+   "Empuxa co talón dianteiro para volver á posición de pé.",
+   "Repite en ambos os lados."
+  ],
+  "tips": [
+   "Mantén case todo o peso sobre a perna adiantada.",
+   "Axusta a distancia ao banco ata que a zancada sexa estable.",
+   "Completa todas as repeticións cunha perna antes de cambiar."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Crunch en polea",
+  "description": "Un encollemento abdominal de xeonllos en polea alta con corda, que permite engadir carga progresiva ao traballo do recto abdominal.",
+  "instructions": [
+   "Axeónllate diante dunha polea co accesorio de corda na parte superior.",
+   "Suxeita a corda preto da fronte cos cóbados flexionados.",
+   "Baixa flexionando a columna e levando os cóbados cara ás coxas.",
+   "Aperta con forza os abdominais na parte inferior.",
+   "Volve á posición inicial e repite."
+  ],
+  "tips": [
+   "Flexiona a columna en lugar de tirar cos brazos.",
+   "Evita sentar cara atrás coa cadeira en cada repetición.",
+   "Exhala con forza ao baixar para contraer mellor o abdome."
+  ]
+ },
+ "cable-curl": {
+  "name": "Curl en polea",
+  "description": "Un curl de bíceps con resistencia de cable para tensión constante.",
+  "instructions": [
+   "Colócate de pé diante dunha polea baixa cunha barra recta ou barra Z.",
+   "Agarra a barra con agarre supino e os cóbados pegados aos costados.",
+   "Sobe a barra cara aos ombros.",
+   "Baixa de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Evita que os cóbados se adianten ao subir a barra.",
+   "Non balancees o torso para axudarte co peso.",
+   "Afasta un pouco o corpo da polea para manter a tensión."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Rotación externa en polea",
+  "description": "Un exercicio de rotación externa en polea, co cóbado pegado ao costado, que fortalece os rotadores externos do manguito rotador coa axuda do deltoide posterior.",
+  "instructions": [
+   "Axusta a polea á altura do cóbado e agarra a asa.",
+   "Colócate de lado á máquina co cóbado de traballo flexionado a 90 graos.",
+   "Mantén o cóbado pegado ao costado e rota o antebrazo cara a fóra.",
+   "Fai unha pausa ao final do movemento.",
+   "Volve de forma controlada. Completa as repeticións dun lado e despois cambia."
+  ],
+  "tips": [
+   "Evita encoller os ombros mentres xiras o brazo.",
+   "Traballa con pouco peso e de forma lenta e controlada.",
+   "Mantén o pulso firme, aliñado co antebrazo."
+  ]
+ },
+ "cable-fly": {
+  "name": "Aperturas en polea",
+  "description": "Un exercicio de illamento para o peito con resistencia de cable para tensión constante.",
+  "instructions": [
+   "Colócate entre dúas columnas de cable cos agarres enganchados ás poleas altas.",
+   "Cunha lixeira flexión nos cóbados, abre os brazos cara aos lados.",
+   "Xunta as mans diante do peito nun movemento de aperta.",
+   "Volve amodo á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén constante o ángulo dos cóbados para non convertelo nun press.",
+   "Aperta o peito un segundo cando as mans se xunten.",
+   "Non adiantes os ombros cando os brazos estean abertos."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Elevacións frontais en polea",
+  "description": "Elevación frontal con polea baixa, que mantén tensión constante durante todo o percorrido.",
+  "instructions": [
+   "De costas á polea baixa, co cable pasando entre as pernas e a asa nunha man, brazo estendido diante da coxa.",
+   "Eleva o brazo cara adiante ata a altura do ombro, co cóbado lixeiramente flexionado.",
+   "Mantén un instante arriba sen inclinar o tronco cara atrás.",
+   "Baixa con control sen deixar que o peso descanse; repite e cambia de brazo."
+  ],
+  "tips": [
+   "Colócate abondo lonxe para que o cable tire cara atrás.",
+   "Mantén o abdome firme para non arquear as costas."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Elevacións laterais en polea",
+  "description": "Unha elevación lateral unilateral en polea, que ofrece tensión constante sobre o deltoide lateral.",
+  "instructions": [
+   "Colócate de lado a unha polea baixa e agarra a asa coa man máis afastada da máquina.",
+   "Mantén unha lixeira flexión no cóbado e deixa que o cable cruce por diante do corpo.",
+   "Sobe o brazo cara ao lado ata quedar paralelo ao chan.",
+   "Baixa con control. Fai as repeticións dun lado e despois cambia.",
+   "Mantén a tensión — non deixes que o peso descanse abaixo."
+  ],
+  "tips": [
+   "Guía co cóbado, non coa man.",
+   "Fai unha breve pausa arriba, sen balanceo.",
+   "Usa menos carga ca con mancorna — a tensión do cable é constante."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Extensión de tríceps sobre a cabeza en polea",
+  "description": "Un exercicio de tríceps con cable: de costas á pila de pesos, suxeitas unha corda detrás da cabeza e estendes os cóbados para empuxala cara arriba e por riba da cabeza. A posición sobre a cabeza estira a cabeza longa do tríceps e o cable mantén a tensión no músculo durante todo o movemento.",
+  "instructions": [
+   "Engancha unha corda á polea baixa e selecciona un peso lixeiro.",
+   "Agarra a corda con ambas as mans, xira de costas á pila e dá un paso adiante en posición graduada para que o cable tire de ti cara atrás.",
+   "Sobe a corda por riba da cabeza cos cóbados flexionados e a parte superior dos brazos preto das orellas, de modo que as mans queden detrás da cabeza.",
+   "Aperta o tronco e mantén quieta a parte superior dos brazos, despois estende os cóbados para empuxar a corda cara arriba ata que os brazos queden completamente estirados sobre a cabeza.",
+   "Fai unha breve pausa arriba e despois flexiona os cóbados para baixar a corda de novo detrás da cabeza de forma controlada.",
+   "Repite o número de repeticións previsto."
+  ],
+  "tips": [
+   "Mantén os cóbados apuntando adiante e a parte superior dos brazos quieta; se se abren ou se desprazan, a extensión convértese nun press.",
+   "Dá un paso abondo longo adiante para que o cable te manteña estable e evita arquear a zona lumbar ao subir os brazos sobre a cabeza.",
+   "Usa un peso que poidas controlar en todo o estiramento; as cargas pesadas separan os cóbados."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Press Pallof en polea",
+  "description": "Un exercicio de core antirrotación no que a polea tira de ti cara a un lado mentres empuxas o agarre recto desde o peito e non deixas que o torso xire.",
+  "instructions": [
+   "Coloca a polea á altura do peito e colle o agarre con ambas as mans, colocado de lado respecto á máquina.",
+   "Sepárate ata que haxa tensión real no cable, cos pés á largura dos ombros e os xeonllos lixeiramente flexionados.",
+   "Leva o agarre ao centro do peito e aperta o tronco e os glúteos.",
+   "Empuxa o agarre recto cara adiante ata estender os brazos, resistindo o tirón que quere rotarte cara á máquina.",
+   "Mantén un instante a posición estendida e devolve despois o agarre ao peito de forma controlada.",
+   "Completa as repeticións desexadas, dá a volta e repite cara ao outro lado."
+  ],
+  "tips": [
+   "Nada debe rotar. Se os ombros xiran cara á polea ao empuxar, baixa o peso — o que adestra é a rotación que non chega a producirse.",
+   "Canto máis te afastes da máquina, máis longo é o brazo de panca e máis custa, así que podes cambiar a dificultade sen tocar a pila de pesos.",
+   "Mantén os brazos á altura do peito e os ombros abaixo; deixar que o agarre suba convérteo nunha elevación frontal."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Paxaro en polea",
+  "description": "Un exercicio de pé con cable para os deltoides posteriores: de cara ao espazo entre dúas torres de polea, suxeitas as empuñaduras opostas cos cables cruzados diante de ti e levas os brazos cara a fóra e atrás ata que quedan á altura dos ombros. Os cables manteñen a tensión na parte posterior dos ombros durante todo o arco.",
+  "instructions": [
+   "Coloca ambas as poleas aproximadamente á altura dos ombros e sitúate no centro, entre as dúas torres de polea.",
+   "Agarra a empuñadura esquerda coa man dereita e a empuñadura dereita coa man esquerda, de modo que os cables se crucen diante de ti.",
+   "Ponte ergueito cos brazos estirados diante á altura dos ombros e unha lixeira flexión nos cóbados.",
+   "Leva os brazos cara a fóra e atrás nun arco amplo, guiando o movemento cos cóbados, ata que queden en liña cos ombros.",
+   "Xunta as omoplatas brevemente sen arquear a zona lumbar.",
+   "Devolve as empuñaduras amodo á posición inicial cruzada e repite o número de repeticións previsto."
+  ],
+  "tips": [
+   "Mantén os cóbados lixeiramente flexionados e fixos; se os flexionas e estendes, a apertura convértese nun remo.",
+   "Mantén os ombros baixos e o pescozo relaxado para que traballen os deltoides posteriores e non o trapecio superior.",
+   "Usa un peso lixeiro e un retorno lento; os cables tiran con máis forza ao final do arco, así que controla esa posición."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Elevación de xeonllos en cadeira romana",
+  "description": "Un exercicio de peso corporal en cadeira romana que traballa o abdome baixo e os flexores de cadeira.",
+  "instructions": [
+   "Colócate na cadeira romana coas costas planas contra o respaldo e os antebrazos nos apoios.",
+   "Deixa as pernas colgando rectas cara abaixo.",
+   "Activa o core e sobe os xeonllos cara ao peito.",
+   "Mantén brevemente arriba e baixa amodo á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Evita balancear as pernas para coller impulso.",
+   "Exhala ao subir os xeonllos.",
+   "Mantén as costas contra o respaldo durante todo o exercicio."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Press de peito en máquina",
+  "description": "Un movemento de empuxe para o peito en máquina, ideal para principiantes.",
+  "instructions": [
+   "Senta na máquina coas costas planas contra o respaldo.",
+   "Agarra as empuñaduras á altura do peito.",
+   "Empuxa as empuñaduras cara adiante ata estender os brazos completamente.",
+   "Volve amodo á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Axusta o asento para que as empuñaduras queden á altura do peito.",
+   "Empuxa sen bloquear os cóbados de golpe.",
+   "Volve atrás con control, sen soltar o peso de golpe."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Remo con mancornas con apoio no peito",
+  "description": "Un remo con mancornas con apoio no peito para eliminar a tensión na zona lumbar e illar os músculos das costas.",
+  "instructions": [
+   "Déitate boca abaixo nun banco inclinado coas mancornas colgando por debaixo.",
+   "Rema coas mancornas cara aos lados.",
+   "Aperta na parte superior e baixa.",
+   "Repite."
+  ],
+  "tips": [
+   "O apoio no peito elimina a fatiga das costas.",
+   "Concéntrate en xuntar as omoplatas."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Remo con pesa rusa apoiado no peito",
+  "description": "Este exercicio traballa os músculos das costas, principalmente o dorsal ancho e os romboides, remando cunha pesa rusa en cada man cara ás cadeiras mentres o torso está apoiado nun banco inclinado.",
+  "instructions": [
+   "Déitate boca abaixo nun banco inclinado, deixando que os brazos colguen libremente cunha pesa rusa en cada man.",
+   "Contrae o abdome e retrae as escápulas.",
+   "Tira das pesas rusas cara ás cadeiras, apertando as escápulas.",
+   "Fai unha breve pausa na parte superior, sentindo a contracción nas costas.",
+   "Baixa amodo as pesas rusas á posición inicial con control."
+  ],
+  "tips": [
+   "Mantén o torso estable durante todo o movemento; evita balancearte.",
+   "Concéntrate en comezar o tirón cos músculos das costas, non só cos brazos.",
+   "Mantén os cóbados preto do corpo para dar prioridade ao dorsal ancho."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Remo en máquina con apoio no peito",
+  "description": "Un exercicio de remo sentado en máquina cunha almofada no peito que sostén o torso, de modo que os dorsais e os músculos entre as omoplatas fan o tirón e a zona lumbar queda fóra. Tiras das empuñaduras cara atrás levando os cóbados detrás de ti e despois déixalas volver cara adiante con control.",
+  "instructions": [
+   "Axusta o asento para que as empuñaduras queden á altura da parte baixa do peito e senta co peito contra a almofada e os pés ben apoiados.",
+   "Estírate cara adiante e agarra as empuñaduras cos brazos estendidos e os ombros relaxados.",
+   "Aperta o tronco e tira das empuñaduras cara atrás levando os cóbados detrás de ti.",
+   "Xunta as omoplatas ao final do tirón sen despegar o peito da almofada.",
+   "Fai unha breve pausa e despois estende os brazos para devolver as empuñaduras cara adiante de forma controlada.",
+   "Repite o número de repeticións previsto mantendo o peito sobre a almofada en todo momento."
+  ],
+  "tips": [
+   "Tira cos cóbados en lugar de coas mans, para que os dorsais e a parte media das costas leven o movemento e os bíceps axuden.",
+   "Mantén o peito na almofada e os ombros baixos; se encolles os ombros ou te botas cara atrás, o remo convértese nun tirón do trapecio superior.",
+   "Deixa que as omoplatas se separen cara adiante ao comezo de cada repetición para lograr un estiramento completo antes do seguinte tirón."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Remo en T con apoio no peito",
+  "description": "Remo con barra en T apoiando o peito nun banco inclinado, que illa as costas sen carga sobre a zona lumbar.",
+  "instructions": [
+   "Apoia o peito no banco inclinado, cos pés firmes no chan, e agarra a asa da barra en T cos brazos estendidos.",
+   "Tira da asa cara ao peito levando os cóbados atrás e pegados ao corpo.",
+   "Aperta as omoplatas arriba durante un instante.",
+   "Baixa con control ata estender os brazos sen despegar o peito do banco."
+  ],
+  "tips": [
+   "Mantén a cabeza aliñada coa columna.",
+   "Se precisas despegar o peito do banco para subir, reduce o peso."
+  ]
+ },
+ "chin-ups": {
+  "name": "Dominadas en supinación",
+  "description": "Unha variante de dominadas con agarre supino que activa con forza os bíceps xunto co dorsal ancho.",
+  "instructions": [
+   "Cólgate dunha barra con agarre supino á largura dos ombros.",
+   "Sobe ata que o queixo supere a barra.",
+   "Baixa de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén o core contraído durante todo o exercicio.",
+   "Evita o balanceo excesivo."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Press de banca con agarre pechado",
+  "description": "Press de banca coas mans máis xuntas, que aumenta a participación do tríceps mantendo o traballo do peito.",
+  "instructions": [
+   "Déitate no banco e agarra a barra coas mans separadas á largura dos ombros ou algo menos.",
+   "Desbloquea a barra e lévaa sobre o peito cos brazos estendidos.",
+   "Baixa de forma controlada ata rozar a parte baixa do peito, cos cóbados preto do corpo.",
+   "Empuxa a barra cara arriba ata estender os cóbados."
+  ],
+  "tips": [
+   "Non xuntes as mans en exceso: o pulso sofre; abonda coa largura dos ombros.",
+   "Pide axuda ou usa un rack con seguros cando traballes preto do fallo."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Press de banca con mancornas",
+  "description": "Un exercicio composto de peito con mancornas que permite maior percorrido ca o press de banca con barra.",
+  "instructions": [
+   "Déitate nun banco plano suxeitando unha mancorna en cada man á altura do peito.",
+   "Empuxa as mancornas cara arriba ata estender completamente os brazos.",
+   "Báixaas amodo ata a posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os pulsos neutros durante todo o exercicio.",
+   "Aperta o peito na parte superior do movemento."
+  ]
+ },
+ "db-fly": {
+  "name": "Aperturas con mancornas",
+  "description": "Un exercicio de illamento que estira e contrae o peitoral ao longo dun amplo arco de movemento.",
+  "instructions": [
+   "Déitate nun banco coas mancornas sobre o peito e as palmas mirándose entre si.",
+   "Cunha lixeira flexión de cóbados, baixa as mancornas cara aos lados.",
+   "Volve á posición inicial apertando o peito.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén unha flexión constante nos cóbados durante todo o exercicio.",
+   "Non baixes demasiado as mancornas."
+  ]
+ },
+ "db-squat": {
+  "name": "Agachamento con mancornas",
+  "description": "Un agachamento cargado cunha mancorna en cada man aos costados, accesible sen barra.",
+  "instructions": [
+   "Pés á largura dos ombros, unha mancorna en cada man aos lados.",
+   "Activa o core e mantén o peito arriba.",
+   "Baixa en agachamento flexionando cadeiras e xeonllos.",
+   "Descende ata que as coxas queden paralelas ou máis abaixo.",
+   "Empuxa cos talóns para volver subir."
+  ],
+  "tips": [
+   "Mantén o peito arriba e as costas rectas.",
+   "Empuxa os xeonllos en liña coas puntas dos pés.",
+   "Usa correas se o agarre se converte no factor limitante."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "Un exercicio de core deitado boca arriba que coordina a extensión de extremidades opostas para adestrar a estabilidade do core profundo.",
+  "instructions": [
+   "Déitate boca arriba cos brazos estendidos cara ao teito e os xeonllos a 90 graos.",
+   "Baixa o brazo dereito e a perna esquerda cara ao chan mantendo a zona lumbar premida contra o chan.",
+   "Volve á posición inicial.",
+   "Repite do outro lado.",
+   "Alterna."
+  ],
+  "tips": [
+   "Preme a zona lumbar contra o chan en todo momento.",
+   "Móvete amodo."
+  ]
+ },
+ "deadlift": {
+  "name": "Peso morto con barra",
+  "description": "Un levantamento composto de corpo enteiro que traballa principalmente a cadea posterior.",
+  "instructions": [
+   "De pé cos pés á largura das cadeiras e a barra sobre o medio do pé.",
+   "Fai bisagra nas cadeiras e agarra a barra.",
+   "Contrae o core e levanta estendendo cadeiras e xeonllos.",
+   "Ponte completamente ergueito arriba e despois baixa de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén a barra preto do corpo.",
+   "Non redondees a zona lumbar."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Peso morto con déficit",
+  "description": "Peso morto subido sobre unha plataforma baixa, que aumenta o percorrido e a esixencia no arrinque.",
+  "instructions": [
+   "Sobe a unha plataforma de 2 a 5 cm cos pés baixo a barra e agarra a barra coas costas neutras e os ombros sobre ela.",
+   "Tensa o corpo e empuxa o chan cos pés mentres a barra comeza a subir pegada ás pernas.",
+   "Estende cadeiras e xeonllos á vez ata quedar completamente ergueito.",
+   "Baixa a barra de forma controlada ata o chan, mantendo as costas neutras."
+  ],
+  "tips": [
+   "Comeza cun déficit pequeno e pouco peso para axustar a técnica.",
+   "Non redondees as costas ao saír do chan."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "Exercicio de abdome avanzado co corpo ríxido apoiado só nos ombros, que sobe e baixa como unha panca.",
+  "instructions": [
+   "Déitate nun banco, agarra o bordo por detrás da cabeza e eleva o corpo recto apoiando só os ombros e a parte alta das costas.",
+   "Baixa o corpo recto, sen dobrar as cadeiras, ata quedar case paralelo ao chan.",
+   "Mantén o abdome e os glúteos firmes sen tocar o banco.",
+   "Sobe de novo o corpo recto ata a vertical; se non podes, comeza só coa fase de baixada."
+  ],
+  "tips": [
+   "Comeza cos xeonllos flexionados ou só coa fase excéntrica.",
+   "Non dobrar a cadeira é a clave do exercicio."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Remo inclinado con mancornas",
+  "description": "Remo cunha mancorna en cada man e o torso inclinado: traballa dorsais e parte alta das costas sen máis material ca unhas mancornas.",
+  "instructions": [
+   "De pé, cunha mancorna en cada man, flexiona lixeiramente os xeonllos e inclina o torso desde as cadeiras ata deixalo case paralelo ao chan, coas costas rectas.",
+   "Deixa os brazos colgando coas palmas mirándose entre si.",
+   "Tira das mancornas cara ás cadeiras levando os cóbados cara atrás e xuntando as omoplatas.",
+   "Fai unha breve pausa arriba e baixa con control ata estender os brazos."
+  ],
+  "tips": [
+   "Mantén o torso fixo: se precisas balancearte para subir as mancornas, pesan demasiado.",
+   "Mantén o pescozo aliñado coa columna, mirando ao chan.",
+   "Se a zona lumbar cansa antes ca as costas, usa menos peso ou recorre a un remo con apoio."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Curl con mancornas",
+  "description": "Flexión de cóbado cunha mancorna en cada man para traballar o bíceps cun percorrido libre.",
+  "instructions": [
+   "De pé, cunha mancorna en cada man, os brazos estendidos xunto ao corpo e as palmas cara adiante.",
+   "Mantén os cóbados pegados ao torso e sobe as mancornas flexionando os cóbados sen balancear o corpo.",
+   "Contrae o bíceps arriba durante un instante, sen elevar os ombros.",
+   "Baixa de forma controlada ata estender o cóbado por completo."
+  ],
+  "tips": [
+   "Evita impulsarte coas costas: se o precisas, reduce o peso.",
+   "Controla a baixada; debe durar polo menos o dobre ca a subida."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Paseo do granxeiro con mancornas",
+  "description": "Este exercicio de corpo enteiro consiste en camiñar suxeitando mancornas pesadas, o que desenvolve eficazmente a forza de agarre, a estabilidade do core e a resistencia muscular xeral.",
+  "instructions": [
+   "Ponte de pé ergueito cunha mancorna en cada man, os brazos estendidos aos lados.",
+   "Retrae as escápulas e activa o core, mantendo a columna vertebral neutra.",
+   "Camiña amodo e de forma deliberada durante unha distancia ou un tempo fixados, dando pasos curtos e controlados.",
+   "Mantén o peito ergueito e evita inclinarte cara a un lado mentres camiñas.",
+   "Concéntrate en manter unha postura forte e estable durante todo o movemento."
+  ],
+  "tips": [
+   "Usa as mancornas máis pesadas que poidas controlar sen comprometer a técnica.",
+   "Respira fondo e con ritmo para manter a tensión do core.",
+   "Imaxina que levas un vaso de auga en equilibrio sobre a cabeza."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Elevacións frontais con mancornas",
+  "description": "Elevación das mancornas cara adiante ata a altura dos ombros para traballar a parte anterior do deltoide.",
+  "instructions": [
+   "De pé, cunha mancorna en cada man diante das coxas e os brazos case estendidos.",
+   "Eleva as mancornas cara adiante ata a altura dos ombros, cunha lixeira flexión de cóbados.",
+   "Detente ao chegar á horizontal sen balancear o torso.",
+   "Baixa de forma controlada ata as coxas."
+  ],
+  "tips": [
+   "Non te impulses coas costas: se o fas, reduce o peso.",
+   "O deltoide anterior xa traballa moito nos press; non abuses do volume."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Paxaro con mancornas",
+  "description": "Un exercicio de illamento inclinado que levanta as mancornas cara aos lados, traballando os deltoides posteriores e a parte alta das costas.",
+  "instructions": [
+   "Inclínate cara adiante desde as cadeiras suxeitando mancornas cos brazos colgando.",
+   "Mantén as costas rectas e os xeonllos lixeiramente dobrados.",
+   "Sobe as mancornas cara aos lados ata a altura dos ombros.",
+   "Aperta as omoplatas na parte superior.",
+   "Baixa as mancornas de forma controlada.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Usa un peso lixeiro para que traballen os deltoides posteriores, non o impulso.",
+   "Xunta ben as omoplatas arriba.",
+   "Mantén unha flexión suave e fixa nos cóbados en todo momento."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Peso morto romanés con mancornas",
+  "description": "Un peso morto romanés con mancornas que dá prioridade ao estiramento dos isquiotibiais mediante unha bisagra de cadeira.",
+  "instructions": [
+   "Ponte de pé suxeitando mancornas diante das coxas cunha lixeira flexión de xeonllos.",
+   "Inclínate desde as cadeiras e empuxa os glúteos cara atrás.",
+   "Baixa as mancornas ao longo das pernas ata notar o estiramento nos isquiotibiais.",
+   "Mantén as costas rectas e os ombros cara atrás.",
+   "Empuxa as cadeiras cara adiante para volver á posición de pé.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Baixa ata onde a túa flexibilidade o permita, sen forzar.",
+   "Mantén a mesma flexión suave de xeonllos en todo o percorrido.",
+   "Non convertas o movemento nun agachamento."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Press de ombros con mancornas",
+  "description": "Un press vertical con mancornas, sentado ou de pé, que desenvolve as porcións anterior e lateral do deltoide.",
+  "instructions": [
+   "Senta ou ponte de pé suxeitando mancornas á altura dos ombros coas palmas mirando cara adiante.",
+   "Empuxa ambas as mancornas por riba da cabeza ata que os brazos queden completamente estendidos.",
+   "Mantén o core contraído e evita arquear a zona lumbar.",
+   "Baixa as mancornas de forma controlada ata a altura dos ombros.",
+   "Non deixes que as mancornas se despracen detrás da cabeza.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Sobe as mancornas en liña recta, sen chocalas arriba.",
+   "Mantén os pulsos firmes, aliñados cos antebrazos.",
+   "Se a zona lumbar se arquea, reduce o peso."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Encollementos con mancornas",
+  "description": "Elevación dos ombros cunha mancorna en cada man para traballar a parte alta das costas e os trapecios.",
+  "instructions": [
+   "De pé, cunha mancorna en cada man, os brazos estendidos xunto ao corpo e a mirada á fronte.",
+   "Eleva os ombros cara ás orellas en liña recta, sen rotalos nin flexionar os cóbados.",
+   "Mantén un instante a contracción arriba.",
+   "Baixa de forma controlada ata estirar o trapecio por completo."
+  ],
+  "tips": [
+   "Non fagas círculos cos ombros: o percorrido é vertical.",
+   "Se o agarre falla antes ca o trapecio, usa correas."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Elevación de xemelgo a unha perna con mancorna",
+  "description": "Elevación de talón a unha soa perna sobre un chanzo, cunha mancorna e apoiando a outra man para o equilibrio.",
+  "instructions": [
+   "De pé sobre un chanzo coa punta dun pé, a outra perna flexionada e unha mancorna na man do mesmo lado; apoia a outra man nunha parede.",
+   "Deixa caer o talón por debaixo do chanzo ata estirar o xemelgo.",
+   "Sobe de puntas todo o que poidas, sen dobrar o xeonllo.",
+   "Mantén un instante arriba e baixa con control; completa as repeticións e cambia de perna."
+  ],
+  "tips": [
+   "Empuxa coa base da deda, sen que o nocello se vaia cara a fóra.",
+   "É unilateral: fai as mesmas repeticións con cada perna."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Flexións en pica coas mans elevadas",
+  "description": "Versión para principiantes da flexión en pica, coas mans sobre un chanzo ou unha cadeira estable para reducir a carga.",
+  "instructions": [
+   "Apoia as mans no bordo dun chanzo, banco ou cadeira firme, á largura dos ombros, e camiña cos pés cara atrás ata elevar as cadeiras.",
+   "Flexiona os cóbados e baixa a cabeza cara ao apoio, coas cadeiras altas.",
+   "Detente cando a cabeza quede entre as mans, sen perder a posición.",
+   "Empuxa cos brazos ata estender os cóbados."
+  ],
+  "tips": [
+   "Achega os pés ao apoio para facelo máis difícil.",
+   "Comproba que o apoio non se move antes de comezar."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull en polea",
+  "description": "Un exercicio de cable que traballa os deltoides posteriores e os rotadores externos.",
+  "instructions": [
+   "Engancha unha corda nunha polea alta.",
+   "Tira da corda cara á cara, separando os extremos.",
+   "Aperta os deltoides posteriores e os rotadores externos.",
+   "Volve á posición inicial de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os cóbados altos, aliñados cos ombros.",
+   "Xunta as escápulas ao final de cada repetición.",
+   "Traballa con peso lixeiro para non perder a técnica."
+  ]
+ },
+ "front-squat": {
+  "name": "Agachamento frontal",
+  "description": "Un agachamento coa barra suxeita diante sobre os deltoides, que dá prioridade aos cuádriceps e ao core.",
+  "instructions": [
+   "Fai unha cargada ou coloca a barra nos deltoides anteriores cos cóbados altos.",
+   "Baixa en agachamento mantendo o torso ergueito ata que as coxas estean paralelas ao chan.",
+   "Volve subir.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os cóbados altos para estabilizar a barra.",
+   "Un torso máis vertical aumenta a activación dos cuádriceps."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Ponte de glúteos",
+  "description": "Un exercicio de activación de glúteos co peso corporal realizado deitado no chan.",
+  "instructions": [
+   "Déitate boca arriba cos xeonllos flexionados e os pés planos no chan.",
+   "Eleva as cadeiras apertando os glúteos.",
+   "Mantén brevemente na parte alta coas cadeiras totalmente estendidas.",
+   "Baixa as cadeiras de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Empuxa cos talóns para activar mellor os glúteos.",
+   "Evita arquear a zona lumbar ao estender as cadeiras.",
+   "Mantén os xeonllos aliñados cos pés durante todo o percorrido."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Agachamento goblet",
+  "description": "Un agachamento axeitado para principiantes cunha pesa rusa suxeita á altura do peito que mellora a postura e a profundidade.",
+  "instructions": [
+   "Suxeita unha pesa rusa á altura do peito con ambas as mans.",
+   "Baixa en agachamento mantendo o peso preto do peito.",
+   "Volve subir.",
+   "Repite."
+  ],
+  "tips": [
+   "A posición goblet favorece de forma natural un torso ergueito.",
+   "Empuxa os xeonllos cara a fóra na parte baixa."
+  ]
+ },
+ "good-morning": {
+  "name": "Bos días con barra",
+  "description": "Bisagra de cadeira coa barra sobre as costas, para fortalecer isquiotibiais, glúteos e zona lumbar.",
+  "instructions": [
+   "De pé coa barra sobre a parte alta das costas, pés á largura dos ombros e os xeonllos lixeiramente flexionados.",
+   "Leva as cadeiras cara atrás inclinando o tronco cara adiante coas costas neutras.",
+   "Baixa ata notar tensión nos isquiotibiais, co tronco preto da horizontal.",
+   "Empuxa as cadeiras cara adiante para estar de novo ergueito."
+  ],
+  "tips": [
+   "Comeza con moi pouco peso: a zona lumbar traballa con intensidade.",
+   "Mira á fronte e non redondees as costas."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack squat",
+  "description": "Un exercicio guiado na máquina hack squat que traballa principalmente os cuádriceps mediante un patrón de agachamento controlado sobre o trineo.",
+  "instructions": [
+   "Carga a máquina hack squat e colócate coas costas e os ombros contra os acolchados.",
+   "Sitúa os pés á largura dos ombros sobre a plataforma cos pés lixeiramente xirados cara a fóra.",
+   "Solta as asas de seguridade e baixa o trineo flexionando xeonllos e cadeiras.",
+   "Descende ata que as coxas estean polo menos paralelas á plataforma.",
+   "Empuxa cos talóns para estender as pernas e devolver o trineo á posición inicial.",
+   "Volve enganchar as asas de seguridade ao rematar a serie."
+  ],
+  "tips": [
+   "Mantén a zona lumbar pegada ao acolchado durante todo o movemento.",
+   "Colocar os pés máis arriba na plataforma despraza a énfase cara a glúteos e isquiotibiais.",
+   "Controla a baixada; non te impulses desde o punto máis baixo."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Curl martelo con mancornas",
+  "description": "Unha variante do curl de bíceps con agarre neutro que traballa o braquiorradial.",
+  "instructions": [
+   "De pé, suxeita as mancornas aos lados coas palmas enfrontadas.",
+   "Sobe as mancornas mantendo as palmas cara a dentro.",
+   "Aperta na parte alta e baixa de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os cóbados pegados ao torso durante todo o percorrido.",
+   "Evita balancear o corpo para impulsar as mancornas.",
+   "Os pulsos van firmes e neutros durante todo o curl."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Flexións en pino",
+  "description": "Flexión en vertical apoiando os pés na parede, un dos exercicios de empuxe con peso corporal máis esixentes.",
+  "instructions": [
+   "Colócate de costas á parede, apoia as mans no chan e sobe os pés ata quedar en vertical co abdome firme.",
+   "Flexiona os cóbados e baixa a cabeza de forma controlada cara ao chan.",
+   "Detente cando a cabeza roce o chan ou unha esteira.",
+   "Empuxa cos brazos ata estender os cóbados por completo."
+  ],
+  "tips": [
+   "Practica antes a posición de pino e a flexión en pica.",
+   "Usa unha esteira baixo a cabeza para gañar confianza."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Elevación de xeonllos colgado",
+  "description": "Un exercicio de core colgado dunha barra que traballa o abdome baixo e os flexores de cadeira cos xeonllos dobrados.",
+  "instructions": [
+   "Cólgate dunha barra con agarre prono e os brazos completamente estendidos.",
+   "Activa o core e sobe os xeonllos cara ao peito.",
+   "Mantén brevemente arriba.",
+   "Baixa as pernas amodo á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Evita o balanceo — comeza o movemento desde o core.",
+   "Exhala ao subir os xeonllos.",
+   "Progresa a elevacións coas pernas rectas cando isto resulte fácil."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Elevación de pernas colgado",
+  "description": "Elevación das pernas rectas ata a horizontal colgado dunha barra, para o abdome e os flexores de cadeira.",
+  "instructions": [
+   "Cólgate dunha barra con agarre algo máis ancho ca os ombros e as pernas xuntas e estendidas.",
+   "Eleva as pernas rectas ata que queden paralelas ao chan, inclinando lixeiramente a pelve cara atrás.",
+   "Mantén un instante arriba sen balancearte.",
+   "Baixa de forma controlada ata a posición inicial, sen deixar que o corpo oscile."
+  ],
+  "tips": [
+   "Se non podes coas pernas rectas, flexiona os xeonllos.",
+   "Evita o balanceo: usa o abdome, non o impulso."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Peso morto con barra hexagonal",
+  "description": "Un peso morto de pé dentro dunha barra hexagonal, que mantén a carga centrada para un tirón máis ergueito e amable coas costas.",
+  "instructions": [
+   "Colócate dentro dunha barra hexagonal cargada cos pés á largura dos ombros.",
+   "Flexiona cadeiras e xeonllos para agarrar as asas.",
+   "Contrae o core e mantén as costas planas.",
+   "Empuxa cos talóns e estende cadeiras e xeonllos para poñerte ergueito.",
+   "Bloquea na parte alta cos ombros cara atrás.",
+   "Baixa a barra ao chan de forma controlada."
+  ],
+  "tips": [
+   "Mantén o peito arriba e as costas planas mentres axustas o agarre.",
+   "Empuxa o chan en lugar de tirar da barra coas costas.",
+   "Ponte completamente ergueito arriba sen inclinarte cara atrás."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Abdución de cadeira en máquina",
+  "description": "Un exercicio en máquina que traballa os músculos externos da cadeira.",
+  "instructions": [
+   "Senta na máquina de abdución de cadeira cos apoios contra a parte externa das coxas.",
+   "Empuxa as pernas cara a fóra contra a resistencia.",
+   "Mantén brevemente no punto máis aberto.",
+   "Volve á posición inicial de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén as costas apoiadas no respaldo da máquina.",
+   "Abre as pernas sen impulso, cun ritmo controlado.",
+   "Resiste a volta ao centro en lugar de soltar o peso de golpe."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Adución de cadeira en máquina",
+  "description": "Un exercicio en máquina apertando as pernas unha contra a outra fronte á resistencia, que illa e fortalece os adutores da cara interna da coxa.",
+  "instructions": [
+   "Senta na máquina de adución de cadeira coas costas contra o respaldo.",
+   "Coloca as pernas contra as almofadas coa máquina axustada a un estiramento cómodo.",
+   "Aperta as pernas ata que as almofadas se xunten no centro.",
+   "Mantén brevemente a contracción na posición completamente pechada.",
+   "Deixa que as pernas se abran de volta con control ata o inicio.",
+   "Repite o número desexado de repeticións."
+  ],
+  "tips": [
+   "Escolle unha apertura inicial que estire sen forzar a virilla.",
+   "Percorre todo o rango a unha velocidade uniforme e controlada.",
+   "Non deixes que a placa de peso golpee ao abrir as pernas."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust con barra",
+  "description": "Un exercicio composto para glúteos que utiliza unha barra apoiada sobre as cadeiras.",
+  "instructions": [
+   "Senta no chan coa parte superior das costas contra un banco e a barra sobre as cadeiras.",
+   "Empuxa as cadeiras cara arriba ata que o tronco e as coxas queden aliñados.",
+   "Aperta os glúteos na parte superior.",
+   "Baixa as cadeiras de novo con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén o queixo recollido e as costelas abaixo.",
+   "Empuxa a través dos talóns, non das puntas.",
+   "Evita arquear a zona lumbar na parte alta."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Prensa de pernas horizontal",
+  "description": "Unha prensa de pernas en máquina realizada en posición horizontal, que traballa cuádriceps, glúteos e isquiotibiais.",
+  "instructions": [
+   "Senta na prensa de pernas horizontal coas costas apoiadas no respaldo e os pés á largura dos ombros sobre a plataforma.",
+   "Empuxa cos pés para estender as pernas, sen chegar a bloquear os xeonllos.",
+   "Flexiona os xeonllos de forma controlada ata achegalos ao peito.",
+   "Repite."
+  ],
+  "tips": [
+   "Non deixes que a zona lumbar se separe do asento.",
+   "Evita bloquear completamente os xeonllos."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Press en banco inclinado con barra",
+  "description": "Un movemento de press con barra en banco inclinado que traballa a parte superior do peito.",
+  "instructions": [
+   "Déitate nun banco inclinado a 30-45 graos.",
+   "Agarra a barra lixeiramente máis ancho ca os ombros e sácaa do soporte.",
+   "Baixa a barra ata a parte superior do peito.",
+   "Empuxa a barra de volta ata a extensión completa.",
+   "Repite."
+  ],
+  "tips": [
+   "Retrae as escápulas e mantenas pegadas ao banco.",
+   "Evita rebotar a barra no peito.",
+   "Pide axuda cando traballes con cargas pesadas."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Elevacións en Y en banco inclinado",
+  "description": "Elevación de mancornas en forma de Y, apoiado boca abaixo nun banco inclinado, para o trapecio inferior e medio.",
+  "instructions": [
+   "Déitate boca abaixo nun banco inclinado, co peito apoiado e unha mancorna lixeira en cada man colgando.",
+   "Eleva os brazos cara adiante e arriba formando unha Y, cos polgares apuntando ao teito.",
+   "Detente cando os brazos queden aliñados co tronco, sen levantar o peito do banco.",
+   "Baixa con control ata a posición inicial."
+  ],
+  "tips": [
+   "Usa pouco peso: o trapecio inferior é un músculo pequeno.",
+   "Mantén o pescozo neutro, mirando ao chan."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Curl con mancornas en banco inclinado",
+  "description": "Un curl de bíceps en banco inclinado para un maior estiramento da cabeza longa.",
+  "instructions": [
+   "Senta nun banco inclinado a 45 graos con mancornas aos lados.",
+   "Deixa que os brazos colguen rectos coas palmas cara adiante.",
+   "Sobe as mancornas cara aos ombros.",
+   "Baixa con control ata a extensión completa.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os ombros e as costas apoiados no banco.",
+   "Non adiantes os ombros ao subir as mancornas.",
+   "Aproveita o estiramento abaixo cunha baixada lenta."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Press con mancornas en banco inclinado",
+  "description": "Un movemento de press en banco inclinado que dá prioridade á parte superior do peito.",
+  "instructions": [
+   "Axusta o banco a 30 graos de inclinación e senta coas mancornas á altura dos ombros.",
+   "Empuxa as mancornas cara arriba e xuntas ata que os brazos estean completamente estendidos.",
+   "Baixa as mancornas de volta á altura dos ombros con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os pés firmes no chan e as escápulas retraídas.",
+   "Evita chocar as mancornas na parte alta.",
+   "Baixa ata notar un estiramento suave no peito."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Flexións inclinadas",
+  "description": "Unha variante da flexión axeitada para principiantes coas mans elevadas sobre un banco ou chanzo.",
+  "instructions": [
+   "Coloca as mans sobre un banco ou superficie elevada, á largura dos ombros.",
+   "Estende as pernas cara atrás en posición de prancha.",
+   "Baixa o peito cara ao banco flexionando os cóbados.",
+   "Empuxa de volta á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Aperta o abdome para que a cadeira non se afunda.",
+   "Canto máis alta sexa a superficie, máis doado é o exercicio.",
+   "Asegúrate de que o banco non se move antes de comezar."
+  ]
+ },
+ "inverted-row": {
+  "name": "Remo invertido",
+  "description": "Un exercicio de tracción horizontal co peso corporal realizado baixo unha barra fixa, tirando do peito cara á barra mentres se mantén o corpo ríxido.",
+  "instructions": [
+   "Coloca unha barra nun rack á altura da cintura aproximadamente.",
+   "Déitate debaixo e agarra a barra lixeiramente máis ancho ca os ombros con agarre prono.",
+   "Cólgate cos brazos estendidos, os talóns no chan e o corpo recto da cabeza aos nocellos.",
+   "Tira do peito cara á barra, apertando as omoplatas.",
+   "Baixa con control ata que os brazos estean completamente estendidos.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén o core contraído — sen que as cadeiras se afundan.",
+   "Para facelo máis difícil, eleva os pés; para facelo máis doado, camiña cos pés cara á barra.",
+   "Fai unha breve pausa na parte superior co peito contra a barra."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Elevación de tibial con pesa rusa",
+  "description": "Un exercicio para as canelas que se fai sentado nun banco cunha pesa rusa colgada da parte dianteira dun pé. Levantar as dedas cara á canela contra o peso fortalece os músculos da parte dianteira da perna.",
+  "instructions": [
+   "Senta no extremo dun banco plano cunha perna estirada e o talón apoiado no chan.",
+   "Colga unha pesa rusa pola asa na parte dianteira do pé, sobre as dedas.",
+   "Sobe as dedas cara á canela todo o que che resulte cómodo mentres o talón segue no chan.",
+   "Mantén brevemente a posición superior.",
+   "Baixa o pé amodo ata que as dedas apunten ao chan.",
+   "Completa as repeticións e despois cambia de perna."
+  ],
+  "tips": [
+   "Fai o movemento só desde o nocello; o xeonllo e a coxa seguen quietos.",
+   "Comeza cunha pesa rusa lixeira e aumenta pouco a pouco; os músculos da canela fatíganse rápido.",
+   "Baixa amodo en lugar de deixar caer o peso."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Remo en polea de xeonllos",
+  "description": "Un remo en polea executado desde unha posición de xeonllos ergueita, que elimina o impulso da cadeira e mantén a tensión na parte superior das costas durante todo o movemento.",
+  "instructions": [
+   "Axusta a polea á altura do peito e engancha unha corda ou unha asa dobre en D.",
+   "Axeónllate ergueito diante da máquina abondo lonxe para que o peso non chegue ao tope.",
+   "Agarra a asa con ambas as mans e sostena estendida diante de ti á altura do peito.",
+   "Leva a asa cara ao esterno levando os cóbados cara atrás e apertando as omoplatas.",
+   "Volve de forma controlada á posición inicial con estiramento.",
+   "Repite o número de repeticións recomendado."
+  ],
+  "tips": [
+   "Mantente ergueito: non te inclines cara atrás para rematar a repetición.",
+   "A postura de xeonllos ergueita obriga o core a resistir a rotación en cada tirón."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Flexións cos xeonllos apoiados",
+  "description": "Unha variante de flexión axeitada para principiantes, cos xeonllos apoiados no chan para reducir a carga sobre o tren superior.",
+  "instructions": [
+   "Comeza en posición de flexión cos xeonllos no chan.",
+   "Coloca as mans á largura dos ombros no chan.",
+   "Mantén o corpo en liña recta desde os xeonllos ata os ombros.",
+   "Baixa o peito cara ao chan dobrando os cóbados.",
+   "Empuxa coas mans para volver á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Non abras os cóbados en exceso cara aos lados.",
+   "Aperta os glúteos e o abdome durante todo o movemento.",
+   "Mira ao chan para manter o pescozo neutro."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Elevacións laterais con mancornas",
+  "description": "Un movemento de illamento que traballa o deltoide lateral para gañar largura nos ombros.",
+  "instructions": [
+   "Ponte de pé con mancornas aos costados.",
+   "Eleva as mancornas cara aos lados ata que os brazos queden paralelos ao chan.",
+   "Baixa de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Lixeira flexión nos cóbados.",
+   "Guía cos cóbados, non coas mans."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Xalón ao peito",
+  "description": "Un exercicio en máquina de polea que traballa o dorsal ancho.",
+  "instructions": [
+   "Senta na máquina de xalón coas coxas suxeitas baixo os rolos.",
+   "Agarra a barra ancha cun agarre en pronación.",
+   "Tira da barra ata a parte superior do peito apertando os dorsais.",
+   "Devolve a barra amodo á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Comeza o tirón baixando as omoplatas, non dobrando os cóbados.",
+   "Evita balancear o torso para mover o peso.",
+   "Dirixe os cóbados cara abaixo e atrás, non cara a fóra."
+  ]
+ },
+ "leg-curl": {
+  "name": "Curl de pernas deitado",
+  "description": "Un exercicio de illamento para os isquiotibiais usando a máquina de curl de pernas.",
+  "instructions": [
+   "Déitate boca abaixo na máquina de curl de pernas cos nocellos baixo o rolo.",
+   "Leva os talóns cara aos glúteos.",
+   "Aperta os isquiotibiais na parte superior.",
+   "Baixa con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén as cadeiras pegadas ao banco durante todo o percorrido.",
+   "Evita arquear a zona lumbar ao subir os talóns.",
+   "Escolle un peso que permita un percorrido completo e controlado."
+  ]
+ },
+ "leg-extension": {
+  "name": "Extensión de pernas",
+  "description": "Un exercicio de illamento para os cuádriceps usando unha máquina.",
+  "instructions": [
+   "Senta na máquina de extensión de pernas cos nocellos detrás do rolo.",
+   "Estende as pernas ata que queden rectas.",
+   "Aperta os cuádriceps na parte superior.",
+   "Baixa con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Aliña os xeonllos co eixe de xiro da máquina.",
+   "Sobe o peso sen lanzalo con impulso.",
+   "Agárrate ás asas para manter a cadeira estable no asento."
+  ]
+ },
+ "leg-press": {
+  "name": "Prensa de pernas",
+  "description": "Un movemento composto en máquina para cuádriceps e glúteos.",
+  "instructions": [
+   "Senta na prensa de pernas cos pés á largura dos ombros sobre a plataforma.",
+   "Solta os seguros e baixa a plataforma dobrando os xeonllos.",
+   "Empuxa a plataforma cara arriba ata que as pernas queden case rectas.",
+   "Non bloquees os xeonllos na parte superior.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén a zona lumbar pegada ao respaldo en todo momento.",
+   "Baixa só ata onde a cadeira non se despegue.",
+   "Aliña os xeonllos coas puntas dos pés."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Elevación de xemelgos na prensa",
+  "description": "Elevación de talóns empuxando a plataforma da prensa coa punta dos pés.",
+  "instructions": [
+   "Senta na prensa coas pernas case estendidas e só a parte dianteira dos pés apoiada no bordo da plataforma.",
+   "Libera o seguro e deixa que os talóns baixen estirando os xemelgos.",
+   "Empuxa a plataforma coa punta dos pés ata quedar de puntas.",
+   "Mantén un instante arriba e volve baixar con control."
+  ],
+  "tips": [
+   "Non bloquees de todo os xeonllos.",
+   "Fai percorridos completos e pausa abaixo: é onde se gaña o estímulo."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Elevación de pernas deitado",
+  "description": "Elevación de ambas as pernas deitado boca arriba para traballar a parte inferior do abdome e os flexores da cadeira.",
+  "instructions": [
+   "Déitate boca arriba coas pernas xuntas e estendidas, e as mans baixo os glúteos ou aos lados.",
+   "Pega a zona lumbar ao chan contraendo o abdome.",
+   "Eleva as pernas ata que queden perpendiculares ao chan, sen balancearte.",
+   "Baixa de forma lenta sen que os pés toquen o chan nin se arqueen as costas."
+  ],
+  "tips": [
+   "Se a zona lumbar se despega do chan, flexiona os xeonllos.",
+   "Controla a baixada: é a parte que máis traballa o abdome."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Extensión de lombo en máquina",
+  "description": "Un exercicio de illamento sentado para a zona lumbar: coa cadeira e as pernas fixas, o torso empuxa cara atrás contra un rolo acolchado e estende a columna vencendo a placa de pesos.",
+  "instructions": [
+   "Senta na máquina de extensión de lombo cos pés apoiados na plataforma e axusta o rolo para que quede sobre a parte alta das costas, xusto por debaixo das omoplatas.",
+   "Agarra as empuñaduras laterais e deixa que o torso veña lixeiramente cara adiante: esta é a posición inicial.",
+   "Empuxa cara atrás contra o rolo estendendo a columna ata que o torso quede inclinado cara atrás e a zona lumbar estea totalmente contraída.",
+   "Fai unha pausa breve na extensión completa e volve á posición inicial de forma controlada, resistindo o peso durante o percorrido.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Coloca o rolo xusto por debaixo das omoplatas: máis arriba preme o pescozo e máis abaixo perdes percorrido.",
+   "Estende desde a zona lumbar en lugar de botar a cabeza e os ombros cara atrás, e mantén lento o movemento en ambos os sentidos.",
+   "Detente co torso estendido en posición neutra en lugar de forzar a columna máis alá, e comeza con pouco peso: a zona lumbar responde mellor a repeticións controladas ca a cargas altas."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Curl de bíceps en máquina",
+  "description": "Un curl de bíceps en máquina para o adestramento illado dos brazos.",
+  "instructions": [
+   "Senta na máquina e axusta o rolo á lonxitude dos teus brazos.",
+   "Agarra as empuñaduras con agarre en supinación.",
+   "Leva as empuñaduras cara aos ombros.",
+   "Baixa con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os cóbados apoiados na almofada en todo momento.",
+   "Evita encoller os ombros ao subir as asas.",
+   "Baixa ata case estender os brazos sen perder a tensión."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Elevación de xemelgos en máquina",
+  "description": "Un exercicio de illamento en máquina de pé que traballa os xemelgos e o sóleo cun percorrido completo do nocello.",
+  "instructions": [
+   "Colócate na máquina de elevación de xemelgos coa parte dianteira dos pés sobre a plataforma.",
+   "Coloca os rolos dos ombros con firmeza.",
+   "Baixa os talóns por debaixo da plataforma para un estiramento completo.",
+   "Empuxa coa parte dianteira dos pés para elevarte de puntas.",
+   "Aperta os xemelgos na parte superior.",
+   "Baixa con control e repite."
+  ],
+  "tips": [
+   "Evita rebotar na parte baixa para non perder tensión.",
+   "Mantén os xeonllos estendidos pero sen chegar a bloquealos.",
+   "Sobe en vertical, sen inclinar os nocellos cara a fóra."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Aperturas en máquina",
+  "description": "Un exercicio de illamento de peito realizado nunha máquina que xunta as pancas nun arco diante do corpo.",
+  "instructions": [
+   "Senta na máquina de aperturas e axusta o asento para que as pancas queden á altura do peito.",
+   "Suxeita as pancas cunha lixeira flexión de cóbados.",
+   "Xunta as pancas diante do peito nun arco suave.",
+   "Contrae o peitoral no punto de máxima contracción.",
+   "Volve con control á posición inicial sen deixar caer o peso.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Mantén unha flexión de cóbado lixeira e constante durante todo o movemento.",
+   "Céntrate en contraer o peito en lugar de empuxar cos brazos.",
+   "Controla o regreso en vez de deixar caer a pila de pesos."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Paxaro en máquina",
+  "description": "Un exercicio sentado en máquina para os deltoides posteriores, tamén coñecido como pec deck inverso: de cara á almofada, levas as dúas empuñaduras cara a fóra e atrás nun arco amplo contra a pila de pesos. A almofada mantén o torso quieto, de modo que o traballo queda na parte posterior dos ombros e nos músculos entre as omoplatas.",
+  "instructions": [
+   "Axusta o asento para que as empuñaduras queden á altura dos ombros e senta de cara á máquina co peito contra a almofada.",
+   "Agarra as empuñaduras cos brazos estirados diante e unha lixeira flexión nos cóbados.",
+   "Mantén os ombros baixos e afastados das orellas e aperta o tronco.",
+   "Leva as empuñaduras cara a fóra e atrás nun arco amplo, guiando o movemento cos cóbados, ata que os brazos queden aproximadamente en liña cos ombros.",
+   "Xunta as omoplatas brevemente sen botarte cara atrás separando o peito da almofada.",
+   "Devolve as empuñaduras cara adiante amodo e repite o número de repeticións previsto."
+  ],
+  "tips": [
+   "Guía o movemento cos cóbados en lugar de tirar coas mans, para que traballen os deltoides posteriores e non os bíceps.",
+   "Mantén o peito na almofada e o pescozo relaxado; se te botas cara atrás ou encolles os ombros, a carga pasa ao trapecio superior.",
+   "Escolle un peso que poidas baixar con control; unha carga máis lixeira cun retorno lento traballa mellor os deltoides posteriores ca un balanceo con moito peso."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Crunch en máquina sentado",
+  "description": "Un exercicio de illamento abdominal nunha máquina sentada que flexiona a columna contra resistencia.",
+  "instructions": [
+   "Senta na máquina de abdominais e suxeita as empuñaduras.",
+   "Coloca a almofada do peito contra o torso.",
+   "Contrae o abdome para flexionar o torso cara adiante e abaixo.",
+   "Contrae ao final do percorrido.",
+   "Volve á posición inicial con control.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Comeza o movemento co abdome, non cos brazos.",
+   "Exhala mentres flexionas o torso.",
+   "Evita o impulso de balancear o corpo."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Press de ombros en máquina",
+  "description": "Un movemento de press por riba da cabeza en máquina para os ombros.",
+  "instructions": [
+   "Senta na máquina coas costas contra o respaldo.",
+   "Agarra as empuñaduras á altura dos ombros.",
+   "Empuxa as empuñaduras sobre a cabeza ata que os brazos queden completamente estendidos.",
+   "Baixa con control á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Non arquees a zona lumbar ao empuxar cara arriba.",
+   "Evita bloquear os cóbados de golpe na parte alta.",
+   "Mantén os pulsos firmes e aliñados cos antebrazos."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Dominadas negativas",
+  "description": "Fase de baixada lenta da dominada, para construír a forza necesaria para facer dominadas completas.",
+  "instructions": [
+   "Sobe a un banco ou salta para colocar o queixo por riba da barra, con agarre algo máis ancho ca os ombros.",
+   "Sen apoiarte, baixa o corpo moi amodo, nuns tres a cinco segundos.",
+   "Controla o movemento ata estender os brazos por completo.",
+   "Volve subir coa axuda do banco ou do salto e repite."
+  ],
+  "tips": [
+   "Mantén os ombros afastados das orellas durante a baixada.",
+   "Cando domines cinco repeticións lentas, proba a subir sen axuda."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Curl nórdico de isquiotibiais",
+  "description": "Un exercicio de flexión de xeonllo baixando o torso cara adiante desde unha posición de xeonllos, que traballa os isquiotibiais de forma excéntrica.",
+  "instructions": [
+   "Axeónllate sobre unha esteira cos nocellos ancorados baixo un apoio fixo.",
+   "Mantén o torso ergueito e as cadeiras estendidas.",
+   "Baixa o corpo cara adiante amodo resistindo cos isquiotibiais.",
+   "Amortece a caída coas mans xusto antes de tocar o chan.",
+   "Empuxa coas mans para volver e impúlsate cara á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Baixa o máis amodo posible: a fase excéntrica é o obxectivo.",
+   "Mantén as cadeiras estendidas; non te dobres pola cintura.",
+   "Frea coas mans e empuxa lixeiramente mentres gañas forza."
+  ]
+ },
+ "ohp": {
+  "name": "Press militar con barra",
+  "description": "Un movemento de empuxe composto por riba da cabeza que traballa os ombros e o tríceps.",
+  "instructions": [
+   "De pé cos pés á largura dos ombros e a barra á altura das clavículas.",
+   "Contrae o core e empuxa a barra por riba da cabeza.",
+   "Bloquea os cóbados arriba coa barra sobre o punto medio do pé.",
+   "Baixa a barra ata a altura das clavículas.",
+   "Repite."
+  ],
+  "tips": [
+   "Non te botes demasiado cara atrás.",
+   "Aperta os glúteos para maior estabilidade."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Remo unilateral sentado en polea",
+  "description": "Un remo unilateral sentado en polea para dorsais e parte alta das costas, que mantén o torso de fronte mentres a omoplata do lado activo avanza e retrocede de forma controlada.",
+  "instructions": [
+   "Senta na estación de polea e suxeita o agarre co brazo de traballo estendido.",
+   "Apoia ben os pés, senta ergueito e activa o tronco sen inclinarte cara atrás.",
+   "Leva o agarre cara ás costelas baixas mentres retraes a omoplata.",
+   "Fai unha pausa breve sen xirar o torso nin elevar o ombro.",
+   "Estende o brazo de forma controlada, remata a serie e cambia de lado."
+  ],
+  "tips": [
+   "Mantén ambos os ombros orientados á fronte durante toda a repetición.",
+   "Leva o cóbado cara atrás preto do corpo en lugar de flexionar soamente o brazo.",
+   "Deixa que a omoplata avance ao comezo sen redondear a zona lumbar."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Extensión de tríceps sobre a cabeza con mancorna",
+  "description": "Un exercicio de illamento para o tríceps que dá prioridade á cabeza longa.",
+  "instructions": [
+   "De pé ou sentado, sostén unha mancorna por riba da cabeza con ambas as mans.",
+   "Baixa a mancorna detrás da cabeza dobrando os cóbados.",
+   "Estende os brazos de volta á posición inicial.",
+   "Mantén os cóbados preto da cabeza durante todo o exercicio.",
+   "Repite."
+  ],
+  "tips": [
+   "Move só os antebrazos e mantén quieto todo o demais.",
+   "Evita arquear a zona lumbar cando a mancorna baixe.",
+   "Agarra a mancorna por debaixo do disco superior con ambas as palmas."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Fondos en paralelas",
+  "description": "Exercicio co peso corporal en barras paralelas que traballa peito, tríceps e ombros.",
+  "instructions": [
+   "Suxéitate nas barras paralelas cos brazos estendidos e o corpo suspendido, sen tocar o chan.",
+   "Inclina lixeiramente o torso cara adiante e flexiona os cóbados para baixar de forma controlada.",
+   "Detente cando os ombros queden á altura dos cóbados, sen afundirte na articulación.",
+   "Empuxa co peito e os tríceps ata estender de novo os brazos."
+  ],
+  "tips": [
+   "Se non podes completar series limpas, usa unha máquina de fondos asistidos ou bandas.",
+   "Non baixes máis alá do que o teu ombro tolere sen molestias."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Press de banca con pausa",
+  "description": "Press de banca cunha pausa dun a dous segundos sobre o peito, que elimina o rebote e mellora a forza no arrinque.",
+  "instructions": [
+   "Déitate no banco cos pés firmes no chan, as omoplatas xuntas e a barra sobre o peito con agarre algo máis ancho ca os ombros.",
+   "Baixa a barra de forma controlada ata rozar o peito.",
+   "Mantén a barra quieta sobre o peito durante un ou dous segundos sen relaxar a tensión.",
+   "Empuxa a barra cara arriba ata estender os cóbados."
+  ],
+  "tips": [
+   "Usa entre un 10 e un 15 % menos de peso ca no press normal.",
+   "Pide a alguén que vixíe ou utiliza os topes do rack."
+  ]
+ },
+ "pause-squat": {
+  "name": "Agachamento con pausa",
+  "description": "Agachamento con barra cunha pausa no punto máis baixo, para gañar control e forza sen rebote.",
+  "instructions": [
+   "Coloca a barra sobre a parte alta das costas, pés á largura dos ombros e puntas lixeiramente abertas.",
+   "Baixa controlando a profundidade coas costas neutras e os xeonllos seguindo a liña dos pés.",
+   "Mantén a posición máis baixa entre un e tres segundos, sen relaxar o tronco.",
+   "Empuxa o chan cos pés ata estar de novo ergueito."
+  ],
+  "tips": [
+   "Reduce a carga respecto ao teu agachamento normal.",
+   "Non rebotes ao saír da pausa: empuxa de forma continua."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Unha máquina de illamento de peito con asas móbiles que traballa os peitorais mediante adución horizontal.",
+  "instructions": [
+   "Senta na máquina pec deck e agarra as asas cos brazos abertos aos lados e os cóbados lixeiramente flexionados.",
+   "Axusta o asento para que as asas queden á altura media do peito.",
+   "Xunta as asas diante do peito apertando.",
+   "Mantén a contracción brevemente no centro.",
+   "Volve con control á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Non deixes que os brazos vaian demasiado atrás ao abrir.",
+   "Mantén as costas e os ombros pegados ao respaldo.",
+   "Exhala ao xuntar as asas e inhala ao abrir."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Remo Pendlay",
+  "description": "Remo explosivo con barra que parte do chan en cada repetición, co tronco paralelo ao chan.",
+  "instructions": [
+   "Cos pés baixo a barra e o tronco case paralelo ao chan, agarra a barra coas mans algo máis anchas ca os ombros e as costas neutras.",
+   "Tira da barra con forza ata tocar a parte baixa do peito, mantendo o tronco inmóbil.",
+   "Baixa a barra de forma controlada ata apoiala no chan e detela un instante.",
+   "Reaxusta a posición das costas e repite desde o chan."
+  ],
+  "tips": [
+   "O tronco non sobe nin baixa: se se move, a carga é excesiva.",
+   "Cada repetición comeza coa barra quieta no chan."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Flexións en pica",
+  "description": "Flexión co corpo en forma de V invertida, que traslada a carga do peito ao ombro sen material.",
+  "instructions": [
+   "Apoia as mans no chan á largura dos ombros e eleva as cadeiras formando unha V invertida, coas pernas case rectas.",
+   "Flexiona os cóbados e baixa a cabeza cara ao chan entre as mans.",
+   "Detente cando a cabeza quede preto do chan sen apoiala.",
+   "Empuxa cos brazos ata estender os cóbados e volver á posición inicial."
+  ],
+  "tips": [
+   "Canto máis preto estean os pés das mans, máis difícil é o exercicio.",
+   "Mantén as cadeiras altas durante todo o percorrido."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Agachamento a unha perna (pistol)",
+  "description": "Agachamento profundo a unha soa perna coa outra estendida diante, só co peso corporal.",
+  "instructions": [
+   "De pé sobre unha perna coa outra elevada diante e os brazos estendidos para manter o equilibrio.",
+   "Flexiona o xeonllo de apoio e baixa con control, co talón pegado ao chan.",
+   "Baixa todo o que poidas sen perder a técnica, coa perna libre estirada diante.",
+   "Empuxa o chan co pé ata estar de novo de pé; repite e cambia de perna."
+  ],
+  "tips": [
+   "Comeza agarrándote a un apoio ou sentando nun caixón.",
+   "Mantén o xeonllo aliñado co pé."
+  ]
+ },
+ "plank": {
+  "name": "Prancha frontal",
+  "description": "Exercicio isométrico de core que adestra a estabilidade do tronco mantendo o corpo recto sobre os antebrazos e as puntas dos pés.",
+  "instructions": [
+   "Apoia os antebrazos no chan cos cóbados baixo os ombros e as pernas estendidas.",
+   "Eleva o corpo formando unha liña recta desde a cabeza ata os talóns.",
+   "Activa o abdome e os glúteos e mantén a zona lumbar neutra, sen deixar caer a cadeira.",
+   "Respira con normalidade e mantén a posición o tempo indicado."
+  ],
+  "tips": [
+   "Comeza con series curtas de boa calidade antes de alongar o tempo.",
+   "Se a zona lumbar se afunde, apoia os xeonllos no chan ou reduce o tempo."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Hip thrust en máquina de discos",
+  "description": "Un empuxe de cadeira nunha máquina de glúteo de discos, na que o respaldo e a plataforma integrados fixan a posición para que as cadeiras se estendan contra a carga sen ter que montar un banco.",
+  "instructions": [
+   "Carga os soportes de discos por igual e senta na máquina coa parte alta das costas contra o respaldo e os pés planos na plataforma.",
+   "Baixa a almofada ou barra sobre as cadeiras e axústaa para que apoie no pregamento da cadeira e non sobre o abdome.",
+   "Coloca os pés de modo que as canelas queden verticais cando as cadeiras estean arriba, e suxeita as empuñaduras.",
+   "Empuxa as cadeiras cara arriba apertando os glúteos ata que as coxas queden aliñadas co torso, e mantén un instante arriba.",
+   "Baixa de forma controlada ata xusto antes do final do percorrido e repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Coloca a almofada no pregamento da cadeira. Deixala sobre o abdome é o único realmente incómodo desta máquina, e resólvese movendo a almofada, non engadindo acolchado.",
+   "Remata o movemento coa cadeira, non coa zona lumbar. Se arriba se che abren as costelas é que rematou a extensión de cadeira e comezaches a arquear, que é onde a máquina deixa de adestrar o glúteo.",
+   "Este é o empuxe de cadeira ao que recorrer cando o banco e a barra están ocupados: o respaldo e a plataforma forman parte do bastidor, así que non hai montaxe que facer mal."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Curl en banco Scott",
+  "description": "Unha variante do curl que usa un banco Scott para illar o bíceps.",
+  "instructions": [
+   "Senta no banco Scott cos brazos apoiados na almofada.",
+   "Sostén unha barra Z con agarre supino.",
+   "Sobe a barra cara aos ombros.",
+   "Baixa con control ata que os brazos queden case estendidos.",
+   "Repite."
+  ],
+  "tips": [
+   "Evita os rebotes na parte baixa do percorrido.",
+   "Mantén os pulsos neutros sobre a barra Z.",
+   "Sobe a barra sen impulso dos ombros nin das costas."
+  ]
+ },
+ "pull-up": {
+  "name": "Dominadas",
+  "description": "Un exercicio composto co peso corporal que traballa o dorsal ancho e o bíceps.",
+  "instructions": [
+   "Cólgate dunha barra con agarre prono, lixeiramente máis ancho ca a largura dos ombros.",
+   "Súbete ata que o queixo quede por riba da barra.",
+   "Baixa con control ata quedar colgado por completo.",
+   "Repite."
+  ],
+  "tips": [
+   "Evita balancearte ou usar impulso.",
+   "Activa o dorsal ancho levando os cóbados cara abaixo."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Press de ombros con impulso das pernas, que permite mover máis carga ca o press militar estrito.",
+  "instructions": [
+   "De pé coa barra apoiada na parte alta do peito e os ombros, os cóbados lixeiramente adiantados e os pés á largura das cadeiras.",
+   "Flexiona lixeiramente os xeonllos mantendo o tronco vertical, e estende cadeiras e xeonllos con forza.",
+   "Aproveita o impulso para empuxar a barra ata estender os brazos sobre a cabeza.",
+   "Baixa a barra de forma controlada ata o peito e amortece coas pernas."
+  ],
+  "tips": [
+   "O impulso vén das pernas, non de inclinar as costas cara atrás.",
+   "Remata coa barra sobre a coroa da cabeza e o corpo estable."
+  ]
+ },
+ "push-up": {
+  "name": "Flexións",
+  "description": "Un exercicio fundamental co peso corporal para o peito, os ombros e os tríceps.",
+  "instructions": [
+   "Comeza en posición de prancha alta coas mans á largura dos ombros.",
+   "Baixa o corpo ata que o peito case toque o chan.",
+   "Empuxa cara arriba ata a posición inicial.",
+   "Mantén o corpo en liña recta en todo momento.",
+   "Repite."
+  ],
+  "tips": [
+   "Aperta o abdome e os glúteos para evitar que a cadeira caia.",
+   "Non abras os cóbados en exceso; mantenos preto do torso.",
+   "Mantén o pescozo neutro mirando ao chan."
+  ]
+ },
+ "rack-pull": {
+  "name": "Peso morto desde rack",
+  "description": "Peso morto parcial desde a altura dos xeonllos, que sobrecarga a parte alta das costas e a extensión de cadeira.",
+  "instructions": [
+   "Coloca a barra nos soportes á altura dos xeonllos ou xusto por debaixo, cos pés á largura das cadeiras baixo a barra.",
+   "Agarra a barra, tensa as costas e o abdome e empuxa o chan cos pés.",
+   "Estende cadeiras e xeonllos á vez ata quedar ergueito, cos ombros cara atrás.",
+   "Baixa a barra de forma controlada ata apoiala nos soportes."
+  ],
+  "tips": [
+   "Usa os soportes a unha altura que permita manter as costas neutras.",
+   "Non hiperestendas a zona lumbar ao rematar."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Zancada inversa con mancornas",
+  "description": "Unha variante da zancada que dá un paso cara atrás para maior estabilidade do xeonllo.",
+  "instructions": [
+   "Ponte de pé suxeitando mancornas aos costados.",
+   "Dá un paso cara atrás cunha perna e baixa o xeonllo cara ao chan.",
+   "Baixa ata que a coxa dianteira quede paralela ao chan.",
+   "Empuxa co talón dianteiro para volver á posición de pé.",
+   "Repite en ambos os lados."
+  ],
+  "tips": [
+   "Dá o paso atrás abondo longo para que o xeonllo dianteiro non pase do pé.",
+   "Mantén o torso ergueito e as mancornas pegadas ao corpo.",
+   "Completa o mesmo número de repeticións con cada perna."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Curl nórdico inverso",
+  "description": "Un exercicio de cuádriceps co propio peso corporal, de xeonllos, inclinando o torso cara atrás con control mentres se mantén a cadeira estendida.",
+  "instructions": [
+   "Axeónllate sobre unha almofada cos xeonllos á largura das cadeiras, as tibias e o empeine no chan e o torso ergueito.",
+   "Mantén a cadeira estendida e o core activado.",
+   "Inclina o torso amodo cara atrás mantendo o corpo en liña recta.",
+   "Baixa tanto como poidas controlar co cuádriceps.",
+   "Volve subir á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Mantén a cadeira estendida en todo momento, sen que se dobre.",
+   "Baixa só ata onde poidas controlar o movemento.",
+   "Usa unha almofada baixo os xeonllos para maior comodidade."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Peso morto romanés",
+  "description": "Un movemento de bisagra de cadeira que dá prioridade aos isquiotibiais e aos glúteos.",
+  "instructions": [
+   "Ponte de pé suxeitando a barra á altura das cadeiras con agarre prono.",
+   "Leva as cadeiras cara atrás inclinando o tronco, cos xeonllos lixeiramente flexionados e case fixos.",
+   "Baixa a barra ao longo das pernas ata notar o estiramento dos isquiotibiais.",
+   "Empuxa as cadeiras cara adiante para volver á posición de pé.",
+   "Repite."
+  ],
+  "tips": [
+   "Non redondees a parte baixa das costas; mantén a columna neutra.",
+   "Baixa só ata onde chegues sen perder a postura.",
+   "Aperta os dorsais para manter a barra preto do corpo."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Máquina de remo",
+  "description": "Un exercicio cardiovascular de corpo enteiro na máquina de remo: cada palada empuxa coas pernas, leva o torso cara atrás e tira da asa ata as costelas, traballando pernas, costas e brazos nun ciclo continuo.",
+  "instructions": [
+   "Senta na máquina de remo, suxeita os pés coas correas das plataformas e agarra a asa en pronación.",
+   "Deslízate cara adiante ata a posición de ataque: tibias verticais, torso lixeiramente por diante da cadeira e brazos estirados cara ao volante.",
+   "Empuxa primeiro coas pernas e despraza o asento cara atrás ata deixar os xeonllos case estirados.",
+   "Leva o torso cara atrás pasando da vertical e tira entón da asa ata as costelas baixas, cos cóbados pasando xunto aos costados.",
+   "Inverte a orde na recuperación — primeiro os brazos cara adiante, despois o torso e por último flexionar os xeonllos — e volve esvarar ata a posición de ataque para a seguinte palada.",
+   "Continúa durante o tempo, a distancia ou o número de paladas que queiras."
+  ],
+  "tips": [
+   "Respecta a orde: pernas, torso e brazos no tirón, e brazos, torso e pernas na recuperación. Flexionar os brazos antes de tempo desaproveita a parte máis forte da palada.",
+   "Rema coas costas planas e o core activado: redondear a zona lumbar na posición de ataque é o que converte o remo en dor de costas en lugar de traballo cardiovascular.",
+   "Leva a asa en liña recta e horizontal ata as costelas baixas, e fai a recuperación unhas dúas veces máis amodo ca o tirón en lugar de volver de golpe."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Press militar sentado con barra",
+  "description": "Press de ombros con barra sentado, co respaldo como apoio para concentrar o traballo no deltoide.",
+  "instructions": [
+   "Sentado nun banco con respaldo vertical, agarra a barra algo máis ancho ca os ombros e apóiaa sobre a parte alta do peito.",
+   "Empuxa a barra en liña recta cara arriba ata estender os cóbados.",
+   "Mantén a barra sobre a coroa da cabeza, coas costelas recollidas.",
+   "Baixa de forma controlada ata a clavícula."
+  ],
+  "tips": [
+   "Aperta os glúteos e o abdome para non arquear as costas.",
+   "Move a cabeza cara atrás para deixar paso á barra, sen forzar o pescozo."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Remo sentado en polea",
+  "description": "Un exercicio de costas nunha máquina de remo con polea, tirando dunha asa cara ao torso estando sentado.",
+  "instructions": [
+   "Senta na estación de remo e coloca os pés nos apoios.",
+   "Suxeita a asa e senta ergueito cunha lixeira inclinación cara adiante.",
+   "Leva os cóbados cara atrás e tira da asa cara á parte baixa do abdome.",
+   "Contrae as omoplatas ao final do tirón.",
+   "Estende os brazos con control de volta á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Mantén o torso ergueito cun balanceo mínimo.",
+   "Leva os cóbados directamente cara atrás, non cara aos lados.",
+   "Contrae as omoplatas ao final do tirón."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Elevación de xemelgos sentado en máquina",
+  "description": "Unha elevación de talóns en máquina realizada sentado para traballar especificamente o músculo sóleo.",
+  "instructions": [
+   "Senta na máquina de elevación de talóns coas almofadas apoiadas nas coxas.",
+   "Baixa os talóns o máis posible.",
+   "Elévate sobre as puntas dos pés.",
+   "Baixa con control.",
+   "Repite."
+  ],
+  "tips": [
+   "O xeonllo flexionado destensa o xemelgo, así que o sóleo asume máis traballo.",
+   "Utiliza un percorrido completo."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Elevación de xemelgos sentado con mancornas",
+  "description": "Elevación de talóns sentado con mancornas sobre as coxas, que traballa o sóleo co xeonllo flexionado.",
+  "instructions": [
+   "Senta nun banco coa punta dos pés sobre un chanzo ou disco e unha mancorna sobre cada coxa, preto dos xeonllos.",
+   "Deixa caer os talóns todo o que poidas para estirar o xemelgo.",
+   "Sobe os talóns empuxando coa parte dianteira do pé ata o máximo.",
+   "Mantén un instante arriba e baixa con control."
+  ],
+  "tips": [
+   "Suxeita as mancornas coas mans para que non esvaren.",
+   "O xeonllo flexionado despraza o traballo cara ao sóleo."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Elevacións laterais sentado con mancornas",
+  "description": "Un exercicio de illamento sentado que levanta as mancornas cara aos lados, traballando os deltoides laterais sen impulso das pernas.",
+  "instructions": [
+   "Senta nun banco cunha mancorna en cada man aos lados.",
+   "Mantén as costas ergueitas e o core contraído.",
+   "Eleva ambas as mancornas cara aos lados ata a altura dos ombros.",
+   "Mantén unha lixeira flexión nos cóbados.",
+   "Baixa as mancornas con control.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Usa un peso lixeiro para manter a elevación estrita.",
+   "Guía cos cóbados en lugar de coas mans.",
+   "Eleva ata a altura dos ombros e baixa con control."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Curl de pernas sentado",
+  "description": "Un exercicio de illamento de isquiotibiais en máquina en posición sentada, con tensión constante e menor implicación dos flexores de cadeira respecto da variante deitada.",
+  "instructions": [
+   "Axusta o respaldo e a almofada do nocello para que os xeonllos queden aliñados co eixe da máquina.",
+   "Senta ergueito, coloca a parte posterior dos nocellos sobre a almofada e suxeita as asas.",
+   "Flexiona as pernas cara abaixo e atrás baixo o asento ata onde a máquina o permita.",
+   "Fai unha pausa na contracción máxima e volve amodo á posición inicial.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Mantén as costas firmemente apoiadas no respaldo durante todo o movemento.",
+   "Flexiona lixeiramente os pés cara ás canelas na contracción máxima para activar máis os isquiotibiais.",
+   "Controla a fase excéntrica — non deixes que o peso che devolva as pernas rapidamente."
+  ]
+ },
+ "shrug": {
+  "name": "Encollementos con barra",
+  "description": "Un movemento de illamento para o trapecio superior.",
+  "instructions": [
+   "De pé, sostén unha barra cos brazos estendidos e agarre en pronación.",
+   "Encolle os ombros directamente cara ás orellas.",
+   "Mantén brevemente na parte superior.",
+   "Baixa os ombros con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Sobe os ombros en vertical, sen facer círculos.",
+   "Non uses os brazos; os cóbados seguen estendidos todo o tempo.",
+   "Evita impulsarte coas pernas para subir máis peso."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Abdución de cadeira deitado de lado",
+  "description": "Un exercicio de illamento con peso corporal que traballa o glúteo medio e os abdutores da cadeira.",
+  "instructions": [
+   "Déitate de lado cunha perna enriba da outra.",
+   "Mantén a perna inferior lixeiramente flexionada.",
+   "Eleva a perna superior cara ao teito.",
+   "Baixa con control.",
+   "Repite de ambos os lados."
+  ],
+  "tips": [
+   "Mantén unha cadeira enriba da outra durante todo o exercicio.",
+   "Evita inclinar a pelve."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Adución de cadeira deitado de lado",
+  "description": "Un exercicio de adución deitado de lado que eleva a perna inferior contra a gravidade para traballar a cadeira co propio peso.",
+  "instructions": [
+   "Déitate de lado coa perna inferior recta.",
+   "Flexiona a perna superior e coloca o seu pé plano diante da coxa inferior.",
+   "Apoia a cabeza no brazo inferior.",
+   "Eleva a perna inferior cara ao teito.",
+   "Baixa a perna con control.",
+   "Completa as repeticións dun lado e despois cambia."
+  ],
+  "tips": [
+   "Move só a perna; a cadeira e o torso seguen quietos.",
+   "Sobe a perna sen impulso e baixa amodo.",
+   "Aliña ombros, cadeira e pés antes de comezar a moverte."
+  ]
+ },
+ "side-plank": {
+  "name": "Prancha lateral",
+  "description": "Unha variante da prancha lateral que traballa os oblicuos e o core lateral.",
+  "instructions": [
+   "Déitate de lado co antebrazo no chan e o cóbado baixo o ombro.",
+   "Levanta as cadeiras do chan formando unha liña recta da cabeza aos pés.",
+   "Mantén a posición co core apertado.",
+   "Respira con regularidade.",
+   "Repite de ambos os lados."
+  ],
+  "tips": [
+   "Non deixes que a cadeira se afunda cara ao chan.",
+   "Aliña ombros e cadeira nun mesmo plano, sen rotar o torso.",
+   "Empuxa o chan co antebrazo para non colgarte do ombro."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Remo con mancorna a un brazo",
+  "description": "Un exercicio de costas unilateral con mancorna para un desenvolvemento equilibrado.",
+  "instructions": [
+   "Coloca un xeonllo e unha man nun banco como apoio.",
+   "Sostén unha mancorna na outra man co brazo estendido.",
+   "Tira da mancorna cara á cadeira apertando a omoplata.",
+   "Baixa a mancorna con control.",
+   "Repite de ambos os lados."
+  ],
+  "tips": [
+   "Non xires o torso ao tirar; mantén a cadeira estable.",
+   "Evita encoller o ombro cara á orella ao comezar o tirón.",
+   "Fai as mesmas repeticións con cada brazo."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Elevacións laterais a un brazo en máquina de discos",
+  "description": "A elevación lateral en máquina de discos traballando un brazo de cada vez, de modo que cada lado levanta a súa propia carga e ambos poden adestrarse ata o mesmo nivel.",
+  "instructions": [
+   "Axusta a altura do asento para que o eixe da almofada quede aliñado co teu ombro e carga só o lado que vas traballar.",
+   "Senta coas costas apoiadas no respaldo e coloca a cara externa do brazo que traballa contra a súa almofada.",
+   "Suxeita a empuñadura do lado libre ou apoia esa man no colo, e mantén o torso aliñado co asento.",
+   "Empuxa o brazo que traballa cara a fóra e cara arriba contra a almofada ata a altura do ombro, e baixa de forma controlada.",
+   "Completa todas as repeticións dese lado, despois carga e traballa o outro lado."
+  ],
+  "tips": [
+   "Iguala os lados polo brazo débil, non polo forte. Traballar un lado de cada vez só revela un desequilibrio se deixas que o lado débil fixe o número de repeticións.",
+   "Non deixes que o torso se incline cara ao lado que traballa. Con carga nun só brazo a máquina xa non se equilibra soa, e inclinarse converte a elevación nunha flexión lateral.",
+   "Comeza polo brazo débil para que marque o obxectivo, e dá o mesmo descanso aos dous lados."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Ponte de glúteos a unha perna",
+  "description": "Ponte de glúteo cunha soa perna apoiada, que aumenta a esixencia sen engadir material.",
+  "instructions": [
+   "Déitate boca arriba cun xeonllo flexionado e o pé apoiado no chan, e a outra perna estendida no aire.",
+   "Empuxa co talón da perna de apoio e eleva a cadeira ata aliñar ombro, cadeira e xeonllo.",
+   "Aperta o glúteo arriba durante un instante sen arquear a zona lumbar.",
+   "Baixa con control sen apoiar a cadeira; completa as repeticións e cambia de perna."
+  ],
+  "tips": [
+   "Mantén a pelve nivelada, sen que unha cadeira caia.",
+   "Comeza coa ponte de glúteos con dúas pernas se che custa."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Press francés",
+  "description": "Unha extensión de tríceps deitado con barra que illa os tríceps ao longo dun percorrido completo.",
+  "instructions": [
+   "Déitate nun banco plano suxeitando unha barra sobre o peito con agarre estreito.",
+   "Baixa a barra cara á fronte flexionando os cóbados.",
+   "Estende os brazos de volta á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén a parte superior dos brazos vertical durante todo o exercicio.",
+   "Baixa amodo para protexer os cóbados."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Press de banca en máquina Smith",
+  "description": "Un press de banca en máquina Smith cuxo percorrido guiado permite adestrar o peito con menos demanda de estabilización.",
+  "instructions": [
+   "Déitate nun banco plano dentro da máquina Smith.",
+   "Agarra a barra coas mans algo máis separadas ca a largura dos ombros e desbloquéaa.",
+   "Baixa a barra con control ata o centro do peito.",
+   "Fai unha breve pausa sen rebotar.",
+   "Empuxa a barra cara arriba ata estender completamente os brazos.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Aliña o banco para que a barra baixe á metade do peito.",
+   "Mantén os pés firmes no chan durante toda a serie.",
+   "Aprende o xiro de pulso para enganchar a barra antes de cargar peso."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Elevación de xemelgos en máquina Smith",
+  "description": "Elevación de talóns de pé coa barra guiada da máquina Smith sobre os ombros.",
+  "instructions": [
+   "Colócate baixo a barra da máquina Smith coa punta dos pés sobre un chanzo ou disco e a barra sobre a parte alta das costas.",
+   "Libera a barra e deixa baixar os talóns ata estirar os xemelgos.",
+   "Sobe de puntas coas pernas estendidas, sen bloquear os xeonllos.",
+   "Mantén un instante arriba e baixa con control antes de deixar a barra nos topes."
+  ],
+  "tips": [
+   "A guía estabilízate: aprovéitaa para usar máis carga.",
+   "Mantén o tronco ergueito e a mirada á fronte."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Press inclinado en máquina Smith",
+  "description": "Un press inclinado en máquina Smith que dá prioridade á parte superior do peito e aos deltoides anteriores cunha traxectoria guiada.",
+  "instructions": [
+   "Axusta un banco inclinado a 30-45 graos dentro da máquina Smith.",
+   "Déitate e agarra a barra lixeiramente máis ancho ca a largura dos ombros.",
+   "Desbloquea e baixa a barra ata a parte superior do peito.",
+   "Fai unha breve pausa na parte inferior.",
+   "Empuxa a barra cara arriba ata estender os brazos.",
+   "Repite o número de repeticións desexado."
+  ],
+  "tips": [
+   "Axusta a posición do banco para que a barra chegue á parte alta do peito.",
+   "Baixa a barra sen rebotala no peito.",
+   "Mantén os glúteos no banco e os pés ben apoiados."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Agachamento en máquina Smith",
+  "description": "Agachamento coa barra guiada da máquina Smith: o percorrido fixo reduce a demanda de equilibrio e deixa o esforzo en pernas e glúteos, unha boa opción cando non hai un rack libre.",
+  "instructions": [
+   "Axusta a barra á altura dos ombros e colócate debaixo, coa barra sobre a parte alta das costas e os pés lixeiramente adiantados respecto da barra.",
+   "Xira os pulsos para soltar os ganchos e mantén o torso ergueito e o core activo.",
+   "Baixa flexionando xeonllos e cadeiras ata que as coxas queden polo menos paralelas ao chan, cos xeonllos seguindo a dirección dos pés.",
+   "Empuxa con todo o pé contra o chan ata volver á posición de pé.",
+   "Ao rematar a serie, xira os pulsos para enganchar a barra nos topes."
+  ],
+  "tips": [
+   "Adiantar un pouco os pés permite baixar máis sen que os talóns se despeguen.",
+   "Coloca os topes de seguridade xusto por debaixo do punto máis baixo do teu percorrido."
+  ]
+ },
+ "squat": {
+  "name": "Agachamento traseiro con barra",
+  "description": "Un movemento composto de tren inferior que traballa cuádriceps, glúteos e isquiotibiais.",
+  "instructions": [
+   "Coloca a barra sobre os trapecios superiores.",
+   "Saca a barra do rack e dá un paso atrás, cos pés á largura dos ombros.",
+   "Contrae o core e baixa flexionando xeonllos e cadeiras ata que as coxas queden paralelas ao chan.",
+   "Empuxa a través dos talóns para volver á posición de pé.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén o peito arriba durante todo o movemento.",
+   "Empuxa os xeonllos cara a fóra en liña coas puntas dos pés."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Roda abdominal de pé",
+  "description": "Rollout coa roda abdominal partindo de pé, coas pernas rectas e moito percorrido.",
+  "instructions": [
+   "De pé, coas pernas rectas, inclínate cara adiante e apoia a roda abdominal no chan coas dúas mans.",
+   "Roda cara adiante cos brazos estendidos e o abdome firme ata quedar case paralelo ao chan.",
+   "Mantén as cadeiras aliñadas, sen deixar caer a zona lumbar.",
+   "Tira do abdome para volver rodando á posición inicial."
+  ],
+  "tips": [
+   "Comeza coa versión de xeonllos ata controlar o percorrido.",
+   "Detén o percorrido antes de que a zona lumbar se afunda."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Elevación de talóns de pé",
+  "description": "Unha elevación de talóns realizada de pé para desenvolver o xemelgo ao longo dun percorrido completo.",
+  "instructions": [
+   "Ponte de pé no bordo dunha plataforma ou máquina de elevación de talóns.",
+   "Baixa os talóns por debaixo da plataforma.",
+   "Empuxa cara arriba de puntas.",
+   "Baixa amodo.",
+   "Repite."
+  ],
+  "tips": [
+   "Fai unha pausa na parte superior para maximizar a contracción.",
+   "Baixar o talón por completo aumenta o percorrido."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Abdución de cadeira de pé",
+  "description": "Unha elevación lateral de perna co peso do corpo, de pé sobre a outra perna. Traballa o glúteo medio do lado da perna elevada e, na perna de apoio, os músculos que manteñen as cadeiras niveladas.",
+  "instructions": [
+   "Ponte ergueito coas mans nas cadeiras e os pés xuntos.",
+   "Pasa o peso a unha perna e mantén ese xeonllo lixeiramente flexionado.",
+   "Eleva a outra perna estirada cara ao lado, coas puntas dos pés cara adiante e o tronco ergueito.",
+   "Sobe a perna só ata onde poidas sen inclinar a parte superior do corpo no sentido contrario.",
+   "Baixa a perna amodo ata colocala xunto ao pé de apoio.",
+   "Completa o número de repeticións previsto e repite coa outra perna."
+  ],
+  "tips": [
+   "Mantén as cadeiras rectas e o tronco quieto; inclinarte no sentido contrario á perna elevada quítalle traballo á cadeira.",
+   "Controla tamén o movemento de baixada; non deixes que a perna se balancee.",
+   "Agárrate a unha parede ou a unha cadeira se non logras manter o equilibrio; engade unha banda elástica arredor das coxas cando o movemento che resulte fácil."
+  ]
+ },
+ "step-ups": {
+  "name": "Subidas ao chanzo",
+  "description": "Unha subida a un caixón ou banco cunha perna que adestra cuádriceps e glúteos de forma funcional.",
+  "instructions": [
+   "Ponte de pé diante dun caixón ou banco resistente.",
+   "Coloca un pé completamente sobre a superficie do caixón.",
+   "Empuxa a través dese talón para subir o corpo ao caixón.",
+   "Sobe o pé de atrás para quedar completamente sobre o caixón.",
+   "Baixa o pé de atrás de novo ao chan con control, mantendo a carga na perna que traballa.",
+   "Alterna as pernas ou completa todas as repeticións dun lado antes de cambiar."
+  ],
+  "tips": [
+   "Apoia todo o pé sobre a superficie do caixón.",
+   "Impulsa co talón da perna que sobe, non coa de atrás.",
+   "Controla o descenso en lugar de deixarte caer."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Xalón cos brazos rectos",
+  "description": "Un exercicio de illamento para os dorsais usando cable cos brazos rectos.",
+  "instructions": [
+   "Ponte de pé diante dunha polea cunha barra recta enganchada á polea alta.",
+   "Cos brazos case rectos, empuxa a barra cara abaixo nun arco cara ás coxas.",
+   "Aperta os dorsais na parte inferior.",
+   "Devolve a barra amodo á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén os brazos case rectos durante todo o movemento.",
+   "Leva a barra cara ás coxas describindo un arco.",
+   "Aperta os dorsais na parte baixa do percorrido."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Peso morto sumo",
+  "description": "Variante do peso morto cunha postura moi aberta e agarre estreito que despraza o traballo cara a glúteos, adutores e cuádriceps.",
+  "instructions": [
+   "Colócate cos pés moi abertos, as puntas lixeiramente cara a fóra e a barra sobre a metade do pé.",
+   "Agarra a barra coas mans por dentro das pernas, as costas neutras e o peito alto.",
+   "Empuxa o chan coas pernas abrindo os xeonllos cara a fóra ata quedar de pé coa barra pegada ao corpo.",
+   "Bloquea cadeira e xeonllos arriba e baixa a barra de forma controlada polo mesmo camiño."
+  ],
+  "tips": [
+   "Mantén a barra sempre pegada ao corpo.",
+   "Os xeonllos seguen a dirección das puntas dos pés; non os deixes caer cara a dentro."
+  ]
+ },
+ "t-bar-row": {
+  "name": "Remo en T",
+  "description": "Un remo composto con barra en T e torso inclinado, que desenvolve dorsais e romboides con cargas elevadas.",
+  "instructions": [
+   "Colócate a cabalo da barra en T cos pés á largura dos ombros.",
+   "Inclínate desde as cadeiras ata que o torso quede a uns 45 graos.",
+   "Agarra as asas e mantén as costas planas.",
+   "Tira da barra cara ao peito levando os cóbados cara atrás.",
+   "Aperta as omoplatas na parte superior.",
+   "Baixa a barra de forma controlada e repite."
+  ],
+  "tips": [
+   "Inclina o torso uns 45 graos mantendo as costas planas.",
+   "Tira levando os cóbados cara atrás, non só cos brazos.",
+   "Xunta as omoplatas na parte alta do tirón."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Extensión de tríceps en polea",
+  "description": "Un exercicio de illamento para os tríceps usando unha polea.",
+  "instructions": [
+   "Ponte de pé diante dunha polea cun accesorio de barra recta.",
+   "Agarra a barra e pega os cóbados aos costados.",
+   "Empuxa a barra cara abaixo ata que os brazos estean completamente estendidos.",
+   "Volve amodo á posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén o torso ergueito.",
+   "Só deben moverse os antebrazos."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Curl de isquiotibiais con TRX",
+  "description": "Este exercicio de illamento utiliza un adestrador en suspensión para traballar os isquiotibiais, os glúteos e os xemelgos ao levar os talóns cara aos glúteos.",
+  "instructions": [
+   "Déitate boca arriba cos talóns nos apoios do adestrador en suspensión e os xeonllos flexionados a 90 graos.",
+   "Levanta as cadeiras do chan, creando unha liña recta desde os xeonllos ata os ombros.",
+   "Estende as pernas cara adiante, mantendo as cadeiras elevadas e a tensión no core.",
+   "Tira dos talóns cara aos glúteos, contraendo os isquiotibiais con forza.",
+   "Controla o movemento, evitando que as cadeiras caian durante toda a serie."
+  ],
+  "tips": [
+   "Mantén o core contraído para evitar que as cadeiras se afundan.",
+   "Concéntrate nunha forte contracción dos isquiotibiais no punto máximo do curl.",
+   "Controla a fase excéntrica estendendo amodo as pernas."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Xalón ao peito con barra en V",
+  "description": "Un xalón con agarre neutro realizado cunha barra en V estreita, que maximiza o estiramento do dorsal e permite unha contracción máis profunda.",
+  "instructions": [
+   "Coloca unha barra en V (asa dobre en D) no cable de xalón ao peito.",
+   "Senta coas coxas aseguradas baixo a almofada e agarra a asa coas palmas enfrontadas.",
+   "Comeza cos brazos completamente estendidos por riba da cabeza.",
+   "Tira da asa cara ao esterno empuxando os cóbados cara abaixo e lixeiramente cara atrás.",
+   "Aperta os dorsais na posición inferior e sobe amodo de forma controlada.",
+   "Repite o número de repeticións recomendado."
+  ],
+  "tips": [
+   "O agarre neutro é máis suave cos ombros ca os agarres en pronación ou supinación.",
+   "Imaxina que achegas as costelas ás cadeiras: pensa nos dorsais, non nos brazos."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Zancada camiñando con mancornas",
+  "description": "Zancadas alternas avanzando cunha mancorna en cada man; traballa cuádriceps e glúteos de forma unilateral.",
+  "instructions": [
+   "De pé, cunha mancorna en cada man e os brazos relaxados aos lados.",
+   "Dá un paso longo cara adiante e baixa ata que ambos os xeonllos formen ángulos duns 90 graos.",
+   "Empuxa coa perna adiantada para poñerte de pé e leva a perna traseira adiante no seguinte paso.",
+   "Alterna as pernas mantendo o torso ergueito durante todo o percorrido."
+  ],
+  "tips": [
+   "Dá pasos abondo longos para que o xeonllo dianteiro non sobrepase moito a punta do pé.",
+   "Precisas espazo libre; se non o tes, usa zancadas inversas."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Fondos con lastre",
+  "description": "Fondos en paralelas con peso engadido, suxeitando unha mancorna entre os pés ou cun chaleco con lastre.",
+  "instructions": [
+   "Suxéitate nas paralelas cos brazos estendidos e unha mancorna suxeita entre os pés ou os nocellos.",
+   "Inclina lixeiramente o torso e flexiona os cóbados para baixar de forma controlada.",
+   "Detente cando os ombros queden á altura dos cóbados.",
+   "Empuxa co peito e os tríceps ata estender os brazos."
+  ],
+  "tips": [
+   "Domina antes os fondos con peso corporal.",
+   "Non baixes máis do que o teu ombro tolere."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Dominadas con lastre",
+  "description": "Dominada con peso engadido, suxeitando unha mancorna entre os pés ou cun chaleco con lastre.",
+  "instructions": [
+   "Cólgate da barra con agarre algo máis ancho ca os ombros e suxeita unha mancorna entre os pés ou os nocellos.",
+   "Tira dos cóbados cara abaixo e atrás ata que o queixo supere a barra.",
+   "Mantén o corpo estable, sen balancearte.",
+   "Baixa de forma controlada ata estender os brazos por completo."
+  ],
+  "tips": [
+   "Domina antes as dominadas con peso corporal.",
+   "Se usas chaleco con lastre, axusta o peso de forma progresiva."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Remo sentado en polea con agarre ancho",
+  "description": "Remo horizontal en polea con barra longa e agarre ancho, que carga a parte alta das costas e a parte posterior do ombro.",
+  "instructions": [
+   "Senta diante da polea baixa cos pés no apoio, os xeonllos lixeiramente flexionados e a barra longa con agarre ancho.",
+   "Coas costas rectas e o peito alto, tira da barra cara á parte baixa do peito levando os cóbados cara a fóra e atrás.",
+   "Xunta as omoplatas ao final e mantén un instante a contracción.",
+   "Estira os brazos de forma controlada, deixando que as omoplatas se separen sen encurvar as costas."
+  ],
+  "tips": [
+   "Non te balancees: o movemento faino as costas, non o torso.",
+   "Leva a barra ao peito, non ao abdome, para cargar a parte alta das costas."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Agachamento Zercher",
+  "description": "Agachamento coa barra suxeita na flexión dos cóbados, que despraza a carga cara adiante e esixe moito ao tronco.",
+  "instructions": [
+   "Coloca a barra á altura do abdome sobre a flexión dos cóbados, cos antebrazos cruzados ou os puños xuntos.",
+   "Baixa flexionando cadeiras e xeonllos, co peito alto e os cóbados pegados ao corpo.",
+   "Detente cando as coxas queden paralelas ao chan ou algo por debaixo.",
+   "Empuxa o chan cos pés ata estar de novo ergueito."
+  ],
+  "tips": [
+   "Usa unha almofada ou toalla na barra se che molesta nos cóbados.",
+   "Mantén o abdome firme para non inclinarte cara adiante."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Press militar sentado no chan coas pernas estiradas, que elimina o apoio e esixe estabilidade do tronco.",
+  "instructions": [
+   "Senta no chan coas pernas estiradas diante e a barra apoiada na parte alta do peito.",
+   "Mantén o tronco ergueito e empuxa a barra en liña recta ata estender os brazos.",
+   "Detén a barra sobre a coroa da cabeza sen inclinarte cara atrás.",
+   "Baixa de forma controlada ata a clavícula."
+  ],
+  "tips": [
+   "Usa menos peso ca de pé: o tronco fai de estabilizador.",
+   "Aperta os glúteos e o abdome durante todo o movemento."
+  ]
+ }
+}
