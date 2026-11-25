@@ -88,7 +88,8 @@ export interface LandingContent {
 export const LANDING_LANGUAGES: LandingLanguage[] = [
   { code: 'es', path: '', name: 'Español', load: () => import('./i18n/es').then(m => m.default) },
   { code: 'en', path: 'en', name: 'English', load: () => import('./i18n/en').then(m => m.default) },
-  { code: 'de', path: 'de', name: 'Deutsch', load: () => import('./i18n/de').then(m => m.default) }
+  { code: 'de', path: 'de', name: 'Deutsch', load: () => import('./i18n/de').then(m => m.default) },
+  { code: 'pt', path: 'pt-br', name: 'Português (Brasil)', load: () => import('./i18n/pt').then(m => m.default) }
 ];
 
 export const landingLanguage = (code: string | null | undefined): LandingLanguage =>
