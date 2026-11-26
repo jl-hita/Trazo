@@ -106,9 +106,21 @@ public sealed class PostgresMigrationTests : IDisposable
     public void The_segment_migration_keeps_every_logged_set_as_a_main_set_and_goes_down_and_up_again()
     {
         using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeSegments);
-        var (user, log) = (Guid.NewGuid(), Guid.NewGuid());
+        var (user, plan, block, session, log) = (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
         InsertMinimalRow("users", new() { ["Id"] = $"'{user}'", ["Role"] = "'user'" });
-        InsertMinimalRow("workout_logs", new() { ["Id"] = $"'{log}'", ["UserId"] = $"'{user}'", ["PlanId"] = "NULL", ["PlannedSessionId"] = "NULL" });
+        InsertMinimalRow("training_plans", new()
+        {
+            ["Id"] = $"'{plan}'", ["UserId"] = $"'{user}'", ["Status"] = "'Archived'", ["Origin"] = "'Generated'", ["SchedulingMode"] = "'Calendar'"
+        });
+        InsertMinimalRow("training_mesocycles", new() { ["Id"] = $"'{block}'", ["PlanId"] = $"'{plan}'", ["Sequence"] = "1" });
+        InsertMinimalRow("planned_sessions", new()
+        {
+            ["Id"] = $"'{session}'", ["PlanId"] = $"'{plan}'", ["MesocycleId"] = $"'{block}'", ["PrescriptionJson"] = "'{\"exercises\":[]}'", ["Status"] = "'Planned'"
+        });
+        InsertMinimalRow("workout_logs", new()
+        {
+            ["Id"] = $"'{log}'", ["UserId"] = $"'{user}'", ["PlanId"] = $"'{plan}'", ["PlannedSessionId"] = $"'{session}'", ["Outcome"] = "'Completed'"
+        });
         InsertMinimalRow("workout_set_logs", new() { ["WorkoutLogId"] = $"'{log}'", ["ExerciseId"] = "'curl'", ["SetNumber"] = "1" });
 
         using (var db = Context()) db.Database.Migrate();
