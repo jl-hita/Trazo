@@ -142,8 +142,9 @@ public sealed class ExerciseSeedAuditTests
             Assert.True(Level(id) == "Advanced", $"{id} must stay Advanced");
 
         var counts = Entries().GroupBy(x => x.GetProperty("minimumExperience").GetString()!).ToDictionary(g => g.Key, g => g.Count());
-        Assert.Equal(102, counts["Beginner"]);
-        Assert.Equal(30, counts["Intermediate"]);
+        // 103 since the exercise review opened the guided hip adduction machine to beginners (docs/exercise-review.md).
+        Assert.Equal(103, counts["Beginner"]);
+        Assert.Equal(29, counts["Intermediate"]);
         Assert.Equal(18, counts["Advanced"]);
     }
 

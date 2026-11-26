@@ -227,7 +227,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P0-2 | Metadatos nuevos en datos | Migración y seed con R1; panel y API; valores equivalentes a las tablas | P0-1, D4 | Hecho | #242 | migración, validador, panel, seeder |
 | P0-3 | Motor y limitaciones sin ids | Se borran tabla de estímulo, tokens y overrides; planes y exclusiones idénticos; prueba que impide literales de id; un ejercicio nuevo funciona sin código | P0-2 | Hecho | #242 | golden intacto; 1.890 planes del catálogo real idénticos a los de `main` (comprobación puntual) |
 | P0-4 | Seed autoritativo | R2 completa: producción igual al seed en metadatos y traducciones, idempotente, instalación nueva equivalente; la consola marca los ejercicios del seed y bloquea su edición | P0-1 | Hecho (producción comprobada tras desplegar) | #240 | seeder en SQLite y PostgreSQL (CI), panel, importación, consola |
-| P0-5 | Revisión ejercicio a ejercicio (3 PR por patrón) | Cada ejercicio con decisión registrada; cambios de plan explicados | P0-3, P0-4 | En curso (lotes 1 y 2 de 3: empuje y tirón) | #243 y lote 2 | comparación de 1.890 planes; ver `exercise-review.md` |
+| P0-5 | Revisión ejercicio a ejercicio (3 PR por patrón) | Cada ejercicio con decisión registrada; cambios de plan explicados | P0-3, P0-4 | Hecho (150 revisados con asistencia; sin entrenador, D8) | #243, #244, #245 | comparación de 1.890 planes; ver `exercise-review.md` |
 | P5-1 | Escenarios de decisión | Perfiles, fatiga, estancamiento, dolor, incumplimiento; en CI | — | Pendiente | | |
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Pendiente | | |
 | C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | Hecho (sin revisión nativa) | #241 | cobertura de todos los idiomas y correspondencia de pasos |
@@ -257,6 +257,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | D1: el seed es la línea base, con traducciones en todos los idiomas, sobrescribe la base de datos en sus ejercicios y la consola los identifica (R2). |
 | 2026-11-26 | D2: la pista de lanzamiento va justo después de este roadmap. |
 | 2026-11-26 | D4: aprobado el modelo de metadatos R1. Los valores iniciales reproducen las reglas anteriores; corregirlos es P0-5. |
+| 2026-11-26 | Cierre de P0: los 150 ejercicios revisados (asistido, sin entrenador) y con textos completos en los 29 idiomas del seed, con los mismos pasos y consejos que el original (lo exige una prueba). Pendiente: revisión nativa de las traducciones y comprobación en producción con `seed-report`. |
 
 ## 7. Evidencia consultada
 
