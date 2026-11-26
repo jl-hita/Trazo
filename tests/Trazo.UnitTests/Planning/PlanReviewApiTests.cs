@@ -108,6 +108,24 @@ public sealed class PlanReviewApiTests() : PlansApiBase(enforced: false)
     private static string[] Authors2(JsonElement detail) => detail.GetProperty("messages").EnumerateArray().Select(m => m.GetProperty("author").GetString()!).ToArray();
 
     [Fact]
+    public async Task AMessageSentAgainWithTheSameIdentityIsStoredOnce()
+    {
+        var (_, user, _) = await StartPlanAsync("eva@example.com");
+        var id = await OpenAsync(user);
+        var key = Guid.NewGuid();
+        for (var i = 0; i < 2; i++)
+            Assert.Equal(HttpStatusCode.Created, (await user.PostAsJsonAsync(Route + "/messages", new { body = "hola", clientRequestId = key })).StatusCode);
+        Assert.Equal(["user"], Authors(await ThreadAsync(user)));
+
+        // Also after the conversation is closed: the message was received, so the retry is not an error.
+        var admin = ClientFor(await AddUserAsync("rev@example.com", role: "admin"));
+        await admin.PostAsync($"{Admin}/{id}/claim", null);
+        Assert.Equal(HttpStatusCode.NoContent, (await admin.PostAsJsonAsync($"{Admin}/{id}/review", new { })).StatusCode);
+        Assert.Equal(HttpStatusCode.Created, (await user.PostAsJsonAsync(Route + "/messages", new { body = "hola", clientRequestId = key })).StatusCode);
+        Assert.Equal(["user"], Authors(await ThreadAsync(user)));
+    }
+
+    [Fact]
     public async Task ASuperadminCanGiveBackARequestSomeoneElseHolds()
     {
         var (_, user, _) = await StartPlanAsync("carl@example.com");

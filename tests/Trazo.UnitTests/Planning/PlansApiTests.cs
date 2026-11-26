@@ -100,6 +100,8 @@ public abstract class PlansApiBase : IDisposable
     private readonly string? _postgresDatabase;
     private readonly string? _postgresAdmin;
 
+    protected bool OnPostgres => _postgresDatabase is not null;
+
     /// <param name="postgres">A PostgreSQL connection string: the host then runs on a fresh database with the real migrations instead of SQLite.</param>
     protected PlansApiBase(bool enforced, string? postgres = null)
     {

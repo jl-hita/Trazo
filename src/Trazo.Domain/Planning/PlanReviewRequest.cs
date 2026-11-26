@@ -54,4 +54,6 @@ public sealed class PlanReviewMessage
     public Guid? AuthorUserId { get; set; }
     public required string Body { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    /// <summary>Identity the app gives a message it writes, so sending it again stores nothing new.</summary>
+    public Guid? ClientRequestId { get; set; }
 }

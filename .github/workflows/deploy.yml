@@ -89,7 +89,14 @@ jobs:
         working-directory: admin/Trazo.Admin.Web
         run: |
           npm ci
-          npm audit --omit=dev --audit-level=high
+          # El DNS del servidor ha fallado alguna vez justo aquí: se reintenta solo si el registro no responde.
+          # Una vulnerabilidad, o un registro caído tras los reintentos, siguen deteniendo el despliegue.
+          for attempt in 1 2 3 4 5; do
+            if out="$(npm audit --omit=dev --audit-level=high 2>&1)"; then echo "$out"; break; fi
+            echo "$out"
+            grep -q 'audit endpoint returned an error' <<< "$out" && (( attempt < 5 )) || exit 1
+            sleep $((attempt * 15))
+          done
           npm run build
           test -f dist/trazo-admin-web/browser/index.html
           rm -rf /tmp/trazo-frontend

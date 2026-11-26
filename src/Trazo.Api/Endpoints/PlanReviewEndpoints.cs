@@ -38,7 +38,7 @@ public static class PlanReviewEndpoints
     }
 
     public sealed record CreateReviewRequest(string? Note);
-    public sealed record MessageRequest(string? Body);
+    public sealed record MessageRequest(string? Body, Guid? ClientRequestId = null);
 
     /// <summary>Author is "user" or "team"; audit lines are never sent to the user.</summary>
     public sealed record UserMessageView(Guid Id, string Author, string Body, DateTimeOffset CreatedAt);
@@ -130,6 +130,13 @@ public static class PlanReviewEndpoints
         if (planId is null) return Problem(StatusCodes.Status404NotFound, "No tienes un plan activo.", "no_active_plan");
         var entity = await db.PlanReviewRequests.Where(r => r.PlanId == planId).OrderByDescending(r => r.CreatedAt).FirstOrDefaultAsync(ct);
         if (entity is null) return Problem(StatusCodes.Status404NotFound, "No has pedido ninguna revisión.", "no_review_request");
+        // A message that is already stored (the answer got lost, or it was sent twice) is answered as sent, even if the
+        // conversation has since been closed or has reached a limit.
+        var key = request!.ClientRequestId;
+        Task<bool> StoredAsync() => db.PlanReviewMessages.AsNoTracking().AnyAsync(m => m.RequestId == entity.Id && m.ClientRequestId == key, ct);
+        async Task<IResult> SentAsync() =>
+            Results.Created("/api/v1/plans/current/review-request", await BuildViewAsync(db, entity, true, clock.GetUtcNow(), ct));
+        if (key is not null && await StoredAsync()) return await SentAsync();
         if (entity.Status == PlanReviewStatus.Reviewed)
             return Problem(StatusCodes.Status409Conflict, "Esta revisión está cerrada. Pide una nueva para seguir hablando con el equipo.", "review_closed");
 
@@ -142,12 +149,21 @@ public static class PlanReviewEndpoints
             return Problem(StatusCodes.Status409Conflict, "Espera a que el equipo te responda antes de enviar más mensajes.", "wait_for_reply");
 
         var now = clock.GetUtcNow();
-        db.PlanReviewMessages.Add(new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = entity.Id, Author = PlanReviewAuthors.User, Body = body, CreatedAt = now });
+        var message = new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = entity.Id, Author = PlanReviewAuthors.User, Body = body, CreatedAt = now, ClientRequestId = key };
+        db.PlanReviewMessages.Add(message);
         entity.UpdatedAt = now;
-        await db.SaveChangesAsync(ct);
+        try { await db.SaveChangesAsync(ct); }
+        catch (DbUpdateException) when (key is not null)
+        {
+            // The same message arrived twice at once and the other request stored it first.
+            db.ChangeTracker.Clear();
+            if (!await StoredAsync()) throw;
+            entity = await db.PlanReviewRequests.SingleAsync(r => r.Id == entity.Id, ct);
+            return await SentAsync();
+        }
 
         PlanReviewNotifier.NotifyStaff(background, entity.Id, userId, isNew: false);
-        return Results.Created("/api/v1/plans/current/review-request", await BuildViewAsync(db, entity, true, now, ct));
+        return await SentAsync();
     }
 
     private static Task<Guid?> ActivePlanIdAsync(TrazoDbContext db, Guid userId, CancellationToken ct) =>

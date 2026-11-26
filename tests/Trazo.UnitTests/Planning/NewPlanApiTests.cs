@@ -111,7 +111,7 @@ public abstract class NewPlanApiScenarios(string? postgres) : PlansApiBase(enfor
 
         // The SQLite schema of this fixture only has the planning tables, which the full account deletion needs beyond; there the same
         // deletion is checked with the complete schema in AccountApiTests. Here it runs against the real PostgreSQL migrations.
-        if (postgres is null) return;
+        if (!OnPostgres) return;
         var deleted = await anaClient.SendAsync(new HttpRequestMessage(HttpMethod.Delete, "/api/v1/account") { Content = JsonContent.Create(new { password = Password }) });
         Assert.True(deleted.StatusCode == HttpStatusCode.OK, await deleted.Content.ReadAsStringAsync());
         Assert.Equal(0, await InDbAsync(db => db.MuscleWeekObservations.CountAsync(o => o.UserId == ana.Id)));

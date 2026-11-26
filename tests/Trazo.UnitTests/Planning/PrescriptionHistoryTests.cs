@@ -641,7 +641,7 @@ public abstract class PrescriptionHistoryScenarios(string? postgres) : PlansApiB
         var (_, client, _) = await StartPlanAsync("hist9@example.com");
         var (session, exercise, replacement) = await SwapTargetAsync(client);
         var before = (await SessionsAsync()).Single(s => s.Id == session.Id);
-        await InDbAsync(db => db.Database.ExecuteSqlRawAsync(postgres is null
+        await InDbAsync(db => db.Database.ExecuteSqlRawAsync(!OnPostgres
             ? "CREATE TRIGGER fail_history BEFORE INSERT ON plan_adaptations WHEN NEW.\"Kind\" = 'user_swap_exercise' BEGIN SELECT RAISE(ABORT, 'history write failed'); END;"
             : "CREATE FUNCTION fail_history() RETURNS trigger AS $$ BEGIN RAISE EXCEPTION 'history write failed'; END $$ LANGUAGE plpgsql;"
               + " CREATE TRIGGER fail_history BEFORE INSERT ON plan_adaptations FOR EACH ROW WHEN (NEW.\"Kind\" = 'user_swap_exercise') EXECUTE FUNCTION fail_history();"));

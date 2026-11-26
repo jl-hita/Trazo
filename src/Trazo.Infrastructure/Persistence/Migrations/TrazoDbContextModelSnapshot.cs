@@ -344,8 +344,10 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<Guid?>("AuthorUserId").HasColumnType("uuid");
             b.Property<string>("Body").IsRequired().HasMaxLength(2000).HasColumnType("character varying(2000)");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<Guid?>("ClientRequestId").HasColumnType("uuid");
             b.HasKey("Id");
             b.HasIndex("RequestId", "CreatedAt");
+            b.HasIndex("RequestId", "ClientRequestId").IsUnique().HasFilter("\"ClientRequestId\" IS NOT NULL");
             b.HasIndex("AuthorUserId");
             b.ToTable("plan_review_messages");
         });
