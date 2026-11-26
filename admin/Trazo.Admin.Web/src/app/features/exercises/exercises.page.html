@@ -29,10 +29,35 @@
             <option value="updated">{{ copy.sortUpdated }}</option>
           </select>
           <trazo-button variant="primary" type="button" (pressed)="startNew()">{{ copy.newExercise }}</trazo-button>
+          <trazo-button variant="secondary" type="button" (pressed)="checkSeed()" [disabled]="seedBusy()">
+            {{ seedBusy() ? copy.checkingSeed : copy.checkSeed }}
+          </trazo-button>
           <trazo-button [variant]="transferConfirm() ? 'danger' : 'secondary'" type="button" (pressed)="sendToDietoExpress()" [disabled]="transferBusy()">
             {{ transferBusy() ? copy.sending : transferConfirm() ? copy.confirmSend : copy.sendToDietoExpress }}
           </trazo-button>
         </div>
+
+        @if (seedError()) { <p class="ex-note" role="alert">{{ seedError() }}</p> }
+        @if (seedReport(); as r) {
+          <div class="ex-note" role="status">
+            <p><b>{{ seedMatches() ? copy.seedMatches : copy.seedDiffers }}</b>
+              {{ r.seedExercises }} {{ copy.seedCounts }} {{ r.databaseExercises }}.
+              {{ copy.seedDifferences }} {{ r.differences.length }} · {{ copy.seedMissing }} {{ r.missingInDatabase.length }} ·
+              {{ copy.seedInvalid }} {{ r.invalid.length }} · {{ copy.seedOutside }} {{ r.outsideSeed.length }} ·
+              {{ copy.seedLanguages }} {{ r.languages.length - incompleteLanguages().length }}/{{ r.languages.length }}.</p>
+            @if (r.differences.length || r.missingInDatabase.length || r.invalid.length || r.outsideSeed.length || incompleteLanguages().length) {
+              <details><summary>{{ copy.seedDetail }}</summary>
+                <ul>
+                  @for (d of r.differences; track d.exerciseId) { <li><b>{{ d.exerciseId }}</b>: {{ d.engineFields.concat(d.contentFields, d.translations).join(', ') }}</li> }
+                  @for (id of r.missingInDatabase; track id) { <li><b>{{ id }}</b>: {{ copy.seedMissing }}</li> }
+                  @for (i of r.invalid; track i.exerciseId) { <li><b>{{ i.exerciseId }}</b>: {{ copy.seedInvalid }}</li> }
+                  @for (o of r.outsideSeed; track o.exerciseId) { <li><b>{{ o.exerciseId }}</b>: {{ copy.seedOutside }} ({{ o.source }})</li> }
+                  @for (l of incompleteLanguages(); track l.language) { <li><b>{{ l.language }}</b>: {{ l.incomplete }}</li> }
+                </ul>
+              </details>
+            }
+          </div>
+        }
 
         @if (transferMessage()) { <p class="ex-note" role="status">{{ transferMessage() }}</p> }
         @if (transferSkipped().length) {

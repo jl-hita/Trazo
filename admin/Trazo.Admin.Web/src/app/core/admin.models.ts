@@ -50,6 +50,15 @@ export interface AdminExerciseOptions {
   mechanics: string[]; bodyParts: string[]; sources: string[]; muscles: string[]; goals: string[]; emphases: string[]; limitationAreas: string[];
 }
 
+/** Where the database differs from the exercise seed shipped with the API. */
+export interface AdminSeedReport {
+  seedExercises: number; databaseExercises: number; missingInDatabase: string[];
+  differences: { exerciseId: string; engineFields: string[]; contentFields: string[]; translations: string[] }[];
+  outsideSeed: { exerciseId: string; source: string; isActive: boolean }[];
+  invalid: { exerciseId: string; source: string; isActive: boolean; errors: Record<string, string[]> }[];
+  languages: { language: string; complete: number; incomplete: number }[];
+}
+
 export interface ExerciseFilters {
   q: string; movementPattern: string; status: string; source: string; sort: string; page: number; pageSize: number;
 }

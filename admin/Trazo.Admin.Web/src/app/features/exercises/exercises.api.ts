@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ApiHttpClient } from '../../core/api-http.client';
 import { HttpParams } from '@angular/common/http';
 import type {
-  AdminExerciseDetail, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary,
+  AdminExerciseDetail, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, AdminSeedReport,
   ExerciseAction, ExerciseFilters, Page, TransferResult
 } from '../../core/admin.models';
 
@@ -20,6 +20,10 @@ export class ExercisesApi {
     if (filters.source) params = params.set('source', filters.source);
     if (filters.sort) params = params.set('sort', filters.sort);
     return this.http.get<Page<AdminExerciseSummary>>(`${API}/exercises`, { params });
+  }
+
+  seedReport(): Promise<AdminSeedReport> {
+    return this.http.get<AdminSeedReport>(`${API}/exercises/seed-report`);
   }
 
   options(): Promise<AdminExerciseOptions> {
