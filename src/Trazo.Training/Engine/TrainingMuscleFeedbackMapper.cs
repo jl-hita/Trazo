@@ -108,11 +108,11 @@ public static class TrainingMuscleFeedbackMapper
                     return null;
 
                 var primary = ReadMuscleGroups(primaryMusclesElement);
-                var secondary = exercise.TryGetProperty("secondaryMuscleGroups", out var secondaryElement) &&
+                var secondary = exercise.TryGetProperty("effectiveSecondaryMuscleGroups", out var secondaryElement) &&
                                 secondaryElement.ValueKind == JsonValueKind.Array
                     ? ReadMuscleGroups(secondaryElement)
                     : Array.Empty<TrainingMuscleGroup>();
-                var effective = TrainingExerciseStimulus.GetEffectiveMuscles(id, primary, secondary)
+                var effective = TrainingStimulus.Of(primary, secondary)
                     .Select(muscle => muscle.ToString())
                     .OrderBy(muscle => muscle, StringComparer.Ordinal)
                     .ToArray();

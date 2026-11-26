@@ -93,7 +93,9 @@ public static class LongitudinalLearning
                 .ToDictionaryAsync(m => m.Id, m => (m.Sequence, m.IsDeload), ct);
             var preparation = (await db.TrainingMesocycles.AsNoTracking().Where(m => m.PlanId == planId && m.PhaseType == PreparationPhase.PhaseType)
                 .Select(m => m.Sequence).ToListAsync(ct)).ToHashSet();
-            var built = MuscleWeekObserver.Build(new ObserverInput(userId, planId, sessions, allLogs, mesocycles, periods, now, preparation));
+            var stimulus = (await db.ExerciseCatalog.AsNoTracking().Select(e => new { e.Id, e.EffectiveSecondaryMuscles }).ToListAsync(ct))
+                .ToDictionary(e => e.Id, e => (IReadOnlyList<string>)e.EffectiveSecondaryMuscles, StringComparer.OrdinalIgnoreCase);
+            var built = MuscleWeekObserver.Build(new ObserverInput(userId, planId, sessions, allLogs, mesocycles, periods, now, preparation, stimulus));
             foreach (var row in built)
             {
                 var existing = stored.FirstOrDefault(o => o.PlanId == row.PlanId && o.Period == row.Period && o.Muscle == row.Muscle);

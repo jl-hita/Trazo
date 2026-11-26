@@ -68,7 +68,7 @@ public sealed class TrainingMuscleFeedbackTests
     [Fact]
     public void ReviewedSecondaryCompoundSetsPreventRedundantDirectMuscleIncrease()
     {
-        const string row = """{"exercises":[{"exerciseId":"seated-cable-row","sets":3,"primaryMuscleGroups":["Lats","UpperBack"],"secondaryMuscleGroups":["Biceps"]}]}""";
+        const string row = """{"exercises":[{"exerciseId":"seated-cable-row","sets":3,"primaryMuscleGroups":["Lats","UpperBack"],"secondaryMuscleGroups":["Biceps"],"effectiveSecondaryMuscleGroups":["Biceps"]}]}""";
         const string curl = """{"exercises":[{"exerciseId":"machine-bicep-curl","sets":2,"primaryMuscleGroups":["Biceps"],"secondaryMuscleGroups":[]}]}""";
         var planned = TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets([row, curl])
             .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);

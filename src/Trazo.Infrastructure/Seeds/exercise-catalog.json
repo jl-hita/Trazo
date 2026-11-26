@@ -1,7 +1,7 @@
 [
   {
     "id": "ab-wheel-rollout",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Rueda Abdominal",
     "nameEn": "Ab Wheel Rollout",
@@ -46,11 +46,17 @@
       "ab-wheel"
     ],
     "selectionPriority": 68,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "arnold-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Press Arnold",
     "nameEn": "Arnold Press",
@@ -91,11 +97,19 @@
       "bench"
     ],
     "selectionPriority": 68,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "assisted-pull-ups",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Dominadas Asistidas",
     "nameEn": "Assisted Pull-Up",
@@ -140,11 +154,17 @@
       "assisted-pull-up-machine"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "ball-leg-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas con Pelota de Estabilidad",
     "nameEn": "Stability Ball Leg Curl",
@@ -186,11 +206,15 @@
       "stability-ball"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "banded-standing-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Pierna de Pie con Banda",
     "nameEn": "Banded Standing Leg Curl",
@@ -231,11 +255,15 @@
       "resistance-band"
     ],
     "selectionPriority": 42,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "band-lat-pulldown",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Jalón con Banda Elástica",
     "nameEn": "Resistance Band Lat Pulldown",
@@ -275,11 +303,17 @@
       "resistance-band"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "band-pull-apart",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Band Pull-Apart",
     "nameEn": "Band Pull-Apart",
@@ -319,11 +353,15 @@
       "resistance-band"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "band-row",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Remo con Banda Elástica",
     "nameEn": "Resistance Band Row",
@@ -364,11 +402,17 @@
       "resistance-band"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "band-shoulder-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Press de Hombros con Banda Elástica",
     "nameEn": "Resistance Band Shoulder Press",
@@ -408,11 +452,19 @@
       "resistance-band"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "barbell-bulgarian-split-squat",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Sentadilla Búlgara con Barra",
     "nameEn": "Barbell Bulgarian Split Squat",
@@ -454,11 +506,17 @@
       "squat-rack"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "barbell-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl con Barra",
     "nameEn": "Barbell Curl",
@@ -497,11 +555,18 @@
       "barbell"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "barbell-glute-bridge",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Puente de Glúteos con Barra",
     "nameEn": "Barbell Glute Bridge",
@@ -543,11 +608,15 @@
       "barbell"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "barbell-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo con Barra Inclinado",
     "nameEn": "Bent-Over Barbell Row",
@@ -590,11 +659,19 @@
       "barbell"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "barbell-standing-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos de Pie con Barra",
     "nameEn": "Barbell Standing Calf Raise",
@@ -632,11 +709,15 @@
       "squat-rack"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "bench-press",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Press de Banca con Barra",
     "nameEn": "Barbell Bench Press",
@@ -681,11 +762,17 @@
       "squat-rack"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "bent-knee-inverted-row",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Remo Invertido con Rodillas Flexionadas",
     "nameEn": "Bent-Knee Inverted Row",
@@ -727,11 +814,19 @@
       "squat-rack"
     ],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "bodyweight-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevación de Gemelos con Peso Corporal",
     "nameEn": "Bodyweight Calf Raise",
@@ -768,11 +863,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 42,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "bodyweight-reverse-lunge",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Zancada Inversa con Peso Corporal",
     "nameEn": "Bodyweight Reverse Lunge",
@@ -810,11 +909,17 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "bodyweight-squat",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Sentadilla con Peso Corporal",
     "nameEn": "Bodyweight Squat",
@@ -853,11 +958,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "bulgarian-split-squat",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Sentadilla Búlgara",
     "nameEn": "Bulgarian Split Squat",
@@ -901,11 +1010,17 @@
       "bench"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "cable-crunch",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Crunch en Polea",
     "nameEn": "Cable Crunch",
@@ -946,11 +1061,15 @@
       "cable"
     ],
     "selectionPriority": 80,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "cable-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl en Polea",
     "nameEn": "Cable Curl",
@@ -989,11 +1108,15 @@
       "cable"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "cable-external-rotation",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Rotación Externa en Polea",
     "nameEn": "Cable External Rotation",
@@ -1034,11 +1157,15 @@
       "cable"
     ],
     "selectionPriority": 42,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "cable-fly",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Aperturas en Polea",
     "nameEn": "Cable Fly",
@@ -1079,11 +1206,15 @@
       "cable"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "cable-front-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevaciones Frontales en Polea",
     "nameEn": "Cable Front Raise",
@@ -1120,11 +1251,17 @@
       "cable"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "cable-lateral-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales en Polea",
     "nameEn": "Cable Lateral Raise",
@@ -1165,11 +1302,19 @@
       "cable"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [
+      "LateralDeltoid"
+    ],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "cable-overhead-tricep-extension",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps sobre la Cabeza en Polea",
     "nameEn": "Cable Overhead Triceps Extension",
@@ -1211,11 +1356,18 @@
       "cable"
     ],
     "selectionPriority": 76,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow",
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "cable-pallof-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press Pallof en Polea",
     "nameEn": "Cable Pallof Press",
@@ -1260,11 +1412,15 @@
       "cable"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "cable-reverse-fly",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Pájaro en Polea",
     "nameEn": "Cable Reverse Fly",
@@ -1306,11 +1462,15 @@
       "cable"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "captains-chair-knee-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevación de Rodillas en Silla Romana",
     "nameEn": "Captain's Chair Knee Raise",
@@ -1353,11 +1513,15 @@
       "captains-chair"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "chest-press-machine",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press de Pecho en Máquina",
     "nameEn": "Machine Chest Press",
@@ -1399,11 +1563,17 @@
       "chest-press-machine"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "chest-supported-db-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo con Mancuernas con Apoyo en el Pecho",
     "nameEn": "Chest-Supported Dumbbell Row",
@@ -1445,11 +1615,17 @@
       "bench"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "chest-supported-kettlebell-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo con Pesa Rusa Apoyado en el Pecho",
     "nameEn": "Chest-Supported Kettlebell Row",
@@ -1493,11 +1669,17 @@
       "bench"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "chest-supported-machine-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo en Máquina con Apoyo en el Pecho",
     "nameEn": "Chest-Supported Machine Row",
@@ -1542,11 +1724,17 @@
       "seated-row-machine"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "chest-supported-t-bar-row",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Remo en T con Apoyo en el Pecho",
     "nameEn": "Chest-Supported T-Bar Row",
@@ -1591,11 +1779,17 @@
       "bench"
     ],
     "selectionPriority": 68,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "chin-ups",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Dominadas en Supinación",
     "nameEn": "Chin-Ups",
@@ -1636,11 +1830,17 @@
       "pull-up-bar"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "close-grip-bench-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Press de Banca con Agarre Cerrado",
     "nameEn": "Close-Grip Bench Press",
@@ -1682,11 +1882,17 @@
       "squat-rack"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "db-bench-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press de Banca con Mancuernas",
     "nameEn": "Dumbbell Bench Press",
@@ -1728,11 +1934,17 @@
       "bench"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "db-fly",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Aperturas con Mancuernas",
     "nameEn": "Dumbbell Fly",
@@ -1772,11 +1984,15 @@
       "bench"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "db-squat",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Sentadilla con Mancuernas",
     "nameEn": "Dumbbell Squat",
@@ -1819,11 +2035,15 @@
       "dumbbell"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "dead-bug",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Dead Bug",
     "nameEn": "Dead Bug",
@@ -1860,11 +2080,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "deadlift",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Peso Muerto con Barra",
     "nameEn": "Barbell Deadlift",
@@ -1908,11 +2132,17 @@
       "barbell"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "deficit-deadlift",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Peso Muerto con Déficit",
     "nameEn": "Deficit Deadlift",
@@ -1954,11 +2184,17 @@
       "barbell"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "dragon-flag",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Dragon Flag",
     "nameEn": "Dragon Flag",
@@ -2000,11 +2236,15 @@
       "bench"
     ],
     "selectionPriority": 55,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-bent-over-row",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Remo Inclinado con Mancuernas",
     "nameEn": "Bent-Over Dumbbell Row",
@@ -2047,11 +2287,19 @@
       "dumbbell"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-curl",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Curl con Mancuernas",
     "nameEn": "Dumbbell Curl",
@@ -2090,11 +2338,15 @@
       "dumbbell"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-farmers-walk",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Paseo del Granjero con Mancuernas",
     "nameEn": "Dumbbell Farmer's Walk",
@@ -2139,11 +2391,15 @@
       "dumbbell"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-front-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevaciones Frontales con Mancuernas",
     "nameEn": "Dumbbell Front Raise",
@@ -2180,11 +2436,17 @@
       "dumbbell"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-reverse-fly",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Pájaro con Mancuernas",
     "nameEn": "Dumbbell Reverse Fly",
@@ -2226,11 +2488,17 @@
       "dumbbell"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "UpperBack"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-romanian-deadlift",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Peso Muerto Rumano con Mancuernas",
     "nameEn": "Dumbbell Romanian Deadlift",
@@ -2275,11 +2543,17 @@
       "dumbbell"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-shoulder-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press de Hombros con Mancuernas",
     "nameEn": "Dumbbell Shoulder Press",
@@ -2323,11 +2597,19 @@
       "dumbbell"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-shrug",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Encogimientos con Mancuernas",
     "nameEn": "Dumbbell Shrug",
@@ -2366,11 +2648,15 @@
       "dumbbell"
     ],
     "selectionPriority": 48,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "dumbbell-single-leg-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelo a una Pierna con Mancuerna",
     "nameEn": "Dumbbell Single-Leg Calf Raise",
@@ -2407,11 +2693,15 @@
       "dumbbell"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "elevated-pike-push-up",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Flexiones en Pica con Manos Elevadas",
     "nameEn": "Elevated Pike Push-Up",
@@ -2451,11 +2741,20 @@
       "step"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "face-pull",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Face Pull en Polea",
     "nameEn": "Cable Face Pull",
@@ -2495,11 +2794,15 @@
       "cable"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "front-squat",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Sentadilla Frontal",
     "nameEn": "Front Squat",
@@ -2542,11 +2845,18 @@
       "squat-rack"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "glute-bridge",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Puente de Glúteos",
     "nameEn": "Glute Bridge",
@@ -2585,11 +2895,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "goblet-squat",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Sentadilla Goblet",
     "nameEn": "Goblet Squat",
@@ -2630,11 +2944,15 @@
       "kettlebell"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "good-morning",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Buenos Días con Barra",
     "nameEn": "Good Morning",
@@ -2675,11 +2993,17 @@
       "squat-rack"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "hack-squat",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Hack Squat",
     "nameEn": "Hack Squat",
@@ -2724,11 +3048,15 @@
       "hack-squat-machine"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "hammer-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Martillo con Mancuernas",
     "nameEn": "Dumbbell Hammer Curl",
@@ -2768,11 +3096,15 @@
       "dumbbell"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "handstand-push-up",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Flexiones en Pino",
     "nameEn": "Handstand Push-Up",
@@ -2810,11 +3142,20 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "hanging-knee-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevación de Rodillas Colgado",
     "nameEn": "Hanging Knee Raise",
@@ -2858,11 +3199,15 @@
       "pull-up-bar"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "hanging-leg-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevación de Piernas Colgado",
     "nameEn": "Hanging Leg Raise",
@@ -2904,11 +3249,15 @@
       "pull-up-bar"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "hex-bar-deadlift",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Peso Muerto con Barra Hexagonal",
     "nameEn": "Hex Bar Deadlift",
@@ -2955,11 +3304,17 @@
       "trap-bar"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "hip-abduction",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera en Máquina",
     "nameEn": "Machine Hip Abduction",
@@ -3000,11 +3355,15 @@
       "hip-abduction-machine"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "hip-adduction",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Aducción de Cadera en Máquina",
     "nameEn": "Machine Hip Adduction",
@@ -3044,11 +3403,15 @@
       "hip-adduction-machine"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "hip-thrust",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Hip Thrust con Barra",
     "nameEn": "Barbell Hip Thrust",
@@ -3091,11 +3454,15 @@
       "bench"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "horizontal-leg-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Prensa de Piernas Horizontal",
     "nameEn": "Horizontal Leg Press",
@@ -3136,11 +3503,15 @@
       "leg-press-machine"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "incline-bench-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press en Banco Inclinado con Barra",
     "nameEn": "Incline Barbell Bench Press",
@@ -3185,11 +3556,17 @@
       "squat-rack"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "incline-bench-y-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevaciones en Y en Banco Inclinado",
     "nameEn": "Incline Bench Y-Raise",
@@ -3229,11 +3606,17 @@
       "bench"
     ],
     "selectionPriority": 56,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "incline-db-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl con Mancuernas en Banco Inclinado",
     "nameEn": "Incline Dumbbell Curl",
@@ -3273,11 +3656,17 @@
       "bench"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "incline-db-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press con Mancuernas en Banco Inclinado",
     "nameEn": "Incline Dumbbell Press",
@@ -3320,11 +3709,17 @@
       "bench"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "incline-push-ups",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Flexiones Inclinadas",
     "nameEn": "Incline Push-Up",
@@ -3366,11 +3761,19 @@
       "bench"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "inverted-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo Invertido",
     "nameEn": "Inverted Row",
@@ -3416,11 +3819,19 @@
       "squat-rack"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "kettlebell-tibialis-raise",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Elevación de Tibial con Pesa Rusa",
     "nameEn": "Kettlebell Tibialis Raise",
@@ -3461,11 +3872,15 @@
       "bench"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "kneeling-cable-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo en Polea Arrodillado",
     "nameEn": "Kneeling Cable Row",
@@ -3508,11 +3923,17 @@
       "cable"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "knee-push-ups",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Flexiones con Rodillas Apoyadas",
     "nameEn": "Knee Push-Up",
@@ -3555,11 +3976,19 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "lateral-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales con Mancuernas",
     "nameEn": "Dumbbell Lateral Raise",
@@ -3596,11 +4025,19 @@
       "dumbbell"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [
+      "LateralDeltoid"
+    ],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "lat-pulldown",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Jalón al Pecho",
     "nameEn": "Lat Pulldown",
@@ -3644,11 +4081,17 @@
       "lat-pulldown-machine"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "leg-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas Tumbado",
     "nameEn": "Lying Leg Curl",
@@ -3689,11 +4132,15 @@
       "leg-curl-machine"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "leg-extension",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Extensión de Piernas",
     "nameEn": "Leg Extension",
@@ -3732,11 +4179,15 @@
       "leg-extension-machine"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "leg-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Prensa de Piernas",
     "nameEn": "Leg Press",
@@ -3779,11 +4230,15 @@
       "leg-press-machine"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "leg-press-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos en Prensa",
     "nameEn": "Leg Press Calf Raise",
@@ -3820,11 +4275,15 @@
       "leg-press-machine"
     ],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "lying-leg-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Piernas Tumbado",
     "nameEn": "Lying Leg Raise",
@@ -3862,11 +4321,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "machine-back-extension",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Extensión de Espalda en Máquina",
     "nameEn": "Machine Back Extension",
@@ -3908,11 +4371,20 @@
       "back-extension-machine"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "machine-bicep-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Bíceps en Máquina",
     "nameEn": "Machine Biceps Curl",
@@ -3951,11 +4423,15 @@
       "bicep-curl-machine"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "machine-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevación de Gemelos en Máquina",
     "nameEn": "Machine Calf Raise",
@@ -3995,11 +4471,15 @@
       "standing-calf-raise-machine"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "machine-chest-fly",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Aperturas en Máquina",
     "nameEn": "Machine Chest Fly",
@@ -4042,11 +4522,15 @@
       "chest-fly-machine"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "machine-reverse-fly",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Pájaro en Máquina",
     "nameEn": "Machine Reverse Fly",
@@ -4088,11 +4572,17 @@
       "reverse-fly-machine"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "UpperBack"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "machine-seated-crunch",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Crunch en Máquina Sentado",
     "nameEn": "Machine Seated Crunch",
@@ -4134,11 +4624,15 @@
       "ab-crunch-machine"
     ],
     "selectionPriority": 78,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "machine-shoulder-press",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press de Hombros en Máquina",
     "nameEn": "Machine Shoulder Press",
@@ -4180,11 +4674,19 @@
       "shoulder-press-machine"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "negative-pull-up",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Dominadas Negativas",
     "nameEn": "Negative Pull-Up",
@@ -4225,11 +4727,17 @@
       "pull-up-bar"
     ],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "nordic-hamstring-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl Nórdico de Isquiotibiales",
     "nameEn": "Nordic Hamstring Curl",
@@ -4272,11 +4780,15 @@
       "glute-ham-developer"
     ],
     "selectionPriority": 42,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "ohp",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Press Militar con Barra",
     "nameEn": "Barbell Overhead Press",
@@ -4319,11 +4831,19 @@
       "squat-rack"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "one-arm-seated-cable-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo Unilateral Sentado en Polea",
     "nameEn": "One-Arm Seated Cable Row",
@@ -4367,11 +4887,17 @@
       "cable"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "overhead-tricep-extension",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps sobre la Cabeza con Mancuerna",
     "nameEn": "Dumbbell Overhead Triceps Extension",
@@ -4410,11 +4936,18 @@
       "dumbbell"
     ],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow",
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "parallel-bar-dips",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Fondos en Paralelas",
     "nameEn": "Parallel Bar Dips",
@@ -4454,11 +4987,19 @@
       "dip-station"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow",
+      "Shoulder",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "paused-bench-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Press de Banca con Pausa",
     "nameEn": "Paused Bench Press",
@@ -4500,11 +5041,17 @@
       "squat-rack"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "pause-squat",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Sentadilla con Pausa",
     "nameEn": "Pause Squat",
@@ -4546,11 +5093,17 @@
       "squat-rack"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "pec-deck",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Pec Deck",
     "nameEn": "Pec Deck",
@@ -4593,11 +5146,15 @@
       "pec-deck"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "pendlay-row",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Remo Pendlay",
     "nameEn": "Pendlay Row",
@@ -4639,11 +5196,19 @@
       "barbell"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "pike-push-up",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Flexiones en Pica",
     "nameEn": "Pike Push-Up",
@@ -4682,11 +5247,20 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "pistol-squat",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Sentadilla a una Pierna (Pistol)",
     "nameEn": "Pistol Squat",
@@ -4726,11 +5300,17 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "plank",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Plancha Frontal",
     "nameEn": "Plank",
@@ -4770,11 +5350,17 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "plate-loaded-glute-drive",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Hip Thrust en Máquina de Discos",
     "nameEn": "Plate-Loaded Glute Drive",
@@ -4817,11 +5403,15 @@
       "hip-thrust-machine"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "preacher-curl",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Curl en Banco Scott",
     "nameEn": "Preacher Curl",
@@ -4861,11 +5451,17 @@
       "preacher-curl-bench"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "pull-up",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Dominadas",
     "nameEn": "Pull-Up",
@@ -4907,11 +5503,17 @@
       "pull-up-bar"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "push-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Push Press",
     "nameEn": "Push Press",
@@ -4953,11 +5555,19 @@
       "squat-rack"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "push-up",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Flexiones",
     "nameEn": "Push-Up",
@@ -4997,11 +5607,17 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "rack-pull",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Peso Muerto desde Rack",
     "nameEn": "Rack Pull",
@@ -5045,11 +5661,19 @@
       "squat-rack"
     ],
     "selectionPriority": 80,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Hamstrings"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "reverse-lunge",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Zancada Inversa con Mancuernas",
     "nameEn": "Reverse Lunge",
@@ -5091,11 +5715,17 @@
       "dumbbell"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "reverse-nordic-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl Nórdico Inverso",
     "nameEn": "Reverse Nordic Curl",
@@ -5136,11 +5766,17 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 42,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "romanian-deadlift",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Peso Muerto Rumano",
     "nameEn": "Romanian Deadlift",
@@ -5183,11 +5819,17 @@
       "barbell"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "rowing-machine",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Máquina de Remo",
     "nameEn": "Rowing Machine",
@@ -5233,11 +5875,15 @@
       "rower"
     ],
     "selectionPriority": 50,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "seated-barbell-overhead-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Press Militar Sentado con Barra",
     "nameEn": "Seated Barbell Overhead Press",
@@ -5279,11 +5925,19 @@
       "squat-rack"
     ],
     "selectionPriority": 70,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "seated-cable-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo Sentado en Polea",
     "nameEn": "Seated Cable Row",
@@ -5329,11 +5983,17 @@
       "cable"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "seated-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevación de Gemelos Sentado en Máquina",
     "nameEn": "Seated Calf Raise",
@@ -5371,11 +6031,15 @@
       "seated-calf-raise-machine"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "seated-dumbbell-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos Sentado con Mancuernas",
     "nameEn": "Seated Dumbbell Calf Raise",
@@ -5413,11 +6077,15 @@
       "bench"
     ],
     "selectionPriority": 64,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "seated-dumbbell-lateral-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales Sentado con Mancuernas",
     "nameEn": "Seated Dumbbell Lateral Raise",
@@ -5460,11 +6128,19 @@
       "bench"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [
+      "LateralDeltoid"
+    ],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "seated-leg-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas Sentado",
     "nameEn": "Seated Leg Curl",
@@ -5505,11 +6181,15 @@
       "leg-curl-machine"
     ],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "shrug",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Encogimientos con Barra",
     "nameEn": "Barbell Shrug",
@@ -5549,11 +6229,15 @@
       "barbell"
     ],
     "selectionPriority": 50,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "side-lying-hip-abduction",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera Tumbado de Lado",
     "nameEn": "Side-Lying Hip Abduction",
@@ -5590,11 +6274,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "side-lying-hip-adduction",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Aducción de Cadera Tumbado de Lado",
     "nameEn": "Side-Lying Hip Adduction",
@@ -5632,11 +6320,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "side-plank",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Plancha Lateral",
     "nameEn": "Side Plank",
@@ -5676,11 +6368,17 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "single-arm-db-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo con Mancuerna a un Brazo",
     "nameEn": "Single-Arm Dumbbell Row",
@@ -5725,11 +6423,17 @@
       "bench"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "single-arm-plate-loaded-lateral-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales a un Brazo en Máquina de Discos",
     "nameEn": "Single-Arm Plate-Loaded Lateral Raise",
@@ -5770,11 +6474,19 @@
       "plate-loaded-lateral-raise-machine"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [
+      "LateralDeltoid"
+    ],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "single-leg-glute-bridge",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Puente de Glúteos a una Pierna",
     "nameEn": "Single-Leg Glute Bridge",
@@ -5811,11 +6523,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 62,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "skull-crusher",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Skull Crusher",
     "nameEn": "Skull Crusher",
@@ -5853,11 +6569,17 @@
       "bench"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "smith-machine-bench-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press de Banca en Máquina Smith",
     "nameEn": "Smith Machine Bench Press",
@@ -5902,11 +6624,17 @@
       "bench"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "smith-machine-calf-raise",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos en Máquina Smith",
     "nameEn": "Smith Machine Calf Raise",
@@ -5943,11 +6671,15 @@
       "smith-machine"
     ],
     "selectionPriority": 66,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "smith-machine-incline-bench-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press Inclinado en Máquina Smith",
     "nameEn": "Smith Machine Incline Bench Press",
@@ -5992,11 +6724,17 @@
       "bench"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "smith-machine-squat",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Sentadilla en Máquina Smith",
     "nameEn": "Smith Machine Squat",
@@ -6038,11 +6776,15 @@
       "smith-machine"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "squat",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Sentadilla Trasera con Barra",
     "nameEn": "Barbell Back Squat",
@@ -6086,11 +6828,17 @@
       "squat-rack"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "standing-ab-wheel-rollout",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Rueda Abdominal de Pie",
     "nameEn": "Standing Ab Wheel Rollout",
@@ -6133,11 +6881,17 @@
       "ab-wheel"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "standing-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Elevación de Talones de Pie",
     "nameEn": "Standing Calf Raise",
@@ -6175,11 +6929,15 @@
       "standing-calf-raise-machine"
     ],
     "selectionPriority": 58,
-    "isActive": false
+    "isActive": false,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "standing-hip-abduction",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera de Pie",
     "nameEn": "Standing Hip Abduction",
@@ -6220,11 +6978,15 @@
     ],
     "requiredEquipment": [],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "step-ups",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Subidas al Escalón",
     "nameEn": "Step-Up",
@@ -6269,11 +7031,17 @@
       "step"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "straight-arm-pulldown",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Jalón con Brazos Rectos",
     "nameEn": "Straight-Arm Pulldown",
@@ -6315,11 +7083,15 @@
       "cable"
     ],
     "selectionPriority": 58,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "sumo-deadlift",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Peso Muerto Sumo",
     "nameEn": "Sumo Deadlift",
@@ -6363,11 +7135,17 @@
       "barbell"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "t-bar-row",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Remo en T",
     "nameEn": "T-Bar Row",
@@ -6414,11 +7192,19 @@
       "t-bar-row-handle"
     ],
     "selectionPriority": 85,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "tricep-pushdown",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps en Polea",
     "nameEn": "Cable Triceps Pushdown",
@@ -6456,11 +7242,15 @@
       "cable"
     ],
     "selectionPriority": 72,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "trx-hamstring-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Isquiotibiales con TRX",
     "nameEn": "TRX Hamstring Curl",
@@ -6502,11 +7292,15 @@
       "suspension-trainer"
     ],
     "selectionPriority": 42,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "v-bar-lat-pulldown",
-    "version": 2,
+    "version": 3,
     "source": "repdb-free",
     "nameEs": "Jalón al Pecho con Barra en V",
     "nameEn": "V-Bar Lat Pulldown",
@@ -6548,11 +7342,17 @@
       "lat-pulldown-machine"
     ],
     "selectionPriority": 96,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "walking-lunge",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Zancada Caminando con Mancuernas",
     "nameEn": "Dumbbell Walking Lunge",
@@ -6594,11 +7394,17 @@
       "dumbbell"
     ],
     "selectionPriority": 75,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Knee"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "weighted-dip",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Fondos con Lastre",
     "nameEn": "Weighted Dip",
@@ -6639,11 +7445,19 @@
       "dumbbell"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow",
+      "Shoulder",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "weighted-pull-up",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Dominadas con Lastre",
     "nameEn": "Weighted Pull-Up",
@@ -6685,11 +7499,19 @@
       "dumbbell"
     ],
     "selectionPriority": 80,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Elbow"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "wide-grip-seated-cable-row",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Remo Sentado en Polea con Agarre Ancho",
     "nameEn": "Wide-Grip Seated Cable Row",
@@ -6731,11 +7553,18 @@
       "cable"
     ],
     "selectionPriority": 70,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Lats",
+      "Biceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [],
+    "metadataReviewed": true
   },
   {
     "id": "zercher-squat",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Sentadilla Zercher",
     "nameEn": "Zercher Squat",
@@ -6776,11 +7605,18 @@
       "barbell"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [],
+    "emphasis": [],
+    "limitationAreas": [
+      "LowerBack",
+      "Wrist"
+    ],
+    "metadataReviewed": true
   },
   {
     "id": "z-press",
-    "version": 2,
+    "version": 3,
     "source": "trazo-curated",
     "nameEs": "Z Press",
     "nameEn": "Z Press",
@@ -6821,6 +7657,14 @@
       "barbell"
     ],
     "selectionPriority": 60,
-    "isActive": true
+    "isActive": true,
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
+    "emphasis": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
+    "metadataReviewed": true
   }
 ]

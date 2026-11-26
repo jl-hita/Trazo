@@ -62,7 +62,12 @@ public sealed class ExerciseMetadataValidatorTests
         { "requiredEquipment", m => m with { RequiredEquipment = [] } },
         { "isUnilateral", m => m with { MovementPattern = "SingleLeg" } },
         { "met", m => m with { Met = 31 } },
-        { "selectionPriority", m => m with { SelectionPriority = 101 } }
+        { "selectionPriority", m => m with { SelectionPriority = 101 } },
+        { "effectiveSecondaryMuscles", m => m with { EffectiveSecondaryMuscles = ["Biceps"] } },
+        { "emphasis", m => m with { Emphasis = ["UpperChest"] } },
+        { "emphasis", m => m with { Emphasis = ["LateralDeltoid"] } },
+        { "limitationAreas", m => m with { LimitationAreas = ["Neck"] } },
+        { "limitationAreas", m => m with { MetadataReviewed = true } }
     };
 
     [Theory]
@@ -115,7 +120,9 @@ public sealed class ExerciseMetadataValidatorTests
         Difficulty = e.Difficulty, Equipment = e.Equipment, BodyPart = e.BodyPart, Met = e.Met, IsUnilateral = e.IsUnilateral,
         IsBodyweight = e.IsBodyweight, MovementPattern = e.MovementPattern, PrimaryMuscles = e.PrimaryMuscles,
         SecondaryMuscles = e.SecondaryMuscles, MinimumExperience = e.MinimumExperience, SuitableGoals = e.SuitableGoals,
-        RequiredEquipment = e.RequiredEquipment, SelectionPriority = e.SelectionPriority, IsActive = e.IsActive
+        RequiredEquipment = e.RequiredEquipment, SelectionPriority = e.SelectionPriority, IsActive = e.IsActive,
+        EffectiveSecondaryMuscles = e.EffectiveSecondaryMuscles!, Emphasis = e.Emphasis!, LimitationAreas = e.LimitationAreas!,
+        MetadataReviewed = e.MetadataReviewed
     };
 
     private static List<ExerciseCatalogTranslation> Translations(ExerciseSeed seed) =>

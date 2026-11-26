@@ -206,6 +206,33 @@ public sealed class AdminExercisesApiTests : IDisposable
     }
 
     [Fact]
+    public async Task PlanningMetadata_IsStoredAndAReviewedExerciseDeclaresItsLimitationAreas()
+    {
+        var client = await ClientAsync("superadmin");
+        object Body(string id, string[]? areas) => new
+        {
+            id, nameEs = "Elevación", nameEn = id, descriptionEs = "Hombro.", instructionsEs = new[] { "Uno.", "Dos.", "Tres." },
+            forceType = "push", mechanic = "isolation", difficulty = "beginner", bodyPart = "shoulders", movementPattern = "Accessory",
+            primaryMuscles = new[] { "Deltoids" }, secondaryMuscles = new[] { "UpperBack" }, effectiveSecondaryMuscles = new[] { "UpperBack" },
+            emphasis = new[] { "LateralDeltoid" }, limitationAreas = areas, metadataReviewed = true, minimumExperience = "Beginner",
+            suitableGoals = new[] { "Hypertrophy" }, requiredEquipment = new[] { "cable" }
+        };
+
+        var undeclared = await client.PostAsJsonAsync("/api/v1/admin/exercises", Body("raise-a", null));
+        Assert.Equal(HttpStatusCode.BadRequest, undeclared.StatusCode);
+        Assert.True((await JsonAsync(undeclared)).GetProperty("errors").TryGetProperty("limitationAreas", out _));
+
+        var created = await client.PostAsJsonAsync("/api/v1/admin/exercises", Body("raise-b", ["Shoulder"]));
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var detail = await JsonAsync(created);
+        Assert.True(detail.GetProperty("metadataReviewed").GetBoolean());
+        Assert.Equal(["Shoulder"], detail.GetProperty("limitationAreas").EnumerateArray().Select(x => x.GetString()!).ToArray());
+        Assert.Equal(["LateralDeltoid"], detail.GetProperty("emphasis").EnumerateArray().Select(x => x.GetString()!).ToArray());
+        var options = await JsonAsync(await client.GetAsync("/api/v1/admin/exercises/options"));
+        Assert.Contains("Shoulder", options.GetProperty("limitationAreas").EnumerateArray().Select(x => x.GetString()));
+    }
+
+    [Fact]
     public async Task SeedExercises_AreMarkedAndReadOnly_ExceptForTheirImages()
     {
         var client = await ClientAsync("superadmin");

@@ -1,7 +1,7 @@
 namespace Trazo.Application.Planning;
 
 /// <summary>The work done (or prescribed) on one exercise, reduced to what dose needs.</summary>
-public sealed record DoseExercise(string ExerciseId, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int Sets);
+public sealed record DoseExercise(string ExerciseId, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, int Sets);
 
 /// <summary>A workout that really happened: its instant and what was done.</summary>
 public sealed record DoseWorkout(DateTimeOffset PerformedAt, IReadOnlyList<DoseExercise> Exercises);
@@ -40,7 +40,7 @@ public static class LoadMetrics
     {
         var total = new Dictionary<string, decimal>(StringComparer.Ordinal);
         foreach (var exercise in exercises)
-            foreach (var muscle in Trazo.Training.TrainingStimulus.EffectiveMuscles(exercise.ExerciseId, exercise.PrimaryMuscles, exercise.SecondaryMuscles))
+            foreach (var muscle in Trazo.Training.TrainingStimulus.EffectiveMuscles(exercise.PrimaryMuscles, exercise.EffectiveSecondaryMuscles))
                 total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets;
         return total;
     }

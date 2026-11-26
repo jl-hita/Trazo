@@ -175,7 +175,7 @@ internal sealed class PlanSimulator
     {
         var total = new Dictionary<TrainingMuscleGroup, decimal>();
         foreach (var exercise in sessions.SelectMany(s => s))
-            foreach (var muscle in TrainingExerciseStimulus.GetEffectiveMuscles(exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups))
+            foreach (var muscle in exercise.StimulatedMuscles())
                 total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets;
         return total;
     }

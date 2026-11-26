@@ -17,7 +17,7 @@ public sealed class TrainingManualVolumeAnalysisTests
             100,
             true,
             [TrainingMuscleGroup.Chest],
-            [TrainingMuscleGroup.Triceps]);
+            [TrainingMuscleGroup.Triceps]).Described();
 
         var result = TrainingProgramQualityAnalyzer.AnalyzeManual(
             [benchPress],
@@ -48,7 +48,7 @@ public sealed class TrainingManualVolumeAnalysisTests
             100,
             true,
             [TrainingMuscleGroup.Chest],
-            [TrainingMuscleGroup.Triceps]);
+            [TrainingMuscleGroup.Triceps]).Described();
         var ambiguousExercise = new TrainingExerciseCandidate(
             "machine-chest-press", "catalog-v1", "Press banca",
             TrainingMovementPattern.HorizontalPush,
@@ -58,7 +58,7 @@ public sealed class TrainingManualVolumeAnalysisTests
             90,
             true,
             [TrainingMuscleGroup.Deltoids],
-            [TrainingMuscleGroup.Chest]);
+            [TrainingMuscleGroup.Chest]).Described();
 
         var result = TrainingProgramQualityAnalyzer.AnalyzeManual(
             [benchPress, ambiguousExercise],
@@ -89,7 +89,7 @@ public sealed class TrainingManualVolumeAnalysisTests
             50,
             false,
             [],
-            []);
+            []).Described();
 
         var result = TrainingProgramQualityAnalyzer.AnalyzeManual(
             [incompleteExercise],
@@ -114,7 +114,7 @@ public sealed class TrainingManualVolumeAnalysisTests
             100,
             true,
             [TrainingMuscleGroup.Chest],
-            [TrainingMuscleGroup.Triceps]);
+            [TrainingMuscleGroup.Triceps]).Described();
 
         var result = TrainingProgramQualityAnalyzer.AnalyzeManual(
             [benchPress],

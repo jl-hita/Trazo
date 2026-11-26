@@ -183,6 +183,8 @@ public static class TrainingAdaptationPrescriptionAdjuster
             target["exerciseNameSnapshot"] = replacement.Name;
             target["primaryMuscleGroups"] = new JsonArray(replacement.PrimaryMuscleGroups.Select(m => (JsonNode?)JsonValue.Create(m.ToString())).ToArray());
             target["secondaryMuscleGroups"] = new JsonArray(replacement.SecondaryMuscleGroups.Select(m => (JsonNode?)JsonValue.Create(m.ToString())).ToArray());
+            target["effectiveSecondaryMuscleGroups"] = new JsonArray((replacement.EffectiveSecondaryMuscleGroups ?? [])
+                .Select(m => (JsonNode?)JsonValue.Create(m.ToString())).ToArray());
             foreach (var stale in new[] { "targetLoadKg", "loadBasis", "warmupSets", "warmupNote", "adaptationOriginalSets" })
                 target.Remove(stale);
             // The approach sets depend on the muscles of the exercise: the replacement gets its own (what the generator would give it).

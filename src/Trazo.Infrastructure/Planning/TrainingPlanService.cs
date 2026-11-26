@@ -345,7 +345,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, index + 1, exercise.Sets,
                 exercise.MinRepetitions, exercise.MaxRepetitions, exercise.TargetRir, exercise.RestSeconds,
                 TrainingProgressionRule.DoubleProgression, "Elegido por el usuario.",
-                candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
+                candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups,
+                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? []);
         }).ToList();
         var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45)) / 60.0);
         return new PlannedSession
@@ -514,8 +515,10 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         if (mesocycle is null) return null;
         if (await db.PlanAdaptations.AsNoTracking().AnyAsync(a => a.PlanId == plan.Id && a.Kind == "muscle_priorities" && a.AppliedAt >= mesocycle.CreatedAt, ct))
             return null;
+        var stored = await StoredStimulusAsync(ct);
         var sessions = (await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == mesocycle.Id && s.WeekNumber == position.Week)
-            .Select(s => s.PrescriptionJson).ToListAsync(ct)).Select(PrescriptionJson.Read).ToList();
+            .Select(s => s.PrescriptionJson).ToListAsync(ct))
+            .Select(json => PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(json, stored))).ToList();
         if (sessions.Count == 0) return null;
         var targets = (await db.LongitudinalDecisions.AsNoTracking().Where(d => d.PlanId == plan.Id && d.MesocycleSequence == mesocycle.Sequence).ToListAsync(ct))
             .Where(d => Enum.TryParse<TrainingMuscleGroup>(d.Muscle, out _))
@@ -666,10 +669,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         AvailabilityView? availability = null;
         if (premium)
         {
+            var stimulus = await StoredStimulusAsync(ct);
             var candidates = next.Candidates.Select(c => pending.First(s => s.Id == c.Id)).Select(s => new RecoveryCandidate(
                 s.Id, s.SequenceIndex, s.Title,
-                PrescriptionJson.Read(s.PrescriptionJson).Select(e => new RecoveryPlannedExercise(
-                    e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets, e.ExerciseId)).ToList())).ToList();
+                PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(s.PrescriptionJson, stimulus)).Select(e => new RecoveryPlannedExercise(
+                    e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), EffectiveSecondary(e), e.Sets, e.ExerciseId)).ToList())).ToList();
             var recommendation = RecoveryAdvisor.Recommend(
                 candidates, await RecoveryHistoryAsync(userId, clock.GetUtcNow(), ct), clock.GetUtcNow(), Enum.Parse<TrainingExperience>(plan.Experience), Lang);
             availability = new AvailabilityView(
@@ -1409,12 +1413,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             .Where(l => l.UserId == userId && l.PerformedAt >= since).OrderBy(l => l.PerformedAt).ToListAsync(ct);
         var ids = logs.Select(l => l.PlannedSessionId).ToList();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
+        var stimulus = await StoredStimulusAsync(ct);
         var exposures = new List<RecoveryExposure>();
         foreach (var log in logs)
         {
             if (!sessions.TryGetValue(log.PlannedSessionId, out var session)) continue;
             var loaded = LoadedExercises(log.ExerciseFeedbackJson);
-            var prescribed = PrescriptionJson.Read(session.PrescriptionJson);
+            var prescribed = PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(session.PrescriptionJson, stimulus));
             var exercises = new List<RecoveryExercise>();
             foreach (var group in log.Sets.Where(s => s.Completed).GroupBy(s => s.ExerciseId, StringComparer.OrdinalIgnoreCase))
             {
@@ -1422,7 +1427,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 if (exercise is null) continue;
                 var rirs = group.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
                 exercises.Add(new RecoveryExercise(
-                    exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), exercise.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(),
+                    exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), EffectiveSecondary(exercise),
                     group.Count(), rirs.Count == group.Count() ? rirs.Average() : null, loaded.Contains(group.Key), exercise.ExerciseId));
             }
             exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
@@ -1639,8 +1644,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var prescribed = sessions.Where(s => s.Week >= 1).ToList();
         var ids = recent.SelectMany(l => l.Sets.Select(s => s.ExerciseId)).Concat(prescribed.SelectMany(s => PrescriptionJson.Read(s.Json).Select(e => e.ExerciseId)))
             .Distinct().ToList();
-        var muscles = (await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id)).Select(e => new { e.Id, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct))
-            .ToDictionary(e => e.Id, e => (Primary: (IReadOnlyList<string>)e.PrimaryMuscles, Secondary: (IReadOnlyList<string>)e.SecondaryMuscles));
+        var muscles = (await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id)).Select(e => new { e.Id, e.PrimaryMuscles, e.EffectiveSecondaryMuscles }).ToListAsync(ct))
+            .ToDictionary(e => e.Id, e => (Primary: (IReadOnlyList<string>)e.PrimaryMuscles, Secondary: (IReadOnlyList<string>)e.EffectiveSecondaryMuscles));
 
         var windowStart = now.AddDays(-7);
         var workouts = recent.Where(l => l.PerformedAt > windowStart).Select(l => new DoseWorkout(l.PerformedAt,
@@ -1649,8 +1654,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         var slot = SlotsOf(plan).FirstOrDefault(s => s.Contains(position.Week));
         var blockSessions = slot is null ? [] : prescribed.Where(s => slot.Contains(s.Week)).ToList();
-        var perSession = blockSessions.Select(s => (IReadOnlyList<DoseExercise>)PrescriptionJson.Read(s.Json)
-            .Select(e => new DoseExercise(e.ExerciseId, e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), e.SecondaryMuscleGroups.Select(m => m.ToString()).ToList(), e.Sets)).ToList());
+        var stored = await StoredStimulusAsync(ct);
+        var perSession = blockSessions.Select(s => (IReadOnlyList<DoseExercise>)PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(s.Json, stored))
+            .Select(e => new DoseExercise(e.ExerciseId, e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), EffectiveSecondary(e), e.Sets)).ToList());
         return new RollingLoadView(7, windowStart, now, workouts.Count, plan.SessionsPerPeriod,
             LoadMetrics.ObservedSessionsPerSevenDays(recent.Select(l => l.PerformedAt).ToList(), now),
             LoadMetrics.Dose(workouts), slot is null ? [] : LoadMetrics.PrescribedPerSevenDays(perSession, slot.Weeks));
@@ -1970,6 +1976,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var past = await db.WorkoutLogs.AsNoTracking()
             .Where(l => l.PlanId == plan.Id && l.Id != workout.Id)
             .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(12).ToListAsync(ct);
+        var stimulus = await StoredStimulusAsync(ct);
         // Sessions the user did NOT answer are kept on purpose: the mapper turns them into neutral exposures, so two low answers
         // separated by unanswered sessions are not read as consecutive. Only when nothing was ever answered is there nothing to read.
         var logs = new[] { workout }.Concat(past).ToList();
@@ -1982,10 +1989,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // day, so each log gets its own ordinal "day" in chronological order (what matters to the engine is the order and that they differ).
         var ordered = logs.Where(l => sessions.ContainsKey(l.PlannedSessionId)).OrderBy(l => l.PerformedAt).ThenBy(l => l.LoggedAt).ToList();
         var records = ordered.Select((l, index) => new TrainingMuscleFeedbackRecord(
-            DateOnly.FromDayNumber(index), l.Outcome.ToString(), l.ExerciseFeedbackJson, sessions[l.PlannedSessionId].PrescriptionJson)).ToList();
+            DateOnly.FromDayNumber(index), l.Outcome.ToString(), l.ExerciseFeedbackJson,
+            PrescriptionJson.CompleteStimulus(sessions[l.PlannedSessionId].PrescriptionJson, stimulus))).ToList();
         var week = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == logged.WeekNumber)
             .Select(s => s.PrescriptionJson).ToListAsync(ct);
-        var planned = TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets(week);
+        var planned = TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets(week.Select(json => PrescriptionJson.CompleteStimulus(json, stimulus)));
         var ceilings = planned.Keys.ToDictionary(m => m, _ => (int)MuscleWeeklyCeiling, StringComparer.Ordinal);
         var decisions = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings);
 
@@ -2143,7 +2151,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var exercise = new TrainingExercisePrescription(
             candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, prescribed.Count == 0 ? 1 : prescribed.Max(e => e.Order) + 1, sets,
             min, max, request.TargetRir ?? 2m, rest, TrainingProgressionRule.DoubleProgression, "Añadido por el usuario a esta sesión.",
-            candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups);
+            candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups,
+                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? []);
         var beforeAdd = session.PrescriptionJson;
         session.PrescriptionJson = PrescriptionJson.AppendExtra(session.PrescriptionJson, exercise);
         session.EstimatedDurationMinutes = Math.Clamp(session.EstimatedDurationMinutes + (int)Math.Ceiling(sets * (rest + 45) / 60.0), 10, 240);
@@ -2295,6 +2304,17 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         }
         return result;
     }
+
+    /// <summary>
+    /// The secondary muscles that count a set for each catalog exercise: what completes the sessions stored before prescriptions
+    /// carried them (see <see cref="PrescriptionJson.CompleteStimulus"/>).
+    /// </summary>
+    private async Task<IReadOnlyDictionary<string, IReadOnlyList<string>>> StoredStimulusAsync(CancellationToken ct) =>
+        (await db.ExerciseCatalog.AsNoTracking().Select(e => new { e.Id, e.EffectiveSecondaryMuscles }).ToListAsync(ct))
+            .ToDictionary(e => e.Id, e => (IReadOnlyList<string>)e.EffectiveSecondaryMuscles, StringComparer.OrdinalIgnoreCase);
+
+    private static List<string> EffectiveSecondary(TrainingExercisePrescription exercise) =>
+        (exercise.EffectiveSecondaryMuscleGroups ?? []).Select(m => m.ToString()).ToList();
 
     /// <summary>
     /// A generated plan is a Premium product: without access it can be read (and archived), but not used. Manual plans are

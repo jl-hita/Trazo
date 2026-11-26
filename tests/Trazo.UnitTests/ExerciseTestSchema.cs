@@ -14,7 +14,9 @@ internal static class ExerciseTestSchema
           "Met" REAL NOT NULL, "IsUnilateral" INTEGER NOT NULL, "IsBodyweight" INTEGER NOT NULL, "MovementPattern" TEXT NOT NULL,
           "PrimaryMuscles" TEXT NOT NULL, "SecondaryMuscles" TEXT NOT NULL, "MinimumExperience" TEXT NOT NULL,
           "SuitableGoals" TEXT NOT NULL, "RequiredEquipment" TEXT NOT NULL, "SelectionPriority" INTEGER NOT NULL,
-          "SeedVersion" INTEGER NOT NULL, "IsActive" INTEGER NOT NULL DEFAULT 1, "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
+          "SeedVersion" INTEGER NOT NULL, "IsActive" INTEGER NOT NULL DEFAULT 1,
+          "EffectiveSecondaryMuscles" TEXT NOT NULL DEFAULT '[]', "Emphasis" TEXT NOT NULL DEFAULT '[]',
+          "LimitationAreas" TEXT NOT NULL DEFAULT '[]', "MetadataReviewed" INTEGER NOT NULL DEFAULT 0, "CreatedAt" TEXT NOT NULL, "UpdatedAt" TEXT NOT NULL);
         CREATE TABLE exercise_catalog_translations (
           exercise_id TEXT NOT NULL, "LanguageCode" TEXT NOT NULL, "Name" TEXT NULL, "Description" TEXT NULL, "Instructions" TEXT NULL,
           "Tips" TEXT NULL, "Status" TEXT NOT NULL DEFAULT 'draft', "UpdatedAt" TEXT NOT NULL, PRIMARY KEY (exercise_id, "LanguageCode"));

@@ -213,7 +213,8 @@ public static class TrainingProgramGenerator
                     progression,
                     $"Patrón {pattern}; metadatos {(candidate.IsReviewed ? "revisados" : "aportados por el profesional propietario")}; compatible con objetivo, experiencia, material y exclusiones.",
                     candidate.PrimaryMuscleGroups.ToArray(),
-                    candidate.SecondaryMuscleGroups.ToArray()));
+                    candidate.SecondaryMuscleGroups.ToArray(),
+                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? []));
             }
 
             // The main lift of a strength session gets its dose from the lift, not from the weekly muscle
@@ -422,8 +423,7 @@ public static class TrainingProgramGenerator
             foreach (var exercise in weekSessions[sessionIndex].Exercises.OrderBy(x => x.Order).ToArray())
             {
                 if (exercise.Sets >= maxSets) continue;
-                var tracked = TrainingExerciseStimulus.GetEffectiveMuscles(
-                        exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+                var tracked = exercise.StimulatedMuscles()
                     .Where(ceilings.ContainsKey)
                     .ToArray();
                 if (tracked.Length == 0 || tracked.Any(boosted.Contains)) continue;
@@ -924,8 +924,7 @@ public static class TrainingProgramGenerator
             var currentEffectiveVolume = new Dictionary<TrainingMuscleGroup, decimal>();
             foreach (var exercise in previousSessions.Where(session => session.WeekNumber == week)
                          .SelectMany(session => session.Exercises).Concat(currentExercises))
-            foreach (var muscle in TrainingExerciseStimulus.GetEffectiveMuscles(
-                         exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups))
+            foreach (var muscle in exercise.StimulatedMuscles())
                 currentEffectiveVolume[muscle] = currentEffectiveVolume.GetValueOrDefault(muscle) + exercise.Sets;
 
             var selectedThisWeek = previousSessions
@@ -1038,8 +1037,7 @@ public static class TrainingProgramGenerator
                     && (int)candidate.MinimumExperience <= (int)request.Experience
                     && (equipment.Count == 0 || HasRequiredEquipment(candidate.RequiredEquipment, equipment))
                     && !excluded.Contains(candidate.ExerciseId)
-                    && (allowedMuscles is null || TrainingExerciseStimulus.GetEffectiveMuscles(
-                        candidate.ExerciseId, candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups)
+                    && (allowedMuscles is null || candidate.StimulatedMuscles()
                         .Any(allowedMuscles.Contains))
                     // By default, two direct hamstring accessories a week are enough.
                     // An explicit professional target/priority can add more.
@@ -1100,8 +1098,7 @@ public static class TrainingProgramGenerator
                 var directGap = isolationSlotsApply ? GetDirectIsolationGap(candidate) : DirectIsolationGap.None;
                 if (directGap != DirectIsolationGap.None)
                     sets = directGap == DirectIsolationGap.LateralDeltoid ? DirectLateralDeltoidSets : DirectArmSets;
-                var underTargetMuscles = TrainingExerciseStimulus.GetEffectiveMuscles(
-                        candidate.ExerciseId, candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups)
+                var underTargetMuscles = candidate.StimulatedMuscles()
                     .Where(muscle => currentEffectiveVolume.GetValueOrDefault(muscle) < targets.GetValueOrDefault(muscle))
                     .ToArray();
                 var prescription = new TrainingExercisePrescription(
@@ -1117,7 +1114,8 @@ public static class TrainingProgramGenerator
                     progression,
                     $"Accesorio seleccionado para atender el déficit de estímulo efectivo de {string.Join(", ", underTargetMuscles)} sin sustituir los patrones básicos; metadatos {(candidate.IsReviewed ? "revisados" : "aportados por el profesional propietario")}.",
                     candidate.PrimaryMuscleGroups.ToArray(),
-                    candidate.SecondaryMuscleGroups.ToArray());
+                    candidate.SecondaryMuscleGroups.ToArray(),
+                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? []);
 
                 var durationSession = new TrainingSessionPrescription(
                     week,
@@ -1153,7 +1151,7 @@ public static class TrainingProgramGenerator
         if (candidate.MovementPattern != TrainingMovementPattern.Accessory)
             return DirectIsolationGap.None;
         if (candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Deltoids) &&
-            candidate.ExerciseId.Contains("lateral-raise", StringComparison.OrdinalIgnoreCase))
+            (candidate.Emphasis?.Contains(TrainingExerciseEmphasis.LateralDeltoid) ?? false))
             return DirectIsolationGap.LateralDeltoid;
         if (candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Biceps))
             return DirectIsolationGap.Biceps;
@@ -1186,8 +1184,7 @@ public static class TrainingProgramGenerator
         IReadOnlySet<TrainingMuscleGroup>? allowedMuscles,
         IReadOnlyList<TrainingMuscleVolumeTarget>? preferences)
     {
-        var muscles = TrainingExerciseStimulus.GetEffectiveMuscles(
-                candidate.ExerciseId, candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups)
+        var muscles = candidate.StimulatedMuscles()
             .Where(muscle => targets.ContainsKey(muscle) &&
                              (allowedMuscles is null || allowedMuscles.Contains(muscle)))
             .ToArray();
@@ -1287,7 +1284,17 @@ public sealed record TrainingExerciseCandidate(
     bool IsReviewed,
     IReadOnlyList<TrainingMuscleGroup> PrimaryMuscleGroups,
     IReadOnlyList<TrainingMuscleGroup> SecondaryMuscleGroups,
-    bool IsOwnedByCurrentProfessional = false);
+    bool IsOwnedByCurrentProfessional = false,
+    IReadOnlyList<TrainingMuscleGroup>? EffectiveSecondaryMuscleGroups = null,
+    IReadOnlyList<TrainingExerciseEmphasis>? Emphasis = null,
+    // Body areas for which the exercise is avoided. Read by whoever applies the user's limitations.
+    IReadOnlyList<string>? LimitationAreas = null);
+
+/// <summary>A part of a muscle group that an exercise trains and that the plan reserves direct work for.</summary>
+public enum TrainingExerciseEmphasis
+{
+    LateralDeltoid
+}
 
 public sealed record TrainingProgramGenerationResult(
     TrainingProgramPrescription? Prescription,

@@ -28,6 +28,9 @@ public sealed class ExerciseCatalogItemConfiguration : IEntityTypeConfiguration<
         builder.Property(x => x.MinimumExperience).HasMaxLength(40).IsRequired();
         builder.Property(x => x.SuitableGoals).HasColumnType("text[]").IsRequired();
         builder.Property(x => x.RequiredEquipment).HasColumnType("text[]").IsRequired();
+        builder.Property(x => x.EffectiveSecondaryMuscles).HasColumnType("text[]").IsRequired();
+        builder.Property(x => x.Emphasis).HasColumnType("text[]").IsRequired();
+        builder.Property(x => x.LimitationAreas).HasColumnType("text[]").IsRequired();
         builder.Property(x => x.CreatedAt).HasColumnType("timestamp with time zone");
         builder.Property(x => x.UpdatedAt).HasColumnType("timestamp with time zone");
         builder.HasIndex(x => x.Source);

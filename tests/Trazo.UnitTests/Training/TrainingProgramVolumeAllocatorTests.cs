@@ -11,7 +11,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var session = Session(new TrainingExercisePrescription(
             "bench-press", "v1", "Press banca", 1, 2, 8, 12, 2m, 120,
             TrainingProgressionRule.DoubleProgression, "test",
-            [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]));
+            [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]).Described());
 
         var volume = TrainingProgramVolumeAllocator.CalculateEffectiveVolume([session]);
 
@@ -25,7 +25,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var session = Session(new TrainingExercisePrescription(
             "barbell-row", "v1", "Remo con barra", 1, 3, 8, 12, 2m, 120,
             TrainingProgressionRule.DoubleProgression, "test",
-            [TrainingMuscleGroup.UpperBack], [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats]));
+            [TrainingMuscleGroup.UpperBack], [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats]).Described());
 
         var volume = TrainingProgramVolumeAllocator.CalculateEffectiveVolume([session]);
 
@@ -42,7 +42,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
             [Session(new TrainingExercisePrescription(
                 "bench-press", "v1", "Press banca", 1, 2, 8, 12, 2m, 120,
                 TrainingProgressionRule.DoubleProgression, "test",
-                [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]))]);
+                [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]).Described())]);
 
         var report = TrainingProgramQualityAnalyzer.Analyze(plan);
         var triceps = report.WeeklyMuscleVolumes.Single().Muscles
@@ -60,7 +60,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var session = Session(new TrainingExercisePrescription(
             "squat", "v1", "Sentadilla", 1, 3, 8, 12, 2m, 120,
             TrainingProgressionRule.DoubleProgression, "test",
-            [TrainingMuscleGroup.Quadriceps], [TrainingMuscleGroup.Hamstrings]));
+            [TrainingMuscleGroup.Quadriceps], [TrainingMuscleGroup.Hamstrings]).Described());
 
         var volume = TrainingProgramVolumeAllocator.CalculateEffectiveVolume([session]);
 
@@ -112,7 +112,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var session = Session(new TrainingExercisePrescription(
             "bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
             TrainingProgressionRule.DoubleProgression, "test",
-            [TrainingMuscleGroup.Chest], []));
+            [TrainingMuscleGroup.Chest], []).Described());
         var result = TrainingProgramVolumeAllocator.Allocate(
             [session], TrainingGoal.Hypertrophy, TrainingExperience.Advanced,
             [new TrainingMuscleVolumeTarget(TrainingMuscleGroup.Chest, Priority: 3)], 60);
@@ -138,15 +138,15 @@ public sealed class TrainingProgramVolumeAllocatorTests
         {
             Session(
                 new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []),
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described(),
                 new TrainingExercisePrescription("row", "v1", "Remo", 2, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.UpperBack], [TrainingMuscleGroup.Biceps])),
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.UpperBack], [TrainingMuscleGroup.Biceps]).Described()),
             new TrainingSessionPrescription(1, DayOfWeek.Wednesday, "Sesión B", 5,
             [
                 new TrainingExercisePrescription("incline", "v1", "Press inclinado", 1, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []),
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described(),
                 new TrainingExercisePrescription("db-fly", "v1", "Aperturas", 2, 1, 10, 15, 2m, 90,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], [])
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described()
             ])
         };
 
@@ -177,7 +177,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var session = Session(new TrainingExercisePrescription(
             "bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
             TrainingProgressionRule.DoubleProgression, "test",
-            [TrainingMuscleGroup.Chest], []));
+            [TrainingMuscleGroup.Chest], []).Described());
 
         var result = TrainingProgramVolumeAllocator.Allocate(
             [session], TrainingGoal.Hypertrophy, TrainingExperience.Beginner, null, 60);
@@ -244,11 +244,11 @@ public sealed class TrainingProgramVolumeAllocatorTests
         {
             Session(
                 new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []),
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described(),
                 new TrainingExercisePrescription("curl", "v1", "Curl de bíceps", 2, 1, 8, 12, 2m, 90,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Biceps], []),
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Biceps], []).Described(),
                 new TrainingExercisePrescription("knee-raise", "v1", "Elevación de rodillas", 3, 1, 8, 12, 2m, 90,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.HipFlexors], []))
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.HipFlexors], []).Described())
         };
 
         var defaults = TrainingProgramVolumeAllocator.Allocate(
@@ -281,9 +281,9 @@ public sealed class TrainingProgramVolumeAllocatorTests
         {
             Session(
                 new TrainingExercisePrescription("squat", "v1", "Sentadilla", 1, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes], [TrainingMuscleGroup.Hamstrings]),
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes], [TrainingMuscleGroup.Hamstrings]).Described(),
                 new TrainingExercisePrescription("leg-press", "v1", "Prensa", 2, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes], []))
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes], []).Described())
         };
 
         var first = TrainingProgramVolumeAllocator.Allocate(sessions, TrainingGoal.Hypertrophy,
@@ -307,10 +307,10 @@ public sealed class TrainingProgramVolumeAllocatorTests
             Session(
                 new TrainingExercisePrescription("squat", "v1", "Sentadilla", 1, 1, 8, 12, 2m, 120,
                     TrainingProgressionRule.DoubleProgression, "test",
-                    [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes], []),
+                    [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes], []).Described(),
                 new TrainingExercisePrescription("glute-bridge", "v1", "Puente de glúteos", 2, 1, 8, 12, 2m, 120,
                     TrainingProgressionRule.DoubleProgression, "test",
-                    [TrainingMuscleGroup.Glutes], []))
+                    [TrainingMuscleGroup.Glutes], []).Described())
         };
 
         var result = TrainingProgramVolumeAllocator.Allocate(
@@ -333,11 +333,11 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var sessions = new[]
         {
             Session(new TrainingExercisePrescription("biceps-curl", "v1", "Curl de bíceps", 1, 1, 10, 15, 2m, 90,
-                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Biceps], [])),
+                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Biceps], []).Described()),
             new TrainingSessionPrescription(1, DayOfWeek.Thursday, "Sesión B", 5,
             [
                 new TrainingExercisePrescription("biceps-curl", "v1", "Curl de bíceps", 1, 1, 10, 15, 2m, 90,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Biceps], [])
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Biceps], []).Described()
             ])
         };
 
@@ -356,7 +356,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var sessions = new[]
         {
             Session(new TrainingExercisePrescription("squat", "v1", "Sentadilla", 1, 1, 8, 12, 2m, 180,
-                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Quadriceps], []))
+                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Quadriceps], []).Described())
         };
 
         var result = TrainingProgramVolumeAllocator.Allocate(sessions, TrainingGoal.Hypertrophy,
@@ -372,7 +372,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
     public void FractionalWeeklySetTargetsAreRejected()
     {
         var session = Session(new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
-            TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []));
+            TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described());
 
         var result = TrainingProgramVolumeAllocator.Allocate([session], TrainingGoal.Hypertrophy,
             TrainingExperience.Beginner,
@@ -388,11 +388,11 @@ public sealed class TrainingProgramVolumeAllocatorTests
         var shortSchedule = new[]
         {
             Session(new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
-                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], [])),
+                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described()),
             new TrainingSessionPrescription(1, DayOfWeek.Thursday, "Sesión B", 5,
             [
                 new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
-                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], [])
+                    TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described()
             ])
         };
 
@@ -419,9 +419,9 @@ public sealed class TrainingProgramVolumeAllocatorTests
     {
         var session = Session(
             new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 5, 3, 6, 2m, 180,
-                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []),
+                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described(),
             new TrainingExercisePrescription("row", "v1", "Remo", 2, 5, 3, 6, 2m, 180,
-                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.UpperBack], []));
+                TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.UpperBack], []).Described());
 
         var result = TrainingProgramVolumeAllocator.Allocate(
             [session], TrainingGoal.Strength, TrainingExperience.Advanced, null, 90);
@@ -437,7 +437,7 @@ public sealed class TrainingProgramVolumeAllocatorTests
     public void DuplicateOrOutOfRangeMusclePreferencesAreRejected()
     {
         var session = Session(new TrainingExercisePrescription("bench", "v1", "Press banca", 1, 1, 8, 12, 2m, 120,
-            TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []));
+            TrainingProgressionRule.DoubleProgression, "test", [TrainingMuscleGroup.Chest], []).Described());
 
         var result = TrainingProgramVolumeAllocator.Allocate([session], TrainingGoal.Hypertrophy,
             TrainingExperience.Beginner,

@@ -15,13 +15,13 @@ public enum RecoveryState
 
 /// <summary>What the user did to one exercise in a past workout, reduced to what recovery needs.</summary>
 public sealed record RecoveryExercise(
-    IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int CompletedSets, decimal? AverageRir, bool LoadedBefore, string ExerciseId = "");
+    IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, int CompletedSets, decimal? AverageRir, bool LoadedBefore, string ExerciseId = "");
 
 /// <summary>A past workout: when it happened, what was done and how the user reported to feel.</summary>
 public sealed record RecoveryExposure(
     DateTimeOffset PerformedAt, IReadOnlyList<RecoveryExercise> Exercises, string Recovery, decimal? SessionRpe, bool Pain);
 
-public sealed record RecoveryPlannedExercise(IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles, int Sets, string ExerciseId = "");
+public sealed record RecoveryPlannedExercise(IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, int Sets, string ExerciseId = "");
 
 /// <summary>A pending session the advisor can assess, with its prescribed work.</summary>
 public sealed record RecoveryCandidate(Guid SessionId, int SequenceIndex, string Title, IReadOnlyList<RecoveryPlannedExercise> Exercises);
@@ -80,7 +80,7 @@ public static class RecoveryAdvisor
     private static RecoveryAssessment Assess(RecoveryCandidate candidate, Dictionary<string, Readiness> readyAt, DateTimeOffset now, AppLanguage language)
     {
         var limiting = new List<(string Muscle, Readiness Readiness)>();
-        foreach (var (muscle, sets) in EffectiveSets(candidate.Exercises.Select(e => (e.ExerciseId, e.PrimaryMuscles, e.SecondaryMuscles, (double)e.Sets))))
+        foreach (var (muscle, sets) in EffectiveSets(candidate.Exercises.Select(e => (e.PrimaryMuscles, e.EffectiveSecondaryMuscles, (double)e.Sets))))
             if (sets >= MeaningfulSets && readyAt.TryGetValue(muscle, out var readiness) && readiness.At > now)
                 limiting.Add((muscle, readiness));
 
@@ -113,7 +113,7 @@ public static class RecoveryAdvisor
             foreach (var exercise in exposure.Exercises.Where(e => e.CompletedSets > 0))
             {
                 var factor = IntensityFactor(exercise.AverageRir) * (exercise.LoadedBefore ? 1.1 : 1.0);
-                foreach (var (muscle, sets) in EffectiveSets([(exercise.ExerciseId, exercise.PrimaryMuscles, exercise.SecondaryMuscles, (double)exercise.CompletedSets)]))
+                foreach (var (muscle, sets) in EffectiveSets([(exercise.PrimaryMuscles, exercise.EffectiveSecondaryMuscles, (double)exercise.CompletedSets)]))
                 {
                     effective[muscle] = effective.GetValueOrDefault(muscle) + sets;
                     weighted[muscle] = weighted.GetValueOrDefault(muscle) + sets * factor;
@@ -135,11 +135,11 @@ public static class RecoveryAdvisor
     /// secondary ones with a meaningful contribution (the triceps in a press) and not at all for the incidental ones. The same definition the
     /// generator plans with and the load chart measures, so the volume, the dose and the recovery never disagree about one workout.
     /// </summary>
-    private static Dictionary<string, double> EffectiveSets(IEnumerable<(string ExerciseId, IReadOnlyList<string> Primary, IReadOnlyList<string> Secondary, double Sets)> work)
+    private static Dictionary<string, double> EffectiveSets(IEnumerable<(IReadOnlyList<string> Primary, IReadOnlyList<string> EffectiveSecondary, double Sets)> work)
     {
         var total = new Dictionary<string, double>(StringComparer.Ordinal);
-        foreach (var (exerciseId, primary, secondary, sets) in work)
-            foreach (var muscle in Trazo.Training.TrainingStimulus.EffectiveMuscles(exerciseId, primary, secondary))
+        foreach (var (primary, effectiveSecondary, sets) in work)
+            foreach (var muscle in Trazo.Training.TrainingStimulus.EffectiveMuscles(primary, effectiveSecondary))
                 total[muscle] = total.GetValueOrDefault(muscle) + sets;
         return total;
     }

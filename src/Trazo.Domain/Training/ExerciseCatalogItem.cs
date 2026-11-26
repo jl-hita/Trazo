@@ -28,6 +28,14 @@ public sealed class ExerciseCatalogItem
     public string[] SuitableGoals { get; set; } = [];
     public string[] RequiredEquipment { get; set; } = [];
     public int SelectionPriority { get; set; }
+    /// <summary>The secondary muscles the exercise stimulates enough to count a set.</summary>
+    public string[] EffectiveSecondaryMuscles { get; set; } = [];
+    /// <summary>Parts of a muscle group the plan reserves direct work for (for example <c>LateralDeltoid</c>).</summary>
+    public string[] Emphasis { get; set; } = [];
+    /// <summary>Body areas for which the exercise is avoided when the user declares a limitation there.</summary>
+    public string[] LimitationAreas { get; set; } = [];
+    /// <summary>Somebody checked the planning metadata: only then is the exercise planned automatically.</summary>
+    public bool MetadataReviewed { get; set; }
     public int SeedVersion { get; set; }
     /// <summary>Inactive exercises are hidden from the public catalog and from plan generation.</summary>
     public bool IsActive { get; set; } = true;

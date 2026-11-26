@@ -127,6 +127,7 @@
           }
           <label class="check"><input type="checkbox" [ngModel]="draft().isUnilateral" (ngModelChange)="patch('isUnilateral', $event)"> {{ copy.unilateral }}</label>
           <label class="check"><input type="checkbox" [ngModel]="draft().isBodyweight" (ngModelChange)="patch('isBodyweight', $event)"> {{ copy.bodyweight }}</label>
+          <label class="check"><input type="checkbox" [ngModel]="draft().metadataReviewed" (ngModelChange)="patch('metadataReviewed', $event)"> {{ copy.metadataReviewed }}</label>
           </fieldset>
 
           @for (list of optionLists; track list) {

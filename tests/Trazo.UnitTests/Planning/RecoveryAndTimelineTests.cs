@@ -115,7 +115,7 @@ public sealed class RecoveryAdvisorTests
         Assert.Equal(RecoveryState.Wait, Assess(Session(2, "Brazos", Triceps, None), [press]).State);
 
         // The same sets of an exercise whose secondary muscle the engine does not count never held the triceps back.
-        var incidental = new RecoveryExposure(Now.AddHours(-5), [new RecoveryExercise(Chest, Triceps, 4, 2m, false, "pec-deck")], "Unknown", null, false);
+        var incidental = new RecoveryExposure(Now.AddHours(-5), [new RecoveryExercise(Chest, None, 4, 2m, false, "pec-deck")], "Unknown", null, false);
         Assert.Equal(RecoveryState.Ready, Assess(Session(2, "Brazos", Triceps, None), [incidental]).State);
 
         // And a planned session is assessed with the same rule: a session whose only link with the last workout is an incidental secondary is ready.
