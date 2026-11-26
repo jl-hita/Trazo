@@ -110,7 +110,8 @@ export const LANDING_LANGUAGES: LandingLanguage[] = [
   { code: 'cs', path: 'cs', name: 'Čeština', load: () => import('./i18n/cs').then(m => m.default) },
   { code: 'sk', path: 'sk', name: 'Slovenčina', load: () => import('./i18n/sk').then(m => m.default) },
   { code: 'sl', path: 'sl', name: 'Slovenščina', load: () => import('./i18n/sl').then(m => m.default) },
-  { code: 'hr', path: 'hr', name: 'Hrvatski', load: () => import('./i18n/hr').then(m => m.default) }
+  { code: 'hr', path: 'hr', name: 'Hrvatski', load: () => import('./i18n/hr').then(m => m.default) },
+  { code: 'sr', path: 'sr', name: 'Srpski', load: () => import('./i18n/sr').then(m => m.default) }
 ];
 
 export const landingLanguage = (code: string | null | undefined): LandingLanguage =>
