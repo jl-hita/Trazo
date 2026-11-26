@@ -55,4 +55,5 @@ A DietoExpress import does not carry these fields: it leaves the exercises it ad
 
 `GET /api/v1/admin/exercises/seed-report` (read only) compares the database with the exercise seed: exercises missing,
 differences in planning metadata, in other content and in translations, exercises outside the seed, invalid rows and how much of
-each language the seed covers. The API logs a warning on startup when the database differs.
+each language the seed covers. The API logs a warning on startup when the database differs. The console shows it with the
+**Comprobar seed** button of the Training library; opening the URL in a browser answers `401`, because the request carries no token.

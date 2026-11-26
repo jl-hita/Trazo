@@ -7,7 +7,7 @@ import { UiTableComponent } from '../../shared/ui/ui-table.component';
 import { UiFormFieldComponent } from '../../shared/ui/ui-form-field.component';
 import { UI_COPY } from '../../core/ui-copy';
 import type {
-  AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction
+  AdminExerciseDetail, TransferResult, AdminExerciseInput, AdminExerciseOptions, AdminExerciseSummary, ExerciseAction, AdminSeedReport
 } from '../../core/admin.models';
 import { ExercisesApi } from './exercises.api';
 import { errorMessage } from '../../core/api-error';
@@ -100,6 +100,15 @@ export class ExercisesPageComponent {
   protected readonly loading = signal(false);
   protected readonly error = signal('');
 
+  protected readonly seedReport = signal<AdminSeedReport | null>(null);
+  protected readonly seedBusy = signal(false);
+  protected readonly seedError = signal('');
+  protected readonly seedMatches = computed(() => {
+    const r = this.seedReport();
+    return !!r && !r.missingInDatabase.length && !r.differences.length && !r.invalid.length;
+  });
+  protected readonly incompleteLanguages = computed(() => this.seedReport()?.languages.filter(l => l.incomplete > 0) ?? []);
+
   protected readonly editing = signal(false);
   protected readonly detail = signal<AdminExerciseDetail | null>(null);
   protected readonly draft = signal<Draft>({ ...EMPTY });
@@ -166,6 +175,20 @@ export class ExercisesPageComponent {
     await this.perform(
       () => current ? this.api.update(current.id, input) : this.api.create(input),
       current ? 'Cambios guardados.' : 'Ejercicio creado.');
+  }
+
+  /** Compares the database with the exercise seed. It only reads. */
+  protected async checkSeed(): Promise<void> {
+    this.seedBusy.set(true);
+    this.seedError.set('');
+    this.seedReport.set(null);
+    try {
+      this.seedReport.set(await this.api.seedReport());
+    } catch (e) {
+      this.seedError.set(errorMessage(e));
+    } finally {
+      this.seedBusy.set(false);
+    }
   }
 
   /** Sends the exercises created in TRAZO (with their images) to DietoExpress, after a second click. */

@@ -96,6 +96,9 @@ de todo este roadmap, no en paralelo (decisión del titular, 2026-11-26).
 | Play Console, App Links, cobros, pruebas en dispositivo, restauración, legales | Justo después de este roadmap |
 | Analítica P7, fiscal P10, marketing P11, ecosistema | Sin cambios, detrás de este roadmap |
 
+Cuando estén implementados este roadmap **y los bloqueantes de lanzamiento**, se revisarán las exclusiones por lesión (L-REV en §6;
+decisión del titular, 2026-11-26).
+
 ## 3. Recomendaciones de arquitectura
 
 Son propuestas. Las cifras de esta sección son **heurísticas de producto**, no recomendaciones científicas.
@@ -248,6 +251,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Pendiente | | |
 | P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Pendiente | | |
 | P7-2 | Calidad de 5 y 6 días | Variedad, rotación entre bloques, sin relleno | P7-1 | Pendiente | | |
+| L-REV | Revisar las exclusiones por lesión (titular, idealmente con un entrenador o fisioterapeuta) | Cada zona revisada, en especial lo decidido con evidencia débil en `exercise-review.md` | Después de este roadmap y de los bloqueantes de lanzamiento | Pendiente | | |
 
 ### Registro de decisiones
 
