@@ -772,7 +772,7 @@
   },
   {
     "id": "bent-knee-inverted-row",
-    "version": 4,
+    "version": 5,
     "source": "trazo-curated",
     "nameEs": "Remo Invertido con Rodillas Flexionadas",
     "nameEn": "Bent-Knee Inverted Row",
@@ -819,9 +819,7 @@
       "Biceps"
     ],
     "emphasis": [],
-    "limitationAreas": [
-      "LowerBack"
-    ],
+    "limitationAreas": [],
     "metadataReviewed": true
   },
   {
@@ -3778,7 +3776,7 @@
   },
   {
     "id": "inverted-row",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Remo Invertido",
     "nameEn": "Inverted Row",
@@ -3829,9 +3827,7 @@
       "Biceps"
     ],
     "emphasis": [],
-    "limitationAreas": [
-      "LowerBack"
-    ],
+    "limitationAreas": [],
     "metadataReviewed": true
   },
   {
@@ -3885,7 +3881,7 @@
   },
   {
     "id": "kneeling-cable-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo en Polea Arrodillado",
     "nameEn": "Kneeling Cable Row",
@@ -3912,12 +3908,12 @@
     "isBodyweight": false,
     "movementPattern": "HorizontalPull",
     "primaryMuscles": [
-      "Lats"
+      "Lats",
+      "UpperBack"
     ],
     "secondaryMuscles": [
       "Biceps",
-      "Deltoids",
-      "UpperBack"
+      "Deltoids"
     ],
     "minimumExperience": "Beginner",
     "suitableGoals": [
@@ -5416,7 +5412,7 @@
   },
   {
     "id": "preacher-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl en Banco Scott",
     "nameEn": "Preacher Curl",
@@ -5455,7 +5451,7 @@
       "ez-bar",
       "preacher-curl-bench"
     ],
-    "selectionPriority": 58,
+    "selectionPriority": 72,
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
