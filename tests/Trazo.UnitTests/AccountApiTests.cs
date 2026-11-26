@@ -537,6 +537,65 @@ public sealed class AccountApiTests : IDisposable
     }
 
     [Fact]
+    public async Task HealthConsentIsOffByDefaultAndWithdrawingItErasesTheHealthDataOnlyOfThatUser()
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        var eve = await AddUserAsync("eve@example.com");
+        var client = ClientFor(ana);
+        Assert.False((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("healthConsent").GetBoolean());
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync("/api/v1/account/health-consent", new { consent = true })).StatusCode);
+        Assert.True((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("healthConsent").GetBoolean());
+        await StartPlanAndLogAsync(client);
+        await StartPlanAndLogAsync(ClientFor(eve));
+        Assert.Equal(HttpStatusCode.OK, (await client.PutAsJsonAsync("/api/v1/plans/current/limitations", new { limitations = new[] { "Knee" } })).StatusCode);
+        await SeedLearningAsync(ana.Id);
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            var log = await db.WorkoutLogs.Include(l => l.Sets).FirstAsync(l => l.UserId == ana.Id);
+            log.NonCompletionReason = "Illness";
+            log.ExerciseFeedbackJson = """[{"exerciseId":"x","stimulus":"adequate","discomfort":"strong"}]""";
+            log.Sets[0].SkippedReason = "pain";
+            log.Sets[0].PainReported = true;
+            var observation = await db.MuscleWeekObservations.FirstAsync(o => o.UserId == ana.Id);
+            observation.PainSessions = 2;
+            observation.DiscomfortAnswers = 3;
+            observation.Reason = "pain";
+            await db.SaveChangesAsync();
+        }
+        var logsBefore = (await RowsOfAsync(ana.Id))["logs"];
+
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync("/api/v1/account/health-consent", new { consent = false })).StatusCode);
+
+        Assert.False((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("healthConsent").GetBoolean());
+        using var after = _factory.Services.CreateScope();
+        var data = after.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        Assert.NotNull((await data.Users.SingleAsync(u => u.Id == ana.Id)).HealthConsentWithdrawnAt);
+        var plans = await data.TrainingPlans.Where(p => p.UserId == ana.Id).ToListAsync();
+        Assert.All(plans, p => Assert.Empty(p.Limitations));
+        var planIds = plans.Select(p => p.Id).ToList();
+        foreach (var trace in await data.TrainingMesocycles.Where(m => planIds.Contains(m.PlanId)).Select(m => m.GenerationSnapshotJson).ToListAsync())
+            Assert.DoesNotContain("Knee", trace ?? "");
+        var logs = await data.WorkoutLogs.Include(l => l.Sets).Where(l => l.UserId == ana.Id).ToListAsync();
+        Assert.Equal(logsBefore, logs.Count);
+        Assert.All(logs, l =>
+        {
+            Assert.False(l.PainReported);
+            Assert.NotEqual("Illness", l.NonCompletionReason);
+            Assert.DoesNotContain("discomfort", l.ExerciseFeedbackJson ?? "");
+            Assert.All(l.Sets, s => { Assert.False(s.PainReported); Assert.NotEqual("pain", s.SkippedReason); Assert.True(s.Repetitions > 0); });
+        });
+        Assert.Contains(logs, l => l.ExerciseFeedbackJson?.Contains("adequate") == true);
+        var explanations = await data.PlanAdaptations.Where(a => planIds.Contains(a.PlanId)).Select(a => a.Explanation).ToListAsync();
+        Assert.All(explanations, x => { Assert.DoesNotContain("dolor", x); Assert.DoesNotContain("lesion", x); Assert.DoesNotContain("Knee", x); });
+        Assert.All(await data.MuscleWeekObservations.Where(o => o.UserId == ana.Id).ToListAsync(),
+            o => { Assert.Equal(0, o.PainSessions); Assert.Equal(0, o.DiscomfortAnswers); Assert.NotEqual("pain", o.Reason); });
+        // Somebody else's data is untouched.
+        Assert.True(await data.WorkoutLogs.AnyAsync(l => l.UserId == eve.Id && l.PainReported));
+        Assert.Equal(HttpStatusCode.Unauthorized, (await ClientFor(null).PutAsJsonAsync("/api/v1/account/health-consent", new { consent = true })).StatusCode);
+    }
+
+    [Fact]
     public async Task InfoWarnsThatAnActivePlaySubscriptionIsNotCancelled()
     {
         var info = await JsonAsync(await ClientFor(await AddUserAsync("ana@example.com")).GetAsync("/api/v1/account"));

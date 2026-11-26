@@ -27,6 +27,13 @@ public sealed class TrazoUser
     /// engine can study sequences. False (the default) keeps only independent anonymous rows. Never a condition of using the app.
     /// </summary>
     public bool ResearchConsent { get; set; }
+    /// <summary>
+    /// When the user gave the explicit consent to process health data (injuries, pain, discomfort, illness). Null: not given, or withdrawn.
+    /// The app asks for it the first time one of those is about to be entered, and it is never a condition of using TRAZO.
+    /// </summary>
+    public DateTimeOffset? HealthConsentAt { get; set; }
+    /// <summary>When that consent was last withdrawn (the health data was erased then).</summary>
+    public DateTimeOffset? HealthConsentWithdrawnAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

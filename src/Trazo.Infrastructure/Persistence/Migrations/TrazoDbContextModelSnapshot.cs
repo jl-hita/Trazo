@@ -34,6 +34,8 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string>("TimeZoneId").HasMaxLength(64).HasColumnType("character varying(64)");
             b.Property<string>("Language").HasMaxLength(5).HasColumnType("character varying(5)");
             b.Property<bool>("ResearchConsent").ValueGeneratedOnAdd().HasColumnType("boolean").HasDefaultValue(false);
+            b.Property<DateTimeOffset?>("HealthConsentAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset?>("HealthConsentWithdrawnAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
             b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
             b.HasKey("Id");

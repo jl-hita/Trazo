@@ -67,7 +67,7 @@ public sealed record PlaySubscriptionNotice(string Status, DateTimeOffset Expire
 /// <summary>What the app needs before it offers account deletion.</summary>
 public sealed record AccountInfo(
     Guid Id, string Email, string DisplayName, string Role, string TimeZone, bool HasPassword, bool GoogleLinked, bool TwoFactorEnabled,
-    bool CanDelete, string? CannotDeleteReason, DeletionRequirements Deletion, PlaySubscriptionNotice? PlaySubscription, string? Language = null, bool ResearchConsent = false);
+    bool CanDelete, string? CannotDeleteReason, DeletionRequirements Deletion, PlaySubscriptionNotice? PlaySubscription, string? Language = null, bool ResearchConsent = false, bool HealthConsent = false);
 
 /// <summary>
 /// What a deletion request must prove. <c>RequiresPassword</c> and <c>RequiresGoogleIdToken</c> are alternatives (one is enough);
@@ -87,6 +87,8 @@ public interface IAccountService
     Task<bool> SetLanguageAsync(Guid userId, string? language, CancellationToken ct);
     /// <summary>Saves the optional consent to group the anonymous research rows of a future deletion per plan. Revocable at any time.</summary>
     Task<bool> SetResearchConsentAsync(Guid userId, bool consent, CancellationToken ct);
+    /// <summary>Gives the explicit consent for health data, or withdraws it and erases that data in the same transaction.</summary>
+    Task<bool> SetHealthConsentAsync(Guid userId, bool consent, CancellationToken ct);
 }
 
 /// <summary>
@@ -117,7 +119,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
             lastSuperadmin ? "Eres el último superadministrador: nombra a otro antes de eliminar la cuenta." : null,
             new DeletionRequirements(user.PasswordHash is not null, user.GoogleSubject is not null && user.PasswordHash is null,
                 user.TwoFactorEnabled, notice is not null, warning, notice is null ? null : ManageSubscriptionsUrl),
-            notice, user.Language, user.ResearchConsent);
+            notice, user.Language, user.ResearchConsent, user.HealthConsentAt is not null);
     }
 
     private async Task<PlaySubscriptionNotice?> PlaySubscriptionAsync(Guid userId, CancellationToken ct)
@@ -156,6 +158,31 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
         var changed = await db.Users.Where(u => u.Id == userId)
             .ExecuteUpdateAsync(s => s.SetProperty(u => u.ResearchConsent, consent).SetProperty(u => u.UpdatedAt, clock.GetUtcNow()), ct);
         return changed == 1;
+    }
+
+    // ---------------------------------------------------------------- health data
+
+    public async Task<bool> SetHealthConsentAsync(Guid userId, bool consent, CancellationToken ct)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
+        var user = await db.Users.FirstOrDefaultAsync(u => u.Id == userId, ct);
+        if (user is null) return false;
+        var now = clock.GetUtcNow();
+        if (consent)
+        {
+            // Giving it again keeps the date it was first given.
+            user.HealthConsentAt ??= now;
+        }
+        else
+        {
+            user.HealthConsentAt = null;
+            user.HealthConsentWithdrawnAt = now;
+            await HealthDataEraser.EraseAsync(db, userId, ct);
+        }
+        user.UpdatedAt = now;
+        await db.SaveChangesAsync(ct);
+        await transaction.CommitAsync(ct);
+        return true;
     }
 
     // ---------------------------------------------------------------- deletion
@@ -296,7 +323,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
         return new AccountExport(
             clock.GetUtcNow(), "1",
             new ExportAccount(user.Id, user.Email, user.DisplayName, user.Role, user.EmailVerifiedAt, user.PasswordHash is not null,
-                user.GoogleSubject is not null, user.TwoFactorEnabled, user.TimeZoneId, user.CreatedAt, user.LastLoginAt),
+                user.GoogleSubject is not null, user.TwoFactorEnabled, user.TimeZoneId, user.CreatedAt, user.LastLoginAt,
+                user.HealthConsentAt, user.HealthConsentWithdrawnAt),
             plans.Select(p => new ExportPlan(
                 p.Id, p.Status.ToString(), p.Goal, p.Experience, p.Split, p.StartDate, p.TotalWeeks, p.TrainingDays, p.MaxSessionMinutes,
                 p.AvailableEquipment, p.ExcludedExerciseIds, p.Limitations, p.IncludeDeloadPhases, p.DeloadEveryTrainingWeeks,
@@ -361,7 +389,8 @@ public sealed record ExportPremiumGrant(string Kind, int Days, string Status, Da
 
 public sealed record ExportAccount(
     Guid Id, string Email, string DisplayName, string Role, DateTimeOffset? EmailVerifiedAt, bool HasPassword, bool GoogleLinked,
-    bool TwoFactorEnabled, string? TimeZone, DateTimeOffset CreatedAt, DateTimeOffset? LastLoginAt);
+    bool TwoFactorEnabled, string? TimeZone, DateTimeOffset CreatedAt, DateTimeOffset? LastLoginAt,
+    DateTimeOffset? HealthConsentAt = null, DateTimeOffset? HealthConsentWithdrawnAt = null);
 
 public sealed record ExportPlan(
     Guid Id, string Status, string Goal, string Experience, string Split, DateOnly StartDate, int TotalWeeks, string[] TrainingDays,

@@ -36,6 +36,20 @@ two-factor authentication (TOTP or an unused recovery code).
 - The page is plain HTML with no JavaScript and no external resources. CSP: `default-src 'none'; style-src 'sha256-...'; form-action 'self';
   base-uri 'none'; frame-ancestors 'none'`; also `no-store`, `no-referrer`, `nosniff`, `X-Frame-Options: DENY`.
 
+## Health data consent
+
+Injury areas, pain and discomfort marks and illness as a reason are health data (GDPR art. 9). The app asks for an explicit, optional
+consent the first time one of them is about to be entered; `GET /api/v1/account` reports it as `healthConsent`.
+
+- `PUT /api/v1/account/health-consent` `{"consent": true}` records the date it was given.
+- `{"consent": false}` withdraws it and erases, in one transaction: the injury areas of every plan and of the generation traces; pain and
+  discomfort marks of sessions, sets and exercise feedback; "illness" and "pain" as reasons (they become "other"); adaptations and volume
+  decisions explained by pain or injuries; and the pain counters of the learning history.
+- Training history (sessions, sets, loads) stays. Free-text notes and review messages are the user's own words and are not rewritten;
+  deleting the account removes them.
+- The server does not refuse health data without the consent yet: older versions of the app do not send it, and silently dropping a pain
+  report would be unsafe.
+
 ## What is deleted
 
 Everything is removed in one database transaction (explicit deletes, children first; each step checks that no row is left, otherwise the
