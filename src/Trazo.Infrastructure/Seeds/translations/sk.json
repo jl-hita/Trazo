@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Rolovanie s posilňovacím kolieskom",
+  "description": "Cvik na stred tela, pri ktorom roluješ kolieskom dopredu a dozadu a trénuješ schopnosť brániť prehnutiu chrbtice.",
+  "instructions": [
+   "Kľakni si na zem a uchop rukoväti kolieska na šírku ramien.",
+   "Silno spevni stred tela, aby driek zostal v neutrálnej polohe.",
+   "Pomaly roluj kolieskom dopredu a naťahuj telo tak ďaleko, ako zvládneš kontrolovať.",
+   "Zastav skôr, než klesnú boky alebo sa prehne chrbát.",
+   "Pritiahni koliesko späť ku kolenám stiahnutím brušných svalov."
+  ],
+  "tips": [
+   "Pred každým opakovaním spevni stred tela — nedovoľ prehnutie v driekovej časti.",
+   "Rozsah zväčšuj postupne a zastav skôr, než klesnú boky.",
+   "Ak nezvládaš spodnú polohu, použi ako zarážku stenu."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnoldove tlaky",
+  "description": "Tlaky s jednoručkami s otáčaním zápästí, ktoré zapájajú deltový sval v dlhom rozsahu.",
+  "instructions": [
+   "Seď s rovným operadlom, jednoručky drž vo výške hrudníka dlaňami k sebe a lakte vpredu.",
+   "Začni tlačiť nahor a pritom roztváraj lakte a otáčaj dlane dopredu.",
+   "Dokonči s pažami nad hlavou bez zamknutia lakťov.",
+   "Spúšťaj a otáčaj dlane zase k sebe do východiskovej polohy."
+  ],
+  "tips": [
+   "Otočku rob plynulo, bez švihu.",
+   "Chrbát nechaj opretý o operadlo."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Zhyby s dopomocou",
+  "description": "Zhyb na stroji s dopomocou, ktorý odľahčuje časť telesnej váhy a buduje silu chrbta potrebnú na čisté zhyby.",
+  "instructions": [
+   "Polož kolená na vankúš stroja na zhyby s dopomocou.",
+   "Uchop hrazdu dlaňami od seba, o niečo širšie než ramená.",
+   "Priťahuj hrudník k hrazde tlakom lakťov nadol.",
+   "Kontrolovane sa spusti do visu s vystretými pažami.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Pohyb začni stiahnutím lopatiek nadol, až potom krč lakte.",
+   "Nehojdaj sa, aby si chrbtu neuberal(a) prácu.",
+   "Nastav protizávažie tak, aby si zvládol(a) všetky opakovania s dobrou technikou."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Zakopávanie na balančnej lopte",
+  "description": "Zakopávanie s vlastnou váhou na balančnej lopte: päty priťahuješ k zadku a dvíhaš panvu.",
+  "instructions": [
+   "Ľahni si na chrbát, päty a spodnú časť lýtok polož na loptu a paže roztiahni pre rovnováhu.",
+   "Zatlač pätami a zdvihni panvu, aby telo tvorilo priamku od ramien po členky.",
+   "Panvu drž hore, pokrč kolená a privaľ loptu k zadku.",
+   "Kontrolovane vystri nohy späť bez spustenia panvy.",
+   "Odcvič všetky opakovania, potom spusti panvu a zlez z lopty."
+  ],
+  "tips": [
+   "Boky sú hore počas celej série: ide o spojenie mostíka a zakopávania.",
+   "Začni oboma nohami; keď to bude ľahké, prejdi na jednu."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Zakopávanie v stoji s gumou",
+  "description": "Zakopávanie v stoji s gumou okolo členka, vhodné na cesty alebo ako ľahké zakončenie na zadné stehná.",
+  "instructions": [
+   "Natiahni gumu okolo jedného členka a druhý koniec ukotvi pod stojnou nohou alebo v pevnom bode pred sebou.",
+   "Stoj vzpriamene, v prípade potreby sa pridrž, stojnú nohu mierne pokrč.",
+   "Dvíhaj pätu s gumou k zadku a stehnom nehýb.",
+   "Hore stiahni zadné stehno a kontrolovane spusti do plného natiahnutia.",
+   "Odcvič všetky opakovania na jednej strane a nohy vymeň."
+  ],
+  "tips": [
+   "Stehno drž v pokoji — pohybuje sa len predkolenie.",
+   "Nepomáhaj si švihom bokov.",
+   "Ak nezvládaš spúšťanie, použi slabšiu gumu."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Sťahovanie s odporovou gumou",
+  "description": "Zvislý príťah s gumou ukotvenou hore ako náhrada kladky.",
+  "instructions": [
+   "Stoj, guma ukotvená vysoko (dvere alebo hrazda), v každej ruke jeden koniec, paže nad hlavou.",
+   "Sťahuj ruky nadol a lakte veď k bokom, hrudník vypnutý.",
+   "Keď sa ruky dostanú do výšky ramien, stlač chrbát.",
+   "Kontrolovane vráť paže do vystretia."
+  ],
+  "tips": [
+   "Nezakláňaj trup, aby si si pomohol(a).",
+   "Pred začiatkom sa uisti, že ukotvenie drží."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Rozťahovanie gumy",
+  "description": "Rozťahovanie gumy s vystretými pažami na aktiváciu zadnej časti ramien a hornej časti chrbta.",
+  "instructions": [
+   "Stoj, gumu drž na šírku ramien s vystretými pažami pred sebou vo výške hrudníka.",
+   "Rozťahuj ruky do strán, kým sa guma nedotkne hrudníka.",
+   "V koncovej polohe stiahni lopatky k sebe bez dvíhania ramien.",
+   "Kontrolovane sa vráť a nenechaj sa gumou strhnúť."
+  ],
+  "tips": [
+   "Zvoľ gumu, s ktorou zvládneš aspoň 15 čistých opakovaní.",
+   "Rebrá drž stiahnuté, aby si sa neprehýbal(a) v driekovej časti."
+  ]
+ },
+ "band-row": {
+  "name": "Príťahy s odporovou gumou",
+  "description": "Príťahy v sede s gumou zaháknutou o chodidlá; okrem gumy nič nepotrebuješ.",
+  "instructions": [
+   "Seď na zemi s vystretými nohami, gumu veď okolo chodidiel a v každej ruke drž koniec.",
+   "S rovným chrbtom priťahuj ruky k bruchu a lakte veď dozadu.",
+   "V koncovej polohe stiahni lopatky.",
+   "Kontrolovane vystri paže a nepúšťaj napätie gumy."
+  ],
+  "tips": [
+   "Nepomáhaj si kývaním trupu.",
+   "Zvoľ gumu na 12 až 15 čistých opakovaní."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Tlaky na ramená s gumou",
+  "description": "Tlaky na ramená v stoji na gume, tréning deltového svalu s minimom vybavenia.",
+  "instructions": [
+   "Postav sa do stredu gumy, chodidlá na šírku bokov, konce v rukách vo výške ramien.",
+   "Tlač ruky nahor, kým nebudú paže nad hlavou vystreté.",
+   "Brucho spevni a rebrá drž stiahnuté.",
+   "Kontrolovane spusti k ramenám bez straty napätia."
+  ],
+  "tips": [
+   "Pri tlaku sa neprehýbaj.",
+   "Pre väčší odpor gumu obtoč o jeden raz navyše."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulharský drep s veľkou činkou",
+  "description": "Drep na jednej nohe so zadnou nohou na lavičke a činkou na chrbte.",
+  "instructions": [
+   "Opri priehlavok jednej nohy o lavičku za sebou, činka na hornej časti chrbta, druhá noha vpredu.",
+   "Pokrč predné koleno a klesaj so vzpriameným trupom, kým stehno nebude rovnobežne so zemou.",
+   "Váhu drž na päte prednej nohy.",
+   "Odtlač sa prednou nohou do vystretia; odcvič opakovania a nohy vymeň."
+  ],
+  "tips": [
+   "Uprav vzdialenosť tak, aby predné koleno veľmi nepresahovalo špičku.",
+   "Cvik si najprv vyskúšaj bez záťaže alebo s jednoručkami."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Bicepsový zdvih s veľkou činkou",
+  "description": "Klasický izolovaný cvik na biceps s veľkou činkou pre maximálnu záťaž.",
+  "instructions": [
+   "Stoj a drž činku podhmatom na šírku ramien.",
+   "Dvíhaj činku k ramenám.",
+   "Hore stlač a potom kontrolovane spúšťaj.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Nehojdaj trupom.",
+   "Lakte drž pri bokoch."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Zadkový mostík s veľkou činkou",
+  "description": "Zadkový mostík s veľkou činkou pre väčší odpor.",
+  "instructions": [
+   "Ľahni si na zem s činkou cez boky a pokrčenými kolenami.",
+   "Dvíhaj panvu stiahnutím zadku.",
+   "Hore vydrž s úplne vystretými bokmi.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Pri vystretí bokov sa neprehýbaj v driekovej časti.",
+   "Tlač pätami, nie špičkami.",
+   "Bradu pritiahni a hornú časť chrbta nechaj na podložke."
+  ]
+ },
+ "barbell-row": {
+  "name": "Príťahy veľkej činky v predklone",
+  "description": "Komplexný ťahový cvik na hornú a strednú časť chrbta.",
+  "instructions": [
+   "Predkloň sa v bedrách s mierne pokrčenými kolenami.",
+   "Uchop činku o niečo širšie než ramená.",
+   "Priťahuj činku k spodnej časti hrudníka a sťahuj lopatky.",
+   "Činku spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Trup drž približne v 45 stupňoch.",
+   "Nepomáhaj si švihom."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Výpony v stoji s veľkou činkou",
+  "description": "Výpony v stoji s voľnou činkou na chrbte, bez špeciálneho stroja.",
+  "instructions": [
+   "Stoj s činkou na hornej časti chrbta, špičky na schode alebo kotúči na šírku bokov.",
+   "Nechaj päty klesnúť do natiahnutia lýtok, trup vzpriamený.",
+   "Vystúp na špičky čo najvyššie bez krčenia kolien.",
+   "Hore chvíľu vydrž a kontrolovane spusti."
+  ],
+  "tips": [
+   "Začni s malou váhou, kým nezvládneš rovnováhu.",
+   "Cvič v stojane so zarážkami vo vhodnej výške."
+  ]
+ },
+ "bench-press": {
+  "name": "Bench press s veľkou činkou",
+  "description": "Komplexný tlakový cvik na hrudník, ramená a tricepsy.",
+  "instructions": [
+   "Ľahni si na lavičku tak, aby oči boli pod činkou.",
+   "Uchop činku o niečo širšie než ramená.",
+   "Zlož činku zo stojana a spusti ju do stredu hrudníka.",
+   "Vytlač činku späť do úplného vystretia paží.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Chodidlá nechaj celou plochou na zemi.",
+   "V driekovej časti si ponechaj mierne prehnutie.",
+   "Zapri sa nohami o zem, aby si bol(a) stabilný(á)."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Obrátené príťahy s pokrčenými kolenami",
+  "description": "Začiatočnícka obmena obrátených príťahov: s pokrčenými kolenami a chodidlami blízko tela je ľahšia a lepšie sa ovláda.",
+  "instructions": [
+   "Ľahni si pod nízku pevnú tyč, uchop ju o niečo širšie než ramená a drž trup rovný s pokrčenými kolenami a chodidlami na zemi.",
+   "Priťahuj hrudník k tyči, lakte dozadu a lopatky k sebe.",
+   "Hore chvíľu vydrž bez poklesu bokov.",
+   "Kontrolovane spusti do vystretých paží."
+  ],
+  "tips": [
+   "Prisunutím chodidiel si cvik uľahčíš, oddialením sťažíš.",
+   "Keď zvládneš 12 opakovaní, prejdi na obrátené príťahy s vystretými nohami."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Výpony s vlastnou váhou",
+  "description": "Výpony s vlastnou váhou, základný cvik na posilnenie lýtok.",
+  "instructions": [
+   "Stoj s chodidlami na šírku bokov na rovnom povrchu.",
+   "Vystúp na špičky čo najvyššie.",
+   "Hore stlač lýtka.",
+   "Kontrolovane spusti päty na zem.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Pri výstupe rozlož váhu na všetky prsty.",
+   "Nohy nechaj vystreté, aby pracovalo hlavne lýtko.",
+   "Pre rovnováhu sa pozeraj na jeden bod."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Výpady vzad s vlastnou váhou",
+  "description": "Výpad vzad bez vybavenia, stabilnejší a šetrnejší ku kolenám než výpad vpred.",
+  "instructions": [
+   "Stoj s chodidlami pri sebe, ruky v bok, hrudník vypnutý.",
+   "Urob dlhý krok dozadu a krč obe kolená, kým zadné nebude tesne nad zemou.",
+   "Trup drž vzpriamený a váhu na prednej nohe.",
+   "Odrazom prednej nohy sa vráť; odcvič opakovania a nohy vymeň."
+  ],
+  "tips": [
+   "Krok urob taký dlhý, aby predné koleno veľmi nepresahovalo špičku.",
+   "Ak ti rovnováha robí ťažkosti, pridrž sa opory."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Drep s vlastnou váhou",
+  "description": "Základný drep bez vybavenia, ideálny na naučenie pohybu a tréning nôh kdekoľvek.",
+  "instructions": [
+   "Stoj s chodidlami na šírku ramien, špičky mierne von, paže vystreté pred sebou.",
+   "Veď boky dozadu a nadol, akoby si si sadal(a), hrudník vypnutý a chrbát v neutrálnej polohe.",
+   "Klesaj, kým stehná nebudú rovnobežne so zemou, kolená v smere chodidiel.",
+   "Odtlač zem celým chodidlom späť do stoja."
+  ],
+  "tips": [
+   "Päty drž na zemi po celý čas.",
+   "Ak ti klesanie ide ťažko, sadni si na stoličku a vstaň bez švihu."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulharský drep",
+  "description": "Jednostranná obmena drepu so zvýšenou zadnou nohou.",
+  "instructions": [
+   "Postav sa pred lavičku a jednu nohu opri za sebou o lavičku.",
+   "Jednoručky drž po stranách.",
+   "Klesaj, kým predné stehno nebude rovnobežne so zemou.",
+   "Zatlač prednou pätou a vráť sa do stoja.",
+   "Opakuj na obe strany."
+  ],
+  "tips": [
+   "Takmer celú váhu drž na prednej nohe.",
+   "Upravuj vzdialenosť od lavičky, kým výpad nebude stabilný.",
+   "Pred výmenou odcvič všetky opakovania jednou nohou."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Skracovačky na kladke",
+  "description": "Skracovačka v kľaku na hornej kladke s lanom, pri ktorej sa dá postupne pridávať záťaž na priamy brušný sval.",
+  "instructions": [
+   "Kľakni si čelom ku kladke s lanom hore.",
+   "Lano drž pri čele s pokrčenými lakťami.",
+   "Klesaj ohýbaním chrbtice a veď lakte k stehnám.",
+   "Dole brucho silno stiahni.",
+   "Vráť sa do východiskovej polohy a opakuj."
+  ],
+  "tips": [
+   "Ohýbaj chrbticu, neťahaj pažami.",
+   "Nesadaj si pri každom opakovaní bokmi dozadu.",
+   "Pri pohybe nadol silno vydýchni, brucho sa lepšie stiahne."
+  ]
+ },
+ "cable-curl": {
+  "name": "Bicepsový zdvih na kladke",
+  "description": "Bicepsový zdvih s odporom kladky pre stále napätie.",
+  "instructions": [
+   "Postav sa čelom k spodnej kladke s rovnou alebo EZ tyčou.",
+   "Uchop tyč podhmatom, lakte pri bokoch.",
+   "Dvíhaj činku k ramenám.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Pri zdvihu nedovoľ lakťom ujsť dopredu.",
+   "Nepomáhaj si kývaním trupu.",
+   "Odstúp o kúsok od kladky, aby si udržal(a) napätie."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Vonkajšia rotácia na kladke",
+  "description": "Vonkajšia rotácia na kladke s lakťom pri boku, ktorá s pomocou zadného deltu posilňuje vonkajšie rotátory rotátorovej manžety.",
+  "instructions": [
+   "Nastav kladku do výšky lakťa a uchop madlo.",
+   "Stoj bokom k stroju, lakeť pracujúcej paže pokrčený do 90 stupňov.",
+   "Lakeť drž pri boku a predlaktie vytáčaj von.",
+   "V koncovej polohe sa zastav.",
+   "Kontrolovane sa vráť. Odcvič opakovania na jednej strane a vymeň."
+  ],
+  "tips": [
+   "Pri rotácii nedvíhaj ramená.",
+   "Pracuj s malou váhou, pomaly a pod kontrolou.",
+   "Zápästie drž pevné v osi predlaktia."
+  ]
+ },
+ "cable-fly": {
+  "name": "Rozpažky na kladke",
+  "description": "Izolovaný cvik na hrudník s odporom kladiek pre stále napätie.",
+  "instructions": [
+   "Postav sa medzi dva stĺpy kladiek s madlami na horných kladkách.",
+   "S mierne pokrčenými lakťami roztvor paže do strán.",
+   "Spoj ruky pred hrudníkom pohybom objatia.",
+   "Pomaly sa vráť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Uhol v lakťoch nemeň, aby z toho nebol tlak.",
+   "Keď sa ruky stretnú, na sekundu stlač hrudník.",
+   "Pri roztvorených pažiach netlač ramená dopredu."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Predpažovanie na kladke",
+  "description": "Predpažovanie na spodnej kladke so stálym napätím v celom rozsahu.",
+  "instructions": [
+   "Stoj chrbtom k spodnej kladke, lano medzi nohami, madlo v jednej ruke s pažou pred stehnom.",
+   "Dvíhaj pažu dopredu do výšky ramena s mierne pokrčeným lakťom.",
+   "Hore chvíľu vydrž bez záklonu.",
+   "Kontrolovane spusti, závažie nepokladaj; opakuj a ruky vymeň."
+  ],
+  "tips": [
+   "Stoj dosť ďaleko, aby lano ťahalo dozadu.",
+   "Brucho spevni, aby si sa neprehol(a)."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Upažovanie na kladke",
+  "description": "Jednoručné upažovanie na kladke so stálym napätím v strednej časti ramena.",
+  "instructions": [
+   "Stoj bokom k spodnej kladke a madlo uchop vzdialenejšou rukou.",
+   "Lakeť mierne pokrč a lano veď pred telom.",
+   "Dvíhaj pažu do strany do vodorovnej polohy.",
+   "Kontrolovane spusti. Opakovania na každú stranu, potom vymeň.",
+   "Udrž napätie — dole závažie nepokladaj."
+  ],
+  "tips": [
+   "Pohyb veď lakťom, nie rukou.",
+   "Hore krátko zastav, bez švihu.",
+   "Použi menšiu váhu než s jednoručkou — napätie kladky je stále."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Tricepsové extenzie nad hlavou na kladke",
+  "description": "Cvik na triceps na kladke: chrbtom k závažiu držíš lano za hlavou a vystieraním lakťov ho tlačíš nahor nad hlavu. Poloha nad hlavou naťahuje dlhú hlavu tricepsu a kladka udržiava sval v napätí počas celého pohybu.",
+  "instructions": [
+   "Pripni lano na spodnú kladku a zvoľ ľahkú váhu.",
+   "Uchop lano oboma rukami, otoč sa chrbtom k závažiu a urob krok vpred do rozkročného postoja, aby ťa kladka ťahala dozadu.",
+   "Zdvihni lano nad hlavu s pokrčenými lakťami a ramennou časťou paží pri ušiach, aby ruky boli za hlavou.",
+   "Spevni trup, hornou časťou paží nehýb a vystieraním lakťov vytlač lano nahor, kým nebudú paže nad hlavou úplne vystreté.",
+   "Hore krátko zastav a potom pokrčením lakťov kontrolovane spusti lano za hlavu.",
+   "Zopakuj stanovený počet opakovaní."
+  ],
+  "tips": [
+   "Lakte smeruj dopredu a hornou časťou paží nehýb; ak sa roztvoria alebo posunú, z extenzie sa stane tlak.",
+   "Vykroč dosť ďaleko, aby ťa kladka držala stabilne, a pri dvíhaní paží sa neprehýbaj.",
+   "Použi váhu, ktorú zvládneš v celom natiahnutí; ťažká záťaž roztvára lakte."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallofov tlak",
+  "description": "Cvik proti rotácii: kladka ťa ťahá do strany, kým tlačíš madlo priamo od hrudníka a nedovolíš trupu otočiť sa.",
+  "instructions": [
+   "Nastav kladku do výšky hrudníka a uchop madlo oboma rukami, bokom k stroju.",
+   "Odstúp, kým lano nebude naozaj napnuté, chodidlá na šírku ramien a kolená mierne pokrčené.",
+   "Pritiahni madlo do stredu hrudníka a spevni trup aj zadok.",
+   "Tlač madlo priamo vpred do vystretia paží a odolávaj ťahu, ktorý ťa chce otočiť k stroju.",
+   "Vo vystretej polohe chvíľu vydrž a potom madlo kontrolovane vráť k hrudníku.",
+   "Odcvič požadované opakovania, otoč sa a opakuj na druhú stranu."
+  ],
+  "tips": [
+   "Nič sa nesmie otáčať. Ak sa pri tlaku ramená stáčajú ku kladke, uber váhu — trénuje práve rotácia, ku ktorej nedôjde.",
+   "Čím ďalej od stroja stojíš, tým dlhšia je páka a tým je to ťažšie, takže náročnosť zmeníš bez zásahu do závažia.",
+   "Paže drž vo výške hrudníka a ramená dole; ak necháš madlo stúpať, je z toho predpažovanie."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Obrátené rozpažky na kladke",
+  "description": "Cvik na kladkách v stoji na zadné delty: čelom do priestoru medzi dvoma vežami držíš protiľahlé madlá so skríženými lanami a vedieš paže von a dozadu do výšky ramien. Laná udržiavajú zadné ramená v napätí počas celého oblúka.",
+  "instructions": [
+   "Nastav obe kladky zhruba do výšky ramien a postav sa do stredu medzi obe veže.",
+   "Uchop ľavé madlo pravou rukou a pravé ľavou, aby sa laná pred tebou krížili.",
+   "Stoj vzpriamene, paže vystreté dopredu vo výške ramien, lakte mierne pokrčené.",
+   "Veď paže širokým oblúkom von a dozadu, lakte vpredu, kým nebudú v línii s ramenami.",
+   "Krátko stiahni lopatky bez prehnutia.",
+   "Pomaly vráť madlá do skríženej východiskovej polohy a zopakuj stanovený počet."
+  ],
+  "tips": [
+   "Lakte drž mierne pokrčené v nemennom uhle; ak ich budeš krčiť a vystierať, z rozpažky sa stane príťah.",
+   "Ramená drž dole a šiju uvoľnenú, aby pracovali zadné delty, nie horný trapéz.",
+   "Použi ľahkú váhu a pomalý návrat; na konci oblúka ťahajú laná najviac, túto polohu ovládaj."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Priťahovanie kolien na stojane",
+  "description": "Cvik s vlastnou váhou na stojane na spodné brucho a ohýbače bedier.",
+  "instructions": [
+   "Zaujmi polohu na stojane s chrbtom na operadle a predlaktiami na podperách.",
+   "Nohy nechaj voľne visieť.",
+   "Spevni stred tela a pritiahni kolená k hrudníku.",
+   "Hore krátko vydrž a pomaly spusti do východiskovej polohy.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Nehojdaj nohami kvôli švihu.",
+   "Pri dvíhaní kolien vydychuj.",
+   "Chrbát drž na operadle počas celého cviku."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Tlaky na hrudník na stroji",
+  "description": "Tlakový pohyb na hrudník na stroji, ideálny pre začiatočníkov.",
+  "instructions": [
+   "Sadni si do stroja s chrbtom na operadle.",
+   "Uchop madlá vo výške hrudníka.",
+   "Tlač madlá dopredu do úplného vystretia paží.",
+   "Pomaly sa vráť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Nastav sedadlo tak, aby madlá boli vo výške hrudníka.",
+   "Tlač bez prudkého zamykania lakťov.",
+   "Vracaj sa kontrolovane, závažie nepúšťaj."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Príťahy jednoručiek s oporou hrudníka",
+  "description": "Príťahy jednoručiek s oporou hrudníka, ktoré odľahčia driek a izolujú chrbtové svaly.",
+  "instructions": [
+   "Ľahni si bruchom na šikmú lavičku, jednoručky visia pod tebou.",
+   "Priťahuj jednoručky k bokom.",
+   "Hore stlač a spusti.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Opora hrudníka odstraňuje únavu drieku.",
+   "Sústreď sa na sťahovanie lopatiek."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Príťahy kettlebellov s oporou hrudníka",
+  "description": "Cvik precvičuje chrbát, hlavne najširší sval a rombické svaly: s kettlebellom v každej ruke priťahuješ k bokom a trup opieraš o šikmú lavičku.",
+  "instructions": [
+   "Ľahni si bruchom na šikmú lavičku a paže nechaj voľne visieť s kettlebellom v každej ruke.",
+   "Spevni brucho a stiahni lopatky.",
+   "Priťahuj kettlebelly k bokom a stláčaj lopatky.",
+   "Hore krátko zastav a vnímaj stiahnutie v chrbte.",
+   "Pomaly a kontrolovane spusti kettlebelly do východiskovej polohy."
+  ],
+  "tips": [
+   "Trup drž počas celého pohybu stabilný; nehojdaj sa.",
+   "Sústreď sa na začatie ťahu chrbtovými svalmi, nie len pažami.",
+   "Lakte drž pri tele, aby si zdôraznil(a) najširší sval chrbta."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Príťahy na stroji s oporou hrudníka",
+  "description": "Príťahy v sede na stroji s opierkou hrudníka, ktorá podopiera trup, takže ťahajú najširšie svaly a svaly medzi lopatkami a driek je mimo. Ťaháš madlá dozadu s lakťami za seba a potom ich kontrolovane púšťaš dopredu.",
+  "instructions": [
+   "Nastav sedadlo tak, aby madlá boli vo výške spodného hrudníka, a sadni si s hrudníkom na opierke a chodidlami pevne na zemi.",
+   "Natiahni sa dopredu a uchop madlá s vystretými pažami a uvoľnenými ramenami.",
+   "Spevni trup a ťahaj madlá dozadu s lakťami za seba.",
+   "Na konci ťahu stiahni lopatky bez odlepenia hrudníka od opierky.",
+   "Krátko zastav a potom kontrolovane vystri paže s madlami dopredu.",
+   "Zopakuj stanovený počet s hrudníkom stále na opierke."
+  ],
+  "tips": [
+   "Ťahaj lakťami, nie rukami, aby pracovali najširšie svaly a stred chrbta a bicepsy len pomáhali.",
+   "Hrudník nechaj na opierke a ramená dole; ak zdvihneš ramená alebo sa zakloníš, príťah sa zmení na ťah horného trapézu.",
+   "Na začiatku každého opakovania nechaj lopatky ujsť dopredu pre plné natiahnutie pred ďalším ťahom."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "T-príťahy s oporou hrudníka",
+  "description": "T-príťahy s hrudníkom opretým o šikmú lavičku, ktoré izolujú chrbát bez záťaže drieku.",
+  "instructions": [
+   "Opri hrudník o šikmú lavičku, chodidlá pevne na zemi, a uchop madlo T-osi s vystretými pažami.",
+   "Priťahuj madlo k hrudníku, lakte dozadu a pri tele.",
+   "Hore na okamih stlač lopatky.",
+   "Kontrolovane spusti do vystretých paží bez odlepenia hrudníka od lavičky."
+  ],
+  "tips": [
+   "Hlavu drž v osi chrbtice.",
+   "Ak musíš pri zdvihu odlepiť hrudník od lavičky, uber váhu."
+  ]
+ },
+ "chin-ups": {
+  "name": "Zhyby podhmatom",
+  "description": "Obmena zhybov podhmatom, ktorá popri najširšom svale silno zapája bicepsy.",
+  "instructions": [
+   "Zaves sa na hrazdu podhmatom na šírku ramien.",
+   "Priťahuj sa, kým brada nepresiahne hrazdu.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Stred tela drž spevnený počas celého cviku.",
+   "Nehojdaj sa priveľmi."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Bench press úzkym úchopom",
+  "description": "Bench press s rukami bližšie pri sebe, ktorý viac zapája tricepsy a zachováva prácu hrudníka.",
+  "instructions": [
+   "Ľahni si na lavičku a uchop činku na šírku ramien alebo o niečo užšie.",
+   "Zlož činku a s vystretými pažami ju daj nad hrudník.",
+   "Kontrolovane spúšťaj, kým sa nedotkne spodného hrudníka, lakte pri tele.",
+   "Tlač činku nahor do vystretia lakťov."
+  ],
+  "tips": [
+   "Nedávaj ruky príliš k sebe: trpia zápästia; stačí šírka ramien.",
+   "Pri tréningu blízko zlyhania si zober dopomoc alebo stojan so zarážkami."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Bench press s jednoručkami",
+  "description": "Komplexný cvik na hrudník s jednoručkami s väčším rozsahom než bench press s veľkou činkou.",
+  "instructions": [
+   "Ľahni si na rovnú lavičku s jednoručkou v každej ruke vo výške hrudníka.",
+   "Vytlač jednoručky do úplného vystretia paží.",
+   "Pomaly ich spusti do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Zápästia drž počas celého cviku v neutrálnej polohe.",
+   "V hornej polohe stlač hrudník."
+  ]
+ },
+ "db-fly": {
+  "name": "Rozpažky s jednoručkami",
+  "description": "Izolovaný cvik, ktorý naťahuje a sťahuje prsný sval v širokom oblúku.",
+  "instructions": [
+   "Ľahni si na lavičku s jednoručkami nad hrudníkom, dlane proti sebe.",
+   "S mierne pokrčenými lakťami spúšťaj jednoručky do strán.",
+   "Vráť sa do východiskovej polohy so stlačením hrudníka.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Pokrčenie lakťov nemeň počas celého cviku.",
+   "Nespúšťaj jednoručky príliš nízko."
+  ]
+ },
+ "db-squat": {
+  "name": "Drep s jednoručkami",
+  "description": "Drep s jednoručkou v každej ruke popri tele, dostupný bez veľkej činky.",
+  "instructions": [
+   "Chodidlá na šírku ramien, v každej ruke jednoručka po stranách.",
+   "Spevni stred tela a drž hrudník hore.",
+   "Klesni do drepu pokrčením bokov a kolien.",
+   "Klesaj, kým stehná nebudú rovnobežné alebo nižšie.",
+   "Vytlač sa pätami späť nahor."
+  ],
+  "tips": [
+   "Hrudník hore a chrbát rovný.",
+   "Tlač kolená v smere špičiek.",
+   "Ak ťa začne obmedzovať úchop, použi trhačky."
+  ]
+ },
+ "dead-bug": {
+  "name": "Mŕtvy chrobák",
+  "description": "Cvik na stred tela v ľahu na chrbte, ktorý koordináciou protiľahlých končatín trénuje hlbokú stabilitu.",
+  "instructions": [
+   "Ľahni si na chrbát, paže k stropu a kolená v pravom uhle.",
+   "Spúšťaj pravú pažu a ľavú nohu k zemi a driek tlač k podložke.",
+   "Vráť sa do východiskovej polohy.",
+   "Opakuj na druhú stranu.",
+   "Striedaj."
+  ],
+  "tips": [
+   "Driek po celý čas tlač k zemi.",
+   "Pohybuj sa pomaly."
+  ]
+ },
+ "deadlift": {
+  "name": "Mŕtvy ťah s veľkou činkou",
+  "description": "Komplexný zdvih celého tela, ktorý zaťažuje hlavne zadný reťazec.",
+  "instructions": [
+   "Stoj s chodidlami na šírku bokov a činkou nad stredom chodidiel.",
+   "Predkloň sa v bedrách a uchop činku.",
+   "Spevni stred tela a zdvihni vystretím bokov a kolien.",
+   "Hore sa úplne vzpriam a potom kontrolovane spúšťaj.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Činku drž pri tele.",
+   "Nehrb driek."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Mŕtvy ťah z vyvýšeniny",
+  "description": "Mŕtvy ťah zo stoja na nízkej doske, ktorý predlžuje rozsah a sťažuje rozbeh.",
+  "instructions": [
+   "Postav sa na dosku vysokú 2 až 5 cm s chodidlami pod činkou a uchop ju s neutrálnym chrbtom a ramenami nad ňou.",
+   "Spevni telo a odtláčaj zem, kým činka stúpa tesne popri nohách.",
+   "Vystieraj boky aj kolená súčasne až do úplného vzpriamenia.",
+   "Kontrolovane spusti činku na zem s chrbtom v neutrálnej polohe."
+  ],
+  "tips": [
+   "Začni s malou doskou a ľahkou váhou a dolaď techniku.",
+   "Pri odlepení od zeme nehrb chrbát."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dračia vlajka",
+  "description": "Pokročilý brušný cvik: spevnené telo sa opiera len o ramená a dvíha sa a klesá ako páka.",
+  "instructions": [
+   "Ľahni si na lavičku, chyť sa jej okraja za hlavou a zdvihni rovné telo tak, aby držalo len na ramenách a hornej časti chrbta.",
+   "Spúšťaj rovné telo bez ohybu v bedrách takmer do vodorovnej polohy.",
+   "Brucho aj zadok drž spevnené, lavičky sa nedotýkaj.",
+   "Zdvihni rovné telo späť do zvislej polohy; ak to nejde, začni len spúšťaním."
+  ],
+  "tips": [
+   "Začni s pokrčenými kolenami alebo len s excentrickou fázou.",
+   "Podstatou cviku je neohýbať boky."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Príťahy jednoručiek v predklone",
+  "description": "Príťahy s jednoručkou v každej ruke v predklone: najširšie svaly a horný chrbát len s párom jednoručiek.",
+  "instructions": [
+   "Stoj s jednoručkami, mierne pokrč kolená a predkloň trup v bedrách takmer do vodorovnej polohy s rovným chrbtom.",
+   "Paže nechaj visieť dlaňami proti sebe.",
+   "Priťahuj jednoručky k bokom, lakte dozadu a lopatky k sebe.",
+   "Hore krátko zastav a kontrolovane spusti do vystretia."
+  ],
+  "tips": [
+   "Trupom nehýb: ak sa musíš kývať, aby si ich zdvihol(a), sú príliš ťažké.",
+   "Krk drž v osi chrbtice, pohľad k zemi.",
+   "Ak sa driek unaví skôr než horný chrbát, vezmi menšiu váhu alebo príťahy s oporou."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Bicepsový zdvih s jednoručkami",
+  "description": "Ohyb v lakti s jednoručkou v každej ruke, tréning bicepsu s voľným rozsahom.",
+  "instructions": [
+   "Stoj s jednoručkami, paže vystreté popri tele, dlane dopredu.",
+   "Lakte drž pri trupe a dvíhaj jednoručky ohybom v lakťoch bez kývania.",
+   "Hore na okamih stiahni biceps, ramená nedvíhaj.",
+   "Kontrolovane spúšťaj do úplného vystretia lakťa."
+  ],
+  "tips": [
+   "Nepomáhaj si chrbtom: ak to potrebuješ, uber váhu.",
+   "Spúšťanie ovládaj, trvá aspoň dvakrát dlhšie než zdvih."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmárska chôdza s jednoručkami",
+  "description": "Tento cvik na celé telo spočíva v chôdzi s ťažkými jednoručkami a účinne buduje silu úchopu, stabilitu stredu tela a celkovú svalovú vytrvalosť.",
+  "instructions": [
+   "Stoj vzpriamene s jednoručkou v každej ruke, paže popri tele.",
+   "Stiahni lopatky a spevni stred tela s neutrálnou chrbticou.",
+   "Choď pomaly a rozvážne stanovenú vzdialenosť alebo čas krátkymi kontrolovanými krokmi.",
+   "Hrudník drž vzpriamený a pri chôdzi sa nenakláňaj do strany.",
+   "Sústreď sa na pevné a stabilné držanie tela po celý čas."
+  ],
+  "tips": [
+   "Použi najťažšie jednoručky, ktoré zvládneš bez zhoršenia techniky.",
+   "Dýchaj zhlboka a rytmicky, aby si udržal(a) napätie stredu tela.",
+   "Predstav si, že na hlave balansuje pohár vody."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Predpažovanie s jednoručkami",
+  "description": "Zdvih jednoručiek dopredu do výšky ramien na prednú časť deltového svalu.",
+  "instructions": [
+   "Stoj s jednoručkami pred stehnami, paže takmer vystreté.",
+   "Dvíhaj jednoručky dopredu do výšky ramien s mierne pokrčenými lakťami.",
+   "Zastav vo vodorovnej polohe bez kývania trupu.",
+   "Kontrolovane spusti k stehnám."
+  ],
+  "tips": [
+   "Nepomáhaj si chrbtom: ak áno, uber váhu.",
+   "Predný delt veľa pracuje už pri tlakoch; objem nepreháňaj."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Obrátené rozpažky s jednoručkami",
+  "description": "Izolovaný cvik v predklone so zdvihom jednoručiek do strán na zadné delty a horný chrbát.",
+  "instructions": [
+   "Predkloň sa v bedrách s jednoručkami vo zvesených pažiach.",
+   "Chrbát drž rovný a kolená mierne pokrčené.",
+   "Dvíhaj jednoručky do strán do výšky ramien.",
+   "Hore stlač lopatky.",
+   "Jednoručky spúšťaj kontrolovane.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Použi ľahkú váhu, aby pracovali zadné delty, nie švih.",
+   "Hore stlač lopatky k sebe.",
+   "Lakte drž po celý čas v miernom nemennom pokrčení."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Rumunský mŕtvy ťah s jednoručkami",
+  "description": "Rumunský mŕtvy ťah s jednoručkami, ktorý ohybom v bedrách zdôrazňuje natiahnutie zadných stehien.",
+  "instructions": [
+   "Stoj s jednoručkami pred stehnami a mierne pokrčenými kolenami.",
+   "Predkloň sa v bedrách a vysuň zadok dozadu.",
+   "Spúšťaj jednoručky popri nohách, kým neucítiš natiahnutie zadných stehien.",
+   "Chrbát drž rovný a ramená vzadu.",
+   "Tlakom bokov dopredu sa vráť do stoja.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Klesaj len tak nízko, ako dovolí pohyblivosť, nič nenúť.",
+   "Rovnaké mierne pokrčenie kolien udrž v celom rozsahu.",
+   "Nerob z pohybu drep."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Tlaky na ramená s jednoručkami",
+  "description": "Zvislý tlak s jednoručkami v sede alebo v stoji, rozvíja prednú a bočnú časť deltového svalu.",
+  "instructions": [
+   "Seď alebo stoj s jednoručkami vo výške ramien, dlane dopredu.",
+   "Vytlač obe jednoručky nad hlavu do úplného vystretia paží.",
+   "Stred tela drž spevnený a neprehýbaj sa v driekovej časti.",
+   "Kontrolovane spusti jednoručky do výšky ramien.",
+   "Nenechaj jednoručky putovať za hlavu.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Dvíhaj jednoručky priamo nahor, hore o seba neťukaj.",
+   "Zápästia drž pevné v osi predlaktí.",
+   "Ak sa prehýbaš v driekovej časti, uber váhu."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Krčenie ramien s jednoručkami",
+  "description": "Dvíhanie ramien s jednoručkou v každej ruke na horný chrbát a trapézy.",
+  "instructions": [
+   "Stoj s jednoručkami, paže vystreté popri tele, pohľad dopredu.",
+   "Dvíhaj ramená priamo k ušiam, neotáčaj ich a nekrč lakte.",
+   "Hore stiahnutie na okamih podrž.",
+   "Kontrolovane spúšťaj do úplného natiahnutia trapézu."
+  ],
+  "tips": [
+   "Nerob ramenami kruhy: pohyb je zvislý.",
+   "Ak zlyhá úchop skôr než trapéz, použi trhačky."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Výpony na jednej nohe s jednoručkou",
+  "description": "Výpon na jednej nohe na schode s jednoručkou, druhou rukou sa pridržiavaš pre rovnováhu.",
+  "instructions": [
+   "Stoj na schode špičkou jednej nohy, druhú pokrč a jednoručku drž na tej istej strane; druhou rukou sa opri o stenu.",
+   "Nechaj pätu klesnúť pod schod do natiahnutia lýtka.",
+   "Vystúp na špičku čo najvyššie bez krčenia kolena.",
+   "Hore chvíľu vydrž a kontrolovane spusti; odcvič opakovania a nohy vymeň."
+  ],
+  "tips": [
+   "Tlač bruškom pod palcom, členok sa nesmie vytáčať von.",
+   "Cvik je jednostranný: na každej nohe rovnaký počet opakovaní."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Kľuky v striežke s vyvýšenými rukami",
+  "description": "Začiatočnícka obmena kľuku v striežke s rukami na schode alebo stabilnej stoličke pre menšiu záťaž.",
+  "instructions": [
+   "Opri ruky o okraj schodu, lavičky alebo pevnej stoličky na šírku ramien a cúvaj nohami, kým nebudú boky vysoko.",
+   "Pokrč lakte a spúšťaj hlavu k opore, boky vysoko.",
+   "Zastav, keď bude hlava medzi rukami, bez straty polohy.",
+   "Vytlač sa pažami do vystretia lakťov."
+  ],
+  "tips": [
+   "Prisunutím chodidiel k opore cvik sťažíš.",
+   "Pred začiatkom over, že sa opora nehýbe."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull na kladke",
+  "description": "Cvik na kladke na zadné delty a vonkajšie rotátory.",
+  "instructions": [
+   "Pripni lano na hornú kladku.",
+   "Priťahuj lano k tvári a roztváraj konce.",
+   "Stlač zadné delty a vonkajšie rotátory.",
+   "Kontrolovane sa vráť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Lakte drž vysoko v úrovni ramien.",
+   "Na konci každého opakovania stiahni lopatky.",
+   "Pracuj s ľahkou váhou, aby si nestratil(a) techniku."
+  ]
+ },
+ "front-squat": {
+  "name": "Predný drep",
+  "description": "Drep s činkou vpredu na deltoch, zdôrazňuje predné stehná a stred tela.",
+  "instructions": [
+   "Premiestni alebo polož činku na predné delty s lakťami vysoko.",
+   "Klesni do drepu so vzpriameným trupom, kým stehná nebudú rovnobežne so zemou.",
+   "Vstaň späť.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Lakte drž vysoko, aby bola činka stabilná.",
+   "Vzpriamenejší trup viac zapojí predné stehná."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Zadkový mostík",
+  "description": "Aktivačný cvik na zadok s vlastnou váhou v ľahu na zemi.",
+  "instructions": [
+   "Ľahni si na chrbát s pokrčenými kolenami a chodidlami na zemi.",
+   "Dvíhaj panvu stiahnutím zadku.",
+   "Hore krátko vydrž s úplne vystretými bokmi.",
+   "Kontrolovane spusti panvu.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Tlač pätami, zadok sa lepšie zapojí.",
+   "Pri vystretí bokov sa neprehýbaj v driekovej časti.",
+   "Kolená drž v línii chodidiel po celý čas."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet drep",
+  "description": "Drep vhodný pre začiatočníkov s kettlebellom pri hrudníku, zlepšuje držanie tela aj hĺbku.",
+  "instructions": [
+   "Drž kettlebell pri hrudníku oboma rukami.",
+   "Klesni do drepu s váhou blízko hrudníka.",
+   "Vstaň späť.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Poloha goblet prirodzene podporuje vzpriamený trup.",
+   "Dole tlač kolená von."
+  ]
+ },
+ "good-morning": {
+  "name": "Dobré ráno",
+  "description": "Ohyb v bedrách s činkou na chrbte na posilnenie zadných stehien, zadku a drieku.",
+  "instructions": [
+   "Stoj s činkou na hornej časti chrbta, chodidlá na šírku ramien, kolená mierne pokrčené.",
+   "Vysúvaj boky dozadu a predkláňaj trup s neutrálnym chrbtom.",
+   "Klesaj, kým neucítiš ťah v zadných stehnách, trup takmer vodorovne.",
+   "Tlakom bokov dopredu sa vzpriam."
+  ],
+  "tips": [
+   "Začni s veľmi malou váhou: driek pracuje intenzívne.",
+   "Pozeraj sa dopredu a nehrb chrbát."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack drep",
+  "description": "Vedený cvik na hack drepe, ktorý riadeným pohybom na saniach zaťažuje hlavne predné stehná.",
+  "instructions": [
+   "Nalož stroj a opri chrbát aj ramená o polstre.",
+   "Chodidlá postav na plošinu na šírku ramien, špičky mierne von.",
+   "Uvoľni poistky a spúšťaj sane pokrčením kolien a bokov.",
+   "Klesaj, kým stehná nebudú aspoň rovnobežné s plošinou.",
+   "Zatlač pätami, vystri nohy a vráť sane hore.",
+   "Po sérii poistky znova zaisti."
+  ],
+  "tips": [
+   "Driek drž na polstri počas celého pohybu.",
+   "Chodidlá vyššie na plošine presunú dôraz na zadok a zadné stehná.",
+   "Klesanie ovládaj; neodrážaj sa zo spodnej polohy."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Kladivové zdvihy s jednoručkami",
+  "description": "Obmena bicepsového zdvihu neutrálnym úchopom na vretenný sval.",
+  "instructions": [
+   "Stoj s jednoručkami po stranách, dlane proti sebe.",
+   "Dvíhaj jednoručky s dlaňami stále dovnútra.",
+   "Hore stlač a kontrolovane spusti.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Lakte drž pri trupe v celom rozsahu.",
+   "Nehojdaj telom, aby si ich zdvihol(a).",
+   "Zápästia pevné a neutrálne počas celého zdvihu."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Kľuky v stojke",
+  "description": "Kľuk v stojke s nohami opretými o stenu, jeden z najnáročnejších tlakov s vlastnou váhou.",
+  "instructions": [
+   "Postav sa chrbtom k stene, polož ruky na zem a vyjdi nohami do stojky so spevneným bruchom.",
+   "Pokrč lakte a kontrolovane spúšťaj hlavu k zemi.",
+   "Zastav, keď sa hlava dotkne zeme alebo podložky.",
+   "Vytlač sa do úplného vystretia lakťov."
+  ],
+  "tips": [
+   "Najprv natrénuj stojku a kľuk v striežke.",
+   "Pre istotu si pod hlavu daj podložku."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Priťahovanie kolien vo vise",
+  "description": "Cvik vo vise na hrazde na spodné brucho a ohýbače bedier s pokrčenými kolenami.",
+  "instructions": [
+   "Zaves sa na hrazdu nadhmatom s úplne vystretými pažami.",
+   "Spevni stred tela a pritiahni kolená k hrudníku.",
+   "Hore krátko vydrž.",
+   "Pomaly spusti nohy do východiskovej polohy.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Nehojdaj sa — pohyb začína zo stredu tela.",
+   "Pri dvíhaní kolien vydychuj.",
+   "Keď to bude ľahké, prejdi na dvíhanie vystretých nôh."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Dvíhanie nôh vo vise",
+  "description": "Dvíhanie vystretých nôh do vodorovnej polohy vo vise, na brucho a ohýbače bedier.",
+  "instructions": [
+   "Zaves sa na hrazdu o niečo širšie než ramená, nohy pri sebe a vystreté.",
+   "Zdvihni vystreté nohy rovnobežne so zemou a mierne podsaď panvu.",
+   "Hore chvíľu vydrž bez hojdania.",
+   "Kontrolovane spusti do východiskovej polohy, telo sa nesmie rozkývať."
+  ],
+  "tips": [
+   "Ak to s vystretými nohami nejde, pokrč kolená.",
+   "Nehojdaj sa: pracuje brucho, nie švih."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Mŕtvy ťah so šesťhrannou osou",
+  "description": "Mŕtvy ťah v stoji vnútri šesťhrannej osi; záťaž v strede umožňuje vzpriamenejší a k chrbtu šetrnejší ťah.",
+  "instructions": [
+   "Vstúp do naloženej šesťhrannej osi s chodidlami na šírku ramien.",
+   "Pokrč boky aj kolená a uchop madlá.",
+   "Spevni stred tela a drž chrbát rovný.",
+   "Zatlač pätami a vystretím bokov aj kolien sa vzpriam.",
+   "Hore zamkni s ramenami vzadu.",
+   "Kontrolovane spusti os na zem."
+  ],
+  "tips": [
+   "Pri úprave úchopu drž hrudník hore a chrbát rovný.",
+   "Odtláčaj zem, neťahaj os chrbtom.",
+   "Hore sa úplne vzpriam bez záklonu."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Unožovanie na stroji",
+  "description": "Cvik na stroji na vonkajšie svaly bedra.",
+  "instructions": [
+   "Sadni si do stroja na unožovanie s polstrami na vonkajšej strane stehien.",
+   "Tlač nohy von proti odporu.",
+   "V najširšej polohe krátko vydrž.",
+   "Kontrolovane sa vráť.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Chrbát drž na operadle stroja.",
+   "Roznožuj bez švihu a v riadenom tempe.",
+   "Návratu do stredu odolávaj, závažie nepúšťaj."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Prinožovanie na stroji",
+  "description": "Cvik na stroji, pri ktorom tlačíš nohy k sebe proti odporu a izolovane posilňuješ priťahovače na vnútornej strane stehien.",
+  "instructions": [
+   "Sadni si do stroja na prinožovanie s chrbtom na operadle.",
+   "Opri nohy o polstre a nastav stroj na príjemné natiahnutie.",
+   "Tlač nohy k sebe, kým sa polstre v strede nestretnú.",
+   "V zatvorenej polohe stiahnutie krátko podrž.",
+   "Nechaj nohy kontrolovane sa roztvoriť späť na začiatok.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Zvoľ počiatočné roztvorenie, ktoré natiahne, ale nezaťaží slabiny.",
+   "Prejdi celý rozsah rovnomernou kontrolovanou rýchlosťou.",
+   "Pri roztváraní nesmie závažie buchnúť."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust s veľkou činkou",
+  "description": "Komplexný cvik na zadok s veľkou činkou opretou cez boky.",
+  "instructions": [
+   "Sadni si na zem s hornou časťou chrbta o lavičku a činkou cez boky.",
+   "Tlač boky nahor, kým nebudú trup a stehná v jednej rovine.",
+   "Hore stlač zadok.",
+   "Kontrolovane znova spusti boky.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Bradu pritiahnutú, rebrá dole.",
+   "Tlač pätami, nie špičkami.",
+   "Hore sa neprehýbaj v driekovej časti."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Horizontálny leg press",
+  "description": "Vodorovný leg press na stroji na predné stehná, zadok a zadné stehná.",
+  "instructions": [
+   "Sadni si do vodorovného leg pressu s chrbtom na operadle a chodidlami na plošine na šírku ramien.",
+   "Tlač chodidlami a vystieraj nohy bez zamykania kolien.",
+   "Kontrolovane krč kolená, kým sa nepriblížia k hrudníku.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Driek sa nesmie odlepiť od sedadla.",
+   "Kolená úplne nezamykaj."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Tlaky veľkej činky na šikmej lavičke",
+  "description": "Tlak s veľkou činkou na šikmej lavičke na hornú časť hrudníka.",
+  "instructions": [
+   "Ľahni si na lavičku so sklonom 30 až 45 stupňov.",
+   "Uchop činku o niečo širšie než ramená a zlož ju.",
+   "Spusti činku k hornej časti hrudníka.",
+   "Vytlač činku späť do úplného vystretia.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Lopatky stiahni a nechaj ich na lavičke.",
+   "Neodrážaj činku od hrudníka.",
+   "Pri ťažkých váhach požiadaj o dopomoc."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Zdvihy do Y na šikmej lavičke",
+  "description": "Zdvihy jednoručiek do tvaru Y v ľahu na bruchu na šikmej lavičke na spodný a stredný trapéz.",
+  "instructions": [
+   "Ľahni si bruchom na šikmú lavičku s opretým hrudníkom a ľahkou jednoručkou v každej visiacej ruke.",
+   "Dvíhaj paže dopredu a nahor do tvaru Y, palce smerujú k stropu.",
+   "Zastav, keď budú paže v línii trupu, hrudník neodlepuj.",
+   "Kontrolovane spusti do východiskovej polohy."
+  ],
+  "tips": [
+   "Použi malú váhu: spodný trapéz je malý sval.",
+   "Krk v neutrálnej polohe, pohľad k zemi."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Bicepsový zdvih na šikmej lavičke",
+  "description": "Bicepsový zdvih na šikmej lavičke pre väčšie natiahnutie dlhej hlavy.",
+  "instructions": [
+   "Sadni si na lavičku so sklonom 45 stupňov s jednoručkami po stranách.",
+   "Nechaj paže voľne visieť dlaňami dopredu.",
+   "Dvíhaj jednoručky k ramenám.",
+   "Kontrolovane spúšťaj do úplného vystretia.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Ramená a chrbát nechaj na lavičke.",
+   "Pri zdvihu netlač ramená dopredu.",
+   "Využi natiahnutie dole pomalým spúšťaním."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Tlaky jednoručiek na šikmej lavičke",
+  "description": "Tlak na šikmej lavičke zdôrazňujúci hornú časť hrudníka.",
+  "instructions": [
+   "Nastav lavičku na sklon 30 stupňov a sadni si s jednoručkami vo výške ramien.",
+   "Vytlač jednoručky nahor a k sebe do úplného vystretia paží.",
+   "Kontrolovane spusti jednoručky späť do výšky ramien.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Chodidlá pevne na zemi a lopatky stiahnuté.",
+   "Hore jednoručkami neťukaj o seba.",
+   "Spúšťaj, kým neucítiš jemné natiahnutie hrudníka."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Kľuky s oporou na vyvýšení",
+  "description": "Obmena kľuku vhodná pre začiatočníkov s rukami na lavičke alebo schode.",
+  "instructions": [
+   "Opri ruky o lavičku alebo vyvýšený povrch na šírku ramien.",
+   "Vystri nohy dozadu do polohy dosky.",
+   "Spúšťaj hrudník k lavičke pokrčením lakťov.",
+   "Vytlač sa späť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Spevni brucho, aby boky neklesli.",
+   "Čím vyššia opora, tým ľahší cvik.",
+   "Pred začiatkom over, že sa lavička nehýbe."
+  ]
+ },
+ "inverted-row": {
+  "name": "Obrátené príťahy",
+  "description": "Vodorovný ťah s vlastnou váhou pod pevnou tyčou, pri ktorom priťahuješ hrudník k tyči a telo držíš spevnené.",
+  "instructions": [
+   "Umiestni tyč do stojana približne do výšky pása.",
+   "Ľahni si pod ňu a uchop ju nadhmatom o niečo širšie než ramená.",
+   "Vis s vystretými pažami, päty na zemi a telo rovné od hlavy po členky.",
+   "Priťahuj hrudník k tyči a sťahuj lopatky.",
+   "Kontrolovane sa spusti do úplného vystretia paží.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Stred tela spevnený — boky nesmú klesať.",
+   "Zdvihnutím chodidiel cvik sťažíš; uľahčíš ho, ak prejdeš chodidlami k tyči.",
+   "Hore krátko zastav s hrudníkom pri tyči."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Zdvihy na píšťalu s kettlebellom",
+  "description": "Cvik na píšťaly v sede na lavičke s kettlebellom zaveseným cez prednú časť chodidla. Priťahovanie prstov k píšťale proti záťaži posilňuje svaly na prednej strane predkolenia.",
+  "instructions": [
+   "Sadni si na koniec rovnej lavičky s jednou nohou vystretou a pätou na zemi.",
+   "Zaves kettlebell za madlo cez prednú časť chodidla nad prsty.",
+   "Priťahuj prsty k píšťale, ako ďaleko je to príjemné, päta zostáva na zemi.",
+   "Hornú polohu krátko podrž.",
+   "Pomaly spúšťaj chodidlo, kým prsty nesmerujú k zemi.",
+   "Odcvič opakovania a potom vymeň nohu."
+  ],
+  "tips": [
+   "Pohyb ide len z členka; koleno a stehno sú v pokoji.",
+   "Začni s ľahkým kettlebellom a pridávaj postupne; svaly píšťaly sa rýchlo unavia.",
+   "Spúšťaj pomaly, váhu nepúšťaj."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Príťahy kladky v kľaku",
+  "description": "Príťahy kladky zo vzpriameného kľaku bez švihu v bedrách, s napätím v hornej časti chrbta po celý čas.",
+  "instructions": [
+   "Nastav kladku do výšky hrudníka a pripni lano alebo dvojité D madlo.",
+   "Kľakni si vzpriamene pred stroj dosť ďaleko, aby závažie nedosadalo.",
+   "Uchop madlo oboma rukami a drž ho vystretými pažami pred sebou vo výške hrudníka.",
+   "Priťahuj madlo k hrudnej kosti, lakte dozadu a lopatky k sebe.",
+   "Kontrolovane sa vráť do natiahnutej východiskovej polohy.",
+   "Zopakuj odporúčaný počet opakovaní."
+  ],
+  "tips": [
+   "Zostaň vo vzpriamenej polohe: nezakláňaj sa, aby si opakovanie dokončil(a).",
+   "Vzpriamený kľak núti stred tela pri každom ťahu odolávať rotácii."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Kľuky na kolenách",
+  "description": "Kľuk pre začiatočníkov s kolenami na zemi, ktorý znižuje záťaž hornej polovice tela.",
+  "instructions": [
+   "Začni v polohe kľuku s kolenami na zemi.",
+   "Ruky polož na zem na šírku ramien.",
+   "Telo drž v priamke od kolien po ramená.",
+   "Spúšťaj hrudník k zemi pokrčením lakťov.",
+   "Zatlač rukami späť do východiskovej polohy.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Lakte príliš neroztváraj do strán.",
+   "Zadok a brucho drž spevnené počas celého pohybu.",
+   "Pozeraj sa do zeme, aby bol krk v neutrálnej polohe."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Upažovanie s jednoručkami",
+  "description": "Izolovaný pohyb na bočný delt pre širšie ramená.",
+  "instructions": [
+   "Stoj s jednoručkami po stranách.",
+   "Dvíhaj jednoručky do strán, kým nebudú paže rovnobežné so zemou.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Lakte mierne pokrčené.",
+   "Veď lakťami, nie rukami."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Sťahovanie kladky k hrudníku",
+  "description": "Cvik na kladkovom stroji na najširší sval chrbta.",
+  "instructions": [
+   "Sadni si k stroju so stehnami zaistenými pod valcami.",
+   "Uchop širokú tyč nadhmatom.",
+   "Sťahuj tyč k hornej časti hrudníka a stláčaj najširšie svaly.",
+   "Tyč pomaly vráť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Ťah začni stiahnutím lopatiek, nie ohybom lakťov.",
+   "Nepomáhaj si kývaním trupu.",
+   "Lakte veď nadol a dozadu, nie do strán."
+  ]
+ },
+ "leg-curl": {
+  "name": "Zakopávanie v ľahu",
+  "description": "Izolovaný cvik na zadné stehná na stroji na zakopávanie.",
+  "instructions": [
+   "Ľahni si na stroj bruchom nadol s členkami pod valcom.",
+   "Priťahuj päty k zadku.",
+   "Hore stlač zadné stehná.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Boky drž na lavičke v celom rozsahu.",
+   "Pri priťahovaní piat sa neprehýbaj v driekovej časti.",
+   "Zvoľ váhu, s ktorou zvládneš plný a riadený rozsah."
+  ]
+ },
+ "leg-extension": {
+  "name": "Predkopávanie",
+  "description": "Izolovaný cvik na predné stehná na stroji.",
+  "instructions": [
+   "Sadni si na predkopávací stroj s členkami za valcom.",
+   "Vystieraj nohy, kým nebudú rovné.",
+   "Hore stlač predné stehná.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Kolená zrovnaj s osou otáčania stroja.",
+   "Váhu dvíhaj bez vyhadzovania švihom.",
+   "Drž sa madiel, aby boky zostali na sedadle."
+  ]
+ },
+ "leg-press": {
+  "name": "Leg press",
+  "description": "Komplexný pohyb na stroji na predné stehná a zadok.",
+  "instructions": [
+   "Sadni si do leg pressu s chodidlami na plošine na šírku ramien.",
+   "Uvoľni poistky a spúšťaj plošinu pokrčením kolien.",
+   "Vytlač plošinu, kým nohy nebudú takmer vystreté.",
+   "Hore kolená nezamykaj.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Driek drž stále na operadle.",
+   "Klesaj len tak nízko, aby sa boky neodlepili.",
+   "Kolená zrovnaj so špičkami."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Výpony na leg presse",
+  "description": "Výpony tlakom špičiek do plošiny leg pressu.",
+  "instructions": [
+   "Sadni si do stroja s takmer vystretými nohami, len predná časť chodidiel na spodnom okraji plošiny.",
+   "Uvoľni poistku a nechaj päty klesnúť do natiahnutia lýtok.",
+   "Tlač plošinu špičkami, kým nebudeš na špičkách.",
+   "Hore chvíľu vydrž a kontrolovane spusti."
+  ],
+  "tips": [
+   "Kolená úplne nezamykaj.",
+   "Cvič v plnom rozsahu a dole sa zastav: tam vzniká stimul."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Dvíhanie nôh v ľahu",
+  "description": "Dvíhanie oboch nôh v ľahu na chrbte na spodné brucho a ohýbače bedier.",
+  "instructions": [
+   "Ľahni si na chrbát s vystretými nohami pri sebe, ruky pod zadkom alebo popri tele.",
+   "Pritlač driek k zemi stiahnutím brucha.",
+   "Dvíhaj nohy do zvislej polohy bez švihu.",
+   "Spúšťaj pomaly, chodidlá sa nesmú dotknúť zeme ani sa chrbát prehnúť."
+  ],
+  "tips": [
+   "Ak sa driek odlepuje od zeme, pokrč kolená.",
+   "Ovládaj spúšťanie: tam brucho pracuje najviac."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Záklony na stroji",
+  "description": "Izolovaný cvik na driek v sede: s pevnými bokmi a nohami tlačí trup dozadu do polstrovaného valca a vystiera chrbticu proti závažiu.",
+  "instructions": [
+   "Sadni si do stroja na záklony s chodidlami na plošine a nastav valec na hornú časť chrbta tesne pod lopatky.",
+   "Uchop bočné madlá a nechaj trup mierne dopredu: to je východisková poloha.",
+   "Tlač dozadu do valca vystieraním chrbtice, kým sa trup nezakloní a driek nebude úplne stiahnutý.",
+   "V plnom vystretí krátko zastav a kontrolovane sa vráť, závažie brzdi.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Valec umiestni tesne pod lopatky: vyššie tlačí na krk a nižšie skracuje rozsah.",
+   "Vystieraj z drieku, nehádž hlavu a ramená dozadu, a pohyb drž pomalý v oboch smeroch.",
+   "Zastav s trupom v neutrálnom vystretí, chrbticu ďalej netlač, a začni zľahka: drieku viac prospejú riadené opakovania než veľké váhy."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Bicepsový zdvih na stroji",
+  "description": "Bicepsový zdvih na stroji na izolovaný tréning paží.",
+  "instructions": [
+   "Sadni si do stroja a nastav vankúš podľa dĺžky paží.",
+   "Uchop madlá podhmatom.",
+   "Priťahuj madlá k ramenám.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Lakte drž stále na vankúši.",
+   "Pri zdvihu nedvíhaj ramená.",
+   "Spúšťaj takmer do vystretia bez straty napätia."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Výpony na stroji",
+  "description": "Izolovaný cvik v stoji na stroji na dvojhlavý a šikmý lýtkový sval v plnom rozsahu členka.",
+  "instructions": [
+   "Postav sa do stroja s bruškami chodidiel na plošine.",
+   "Pevne usaď ramenné polstre.",
+   "Spusti päty pod plošinu do plného natiahnutia.",
+   "Zatlač bruškami chodidiel a vystúp na špičky.",
+   "Hore stlač lýtka.",
+   "Kontrolovane spusti a opakuj."
+  ],
+  "tips": [
+   "Dole neodrážaj, aby si nestratil(a) napätie.",
+   "Kolená nechaj vystreté, ale nezamykaj ich.",
+   "Stúpaj zvisle, členky nevytáčaj von."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Rozpažky na stroji",
+  "description": "Izolovaný cvik na hrudník na stroji, ktorý zvádza ramená oblúkom pred telo.",
+  "instructions": [
+   "Sadni si do stroja a nastav sedadlo tak, aby ramená stroja boli vo výške hrudníka.",
+   "Drž ich s mierne pokrčenými lakťami.",
+   "Zvádzaj ich pred hrudník plynulým oblúkom.",
+   "V bode najväčšieho stiahnutia stlač prsné svaly.",
+   "Kontrolovane sa vráť, závažie nepúšťaj.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Mierne pokrčenie lakťov nemeň počas celého pohybu.",
+   "Sústreď sa na stiahnutie hrudníka, nie na tlak pažami.",
+   "Návrat ovládaj, závažie nenechaj padať."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Obrátené rozpažky na stroji",
+  "description": "Cvik v sede na stroji na zadné delty, nazývaný aj obrátený pec deck: čelom k vankúšu vedieš obe madlá širokým oblúkom von a dozadu proti závažiu. Vankúš drží trup v pokoji, takže práca zostáva v zadných ramenách a svaloch medzi lopatkami.",
+  "instructions": [
+   "Nastav sedadlo tak, aby madlá boli vo výške ramien, a sadni si čelom k stroju s hrudníkom na vankúši.",
+   "Uchop madlá s pažami vystretými dopredu a mierne pokrčenými lakťami.",
+   "Ramená drž dole, ďalej od uší, a spevni trup.",
+   "Veď madlá širokým oblúkom von a dozadu, lakte vpredu, kým nebudú paže zhruba v línii s ramenami.",
+   "Krátko stiahni lopatky bez zakláňania od vankúša.",
+   "Pomaly vráť madlá dopredu a zopakuj stanovený počet."
+  ],
+  "tips": [
+   "Veď lakťami, neťahaj rukami, aby pracovali zadné delty, nie bicepsy.",
+   "Hrudník nechaj na vankúši a šiju uvoľnenú; ak sa zakloníš alebo zdvihneš ramená, záťaž prejde na horný trapéz.",
+   "Zvoľ váhu, ktorú dokážeš spúšťať kontrolovane; ľahšia váha s pomalým návratom precvičí zadné delty lepšie než švih s ťažkou."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Skracovačky v sede na stroji",
+  "description": "Izolovaný cvik na brucho na stroji v sede, pri ktorom ohýbaš chrbticu proti odporu.",
+  "instructions": [
+   "Sadni si do stroja na brucho a uchop madlá.",
+   "Prilož hrudný vankúš k trupu.",
+   "Stiahnutím brucha ohni trup dopredu a nadol.",
+   "Na konci rozsahu stiahni.",
+   "Kontrolovane sa vráť.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Pohyb začni bruchom, nie pažami.",
+   "Pri ohybe trupu vydychuj.",
+   "Nepomáhaj si hojdaním."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Tlaky na ramená na stroji",
+  "description": "Tlak nad hlavu na stroji na ramená.",
+  "instructions": [
+   "Sadni si do stroja s chrbtom na operadle.",
+   "Uchop madlá vo výške ramien.",
+   "Vytlač madlá nad hlavu do úplného vystretia paží.",
+   "Kontrolovane spusti do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Pri tlaku sa neprehýbaj v driekovej časti.",
+   "Hore prudko nezamykaj lakte.",
+   "Zápästia drž pevné v osi predlaktí."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negatívne zhyby",
+  "description": "Pomalá spúšťacia fáza zhybu, ktorá buduje silu na celé zhyby.",
+  "instructions": [
+   "Vystúp na lavičku alebo vyskoč, aby bola brada nad hrazdou, úchop o niečo širší než ramená.",
+   "Bez opory spúšťaj telo veľmi pomaly, asi tri až päť sekúnd.",
+   "Pohyb ovládaj až do úplného vystretia paží.",
+   "S pomocou lavičky alebo výskoku sa vráť hore a opakuj."
+  ],
+  "tips": [
+   "Pri spúšťaní drž ramená ďalej od uší.",
+   "Keď zvládneš päť pomalých opakovaní, skús sa vytiahnuť bez pomoci."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordické zakopávanie",
+  "description": "Cvik na ohyb kolena, pri ktorom z kľaku spúšťaš trup dopredu a excentricky trénuješ zadné stehná.",
+  "instructions": [
+   "Kľakni si na podložku s členkami ukotvenými pod pevnou oporou.",
+   "Trup drž vzpriamený a boky vystreté.",
+   "Pomaly spúšťaj telo dopredu a brzdi zadnými stehnami.",
+   "Tesne pred zemou pád stlm rukami.",
+   "Odrazom rúk sa pritiahni späť do východiskovej polohy.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Spúšťaj čo najpomalšie: cieľom je excentrická fáza.",
+   "Boky drž vystreté; neohýbaj sa v páse.",
+   "Brzdi sa rukami a zľahka sa odrážaj, kým nezosilnieš."
+  ]
+ },
+ "ohp": {
+  "name": "Tlaky veľkej činky nad hlavu",
+  "description": "Komplexný tlak nad hlavu na ramená a triceps.",
+  "instructions": [
+   "Stoj s chodidlami na šírku ramien a činkou vo výške kľúčnych kostí.",
+   "Spevni stred tela a vytlač činku nad hlavu.",
+   "Hore zamkni lakte s činkou nad stredom chodidiel.",
+   "Spusti činku do výšky kľúčnych kostí.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Príliš sa nezakláňaj.",
+   "Pre väčšiu stabilitu stlač zadok."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Jednoručné príťahy kladky v sede",
+  "description": "Jednoručné príťahy kladky v sede na najširšie svaly a horný chrbát: trup čelom dopredu, lopatka pracujúcej strany sa riadene posúva dopredu a dozadu.",
+  "instructions": [
+   "Sadni si ku kladke a drž madlo vystretou pracujúcou pažou.",
+   "Pevne opri chodidlá, seď rovno a spevni trup bez záklonu.",
+   "Priťahuj madlo k spodným rebrám a sťahuj lopatku.",
+   "Krátko zastav bez otáčania trupu a dvíhania ramena.",
+   "Kontrolovane vystri pažu, dokonči sériu a vymeň stranu."
+  ],
+  "tips": [
+   "Obe ramená smerujú dopredu počas celého opakovania.",
+   "Lakeť veď dozadu blízko tela, neohýbaj len pažu.",
+   "Na začiatku nechaj lopatku ujsť dopredu, driek nehrb."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Tricepsové extenzie nad hlavou s jednoručkou",
+  "description": "Izolovaný cvik na triceps zdôrazňujúci dlhú hlavu.",
+  "instructions": [
+   "V stoji alebo v sede drž jednoručku oboma rukami nad hlavou.",
+   "Spúšťaj jednoručku za hlavu pokrčením lakťov.",
+   "Vystri paže späť do východiskovej polohy.",
+   "Lakte drž počas celého cviku blízko hlavy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Hýb len predlaktiami, všetko ostatné nechaj v pokoji.",
+   "Pri spúšťaní jednoručky sa neprehýbaj v driekovej časti.",
+   "Uchop jednoručku pod horným kotúčom oboma dlaňami."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Kľuky na bradlách",
+  "description": "Cvik s vlastnou váhou na bradlách na hrudník, tricepsy a ramená.",
+  "instructions": [
+   "Opri sa na bradlách o vystreté paže, telo voľne, bez dotyku zeme.",
+   "Trup mierne nakloň dopredu a pokrčením lakťov sa kontrolovane spúšťaj.",
+   "Zastav, keď budú ramená vo výške lakťov, neprepadaj sa v kĺbe.",
+   "Vytlač sa hrudníkom a tricepsami do vystretých paží."
+  ],
+  "tips": [
+   "Ak nezvládaš čisté série, použi stroj s dopomocou alebo gumy.",
+   "Neklesaj nižšie, než tvoje rameno znesie bez ťažkostí."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Bench press s pauzou",
+  "description": "Bench press s jedno- až dvojsekundovou pauzou na hrudníku, ktorá odstráni odraz a zlepší silu z rozbehu.",
+  "instructions": [
+   "Ľahni si na lavičku s chodidlami pevne na zemi, lopatkami pri sebe a činkou nad hrudníkom v úchope o niečo širšom než ramená.",
+   "Kontrolovane spúšťaj činku, kým sa nedotkne hrudníka.",
+   "Drž činku na hrudníku jednu až dve sekundy bez povolenia napätia.",
+   "Tlač činku nahor do vystretia lakťov."
+  ],
+  "tips": [
+   "Použi o 10 až 15 % menšiu váhu než pri bežnom bench presse.",
+   "Požiadaj o istenie alebo použi zarážky stojana."
+  ]
+ },
+ "pause-squat": {
+  "name": "Drep s pauzou",
+  "description": "Drep s veľkou činkou s pauzou v najnižšej polohe pre kontrolu a silu bez odrazu.",
+  "instructions": [
+   "Polož činku na hornú časť chrbta, chodidlá na šírku ramien, špičky mierne von.",
+   "Klesaj s kontrolovanou hĺbkou, neutrálnym chrbtom a kolenami v smere chodidiel.",
+   "Najnižšiu polohu drž jednu až tri sekundy bez povolenia trupu.",
+   "Odtlač zem chodidlami späť do vzpriamenia."
+  ],
+  "tips": [
+   "Zníž váhu oproti bežnému drepu.",
+   "Z pauzy sa neodrážaj: tlač plynulo."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Izolačný stroj na hrudník s pohyblivými ramenami, precvičujúci prsné svaly horizontálnym priťahovaním.",
+  "instructions": [
+   "Sadni si do stroja pec deck a uchop madlá s pažami roztvorenými do strán a mierne pokrčenými lakťami.",
+   "Nastav sedadlo tak, aby madlá boli vo výške stredu hrudníka.",
+   "Zvádzaj madlá pred hrudník so stlačením.",
+   "V strede stiahnutie krátko podrž.",
+   "Kontrolovane sa vráť do východiskovej polohy.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Pri roztváraní nepúšťaj paže príliš dozadu.",
+   "Chrbát a ramená drž na operadle.",
+   "Vydychuj, keď sa madlá stretnú, a nadychuj sa pri roztváraní."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlayove príťahy",
+  "description": "Výbušné príťahy veľkej činky zo zeme pri každom opakovaní s trupom rovnobežne so zemou.",
+  "instructions": [
+   "S chodidlami pod činkou a takmer vodorovným trupom ju uchop o niečo širšie než ramená s neutrálnym chrbtom.",
+   "Prudko pritiahni činku, kým sa nedotkne spodného hrudníka, trupom nehýb.",
+   "Kontrolovane spusti činku na zem a na okamih zastav.",
+   "Znova spevni chrbát a opakuj zo zeme."
+  ],
+  "tips": [
+   "Trup sa nedvíha ani neklesá: ak sa hýbe, váha je príliš veľká.",
+   "Každé opakovanie sa začína s činkou v pokoji na zemi."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Kľuky v striežke",
+  "description": "Kľuk s telom v tvare obráteného V, ktorý bez vybavenia prenáša záťaž z hrudníka na ramená.",
+  "instructions": [
+   "Ruky polož na zem na šírku ramien a zdvihni boky do obráteného V s takmer vystretými nohami.",
+   "Pokrč lakte a spúšťaj hlavu k zemi medzi ruky.",
+   "Zastav, keď bude hlava pri zemi, neopieraj sa o ňu.",
+   "Vytlač sa pažami do vystretých lakťov späť na začiatok."
+  ],
+  "tips": [
+   "Čím bližšie sú chodidlá k rukám, tým je cvik ťažší.",
+   "Boky drž vysoko po celý čas."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Drep na jednej nohe (pištoľ)",
+  "description": "Hlboký drep na jednej nohe s druhou vystretou dopredu, len s vlastnou váhou.",
+  "instructions": [
+   "Stoj na jednej nohe, druhú zdvihni dopredu a paže daj pred seba pre rovnováhu.",
+   "Pokrč koleno stojnej nohy a kontrolovane klesaj s pätou na zemi.",
+   "Klesni tak nízko, ako zvládneš bez straty techniky, voľnú nohu drž vpredu.",
+   "Odtlač zem až do vzpriamenia; opakuj a nohy vymeň."
+  ],
+  "tips": [
+   "Spočiatku sa pridržiavaj opory alebo si sadaj na debnu.",
+   "Koleno drž v línii chodidla."
+  ]
+ },
+ "plank": {
+  "name": "Doska",
+  "description": "Statický cvik na stred tela: stabilitu trénuješ držaním rovného tela na predlaktiach a špičkách.",
+  "instructions": [
+   "Opri predlaktia o zem, lakte pod ramenami a nohy vystreté.",
+   "Zdvihni telo do priamky od hlavy po päty.",
+   "Spevni brucho a zadok s driekom v neutrálnej polohe, boky nesmú klesať.",
+   "Dýchaj normálne a vydrž stanovený čas."
+  ],
+  "tips": [
+   "Začni krátkymi kvalitnými sériami, až potom predlžuj čas.",
+   "Ak sa driek prepadáva, polož kolená alebo čas skráť."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Dvíhanie panvy na kotúčovom stroji",
+  "description": "Dvíhanie panvy na kotúčovom stroji, ktorého operadlo a plošina držia polohu, takže sa boky vystierajú proti váhe bez prípravy lavičky.",
+  "instructions": [
+   "Nalož tŕne rovnomerne a sadni si s hornou časťou chrbta o operadlo a chodidlami celou plochou na plošine.",
+   "Spusti polster alebo tyč na boky tak, aby ležala v ohybe bedier, nie na bruchu.",
+   "Chodidlá postav tak, aby píšťaly boli v hornej polohe zvislé, a drž sa madiel.",
+   "Vytlač boky a stlač zadok, kým stehná nebudú v línii trupu, a chvíľu vydrž.",
+   "Kontrolovane spúšťaj tesne pred dolný doraz a zopakuj požadovaný počet."
+  ],
+  "tips": [
+   "Polster daj do ohybu bedier. Opretie o brucho je jediná naozaj nepríjemná vec na tomto stroji a rieši sa posunutím polstra, nie ďalším vypchávaním.",
+   "Pohyb dokonči bokmi, nie driekom. Ak sa hore otvárajú rebrá, vystretie bedier sa už skončilo a začal(a) si sa prehýbať — tam stroj prestáva trénovať zadok.",
+   "Je to dvíhanie panvy, ktoré zvoliť, keď sú lavička a činka obsadené: operadlo aj plošina sú súčasťou rámu, takže nie je čo nastaviť zle."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Zdvihy na Scottovej lavičke",
+  "description": "Obmena zdvihu na Scottovej lavičke, ktorá izoluje bicepsy.",
+  "instructions": [
+   "Sadni si k lavičke s pažami na polstri.",
+   "Drž EZ os podhmatom.",
+   "Dvíhaj činku k ramenám.",
+   "Kontrolovane spúšťaj, kým nebudú paže takmer vystreté.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Dole v najnižšom bode neodrážaj.",
+   "Zápästia na EZ osi drž v neutrálnej polohe.",
+   "Dvíhaj os bez švihu ramenami alebo chrbtom."
+  ]
+ },
+ "pull-up": {
+  "name": "Zhyby nadhmatom",
+  "description": "Komplexný cvik s vlastnou váhou na najširší sval chrbta a bicepsy.",
+  "instructions": [
+   "Zaves sa na hrazdu nadhmatom, o niečo širšie než ramená.",
+   "Pritiahni sa, kým nebude brada nad hrazdou.",
+   "Kontrolovane sa spusti do úplného visu.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Nehojdaj sa a nepomáhaj si švihom.",
+   "Najširšie svaly zapoj vedením lakťov nadol."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Tlak nad hlavu s odrazom nôh, ktorý umožňuje väčšiu váhu než striktný tlak.",
+  "instructions": [
+   "Stoj s činkou na hornej časti hrudníka a ramenách, lakte mierne vpredu a chodidlá na šírku bokov.",
+   "Mierne pokrč kolená so zvislým trupom a výbušne vystri boky aj kolená.",
+   "Využi zotrvačnosť a vytlač činku do vystretých paží nad hlavu.",
+   "Kontrolovane spusti činku na hrudník a stlm nohami."
+  ],
+  "tips": [
+   "Sila vychádza z nôh, nie zo záklonu chrbta.",
+   "Skonči s činkou nad temenom a stabilným telom."
+  ]
+ },
+ "push-up": {
+  "name": "Kľuky",
+  "description": "Základný cvik s vlastnou váhou na hrudník, ramená a triceps.",
+  "instructions": [
+   "Začni vo vysokej doske s rukami na šírku ramien.",
+   "Spúšťaj telo, kým sa hrudník takmer nedotkne zeme.",
+   "Vytlač sa späť do východiskovej polohy.",
+   "Telo drž stále rovné.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Spevni brucho a zadok, aby boky neklesli.",
+   "Lakte príliš neroztváraj; drž ich pri tele.",
+   "Krk v neutrálnej polohe, pohľad dole."
+  ]
+ },
+ "rack-pull": {
+  "name": "Mŕtvy ťah z podpier",
+  "description": "Čiastočný mŕtvy ťah z výšky kolien, ktorý silno zaťažuje horný chrbát a vystretie bedier.",
+  "instructions": [
+   "Polož činku na zarážky vo výške kolien alebo tesne pod ne, chodidlá na šírku bokov pod ňou.",
+   "Uchop činku, spevni chrbát aj brucho a odtlač zem chodidlami.",
+   "Vystieraj boky aj kolená súčasne, kým nebudeš stáť rovno s ramenami vzadu.",
+   "Kontrolovane spusti činku na zarážky."
+  ],
+  "tips": [
+   "Zarážky nastav do výšky, v ktorej udržíš neutrálny chrbát.",
+   "Na konci sa v driekovej časti nepreklápaj."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Výpady vzad s jednoručkami",
+  "description": "Obmena výpadu s krokom vzad pre lepšiu stabilitu kolena.",
+  "instructions": [
+   "Stoj s jednoručkami po stranách.",
+   "Jednou nohou urob krok dozadu a spúšťaj koleno k zemi.",
+   "Klesaj, kým predné stehno nebude rovnobežne so zemou.",
+   "Zatlač prednou pätou a vráť sa do stoja.",
+   "Opakuj na obe strany."
+  ],
+  "tips": [
+   "Krok dozadu urob taký dlhý, aby predné koleno nepresahovalo chodidlo.",
+   "Trup vzpriamený a jednoručky pri tele.",
+   "Na každej nohe rovnaký počet opakovaní."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Obrátený nordický zdvih",
+  "description": "Cvik na predné stehná s vlastnou váhou v kľaku: trup sa riadene zakláňa s vystretými bokmi.",
+  "instructions": [
+   "Kľakni si na podložku s kolenami na šírku bokov, predkolenia a priehlavky na zemi a trup vzpriamený.",
+   "Boky drž vystreté a stred tela spevnený.",
+   "Pomaly zakláňaj trup a telo drž v priamke.",
+   "Klesaj tak ďaleko, ako to predné stehná zvládnu riadiť.",
+   "Vráť sa do východiskovej polohy.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Boky drž po celý čas vystreté bez zalomenia.",
+   "Choď len tak nízko, ako pohyb ovládaš.",
+   "Pre pohodlie si pod kolená daj polster."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Rumunský mŕtvy ťah",
+  "description": "Ohyb v bedrách zdôrazňujúci zadné stehná a zadok.",
+  "instructions": [
+   "Stoj s činkou vo výške bokov nadhmatom.",
+   "Vysúvaj boky dozadu a predkláňaj trup s mierne pokrčenými, takmer nemennými kolenami.",
+   "Spúšťaj činku popri nohách, kým neucítiš natiahnutie zadných stehien.",
+   "Tlakom bokov dopredu sa vráť do stoja.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Nehrb driek; chrbticu drž v neutrálnej polohe.",
+   "Klesaj len tak nízko, ako udržíš držanie tela.",
+   "Spevni najširšie svaly, aby činka zostala pri tele."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Veslársky trenažér",
+  "description": "Vytrvalostný cvik celého tela na veslárskom trenažéri: každý záber sa odráža nohami, zakláňa trup a priťahuje madlo k rebrám, takže nohy, chrbát a paže pracujú v plynulom cykle.",
+  "instructions": [
+   "Sadni si na trenažér, chodidlá upevni remienkami na opierkach a uchop madlo nadhmatom.",
+   "Zíď dopredu do východiskovej polohy: predkolenia zvisle, trup mierne pred bokmi a paže vystreté k zotrvačníku.",
+   "Najprv sa odtlač nohami a posúvaj sedadlo dozadu, kým nebudú kolená takmer vystreté.",
+   "Zakloň trup za zvislicu a potom pritiahni madlo k spodným rebrám s lakťami za boky.",
+   "Pri návrate poradie obráť — najprv paže dopredu, potom trup a nakoniec pokrčiť kolená — a zíď späť do východiskovej polohy.",
+   "Pokračuj požadovaný čas, vzdialenosť alebo počet záberov."
+  ],
+  "tips": [
+   "Dodržiavaj poradie: nohy, trup, paže v zábere a paže, trup, nohy pri návrate. Predčasné krčenie paží plytvá najsilnejšou časťou záberu.",
+   "Vesluj s rovným chrbtom a spevneným stredom tela: ohnutý driek vo východiskovej polohe mení veslovanie na bolesť chrbta namiesto kondície.",
+   "Madlo veď priamo a vodorovne k spodným rebrám a návrat nechaj trvať zhruba dvakrát dlhšie než záber, nevrhaj sa späť."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Tlaky veľkej činky v sede",
+  "description": "Tlak nad hlavu s veľkou činkou v sede s operadlom, ktorý sústreďuje prácu na deltový sval.",
+  "instructions": [
+   "Sadni si na lavičku so zvislým operadlom, uchop o niečo širšie než ramená a opri činku o horný hrudník.",
+   "Vytlač činku priamo nahor do vystretých lakťov.",
+   "Činku drž nad temenom a rebrá pri sebe.",
+   "Kontrolovane spusti ku kľúčnym kostiam."
+  ],
+  "tips": [
+   "Spevni zadok a brucho, aby sa chrbát neprehol.",
+   "Zasuň hlavu dozadu, aby si činku pustil(a) bez namáhania krku."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Príťahy spodnej kladky v sede",
+  "description": "Cvik na chrbát na spodnej kladke, pri ktorom v sede priťahuješ madlo k trupu.",
+  "instructions": [
+   "Sadni si k veslovacej kladke s chodidlami na opierkach.",
+   "Drž madlo a seď rovno s ľahkým predklonom.",
+   "Veď lakte dozadu a priťahuj madlo k podbrušku.",
+   "Na konci ťahu stiahni lopatky.",
+   "Kontrolovane vystri paže späť na začiatok.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Trup vzpriamený s minimálnym kývaním.",
+   "Lakte veď priamo dozadu, nie do strán.",
+   "Na konci ťahu stiahni lopatky."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Výpony v sede na stroji",
+  "description": "Výpony v sede na stroji zamerané na šikmý lýtkový sval.",
+  "instructions": [
+   "Sadni si do stroja s polstrami na stehnách.",
+   "Spusti päty čo najnižšie.",
+   "Zdvihni sa na brušká chodidiel.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Pokrčené koleno uvoľňuje dvojhlavý sval, takže viac práce preberá šikmý.",
+   "Využi celý rozsah pohybu."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Výpony v sede s jednoručkami",
+  "description": "Výpony v sede s jednoručkami na stehnách, tréning šikmého svalu s pokrčeným kolenom.",
+  "instructions": [
+   "Sadni si na lavičku s bruškami chodidiel na schode alebo kotúči a jednoručkou na každom stehne pri kolene.",
+   "Nechaj päty klesnúť čo najnižšie, aby sa lýtko natiahlo.",
+   "Zdvihni päty tlakom brušiek chodidiel až hore.",
+   "Hore chvíľu vydrž a kontrolovane spusti."
+  ],
+  "tips": [
+   "Jednoručky pridržiavaj, aby sa nešmýkali.",
+   "Pokrčené koleno presúva prácu na šikmý lýtkový sval."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Upažovanie v sede s jednoručkami",
+  "description": "Izolovaný cvik v sede: zdvih jednoručiek do strán na bočné delty bez pomoci nôh.",
+  "instructions": [
+   "Sadni si na lavičku s jednoručkami po stranách.",
+   "Chrbát rovný a stred tela spevnený.",
+   "Zdvihni obe jednoručky do strán do výšky ramien.",
+   "Lakte drž mierne pokrčené.",
+   "Jednoručky spúšťaj kontrolovane.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Použi ľahkú váhu, aby bol zdvih čistý.",
+   "Veď lakťami namiesto rukami.",
+   "Zdvihni do výšky ramien a kontrolovane spusti."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Zakopávanie v sede",
+  "description": "Izolovaný cvik v sede na zadné stehná na stroji, so stálym napätím a menším zapojením ohýbačov bedier než v ľahu.",
+  "instructions": [
+   "Nastav operadlo a členkový valec tak, aby kolená boli v osi stroja.",
+   "Seď rovno, zadnú stranu členkov opri o valec a drž sa madiel.",
+   "Krč nohy dole a dozadu pod sedadlo, ako ďaleko stroj dovolí.",
+   "V plnom stiahnutí zastav a pomaly sa vráť.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Chrbát drž pevne na operadle po celý čas.",
+   "V plnom stiahnutí zľahka pritiahni chodidlá k píšťale pre väčšie zapojenie zadných stehien.",
+   "Ovládaj excentrickú fázu — váha nesmie nohy strhnúť späť."
+  ]
+ },
+ "shrug": {
+  "name": "Krčenie ramien s veľkou činkou",
+  "description": "Izolovaný pohyb na horný trapéz.",
+  "instructions": [
+   "Stoj s veľkou činkou vo vystretých pažiach nadhmatom.",
+   "Dvíhaj ramená priamo k ušiam.",
+   "Hore krátko vydrž.",
+   "Ramená spúšťaj kontrolovane.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Dvíhaj ramená zvisle, bez krúženia.",
+   "Nepoužívaj paže; lakte zostávajú vystreté.",
+   "Nepomáhaj si nohami, aby si zdvihol(a) viac."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Unožovanie v ľahu na boku",
+  "description": "Izolovaný cvik s vlastnou váhou na stredný sedací sval a odťahovače bedra.",
+  "instructions": [
+   "Ľahni si na bok s nohami na sebe.",
+   "Spodnú nohu mierne pokrč.",
+   "Dvíhaj hornú nohu k stropu.",
+   "Spúšťaj kontrolovane.",
+   "Opakuj na oboch stranách."
+  ],
+  "tips": [
+   "Boky drž nad sebou počas celého cviku.",
+   "Nenakláňaj panvu."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Prinožovanie v ľahu na boku",
+  "description": "Prinožovanie v ľahu na boku: spodná noha sa dvíha proti gravitácii a trénuje bedro vlastnou váhou.",
+  "instructions": [
+   "Ľahni si na bok so spodnou nohou vystretou.",
+   "Hornú nohu pokrč a chodidlo polož pred spodné stehno.",
+   "Hlavu opri o spodnú pažu.",
+   "Dvíhaj spodnú nohu k stropu.",
+   "Nohu spúšťaj kontrolovane.",
+   "Dokonči jednu stranu a vymeň."
+  ],
+  "tips": [
+   "Hýbe sa len noha; boky a trup sú v pokoji.",
+   "Nohu dvíhaj bez švihu a spúšťaj pomaly.",
+   "Pred začiatkom zrovnaj ramená, boky a chodidlá."
+  ]
+ },
+ "side-plank": {
+  "name": "Bočná doska",
+  "description": "Obmena bočnej dosky na šikmé brušné svaly a boky stredu tela.",
+  "instructions": [
+   "Ľahni si na bok s predlaktím na zemi a lakťom pod ramenom.",
+   "Zdvihni boky do priamky od hlavy po chodidlá.",
+   "Drž polohu so spevneným stredom tela.",
+   "Dýchaj pravidelne.",
+   "Opakuj na oboch stranách."
+  ],
+  "tips": [
+   "Nenechaj boky klesať k zemi.",
+   "Ramená a boky drž v jednej rovine bez rotácie trupu.",
+   "Odtláčaj zem predlaktím, aby si nevisel(a) v ramene."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Jednoručné príťahy jednoručky",
+  "description": "Jednostranný cvik na chrbát s jednoručkou pre vyrovnaný rozvoj.",
+  "instructions": [
+   "Opri jedno koleno a ruku o lavičku.",
+   "V druhej ruke drž jednoručku s vystretou pažou.",
+   "Priťahuj jednoručku k boku a stláčaj lopatku.",
+   "Jednoručku spúšťaj kontrolovane.",
+   "Opakuj na oboch stranách."
+  ],
+  "tips": [
+   "Pri ťahu neotáčaj trup; boky drž stabilné.",
+   "Na začiatku ťahu neťahaj rameno k uchu.",
+   "Na každú pažu rovnaký počet opakovaní."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Jednoručné upažovanie na kotúčovom stroji",
+  "description": "Upažovanie na kotúčovom stroji jednou pažou: každá strana dvíha vlastnú váhu a obe sa dajú dotrénovať na rovnakú úroveň.",
+  "instructions": [
+   "Nastav výšku sedadla tak, aby os polstra bola v úrovni ramena, a nalož len trénovanú stranu.",
+   "Sadni si chrbtom k operadlu a vonkajšiu stranu pracujúcej paže opri o polster.",
+   "Drž madlo na voľnej strane alebo si ruku polož do lona, trup rovno k sedadlu.",
+   "Tlač pracujúcu pažu von a nahor do polstra až do výšky ramena a kontrolovane spusti.",
+   "Odcvič všetky opakovania na tej strane, potom nalož a trénuj druhú."
+  ],
+  "tips": [
+   "Strany zrovnávaj podľa slabšej paže, nie silnejšej. Tréning po jednej strane odhalí rozdiel len vtedy, keď počet určuje slabšia strana.",
+   "Nenakláňaj trup k pracujúcej strane. S váhou len na jednej paži sa stroj sám nevyváži a naklonenie mení zdvih na úklon.",
+   "Začni slabšou pažou, aby určila cieľ, a obom dopraj rovnakú pauzu."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Zadkový mostík na jednej nohe",
+  "description": "Zadkový mostík na jednej nohe, ktorý zvyšuje nároky bez ďalšieho vybavenia.",
+  "instructions": [
+   "Ľahni si na chrbát s jedným kolenom pokrčeným a chodidlom na zemi, druhú nohu vystri do vzduchu.",
+   "Zatlač pätou opornej nohy a zdvihni panvu, kým nebudú rameno, bok a koleno v línii.",
+   "Hore na okamih stlač zadok bez prehnutia v driekovej časti.",
+   "Kontrolovane spusti bez položenia panvy; odcvič opakovania a nohy vymeň."
+  ],
+  "tips": [
+   "Panvu drž vodorovne, jeden bok nesmie klesnúť.",
+   "Ak je to ťažké, začni mostíkom na oboch nohách."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Francúzsky tlak v ľahu",
+  "description": "Francúzsky tlak v ľahu s veľkou činkou, ktorý izoluje triceps v celom rozsahu.",
+  "instructions": [
+   "Ľahni si na rovnú lavičku s činkou nad hrudníkom v úzkom úchope.",
+   "Spúšťaj činku k čelu pokrčením lakťov.",
+   "Vystri paže späť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Hornú časť paží drž zvislo počas celého cviku.",
+   "Spúšťaj pomaly, šetríš lakte."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Bench press na Smithovom stroji",
+  "description": "Bench press na Smithovom stroji, ktorého vedená dráha umožňuje trénovať hrudník s menšími nárokmi na stabilizáciu.",
+  "instructions": [
+   "Ľahni si na rovnú lavičku vnútri Smithovho stroja.",
+   "Uchop tyč o niečo širšie než ramená a odisti ju.",
+   "Kontrolovane spusti tyč do stredu hrudníka.",
+   "Krátko zastav bez odrazu.",
+   "Vytlač tyč nahor do úplného vystretia paží.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Lavičku zrovnaj tak, aby tyč klesala do stredu hrudníka.",
+   "Chodidlá pevne na zemi počas celej série.",
+   "Skôr než naložíš, nauč sa otočenie zápästí, ktoré tyč zaistí."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Výpony na Smithovom stroji",
+  "description": "Výpony v stoji s vedenou tyčou Smithovho stroja na ramenách.",
+  "instructions": [
+   "Postav sa pod tyč s bruškami chodidiel na schode alebo kotúči a tyčou na hornej časti chrbta.",
+   "Odisti tyč a nechaj päty klesnúť do natiahnutia lýtok.",
+   "Vystúp na špičky s vystretými nohami bez zamykania kolien.",
+   "Hore chvíľu vydrž a kontrolovane spusti, potom tyč zaisti."
+  ],
+  "tips": [
+   "Vedenie ťa stabilizuje: využi to a nalož viac.",
+   "Trup vzpriamený a pohľad dopredu."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Tlaky na šikmej lavičke na Smithovom stroji",
+  "description": "Tlak na šikmej lavičke na Smithovom stroji, zdôrazňuje horný hrudník a predné delty vo vedenej dráhe.",
+  "instructions": [
+   "Postav do Smithovho stroja lavičku so sklonom 30 až 45 stupňov.",
+   "Ľahni si a uchop tyč o niečo širšie než ramená.",
+   "Odisti a spusti tyč k hornej časti hrudníka.",
+   "Dole krátko zastav.",
+   "Vytlač tyč do vystretých paží.",
+   "Zopakuj požadovaný počet opakovaní."
+  ],
+  "tips": [
+   "Lavičku nastav tak, aby tyč dopadala na horný hrudník.",
+   "Spúšťaj tyč bez toho, aby sa odrážala od hrudníka.",
+   "Zadok na lavičke a chodidlá pevne na zemi."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Drep na Smithovom stroji",
+  "description": "Drep na Smithovom stroji: pevná dráha znižuje nároky na rovnováhu a sústreďuje prácu do nôh a zadku, dobrá voľba, keď nie je voľný stojan.",
+  "instructions": [
+   "Nastav tyč do výšky ramien a postav sa pod ňu, tyč na hornej časti chrbta a chodidlá o niečo vpredu.",
+   "Pootočením zápästí uvoľni háky, trup vzpriamený a stred tela spevnený.",
+   "Krč kolená aj boky, kým stehná nebudú aspoň rovnobežné so zemou, kolená v smere chodidiel.",
+   "Tlač celým chodidlom do zeme až do vzpriamenia.",
+   "Po sérii pootoč zápästia a zaves tyč na zarážky."
+  ],
+  "tips": [
+   "Chodidlá o niečo vpredu umožnia ísť hlbšie bez dvíhania piat.",
+   "Bezpečnostné zarážky nastav tesne pod najnižší bod pohybu."
+  ]
+ },
+ "squat": {
+  "name": "Zadný drep s veľkou činkou",
+  "description": "Komplexný pohyb dolnej polovice tela na predné stehná, zadok a zadné stehná.",
+  "instructions": [
+   "Polož činku na horné trapézy.",
+   "Zlož činku zo stojana a ustúp dozadu, chodidlá na šírku ramien.",
+   "Spevni stred tela a krč kolená aj boky, kým stehná nebudú rovnobežne so zemou.",
+   "Zatlač pätami späť do stoja.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Hrudník drž hore po celý čas.",
+   "Kolená tlač von v smere špičiek."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Rolovanie s kolieskom v stoji",
+  "description": "Rolovanie s kolieskom v stoji s vystretými nohami a dlhým rozsahom.",
+  "instructions": [
+   "Stoj s vystretými nohami, predkloň sa a oboma rukami postav koliesko na zem.",
+   "Roluj dopredu s vystretými pažami a spevneným bruchom, kým nebudeš takmer rovnobežne so zemou.",
+   "Boky drž v línii, driek nesmie klesnúť.",
+   "Zatiahni bruchom a vráť sa na začiatok."
+  ],
+  "tips": [
+   "Začni obmenou v kľaku, kým rozsah neovládneš.",
+   "Zastav skôr, než klesne driek."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Dvíhanie piat v stoji",
+  "description": "Výpony v stoji rozvíjajúce lýtkový sval v plnom rozsahu.",
+  "instructions": [
+   "Postav sa na okraj plošiny alebo stroja na lýtka.",
+   "Spusti päty pod úroveň plošiny.",
+   "Vytlač sa na špičky.",
+   "Spúšťaj pomaly.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Hore zastav pre najväčšie stiahnutie.",
+   "Úplné spustenie päty zväčšuje rozsah pohybu."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Unožovanie v stoji",
+  "description": "Unožovanie s vlastnou váhou v stoji na druhej nohe. Precvičuje stredný sedací sval dvíhanej strany a na stojnej nohe svaly, ktoré držia panvu vodorovne.",
+  "instructions": [
+   "Stoj rovno, ruky v bok, chodidlá pri sebe.",
+   "Prenes váhu na jednu nohu a jej koleno mierne pokrč.",
+   "Druhú vystretú nohu dvíhaj do strany, špička dopredu a trup vzpriamený.",
+   "Dvíhaj len tak vysoko, ako zvládneš bez úklonu na opačnú stranu.",
+   "Pomaly spusti nohu vedľa stojnej.",
+   "Odcvič plánované opakovania a to isté druhou nohou."
+  ],
+  "tips": [
+   "Boky rovno a telo v pokoji; úklon od dvíhanej nohy berie bedru prácu.",
+   "Ovládaj aj spúšťanie; nenechaj nohu hojdať.",
+   "Ak nejde rovnováha, pridrž sa steny alebo stoličky; keď bude pohyb ľahký, daj okolo stehien gumu."
+  ]
+ },
+ "step-ups": {
+  "name": "Výstupy na debnu",
+  "description": "Výstup na debnu alebo lavičku jednou nohou, funkčný tréning predných stehien a zadku.",
+  "instructions": [
+   "Postav sa pred pevnú debnu alebo lavičku.",
+   "Polož na debnu celé chodidlo jednej nohy.",
+   "Zatlač tou pätou a vytiahni telo na debnu.",
+   "Prisuň zadnú nohu, kým nebudeš stáť celí na debne.",
+   "Kontrolovane spusti zadnú nohu na zem s váhou na pracujúcej nohe.",
+   "Nohy striedaj alebo odcvič všetko na jednej strane a potom vymeň."
+  ],
+  "tips": [
+   "Na debnu pokladaj celé chodidlo.",
+   "Odrážaj sa pätou hornej nohy, nie zadnej.",
+   "Zostup ovládaj, nezoskakuj."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Sťahovanie kladky vystretými rukami",
+  "description": "Izolovaný cvik na najširšie svaly na kladke s vystretými pažami.",
+  "instructions": [
+   "Stoj čelom ku kladke s rovnou tyčou na hornej kladke.",
+   "S takmer vystretými pažami stláčaj tyč oblúkom k stehnám.",
+   "Dole stlač najširšie svaly.",
+   "Tyč pomaly vráť do východiskovej polohy.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Paže drž takmer vystreté po celý čas.",
+   "Veď tyč k stehnám oblúkom.",
+   "V spodnej polohe stlač najširšie svaly."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo mŕtvy ťah",
+  "description": "Obmena mŕtveho ťahu s veľmi širokým postojom a úzkym úchopom, ktorá presúva prácu na zadok, vnútorné a predné stehná.",
+  "instructions": [
+   "Postav sa veľmi naširoko, špičky mierne von a činka nad stredom chodidiel.",
+   "Uchop činku rukami medzi nohami, chrbát neutrálny a hrudník vypnutý.",
+   "Odtláčaj zem nohami a tlač kolená von, kým nebudeš stáť s činkou tesne pri tele.",
+   "Hore zamkni boky aj kolená a kontrolovane spusti činku rovnakou dráhou."
+  ],
+  "tips": [
+   "Činku drž vždy tesne pri tele.",
+   "Kolená sledujú smer špičiek; nenechaj ich padať dovnútra."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-príťahy",
+  "description": "Komplexné T-príťahy v predklone rozvíjajúce najširšie a rombické svaly s veľkými váhami.",
+  "instructions": [
+   "Postav sa nad T-os s chodidlami na šírku ramien.",
+   "Predkloň sa v bedrách, kým trup nebude asi v 45 stupňoch.",
+   "Uchop madlá a drž chrbát rovný.",
+   "Priťahuj os k hrudníku s lakťami dozadu.",
+   "Hore stlač lopatky.",
+   "Kontrolovane spusti a opakuj."
+  ],
+  "tips": [
+   "Trup nakloň približne do 45 stupňov s rovným chrbtom.",
+   "Ťahaj vedením lakťov dozadu, nie len pažami.",
+   "V hornej polohe ťahu stiahni lopatky."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Sťahovanie kladky na triceps",
+  "description": "Izolovaný cvik na triceps na kladke.",
+  "instructions": [
+   "Stoj čelom ku kladke s rovnou tyčou.",
+   "Uchop tyč a lakte drž pri bokoch.",
+   "Stlač tyč dole do úplného vystretia paží.",
+   "Pomaly sa vráť.",
+   "Opakuj."
+  ],
+  "tips": [
+   "Trup vzpriamený.",
+   "Hýbať sa majú len predlaktia."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Zakopávanie na TRX",
+  "description": "Tento izolovaný cvik využíva závesný posilňovač na zadné stehná, zadok a lýtka priťahovaním piat k zadku.",
+  "instructions": [
+   "Ľahni si na chrbát s pätami v slučkách a kolenami pokrčenými do 90 stupňov.",
+   "Zdvihni panvu zo zeme do priamky od kolien po ramená.",
+   "Vystieraj nohy dopredu s panvou hore a spevneným stredom tela.",
+   "Priťahuj päty k zadku so silným stiahnutím zadných stehien.",
+   "Pohyb ovládaj a panvu počas série nespúšťaj."
+  ],
+  "tips": [
+   "Stred tela spevnený, aby boky neklesali.",
+   "Sústreď sa na silné stiahnutie zadných stehien v hornej polohe.",
+   "Excentrickú fázu ovládaj pomalým vystieraním nôh."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Sťahovanie kladky s V-adaptérom",
+  "description": "Sťahovanie kladky neutrálnym úchopom na úzkom V adaptéri pre maximálne natiahnutie najširších svalov a hlbšie stiahnutie.",
+  "instructions": [
+   "Pripni V adaptér (dvojité D) na hornú kladku.",
+   "Sadni si so stehnami pod polstrom a uchop madlo dlaňami proti sebe.",
+   "Začni s pažami úplne vystretými nad hlavou.",
+   "Priťahuj madlo k hrudnej kosti tlakom lakťov dole a mierne dozadu.",
+   "Dole stlač najširšie svaly a pomaly a kontrolovane sa vráť hore.",
+   "Zopakuj odporúčaný počet opakovaní."
+  ],
+  "tips": [
+   "Neutrálny úchop je k ramenám šetrnejší než nadhmat či podhmat.",
+   "Predstav si, že priťahuješ rebrá k bokom: mysli na chrbát, nie na paže."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Chôdza vo výpadoch s jednoručkami",
+  "description": "Striedavé výpady vpred s jednoručkou v každej ruke; jednostranný tréning predných stehien a zadku.",
+  "instructions": [
+   "Stoj s jednoručkami a uvoľnenými pažami popri tele.",
+   "Urob dlhý krok vpred a klesaj, kým nebudú obe kolená pokrčené zhruba do 90 stupňov.",
+   "Odrazom prednej nohy vstaň a zadnú nohu prenes dopredu do ďalšieho kroku.",
+   "Nohy striedaj s trupom vzpriameným po celú cestu."
+  ],
+  "tips": [
+   "Rob také dlhé kroky, aby predné koleno veľmi nepresahovalo špičku.",
+   "Potrebuješ voľný priestor; ak ho nemáš, rob výpady vzad."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Kľuky na bradlách so záťažou",
+  "description": "Kľuky na bradlách so záťažou, s jednoručkou medzi chodidlami alebo záťažovou vestou.",
+  "instructions": [
+   "Opri sa na bradlách o vystreté paže s jednoručkou držanou chodidlami alebo členkami.",
+   "Trup mierne nakloň a pokrčením lakťov sa kontrolovane spúšťaj.",
+   "Zastav, keď budú ramená vo výške lakťov.",
+   "Vytlač sa hrudníkom a tricepsami do vystretých paží."
+  ],
+  "tips": [
+   "Najprv zvládni kľuky na bradlách s vlastnou váhou.",
+   "Neklesaj nižšie, než rameno znesie."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Zhyby so záťažou",
+  "description": "Zhyb so záťažou, s jednoručkou medzi chodidlami alebo záťažovou vestou.",
+  "instructions": [
+   "Zaves sa o niečo širšie než ramená a drž jednoručku chodidlami alebo členkami.",
+   "Veď lakte dole a dozadu, kým nebude brada nad hrazdou.",
+   "Telo stabilné, bez hojdania.",
+   "Kontrolovane spusti do úplného vystretia paží."
+  ],
+  "tips": [
+   "Najprv zvládni zhyby s vlastnou váhou.",
+   "Ak používaš vestu, pridávaj váhu postupne."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Príťahy kladky v sede širokým úchopom",
+  "description": "Vodorovné príťahy kladky dlhou tyčou širokým úchopom na horný chrbát a zadné ramená.",
+  "instructions": [
+   "Sadni si pred spodnú kladku s chodidlami na opierke, mierne pokrčenými kolenami a širokým úchopom dlhej tyče.",
+   "S rovným chrbtom a vypnutým hrudníkom priťahuj tyč k spodnému hrudníku, lakte von a dozadu.",
+   "Na konci stiahni lopatky a chvíľu udrž napätie.",
+   "Kontrolovane vystri paže a nechaj lopatky rozostúpiť bez hrbenia."
+  ],
+  "tips": [
+   "Nekývaj sa: pohyb robí chrbát, nie trup.",
+   "Veď tyč k hrudníku, nie k bruchu, aby si zaťažil(a) horný chrbát."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercherov drep",
+  "description": "Drep s činkou v lakťových jamkách, ktorý presúva váhu dopredu a kladie veľké nároky na stred tela.",
+  "instructions": [
+   "Umiestni činku vo výške brucha do lakťových jamiek, predlaktia skrížené alebo ruky spojené.",
+   "Krč boky aj kolená s vypnutým hrudníkom a lakťami pri tele.",
+   "Zastav, keď budú stehná rovnobežne so zemou alebo o niečo nižšie.",
+   "Odtlač zem chodidlami späť do vzpriamenia."
+  ],
+  "tips": [
+   "Ak tyč tlačí do lakťov, použi na ňu polster alebo uterák.",
+   "Brucho spevnené, aby si neprepadol(a) dopredu."
+  ]
+ },
+ "z-press": {
+  "name": "Z-tlak",
+  "description": "Tlak nad hlavu v sede na zemi s vystretými nohami, ktorý odstraňuje oporu a vyžaduje stabilný stred tela.",
+  "instructions": [
+   "Sadni si na zem s nohami vystretými dopredu a činkou na hornej časti hrudníka.",
+   "Trup vzpriamený a tlač činku priamo nahor do vystretých paží.",
+   "Zastav činku nad temenom bez záklonu.",
+   "Kontrolovane spusti ku kľúčnym kostiam."
+  ],
+  "tips": [
+   "Použi menšiu váhu než v stoji: stabilizuje stred tela.",
+   "Zadok a brucho drž spevnené počas celého pohybu."
+  ]
+ }
+}
