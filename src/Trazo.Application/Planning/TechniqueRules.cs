@@ -29,43 +29,60 @@ public static class TechniqueRules
         _ => LogSessionValidator.MaximumSegment
     };
 
+    public const string InvalidTechnique = "La técnica no es válida.";
+    public const string NotAdmitted = "El ejercicio no admite esa técnica.";
+    public const string NotInSuperset = "Una superserie no se combina con otra técnica en el mismo ejercicio.";
+    public const string MatchNeedsTwoSets = "Myo-rep match necesita al menos dos series.";
+    public const string InvalidSuperset = "Las rondas o los descansos de la superserie no son válidos.";
+
     /// <summary>What is wrong with a technique on an exercise; empty when it can be prescribed.</summary>
     public static IReadOnlyList<string> Validate(
         TrainingTechniquePrescription technique, int sets, IReadOnlyCollection<TrainingTechniqueType>? allowed, bool inSuperset)
     {
         ArgumentNullException.ThrowIfNull(technique);
+        if (!Enum.IsDefined(technique.Type) || !Enum.IsDefined(technique.AppliesTo)) return [InvalidTechnique];
         var errors = new List<string>();
-        if (!Enum.IsDefined(technique.Type) || !Enum.IsDefined(technique.AppliesTo)) return ["La técnica no es válida."];
-        if (allowed is null || !allowed.Contains(technique.Type)) errors.Add("El ejercicio no admite esa técnica.");
-        if (inSuperset) errors.Add("Una superserie no se combina con otra técnica en el mismo ejercicio.");
-        var maximum = MaximumSegments(technique.Type);
-        if (technique.MaxSegments < 1 || technique.MaxSegments > maximum) errors.Add($"Los segmentos deben estar entre 1 y {maximum}.");
-        if (technique.RestSeconds is < 0 or > MaximumRestSeconds) errors.Add($"El descanso entre segmentos debe estar entre 0 y {MaximumRestSeconds} segundos.");
-        if (technique.TargetRir is < 0 or > 5) errors.Add("El RIR objetivo debe estar entre 0 y 5.");
-        if (technique.Type == TrainingTechniqueType.DropSet)
-        {
-            if (technique.LoadDropPercent is not (>= 5 and <= 50)) errors.Add("La bajada de carga debe estar entre el 5 y el 50 %.");
-        }
-        else if (technique.LoadDropPercent is not null) errors.Add("Solo un drop set baja la carga.");
-        var (min, max) = (technique.SegmentMinRepetitions, technique.SegmentMaxRepetitions);
-        if (technique.Type is TrainingTechniqueType.MyoReps or TrainingTechniqueType.RestPause)
-        {
-            if (min is < 1 or > 30 || max is < 1 or > 30 || (min is not null && max is not null && min > max))
-                errors.Add("Las repeticiones de cada segmento deben estar entre 1 y 30, y el mínimo no puede superar el máximo.");
-        }
-        else if (min is not null || max is not null) errors.Add("Esta técnica no fija las repeticiones de los segmentos.");
-        if (technique.Type == TrainingTechniqueType.MyoRepMatch && sets < 2) errors.Add("Myo-rep match necesita al menos dos series.");
+        if (allowed is null || !allowed.Contains(technique.Type)) errors.Add(NotAdmitted);
+        if (inSuperset) errors.Add(NotInSuperset);
+        if (!InRange(technique)) errors.Add(InvalidTechnique);
+        if (technique.Type == TrainingTechniqueType.MyoRepMatch && sets < 2) errors.Add(MatchNeedsTwoSets);
         return errors;
+    }
+
+    /// <summary>Segments, rest, reserve, load drop (a drop set only) and segment repetitions (myo-reps and rest-pause only).</summary>
+    private static bool InRange(TrainingTechniquePrescription technique)
+    {
+        if (technique.MaxSegments < 1 || technique.MaxSegments > MaximumSegments(technique.Type)) return false;
+        if (technique.RestSeconds is < 0 or > MaximumRestSeconds || technique.TargetRir is < 0 or > 5) return false;
+        if (technique.Type == TrainingTechniqueType.DropSet ? technique.LoadDropPercent is not (>= 5 and <= 50) : technique.LoadDropPercent is not null)
+            return false;
+        var (min, max) = (technique.SegmentMinRepetitions, technique.SegmentMaxRepetitions);
+        return technique.Type is TrainingTechniqueType.MyoReps or TrainingTechniqueType.RestPause
+            ? min is not (< 1 or > 30) && max is not (< 1 or > 30) && !(min > max)
+            : min is null && max is null;
     }
 
     public static IReadOnlyList<string> Validate(TrainingSupersetPrescription superset)
     {
         ArgumentNullException.ThrowIfNull(superset);
-        var errors = new List<string>();
-        if (superset.Group is not { Length: 1 } || superset.Group[0] is < 'A' or > 'F') errors.Add("El grupo de superserie debe ser una letra de la A a la F.");
-        if (superset.Rounds is < 1 or > MaximumSupersetRounds) errors.Add($"Las rondas deben estar entre 1 y {MaximumSupersetRounds}.");
-        if (superset.RestBetweenSeconds is < 0 or > MaximumSupersetRestSeconds || superset.RestAfterRoundSeconds is < 0 or > MaximumSupersetRestSeconds)
-            errors.Add($"Los descansos deben estar entre 0 y {MaximumSupersetRestSeconds} segundos.");
-        return errors;
+        var valid = superset.Group is { Length: 1 } && superset.Group[0] is >= 'A' and <= 'F'
+                    && superset.Rounds is >= 1 and <= MaximumSupersetRounds
+                    && superset.RestBetweenSeconds is >= 0 and <= MaximumSupersetRestSeconds
+                    && superset.RestAfterRoundSeconds is >= 0 and <= MaximumSupersetRestSeconds;
+        return valid ? [] : [InvalidSuperset];
+    }
+
+    public const int DefaultRestBetweenSeconds = 15;
+    public const int DefaultRestAfterRoundSeconds = 90;
+    /// <summary>The time a segment takes besides its rest, for the estimated duration of a session. A product estimate.</summary>
+    public const int SecondsPerSegment = 20;
+
+    /// <summary>What the segments of an exercise add to the session, at most: every segment of every set that carries the technique.</summary>
+    public static int ExtraSeconds(TrainingTechniquePrescription? technique, int sets)
+    {
+        if (technique is null) return 0;
+        var carrying = technique.AppliesTo == TrainingTechniqueScope.LastSet ? 1
+            : technique.Type == TrainingTechniqueType.MyoRepMatch ? Math.Max(0, sets - 1) : sets;
+        return carrying * technique.MaxSegments * (technique.RestSeconds + SecondsPerSegment);
     }
 }

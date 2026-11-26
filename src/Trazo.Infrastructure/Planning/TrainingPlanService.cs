@@ -273,15 +273,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         await UseUserClockAsync(userId, ct);
         if (await db.TrainingPlans.AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct))
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists, "Ya tienes un plan activo. Archívalo antes de crear otro.");
+        if (!client.Techniques && HasTechniques(manual))
+            return PlanResult<PlanView>.Fail(PlanFailure.AppUpdateRequired, UpdateAppMessage);
 
         var catalog = (await LoadCandidatesAsync(ct)).Candidates.ToDictionary(c => c.ExerciseId, StringComparer.OrdinalIgnoreCase);
-        var errors = new Dictionary<string, string[]>();
-        for (var d = 0; d < manual.Days.Count; d++)
-            for (var e = 0; e < manual.Days[d].Exercises.Count; e++)
-                if (!catalog.ContainsKey(manual.Days[d].Exercises[e].ExerciseId))
-                    errors[$"days.{d + 1}.exercises.{e + 1}"] = ["El ejercicio no existe en el catálogo."];
-        if (errors.Count > 0)
-            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Algún ejercicio no existe en el catálogo.", errors);
+        if (CatalogProblems(manual, catalog) is { } refused) return refused;
 
         var now = clock.GetUtcNow();
         var calendar = manual.SchedulingMode == PlanSchedulingMode.Calendar;
@@ -335,6 +331,34 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         return PlanResult<PlanView>.Ok(ToView(plan, calendar ? PlanSchedule.Position(plan.StartDate, plan.TotalWeeks, Today) : new PlanPosition(PlanTimeline.InProgress, 1)));
     }
 
+    private const string UpdateAppMessage = "Actualiza la app para editar un plan con técnicas avanzadas.";
+
+    private static bool HasTechniques(ManualPlan manual) =>
+        manual.Days.Any(d => d.Supersets is { Count: > 0 } || d.Exercises.Any(e => e.Technique is not null));
+
+    /// <summary>What the catalog refuses in a manual plan: unknown exercises and techniques an exercise does not admit.</summary>
+    private static PlanResult<PlanView>? CatalogProblems(ManualPlan manual, IReadOnlyDictionary<string, TrainingExerciseCandidate> catalog)
+    {
+        var errors = new Dictionary<string, string[]>();
+        var unknown = false;
+        for (var d = 0; d < manual.Days.Count; d++)
+            for (var e = 0; e < manual.Days[d].Exercises.Count; e++)
+            {
+                var exercise = manual.Days[d].Exercises[e];
+                var field = $"days.{d + 1}.exercises.{e + 1}";
+                if (!catalog.TryGetValue(exercise.ExerciseId, out var candidate))
+                {
+                    errors[field] = ["El ejercicio no existe en el catálogo."];
+                    unknown = true;
+                }
+                else if (exercise.Technique is { } technique && !(candidate.AllowedTechniques?.Contains(technique.Type) ?? false))
+                    errors[field] = [TechniqueRules.NotAdmitted];
+            }
+        if (errors.Count == 0) return null;
+        return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest,
+            unknown ? "Algún ejercicio no existe en el catálogo." : TechniqueRules.NotAdmitted, errors);
+    }
+
     private static PlannedSession BuildManualSession(
         TrainingPlan plan, Guid mesocycleId, int week, ManualDay day, IReadOnlyDictionary<string, TrainingExerciseCandidate> catalog, DateTimeOffset now)
     {
@@ -346,9 +370,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 exercise.MinRepetitions, exercise.MaxRepetitions, exercise.TargetRir, exercise.RestSeconds,
                 TrainingProgressionRule.DoubleProgression, "Elegido por el usuario.",
                 candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups,
-                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? []);
+                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? [], Technique: exercise.Technique);
         }).ToList();
-        var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45)) / 60.0);
+        var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45) + TechniqueRules.ExtraSeconds(e.Technique, e.Sets)) / 60.0);
         return new PlannedSession
         {
             Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycleId, WeekNumber = week,
@@ -356,7 +380,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Date = IsSequence(plan) ? null : PlanSchedule.DateFor(plan.StartDate, week, day.Day!.Value), Title = day.Title,
             EstimatedDurationMinutes = Math.Clamp(minutes, 10, 240),
             PrescriptionJson = PrescriptionJson.Serialize(prescription,
-                day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!)),
+                day.Exercises.Where(e => e.SupersetGroup is not null).ToDictionary(e => e.ExerciseId, e => e.SupersetGroup!),
+                day.Supersets ?? []),
             // The user wrote this prescription: it is not an engine snapshot, so no original is stored for it.
             PrescriptionSource = PrescriptionSources.User, Status = PlannedSessionStatus.Planned, UpdatedAt = now
         };
@@ -401,19 +426,19 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             return PlanResult<PlanView>.Fail(PlanFailure.NotAllowed, "Solo se pueden editar los planes que has creado tú.");
 
         var catalog = (await LoadCandidatesAsync(ct)).Candidates.ToDictionary(c => c.ExerciseId, StringComparer.OrdinalIgnoreCase);
-        var errors = new Dictionary<string, string[]>();
-        for (var d = 0; d < manual.Days.Count; d++)
-            for (var e = 0; e < manual.Days[d].Exercises.Count; e++)
-                if (!catalog.ContainsKey(manual.Days[d].Exercises[e].ExerciseId))
-                    errors[$"days.{d + 1}.exercises.{e + 1}"] = ["El ejercicio no existe en el catálogo."];
-        if (errors.Count > 0)
-            return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Algún ejercicio no existe en el catálogo.", errors);
+        if (CatalogProblems(manual, catalog) is { } refused) return refused;
 
         // The plan keeps its way of scheduling: a calendar plan needs a weekday on every day, a sequence plan ignores them.
         var sequence = IsSequence(plan);
         if (!sequence && manual.Days.Any(d => d.Day is null))
             return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Cada día de un plan con calendario necesita su día de la semana.",
                 new Dictionary<string, string[]> { ["days"] = ["Indica el día de la semana de cada rutina."] });
+
+        // An app that cannot show techniques would save the plan without them: it is asked to update instead.
+        if (!client.Techniques && (HasTechniques(manual)
+                || (await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id).Select(s => s.PrescriptionJson).ToListAsync(ct))
+                    .Any(PrescriptionJson.HasTechniques)))
+            return PlanResult<PlanView>.Fail(PlanFailure.AppUpdateRequired, UpdateAppMessage);
 
         var now = clock.GetUtcNow();
         var logged = (await db.WorkoutLogs.Where(l => l.PlanId == plan.Id).Select(l => l.PlannedSessionId).ToListAsync(ct)).ToHashSet();

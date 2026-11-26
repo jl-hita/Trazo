@@ -16,7 +16,9 @@ public enum PlanFailure
     /// <summary>The plan was generated automatically and the account has no Premium access.</summary>
     PremiumRequired,
     /// <summary>A session was changed by another request after this one read it; nothing of this request was stored.</summary>
-    ConcurrentModification
+    ConcurrentModification,
+    /// <summary>The app that asks cannot show something the plan has, and saving from it would lose it.</summary>
+    AppUpdateRequired
 }
 
 public sealed record PlanResult<T>(

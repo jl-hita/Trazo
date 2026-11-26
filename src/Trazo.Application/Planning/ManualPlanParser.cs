@@ -7,9 +7,11 @@ public sealed record ManualPlan(
     string Name, string Notes, DateOnly StartDate, int TotalWeeks, TrainingGoal Goal, TrainingExperience Experience,
     IReadOnlyList<ManualDay> Days, Trazo.Domain.Planning.PlanSchedulingMode SchedulingMode = Trazo.Domain.Planning.PlanSchedulingMode.Calendar);
 
-public sealed record ManualDay(DayOfWeek? Day, string Title, IReadOnlyList<ManualExercise> Exercises);
+public sealed record ManualDay(
+    DayOfWeek? Day, string Title, IReadOnlyList<ManualExercise> Exercises, IReadOnlyList<TrainingSupersetPrescription>? Supersets = null);
 
-public sealed record ManualExercise(string ExerciseId, int Sets, int MinRepetitions, int MaxRepetitions, decimal? TargetRir, int RestSeconds, string? SupersetGroup = null);
+public sealed record ManualExercise(string ExerciseId, int Sets, int MinRepetitions, int MaxRepetitions, decimal? TargetRir, int RestSeconds, string? SupersetGroup = null,
+    TrainingTechniquePrescription? Technique = null);
 
 public sealed record ManualPlanResult(ManualPlan? Plan, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -100,7 +102,16 @@ public static class ManualPlanParser
                 if (rest is < 0 or > 600) Fail(field, "El descanso debe estar entre 0 y 600 segundos.");
                 var group = string.IsNullOrWhiteSpace(item.SupersetGroup) ? null : item.SupersetGroup.Trim().ToUpperInvariant();
                 if (group is not null && (group.Length != 1 || group[0] is < 'A' or > 'F')) Fail(field, "El grupo de superserie debe ser una letra de la A a la F.");
-                exercises.Add(new ManualExercise(id, sets, min, max, item.TargetRir, rest, group));
+                TrainingTechniquePrescription? technique = null;
+                if (item.Technique is { } wanted)
+                {
+                    technique = Technique(wanted);
+                    // Whether this exercise admits it is a matter of the catalog, checked when the plan is stored.
+                    var problems = technique is null ? [TechniqueRules.InvalidTechnique]
+                        : TechniqueRules.Validate(technique, sets, [technique.Type], group is not null);
+                    foreach (var problem in problems) Fail(field, problem);
+                }
+                exercises.Add(new ManualExercise(id, sets, min, max, item.TargetRir, rest, group, technique));
             }
             // A superset joins two or three consecutive exercises: they are done one after another with a shared rest.
             foreach (var g in exercises.Where(e => e.SupersetGroup is not null).GroupBy(e => e.SupersetGroup))
@@ -109,13 +120,38 @@ public static class ManualPlanParser
                 if (positions.Count is < 2 or > 3 || positions[^1] - positions[0] != positions.Count - 1)
                     Fail($"{key}.exercises", $"La superserie {g.Key} necesita dos o tres ejercicios seguidos.");
             }
-            days.Add(new ManualDay(sequence ? null : weekday, title, exercises));
+            var supersets = new List<TrainingSupersetPrescription>();
+            foreach (var wanted in day.Supersets ?? [])
+            {
+                var letter = (wanted?.Group ?? string.Empty).Trim().ToUpperInvariant();
+                var members = exercises.Where(e => e.SupersetGroup == letter).ToList();
+                var superset = new TrainingSupersetPrescription(letter,
+                    wanted?.Rounds ?? Math.Clamp(members.Select(e => e.Sets).DefaultIfEmpty(1).Max(), 1, TechniqueRules.MaximumSupersetRounds),
+                    wanted?.RestBetweenSeconds ?? TechniqueRules.DefaultRestBetweenSeconds,
+                    wanted?.RestAfterRoundSeconds ?? TechniqueRules.DefaultRestAfterRoundSeconds);
+                if (members.Count == 0 || supersets.Any(s => s.Group == letter) || TechniqueRules.Validate(superset).Count > 0)
+                    Fail($"{key}.supersets", TechniqueRules.InvalidSuperset);
+                else supersets.Add(superset);
+            }
+            days.Add(new ManualDay(sequence ? null : weekday, title, exercises, supersets));
         }
 
         if (errors.Count > 0) return new(null, errors.ToDictionary(p => p.Key, p => p.Value.ToArray()));
         return new(new ManualPlan(name, notes, start, weeks, goal, experience,
                 sequence ? days : days.OrderBy(d => ((int)d.Day!.Value + 6) % 7).ToList(), mode),
             new Dictionary<string, string[]>());
+    }
+
+    /// <summary>The technique asked for, with the defaults of its type for what was left out; null when a name is unknown.</summary>
+    private static TrainingTechniquePrescription? Technique(ManualTechniqueInput input)
+    {
+        if (!TryEnum(input.Type, out TrainingTechniqueType type)) return null;
+        var d = TechniqueRules.Default(type);
+        var scope = d.AppliesTo;
+        if (!string.IsNullOrWhiteSpace(input.AppliesTo) && !TryEnum(input.AppliesTo, out scope)) return null;
+        return new(type, scope, input.MaxSegments ?? d.MaxSegments, input.RestSeconds ?? d.RestSeconds,
+            input.LoadDropPercent ?? d.LoadDropPercent, input.SegmentMinRepetitions ?? d.SegmentMinRepetitions,
+            input.SegmentMaxRepetitions ?? d.SegmentMaxRepetitions, input.TargetRir ?? d.TargetRir);
     }
 
     private static bool TryEnum<T>(string? value, out T result) where T : struct, Enum =>
