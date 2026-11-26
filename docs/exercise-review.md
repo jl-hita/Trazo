@@ -9,7 +9,7 @@ no son consejo médico); no cambiar lo que no tenga un motivo concreto.
 
 ## Lote 1 · Empuje, pecho, hombro y tríceps (45 ejercicios, 2026-11-26)
 
-4 cambiados, 41 sin cambios.
+9 cambiados, 36 sin cambios.
 
 | Ejercicio | Decisión |
 |---|---|
@@ -26,7 +26,7 @@ no son consejo médico); no cambiar lo que no tenga un motivo concreto.
 | `chest-press-machine` | Sin cambios |
 | `close-grip-bench-press` | **Cambiado.** Se evita con limitación de muñeca: el agarre estrecho la carga (su propio consejo lo advierte). |
 | `db-bench-press` | Sin cambios |
-| `db-fly` | Sin cambios |
+| `db-fly` | **Cambiado.** Se evita con limitación de hombro (decisión conservadora, ver duda 4). |
 | `dumbbell-front-raise` | Sin cambios |
 | `dumbbell-reverse-fly` | Sin cambios |
 | `dumbbell-shoulder-press` | Sin cambios |
@@ -41,13 +41,13 @@ no son consejo médico); no cambiar lo que no tenga un motivo concreto.
 | `machine-chest-fly` | Sin cambios |
 | `machine-reverse-fly` | Sin cambios |
 | `machine-shoulder-press` | Sin cambios |
-| `ohp` | Sin cambios |
+| `ohp` | **Cambiado.** Se evita con limitación lumbar: carga axial de pie o sin respaldo, el mismo criterio que ya aparta sentadillas y remos con barra sin apoyo. Quedan el press sentado con respaldo, mancuernas y máquina. |
 | `overhead-tricep-extension` | Sin cambios |
 | `parallel-bar-dips` | Sin cambios |
 | `paused-bench-press` | Sin cambios |
-| `pec-deck` | Sin cambios |
+| `pec-deck` | **Cambiado.** Prioridad 72, como las demás aperturas: nada justifica dejarlo detrás. |
 | `pike-push-up` | Sin cambios |
-| `push-press` | Sin cambios |
+| `push-press` | **Cambiado.** Se evita con limitación lumbar: carga axial de pie o sin respaldo, el mismo criterio que ya aparta sentadillas y remos con barra sin apoyo. Quedan el press sentado con respaldo, mancuernas y máquina. |
 | `push-up` | **Cambiado.** El tríceps pasa de primario a secundario que cuenta, como en el resto de flexiones y press. Cuenta las mismas series; deja de frenar el ejercicio cuando el tríceps llega a su tope. |
 | `seated-barbell-overhead-press` | Sin cambios |
 | `seated-dumbbell-lateral-raise` | Sin cambios |
@@ -57,18 +57,20 @@ no son consejo médico); no cambiar lo que no tenga un motivo concreto.
 | `smith-machine-incline-bench-press` | Sin cambios |
 | `tricep-pushdown` | Sin cambios |
 | `weighted-dip` | Sin cambios |
-| `z-press` | Sin cambios |
+| `z-press` | **Cambiado.** Se evita con limitación lumbar: carga axial de pie o sin respaldo, el mismo criterio que ya aparta sentadillas y remos con barra sin apoyo. Quedan el press sentado con respaldo, mancuernas y máquina. |
 
 ### Efecto en los planes
 
 Comparados con los anteriores en 1.890 combinaciones del catálogo real (perfil, equipamiento, limitación y semilla):
 
-- Cambian 618: 358 con otra selección de ejercicios, 84 solo en series y 176 solo en datos de la prescripción. Ninguna
+- Cambian 788: 606 con otra selección de ejercicios, 52 solo en series y 130 solo en datos de la prescripción. Ninguna
   combinación deja de generar plan.
-- Casi todo el cambio de selección sale de las aperturas inversas: al contar la espalda alta, la de polea deja de ser el
-  comodín y se reparte con la de máquina, el face pull y las elevaciones laterales.
-- Volumen estimado: espalda alta +6,2 % (en buena parte es trabajo que antes no se contaba), deltoides -1,3 %, dorsales
-  -0,6 %, bíceps -0,5 %, tríceps +0,2 %.
+- La mayor parte sale de las aperturas inversas (la de polea deja de ser el comodín), del press militar sentado en lugar del
+  de pie con limitación lumbar y de las aperturas con mancuernas con limitación de hombro.
+- Volumen estimado total: espalda alta +6,2 % (en buena parte trabajo que antes no se contaba), pecho -1,7 %, deltoides
+  -1,3 %, dorsales -0,7 %, bíceps -0,2 %, tríceps +0,6 %.
+- **Coste conocido:** en hipertrofia con solo mancuernas y banco y limitación de hombro, el pecho baja de 11-15 a 9-10 series
+  semanales de media (mínimo 9). Con gimnasio completo no cambia.
 
 ### Convenciones que se mantienen
 
@@ -77,10 +79,20 @@ Comparados con los anteriores en 1.890 combinaciones del catálogo real (perfil,
 - Los press horizontales y las aperturas en polea o máquina no se excluyen por hombro: el patrón de empuje horizontal nunca se
   elimina de un plan.
 
-### Dudas para un entrenador
+### Dudas resueltas (2026-11-26)
 
-1. ¿Evitar el press militar de pie y el push press con limitación lumbar?
-2. ¿Deberían los fondos contar el deltoides anterior?
-3. ¿El pec deck (prioridad 58) debe quedar por detrás de las otras aperturas (72)?
-4. ¿Evitar las aperturas con mancuernas con limitación de hombro? Probado y no aplicado: deja a quien solo tiene mancuernas
-   sin su aislamiento de pecho y recorta mucho ese volumen.
+Resueltas con una búsqueda preliminar (resúmenes, no los artículos completos). Ninguna se apoya en evidencia sólida sobre
+lesiones; siguen abiertas a la revisión de un entrenador.
+
+1. **Press militar de pie con limitación lumbar: se evita.** No se encontró ningún estudio que compare la carga lumbar de pie
+   y sentado con respaldo; la recomendación de apoyo es opinión experta. Se aplica por coherencia con el criterio lumbar ya
+   existente (carga axial sin apoyo).
+2. **Deltoides anterior en los fondos: no cuenta.** No se encontró una comparación directa; una revisión del press de banca
+   sitúa el deltoides anterior por debajo de pectoral y tríceps
+   (<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5295722/>). Se mantiene la convención de los press.
+3. **Pec deck: prioridad igualada.** Un resumen de un estudio de electromiografía lo sitúa a la par de las demás aperturas
+   (<https://www.acefitness.org/certifiednewsarticle/2884/>). El mismo resumen aconseja evitarlo con antecedentes de hombro;
+   no se excluye porque la apertura en máquina es el mismo movimiento y apartar ambos dejaría el aislamiento solo en polea.
+4. **Aperturas con mancuernas con limitación de hombro: se evitan.** Las fuentes de entrenadores la señalan como la apertura
+   más exigente para el hombro; no hay datos controlados de lesiones. Ante una limitación declarada pesa la prudencia: el
+   pecho sigue entrenándose con press, con el coste de volumen indicado arriba. Es la decisión más discutible del lote.

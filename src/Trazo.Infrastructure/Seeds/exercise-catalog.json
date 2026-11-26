@@ -1947,7 +1947,7 @@
   },
   {
     "id": "db-fly",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Aperturas con Mancuernas",
     "nameEn": "Dumbbell Fly",
@@ -1990,7 +1990,9 @@
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
-    "limitationAreas": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
     "metadataReviewed": true
   },
   {
@@ -4790,7 +4792,7 @@
   },
   {
     "id": "ohp",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press Militar con Barra",
     "nameEn": "Barbell Overhead Press",
@@ -4839,6 +4841,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [
+      "LowerBack",
       "Shoulder"
     ],
     "metadataReviewed": true
@@ -5105,7 +5108,7 @@
   },
   {
     "id": "pec-deck",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Pec Deck",
     "nameEn": "Pec Deck",
@@ -5147,7 +5150,7 @@
     "requiredEquipment": [
       "pec-deck"
     ],
-    "selectionPriority": 58,
+    "selectionPriority": 72,
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
@@ -5515,7 +5518,7 @@
   },
   {
     "id": "push-press",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Push Press",
     "nameEn": "Push Press",
@@ -5563,6 +5566,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [
+      "LowerBack",
       "Shoulder"
     ],
     "metadataReviewed": true
@@ -7620,7 +7624,7 @@
   },
   {
     "id": "z-press",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Z Press",
     "nameEn": "Z Press",
@@ -7667,6 +7671,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [
+      "LowerBack",
       "Shoulder"
     ],
     "metadataReviewed": true
