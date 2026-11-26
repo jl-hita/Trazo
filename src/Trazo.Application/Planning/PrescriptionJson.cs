@@ -37,6 +37,9 @@ public static class PrescriptionJson
         return root.ToJsonString(Options);
     }
 
+    /// <summary>True when the session carries a technique or superset rounds.</summary>
+    public static bool HasTechniques(string json) => Supersets(json).Count > 0 || Read(json).Any(e => e.Technique is not null);
+
     /// <summary>How the supersets of a session are alternated; empty for sessions stored without it.</summary>
     public static IReadOnlyList<TrainingSupersetPrescription> Supersets(string json) =>
         JsonNode.Parse(json) is JsonObject root && root["supersets"] is JsonArray array

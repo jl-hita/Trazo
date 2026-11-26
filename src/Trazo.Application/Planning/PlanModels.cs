@@ -289,11 +289,19 @@ public sealed record ManualPlanInput(
     string? Name, string? Notes, DateOnly? StartDate, int? TotalWeeks, string? Goal, string? Experience,
     ManualDayInput[]? Days, string? TimeZone = null, string? SchedulingMode = null);
 
-public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseInput[]? Exercises);
+public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseInput[]? Exercises, ManualSupersetInput[]? Supersets = null);
+
+/// <summary>A technique of an exercise. Only the type is required: the rest takes the default figures of that technique.</summary>
+public sealed record ManualTechniqueInput(
+    string? Type, string? AppliesTo = null, int? MaxSegments = null, int? RestSeconds = null, int? LoadDropPercent = null,
+    int? SegmentMinRepetitions = null, int? SegmentMaxRepetitions = null, decimal? TargetRir = null);
+
+/// <summary>How a superset letter of the day is alternated; rounds default to the most sets of its exercises.</summary>
+public sealed record ManualSupersetInput(string? Group, int? Rounds = null, int? RestBetweenSeconds = null, int? RestAfterRoundSeconds = null);
 
 public sealed record ManualExerciseInput(
     string? ExerciseId, int? Sets, int? MinRepetitions, int? MaxRepetitions, decimal? TargetRir, int? RestSeconds,
-    string? SupersetGroup = null);
+    string? SupersetGroup = null, ManualTechniqueInput? Technique = null);
 
 /// <summary>
 /// A proposal to reorganise the training days because the user persistently trains a different number of days. <c>Preview</c> is the next block

@@ -112,8 +112,28 @@ La interfaz muestra por separado «segmentos hechos» y «series efectivas estim
   otro que no la admite. Devolver series no la recupera. La carga objetivo y las superseries no se tocan.
 - Sin `X-Client-Capabilities: techniques-1`, las vistas de plan y registro omiten técnica, rondas y segmentos. La
   exportación de la cuenta los incluye siempre.
-- Nada crea técnicas todavía. **Quedan para P1-3**, junto con la creación en planes manuales: aceptar técnica y rondas en
-  la entrada, impedir que una app sin la capacidad edite un plan que las tiene y sumar segmentos y descansos a la duración.
+
+### Planes manuales (P1-3, servidor)
+
+`POST /api/v1/plans/manual` y `PUT /api/v1/plans/current/manual` aceptan, por ejercicio, `technique` (solo `type` es
+obligatorio; el resto toma los valores por defecto) y, por día, `supersets`:
+
+```json
+{ "day": "Monday", "title": "Brazo",
+  "exercises": [
+    { "exerciseId": "cable-curl", "sets": 3, "technique": { "type": "DropSet", "maxSegments": 2 } },
+    { "exerciseId": "tricep-pushdown", "supersetGroup": "A" }, { "exerciseId": "hammer-curl", "supersetGroup": "A" }
+  ],
+  "supersets": [ { "group": "A", "restAfterRoundSeconds": 120 } ] }
+```
+
+- Rondas por defecto: las series del ejercicio del grupo que más tenga (hasta 10); descansos 15 s y 90 s.
+- Se rechaza (400, campo `days.N.exercises.M` o `days.N.supersets`) una técnica fuera de rango, no admitida por el
+  ejercicio, combinada con superserie o unas rondas sin ejercicios. Los mensajes están traducidos.
+- Sin la capacidad, crear un plan con técnicas, o editar uno que las tiene, responde 409 `app_update_required`.
+- La duración estimada suma, como máximo previsto, 20 s más el descanso por cada segmento (estimación de producto).
+- Los grupos siguen siendo de 2 o 3 ejercicios; ampliar a 4 es P1-4.
+- **Falta** la parte de Android.
 
 ## 6. Compatibilidad
 
