@@ -263,6 +263,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | Cierre de P0: los 150 ejercicios revisados (asistido, sin entrenador) y con textos completos en los 29 idiomas del seed, con los mismos pasos y consejos que el original (lo exige una prueba). Pendiente: revisión nativa de las traducciones y comprobación en producción con `seed-report`. |
 | 2026-11-26 | D5: aprobadas las cinco decisiones de `prescription-techniques.md` §11 (valores por defecto, volumen y progresión, `allowedTechniques` en el seed, capacidad `techniques-1`, sin combinar superserie y técnica de fatiga). La matriz del generador se concreta en P1-5. |
 | 2026-11-27 | D7: los diez programas son Premium (ningún permiso ni condición de suscripción cambia; se descarta regalar uno, R8). Antes de pagar se ve la ficha (días, duración, material, series semanales por músculo) y una sesión de ejemplo, no las semanas completas. |
+| 2026-11-27 | P5-2: la comparación de políticas con datos reales y la exportación de investigación usan **solo a quien lo consienta**: interruptor opcional en la app, apagado por defecto y revocable; los resultados se muestran agregados. El texto legal lo aprueba el titular. |
 
 ## 7. Evidencia consultada
 
