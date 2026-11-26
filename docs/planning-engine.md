@@ -640,7 +640,7 @@ counts a full set or nothing; it is a planning convention, not a measurement). P
 (`effectiveSecondaryMuscleGroups`); sessions stored before are completed from the catalog when read. Every seed exercise is
 reviewed (`metadataReviewed`) and states these fields, and a test fails otherwise. Nothing is deduced from exercise identifiers: emphasis
 and injury exclusions (`limitationAreas`) are catalog data too, and a test forbids exercise ids in the code. `inverted-row` counts biceps like its bent-knee sibling;
-`cable-reverse-fly` and `rowing-machine` have no meaningful secondary. A graded model (fractions of a set) was not introduced: there is no
+`rowing-machine` has no meaningful secondary (decisions per exercise: `exercise-review.md`). A graded model (fractions of a set) was not introduced: there is no
 evidence base in the product to calibrate the fractions.
 
 ## Load continuity when an exercise is swapped
