@@ -242,7 +242,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Pendiente | | |
 | P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Pendiente | | |
 | P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Pendiente | | |
-| P7-0 | Prioridades y volumen bajo objetivo (adelantado a petición del titular) | Enfatizar añade series; con tiempo libre los músculos llegan a su objetivo | P5-1 | Hecho (quedan casos con pocas sesiones) | PR abierta | 2.430 planes con énfasis comparados; `validation-scenarios.md` |
+| P7-0 | Prioridades y volumen bajo objetivo (adelantado a petición del titular) | Enfatizar añade series; con tiempo libre los músculos llegan a su objetivo | P5-1 | Hecho (quedan casos con pocas sesiones) | #249 | 2.430 planes con énfasis comparados; `validation-scenarios.md` |
 | P7-1 | Torso/pierna 5 e híbrido de 5 días | Volumen, frecuencia y recuperación probados | P0, P5-1 | Pendiente | | |
 | P3-1 | Recetas de programa y primeros tres | Motor común, permisos, personalizables | P1-1, P2-2, D7 | Pendiente | | |
 | P3-2 | Diez programas y pantalla Android | Revisados y documentados | P3-1, P7-1 | Pendiente | | |
