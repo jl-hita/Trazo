@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Der Ziel-RIR muss zwischen 0 und 5 liegen.",
  "El descanso debe estar entre 0 y 600 segundos.": "Die Pause muss zwischen 0 und 600 Sekunden liegen.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Die Supersatz-Gruppe muss ein Buchstabe von A bis F sein.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Supersatz {0} braucht zwei oder drei aufeinanderfolgende Übungen.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Supersatz {0} braucht zwei bis vier aufeinanderfolgende Übungen.",
  "La técnica no es válida.": "Die Technik ist ungültig.",
  "El ejercicio no admite esa técnica.": "Die Übung erlaubt diese Technik nicht.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Ein Supersatz lässt sich nicht mit einer weiteren Technik in derselben Übung kombinieren.",

@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Ciljni RIR mora biti od 0 do 5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Odmor mora biti od 0 do 600 sekundi.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Skupina superserije mora biti slovo od A do F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Superserija {0} treba dve ili tri uzastopne vežbe.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Superserija {0} treba od dve do četiri uzastopne vežbe.",
  "La técnica no es válida.": "Tehnika nije ispravna.",
  "El ejercicio no admite esa técnica.": "Vežba ne dozvoljava tu tehniku.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Superserija se ne može kombinovati sa drugom tehnikom na istoj vežbi.",

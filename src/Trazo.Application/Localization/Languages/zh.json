@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "目标 RIR 必须在 0 到 5 之间。",
  "El descanso debe estar entre 0 y 600 segundos.": "休息时间必须在 0 到 600 秒之间。",
  "El grupo de superserie debe ser una letra de la A a la F.": "超级组编号必须是 A 到 F 的字母。",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "超级组 {0} 需要两到三个连续动作。",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "超级组 {0} 需要 2 到 4 个连续动作。",
  "La técnica no es válida.": "该训练技巧无效。",
  "El ejercicio no admite esa técnica.": "此动作不支持该训练技巧。",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "同一动作不能将超级组与其他训练技巧组合使用。",

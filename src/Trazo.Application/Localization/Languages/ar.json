@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "يجب أن يكون RIR المستهدف بين 0 و5.",
  "El descanso debe estar entre 0 y 600 segundos.": "يجب أن تكون الراحة بين 0 و600 ثانية.",
  "El grupo de superserie debe ser una letra de la A a la F.": "يجب أن تكون مجموعة السوبرسِت حرفًا من A إلى F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "يحتاج السوبرسِت {0} إلى تمرينين أو ثلاثة متتالية.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "يحتاج السوبرسِت {0} إلى تمرينين إلى أربعة تمارين متتالية.",
  "La técnica no es válida.": "التقنية غير صالحة.",
  "El ejercicio no admite esa técnica.": "هذا التمرين لا يسمح بتلك التقنية.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "لا يمكن الجمع بين السوبرسِت وتقنية أخرى في التمرين نفسه.",

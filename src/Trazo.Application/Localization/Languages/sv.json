@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Mål-RIR måste vara mellan 0 och 5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Vilan måste vara mellan 0 och 600 sekunder.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Supersetgruppen måste vara en bokstav från A till F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Superset {0} behöver två eller tre övningar i följd.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Superset {0} kräver två till fyra övningar i följd.",
  "La técnica no es válida.": "Tekniken är inte giltig.",
  "El ejercicio no admite esa técnica.": "Övningen tillåter inte den tekniken.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Ett superset kan inte kombineras med en annan teknik i samma övning.",

@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Το RIR-στόχος πρέπει να είναι από 0 έως 5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Η ξεκούραση πρέπει να είναι από 0 έως 600 δευτερόλεπτα.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Η ομάδα υπερσέτ πρέπει να είναι γράμμα από A έως F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Το υπερσέτ {0} χρειάζεται δύο ή τρεις συνεχόμενες ασκήσεις.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Το υπερσέτ {0} χρειάζεται δύο έως τέσσερις συνεχόμενες ασκήσεις.",
  "La técnica no es válida.": "Η τεχνική δεν είναι έγκυρη.",
  "El ejercicio no admite esa técnica.": "Η άσκηση δεν επιτρέπει αυτή την τεχνική.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Το υπερσέτ δεν συνδυάζεται με άλλη τεχνική στην ίδια άσκηση.",
