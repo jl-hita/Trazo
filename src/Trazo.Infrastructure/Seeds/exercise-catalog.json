@@ -1420,7 +1420,7 @@
   },
   {
     "id": "cable-reverse-fly",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Pájaro en Polea",
     "nameEn": "Cable Reverse Fly",
@@ -1463,7 +1463,9 @@
     ],
     "selectionPriority": 72,
     "isActive": true,
-    "effectiveSecondaryMuscles": [],
+    "effectiveSecondaryMuscles": [
+      "UpperBack"
+    ],
     "emphasis": [],
     "limitationAreas": [],
     "metadataReviewed": true
@@ -1840,7 +1842,7 @@
   },
   {
     "id": "close-grip-bench-press",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Press de Banca con Agarre Cerrado",
     "nameEn": "Close-Grip Bench Press",
@@ -1886,7 +1888,8 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [
-      "Elbow"
+      "Elbow",
+      "Wrist"
     ],
     "metadataReviewed": true
   },
@@ -3933,7 +3936,7 @@
   },
   {
     "id": "knee-push-ups",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Flexiones con Rodillas Apoyadas",
     "nameEn": "Knee Push-Up",
@@ -3971,7 +3974,6 @@
     "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
-      "Strength",
       "GeneralFitness"
     ],
     "requiredEquipment": [],
@@ -5567,7 +5569,7 @@
   },
   {
     "id": "push-up",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Flexiones",
     "nameEn": "Push-Up",
@@ -5594,11 +5596,11 @@
     "isBodyweight": true,
     "movementPattern": "HorizontalPush",
     "primaryMuscles": [
-      "Chest",
-      "Triceps"
+      "Chest"
     ],
     "secondaryMuscles": [
-      "Deltoids"
+      "Deltoids",
+      "Triceps"
     ],
     "minimumExperience": "Beginner",
     "suitableGoals": [
@@ -5608,7 +5610,9 @@
     "requiredEquipment": [],
     "selectionPriority": 85,
     "isActive": true,
-    "effectiveSecondaryMuscles": [],
+    "effectiveSecondaryMuscles": [
+      "Triceps"
+    ],
     "emphasis": [],
     "limitationAreas": [
       "Wrist"
