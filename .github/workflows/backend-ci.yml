@@ -11,15 +11,8 @@ on:
       - "global.json"
       - "deploy/**"
       - ".github/workflows/**"
+  # No path filter: these checks are required on main, so every pull request must report them.
   pull_request:
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "Trazo.sln"
-      - "Directory.Build.props"
-      - "global.json"
-      - "deploy/**"
-      - ".github/workflows/**"
 
 # Cancel superseded CI runs for the same PR or branch; keep unrelated work independent.
 concurrency:

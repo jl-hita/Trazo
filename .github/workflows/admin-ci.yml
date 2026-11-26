@@ -6,10 +6,8 @@ on:
     paths:
       - "admin/Trazo.Admin.Web/**"
       - ".github/workflows/admin-ci.yml"
+  # No path filter: these checks are required on main, so every pull request must report them.
   pull_request:
-    paths:
-      - "admin/Trazo.Admin.Web/**"
-      - ".github/workflows/admin-ci.yml"
 
 # Cancel superseded CI runs for the same PR or branch; keep unrelated work independent.
 concurrency:

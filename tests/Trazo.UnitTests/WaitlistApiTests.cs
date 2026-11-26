@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Trazo.Api.Support;
 using Trazo.Api.Security;
 using Trazo.Domain.Identity;
 using Trazo.Infrastructure.Persistence;
@@ -46,6 +47,8 @@ public sealed class WaitlistApiTests : IDisposable
                     .UseSqlite(_fixture.ConnectionString)
                     .ReplaceService<IModelCustomizer, SqliteDateTimeOffsetCustomizer>());
                 services.AddLogging(l => l.AddProvider(_logs).SetMinimumLevel(LogLevel.Trace));
+                // SQLite is shared: the background ticket writer would lock it while a request saves.
+                foreach (var writer in services.Where(d => d.ImplementationType == typeof(ErrorTicketWriter)).ToList()) services.Remove(writer);
                 services.RemoveAll<IEmailSender>();
                 services.AddSingleton<IEmailSender>(_mail);
             });
