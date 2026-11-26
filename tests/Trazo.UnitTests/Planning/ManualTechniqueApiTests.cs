@@ -45,6 +45,16 @@ public sealed class ManualTechniqueApiTests() : PlansApiBase(enforced: false)
         (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("sessions")[0];
 
     [Fact]
+    public async Task TheExerciseDetailSaysWhichTechniquesItAdmits()
+    {
+        var client = await UserAsync("detail@example.com");
+        var curl = await JsonAsync(await client.GetAsync("/api/v1/exercises/dumbbell-curl"));
+        Assert.Contains("DropSet", curl.GetProperty("allowedTechniques").EnumerateArray().Select(t => t.GetString()));
+        var press = await JsonAsync(await client.GetAsync("/api/v1/exercises/ohp"));
+        Assert.Equal(0, press.GetProperty("allowedTechniques").GetArrayLength());
+    }
+
+    [Fact]
     public async Task ATechniqueTakesItsDefaults_IsServedBack_AndAddsToTheDuration()
     {
         var client = await UserAsync("tech@example.com");
