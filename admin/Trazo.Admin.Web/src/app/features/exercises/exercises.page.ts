@@ -18,6 +18,7 @@ interface Draft {
   bodyPart: string; equipment: string; requiredEquipment: string; primaryMuscles: string; secondaryMuscles: string;
   suitableGoals: string; met: number; selectionPriority: number; isUnilateral: boolean; isBodyweight: boolean;
   effectiveSecondaryMuscles: string; emphasis: string; limitationAreas: string; metadataReviewed: boolean;
+  allowedTechniques: string;
 }
 
 type Kind = 'text' | 'textarea' | 'lines' | 'tags' | 'number';
@@ -27,7 +28,7 @@ const EMPTY: Draft = {
   id: '', nameEs: '', nameEn: '', descriptionEs: '', instructionsEs: '', tipsEs: '', movementPattern: '', difficulty: '',
   minimumExperience: '', forceType: '', mechanic: '', bodyPart: '', equipment: '', requiredEquipment: '', primaryMuscles: '',
   secondaryMuscles: '', suitableGoals: '', met: 3.5, selectionPriority: 50, isUnilateral: false, isBodyweight: false,
-  effectiveSecondaryMuscles: '', emphasis: '', limitationAreas: '', metadataReviewed: false
+  effectiveSecondaryMuscles: '', emphasis: '', limitationAreas: '', metadataReviewed: false, allowedTechniques: ''
 };
 
 const F = UI_COPY.exercises.fields;
@@ -46,6 +47,7 @@ const FIELDS: Field[] = [
   { key: 'effectiveSecondaryMuscles', label: F.effectiveSecondaryMuscles, kind: 'tags', options: 'muscles', hint: F.effectiveSecondaryMusclesHint },
   { key: 'emphasis', label: F.emphasis, kind: 'tags', options: 'emphases', hint: F.emphasisHint },
   { key: 'limitationAreas', label: F.limitationAreas, kind: 'tags', options: 'limitationAreas', hint: F.limitationAreasHint },
+  { key: 'allowedTechniques', label: F.allowedTechniques, kind: 'tags', options: 'techniques', hint: F.allowedTechniquesHint },
   { key: 'equipment', label: F.equipment, kind: 'text', options: 'equipment' },
   { key: 'requiredEquipment', label: F.requiredEquipment, kind: 'tags', options: 'equipment', hint: F.requiredEquipmentHint },
   { key: 'suitableGoals', label: F.suitableGoals, kind: 'tags', options: 'goals', required: true, hint: F.suitableGoalsHint },
@@ -58,7 +60,7 @@ const FIELDS: Field[] = [
 
 const OPTION_LISTS: (keyof AdminExerciseOptions)[] = [
   'movementPatterns', 'difficulties', 'experiences', 'equipment', 'forceTypes', 'mechanics', 'bodyParts', 'muscles', 'goals',
-  'emphases', 'limitationAreas'
+  'emphases', 'limitationAreas', 'techniques'
 ];
 
 const lines = (value: string) => value.split('\n').map(v => v.trim()).filter(Boolean);
@@ -305,7 +307,8 @@ export class ExercisesPageComponent {
       suitableGoals: d.suitableGoals.join(', '), met: d.met, selectionPriority: d.selectionPriority,
       isUnilateral: d.isUnilateral, isBodyweight: d.isBodyweight,
       effectiveSecondaryMuscles: d.effectiveSecondaryMuscles.join(', '), emphasis: d.emphasis.join(', '),
-      limitationAreas: d.limitationAreas.join(', '), metadataReviewed: d.metadataReviewed
+      limitationAreas: d.limitationAreas.join(', '), metadataReviewed: d.metadataReviewed,
+      allowedTechniques: d.allowedTechniques.join(', ')
     });
   }
 
@@ -320,7 +323,8 @@ export class ExercisesPageComponent {
       minimumExperience: d.minimumExperience, suitableGoals: tags(d.suitableGoals), requiredEquipment: tags(d.requiredEquipment),
       selectionPriority: Number.isFinite(Number(d.selectionPriority)) ? Number(d.selectionPriority) : 50,
       effectiveSecondaryMuscles: tags(d.effectiveSecondaryMuscles), emphasis: tags(d.emphasis),
-      limitationAreas: tags(d.limitationAreas), metadataReviewed: d.metadataReviewed
+      limitationAreas: tags(d.limitationAreas), metadataReviewed: d.metadataReviewed,
+      allowedTechniques: tags(d.allowedTechniques)
     };
   }
 

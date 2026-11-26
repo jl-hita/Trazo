@@ -61,6 +61,7 @@ public sealed class ExerciseSeedReportService(TrazoDbContext db)
             Check(engine, "effectiveSecondaryMuscles", SameSet(expected.EffectiveSecondaryMuscles ?? [], row.EffectiveSecondaryMuscles));
             Check(engine, "emphasis", SameSet(expected.Emphasis ?? [], row.Emphasis));
             Check(engine, "limitationAreas", SameSet(expected.LimitationAreas ?? [], row.LimitationAreas));
+        Check(engine, "allowedTechniques", SameSet(expected.AllowedTechniques ?? [], row.AllowedTechniques));
             Check(engine, "metadataReviewed", expected.MetadataReviewed == row.MetadataReviewed);
 
             var content = new List<string>();
@@ -117,7 +118,7 @@ public sealed class ExerciseSeedReportService(TrazoDbContext db)
         item.Id, item.NameEs, item.NameEn, item.DescriptionEs, item.InstructionsEs, item.TipsEs, item.ForceType, item.Mechanic,
         item.Difficulty, item.Equipment, item.BodyPart, item.Met, item.IsUnilateral, item.IsBodyweight, item.MovementPattern,
         item.PrimaryMuscles, item.SecondaryMuscles, item.MinimumExperience, item.SuitableGoals, item.RequiredEquipment,
-        item.SelectionPriority, item.EffectiveSecondaryMuscles, item.Emphasis, item.LimitationAreas, item.MetadataReviewed);
+        item.SelectionPriority, item.EffectiveSecondaryMuscles, item.Emphasis, item.LimitationAreas, item.MetadataReviewed, item.AllowedTechniques);
 
     /// <summary>The texts the seed holds for one exercise: Spanish from the catalog file and the translation files.</summary>
     private static IEnumerable<(string Language, ExerciseText Text)> SeedTexts(ExerciseSeed seed, ExerciseSeedEntry entry)

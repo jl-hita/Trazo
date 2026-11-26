@@ -121,7 +121,7 @@ public sealed class ExerciseMetadataValidatorTests
         IsBodyweight = e.IsBodyweight, MovementPattern = e.MovementPattern, PrimaryMuscles = e.PrimaryMuscles,
         SecondaryMuscles = e.SecondaryMuscles, MinimumExperience = e.MinimumExperience, SuitableGoals = e.SuitableGoals,
         RequiredEquipment = e.RequiredEquipment, SelectionPriority = e.SelectionPriority, IsActive = e.IsActive,
-        EffectiveSecondaryMuscles = e.EffectiveSecondaryMuscles!, Emphasis = e.Emphasis!, LimitationAreas = e.LimitationAreas!,
+        EffectiveSecondaryMuscles = e.EffectiveSecondaryMuscles!, Emphasis = e.Emphasis!, LimitationAreas = e.LimitationAreas!, AllowedTechniques = e.AllowedTechniques!,
         MetadataReviewed = e.MetadataReviewed
     };
 

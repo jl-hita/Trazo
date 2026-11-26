@@ -34,6 +34,8 @@ public sealed class ExerciseCatalogItem
     public string[] Emphasis { get; set; } = [];
     /// <summary>Body areas for which the exercise is avoided when the user declares a limitation there.</summary>
     public string[] LimitationAreas { get; set; } = [];
+    /// <summary>The set techniques the exercise admits (names of <c>TrainingTechniqueType</c>).</summary>
+    public string[] AllowedTechniques { get; set; } = [];
     /// <summary>Somebody checked the planning metadata: only then is the exercise planned automatically.</summary>
     public bool MetadataReviewed { get; set; }
     public int SeedVersion { get; set; }

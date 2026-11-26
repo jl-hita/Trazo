@@ -87,7 +87,8 @@ public sealed class ExerciseCatalogSeeder(
         row.MinimumExperience == m.MinimumExperience && row.SuitableGoals.SequenceEqual(m.SuitableGoals) &&
         row.RequiredEquipment.SequenceEqual(m.RequiredEquipment) && row.SelectionPriority == m.SelectionPriority &&
         row.EffectiveSecondaryMuscles.SequenceEqual(m.EffectiveSecondaryMuscles ?? []) && row.Emphasis.SequenceEqual(m.Emphasis ?? []) &&
-        row.LimitationAreas.SequenceEqual(m.LimitationAreas ?? []) && row.MetadataReviewed == m.MetadataReviewed;
+        row.LimitationAreas.SequenceEqual(m.LimitationAreas ?? []) && row.MetadataReviewed == m.MetadataReviewed &&
+        row.AllowedTechniques.SequenceEqual(m.AllowedTechniques ?? []);
 
     private static void Apply(ExerciseCatalogItem row, ExerciseSeedEntry entry, ExerciseMetadata m)
     {
@@ -101,6 +102,7 @@ public sealed class ExerciseCatalogSeeder(
         row.RequiredEquipment = m.RequiredEquipment; row.SelectionPriority = m.SelectionPriority;
         row.EffectiveSecondaryMuscles = m.EffectiveSecondaryMuscles ?? []; row.Emphasis = m.Emphasis ?? [];
         row.LimitationAreas = m.LimitationAreas ?? []; row.MetadataReviewed = m.MetadataReviewed;
+        row.AllowedTechniques = m.AllowedTechniques ?? [];
     }
 
     private void Write(Dictionary<(string, string), ExerciseCatalogTranslation> stored, string id, string language, ExerciseText text, DateTimeOffset now)

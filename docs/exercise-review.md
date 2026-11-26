@@ -242,3 +242,22 @@ Todas son criterio de producto, abiertas a la revisión de un entrenador:
   sentadilla nunca se elimina de un plan.
 - **Extensión de cuádriceps con limitación de rodilla:** se mantiene; es un ejercicio habitual en readaptación.
 - **Exclusiones nuevas de core:** el core directo solo entra en un plan con prioridad explícita, así que su efecto es pequeño.
+
+## Técnicas admitidas (`allowedTechniques`, 2026-11-26)
+
+Declaradas ejercicio a ejercicio en el seed. Son **criterio de producto** para acotar el riesgo, sin estudios ejercicio a
+ejercicio ni revisión de un entrenador. No admitir ninguna significa solo series normales.
+
+| Técnicas | Ejercicios | Cuáles | Criterio |
+|---|---|---|---|
+| DropSet, MyoRepMatch, MyoReps, RestPause | 45 | `cable-crunch`, `cable-curl`, `cable-fly`, `cable-front-raise`, `cable-lateral-raise`, `cable-overhead-tricep-extension`, `cable-reverse-fly`, `chest-press-machine`, `chest-supported-machine-row`, `dumbbell-curl`, `dumbbell-front-raise`, `dumbbell-reverse-fly`, `dumbbell-shrug`, `dumbbell-single-leg-calf-raise`, `face-pull`, `hammer-curl`, `hip-abduction`, `hip-adduction`, `incline-db-curl`, `kneeling-cable-row`, `lateral-raise`, `lat-pulldown`, `leg-curl`, `leg-extension`, `leg-press-calf-raise`, `machine-bicep-curl`, `machine-calf-raise`, `machine-chest-fly`, `machine-reverse-fly`, `machine-seated-crunch`, `machine-shoulder-press`, `one-arm-seated-cable-row`, `overhead-tricep-extension`, `pec-deck`, `seated-cable-row`, `seated-calf-raise`, `seated-dumbbell-calf-raise`, `seated-dumbbell-lateral-raise`, `seated-leg-curl`, `single-arm-plate-loaded-lateral-raise`, `standing-calf-raise`, `straight-arm-pulldown`, `tricep-pushdown`, `v-bar-lat-pulldown`, `wide-grip-seated-cable-row` | Trabajo monoarticular estable y empujes, remos y jalones en máquina o polea: se puede llegar cerca del fallo y cambiar la carga en segundos. |
+| MyoRepMatch, MyoReps, RestPause | 20 | `ball-leg-curl`, `banded-standing-curl`, `band-lat-pulldown`, `band-pull-apart`, `band-row`, `band-shoulder-press`, `barbell-curl`, `bent-knee-inverted-row`, `bodyweight-calf-raise`, `incline-push-ups`, `inverted-row`, `knee-push-ups`, `preacher-curl`, `push-up`, `shrug`, `side-lying-hip-abduction`, `side-lying-hip-adduction`, `smith-machine-calf-raise`, `standing-hip-abduction`, `trx-hamstring-curl` | Barra, peso corporal y bandas: sin carga que bajar a tiempo (barra) o sin carga que bajar. |
+| DropSet, RestPause | 4 | `chest-supported-db-row`, `chest-supported-kettlebell-row`, `horizontal-leg-press`, `leg-press` | Prensa y remos con mancuerna apoyando el pecho: seguros al fallo, pero demasiado grandes para activación y miniseries. |
+| RestPause | 4 | `assisted-pull-ups`, `chin-ups`, `parallel-bar-dips`, `pull-up` | Dominadas y fondos: solo reanudaciones (en la asistida, bajar carga sería añadir asistencia). |
+| DropSet | 1 | `hack-squat` | Hack: solo descensos, con los topes de la máquina. |
+
+Sin técnicas: los 76 restantes. Todas las bisagras, el trabajo a una pierna, el cardio y las sentadillas salvo prensa y hack;
+los básicos con barra, mancuernas o Smith; los excéntricos y de control (nórdicos, rueda, dragon flag); los isométricos y
+acarreos; y los que llegan al fallo en posición comprometida (`db-fly`, `skull-crusher`, `incline-bench-y-raise`,
+`cable-external-rotation`, `barbell-standing-calf-raise`).
+

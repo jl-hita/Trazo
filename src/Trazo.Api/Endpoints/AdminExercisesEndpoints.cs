@@ -123,7 +123,8 @@ public static partial class AdminExercisesEndpoints
             Sorted(ExerciseCatalogVocabulary.Muscles),
             Sorted(ExerciseCatalogVocabulary.Goals),
             Sorted(ExerciseCatalogVocabulary.Emphases),
-            Sorted(ExerciseCatalogVocabulary.LimitationAreas)));
+            Sorted(ExerciseCatalogVocabulary.LimitationAreas),
+            Sorted(ExerciseCatalogVocabulary.Techniques)));
     }
 
     /// <summary>Where the database differs from the exercise seed, and which rows are invalid. Reads only.</summary>
@@ -273,7 +274,7 @@ public static partial class AdminExercisesEndpoints
         i.Mechanic ?? "", i.Difficulty ?? "", i.Equipment, i.BodyPart ?? "", i.Met ?? 0, i.IsUnilateral ?? false,
         i.IsBodyweight ?? false, i.MovementPattern ?? "", i.PrimaryMuscles ?? [], i.SecondaryMuscles ?? [],
         i.MinimumExperience ?? "", i.SuitableGoals ?? [], i.RequiredEquipment ?? [], i.SelectionPriority ?? 50,
-        i.EffectiveSecondaryMuscles, i.Emphasis, i.LimitationAreas, i.MetadataReviewed ?? false);
+        i.EffectiveSecondaryMuscles, i.Emphasis, i.LimitationAreas, i.MetadataReviewed ?? false, i.AllowedTechniques);
 
     private static void Apply(ExerciseCatalogItem item, ExerciseMetadata c)
     {
@@ -283,6 +284,7 @@ public static partial class AdminExercisesEndpoints
         item.RequiredEquipment = c.RequiredEquipment; item.SelectionPriority = c.SelectionPriority;
         item.EffectiveSecondaryMuscles = c.EffectiveSecondaryMuscles ?? []; item.Emphasis = c.Emphasis ?? [];
         item.LimitationAreas = c.LimitationAreas ?? []; item.MetadataReviewed = c.MetadataReviewed;
+        item.AllowedTechniques = c.AllowedTechniques ?? [];
     }
 
     private static string Slugify(string name)
@@ -316,7 +318,7 @@ public static partial class AdminExercisesEndpoints
             x.Difficulty, x.Equipment, x.BodyPart, x.Met, x.IsUnilateral, x.IsBodyweight, x.MovementPattern,
             x.PrimaryMuscles, x.SecondaryMuscles, x.MinimumExperience, x.SuitableGoals, x.RequiredEquipment,
             x.SelectionPriority, x.IsActive, !seedIndex.Contains(id) && (meta?.IsLocallyCurated ?? false), meta?.SourceSystem, slots, x.CreatedAt, x.UpdatedAt,
-            seedIndex.Contains(id), x.EffectiveSecondaryMuscles, x.Emphasis, x.LimitationAreas, x.MetadataReviewed);
+            seedIndex.Contains(id), x.EffectiveSecondaryMuscles, x.Emphasis, x.LimitationAreas, x.MetadataReviewed, x.AllowedTechniques);
     }
 
     private static void Log(ILoggerFactory loggerFactory, ClaimsPrincipal principal, string action, string exerciseId) =>
@@ -340,15 +342,16 @@ public sealed record AdminExerciseDetail(
     bool IsBodyweight, string MovementPattern, string[] PrimaryMuscles, string[] SecondaryMuscles, string MinimumExperience,
     string[] SuitableGoals, string[] RequiredEquipment, int SelectionPriority, bool IsActive, bool LocallyCurated,
     string? ImportedFrom, IReadOnlyList<int> ImageSlots, DateTimeOffset CreatedAt, DateTimeOffset UpdatedAt, bool FromSeed,
-    string[] EffectiveSecondaryMuscles, string[] Emphasis, string[] LimitationAreas, bool MetadataReviewed);
+    string[] EffectiveSecondaryMuscles, string[] Emphasis, string[] LimitationAreas, bool MetadataReviewed, string[] AllowedTechniques);
 
 public sealed record AdminExerciseInput(
     string? Id, string? NameEs, string? NameEn, string? DescriptionEs, string[]? InstructionsEs, string[]? TipsEs,
     string? ForceType, string? Mechanic, string? Difficulty, string? Equipment, string? BodyPart, double? Met,
     bool? IsUnilateral, bool? IsBodyweight, string? MovementPattern, string[]? PrimaryMuscles, string[]? SecondaryMuscles,
     string? MinimumExperience, string[]? SuitableGoals, string[]? RequiredEquipment, int? SelectionPriority,
-    string[]? EffectiveSecondaryMuscles = null, string[]? Emphasis = null, string[]? LimitationAreas = null, bool? MetadataReviewed = null);
+    string[]? EffectiveSecondaryMuscles = null, string[]? Emphasis = null, string[]? LimitationAreas = null, bool? MetadataReviewed = null,
+    string[]? AllowedTechniques = null);
 
 public sealed record AdminExerciseOptions(
     string[] MovementPatterns, string[] Difficulties, string[] Experiences, string[] Equipment, string[] ForceTypes,
-    string[] Mechanics, string[] BodyParts, string[] Sources, string[] Muscles, string[] Goals, string[] Emphases, string[] LimitationAreas);
+    string[] Mechanics, string[] BodyParts, string[] Sources, string[] Muscles, string[] Goals, string[] Emphases, string[] LimitationAreas, string[] Techniques);

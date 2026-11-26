@@ -10,7 +10,9 @@ public sealed record ExerciseMetadata(
     string[] SuitableGoals, string[] RequiredEquipment, int SelectionPriority,
     string[]? EffectiveSecondaryMuscles = null, string[]? Emphasis = null,
     // Null means nobody said; an empty list means the exercise is avoided for no area.
-    string[]? LimitationAreas = null, bool MetadataReviewed = false);
+    string[]? LimitationAreas = null, bool MetadataReviewed = false,
+    // The set techniques the exercise admits; empty or absent means only straight sets.
+    string[]? AllowedTechniques = null);
 
 /// <summary>The texts of an exercise in one language.</summary>
 public sealed record ExerciseText(string Name, string Description, string[] Instructions, string[] Tips);
@@ -105,6 +107,10 @@ public static partial class ExerciseMetadataValidator
         if (input.MetadataReviewed && input.LimitationAreas is null)
             Fail("limitationAreas", "A reviewed exercise says which areas it is avoided for, even if none.");
 
+        var techniques = Many("allowedTechniques", input.AllowedTechniques, ExerciseCatalogVocabulary.Techniques, 0);
+        if (input.IsBodyweight && techniques.Contains("DropSet"))
+            Fail("allowedTechniques", "A bodyweight exercise has no load to drop.");
+
         var displayEquipment = input.Equipment?.Trim();
         if (string.IsNullOrEmpty(displayEquipment)) displayEquipment = null;
         else if (!DisplayEquipmentPattern().IsMatch(displayEquipment))
@@ -127,7 +133,7 @@ public static partial class ExerciseMetadataValidator
             input.Met, input.IsUnilateral, input.IsBodyweight, pattern, primary, secondary,
             One("minimumExperience", input.MinimumExperience, ExerciseCatalogVocabulary.Experiences),
             Many("suitableGoals", input.SuitableGoals, ExerciseCatalogVocabulary.Goals, 1),
-            equipment, input.SelectionPriority, effective, emphasis, input.LimitationAreas is null ? null : areas, input.MetadataReviewed);
+            equipment, input.SelectionPriority, effective, emphasis, input.LimitationAreas is null ? null : areas, input.MetadataReviewed, techniques);
 
         return new ExerciseValidation(clean, errors.ToDictionary(e => e.Key, e => e.Value.ToArray(), StringComparer.Ordinal));
     }

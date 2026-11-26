@@ -203,7 +203,7 @@ public sealed class ExerciseLibraryImportService(
                 "SuitableGoals" = EXCLUDED."SuitableGoals", "RequiredEquipment" = EXCLUDED."RequiredEquipment",
                 "SelectionPriority" = EXCLUDED."SelectionPriority", "UpdatedAt" = NOW(),
                 -- The archive does not carry the planning metadata, so changed content has to be reviewed again.
-                "EffectiveSecondaryMuscles" = '{}', "Emphasis" = '{}', "LimitationAreas" = '{}', "MetadataReviewed" = FALSE
+                "EffectiveSecondaryMuscles" = '{}', "Emphasis" = '{}', "LimitationAreas" = '{}', "AllowedTechniques" = '{}', "MetadataReviewed" = FALSE
             WHERE EXISTS (SELECT 1 FROM exercise_catalog_import_metadata m
                           WHERE m.exercise_id = EXCLUDED.exercise_id AND m.is_locally_curated = FALSE)
             RETURNING (xmax = 0) AS inserted

@@ -698,6 +698,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<string[]>("EffectiveSecondaryMuscles").IsRequired().HasColumnType("text[]");
             b.Property<string[]>("Emphasis").IsRequired().HasColumnType("text[]");
             b.Property<string[]>("LimitationAreas").IsRequired().HasColumnType("text[]");
+            b.Property<string[]>("AllowedTechniques").IsRequired().HasColumnType("text[]");
             b.Property<bool>("MetadataReviewed").HasColumnType("boolean");
             b.Property<int>("SeedVersion").HasColumnType("integer");
             b.Property<int>("SelectionPriority").HasColumnType("integer");
