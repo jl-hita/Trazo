@@ -257,6 +257,8 @@ app.Use(async (context, next) =>
 {
     context.RequestServices.GetRequiredService<Trazo.Application.Localization.RequestLanguage>().Current =
         Trazo.Application.Localization.LanguageNegotiation.FromAcceptLanguage(context.Request.Headers.AcceptLanguage.ToString());
+    context.RequestServices.GetRequiredService<Trazo.Application.Planning.ClientCapabilities>()
+        .Read(context.Request.Headers[Trazo.Application.Planning.ClientCapabilities.Header].ToString());
     await next();
 });
 // Baseline for every answer of the API. Pages that need more (the account-deletion pages) set their own on top.

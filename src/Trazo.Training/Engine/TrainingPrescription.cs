@@ -50,7 +50,10 @@ public sealed record TrainingExercisePrescription(
     decimal? TargetLoadKg = null,
     string? LoadBasis = null,
     // The secondary muscles that count as a set. Null only in prescriptions stored before the field existed.
-    IReadOnlyList<TrainingMuscleGroup>? EffectiveSecondaryMuscleGroups = null);
+    IReadOnlyList<TrainingMuscleGroup>? EffectiveSecondaryMuscleGroups = null,
+    // Absent means straight sets; it is not written then, so prescriptions without a technique are stored as before.
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    TrainingTechniquePrescription? Technique = null);
 
 /// <summary>Controlled vocabulary for reviewed exercise muscle metadata.</summary>
 public enum TrainingMuscleGroup

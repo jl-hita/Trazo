@@ -62,6 +62,7 @@ public static class DependencyInjection
         services.AddScoped<Trazo.Infrastructure.Marketing.IDownloadsService, Trazo.Infrastructure.Marketing.DownloadsService>();
         services.AddScoped<Trazo.Infrastructure.Marketing.IMarketingAnalytics, Trazo.Infrastructure.Marketing.MarketingAnalytics>();
         services.AddScoped<Trazo.Application.Localization.RequestLanguage>();
+        services.AddScoped<Trazo.Application.Planning.ClientCapabilities>();
         services.AddScoped<Trazo.Infrastructure.Planning.IUserTimeZone, Trazo.Infrastructure.Planning.UserTimeZone>();
         services.AddScoped<Trazo.Infrastructure.Accounts.IAccountService, Trazo.Infrastructure.Accounts.AccountService>();
         services.AddScoped<Trazo.Infrastructure.Planning.ITrainingPlanService, Trazo.Infrastructure.Planning.TrainingPlanService>();

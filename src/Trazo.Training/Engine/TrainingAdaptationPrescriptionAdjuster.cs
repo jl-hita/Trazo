@@ -52,6 +52,7 @@ public static class TrainingAdaptationPrescriptionAdjuster
                 // restored (one set at a time) when the fatigue signal disappears.
                 exercise["adaptationOriginalSets"] ??= sets;
                 exercise["sets"] = sets - 1;
+                RemoveTechnique(exercise);
                 reduced.Add(exerciseId);
                 changed = true;
             }
@@ -136,6 +137,7 @@ public static class TrainingAdaptationPrescriptionAdjuster
                     !rirNode.TryGetValue<decimal>(out var rir) || rir >= 5m)
                     continue;
                 exercise["targetRepetitionsInReserve"] = Math.Min(5m, rir + 1m);
+                RemoveTechnique(exercise);
                 changed = true;
             }
             if (!changed) return false;
@@ -187,6 +189,9 @@ public static class TrainingAdaptationPrescriptionAdjuster
                 .Select(m => (JsonNode?)JsonValue.Create(m.ToString())).ToArray());
             foreach (var stale in new[] { "targetLoadKg", "loadBasis", "warmupSets", "warmupNote", "adaptationOriginalSets" })
                 target.Remove(stale);
+            if (target["technique"] is JsonObject technique &&
+                !(replacement.AllowedTechniques ?? []).Any(t => string.Equals(t.ToString(), technique["type"]?.ToString(), StringComparison.OrdinalIgnoreCase)))
+                RemoveTechnique(target);
             // The approach sets depend on the muscles of the exercise: the replacement gets its own (what the generator would give it).
             RefreshWarmups(items);
             var rationale = $"Intercambio solicitado por el paciente: {originalName} → {replacement.Name} (mismo patrón o mismos músculos principales).";
@@ -252,6 +257,7 @@ public static class TrainingAdaptationPrescriptionAdjuster
                 if (item["targetRepetitionsInReserve"] is JsonValue rirNode && rirNode.TryGetValue<decimal>(out var rir))
                     item["targetRepetitionsInReserve"] = Math.Min(5m, rir + 2m);
                 item["progressionRule"] = (int)TrainingProgressionRule.None;
+                RemoveTechnique(item);
                 changed = true;
             }
             if (!changed) return false;
@@ -279,7 +285,11 @@ public static class TrainingAdaptationPrescriptionAdjuster
             if (target is null || target["sets"] is not JsonValue setsNode || !setsNode.TryGetValue<int>(out var sets)) return false;
             var next = sets + delta;
             if (next < 1 || next > 5) return false;
-            if (delta < 0) target["adaptationOriginalSets"] ??= sets;
+            if (delta < 0)
+            {
+                target["adaptationOriginalSets"] ??= sets;
+                RemoveTechnique(target);
+            }
             target["sets"] = next;
             legacyPrescription = string.Join(Environment.NewLine, exercises.OfType<JsonObject>()
                 .Select(FormatExercise).Where(line => !string.IsNullOrWhiteSpace(line)));
@@ -317,6 +327,12 @@ public static class TrainingAdaptationPrescriptionAdjuster
         catch (InvalidOperationException) { return false; }
         catch (FormatException) { return false; }
     }
+
+    /// <summary>
+    /// Whatever makes a session lighter also takes the technique away: it is work close to failure. Giving sets back later does
+    /// not bring it back. Superset letters and rounds stay: they order the work, they do not harden it.
+    /// </summary>
+    private static void RemoveTechnique(JsonObject exercise) => exercise.Remove("technique");
 
     private static string FormatExercise(JsonObject exercise)
     {

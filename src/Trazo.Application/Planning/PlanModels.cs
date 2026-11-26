@@ -66,7 +66,9 @@ public sealed record ExerciseView(
     /// A swapped exercise the user has never done: what they did the last time with the exercise it replaced, as a reference only
     /// (<c>SuggestionBasis</c> is <c>reference</c>, no load is proposed). Null when the exercise was not swapped or has its own history.
     /// </summary>
-    LastPerformanceView? ReplacedPerformance = null);
+    LastPerformanceView? ReplacedPerformance = null,
+    // Only for apps that declare the techniques capability; null means straight sets.
+    Trazo.Training.TrainingTechniquePrescription? Technique = null);
 
 /// <summary>One set of the last time the user did an exercise.</summary>
 public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir);
@@ -89,7 +91,9 @@ public sealed record LogView(
 /// <summary><c>Date</c> is the planned date; <c>SequenceIndex</c> is the position of the session in the program (it never changes).</summary>
 public sealed record SessionView(
     Guid Id, int WeekNumber, DateOnly? Date, DayOfWeek? Day, string Title, int EstimatedDurationMinutes, string Status,
-    IReadOnlyList<ExerciseView> Exercises, LogView? Log, int SequenceIndex = 0);
+    IReadOnlyList<ExerciseView> Exercises, LogView? Log, int SequenceIndex = 0,
+    // How each superset letter is alternated, for apps that declare the techniques capability.
+    IReadOnlyList<Trazo.Training.TrainingSupersetPrescription>? Supersets = null);
 
 public sealed record WeekView(
     Guid PlanId, int WeekNumber, DateOnly? WeekStart, DateOnly? WeekEnd, string Timeline, MesocycleView? Mesocycle,
