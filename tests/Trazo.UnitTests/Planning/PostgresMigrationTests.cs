@@ -128,9 +128,12 @@ public sealed class PostgresMigrationTests : IDisposable
         const string Rows = "SELECT concat_ws('|', \"ExerciseId\", \"SetNumber\", \"SegmentIndex\") FROM workout_set_logs ORDER BY \"SegmentIndex\"";
         Assert.Equal(["curl|1|0"], Query(_connection, Rows));
 
-        InsertMinimalRow("workout_set_logs", new() { ["WorkoutLogId"] = $"'{log}'", ["ExerciseId"] = "'curl'", ["SetNumber"] = "1", ["SegmentIndex"] = "1" });
-        Assert.ThrowsAny<Exception>(() => InsertMinimalRow("workout_set_logs",
-            new() { ["WorkoutLogId"] = $"'{log}'", ["ExerciseId"] = "'curl'", ["SetNumber"] = "1", ["SegmentIndex"] = "1" }));
+        // Written explicitly: the helper leaves out columns that have a default, and the segment is one.
+        var segment = "INSERT INTO workout_set_logs (\"Id\", \"WorkoutLogId\", \"ExerciseId\", \"SetNumber\", \"SegmentIndex\", \"Completed\", \"PainReported\") " +
+            $"VALUES (gen_random_uuid(), '{log}', 'curl', 1, 1, true, false)";
+        Execute(_connection, segment);
+        Assert.Equal(["curl|1|0", "curl|1|1"], Query(_connection, Rows));
+        Assert.ThrowsAny<Exception>(() => Execute(_connection, segment));
 
         // Going down keeps the sets and drops the segments, which the previous version cannot hold.
         using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeSegments);
