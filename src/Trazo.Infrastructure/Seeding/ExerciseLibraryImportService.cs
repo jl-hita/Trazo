@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Npgsql;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Domain.Training;
+using Trazo.Application.Catalog;
 
 namespace Trazo.Infrastructure.Seeding;
 
@@ -90,6 +91,12 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         if (manifest.Images.Any(image => !exerciseIds.Contains(image.ExerciseId)))
             throw new InvalidDataException("An image references an exercise outside the approved export.");
 
+        var records = exercises.Select(record => (Record: record, Parsed: ReadExercise(record))).ToList();
+        var invalid = records.Where(r => !r.Parsed.Validation.IsValid).ToList();
+        if (invalid.Count > 0)
+            throw new InvalidDataException($"{invalid.Count} exercise(s) have invalid metadata; nothing was imported. " + string.Join(" ",
+                invalid.Take(20).Select(r => $"'{r.Parsed.Validation.Metadata.Id}' — {r.Parsed.Validation.Describe()}")));
+
         var connection = (NpgsqlConnection)db.Database.GetDbConnection();
         var shouldClose = connection.State != System.Data.ConnectionState.Open;
         if (shouldClose) await connection.OpenAsync(cancellationToken);
@@ -103,11 +110,10 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             var updated = 0;
             var preserved = 0;
 
-            foreach (var exercise in exercises)
+            foreach (var (record, (source, validation)) in records)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var id = RequiredString(exercise, "id");
-                var changed = await UpsertExerciseAsync(connection, transaction, exercise, manifest, cancellationToken);
+                var changed = await UpsertExerciseAsync(connection, transaction, record, source, validation.Metadata, manifest, cancellationToken);
                 if (changed == 0) { preserved++; continue; }
                 if (changed == 1) inserted++; else updated++;
             }
@@ -145,31 +151,32 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         }
     }
 
-    private static async Task<int> UpsertExerciseAsync(NpgsqlConnection connection, NpgsqlTransaction transaction,
-        JsonElement e, Manifest manifest, CancellationToken ct)
+    /// <summary>An archive record (its source already checked) as catalog metadata, checked against the same rules as every other way into the catalog.</summary>
+    private static (string Source, ExerciseValidation Validation) ReadExercise(JsonElement e)
     {
         var id = RequiredString(e, "id");
         var source = OptionalString(e, "source") ?? "unknown";
-        if (source is not ("repdb-free" or "dietoexpress-curated"))
-            throw new InvalidDataException($"Exercise '{id}' has an unsupported source '{source}'.");
         var nameEn = OptionalString(e, "nameEn") ?? id;
-        var nameEs = OptionalString(e, "nameEs") ?? nameEn;
-        var descriptionEs = OptionalString(e, "descriptionEs") ?? OptionalString(e, "descriptionEn") ?? "";
-        var instructions = StringArray(e, "instructionsEs") ?? [];
-        var tips = StringArray(e, "tipsEs") ?? [];
-        var pattern = OptionalString(e, "movementPattern") ?? "";
-        var primary = StringArray(e, "reviewedPrimaryMuscles") ?? StringArray(e, "primaryMuscles") ?? [];
-        var secondary = StringArray(e, "reviewedSecondaryMuscles") ?? StringArray(e, "secondaryMuscles") ?? [];
-        var experience = OptionalString(e, "minimumExperience") ?? "intermediate";
-        var goals = StringArray(e, "suitableGoals") ?? StringArray(e, "goals") ?? [];
         var sourceEquipment = StringArray(e, "requiredEquipment") ?? (OptionalString(e, "equipment") is { Length: > 0 } item ? [item] : []);
-        var equipment = ExerciseEquipmentRequirements.Normalize(id, sourceEquipment);
-        var priority = OptionalInt(e, "selectionPriority") ?? 50;
-        if (string.IsNullOrWhiteSpace(pattern) || primary.Length == 0 || goals.Length == 0 ||
-            instructions.Length == 0 || priority is < 0 or > 100 ||
-            equipment.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
-            throw new InvalidDataException($"Approved exercise '{id}' is missing required reviewed metadata.");
+        var metadata = new ExerciseMetadata(
+            id, OptionalString(e, "nameEs") ?? nameEn, nameEn,
+            OptionalString(e, "descriptionEs") ?? OptionalString(e, "descriptionEn") ?? "",
+            StringArray(e, "instructionsEs") ?? [], StringArray(e, "tipsEs") ?? [],
+            OptionalString(e, "forceType") ?? "", OptionalString(e, "mechanic") ?? "", OptionalString(e, "difficulty") ?? "",
+            OptionalString(e, "equipment"), OptionalString(e, "bodyPart") ?? "", OptionalDouble(e, "met") ?? 0d,
+            OptionalBooleanNullable(e, "isUnilateral") ?? false, OptionalBooleanNullable(e, "isBodyweight") ?? false,
+            OptionalString(e, "movementPattern") ?? "",
+            StringArray(e, "reviewedPrimaryMuscles") ?? StringArray(e, "primaryMuscles") ?? [],
+            StringArray(e, "reviewedSecondaryMuscles") ?? StringArray(e, "secondaryMuscles") ?? [],
+            OptionalString(e, "minimumExperience") ?? "",
+            StringArray(e, "suitableGoals") ?? StringArray(e, "goals") ?? [],
+            ExerciseEquipmentRequirements.Normalize(id, sourceEquipment), OptionalInt(e, "selectionPriority") ?? 50);
+        return (source, ExerciseMetadataValidator.Validate(metadata));
+    }
 
+    private static async Task<int> UpsertExerciseAsync(NpgsqlConnection connection, NpgsqlTransaction transaction,
+        JsonElement record, string source, ExerciseMetadata e, Manifest manifest, CancellationToken ct)
+    {
         const string sql = """
             INSERT INTO exercise_catalog
                 (exercise_id, "Source", "NameEn", "NameEs", "DescriptionEs", "InstructionsEs", "TipsEs",
@@ -196,28 +203,28 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             RETURNING (xmax = 0) AS inserted
             """;
         await using var command = new NpgsqlCommand(sql, connection, transaction);
-        command.Parameters.AddWithValue("id", id);
-        command.Parameters.AddWithValue("source", source[..Math.Min(40, source.Length)]);
-        command.Parameters.AddWithValue("name_en", nameEn);
-        command.Parameters.AddWithValue("name_es", nameEs);
-        command.Parameters.AddWithValue("description", descriptionEs);
-        command.Parameters.AddWithValue("instructions", instructions);
-        command.Parameters.AddWithValue("tips", tips);
-        command.Parameters.AddWithValue("force", OptionalString(e, "forceType") ?? "unknown");
-        command.Parameters.AddWithValue("mechanic", OptionalString(e, "mechanic") ?? "unknown");
-        command.Parameters.AddWithValue("difficulty", OptionalString(e, "difficulty") ?? "intermediate");
-        command.Parameters.AddWithValue("equipment", (object?)OptionalString(e, "equipment") ?? DBNull.Value);
-        command.Parameters.AddWithValue("body_part", OptionalString(e, "bodyPart") ?? "unknown");
-        command.Parameters.AddWithValue("met", OptionalDouble(e, "met") ?? 0d);
-        command.Parameters.AddWithValue("unilateral", OptionalBooleanNullable(e, "isUnilateral") ?? false);
-        command.Parameters.AddWithValue("bodyweight", OptionalBooleanNullable(e, "isBodyweight") ?? false);
-        command.Parameters.AddWithValue("pattern", pattern);
-        command.Parameters.AddWithValue("primary", primary);
-        command.Parameters.AddWithValue("secondary", secondary);
-        command.Parameters.AddWithValue("experience", experience);
-        command.Parameters.AddWithValue("goals", goals);
-        command.Parameters.AddWithValue("required_equipment", equipment);
-        command.Parameters.AddWithValue("priority", priority);
+        command.Parameters.AddWithValue("id", e.Id);
+        command.Parameters.AddWithValue("source", source);
+        command.Parameters.AddWithValue("name_en", e.NameEn);
+        command.Parameters.AddWithValue("name_es", e.NameEs);
+        command.Parameters.AddWithValue("description", e.DescriptionEs);
+        command.Parameters.AddWithValue("instructions", e.InstructionsEs);
+        command.Parameters.AddWithValue("tips", e.TipsEs);
+        command.Parameters.AddWithValue("force", e.ForceType);
+        command.Parameters.AddWithValue("mechanic", e.Mechanic);
+        command.Parameters.AddWithValue("difficulty", e.Difficulty);
+        command.Parameters.AddWithValue("equipment", (object?)e.Equipment ?? DBNull.Value);
+        command.Parameters.AddWithValue("body_part", e.BodyPart);
+        command.Parameters.AddWithValue("met", e.Met);
+        command.Parameters.AddWithValue("unilateral", e.IsUnilateral);
+        command.Parameters.AddWithValue("bodyweight", e.IsBodyweight);
+        command.Parameters.AddWithValue("pattern", e.MovementPattern);
+        command.Parameters.AddWithValue("primary", e.PrimaryMuscles);
+        command.Parameters.AddWithValue("secondary", e.SecondaryMuscles);
+        command.Parameters.AddWithValue("experience", e.MinimumExperience);
+        command.Parameters.AddWithValue("goals", e.SuitableGoals);
+        command.Parameters.AddWithValue("required_equipment", e.RequiredEquipment);
+        command.Parameters.AddWithValue("priority", e.SelectionPriority);
         var scalar = await command.ExecuteScalarAsync(ct);
         if (scalar is null) return 0;
 
@@ -234,11 +241,11 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             """;
         await using (var translationCommand = new NpgsqlCommand(spanishTranslationSql, connection, transaction))
         {
-            translationCommand.Parameters.AddWithValue("id", id);
-            translationCommand.Parameters.AddWithValue("name_es", nameEs);
-            translationCommand.Parameters.AddWithValue("description", descriptionEs);
-            translationCommand.Parameters.AddWithValue("instructions", instructions);
-            translationCommand.Parameters.AddWithValue("tips", tips);
+            translationCommand.Parameters.AddWithValue("id", e.Id);
+            translationCommand.Parameters.AddWithValue("name_es", e.NameEs);
+            translationCommand.Parameters.AddWithValue("description", e.DescriptionEs);
+            translationCommand.Parameters.AddWithValue("instructions", e.InstructionsEs);
+            translationCommand.Parameters.AddWithValue("tips", e.TipsEs);
             await translationCommand.ExecuteNonQueryAsync(ct);
         }
 
@@ -252,12 +259,12 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             """;
         await using (var translationCommand = new NpgsqlCommand(englishNameSql, connection, transaction))
         {
-            translationCommand.Parameters.AddWithValue("id", id);
-            translationCommand.Parameters.AddWithValue("name_en", nameEn);
+            translationCommand.Parameters.AddWithValue("id", e.Id);
+            translationCommand.Parameters.AddWithValue("name_en", e.NameEn);
             await translationCommand.ExecuteNonQueryAsync(ct);
         }
 
-        var raw = e.GetRawText();
+        var raw = record.GetRawText();
         const string metadataSql = """
             INSERT INTO exercise_catalog_import_metadata
                 (exercise_id, source_system, source_record_json, attribution, review_notes, reviewed_by, reviewed_at,
@@ -269,12 +276,12 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             WHERE exercise_catalog_import_metadata.is_locally_curated = FALSE
             """;
         await using var metadataCommand = new NpgsqlCommand(metadataSql, connection, transaction);
-        metadataCommand.Parameters.AddWithValue("id", id);
+        metadataCommand.Parameters.AddWithValue("id", e.Id);
         metadataCommand.Parameters.AddWithValue("raw", raw);
         metadataCommand.Parameters.AddWithValue("attribution", manifest.Attribution);
-        metadataCommand.Parameters.AddWithValue("notes", (object?)OptionalString(e, "reviewNotes") ?? DBNull.Value);
-        metadataCommand.Parameters.AddWithValue("reviewed_by", (object?)OptionalString(e, "reviewedBy") ?? DBNull.Value);
-        metadataCommand.Parameters.AddWithValue("reviewed_at", (object?)OptionalDateTime(e, "reviewedAt") ?? DBNull.Value);
+        metadataCommand.Parameters.AddWithValue("notes", (object?)OptionalString(record, "reviewNotes") ?? DBNull.Value);
+        metadataCommand.Parameters.AddWithValue("reviewed_by", (object?)OptionalString(record, "reviewedBy") ?? DBNull.Value);
+        metadataCommand.Parameters.AddWithValue("reviewed_at", (object?)OptionalDateTime(record, "reviewedAt") ?? DBNull.Value);
         await metadataCommand.ExecuteNonQueryAsync(ct);
         return Convert.ToBoolean(scalar) ? 1 : 2;
     }

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using Trazo.Application.Catalog;
 using Trazo.Domain.Training;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
@@ -13,9 +14,6 @@ namespace Trazo.Api.Endpoints;
 /// </summary>
 public static partial class AdminExercisesEndpoints
 {
-    private const int MaxListItems = 30;
-    private const int MaxItemLength = 100;
-
     public static IEndpointRouteBuilder MapAdminExercisesEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/v1/admin/exercises")
@@ -24,6 +22,7 @@ public static partial class AdminExercisesEndpoints
 
         group.MapGet("", ListAsync);
         group.MapGet("/options", OptionsAsync);
+        group.MapGet("/seed-report", SeedReportAsync);
         group.MapGet("/{id}", GetAsync);
         group.MapPost("", CreateAsync);
         group.MapPut("/{id}", UpdateAsync);
@@ -100,30 +99,28 @@ public static partial class AdminExercisesEndpoints
         return Results.Ok(new AdminExercisePage(items, page, pageSize, totalCount, (int)Math.Ceiling(totalCount / (double)pageSize)));
     }
 
-    /// <summary>Values already used in the catalog, offered as suggestions in the editor.</summary>
+    /// <summary>The closed vocabularies the validator accepts, offered by the editor. Sources are the ones already in the catalog.</summary>
     private static async Task<IResult> OptionsAsync(TrazoDbContext db, CancellationToken cancellationToken)
     {
-        var rows = await db.ExerciseCatalog.AsNoTracking().Select(x => new
-        {
-            x.MovementPattern, x.Difficulty, x.MinimumExperience, x.ForceType, x.Mechanic, x.BodyPart, x.Source,
-            x.PrimaryMuscles, x.SecondaryMuscles, x.SuitableGoals, x.RequiredEquipment
-        }).ToListAsync(cancellationToken);
-
-        static string[] Distinct(IEnumerable<string?> values) =>
-            values.Where(v => !string.IsNullOrWhiteSpace(v) && !string.Equals(v.Trim(), "machine", StringComparison.OrdinalIgnoreCase)).Select(v => v!).Distinct().Order().ToArray();
+        var sources = await db.ExerciseCatalog.AsNoTracking().Select(x => x.Source).Distinct().ToListAsync(cancellationToken);
+        static string[] Sorted(IEnumerable<string> values) => values.Order(StringComparer.Ordinal).ToArray();
 
         return Results.Ok(new AdminExerciseOptions(
-            Distinct(rows.Select(r => r.MovementPattern)),
-            Distinct(rows.Select(r => r.Difficulty)),
-            Distinct(rows.Select(r => r.MinimumExperience)),
-            Distinct(rows.SelectMany(r => r.RequiredEquipment)),
-            Distinct(rows.Select(r => r.ForceType)),
-            Distinct(rows.Select(r => r.Mechanic)),
-            Distinct(rows.Select(r => r.BodyPart)),
-            Distinct(rows.Select(r => r.Source)),
-            Distinct(rows.SelectMany(r => r.PrimaryMuscles).Concat(rows.SelectMany(r => r.SecondaryMuscles))),
-            Distinct(rows.SelectMany(r => r.SuitableGoals))));
+            Sorted(ExerciseCatalogVocabulary.MovementPatterns),
+            [.. ExerciseCatalogVocabulary.Difficulties],
+            [.. ExerciseCatalogVocabulary.Experiences],
+            Sorted(ExerciseCatalogVocabulary.Equipment),
+            Sorted(ExerciseCatalogVocabulary.ForceTypes),
+            Sorted(ExerciseCatalogVocabulary.Mechanics),
+            Sorted(ExerciseCatalogVocabulary.BodyParts),
+            Sorted(sources),
+            Sorted(ExerciseCatalogVocabulary.Muscles),
+            Sorted(ExerciseCatalogVocabulary.Goals)));
     }
+
+    /// <summary>Where the database differs from the exercise seed, and which rows are invalid. Reads only.</summary>
+    private static async Task<IResult> SeedReportAsync(ExerciseSeedReportService reports, CancellationToken cancellationToken) =>
+        Results.Ok(await reports.BuildAsync(cancellationToken));
 
     private static async Task<IResult> GetAsync(string id, TrazoDbContext db, CancellationToken cancellationToken)
     {
@@ -134,10 +131,10 @@ public static partial class AdminExercisesEndpoints
     private static async Task<IResult> CreateAsync(
         AdminExerciseInput input, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
     {
-        var (clean, errors) = Validate(input);
-        var id = string.IsNullOrWhiteSpace(input.Id) ? Slugify(clean.NameEn) : input.Id.Trim().ToLowerInvariant();
-        if (!IdPattern().IsMatch(id)) errors["id"] = ["Use 2 to 100 lowercase letters, digits, hyphens or underscores."];
-        if (errors.Count > 0) return Results.ValidationProblem(errors);
+        var id = string.IsNullOrWhiteSpace(input.Id) ? Slugify(input.NameEn ?? "") : input.Id.Trim().ToLowerInvariant();
+        var validation = ExerciseMetadataValidator.Validate(ToMetadata(id, input));
+        if (!validation.IsValid) return Results.ValidationProblem(validation.Errors);
+        var clean = validation.Metadata;
         if (await db.ExerciseCatalog.AnyAsync(x => x.Id == id, cancellationToken))
             return Results.Conflict(new { error = $"An exercise with the id '{id}' already exists." });
 
@@ -162,8 +159,9 @@ public static partial class AdminExercisesEndpoints
     {
         var item = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (item is null) return Results.NotFound();
-        var (clean, errors) = Validate(input);
-        if (errors.Count > 0) return Results.ValidationProblem(errors);
+        var validation = ExerciseMetadataValidator.Validate(ToMetadata(id, input));
+        if (!validation.IsValid) return Results.ValidationProblem(validation.Errors);
+        var clean = validation.Metadata;
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         item.NameEn = clean.NameEn; item.NameEs = clean.NameEs; item.DescriptionEs = clean.DescriptionEs;
@@ -185,6 +183,12 @@ public static partial class AdminExercisesEndpoints
     {
         var item = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (item is null) return Results.NotFound();
+        // Showing an exercise puts it in plans: an invalid one stays hidden until it is corrected.
+        if (active)
+        {
+            var validation = ExerciseMetadataValidator.Validate(ExerciseSeedReportService.Metadata(item));
+            if (!validation.IsValid) return Results.ValidationProblem(validation.Errors);
+        }
         item.IsActive = active;
         item.UpdatedAt = DateTimeOffset.UtcNow;
         await db.SaveChangesAsync(cancellationToken);
@@ -250,68 +254,13 @@ public static partial class AdminExercisesEndpoints
 
     // ---- validation ---------------------------------------------------------------------------
 
-    private sealed record Clean(
-        string NameEs, string NameEn, string DescriptionEs, string[] InstructionsEs, string[] TipsEs, string ForceType,
-        string Mechanic, string Difficulty, string? Equipment, string BodyPart, double Met, bool IsUnilateral, bool IsBodyweight,
-        string MovementPattern, string[] PrimaryMuscles, string[] SecondaryMuscles, string MinimumExperience,
-        string[] SuitableGoals, string[] RequiredEquipment, int SelectionPriority);
+    private static ExerciseMetadata ToMetadata(string id, AdminExerciseInput i) => new(
+        id, i.NameEs ?? "", i.NameEn ?? "", i.DescriptionEs ?? "", i.InstructionsEs ?? [], i.TipsEs ?? [], i.ForceType ?? "",
+        i.Mechanic ?? "", i.Difficulty ?? "", i.Equipment, i.BodyPart ?? "", i.Met ?? 0, i.IsUnilateral ?? false,
+        i.IsBodyweight ?? false, i.MovementPattern ?? "", i.PrimaryMuscles ?? [], i.SecondaryMuscles ?? [],
+        i.MinimumExperience ?? "", i.SuitableGoals ?? [], i.RequiredEquipment ?? [], i.SelectionPriority ?? 50);
 
-    private static (Clean Clean, Dictionary<string, string[]> Errors) Validate(AdminExerciseInput i)
-    {
-        var errors = new Dictionary<string, string[]>();
-        string Required(string field, string? value, int max)
-        {
-            var v = value?.Trim() ?? "";
-            if (v.Length == 0) errors[field] = ["Required."];
-            else if (v.Length > max) errors[field] = [$"At most {max} characters."];
-            return v;
-        }
-        string[] List(string field, string[]? values, bool required)
-        {
-            var list = (values ?? []).Select(v => v?.Trim() ?? "").Where(v => v.Length > 0).Distinct().ToArray();
-            if (required && list.Length == 0) errors[field] = ["Add at least one value."];
-            else if (list.Length > MaxListItems) errors[field] = [$"At most {MaxListItems} values."];
-            else if (list.Any(v => v.Length > (field is "instructionsEs" or "tipsEs" ? 1000 : MaxItemLength)))
-                errors[field] = ["A value is too long."];
-            return list;
-        }
-        string Optional(string field, string? value, int max, string fallback)
-        {
-            var v = value?.Trim();
-            if (string.IsNullOrEmpty(v)) return fallback;
-            if (v.Length > max) errors[field] = [$"At most {max} characters."];
-            return v;
-        }
-
-        var nameEs = Required("nameEs", i.NameEs, 200);
-        var nameEn = Required("nameEn", i.NameEn, 200);
-        var description = Required("descriptionEs", i.DescriptionEs, 5000);
-        var pattern = Required("movementPattern", i.MovementPattern, 80);
-        var difficulty = Required("difficulty", i.Difficulty, 80);
-        var experience = Required("minimumExperience", i.MinimumExperience, 40);
-        var instructions = List("instructionsEs", i.InstructionsEs, required: true);
-        var tips = List("tipsEs", i.TipsEs, required: false);
-        var primary = List("primaryMuscles", i.PrimaryMuscles, required: true);
-        var secondary = List("secondaryMuscles", i.SecondaryMuscles, required: false);
-        var goals = List("suitableGoals", i.SuitableGoals, required: true);
-        var equipmentList = List("requiredEquipment", i.RequiredEquipment, required: false);
-        if (equipmentList.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
-            errors["requiredEquipment"] = ["Specify the exact machine type; generic machine is not a valid equipment requirement."];
-        var forceType = Optional("forceType", i.ForceType, 80, "unknown");
-        var mechanic = Optional("mechanic", i.Mechanic, 80, "unknown");
-        var bodyPart = Optional("bodyPart", i.BodyPart, 100, "unknown");
-        var equipment = Optional("equipment", i.Equipment, 120, "");
-        var met = i.Met ?? 0;
-        if (met is < 0 or > 30) errors["met"] = ["Use a value between 0 and 30."];
-        var priority = i.SelectionPriority ?? 50;
-        if (priority is < 0 or > 100) errors["selectionPriority"] = ["Use a value between 0 and 100."];
-
-        return (new Clean(nameEs, nameEn, description, instructions, tips, forceType, mechanic, difficulty,
-            equipment.Length == 0 ? null : equipment, bodyPart, met, i.IsUnilateral ?? false, i.IsBodyweight ?? false,
-            pattern, primary, secondary, experience, goals, equipmentList, priority), errors);
-    }
-
-    private static void Apply(ExerciseCatalogItem item, Clean c)
+    private static void Apply(ExerciseCatalogItem item, ExerciseMetadata c)
     {
         item.InstructionsEs = c.InstructionsEs; item.TipsEs = c.TipsEs; item.Equipment = c.Equipment; item.Met = c.Met;
         item.IsUnilateral = c.IsUnilateral; item.IsBodyweight = c.IsBodyweight; item.PrimaryMuscles = c.PrimaryMuscles;
@@ -329,9 +278,6 @@ public static partial class AdminExercisesEndpoints
         var slug = SlugCleanup().Replace(plain.ToString(), "-").Trim('-');
         return slug.Length > 100 ? slug[..100].Trim('-') : slug;
     }
-
-    [GeneratedRegex("^[a-z0-9][a-z0-9_-]{1,99}$")]
-    private static partial Regex IdPattern();
 
     [GeneratedRegex("[^a-z0-9]+")]
     private static partial Regex SlugCleanup();

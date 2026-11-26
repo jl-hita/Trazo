@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Trazo.Domain.Training;
@@ -15,59 +14,16 @@ public sealed class ExerciseCatalogSeeder(
     TrazoDbContext db,
     ILogger<ExerciseCatalogSeeder> logger)
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
-    private sealed class SeedEntry
-    {
-        public string Id { get; init; } = "";
-        public int Version { get; init; } = 1;
-        public string Source { get; init; } = "";
-        public string NameEs { get; init; } = "";
-        public string NameEn { get; init; } = "";
-        public string DescriptionEs { get; init; } = "";
-        public string[] InstructionsEs { get; init; } = [];
-        public string[] TipsEs { get; init; } = [];
-        public string ForceType { get; init; } = "";
-        public string Mechanic { get; init; } = "";
-        public string Difficulty { get; init; } = "";
-        public string? Equipment { get; init; }
-        public string BodyPart { get; init; } = "";
-        public double Met { get; init; }
-        public bool IsUnilateral { get; init; }
-        public bool IsBodyweight { get; init; }
-        public string MovementPattern { get; init; } = "";
-        public string[] PrimaryMuscles { get; init; } = [];
-        public string[] SecondaryMuscles { get; init; } = [];
-        public string MinimumExperience { get; init; } = "";
-        public string[] SuitableGoals { get; init; } = [];
-        public string[] RequiredEquipment { get; init; } = [];
-        public int SelectionPriority { get; init; } = 50;
-        public bool IsActive { get; init; } = true;
-    }
-
-    private sealed class TranslationEntry
-    {
-        public string Name { get; init; } = "";
-        public string Description { get; init; } = "";
-        public string[] Instructions { get; init; } = [];
-        public string[] Tips { get; init; } = [];
-    }
-
     /// <summary>
     /// The translated catalog texts, one file per language (<c>Seeds/translations/{code}.json</c>, keyed by exercise id). Only missing rows
     /// are added: whatever the administrator has since edited stays.
     /// </summary>
-    private async Task<int> SeedTranslationsAsync(HashSet<string> exerciseIds, DateTimeOffset now, CancellationToken cancellationToken)
+    private async Task<int> SeedTranslationsAsync(ExerciseSeed seed, DateTimeOffset now, CancellationToken cancellationToken)
     {
-        var folder = Path.Combine(AppContext.BaseDirectory, "Seeds", "translations");
-        if (!Directory.Exists(folder)) return 0;
+        var exerciseIds = seed.Entries.Select(x => x.Id).ToHashSet(StringComparer.Ordinal);
         var added = 0;
-        foreach (var path in Directory.GetFiles(folder, "*.json").Order(StringComparer.Ordinal))
+        foreach (var (language, entries) in seed.Translations)
         {
-            var language = Path.GetFileNameWithoutExtension(path);
-            await using var stream = File.OpenRead(path);
-            var entries = await JsonSerializer.DeserializeAsync<Dictionary<string, TranslationEntry>>(stream, JsonOptions, cancellationToken)
-                ?? throw new InvalidDataException($"Exercise translations '{language}' are empty or invalid.");
             var present = (await db.ExerciseCatalogTranslations.Where(x => x.LanguageCode == language)
                 .Select(x => x.ExerciseId).ToListAsync(cancellationToken)).ToHashSet(StringComparer.Ordinal);
             foreach (var (id, text) in entries.Where(e => exerciseIds.Contains(e.Key) && !present.Contains(e.Key)))
@@ -86,16 +42,11 @@ public sealed class ExerciseCatalogSeeder(
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "Seeds", "exercise-catalog.json");
-        if (!File.Exists(path))
-            throw new FileNotFoundException("The complete exercise catalog seed was not published with the API.", path);
-
-        await using var stream = File.OpenRead(path);
-        var entries = await JsonSerializer.DeserializeAsync<List<SeedEntry>>(stream, JsonOptions, cancellationToken)
-            ?? throw new InvalidDataException("Exercise catalog seed is empty or invalid.");
-
-        if (entries.Count == 0 || entries.Select(x => x.Id).Distinct(StringComparer.Ordinal).Count() != entries.Count)
-            throw new InvalidDataException("Exercise catalog seed is empty or contains duplicate exercise IDs.");
+        var seed = await ExerciseSeed.LoadAsync(ExerciseSeed.DefaultFolder, cancellationToken);
+        var problems = seed.Problems();
+        if (problems.Count > 0)
+            throw new InvalidDataException("Exercise catalog seed failed validation. " + string.Join(" ", problems));
+        var entries = seed.Entries;
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         await db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(731904221)", cancellationToken);
@@ -108,21 +59,6 @@ public sealed class ExerciseCatalogSeeder(
 
         foreach (var entry in entries)
         {
-            if (string.IsNullOrWhiteSpace(entry.Id) ||
-                entry.Source is not ("repdb-free" or "trazo-curated") ||
-                string.IsNullOrWhiteSpace(entry.NameEn) ||
-                string.IsNullOrWhiteSpace(entry.NameEs) ||
-                entry.Version < 1 ||
-                entry.InstructionsEs.Length < 3 ||
-                entry.InstructionsEs.Any(string.IsNullOrWhiteSpace) ||
-                entry.PrimaryMuscles.Length == 0 ||
-                entry.SuitableGoals.Length == 0 ||
-                entry.SelectionPriority is < 0 or > 100 ||
-                entry.RequiredEquipment.Any(value => string.Equals(value, "machine", StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new InvalidDataException($"Exercise seed entry '{entry.Id}' failed validation.");
-            }
-
             var existing = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == entry.Id, cancellationToken);
             if (existing is null)
             {
@@ -242,7 +178,7 @@ public sealed class ExerciseCatalogSeeder(
         }
 
         await db.SaveChangesAsync(cancellationToken);
-        translationsAdded += await SeedTranslationsAsync(entries.Select(x => x.Id).ToHashSet(StringComparer.Ordinal), now, cancellationToken);
+        translationsAdded += await SeedTranslationsAsync(seed, now, cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation(
