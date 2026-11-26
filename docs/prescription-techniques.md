@@ -1,6 +1,6 @@
 # Técnicas avanzadas: modelo de prescripción y registro (P1-1)
 
-Estado: **propuesta pendiente de aprobación (D5)**. Nada de esto está implementado. Las cifras son **valores por defecto de
+Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Nada de esto está implementado todavía. Las cifras son **valores por defecto de
 producto**, no recomendaciones demostradas; la sección 9 dice en qué se apoya cada una.
 
 ## 1. Punto de partida
@@ -139,7 +139,7 @@ Búsqueda preliminar; antes de P1-5 hay que leer las fuentes completas.
 | P1-4 | Superseries completas | Rondas y descansos, 2-4 ejercicios, rotación intacta |
 | P1-5 | Generador | Matriz con explicación y pruebas de escenarios |
 
-## 11. Decisiones a aprobar
+## 11. Decisiones aprobadas
 
 1. Los valores por defecto de la sección 2.
 2. El peso del volumen (1 + como máximo 0,5) y progresar solo con la serie principal.
