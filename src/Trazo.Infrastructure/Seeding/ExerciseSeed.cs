@@ -75,6 +75,15 @@ public sealed record ExerciseSeed(
         return new ExerciseSeed(entries, translations);
     }
 
+    /// <summary>The ids of the exercises the seed holds, without loading their translations.</summary>
+    public static IReadOnlySet<string> LoadIds(string folder)
+    {
+        using var stream = File.OpenRead(Path.Combine(folder, "exercise-catalog.json"));
+        var entries = JsonSerializer.Deserialize<List<ExerciseSeedEntry>>(stream, JsonOptions)
+            ?? throw new InvalidDataException("Exercise catalog seed is empty or invalid.");
+        return entries.Select(e => e.Id).ToHashSet(StringComparer.Ordinal);
+    }
+
     /// <summary>Everything wrong with the exercises of the seed, one line per exercise; empty when it can be applied.</summary>
     public IReadOnlyList<string> Problems()
     {

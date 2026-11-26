@@ -44,4 +44,5 @@
     .ex-panel .empty { color: #8291a6; font-size: 13px; text-align: center; padding: 18px 0; }
     .ex-panel .notice { margin: 0; padding: 10px 12px; border: 1px solid #6b5a2e; border-radius: 6px; background: #2a2412; color: #e6d39b; font-size: 11px; line-height: 1.5; }
     @media (max-width: 1360px) { .ex-layout { grid-template-columns: 1fr; } .ex-panel { position: static; max-height: none; } }
-  
+
+.ex-fields { display: contents; }

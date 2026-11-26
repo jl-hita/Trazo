@@ -10,6 +10,7 @@ namespace Trazo.Api.Endpoints;
 
 /// <summary>
 /// Exercise library management for the administration console (superadmin only).
+/// Exercises of the seed are read only here (only their images can change): the seed governs them.
 /// Editing an imported exercise marks it as locally curated, so later DietoExpress imports keep the edit.
 /// </summary>
 public static partial class AdminExercisesEndpoints
@@ -26,16 +27,21 @@ public static partial class AdminExercisesEndpoints
         group.MapGet("/{id}", GetAsync);
         group.MapPost("", CreateAsync);
         group.MapPut("/{id}", UpdateAsync);
-        group.MapPost("/{id}/activate", (string id, ClaimsPrincipal p, TrazoDbContext db, ILoggerFactory l, CancellationToken ct) => SetActiveAsync(id, true, p, db, l, ct));
-        group.MapPost("/{id}/deactivate", (string id, ClaimsPrincipal p, TrazoDbContext db, ILoggerFactory l, CancellationToken ct) => SetActiveAsync(id, false, p, db, l, ct));
+        group.MapPost("/{id}/activate", (string id, ClaimsPrincipal p, TrazoDbContext db, ExerciseSeedIndex s, ILoggerFactory l, CancellationToken ct) => SetActiveAsync(id, true, p, db, s, l, ct));
+        group.MapPost("/{id}/deactivate", (string id, ClaimsPrincipal p, TrazoDbContext db, ExerciseSeedIndex s, ILoggerFactory l, CancellationToken ct) => SetActiveAsync(id, false, p, db, s, l, ct));
         group.MapPost("/{id}/release-curation", ReleaseCurationAsync);
         group.MapPut("/{id}/images/{slot:int}", UploadImageAsync);
         group.MapDelete("/{id}/images/{slot:int}", DeleteImageAsync);
         return endpoints;
     }
 
+    private static IResult OwnedBySeed() => Results.Conflict(new
+    {
+        error = "This exercise belongs to the exercise seed. Change it in Seeds/exercise-catalog.json and its translations."
+    });
+
     private static async Task<IResult> ListAsync(
-        TrazoDbContext db,
+        TrazoDbContext db, ExerciseSeedIndex seedIndex,
         string? q, string? movementPattern, string? difficulty, string? experience, string? equipment,
         string? muscle, string? source, string? status, string? sort,
         int page = 1, int pageSize = 25, CancellationToken cancellationToken = default)
@@ -95,7 +101,7 @@ public static partial class AdminExercisesEndpoints
         var items = rows.Select(r => new AdminExerciseSummary(
             r.Id, r.Source, r.NameEs, r.NameEn, r.Difficulty, r.Equipment, r.MovementPattern, r.MinimumExperience,
             r.PrimaryMuscles, r.SecondaryMuscles, r.SelectionPriority, r.IsActive,
-            curated.Contains(r.Id), imageCounts.GetValueOrDefault(r.Id))).ToList();
+            !seedIndex.Contains(r.Id) && curated.Contains(r.Id), imageCounts.GetValueOrDefault(r.Id), seedIndex.Contains(r.Id))).ToList();
         return Results.Ok(new AdminExercisePage(items, page, pageSize, totalCount, (int)Math.Ceiling(totalCount / (double)pageSize)));
     }
 
@@ -122,14 +128,15 @@ public static partial class AdminExercisesEndpoints
     private static async Task<IResult> SeedReportAsync(ExerciseSeedReportService reports, CancellationToken cancellationToken) =>
         Results.Ok(await reports.BuildAsync(cancellationToken));
 
-    private static async Task<IResult> GetAsync(string id, TrazoDbContext db, CancellationToken cancellationToken)
+    private static async Task<IResult> GetAsync(string id, TrazoDbContext db, ExerciseSeedIndex seedIndex, CancellationToken cancellationToken)
     {
-        var detail = await BuildDetailAsync(db, id, cancellationToken);
+        var detail = await BuildDetailAsync(db, seedIndex, id, cancellationToken);
         return detail is null ? Results.NotFound() : Results.Ok(detail);
     }
 
     private static async Task<IResult> CreateAsync(
-        AdminExerciseInput input, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+        AdminExerciseInput input, ClaimsPrincipal principal, TrazoDbContext db, ExerciseSeedIndex seedIndex, ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
     {
         var id = string.IsNullOrWhiteSpace(input.Id) ? Slugify(input.NameEn ?? "") : input.Id.Trim().ToLowerInvariant();
         var validation = ExerciseMetadataValidator.Validate(ToMetadata(id, input));
@@ -150,15 +157,16 @@ public static partial class AdminExercisesEndpoints
         db.ExerciseCatalog.Add(item);
         await db.SaveChangesAsync(cancellationToken);
         Log(loggerFactory, principal, "created", id);
-        return Results.Created($"/api/v1/admin/exercises/{id}", await BuildDetailAsync(db, id, cancellationToken));
+        return Results.Created($"/api/v1/admin/exercises/{id}", await BuildDetailAsync(db, seedIndex, id, cancellationToken));
     }
 
     private static async Task<IResult> UpdateAsync(
-        string id, AdminExerciseInput input, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory,
-        CancellationToken cancellationToken)
+        string id, AdminExerciseInput input, ClaimsPrincipal principal, TrazoDbContext db, ExerciseSeedIndex seedIndex,
+        ILoggerFactory loggerFactory, CancellationToken cancellationToken)
     {
         var item = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (item is null) return Results.NotFound();
+        if (seedIndex.Contains(id)) return OwnedBySeed();
         var validation = ExerciseMetadataValidator.Validate(ToMetadata(id, input));
         if (!validation.IsValid) return Results.ValidationProblem(validation.Errors);
         var clean = validation.Metadata;
@@ -175,14 +183,16 @@ public static partial class AdminExercisesEndpoints
             $"UPDATE exercise_catalog_import_metadata SET is_locally_curated = {true} WHERE exercise_id = {id}", cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         Log(loggerFactory, principal, "edited", id);
-        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+        return Results.Ok(await BuildDetailAsync(db, seedIndex, id, cancellationToken));
     }
 
     private static async Task<IResult> SetActiveAsync(
-        string id, bool active, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+        string id, bool active, ClaimsPrincipal principal, TrazoDbContext db, ExerciseSeedIndex seedIndex, ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
     {
         var item = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (item is null) return Results.NotFound();
+        if (seedIndex.Contains(id)) return OwnedBySeed();
         // Showing an exercise puts it in plans: an invalid one stays hidden until it is corrected.
         if (active)
         {
@@ -193,26 +203,28 @@ public static partial class AdminExercisesEndpoints
         item.UpdatedAt = DateTimeOffset.UtcNow;
         await db.SaveChangesAsync(cancellationToken);
         Log(loggerFactory, principal, active ? "activated" : "deactivated", id);
-        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+        return Results.Ok(await BuildDetailAsync(db, seedIndex, id, cancellationToken));
     }
 
     /// <summary>Lets the next DietoExpress import overwrite this exercise again.</summary>
     private static async Task<IResult> ReleaseCurationAsync(
-        string id, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+        string id, ClaimsPrincipal principal, TrazoDbContext db, ExerciseSeedIndex seedIndex, ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
     {
         if (!await db.ExerciseCatalog.AnyAsync(x => x.Id == id, cancellationToken)) return Results.NotFound();
+        if (seedIndex.Contains(id)) return OwnedBySeed();
         var changed = await db.Database.ExecuteSqlInterpolatedAsync(
             $"UPDATE exercise_catalog_import_metadata SET is_locally_curated = {false} WHERE exercise_id = {id}", cancellationToken);
         if (changed == 0) return Results.Conflict(new { error = "This exercise was not imported, so there is nothing to release." });
         Log(loggerFactory, principal, "released the local curation of", id);
-        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+        return Results.Ok(await BuildDetailAsync(db, seedIndex, id, cancellationToken));
     }
 
     // ---- images -------------------------------------------------------------------------------
 
     /// <summary>Stores the request body as the image of a slot. An upload replaces an imported image and protects it from imports.</summary>
     private static async Task<IResult> UploadImageAsync(
-        string id, int slot, HttpRequest request, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory,
+        string id, int slot, HttpRequest request, ClaimsPrincipal principal, TrazoDbContext db, ExerciseSeedIndex seedIndex, ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
         if (slot is < 0 or > ExerciseImageRules.MaximumSlot)
@@ -239,17 +251,17 @@ public static partial class AdminExercisesEndpoints
                 sha256 = excluded.sha256, source = excluded.source, origin_system = excluded.origin_system, imported_at = excluded.imported_at
             """, cancellationToken);
         Log(loggerFactory, principal, $"uploaded image {slot} of", id);
-        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+        return Results.Ok(await BuildDetailAsync(db, seedIndex, id, cancellationToken));
     }
 
     private static async Task<IResult> DeleteImageAsync(
-        string id, int slot, ClaimsPrincipal principal, TrazoDbContext db, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+        string id, int slot, ClaimsPrincipal principal, TrazoDbContext db, ExerciseSeedIndex seedIndex, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
     {
         if (!await db.ExerciseCatalog.AnyAsync(x => x.Id == id, cancellationToken)) return Results.NotFound();
         await db.Database.ExecuteSqlInterpolatedAsync(
             $"DELETE FROM exercise_catalog_images WHERE exercise_id = {id} AND slot = {slot}", cancellationToken);
         Log(loggerFactory, principal, $"removed image {slot} of", id);
-        return Results.Ok(await BuildDetailAsync(db, id, cancellationToken));
+        return Results.Ok(await BuildDetailAsync(db, seedIndex, id, cancellationToken));
     }
 
     // ---- validation ---------------------------------------------------------------------------
@@ -284,7 +296,7 @@ public static partial class AdminExercisesEndpoints
 
     // ---- detail -------------------------------------------------------------------------------
 
-    private static async Task<AdminExerciseDetail?> BuildDetailAsync(TrazoDbContext db, string id, CancellationToken cancellationToken)
+    private static async Task<AdminExerciseDetail?> BuildDetailAsync(TrazoDbContext db, ExerciseSeedIndex seedIndex, string id, CancellationToken cancellationToken)
     {
         var x = await db.ExerciseCatalog.AsNoTracking().SingleOrDefaultAsync(e => e.Id == id, cancellationToken);
         if (x is null) return null;
@@ -298,7 +310,8 @@ public static partial class AdminExercisesEndpoints
             x.Id, x.Source, x.NameEs, x.NameEn, x.DescriptionEs, x.InstructionsEs, x.TipsEs, x.ForceType, x.Mechanic,
             x.Difficulty, x.Equipment, x.BodyPart, x.Met, x.IsUnilateral, x.IsBodyweight, x.MovementPattern,
             x.PrimaryMuscles, x.SecondaryMuscles, x.MinimumExperience, x.SuitableGoals, x.RequiredEquipment,
-            x.SelectionPriority, x.IsActive, meta?.IsLocallyCurated ?? false, meta?.SourceSystem, slots, x.CreatedAt, x.UpdatedAt);
+            x.SelectionPriority, x.IsActive, !seedIndex.Contains(id) && (meta?.IsLocallyCurated ?? false), meta?.SourceSystem, slots, x.CreatedAt, x.UpdatedAt,
+            seedIndex.Contains(id));
     }
 
     private static void Log(ILoggerFactory loggerFactory, ClaimsPrincipal principal, string action, string exerciseId) =>
@@ -312,7 +325,7 @@ public static partial class AdminExercisesEndpoints
 public sealed record AdminExerciseSummary(
     string Id, string Source, string NameEs, string NameEn, string Difficulty, string? Equipment, string MovementPattern,
     string MinimumExperience, string[] PrimaryMuscles, string[] SecondaryMuscles, int SelectionPriority, bool IsActive,
-    bool LocallyCurated, int ImageCount);
+    bool LocallyCurated, int ImageCount, bool FromSeed);
 
 public sealed record AdminExercisePage(IReadOnlyList<AdminExerciseSummary> Items, int Page, int PageSize, int TotalCount, int TotalPages);
 
@@ -321,7 +334,7 @@ public sealed record AdminExerciseDetail(
     string ForceType, string Mechanic, string Difficulty, string? Equipment, string BodyPart, double Met, bool IsUnilateral,
     bool IsBodyweight, string MovementPattern, string[] PrimaryMuscles, string[] SecondaryMuscles, string MinimumExperience,
     string[] SuitableGoals, string[] RequiredEquipment, int SelectionPriority, bool IsActive, bool LocallyCurated,
-    string? ImportedFrom, IReadOnlyList<int> ImageSlots, DateTimeOffset CreatedAt, DateTimeOffset UpdatedAt);
+    string? ImportedFrom, IReadOnlyList<int> ImageSlots, DateTimeOffset CreatedAt, DateTimeOffset UpdatedAt, bool FromSeed);
 
 public sealed record AdminExerciseInput(
     string? Id, string? NameEs, string? NameEn, string? DescriptionEs, string[]? InstructionsEs, string[]? TipsEs,

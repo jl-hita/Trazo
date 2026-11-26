@@ -32,11 +32,20 @@ public sealed class ExerciseLibraryImportValidationTests : IDisposable
                 forceType = "push", mechanic = "compound", difficulty = "intermediate", bodyPart = "chest",
                 movementPattern = "HorizontalPush", primaryMuscles = new[] { "Pectoral" }, minimumExperience = "Beginner",
                 suitableGoals = new[] { "Hypertrophy" }, requiredEquipment = new[] { "barbell" }
+            },
+            // A seed exercise is not imported, so what the archive says about it is not even judged.
+            new
+            {
+                id = "bench-press", source = "dietoexpress-curated", reviewStatus = "approved", reviewed = true,
+                nameEs = "", nameEn = "", descriptionEs = "", instructionsEs = Array.Empty<string>(),
+                forceType = "", mechanic = "", difficulty = "", bodyPart = "",
+                movementPattern = "", primaryMuscles = Array.Empty<string>(), minimumExperience = "",
+                suitableGoals = Array.Empty<string>(), requiredEquipment = Array.Empty<string>()
             }
         });
         var manifest = JsonSerializer.Serialize(new
         {
-            schemaVersion = 1, source = "DietoExpress", exportedAtUtc = DateTimeOffset.UtcNow, exerciseCount = 1, imageCount = 0,
+            schemaVersion = 1, source = "DietoExpress", exportedAtUtc = DateTimeOffset.UtcNow, exerciseCount = 2, imageCount = 0,
             attribution = "test", exercisesSha256 = Convert.ToHexString(SHA256.HashData(exercises)).ToLowerInvariant(),
             images = Array.Empty<object>()
         });
@@ -47,11 +56,13 @@ public sealed class ExerciseLibraryImportValidationTests : IDisposable
         }
 
         using var db = _fixture.NewContext();
-        var service = new ExerciseLibraryImportService(db, NullLogger<ExerciseLibraryImportService>.Instance);
+        var service = new ExerciseLibraryImportService(db, new ExerciseSeedIndex(), NullLogger<ExerciseLibraryImportService>.Instance);
 
         var error = await Assert.ThrowsAsync<InvalidDataException>(() => service.ImportAsync(_archive));
 
         Assert.Contains("odd-press", error.Message);
         Assert.Contains("primaryMuscles", error.Message);
+        Assert.Contains("1 exercise(s)", error.Message);
+        Assert.DoesNotContain("bench-press", error.Message);
     }
 }
