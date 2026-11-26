@@ -101,15 +101,9 @@ install -o root -g root -m 0644 "$REPO/deploy/systemd/trazo.service" /etc/system
 systemctl daemon-reload
 
 # 5. Nginx (solo HTTP; certbot añade HTTPS).
-# Si certbot ya añadió TLS al archivo, no se sobrescribe: se perdería el certificado.
-if [[ -f /etc/nginx/conf.d/trazo.conf ]] && grep -q ssl_certificate /etc/nginx/conf.d/trazo.conf; then
-  echo ">> /etc/nginx/conf.d/trazo.conf ya tiene TLS (certbot); no se sobrescribe."
-else
-  install -o root -g root -m 0644 "$REPO/deploy/nginx/trazo.conf" /etc/nginx/conf.d/trazo.conf
-fi
+# El instalador conserva las líneas TLS que certbot haya añadido.
 install -d -o root -g root -m 0755 /var/www/trazo-releases
-nginx -t
-systemctl reload nginx
+bash "$REPO/deploy/scripts/install-trazo-nginx.sh"
 
 # 6. Helper de despliegue + sudoers para el runner.
 bash "$REPO/deploy/scripts/provision-trazo-deploy.sh" "$REPO/deploy/scripts/trazo-deploy-root.sh"

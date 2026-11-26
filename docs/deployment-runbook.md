@@ -5,7 +5,7 @@ Despliegue continuo del backend con el mismo patrón que DietoExpress: un runner
 ```
 git push main → Actions (runner en weirdfish) → /tmp/trazo-backend + /tmp/trazo-frontend (Angular)
    → sudo trazo-deploy <sha> → /opt/trazo/releases/<sha> ← /opt/trazo/current
-   → systemd trazo.service (127.0.0.1:5001) ← Nginx :80/:443 (sirve /var/www/trazo, proxy /api y /health) ← Internet
+   → systemd trazo.service (127.0.0.1:5001) ← Nginx :80/:443 (sirve /var/www/trazo; envía a la API /api, /health y sus páginas públicas) ← Internet
 ```
 
 Alcance: el workflow despliega el API y el frontend Angular de administración (incluye el asistente de primer arranque), servido por Nginx desde `/var/www/trazo`.
@@ -15,7 +15,7 @@ Alcance: el workflow despliega el API y el frontend Angular de administración (
 ### 1. DNS
 Crea el subdominio `trazo` en DuckDNS apuntando a la misma IP pública que `jlhitap`. El router ya reenvía 80/443 a weirdfish; **no** abras el 5001. Comprueba: `nslookup trazostrength.duckdns.org`.
 
-Si prefieres otro hostname, cámbialo en `deploy/scripts/trazo-deploy-root.sh` (`PUBLIC_HOST`), `deploy/nginx/trazo.conf` y `AllowedHosts` del env.
+Si prefieres otro hostname, cámbialo en `deploy/scripts/trazo-deploy-root.sh` (`PUBLIC_HOST`), `deploy/nginx/trazo*.conf`, `deploy/scripts/install-trazo-nginx.sh` y `AllowedHosts` del env.
 
 ### 2. PostgreSQL (rol y base exclusivos)
 ```bash
@@ -69,6 +69,25 @@ curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 - Si usaste `BootstrapAdmin__*` en lugar del asistente, comprueba que el superadmin inicia sesión y **borra** esas tres variables de `trazo.env`; `sudo systemctl restart trazo`.
 - Haz copia de seguridad de la base `trazo`, `/var/lib/trazo/data-protection-keys` (sin esas claves se pierden los secretos 2FA) y `/var/lib/trazo/r8-mappings` (conserva los mappings históricos para poder reprocesar tickets pendientes).
 - Compila Android con `-PapiScheme=https -PapiHost=trazostrength.duckdns.org -PapiPort=443`.
+
+## nginx
+
+El sitio está en el repo (`deploy/nginx/trazo-site.conf` y las cabeceras de seguridad). El despliegue automático **no** toca nginx.
+Cuando cambie, o si el paso «Check public routes» del despliegue avisa, ejecuta en el servidor:
+
+```bash
+sudo bash /opt/actions-runner-trazo/_work/Trazo/Trazo/deploy/scripts/install-trazo-nginx.sh
+```
+
+Regenera `/etc/nginx/conf.d/trazo.conf` conservando las líneas de certbot, comprueba la configuración y las rutas públicas, y
+restaura la anterior si algo falla (copias en `/var/backups/trazo-nginx`). No edites a mano la copia del servidor.
+
+Para los App Links añade a `/etc/trazo/trazo.env` la huella SHA-256 del certificado de firma de Play (Play Console, Integridad de la
+app) y, si instalas fuera de Play, la del certificado de subida, separadas por comas, y reinicia `trazo`:
+
+```
+AppLinks__Sha256Fingerprints=AA:BB:...,CC:DD:...
+```
 
 ## Operación
 

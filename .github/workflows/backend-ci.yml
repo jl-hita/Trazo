@@ -57,7 +57,7 @@ jobs:
         with:
           dotnet-version: "10.0.x"
       - name: Validate deployment shell scripts
-        run: bash -n deploy/scripts/*.sh
+        run: for f in deploy/scripts/*.sh deploy/tests/*.sh; do bash -n "$f"; done
       - name: Restore
         run: dotnet restore Trazo.sln
       - name: Build
@@ -102,10 +102,20 @@ jobs:
           # The PostgreSQL scenarios must really run here: a skipped or empty run is a failure, not a pass.
           grep -Eq "Passed!.*Failed: +0, Passed: +[1-9][0-9]*, Skipped: +0," postgres-test.log
 
+  # El instalador de nginx y las rutas públicas contra un nginx real (el runner es desechable).
+  nginx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Install nginx
+        run: sudo apt-get update && sudo apt-get install -y nginx
+      - name: Test the installer and the public routes
+        run: sudo CI=true bash deploy/tests/nginx-site.test.sh
+
   # Un único check estable para el resto del repositorio: falla si cualquier reparto falla o se cancela.
   build-and-test:
     if: always()
-    needs: [test, postgres]
+    needs: [test, postgres, nginx]
     runs-on: ubuntu-latest
     steps:
-      - run: test "${{ needs.test.result }}" = "success" && test "${{ needs.postgres.result }}" = "success"
+      - run: test "${{ needs.test.result }}" = "success" && test "${{ needs.postgres.result }}" = "success" && test "${{ needs.nginx.result }}" = "success"
