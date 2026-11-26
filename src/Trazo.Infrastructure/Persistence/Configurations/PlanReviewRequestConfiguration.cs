@@ -31,6 +31,7 @@ public sealed class PlanReviewMessageConfiguration : IEntityTypeConfiguration<Pl
         builder.Property(x => x.Author).HasMaxLength(10).IsRequired();
         builder.Property(x => x.Body).HasMaxLength(2000).IsRequired();
         builder.HasIndex(x => new { x.RequestId, x.CreatedAt });
+        builder.HasIndex(x => new { x.RequestId, x.ClientRequestId }).IsUnique().HasFilter("\"ClientRequestId\" IS NOT NULL");
         builder.HasOne<PlanReviewRequest>().WithMany().HasForeignKey(x => x.RequestId).OnDelete(DeleteBehavior.Cascade);
         builder.HasOne<TrazoUser>().WithMany().HasForeignKey(x => x.AuthorUserId).OnDelete(DeleteBehavior.SetNull);
     }

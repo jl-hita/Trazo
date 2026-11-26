@@ -292,7 +292,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             Goal = manual.Goal.ToString(), Experience = manual.Experience.ToString(), Split = TrainingProgramSplit.Automatic.ToString(),
             StartDate = manual.StartDate, TotalWeeks = manual.TotalWeeks, SchedulingMode = manual.SchedulingMode,
             SessionsPerPeriod = manual.Days.Count,
-            TrainingDays = calendar ? manual.Days.Select(d => d.Day.ToString()).ToArray() : [],
+            TrainingDays = calendar ? manual.Days.Select(d => $"{d.Day}").ToArray() : [],
             MaxSessionMinutes = 180, IncludeDeloadPhases = false, DeloadEveryTrainingWeeks = 4, Seed = 0, EngineVersion = "manual",
             MacrocycleName = manual.Name, MacrocycleNotes = manual.Notes, CreatedAt = now, UpdatedAt = now
         };
@@ -431,7 +431,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
 
         plan.MacrocycleName = manual.Name;
         plan.MacrocycleNotes = manual.Notes;
-        plan.TrainingDays = sequence ? [] : manual.Days.Select(d => d.Day.ToString()).ToArray();
+        plan.TrainingDays = sequence ? [] : manual.Days.Select(d => $"{d.Day}").ToArray();
         if (sequence) plan.SessionsPerPeriod = manual.Days.Count;
         plan.UpdatedAt = now;
         foreach (var phase in plan.Phases)
