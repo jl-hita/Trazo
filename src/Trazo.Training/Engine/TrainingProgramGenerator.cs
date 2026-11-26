@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.11.1";
+    public const string EngineVersion = "0.12.0";
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
     // within this share of the time offered.
     private const decimal StrengthMainLiftTimeShare = 0.85m;
@@ -919,8 +919,18 @@ public static class TrainingProgramGenerator
         if (isolationSlotsApply)
             slots++;
 
-        for (var slot = 0; slot < slots; slot++)
+        // An emphasized muscle gets one more slot of its own after the regular ones: with a fixed number of exercises, each
+        // stopped at its set ceiling, a higher weekly target could otherwise add nothing at all. It is used only while the
+        // muscle is under that target and the session has time for it.
+        var emphasized = (request.MuscleVolumeTargets ?? Array.Empty<TrainingMuscleVolumeTarget>())
+            .Where(preference => preference.Priority > 0 && !preference.Maintenance && !preference.Learned)
+            .Select(preference => preference.MuscleGroup)
+            .ToHashSet();
+        var totalSlots = slots + (emphasized.Count > 0 ? 1 : 0);
+
+        for (var slot = 0; slot < totalSlots; slot++)
         {
+            var emphasisSlot = slot >= slots;
             var currentEffectiveVolume = new Dictionary<TrainingMuscleGroup, decimal>();
             foreach (var exercise in previousSessions.Where(session => session.WeekNumber == week)
                          .SelectMany(session => session.Exercises).Concat(currentExercises))
@@ -1053,6 +1063,8 @@ public static class TrainingProgramGenerator
                         targets.ContainsKey(muscle) &&
                         (allowedMuscles is null || allowedMuscles.Contains(muscle)) &&
                         !selectedAccessoryPrimaryMuscles.Contains(muscle)))
+                .Where(candidate => !emphasisSlot || candidate.PrimaryMuscleGroups.Any(muscle => emphasized.Contains(muscle) &&
+                    currentEffectiveVolume.GetValueOrDefault(muscle) < targets.GetValueOrDefault(muscle)))
                 .Select(candidate => new
                 {
                     Candidate = candidate,
@@ -1132,8 +1144,11 @@ public static class TrainingProgramGenerator
                 break;
             }
 
-            if (!selected)
+            // When the regular slots run out of candidates the emphasis slot still has its turn.
+            if (!selected && (emphasisSlot || totalSlots == slots))
                 break;
+            if (!selected)
+                slot = slots - 1;
         }
     }
 

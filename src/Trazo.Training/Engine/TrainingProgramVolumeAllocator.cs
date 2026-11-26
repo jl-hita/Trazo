@@ -353,10 +353,15 @@ public static class TrainingProgramVolumeAllocator
             }))
             return true;
 
-        // Synergists do not stop a lift at their own ceiling, but nothing goes past the absolute weekly ceiling.
+        // Synergists do not stop a lift at their own ceiling, but nothing goes past the absolute weekly ceiling. A raised
+        // target (a professional one or an emphasis) moves that limit only as far as its own range: it used to remove it, and
+        // the lifts that train the muscle indirectly could then pile up sets without any bound.
         return exercise.StimulatedMuscles()
-            .Where(muscle => targets.ContainsKey(muscle) && !HasRaisedExplicitTarget(preferences, muscle))
-            .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(step, addedSets) > AbsoluteWeeklySetCeiling);
+            .Where(targets.ContainsKey)
+            .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(step, addedSets) >
+                (HasRaisedExplicitTarget(preferences, muscle)
+                    ? Math.Max(AbsoluteWeeklySetCeiling, targets[muscle] + GetUpperHeadroom(goal, experience, preferences, muscle, targets[muscle]))
+                    : AbsoluteWeeklySetCeiling));
     }
 
     internal static IReadOnlyDictionary<TrainingMuscleGroup, decimal> GetWeeklyTargets(
