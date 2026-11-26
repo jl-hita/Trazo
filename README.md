@@ -159,6 +159,7 @@ The Angular development server runs at `http://localhost:4200`. Configure its AP
 
 - [Architecture](docs/architecture.md)
 - [Planning engine](docs/planning-engine.md)
+- [Priority roadmap](docs/priority-roadmap.md)
 - [Authentication](docs/authentication.md)
 - [Configuration and deployment](docs/configuration-and-deployment.md)
 - [Error tickets](docs/error-tickets.md)
