@@ -529,8 +529,9 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<bool>("Completed").HasColumnType("boolean");
             b.Property<string>("SkippedReason").HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<bool>("PainReported").HasColumnType("boolean");
+            b.Property<int>("SegmentIndex").HasColumnType("integer");
             b.HasKey("Id");
-            b.HasIndex("WorkoutLogId", "ExerciseId", "SetNumber").IsUnique();
+            b.HasIndex("WorkoutLogId", "ExerciseId", "SetNumber", "SegmentIndex").IsUnique().HasDatabaseName("ux_workout_set_logs_set_segment");
             b.HasIndex("ExerciseId");
             b.ToTable("workout_set_logs");
         });

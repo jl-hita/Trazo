@@ -108,7 +108,8 @@ public static class MuscleWeekObserver
                 {
                     var sets = log.Sets.Where(s => string.Equals(s.ExerciseId, exercise.ExerciseId, StringComparison.OrdinalIgnoreCase)).ToList();
                     var done = sets.Where(s => s.Completed && !IsPain(s)).ToList();
-                    var skippedForFatigue = sets.Any(s => !s.Completed && string.Equals(s.SkippedReason, "fatigue", StringComparison.OrdinalIgnoreCase));
+                    var main = done.Main().ToList();
+                    var skippedForFatigue = sets.Main().Any(s => !s.Completed && string.Equals(s.SkippedReason, "fatigue", StringComparison.OrdinalIgnoreCase));
                     feedback.TryGetValue(exercise.ExerciseId, out var answer);
                     var change = previousOf.TryGetValue((log.Id, exercise.ExerciseId.ToLowerInvariant()), out var previous)
                         ? Change(IndicatorOf(sets), previous, log.PerformedAt) : null;
@@ -116,8 +117,9 @@ public static class MuscleWeekObserver
                     foreach (var muscle in muscles[exercise.ExerciseId])
                     {
                         if (!perMuscle.TryGetValue(muscle, out var s)) perMuscle[muscle] = s = new SessionAcc();
-                        s.Sets += done.Count;
-                        s.Below += done.Count(x => x.Repetitions is { } r && r < exercise.MinRepetitions);
+                        s.Sets += LoggedSets.EffectiveCount(done);
+                        s.Main += main.Count;
+                        s.Below += main.Count(x => x.Repetitions is { } r && r < exercise.MinRepetitions);
                         if (skippedForFatigue) s.Fatigue++;
                         if (done.Count > 0)
                         {
@@ -128,7 +130,7 @@ public static class MuscleWeekObserver
                                 || string.Equals(answer.Discomfort, "strong", StringComparison.OrdinalIgnoreCase)) s.Discomfort++;
                             // Performance is a signal of the lift it was measured on: only the muscles the exercise trains as PRIMARY receive it.
                             // A synergist is exposed to the work (and to its fatigue) but never inherits the performance of someone else's lift.
-                            if (change is { } c && primary.Contains(muscle)) { s.PerformanceSum += c * done.Count; s.PerformanceWeight += done.Count; s.Samples++; }
+                            if (change is { } c && primary.Contains(muscle) && main.Count > 0) { s.PerformanceSum += c * main.Count; s.PerformanceWeight += main.Count; s.Samples++; }
                         }
                     }
                 }
@@ -147,7 +149,7 @@ public static class MuscleWeekObserver
                     {
                         a.Exposures++;
                         a.SessionsDone++;
-                        a.Completed += s.Sets;
+                        a.Completed += s.Main;
                         a.Below += s.Below;
                         a.Answers += s.Answers;
                         a.LowStimulus += s.LowStimulus;
@@ -171,7 +173,7 @@ public static class MuscleWeekObserver
                     quality = "excluded";
                     reason = a.Pain > 0 ? "pain" : a.Returning ? "return_from_absence" : a.Late > 0 ? "date_unreliable" : "no_valid_exposure";
                 }
-                else if ((decimal)a.Performed / a.Prescribed < LongitudinalPolicy.PartialCompletionRatio) { quality = "partial"; reason = "low_completion"; }
+                else if (a.Performed / a.Prescribed < LongitudinalPolicy.PartialCompletionRatio) { quality = "partial"; reason = "low_completion"; }
                 else quality = "valid";
 
                 rows.Add(new MuscleWeekObservation
@@ -206,7 +208,7 @@ public static class MuscleWeekObserver
     /// </summary>
     private static Indicator? IndicatorOf(IEnumerable<WorkoutSetLog> sets)
     {
-        var done = sets.Where(s => s.Completed && !IsPain(s) && s.Repetitions is > 0).ToList();
+        var done = sets.Main().Where(s => s.Completed && !IsPain(s) && s.Repetitions is > 0).ToList();
         if (done.Count == 0) return null;
         var weighted = done.Where(s => s.WeightKg is > 0).ToList();
         return weighted.Count > 0
@@ -248,13 +250,15 @@ public static class MuscleWeekObserver
 
     private sealed class SessionAcc
     {
-        public int Sets, Below, Fatigue, Answers, LowStimulus, Discomfort, Samples;
+        public decimal Sets;
+        public int Main, Below, Fatigue, Answers, LowStimulus, Discomfort, Samples;
         public decimal PerformanceSum, PerformanceWeight;
     }
 
     private sealed class Acc
     {
-        public int Prescribed, SessionsPlanned, SessionsDone, Exposures, Completed, Below, Fatigue, Answers, LowStimulus, Discomfort, Samples, Pain, Late, Performed;
+        public int Prescribed, SessionsPlanned, SessionsDone, Exposures, Completed, Below, Fatigue, Answers, LowStimulus, Discomfort, Samples, Pain, Late;
+        public decimal Performed;
         public bool Returning;
         public decimal PerformanceSum, PerformanceWeight;
     }

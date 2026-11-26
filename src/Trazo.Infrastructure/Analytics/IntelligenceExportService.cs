@@ -61,7 +61,7 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
         var workoutIds = workouts.Select(x => x.Id).ToArray();
         var sets = await db.WorkoutSetLogs.AsNoTracking().Where(x => workoutIds.Contains(x.WorkoutLogId))
             .Select(x => new { x.Id, x.WorkoutLogId, x.ExerciseId, x.SetNumber, x.WeightKg, x.Repetitions, x.Rir,
-                x.Completed, x.SkippedReason, x.PainReported }).ToListAsync(ct);
+                x.Completed, x.SkippedReason, x.PainReported, x.SegmentIndex }).ToListAsync(ct);
 
         // A fresh secret per package makes keys joinable inside this export, but not across exports or back to account IDs.
         var salt = RandomNumberGenerator.GetBytes(32);

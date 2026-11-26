@@ -227,6 +227,8 @@ public sealed class WorkoutSetLog
     public Guid WorkoutLogId { get; set; }
     public required string ExerciseId { get; set; }
     public int SetNumber { get; set; }
+    /// <summary>0 for the main set; 1 and up for the segments that follow it in a drop set, rest-pause or myo-reps set.</summary>
+    public int SegmentIndex { get; set; }
     public decimal? WeightKg { get; set; }
     public int? Repetitions { get; set; }
     public decimal? Rir { get; set; }

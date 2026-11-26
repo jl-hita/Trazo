@@ -155,7 +155,8 @@ public sealed class WorkoutSetLogConfiguration : IEntityTypeConfiguration<Workou
         builder.Property(x => x.WeightKg).HasPrecision(7, 2);
         builder.Property(x => x.Rir).HasPrecision(3, 1);
         builder.Property(x => x.SkippedReason).HasMaxLength(20);
-        builder.HasIndex(x => new { x.WorkoutLogId, x.ExerciseId, x.SetNumber }).IsUnique();
+        builder.HasIndex(x => new { x.WorkoutLogId, x.ExerciseId, x.SetNumber, x.SegmentIndex }).IsUnique()
+            .HasDatabaseName("ux_workout_set_logs_set_segment");
         builder.HasIndex(x => x.ExerciseId);
     }
 }

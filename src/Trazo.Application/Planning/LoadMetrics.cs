@@ -1,7 +1,7 @@
 namespace Trazo.Application.Planning;
 
 /// <summary>The work done (or prescribed) on one exercise, reduced to what dose needs.</summary>
-public sealed record DoseExercise(string ExerciseId, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, int Sets);
+public sealed record DoseExercise(string ExerciseId, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, decimal Sets);
 
 /// <summary>A workout that really happened: its instant and what was done.</summary>
 public sealed record DoseWorkout(DateTimeOffset PerformedAt, IReadOnlyList<DoseExercise> Exercises);

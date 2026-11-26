@@ -15,7 +15,7 @@ public enum RecoveryState
 
 /// <summary>What the user did to one exercise in a past workout, reduced to what recovery needs.</summary>
 public sealed record RecoveryExercise(
-    IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, int CompletedSets, decimal? AverageRir, bool LoadedBefore, string ExerciseId = "");
+    IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles, decimal CompletedSets, decimal? AverageRir, bool LoadedBefore, string ExerciseId = "");
 
 /// <summary>A past workout: when it happened, what was done and how the user reported to feel.</summary>
 public sealed record RecoveryExposure(

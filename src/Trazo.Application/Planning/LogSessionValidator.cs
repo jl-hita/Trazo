@@ -2,7 +2,7 @@ using Trazo.Domain.Planning;
 
 namespace Trazo.Application.Planning;
 
-public sealed record ParsedSet(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool Pain);
+public sealed record ParsedSet(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool Pain, int Segment = 0);
 
 public sealed record ParsedLog(
     WorkoutOutcome Outcome, string NonCompletionReason, string Recovery, decimal? SessionRpe, bool Pain, string? Notes,
@@ -19,6 +19,9 @@ public static class LogSessionValidator
 {
     public const int MaximumSets = 60;
     public const int MaximumSetNumber = 12;
+    public const int MaximumSegment = 10;
+    /// <summary>Main sets and segments together.</summary>
+    public const int MaximumRows = 200;
     public static readonly string[] Reasons = ["None", "Time", "Fatigue", "Equipment", "Motivation", "Illness", "Other"];
     public static readonly string[] Recoveries = ["Unknown", "Good", "Partial", "Insufficient"];
     public static readonly string[] SetSkipReasons = ["fatigue", "pain", "time", "equipment", "illness", "motivation", "load_too_heavy", "other"];
@@ -45,15 +48,18 @@ public static class LogSessionValidator
         if (notes?.Length > 1000) Fail("notes", "Las notas admiten hasta 1000 caracteres.");
 
         var sets = new List<ParsedSet>();
-        if ((request.Sets?.Length ?? 0) > MaximumSets) Fail("sets", $"Se admiten como máximo {MaximumSets} series.");
-        var seen = new HashSet<(string, int)>();
-        foreach (var (set, index) in (request.Sets ?? []).Take(MaximumSets).Select((s, i) => (s, i)))
+        if ((request.Sets?.Length ?? 0) > MaximumRows || (request.Sets?.Count(s => s is { Segment: null or 0 }) ?? 0) > MaximumSets)
+            Fail("sets", $"Se admiten como máximo {MaximumSets} series.");
+        var seen = new HashSet<(string, int, int)>();
+        foreach (var (set, index) in (request.Sets ?? []).Take(MaximumRows).Select((s, i) => (s, i)))
         {
             var prefix = $"sets[{index}]";
             var id = set.ExerciseId?.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(id) || id.Length > 100) { Fail(prefix, "El identificador del ejercicio es obligatorio."); continue; }
             if (set.SetNumber is not (>= 1 and <= MaximumSetNumber)) { Fail(prefix, $"El número de serie debe estar entre 1 y {MaximumSetNumber}."); continue; }
-            if (!seen.Add((id, set.SetNumber.Value))) { Fail(prefix, "La serie está repetida."); continue; }
+            var segment = set.Segment ?? 0;
+            if (segment is < 0 or > MaximumSegment) { Fail(prefix, $"El segmento debe estar entre 0 y {MaximumSegment}."); continue; }
+            if (!seen.Add((id, set.SetNumber.Value, segment))) { Fail(prefix, "La serie está repetida."); continue; }
             var completed = set.Completed ?? true;
             if (set.WeightKg is < 0 or > 1000) Fail(prefix, "El peso debe estar entre 0 y 1000 kg.");
             if (set.Repetitions is < 0 or > 100) Fail(prefix, "Las repeticiones deben estar entre 0 y 100.");
@@ -62,8 +68,10 @@ public static class LogSessionValidator
             var skipped = string.IsNullOrWhiteSpace(set.SkippedReason) ? null : set.SkippedReason.Trim().ToLowerInvariant();
             if (skipped is not null && !SetSkipReasons.Contains(skipped)) Fail(prefix, $"El motivo de la serie debe ser uno de: {string.Join(", ", SetSkipReasons)}.");
             sets.Add(new ParsedSet(id, set.SetNumber.Value, set.WeightKg, set.Repetitions, set.Rir, completed, skipped,
-                set.PainReported ?? string.Equals(skipped, "pain", StringComparison.Ordinal)));
+                set.PainReported ?? string.Equals(skipped, "pain", StringComparison.Ordinal), segment));
         }
+        if (sets.Any(s => s.Segment > 0 && !seen.Contains((s.ExerciseId, s.SetNumber, 0))))
+            Fail("sets", "Cada segmento necesita su serie principal.");
 
         var feedback = new Dictionary<string, ExerciseFeedbackInput>(StringComparer.Ordinal);
         if ((request.ExerciseFeedback?.Count ?? 0) > MaximumFeedbackExercises) Fail("exerciseFeedback", $"Se admiten respuestas de como máximo {MaximumFeedbackExercises} ejercicios.");
