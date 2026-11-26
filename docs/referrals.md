@@ -106,7 +106,8 @@ folded into "other". No e-mail, IP, device id or free text is stored; the user i
 
 1. Play Console: licence testers and a sandbox purchase of a monthly and an annual plan; confirm `subscriptionsv2.defer` on a test
    subscription (the service account needs the permission to manage orders and subscriptions) and note which states Google accepts.
-2. Serve `/.well-known/assetlinks.json` from the API host: set `AppLinks:Sha256Fingerprints` (Play App Signing certificate **and** the
+2. Serve `/.well-known/assetlinks.json` from the API host (`/invite/` and this path need the nginx site installed, see the
+   deployment runbook): set `AppLinks:Sha256Fingerprints` (Play App Signing certificate **and** the
    upload certificate if side-loading) and make sure the invitation host is the one in `Email:ActionBaseUrl`. Check with the Digital Asset
    Links tester.
 3. Decide whether the Google Play free-trial offer stays: it is independent from the 30-day welcome period (both can stack).

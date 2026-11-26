@@ -156,18 +156,8 @@ It never contains password or token hashes, the 2FA key, recovery codes, or purc
 
 ## Operations
 
-- **nginx:** the Angular fallback would swallow `/account/delete`. Add to the TRAZO server block (before `location /`) and reload nginx:
-
-  ```nginx
-  location ^~ /account/delete {
-      proxy_pass http://127.0.0.1:5001;
-      proxy_set_header Host $host;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-  }
-  ```
-
-  `deploy/nginx/trazo.conf` has it for reference; the live file is edited by hand because certbot changes it. Do not add a conflicting
-  `Content-Security-Policy` in nginx for that path.
+- **nginx:** the Angular fallback would swallow `/account/delete`. The block is in `deploy/nginx/trazo-site.conf`; apply it on the
+  server with `sudo bash deploy/scripts/install-trazo-nginx.sh` (see the deployment runbook). Do not add a `Content-Security-Policy`
+  in nginx for that path.
 - **Email:** SMTP must be configured (Settings); otherwise the web flow answers normally but no link is sent.
 - **Migrations:** `20261114140000_UserTimeZone` adds `users."TimeZoneId"`; `20261203100000_EngineResearchSamples` adds `users."ResearchConsent"` and the two research tables.
