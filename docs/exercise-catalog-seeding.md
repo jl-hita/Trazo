@@ -13,7 +13,7 @@ Before the API starts accepting requests, startup runs these steps in order:
 1. Connect to the dedicated TRAZO PostgreSQL database.
 2. Apply all pending Entity Framework Core migrations.
 3. Load `Seeds/exercise-catalog.json`.
-4. Validate the complete snapshot, including unique IDs, supported sources, required metadata, and specific equipment requirements (the generic `machine` key is forbidden).
+4. Validate the complete snapshot: unique IDs, supported sources and the rules every exercise must satisfy (see "Validation" in `admin-exercises-api.md`).
 5. Insert missing exercises and their Spanish-published / English-draft translation rows.
 6. Apply a newer seed version only to rows from the same source that have never been edited locally. Administrator curation and records from other sources are preserved.
 7. Add missing language rows without replacing existing translations.

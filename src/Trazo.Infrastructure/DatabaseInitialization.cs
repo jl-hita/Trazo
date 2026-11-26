@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Trazo.Infrastructure.Persistence;
 using Trazo.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,7 @@ public static class DatabaseInitialization
 
         var seeder = scope.ServiceProvider.GetRequiredService<ExerciseCatalogSeeder>();
         await seeder.SeedAsync();
+        await LogSeedDifferencesAsync(scope.ServiceProvider);
         await scope.ServiceProvider.GetRequiredService<ExerciseImageSeeder>().SeedAsync();
 
         // Export the effective database catalog (including administrator edits), not just seed files.
@@ -59,6 +61,25 @@ public static class DatabaseInitialization
                 db.Users.Add(user);
                 await db.SaveChangesAsync();
             }
+        }
+    }
+
+    /// <summary>Says on startup that the catalog is not what the seed holds. It is a diagnosis: it never stops the API from starting.</summary>
+    private static async Task LogSeedDifferencesAsync(IServiceProvider services)
+    {
+        var logger = services.GetRequiredService<ILogger<ExerciseSeedReportService>>();
+        try
+        {
+            var report = await services.GetRequiredService<ExerciseSeedReportService>().BuildAsync();
+            if (report.Differences.Count + report.MissingInDatabase.Count + report.Invalid.Count > 0)
+                logger.LogWarning(
+                    "Exercise catalog differs from the seed: {Engine} exercises with different planning metadata, {Other} with other differences, {Missing} missing and {Invalid} invalid. See GET /api/v1/admin/exercises/seed-report.",
+                    report.Differences.Count(d => d.EngineFields.Count > 0), report.Differences.Count(d => d.EngineFields.Count == 0),
+                    report.MissingInDatabase.Count, report.Invalid.Count);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "The exercise catalog could not be compared with the seed.");
         }
     }
 }

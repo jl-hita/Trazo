@@ -72,8 +72,8 @@ public sealed class AdminExercisesApiTests : IDisposable
     private static object Input(string nameEn = "Press de Banca", string? id = null, string[]? requiredEquipment = null) => new
     {
         id, nameEs = "Press de banca", nameEn, descriptionEs = "Empuje horizontal con barra.",
-        instructionsEs = new[] { "Tumbado, baja la barra al pecho.", "Empuja hasta extender los codos." },
-        tipsEs = new[] { "Escápulas retraídas." }, difficulty = "intermediate", equipment = "barbell", bodyPart = "chest",
+        instructionsEs = new[] { "Tumbado, sujeta la barra.", "Baja la barra al pecho.", "Empuja hasta extender los codos." },
+        tipsEs = new[] { "Escápulas retraídas." }, difficulty = "intermediate", equipment = "barbell", bodyPart = "chest", forceType = "push", mechanic = "compound",
         movementPattern = "HorizontalPush", primaryMuscles = new[] { "Chest" }, secondaryMuscles = new[] { "Triceps" },
         minimumExperience = "Beginner", suitableGoals = new[] { "Strength" }, requiredEquipment = requiredEquipment ?? new[] { "barbell", "bench" },
         selectionPriority = 80
@@ -108,7 +108,7 @@ public sealed class AdminExercisesApiTests : IDisposable
         Assert.Equal("press-de-banca-pausado", detail.GetProperty("id").GetString());
         Assert.Equal("trazo", detail.GetProperty("source").GetString());
         Assert.True(detail.GetProperty("isActive").GetBoolean());
-        Assert.Equal(2, detail.GetProperty("instructionsEs").GetArrayLength());
+        Assert.Equal(3, detail.GetProperty("instructionsEs").GetArrayLength());
 
         Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsJsonAsync("/api/v1/admin/exercises", Input("Press de Banca Pausado"))).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/v1/admin/exercises", Input(id: "Bad Id!"))).StatusCode);
@@ -143,8 +143,9 @@ public sealed class AdminExercisesApiTests : IDisposable
         await client.PostAsJsonAsync("/api/v1/admin/exercises", Input("Bench Press"));
         await client.PostAsJsonAsync("/api/v1/admin/exercises", new
         {
-            nameEs = "Sentadilla", nameEn = "Squat", descriptionEs = "Flexión de rodillas.", instructionsEs = new[] { "Baja con control." },
-            difficulty = "beginner", movementPattern = "Squat", primaryMuscles = new[] { "Quadriceps" }, minimumExperience = "Beginner",
+            nameEs = "Sentadilla", nameEn = "Squat", descriptionEs = "Flexión de rodillas.",
+            instructionsEs = new[] { "Coloca los pies.", "Baja con control.", "Sube." }, forceType = "push", mechanic = "compound",
+            bodyPart = "upper_legs", isBodyweight = true, difficulty = "beginner", movementPattern = "Squat", primaryMuscles = new[] { "Quadriceps" }, minimumExperience = "Beginner",
             suitableGoals = new[] { "Hypertrophy" }
         });
 

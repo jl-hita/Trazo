@@ -82,6 +82,9 @@ confianza, confirmación) y recomendaciones por ejercicio, estancamiento o moles
 
 ## 2. Convivencia con el roadmap anterior
 
+La **pista de lanzamiento** (Play Console, App Links, cobros, pruebas en dispositivo, restauración, legales) va **justo después**
+de todo este roadmap, no en paralelo (decisión del titular, 2026-11-26).
+
 | Del issue #48 | Destino |
 |---|---|
 | P12 revisión del catálogo, «corregir datos de producción» | Absorbido en P0 |
@@ -90,7 +93,7 @@ confianza, confirmación) y recomendaciones por ejercicio, estancamiento o moles
 | Splits de 5–6 días, techo de 20 series, variedad | Absorbido en P7 |
 | Recalibrar `RecoveryAdvisor`, validar con historiales | Absorbido en P5/P6 |
 | Portar a DietoExpress / paquete compartido | Aplazado hasta cerrar P0 (decisión D3) |
-| Play Console, App Links, cobros, pruebas en dispositivo, restauración, legales | **Pista paralela de lanzamiento**, dependiente en gran parte del titular; este roadmap no la sustituye (decisión D2) |
+| Play Console, App Links, cobros, pruebas en dispositivo, restauración, legales | Justo después de este roadmap |
 | Analítica P7, fiscal P10, marketing P11, ecosistema | Sin cambios, detrás de este roadmap |
 
 ## 3. Recomendaciones de arquitectura
@@ -117,12 +120,16 @@ Un **validador único** (dominio) lo usan seeder, alta y edición del panel e im
 efectivos ⊆ secundarios, sin solapes, equipamiento canónico, coherencia patrón/mecánica y `limitationAreas` declarado
 (vacío es una respuesta, ausente no).
 
-### R2 · Fuente de verdad
+### R2 · Fuente de verdad (aprobada y ampliada el 2026-11-26)
 
-Para los ejercicios oficiales (`repdb-free`, `trazo-curated`) manda el seed: los metadatos que lee el motor se actualizan
-cuando sube la versión del seed y el panel los muestra en solo lectura (siguen editables imágenes, traducciones y visibilidad).
-Los ejercicios propios (`trazo`) se editan en el panel con el mismo validador. El importador no puede pisar los oficiales. La
-CI falla si la instantánea de producción difiere del seed en un campo del motor.
+El seed es la **línea base** de ejercicios y tiene prioridad sobre la base de datos:
+
+- Contiene todos los metadatos correctos y las traducciones en **todos los idiomas**.
+- Para los ejercicios que incluye, **sobrescribe** lo que haya en la base de datos: metadatos, textos, visibilidad y traducciones.
+- Para cambiar uno de esos ejercicios se modifica el seed.
+- La consola de administración **indica que el ejercicio es del seed** y no permite editar lo que el seed gobierna.
+- El importador de DietoExpress no puede pisarlos. Los ejercicios fuera del seed siguen siendo editables, con el mismo validador.
+- Un idioma que el seed aún no tenga (hoy, inglés) no borra lo que haya en la base de datos.
 
 ### R3 · Modelo de prescripción
 
@@ -190,8 +197,6 @@ calcula cuando se fije la métrica principal. Solo datos anónimos o agregados, 
 
 | ID | Decisión | Recomendación | Bloquea |
 |---|---|---|---|
-| D1 | Autoridad del catálogo y reconciliar producción (¿hay ediciones del panel que conservar?) | R2: el seed manda en los campos del motor; revisar el listado de diferencias antes de aplicar | P0-1, P0-4 |
-| D2 | ¿La pista de lanzamiento de #48 sigue en paralelo? | Sí | — |
 | D3 | DietoExpress mientras cambia el motor | Congelar el port hasta cerrar P0 | — |
 | D4 | Modelo de metadatos | R1 | P0-2 |
 | D5 | Modelo de prescripción, volumen y matriz del generador | R3–R5 | P1 |
@@ -211,20 +216,22 @@ calcula cuando se fije la métrica principal. Solo datos anónimos o agregados, 
 
 ## 6. Secuencia de PR y seguimiento
 
+P0-4 se adelanta a P0-2: producción usa hoy metadatos antiguos y el titular ha fijado que el seed mande.
+
 Cambio de orden respecto al roadmap, y motivo: la parte de P7 que habilita 5 días en torso/pierna e híbrido va antes de P3; la
 batería de P5 empieza con P0 porque protege sus cambios.
 
 | ID | PR | Objetivo y criterios de aceptación | Depende | Estado | PR | Pruebas |
 |---|---|---|---|---|---|---|
 | P0-0 | Roadmap | Este documento, enlazado desde #48 | — | Hecho | #238 | solo documentación |
-| P0-1 | Validador único e informe de divergencias | Mismas reglas en seeder, panel e importador; CI/consola listan diferencias producción–seed; ningún dato cambia | D1 | Pendiente | | |
+| P0-1 | Validador único e informe de divergencias | Mismas reglas en seed, panel e importador; aviso al arrancar y `GET /admin/exercises/seed-report`; ningún dato cambia | — | Hecho | #239 | validador, seed, informe, panel e importación en CI; no comprobado en producción |
 | P0-2 | Metadatos nuevos en datos | Migración y seed con R1; panel y API; valores equivalentes a las tablas | P0-1, D4 | Pendiente | | |
 | P0-3 | Motor y limitaciones sin ids | Se borran tabla de estímulo, tokens y overrides; golden y exclusiones idénticos; prueba que impide literales de id; un ejercicio nuevo funciona sin código | P0-2 | Pendiente | | |
-| P0-4 | Seed autoritativo y reconciliación | Producción igual al seed en campos del motor; idempotente; instalación nueva equivalente | P0-1, D1 | Pendiente | | |
+| P0-4 | Seed autoritativo | R2 completa: producción igual al seed en metadatos y traducciones, idempotente, instalación nueva equivalente; la consola marca los ejercicios del seed y bloquea su edición | P0-1 | Pendiente (siguiente) | | |
 | P0-5 | Revisión ejercicio a ejercicio (3 PR por patrón) | Cada ejercicio con decisión registrada; cambios de plan explicados | P0-3, P0-4 | Pendiente | | |
 | P5-1 | Escenarios de decisión | Perfiles, fatiga, estancamiento, dolor, incumplimiento; en CI | — | Pendiente | | |
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Pendiente | | |
-| C-1 | Contenido en inglés (por lotes) | 150 con descripción, instrucciones y consejos publicados | P0-1 | Pendiente | | |
+| C-1 | Inglés en el seed (por lotes) | `translations/en.json` completo; necesario para cerrar P0 | P0-4 | Pendiente | | |
 | C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Pendiente | | |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Pendiente | | |
@@ -247,7 +254,9 @@ batería de P5 empieza con P0 porque protege sus cambios.
 
 | Fecha | Decisión |
 |---|---|
-| 2026-11-26 | Se adopta este roadmap con precedencia sobre las prioridades de producto de #48. Recomendaciones R1–R10 pendientes de aprobación. |
+| 2026-11-26 | Se adopta este roadmap con precedencia sobre las prioridades de producto de #48. Recomendaciones R1 y R3–R10 pendientes de aprobación. |
+| 2026-11-26 | D1: el seed es la línea base, con traducciones en todos los idiomas, sobrescribe la base de datos en sus ejercicios y la consola los identifica (R2). |
+| 2026-11-26 | D2: la pista de lanzamiento va justo después de este roadmap. |
 
 ## 7. Evidencia consultada
 

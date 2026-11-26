@@ -32,3 +32,17 @@ Routes under `/api/v1/admin/exercises`, all restricted to the `superadmin` role.
 
 Uploading or replacing images, bulk edits and deleting exercises. Deleting is deliberately left out: hiding keeps
 history intact for plans that may reference an exercise.
+
+## Validation
+
+Creating, editing and showing (`activate`) an exercise, the seed and the DietoExpress import share one set of rules
+(`ExerciseMetadataValidator`): closed vocabularies for pattern, muscles, goals, experience, difficulty, mechanic, force type,
+body part and required equipment (listed by `GET /options`); at least one primary muscle and one goal; no muscle both primary
+and secondary; at least three instructions; equipment required unless the exercise is bodyweight; single-leg exercises are
+unilateral. Errors are returned per field. An import with any invalid record writes nothing.
+
+## Seed report
+
+`GET /api/v1/admin/exercises/seed-report` (read only) compares the database with the exercise seed: exercises missing,
+differences in planning metadata, in other content and in translations, exercises outside the seed, invalid rows and how much of
+each language the seed covers. The API logs a warning on startup when the database differs.
