@@ -248,6 +248,8 @@ export const UI_COPY = {
       emphasisHint: 'Parte de un músculo que el plan reserva trabajo directo. Vacío si no aplica.',
       limitationAreas: 'Zonas con limitación en las que se evita',
       limitationAreasHint: 'Quien declare una limitación en estas zonas no recibirá el ejercicio.',
+      allowedTechniques: 'Técnicas que admite',
+      allowedTechniquesHint: 'Técnicas de series que se pueden prescribir en este ejercicio. Vacío: solo series normales.',
       identifierHint: 'Opcional. Déjalo vacío para generarlo a partir del nombre en inglés.',
       nameEs: 'Nombre (castellano)',
       nameEn: 'Nombre (inglés)',

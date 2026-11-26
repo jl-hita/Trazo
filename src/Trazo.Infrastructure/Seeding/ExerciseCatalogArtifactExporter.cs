@@ -51,7 +51,8 @@ public sealed class ExerciseCatalogArtifactExporter(
         string[] EffectiveSecondaryMuscles,
         string[] Emphasis,
         string[] LimitationAreas,
-        bool MetadataReviewed);
+        bool MetadataReviewed,
+        string[] AllowedTechniques);
 
     private sealed record Artifact(
         int SchemaVersion,
@@ -95,7 +96,8 @@ public sealed class ExerciseCatalogArtifactExporter(
                 x.EffectiveSecondaryMuscles,
                 x.Emphasis,
                 x.LimitationAreas,
-                x.MetadataReviewed))
+                x.MetadataReviewed,
+                x.AllowedTechniques))
             .ToListAsync(cancellationToken);
 
         var artifact = new Artifact(

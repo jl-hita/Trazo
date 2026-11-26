@@ -1303,7 +1303,9 @@ public sealed record TrainingExerciseCandidate(
     IReadOnlyList<TrainingMuscleGroup>? EffectiveSecondaryMuscleGroups = null,
     IReadOnlyList<TrainingExerciseEmphasis>? Emphasis = null,
     // Body areas for which the exercise is avoided. Read by whoever applies the user's limitations.
-    IReadOnlyList<string>? LimitationAreas = null);
+    IReadOnlyList<string>? LimitationAreas = null,
+    // The techniques the catalog admits on this exercise. The generator does not prescribe any yet.
+    IReadOnlyList<TrainingTechniqueType>? AllowedTechniques = null);
 
 /// <summary>A part of a muscle group that an exercise trains and that the plan reserves direct work for.</summary>
 public enum TrainingExerciseEmphasis

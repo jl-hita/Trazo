@@ -54,6 +54,7 @@
       "Shoulder",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -107,11 +108,12 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "assisted-pull-ups",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Dominadas Asistidas",
     "nameEn": "Assisted Pull-Up",
@@ -162,11 +164,14 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "ball-leg-curl",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas con Pelota de Estabilidad",
     "nameEn": "Stability Ball Leg Curl",
@@ -211,11 +216,16 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "banded-standing-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Pierna de Pie con Banda",
     "nameEn": "Banded Standing Leg Curl",
@@ -260,11 +270,16 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "band-lat-pulldown",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Jalón con Banda Elástica",
     "nameEn": "Resistance Band Lat Pulldown",
@@ -310,11 +325,16 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "band-pull-apart",
-    "version": 4,
+    "version": 5,
     "source": "trazo-curated",
     "nameEs": "Band Pull-Apart",
     "nameEn": "Band Pull-Apart",
@@ -358,11 +378,16 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "band-row",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Remo con Banda Elástica",
     "nameEn": "Resistance Band Row",
@@ -409,11 +434,16 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "band-shoulder-press",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Press de Hombros con Banda Elástica",
     "nameEn": "Resistance Band Shoulder Press",
@@ -460,6 +490,11 @@
     "emphasis": [],
     "limitationAreas": [
       "Shoulder"
+    ],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -513,11 +548,12 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "barbell-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl con Barra",
     "nameEn": "Barbell Curl",
@@ -562,6 +598,11 @@
     "limitationAreas": [
       "Elbow",
       "Wrist"
+    ],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -613,6 +654,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -668,6 +710,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -714,6 +757,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -769,11 +813,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "bent-knee-inverted-row",
-    "version": 5,
+    "version": 6,
     "source": "trazo-curated",
     "nameEs": "Remo Invertido con Rodillas Flexionadas",
     "nameEn": "Bent-Knee Inverted Row",
@@ -821,11 +866,16 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "bodyweight-calf-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevación de Gemelos con Peso Corporal",
     "nameEn": "Bodyweight Calf Raise",
@@ -866,6 +916,11 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -914,6 +969,7 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -961,6 +1017,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -1015,11 +1072,12 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "cable-crunch",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Crunch en Polea",
     "nameEn": "Cable Crunch",
@@ -1064,11 +1122,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "cable-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl en Polea",
     "nameEn": "Cable Curl",
@@ -1111,6 +1175,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -1160,11 +1230,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "cable-fly",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Aperturas en Polea",
     "nameEn": "Cable Fly",
@@ -1209,11 +1280,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "cable-front-raise",
-    "version": 4,
+    "version": 5,
     "source": "trazo-curated",
     "nameEs": "Elevaciones Frontales en Polea",
     "nameEn": "Cable Front Raise",
@@ -1256,11 +1333,17 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "cable-lateral-raise",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales en Polea",
     "nameEn": "Cable Lateral Raise",
@@ -1309,11 +1392,17 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "cable-overhead-tricep-extension",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps sobre la Cabeza en Polea",
     "nameEn": "Cable Overhead Triceps Extension",
@@ -1361,6 +1450,12 @@
     "limitationAreas": [
       "Elbow",
       "Shoulder"
+    ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -1415,11 +1510,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "cable-reverse-fly",
-    "version": 6,
+    "version": 7,
     "source": "repdb-free",
     "nameEs": "Pájaro en Polea",
     "nameEn": "Cable Reverse Fly",
@@ -1467,6 +1563,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -1518,11 +1620,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "chest-press-machine",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press de Pecho en Máquina",
     "nameEn": "Machine Chest Press",
@@ -1570,11 +1673,17 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "chest-supported-db-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo con Mancuernas con Apoyo en el Pecho",
     "nameEn": "Chest-Supported Dumbbell Row",
@@ -1622,11 +1731,15 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "chest-supported-kettlebell-row",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Remo con Pesa Rusa Apoyado en el Pecho",
     "nameEn": "Chest-Supported Kettlebell Row",
@@ -1676,11 +1789,15 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "chest-supported-machine-row",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Remo en Máquina con Apoyo en el Pecho",
     "nameEn": "Chest-Supported Machine Row",
@@ -1731,6 +1848,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -1786,11 +1909,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "chin-ups",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Dominadas en Supinación",
     "nameEn": "Chin-Ups",
@@ -1836,6 +1960,9 @@
     "emphasis": [],
     "limitationAreas": [
       "Elbow"
+    ],
+    "allowedTechniques": [
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -1890,6 +2017,7 @@
       "Elbow",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -1942,6 +2070,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -1992,6 +2121,7 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2043,6 +2173,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2088,6 +2219,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2142,6 +2274,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2194,6 +2327,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2247,6 +2381,7 @@
       "LowerBack",
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2302,11 +2437,12 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "dumbbell-curl",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Curl con Mancuernas",
     "nameEn": "Dumbbell Curl",
@@ -2349,6 +2485,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -2402,11 +2544,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "dumbbell-front-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevaciones Frontales con Mancuernas",
     "nameEn": "Dumbbell Front Raise",
@@ -2449,11 +2592,17 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "dumbbell-reverse-fly",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Pájaro con Mancuernas",
     "nameEn": "Dumbbell Reverse Fly",
@@ -2501,6 +2650,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -2556,6 +2711,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2612,11 +2768,12 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "dumbbell-shrug",
-    "version": 4,
+    "version": 5,
     "source": "trazo-curated",
     "nameEs": "Encogimientos con Mancuernas",
     "nameEn": "Dumbbell Shrug",
@@ -2659,11 +2816,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "dumbbell-single-leg-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelo a una Pierna con Mancuerna",
     "nameEn": "Dumbbell Single-Leg Calf Raise",
@@ -2704,6 +2867,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -2757,11 +2926,12 @@
       "Shoulder",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "face-pull",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Face Pull en Polea",
     "nameEn": "Cable Face Pull",
@@ -2805,6 +2975,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -2859,6 +3035,7 @@
       "LowerBack",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2906,6 +3083,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -2955,6 +3133,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -3006,11 +3185,12 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "hack-squat",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Hack Squat",
     "nameEn": "Hack Squat",
@@ -3059,11 +3239,14 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "hammer-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Martillo con Mancuernas",
     "nameEn": "Dumbbell Hammer Curl",
@@ -3107,6 +3290,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -3158,6 +3347,7 @@
       "Shoulder",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -3212,6 +3402,7 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -3264,6 +3455,7 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -3321,11 +3513,12 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "hip-abduction",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera en Máquina",
     "nameEn": "Machine Hip Abduction",
@@ -3369,11 +3562,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "hip-adduction",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Aducción de Cadera en Máquina",
     "nameEn": "Machine Hip Adduction",
@@ -3417,6 +3616,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -3468,11 +3673,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "horizontal-leg-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Prensa de Piernas Horizontal",
     "nameEn": "Horizontal Leg Press",
@@ -3517,6 +3723,10 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -3572,6 +3782,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -3622,11 +3833,12 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "incline-db-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl con Mancuernas en Banco Inclinado",
     "nameEn": "Incline Dumbbell Curl",
@@ -3671,6 +3883,12 @@
     "emphasis": [],
     "limitationAreas": [
       "Elbow"
+    ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -3725,11 +3943,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "incline-push-ups",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Flexiones Inclinadas",
     "nameEn": "Incline Push-Up",
@@ -3779,11 +3998,16 @@
     "limitationAreas": [
       "Wrist"
     ],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "inverted-row",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Remo Invertido",
     "nameEn": "Inverted Row",
@@ -3835,6 +4059,11 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -3884,11 +4113,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "kneeling-cable-row",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Remo en Polea Arrodillado",
     "nameEn": "Kneeling Cable Row",
@@ -3937,11 +4167,17 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "knee-push-ups",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Flexiones con Rodillas Apoyadas",
     "nameEn": "Knee Push-Up",
@@ -3991,11 +4227,16 @@
     "limitationAreas": [
       "Wrist"
     ],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "lateral-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales con Mancuernas",
     "nameEn": "Dumbbell Lateral Raise",
@@ -4040,11 +4281,17 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "lat-pulldown",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Jalón al Pecho",
     "nameEn": "Lat Pulldown",
@@ -4094,11 +4341,17 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "leg-curl",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas Tumbado",
     "nameEn": "Lying Leg Curl",
@@ -4143,11 +4396,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "leg-extension",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Extensión de Piernas",
     "nameEn": "Leg Extension",
@@ -4190,11 +4449,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "leg-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Prensa de Piernas",
     "nameEn": "Leg Press",
@@ -4241,11 +4506,15 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "leg-press-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos en Prensa",
     "nameEn": "Leg Press Calf Raise",
@@ -4286,6 +4555,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -4332,6 +4607,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -4384,11 +4660,12 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "machine-bicep-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl de Bíceps en Máquina",
     "nameEn": "Machine Biceps Curl",
@@ -4431,11 +4708,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "machine-calf-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevación de Gemelos en Máquina",
     "nameEn": "Machine Calf Raise",
@@ -4479,11 +4762,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "machine-chest-fly",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Aperturas en Máquina",
     "nameEn": "Machine Chest Fly",
@@ -4530,11 +4819,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "machine-reverse-fly",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Pájaro en Máquina",
     "nameEn": "Machine Reverse Fly",
@@ -4582,11 +4877,17 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "machine-seated-crunch",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Crunch en Máquina Sentado",
     "nameEn": "Machine Seated Crunch",
@@ -4632,11 +4933,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "machine-shoulder-press",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Press de Hombros en Máquina",
     "nameEn": "Machine Shoulder Press",
@@ -4685,6 +4992,12 @@
     "emphasis": [],
     "limitationAreas": [
       "Shoulder"
+    ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -4737,6 +5050,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -4788,6 +5102,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -4844,11 +5159,12 @@
       "LowerBack",
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "one-arm-seated-cable-row",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Remo Unilateral Sentado en Polea",
     "nameEn": "One-Arm Seated Cable Row",
@@ -4898,11 +5214,17 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "overhead-tricep-extension",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps sobre la Cabeza con Mancuerna",
     "nameEn": "Dumbbell Overhead Triceps Extension",
@@ -4948,11 +5270,17 @@
       "Elbow",
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "parallel-bar-dips",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Fondos en Paralelas",
     "nameEn": "Parallel Bar Dips",
@@ -4999,6 +5327,9 @@
       "Elbow",
       "Shoulder",
       "Wrist"
+    ],
+    "allowedTechniques": [
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -5052,6 +5383,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5104,11 +5436,12 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "pec-deck",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Pec Deck",
     "nameEn": "Pec Deck",
@@ -5155,6 +5488,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -5209,6 +5548,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5261,6 +5601,7 @@
       "Shoulder",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5311,6 +5652,7 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5359,6 +5701,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5410,11 +5753,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "preacher-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl en Banco Scott",
     "nameEn": "Preacher Curl",
@@ -5460,11 +5804,16 @@
     "limitationAreas": [
       "Elbow"
     ],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "pull-up",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Dominadas",
     "nameEn": "Pull-Up",
@@ -5512,6 +5861,9 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -5567,11 +5919,12 @@
       "LowerBack",
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "push-up",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Flexiones",
     "nameEn": "Push-Up",
@@ -5618,6 +5971,11 @@
     "emphasis": [],
     "limitationAreas": [
       "Wrist"
+    ],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
     ],
     "metadataReviewed": true
   },
@@ -5675,6 +6033,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5727,6 +6086,7 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5778,6 +6138,7 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5831,6 +6192,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5885,6 +6247,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -5939,11 +6302,12 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "seated-cable-row",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Remo Sentado en Polea",
     "nameEn": "Seated Cable Row",
@@ -5995,11 +6359,17 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "seated-calf-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevación de Gemelos Sentado en Máquina",
     "nameEn": "Seated Calf Raise",
@@ -6041,11 +6411,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "seated-dumbbell-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos Sentado con Mancuernas",
     "nameEn": "Seated Dumbbell Calf Raise",
@@ -6087,11 +6463,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "seated-dumbbell-lateral-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales Sentado con Mancuernas",
     "nameEn": "Seated Dumbbell Lateral Raise",
@@ -6142,11 +6524,17 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "seated-leg-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas Sentado",
     "nameEn": "Seated Leg Curl",
@@ -6191,11 +6579,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "shrug",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Encogimientos con Barra",
     "nameEn": "Barbell Shrug",
@@ -6239,11 +6633,16 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "side-lying-hip-abduction",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera Tumbado de Lado",
     "nameEn": "Side-Lying Hip Abduction",
@@ -6284,11 +6683,16 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "side-lying-hip-adduction",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Aducción de Cadera Tumbado de Lado",
     "nameEn": "Side-Lying Hip Adduction",
@@ -6330,6 +6734,11 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -6378,6 +6787,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -6433,11 +6843,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "single-arm-plate-loaded-lateral-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevaciones Laterales a un Brazo en Máquina de Discos",
     "nameEn": "Single-Arm Plate-Loaded Lateral Raise",
@@ -6486,6 +6897,12 @@
     "limitationAreas": [
       "Shoulder"
     ],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -6531,6 +6948,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -6579,6 +6997,7 @@
     "limitationAreas": [
       "Elbow"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -6634,11 +7053,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "smith-machine-calf-raise",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Elevación de Gemelos en Máquina Smith",
     "nameEn": "Smith Machine Calf Raise",
@@ -6679,6 +7099,11 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -6734,6 +7159,7 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -6784,6 +7210,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -6838,6 +7265,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -6893,11 +7321,12 @@
       "Shoulder",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "standing-calf-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevación de Talones de Pie",
     "nameEn": "Standing Calf Raise",
@@ -6939,11 +7368,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "standing-hip-abduction",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera de Pie",
     "nameEn": "Standing Hip Abduction",
@@ -6988,6 +7423,11 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -7043,11 +7483,12 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "straight-arm-pulldown",
-    "version": 5,
+    "version": 6,
     "source": "repdb-free",
     "nameEs": "Jalón con Brazos Rectos",
     "nameEn": "Straight-Arm Pulldown",
@@ -7093,6 +7534,12 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -7147,6 +7594,7 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -7206,11 +7654,12 @@
     "limitationAreas": [
       "LowerBack"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "tricep-pushdown",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Extensión de Tríceps en Polea",
     "nameEn": "Cable Triceps Pushdown",
@@ -7252,11 +7701,17 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "trx-hamstring-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl de Isquiotibiales con TRX",
     "nameEn": "TRX Hamstring Curl",
@@ -7302,11 +7757,16 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "v-bar-lat-pulldown",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Jalón al Pecho con Barra en V",
     "nameEn": "V-Bar Lat Pulldown",
@@ -7354,6 +7814,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -7406,6 +7872,7 @@
     "limitationAreas": [
       "Knee"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -7459,6 +7926,7 @@
       "Shoulder",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -7513,11 +7981,12 @@
     "limitationAreas": [
       "Elbow"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
     "id": "wide-grip-seated-cable-row",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Remo Sentado en Polea con Agarre Ancho",
     "nameEn": "Wide-Grip Seated Cable Row",
@@ -7566,6 +8035,12 @@
     ],
     "emphasis": [],
     "limitationAreas": [],
+    "allowedTechniques": [
+      "DropSet",
+      "MyoRepMatch",
+      "MyoReps",
+      "RestPause"
+    ],
     "metadataReviewed": true
   },
   {
@@ -7619,6 +8094,7 @@
       "LowerBack",
       "Wrist"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   },
   {
@@ -7673,6 +8149,7 @@
       "LowerBack",
       "Shoulder"
     ],
+    "allowedTechniques": [],
     "metadataReviewed": true
   }
 ]

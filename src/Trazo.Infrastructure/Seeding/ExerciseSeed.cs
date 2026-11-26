@@ -34,13 +34,14 @@ public sealed class ExerciseSeedEntry
     public string[]? EffectiveSecondaryMuscles { get; init; }
     public string[]? Emphasis { get; init; }
     public string[]? LimitationAreas { get; init; }
+    public string[]? AllowedTechniques { get; init; }
     public bool MetadataReviewed { get; init; }
 
     /// <summary>The entry as the catalog stores it, ready to be validated.</summary>
     public ExerciseMetadata Metadata() => new(
         Id, NameEs, NameEn, DescriptionEs, InstructionsEs, TipsEs, ForceType, Mechanic, Difficulty, Equipment, BodyPart, Met,
         IsUnilateral, IsBodyweight, MovementPattern, PrimaryMuscles, SecondaryMuscles, MinimumExperience, SuitableGoals,
-        RequiredEquipment, SelectionPriority, EffectiveSecondaryMuscles, Emphasis, LimitationAreas, MetadataReviewed);
+        RequiredEquipment, SelectionPriority, EffectiveSecondaryMuscles, Emphasis, LimitationAreas, MetadataReviewed, AllowedTechniques);
 }
 
 /// <summary>The versioned exercise library shipped with the application: the exercises and their translations.</summary>
@@ -99,8 +100,8 @@ public sealed record ExerciseSeed(
         {
             if (!Sources.Contains(entry.Source, StringComparer.Ordinal)) problems.Add($"{entry.Id}: unknown source '{entry.Source}'.");
             if (entry.Version < 1) problems.Add($"{entry.Id}: the version must be at least 1.");
-            if (entry.EffectiveSecondaryMuscles is null || entry.Emphasis is null || entry.LimitationAreas is null)
-                problems.Add($"{entry.Id}: the seed states effectiveSecondaryMuscles, emphasis and limitationAreas, even when empty.");
+            if (entry.EffectiveSecondaryMuscles is null || entry.Emphasis is null || entry.LimitationAreas is null || entry.AllowedTechniques is null)
+                problems.Add($"{entry.Id}: the seed states effectiveSecondaryMuscles, emphasis, limitationAreas and allowedTechniques, even when empty.");
             var validation = ExerciseMetadataValidator.Validate(entry.Metadata());
             if (!validation.IsValid) problems.Add($"{entry.Id}: {validation.Describe()}");
         }

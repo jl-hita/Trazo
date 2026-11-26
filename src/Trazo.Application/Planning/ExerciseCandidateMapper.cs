@@ -55,7 +55,8 @@ public static class ExerciseCandidateMapper
                 SecondaryMuscleGroups: secondary,
                 EffectiveSecondaryMuscleGroups: ParseAll<TrainingMuscleGroup>(item.EffectiveSecondaryMuscles).Where(secondary.Contains).ToList(),
                 Emphasis: ParseAll<TrainingExerciseEmphasis>(item.Emphasis),
-                LimitationAreas: item.LimitationAreas.ToList()));
+                LimitationAreas: item.LimitationAreas.ToList(),
+                AllowedTechniques: ParseAll<TrainingTechniqueType>(item.AllowedTechniques)));
         }
         return new CandidateMappingResult(candidates, skipped);
     }

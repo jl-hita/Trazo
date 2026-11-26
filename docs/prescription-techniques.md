@@ -1,6 +1,6 @@
 # Técnicas avanzadas: modelo de prescripción y registro (P1-1)
 
-Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Implementado: solo el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5). Las cifras son **valores por defecto de
+Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Implementado: el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5) y las técnicas admitidas por ejercicio en el catálogo (`exercise-review.md`). Las cifras son **valores por defecto de
 producto**, no recomendaciones demostradas; la sección 9 dice en qué se apoya cada una.
 
 ## 1. Punto de partida

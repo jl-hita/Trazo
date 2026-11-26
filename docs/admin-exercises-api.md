@@ -48,6 +48,7 @@ Planning metadata, which the engine reads instead of deducing anything from the 
 | `emphasis` | Part of a muscle the plan reserves direct work for (`LateralDeltoid`, primary deltoids) |
 | `limitationAreas` | `Elbow`, `Knee`, `LowerBack`, `Shoulder`, `Wrist`: avoided for users with a limitation there |
 | `metadataReviewed` | Only a reviewed exercise is planned automatically; it must state `limitationAreas`, even empty. Any limitation avoids an unreviewed one |
+| `allowedTechniques` | `DropSet`, `MyoRepMatch`, `MyoReps`, `RestPause`: set techniques the exercise can be prescribed with; empty means straight sets only. No `DropSet` on bodyweight exercises |
 
 A DietoExpress import does not carry these fields: it leaves the exercises it adds or changes unreviewed. An import with any invalid record writes nothing.
 
