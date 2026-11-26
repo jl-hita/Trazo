@@ -235,7 +235,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Pendiente | | |
 | C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | Hecho (sin revisión nativa) | #241 | cobertura de todos los idiomas y correspondencia de pasos |
 | C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
-| P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Pendiente | | |
+| P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | En revisión (pendiente de aprobar D5) | PR abierta | `prescription-techniques.md` |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Pendiente | | |
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Pendiente | | |
 | P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Pendiente | | |
@@ -243,6 +243,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Pendiente | | |
 | P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Pendiente | | |
 | P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Pendiente | | |
+| P7-0 | Prioridades y volumen bajo objetivo (adelantado a petición del titular) | Enfatizar añade series; con tiempo libre los músculos llegan a su objetivo | P5-1 | En curso | | `validation-scenarios.md`, carencias 3 y 4 |
 | P7-1 | Torso/pierna 5 e híbrido de 5 días | Volumen, frecuencia y recuperación probados | P0, P5-1 | Pendiente | | |
 | P3-1 | Recetas de programa y primeros tres | Motor común, permisos, personalizables | P1-1, P2-2, D7 | Pendiente | | |
 | P3-2 | Diez programas y pantalla Android | Revisados y documentados | P3-1, P7-1 | Pendiente | | |
