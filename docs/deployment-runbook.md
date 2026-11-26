@@ -73,10 +73,12 @@ curl "https://trazostrength.duckdns.org/api/v1/exercises?pageSize=1"
 ## nginx
 
 El sitio está en el repo (`deploy/nginx/trazo-site.conf` y las cabeceras de seguridad). El despliegue automático **no** toca nginx.
-Cuando cambie, o si el paso «Check public routes» del despliegue avisa, ejecuta en el servidor:
+Cuando cambie, o si el paso «Check public routes» del despliegue avisa, ejecuta en el servidor (no sirve la copia del
+runner: al acabar el despliegue queda en la rama del catálogo):
 
 ```bash
-sudo bash /opt/actions-runner-trazo/_work/Trazo/Trazo/deploy/scripts/install-trazo-nginx.sh
+git -C ~/trazo-repo pull --ff-only   # la primera vez: git clone https://github.com/jl-hita/Trazo.git ~/trazo-repo
+sudo bash ~/trazo-repo/deploy/scripts/install-trazo-nginx.sh
 ```
 
 Regenera `/etc/nginx/conf.d/trazo.conf` conservando las líneas de certbot, comprueba la configuración y las rutas públicas, y
