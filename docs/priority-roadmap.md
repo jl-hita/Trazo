@@ -231,7 +231,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P0-5 | Revisión ejercicio a ejercicio (3 PR por patrón) | Cada ejercicio con decisión registrada; cambios de plan explicados | P0-3, P0-4 | Pendiente | | |
 | P5-1 | Escenarios de decisión | Perfiles, fatiga, estancamiento, dolor, incumplimiento; en CI | — | Pendiente | | |
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Pendiente | | |
-| C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | En curso | PR abierta | cobertura de todos los idiomas y correspondencia de pasos |
+| C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | En curso | #241 | cobertura de todos los idiomas y correspondencia de pasos |
 | C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Pendiente | | |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Pendiente | | |
