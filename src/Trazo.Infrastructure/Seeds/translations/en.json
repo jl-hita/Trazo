@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Ab Wheel Rollout",
+  "description": "A core exercise in which you roll a wheel out and back, training the spine to resist extension.",
+  "instructions": [
+   "Kneel on the floor and grip the wheel handles at shoulder width.",
+   "Brace your core hard so your lower back stays neutral.",
+   "Roll the wheel forward slowly, extending your body as far as you can control.",
+   "Stop before your hips sag or your back arches.",
+   "Pull the wheel back toward your knees by contracting your abs."
+  ],
+  "tips": [
+   "Brace before every rep and don't let your lower back arch.",
+   "Increase your range gradually, stopping before your hips sag.",
+   "Use a wall as a stop if you can't yet control the bottom position."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold Press",
+  "description": "A dumbbell shoulder press with a wrist rotation that works the delts through a long range of motion.",
+  "instructions": [
+   "Sit against an upright backrest holding the dumbbells at chest height, palms facing you and elbows in front.",
+   "Start pressing up while opening your elbows and turning your palms forward.",
+   "Finish with your arms extended overhead without locking your elbows.",
+   "Lower, turning your palms back toward you, to the starting position."
+  ],
+  "tips": [
+   "Make the rotation smooth, with no jerking.",
+   "Keep your back against the backrest."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Assisted Pull-Up",
+  "description": "A pull-up on an assisted machine that offsets part of your bodyweight, built to develop the back strength needed for strict pull-ups.",
+  "instructions": [
+   "Place your knees on the pad of the assisted pull-up machine.",
+   "Grip the bar with your palms facing away, slightly wider than shoulder width.",
+   "Pull your chest toward the bar by driving your elbows down.",
+   "Lower yourself under control until you hang with your arms straight.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Start the movement by pulling your shoulder blades down before bending your elbows.",
+   "Avoid swinging, which takes work away from your back.",
+   "Adjust the counterweight so you can complete every rep with good form."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Stability Ball Leg Curl",
+  "description": "A bodyweight hamstring curl on a stability ball, rolling your heels toward your glutes while keeping your hips raised.",
+  "instructions": [
+   "Lie on your back with your heels and lower calves on the stability ball and your arms out to the sides for balance.",
+   "Press through your heels to lift your hips into a straight line from shoulders to ankles.",
+   "Keeping your hips up, bend your knees to roll the ball toward your glutes.",
+   "Straighten your legs again under control without dropping your hips.",
+   "Complete all your reps, then lower your hips and step off the ball."
+  ],
+  "tips": [
+   "Your hips stay up for the whole set: it is a bridge and a curl combined.",
+   "Start with both feet and progress to one leg when it becomes easy."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Resistance Band Lat Pulldown",
+  "description": "A vertical pulldown with a resistance band anchored high, as an alternative to a cable station.",
+  "instructions": [
+   "Stand with the band anchored to a high point (a door or a bar), one end in each hand and your arms extended overhead.",
+   "Pull your hands down, driving your elbows to your sides with your chest up.",
+   "Squeeze your back when your hands reach shoulder height.",
+   "Raise your arms under control until they are straight again."
+  ],
+  "tips": [
+   "Don't lean your torso back to pull.",
+   "Make sure the anchor is secure before you start."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Band Pull-Apart",
+  "description": "Pulling a resistance band apart with straight arms to work the rear delts and upper back.",
+  "instructions": [
+   "Stand holding the band with your hands shoulder-width apart and your arms extended in front of you at chest height.",
+   "Pull your hands apart, moving your arms out to the sides until the band touches your chest.",
+   "Squeeze your shoulder blades together at the end without shrugging.",
+   "Return to the start under control without letting the band snap you back."
+  ],
+  "tips": [
+   "Choose a band that allows 15 or more clean reps.",
+   "Keep your ribs down so your lower back doesn't arch."
+  ]
+ },
+ "band-row": {
+  "name": "Resistance Band Row",
+  "description": "A seated row with a resistance band anchored on your feet, needing no equipment other than the band.",
+  "instructions": [
+   "Sit on the floor with your legs extended and the band around the soles of your feet, one end in each hand.",
+   "Keeping your back straight, pull your hands toward your stomach, driving your elbows back.",
+   "Squeeze your shoulder blades together at the end of the movement.",
+   "Straighten your arms under control without losing the tension in the band."
+  ],
+  "tips": [
+   "Don't rock your torso to help the pull.",
+   "Choose a band that allows 12 to 15 clean reps."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Resistance Band Shoulder Press",
+  "description": "A standing shoulder press on a resistance band that trains the delts with very little equipment.",
+  "instructions": [
+   "Stand on the middle of the band, feet hip-width apart, with one end in each hand at shoulder height.",
+   "Press your hands up until your arms are extended overhead.",
+   "Keep your abs tight and your ribs down.",
+   "Lower under control to your shoulders without losing tension."
+  ],
+  "tips": [
+   "Don't arch your back as you press.",
+   "Wrap the band once more around your hands to increase resistance."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Banded Standing Leg Curl",
+  "description": "A standing leg curl with a band around the ankle, useful when travelling or as a light hamstring finisher.",
+  "instructions": [
+   "Loop a resistance band around one ankle and anchor the other end under your standing foot or to a fixed point in front of you.",
+   "Stand tall with a soft bend in the supporting leg, holding on to something if you need balance.",
+   "Curl the banded heel toward your glute while keeping the thigh still.",
+   "Squeeze the hamstring at the top, then lower under control to a full stretch.",
+   "Complete all reps on one side and switch legs."
+  ],
+  "tips": [
+   "Keep your thigh still: only the lower leg moves.",
+   "Don't swing your hips to build momentum.",
+   "Use a lighter band if you can't control the lowering phase."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Barbell Bulgarian Split Squat",
+  "description": "A single-leg squat with the rear foot raised on a bench and the barbell on your back.",
+  "instructions": [
+   "Rest the top of one foot on a bench behind you, with the bar on your upper back and the other leg forward.",
+   "Bend the front knee and lower with an upright torso until your thigh is parallel to the floor.",
+   "Keep your weight on the heel of the front leg.",
+   "Drive through the front foot until the leg is straight; complete your reps and switch legs."
+  ],
+  "tips": [
+   "Set your stance so the front knee doesn't travel far past your toes.",
+   "Practise unloaded or with dumbbells first."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Barbell Curl",
+  "description": "A classic biceps isolation exercise using a barbell for maximum load.",
+  "instructions": [
+   "Stand holding a barbell with a shoulder-width underhand grip.",
+   "Curl the bar toward your shoulders.",
+   "Squeeze at the top, then lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Avoid swinging your torso.",
+   "Keep your elbows close to your sides."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Barbell Glute Bridge",
+  "description": "A loaded glute bridge using a barbell for extra resistance.",
+  "instructions": [
+   "Lie on the floor with a barbell over your hips and your knees bent.",
+   "Raise your hips by squeezing your glutes.",
+   "Hold at the top with your hips fully extended.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Avoid arching your lower back as you extend your hips.",
+   "Drive through your heels, not your toes.",
+   "Tuck your chin and keep your upper back on the floor."
+  ]
+ },
+ "barbell-row": {
+  "name": "Bent-Over Barbell Row",
+  "description": "A compound pull that works the upper and mid back.",
+  "instructions": [
+   "Hinge at your hips with a slight bend in your knees.",
+   "Grip the bar slightly wider than shoulder width.",
+   "Row the bar to your lower chest, squeezing your shoulder blades together.",
+   "Lower the bar under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your torso at roughly 45 degrees.",
+   "Don't use momentum to swing the weight."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Barbell Standing Calf Raise",
+  "description": "A standing calf raise with a free barbell on your back, with no dedicated machine needed.",
+  "instructions": [
+   "Stand with the bar on your upper back and the balls of your feet on a step or plate, hip-width apart.",
+   "Let your heels drop until your calves stretch, keeping your torso upright.",
+   "Rise onto your toes as high as you can without bending your knees.",
+   "Hold briefly at the top and lower under control."
+  ],
+  "tips": [
+   "Start light until you control your balance.",
+   "For safety, do it inside a rack with the pins at the right height."
+  ]
+ },
+ "bench-press": {
+  "name": "Barbell Bench Press",
+  "description": "A compound press that works the chest, shoulders and triceps.",
+  "instructions": [
+   "Lie on the bench with your eyes under the bar.",
+   "Grip the bar slightly wider than shoulder width.",
+   "Unrack the bar and lower it to the middle of your chest.",
+   "Press the bar back up until your arms are fully extended.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Keep your feet flat on the floor.",
+   "Keep a slight arch in your lower back.",
+   "Drive your legs into the floor to stay stable."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Bent-Knee Inverted Row",
+  "description": "The beginner version of the inverted row: with bent knees and your feet close in, you move less weight and it is easier to control.",
+  "instructions": [
+   "Lie under a sturdy low bar, grip it slightly wider than your shoulders and keep your torso straight, knees bent and feet flat.",
+   "Pull your chest to the bar, driving your elbows back and squeezing your shoulder blades together.",
+   "Hold briefly at the top without letting your hips drop.",
+   "Lower under control until your arms are straight."
+  ],
+  "tips": [
+   "Bring your feet closer to make it easier or move them away to progress.",
+   "Once you manage 12 reps, move on to the straight-leg inverted row."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Bodyweight Calf Raise",
+  "description": "A bodyweight calf raise, a basic exercise for strengthening the calves.",
+  "instructions": [
+   "Stand with your feet hip-width apart on a flat surface.",
+   "Rise onto your toes as high as possible.",
+   "Squeeze your calves at the top.",
+   "Lower your heels to the floor under control.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Spread your weight across all your toes as you rise.",
+   "Keep your legs straight to keep the work on the gastrocnemius.",
+   "Fix your eyes on one point to keep your balance."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Bodyweight Reverse Lunge",
+  "description": "A backward lunge with no equipment, more stable and easier on the knees than the forward lunge.",
+  "instructions": [
+   "Stand with your feet together, hands on your waist and chest up.",
+   "Take a long step back and bend both knees until the rear knee is close to the floor.",
+   "Keep your torso upright and your weight on the front foot.",
+   "Push through the front leg back to the start; complete your reps and switch legs."
+  ],
+  "tips": [
+   "Step far enough that the front knee doesn't travel much past your toes.",
+   "Hold on to a support if balance is still difficult."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Bodyweight Squat",
+  "description": "The basic squat with no equipment, ideal for learning the movement pattern and training your legs anywhere.",
+  "instructions": [
+   "Stand with your feet shoulder-width apart, toes slightly out and arms extended in front of you.",
+   "Send your hips back and down as if sitting, with your chest up and your back neutral.",
+   "Lower until your thighs are parallel to the floor, knees tracking over your feet.",
+   "Push the floor away with your whole foot until you stand tall again."
+  ],
+  "tips": [
+   "Keep your heels down through the whole range.",
+   "If getting low is hard, sit to a chair and stand up without momentum."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgarian Split Squat",
+  "description": "A single-leg squat variation with the rear foot elevated.",
+  "instructions": [
+   "Stand in front of a bench and rest one foot on it behind you.",
+   "Hold dumbbells at your sides.",
+   "Lower until your front thigh is parallel to the floor.",
+   "Push through your front heel to stand up.",
+   "Repeat on both sides."
+  ],
+  "tips": [
+   "Keep most of your weight on the front leg.",
+   "Adjust your distance from the bench until the split stance feels stable.",
+   "Finish all reps on one leg before switching."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Cable Crunch",
+  "description": "A kneeling rope crunch on a high pulley that lets you add load progressively to the rectus abdominis.",
+  "instructions": [
+   "Kneel facing a pulley with a rope attachment set high.",
+   "Hold the rope near your forehead with your elbows bent.",
+   "Crunch down by flexing your spine, bringing your elbows toward your thighs.",
+   "Squeeze your abs hard at the bottom.",
+   "Return to the start and repeat."
+  ],
+  "tips": [
+   "Flex your spine instead of pulling with your arms.",
+   "Avoid sitting your hips back on each rep.",
+   "Exhale forcefully on the way down for a better contraction."
+  ]
+ },
+ "cable-curl": {
+  "name": "Cable Curl",
+  "description": "A cable biceps curl for constant tension.",
+  "instructions": [
+   "Stand facing a low pulley with a straight or EZ bar.",
+   "Take an underhand grip with your elbows close to your sides.",
+   "Curl the bar toward your shoulders.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Don't let your elbows drift forward as you curl.",
+   "Don't swing your torso to help move the weight.",
+   "Stand slightly back from the pulley to keep tension."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Cable External Rotation",
+  "description": "A cable external rotation with the elbow pinned to your side that strengthens the external rotators of the rotator cuff, with help from the rear delt.",
+  "instructions": [
+   "Set the pulley at elbow height and grab the handle.",
+   "Stand side-on to the machine with the working elbow bent to 90 degrees.",
+   "Keep your elbow against your side and rotate your forearm outward.",
+   "Pause at the end of the movement.",
+   "Return under control. Complete your reps on one side, then switch."
+  ],
+  "tips": [
+   "Avoid shrugging as you rotate your arm.",
+   "Use a light weight and move slowly and under control.",
+   "Keep your wrist firm and in line with your forearm."
+  ]
+ },
+ "cable-fly": {
+  "name": "Cable Fly",
+  "description": "A chest isolation exercise with cable resistance for constant tension.",
+  "instructions": [
+   "Stand between two cable columns with the handles attached to the high pulleys.",
+   "With a slight bend in your elbows, open your arms out to the sides.",
+   "Bring your hands together in front of your chest in a hugging motion.",
+   "Return slowly to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep the elbow angle constant so it doesn't turn into a press.",
+   "Squeeze your chest for a second when your hands meet.",
+   "Don't let your shoulders roll forward when your arms are open."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Cable Front Raise",
+  "description": "A front raise on a low pulley that keeps constant tension through the whole range.",
+  "instructions": [
+   "Stand facing away from a low pulley, with the cable running between your legs and the handle in one hand, arm extended in front of your thigh.",
+   "Raise your arm forward to shoulder height with a slightly bent elbow.",
+   "Hold briefly at the top without leaning your torso back.",
+   "Lower under control without resting the stack; repeat and switch arms."
+  ],
+  "tips": [
+   "Stand far enough away that the cable pulls you backward.",
+   "Keep your abs tight so your back doesn't arch."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Cable Lateral Raise",
+  "description": "A one-arm cable lateral raise that keeps constant tension on the side delt.",
+  "instructions": [
+   "Stand side-on to a low pulley and take the handle with the hand farther from the machine.",
+   "Keep a slight bend in your elbow and let the cable cross in front of your body.",
+   "Raise your arm out to the side until it is parallel to the floor.",
+   "Lower under control. Do your reps on one side, then switch.",
+   "Keep the tension: don't let the weight rest at the bottom."
+  ],
+  "tips": [
+   "Lead with your elbow, not your hand.",
+   "Pause briefly at the top, with no swinging.",
+   "Use less load than with a dumbbell, because cable tension is constant."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Cable Overhead Triceps Extension",
+  "description": "A cable triceps exercise: facing away from the stack, you hold a rope behind your head and extend your elbows to drive it up and overhead. The overhead position stretches the long head of the triceps and the cable keeps tension on the muscle throughout.",
+  "instructions": [
+   "Attach a rope to the low pulley and select a light weight.",
+   "Grip the rope with both hands, turn your back to the stack and step forward into a staggered stance so the cable pulls you backward.",
+   "Bring the rope overhead with your elbows bent and your upper arms close to your ears, so your hands sit behind your head.",
+   "Brace your torso and keep your upper arms still, then extend your elbows to press the rope up until your arms are straight overhead.",
+   "Pause briefly at the top, then bend your elbows to lower the rope behind your head under control.",
+   "Repeat for the planned number of reps."
+  ],
+  "tips": [
+   "Keep your elbows pointing forward and your upper arms still; if they flare or travel, the extension turns into a press.",
+   "Step far enough forward for the cable to keep you stable, and don't arch your lower back as you raise your arms.",
+   "Use a weight you can control through the whole stretch; heavy loads push the elbows apart."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Cable Pallof Press",
+  "description": "An anti-rotation core exercise in which the cable pulls you sideways while you press the handle straight out from your chest and refuse to let your torso turn.",
+  "instructions": [
+   "Set the pulley at chest height and take the handle with both hands, standing side-on to the machine.",
+   "Step away until there is real tension on the cable, feet shoulder-width apart and knees slightly bent.",
+   "Bring the handle to the middle of your chest and brace your torso and glutes.",
+   "Press the handle straight forward until your arms are extended, resisting the pull that tries to turn you toward the machine.",
+   "Hold the extended position for a moment, then bring the handle back to your chest under control.",
+   "Complete your reps, then turn around and repeat on the other side."
+  ],
+  "tips": [
+   "Nothing should rotate. If your shoulders turn toward the pulley as you press, lower the weight: the rotation that never happens is what trains you.",
+   "The farther you stand from the machine, the longer the lever and the harder it gets, so you can change the difficulty without touching the stack.",
+   "Keep your arms at chest height and your shoulders down; letting the handle rise turns it into a front raise."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Cable Reverse Fly",
+  "description": "A standing cable exercise for the rear delts: facing the space between two pulley towers, you hold the opposite handles with the cables crossed in front of you and move your arms out and back until they reach shoulder height. The cables keep tension on the back of the shoulders through the whole arc.",
+  "instructions": [
+   "Set both pulleys at about shoulder height and stand centred between the two towers.",
+   "Take the left handle in your right hand and the right handle in your left, so the cables cross in front of you.",
+   "Stand tall with your arms straight out at shoulder height and a slight bend in your elbows.",
+   "Sweep your arms out and back in a wide arc, leading with your elbows, until they are in line with your shoulders.",
+   "Squeeze your shoulder blades briefly without arching your lower back.",
+   "Return the handles slowly to the crossed start position and repeat for the planned number of reps."
+  ],
+  "tips": [
+   "Keep your elbows slightly bent and fixed; bending and straightening them turns the fly into a row.",
+   "Keep your shoulders down and your neck relaxed so the rear delts work rather than the upper traps.",
+   "Use a light weight and a slow return; the cables pull hardest at the end of the arc, so control that position."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Captain's Chair Knee Raise",
+  "description": "A bodyweight exercise on the captain's chair that works the lower abs and hip flexors.",
+  "instructions": [
+   "Get into the captain's chair with your back flat against the pad and your forearms on the rests.",
+   "Let your legs hang straight down.",
+   "Brace your core and raise your knees toward your chest.",
+   "Hold briefly at the top, then lower slowly to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Avoid swinging your legs for momentum.",
+   "Exhale as you raise your knees.",
+   "Keep your back against the pad throughout."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Machine Chest Press",
+  "description": "A machine chest press, ideal for beginners.",
+  "instructions": [
+   "Sit in the machine with your back flat against the backrest.",
+   "Grip the handles at chest height.",
+   "Press the handles forward until your arms are fully extended.",
+   "Return slowly to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Adjust the seat so the handles are at chest height.",
+   "Press without snapping your elbows into lockout.",
+   "Return under control without letting the weight drop."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Chest-Supported Dumbbell Row",
+  "description": "A dumbbell row with your chest supported, which takes the strain off your lower back and isolates the back muscles.",
+  "instructions": [
+   "Lie face down on an incline bench with the dumbbells hanging below.",
+   "Row the dumbbells up to your sides.",
+   "Squeeze at the top, then lower.",
+   "Repeat."
+  ],
+  "tips": [
+   "The chest support removes lower-back fatigue.",
+   "Focus on squeezing your shoulder blades together."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Chest-Supported Kettlebell Row",
+  "description": "This exercise works your back, mainly the lats and rhomboids, rowing a kettlebell in each hand toward your hips with your torso supported on an incline bench.",
+  "instructions": [
+   "Lie face down on an incline bench, letting your arms hang freely with a kettlebell in each hand.",
+   "Brace your abs and pull your shoulder blades back.",
+   "Row the kettlebells toward your hips, squeezing your shoulder blades.",
+   "Pause briefly at the top, feeling your back contract.",
+   "Lower the kettlebells slowly to the start under control."
+  ],
+  "tips": [
+   "Keep your torso still throughout; avoid swinging.",
+   "Focus on starting the pull with your back muscles, not just your arms.",
+   "Keep your elbows close to your body to emphasize the lats."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Chest-Supported Machine Row",
+  "description": "A seated machine row with a chest pad that supports your torso, so the lats and the muscles between the shoulder blades do the pulling and the lower back stays out of it. You pull the handles back, driving your elbows behind you, then let them return forward under control.",
+  "instructions": [
+   "Set the seat so the handles are level with your lower chest, and sit with your chest against the pad and your feet planted.",
+   "Reach forward and grip the handles with your arms extended and your shoulders relaxed.",
+   "Brace your torso and pull the handles back, driving your elbows behind you.",
+   "Squeeze your shoulder blades at the end of the pull without lifting your chest off the pad.",
+   "Pause briefly, then extend your arms to return the handles forward under control.",
+   "Repeat for the planned number of reps, keeping your chest on the pad throughout."
+  ],
+  "tips": [
+   "Pull with your elbows rather than your hands, so the lats and mid back lead and the biceps assist.",
+   "Keep your chest on the pad and your shoulders down; shrugging or leaning back turns the row into an upper-trap pull.",
+   "Let your shoulder blades spread forward at the start of each rep for a full stretch before the next pull."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Chest-Supported T-Bar Row",
+  "description": "A T-bar row with your chest on an incline bench, isolating the back without loading the lower back.",
+  "instructions": [
+   "Rest your chest on the incline bench with your feet firmly on the floor, and grip the T-bar handle with your arms extended.",
+   "Pull the handle toward your chest, driving your elbows back and close to your body.",
+   "Squeeze your shoulder blades at the top for a moment.",
+   "Lower under control until your arms are straight, without lifting your chest off the bench."
+  ],
+  "tips": [
+   "Keep your head in line with your spine.",
+   "If you need to lift your chest off the bench to get the weight up, use less."
+  ]
+ },
+ "chin-ups": {
+  "name": "Chin-Ups",
+  "description": "A pull-up variation with an underhand grip that heavily works the biceps along with the lats.",
+  "instructions": [
+   "Hang from a bar with a shoulder-width underhand grip.",
+   "Pull up until your chin clears the bar.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your core tight throughout.",
+   "Avoid excessive swinging."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Close-Grip Bench Press",
+  "description": "A bench press with a narrower grip, which increases triceps involvement while still working the chest.",
+  "instructions": [
+   "Lie on the bench and grip the bar with your hands shoulder-width apart or slightly narrower.",
+   "Unrack the bar and hold it over your chest with your arms extended.",
+   "Lower under control until it touches your lower chest, keeping your elbows close to your body.",
+   "Press the bar up until your elbows are straight."
+  ],
+  "tips": [
+   "Don't bring your hands too close, which strains the wrists; shoulder width is enough.",
+   "Use a spotter or a rack with safety pins when training close to failure."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Dumbbell Bench Press",
+  "description": "A compound dumbbell chest exercise that allows a larger range of motion than the barbell bench press.",
+  "instructions": [
+   "Lie on a flat bench holding a dumbbell in each hand at chest height.",
+   "Press the dumbbells up until your arms are fully extended.",
+   "Lower them slowly to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your wrists neutral throughout.",
+   "Squeeze your chest at the top."
+  ]
+ },
+ "db-fly": {
+  "name": "Dumbbell Fly",
+  "description": "An isolation exercise that stretches and contracts the pecs through a wide arc.",
+  "instructions": [
+   "Lie on a bench with the dumbbells above your chest, palms facing each other.",
+   "With a slight bend in your elbows, lower the dumbbells out to the sides.",
+   "Return to the start, squeezing your chest.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep the same elbow bend throughout.",
+   "Don't lower the dumbbells too far."
+  ]
+ },
+ "db-squat": {
+  "name": "Dumbbell Squat",
+  "description": "A squat loaded with a dumbbell in each hand at your sides, accessible without a barbell.",
+  "instructions": [
+   "Stand with your feet shoulder-width apart, a dumbbell in each hand at your sides.",
+   "Brace your core and keep your chest up.",
+   "Squat by bending your hips and knees.",
+   "Descend until your thighs are parallel to the floor or lower.",
+   "Drive through your heels to stand back up."
+  ],
+  "tips": [
+   "Keep your chest up and your back straight.",
+   "Push your knees out in line with your toes.",
+   "Use straps if grip becomes the limiting factor."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead Bug",
+  "description": "A core exercise lying on your back that coordinates opposite arm and leg extension to train deep core stability.",
+  "instructions": [
+   "Lie on your back with your arms extended toward the ceiling and your knees bent to 90 degrees.",
+   "Lower your right arm and left leg toward the floor, keeping your lower back pressed down.",
+   "Return to the start.",
+   "Repeat on the other side.",
+   "Keep alternating."
+  ],
+  "tips": [
+   "Keep your lower back pressed into the floor at all times.",
+   "Move slowly."
+  ]
+ },
+ "deadlift": {
+  "name": "Barbell Deadlift",
+  "description": "A full-body compound lift that mainly works the posterior chain.",
+  "instructions": [
+   "Stand with your feet hip-width apart and the bar over the middle of your feet.",
+   "Hinge at your hips and grip the bar.",
+   "Brace your core and lift by extending your hips and knees.",
+   "Stand fully upright at the top, then lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep the bar close to your body.",
+   "Don't round your lower back."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Deficit Deadlift",
+  "description": "A deadlift standing on a low platform, which increases the range of motion and the demand off the floor.",
+  "instructions": [
+   "Stand on a 2 to 5 cm platform with your feet under the bar and grip it with a neutral back and your shoulders over it.",
+   "Brace and push the floor away as the bar starts to rise close to your legs.",
+   "Extend your hips and knees together until you are fully upright.",
+   "Lower the bar to the floor under control, keeping your back neutral."
+  ],
+  "tips": [
+   "Start with a small deficit and light weight to dial in your technique.",
+   "Don't round your back as the bar leaves the floor."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon Flag",
+  "description": "An advanced ab exercise with a rigid body supported only on the shoulders, raised and lowered like a lever.",
+  "instructions": [
+   "Lie on a bench, grip the edge behind your head and lift your straight body so only your shoulders and upper back are supported.",
+   "Lower your straight body, without bending at the hips, until it is almost parallel to the floor.",
+   "Keep your abs and glutes tight without touching the bench.",
+   "Raise your straight body back to vertical; if you can't, start with the lowering phase only."
+  ],
+  "tips": [
+   "Start with bent knees or with the lowering phase only.",
+   "Not bending at the hips is the key to the exercise."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Bent-Over Dumbbell Row",
+  "description": "A row with a dumbbell in each hand and your torso bent forward: it works the lats and upper back with nothing but dumbbells.",
+  "instructions": [
+   "Stand with a dumbbell in each hand, bend your knees slightly and hinge at your hips until your torso is nearly parallel to the floor, back straight.",
+   "Let your arms hang with your palms facing each other.",
+   "Row the dumbbells toward your hips, driving your elbows back and squeezing your shoulder blades together.",
+   "Pause briefly at the top and lower under control until your arms are straight."
+  ],
+  "tips": [
+   "Keep your torso still: if you need to swing to lift the dumbbells, they are too heavy.",
+   "Keep your neck in line with your spine, looking at the floor.",
+   "If your lower back tires before your back muscles, use less weight or switch to a supported row."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Dumbbell Curl",
+  "description": "Elbow flexion with a dumbbell in each hand, working the biceps through a free range of motion.",
+  "instructions": [
+   "Stand with a dumbbell in each hand, arms extended at your sides and palms facing forward.",
+   "Keep your elbows close to your torso and curl the dumbbells without swinging your body.",
+   "Squeeze your biceps at the top for a moment without raising your shoulders.",
+   "Lower under control until your elbows are fully straight."
+  ],
+  "tips": [
+   "Don't use your back for momentum: if you need to, lower the weight.",
+   "Control the lowering phase so it takes at least twice as long as the lift."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Dumbbell Farmer's Walk",
+  "description": "A full-body exercise in which you walk holding heavy dumbbells, building grip strength, core stability and overall muscular endurance.",
+  "instructions": [
+   "Stand tall with a dumbbell in each hand and your arms straight at your sides.",
+   "Pull your shoulder blades back and brace your core, keeping a neutral spine.",
+   "Walk slowly and deliberately for a set distance or time, taking short, controlled steps.",
+   "Keep your chest up and don't lean to either side as you walk.",
+   "Focus on holding a strong, stable posture throughout."
+  ],
+  "tips": [
+   "Use the heaviest dumbbells you can control without losing form.",
+   "Breathe deeply and rhythmically to keep your core tight.",
+   "Imagine you are balancing a glass of water on your head."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Dumbbell Front Raise",
+  "description": "Raising dumbbells forward to shoulder height to work the front delts.",
+  "instructions": [
+   "Stand with a dumbbell in each hand in front of your thighs, arms almost straight.",
+   "Raise the dumbbells forward to shoulder height with a slight bend in your elbows.",
+   "Stop when you reach horizontal, without swinging your torso.",
+   "Lower under control to your thighs."
+  ],
+  "tips": [
+   "Don't use your back for momentum: if you do, lower the weight.",
+   "The front delts already work hard in pressing, so don't overdo the volume."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Dumbbell Reverse Fly",
+  "description": "A bent-over isolation exercise raising dumbbells out to the sides to work the rear delts and upper back.",
+  "instructions": [
+   "Hinge forward at your hips holding dumbbells with your arms hanging.",
+   "Keep your back straight and your knees slightly bent.",
+   "Raise the dumbbells out to the sides up to shoulder height.",
+   "Squeeze your shoulder blades at the top.",
+   "Lower the dumbbells under control.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Use a light weight so the rear delts do the work, not momentum.",
+   "Squeeze your shoulder blades together at the top.",
+   "Keep a soft, fixed bend in your elbows throughout."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Dumbbell Romanian Deadlift",
+  "description": "A dumbbell Romanian deadlift that emphasizes the hamstring stretch through a hip hinge.",
+  "instructions": [
+   "Stand holding dumbbells in front of your thighs with a slight bend in your knees.",
+   "Hinge at your hips and push your glutes back.",
+   "Lower the dumbbells along your legs until you feel your hamstrings stretch.",
+   "Keep your back straight and your shoulders back.",
+   "Drive your hips forward to stand back up.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Go only as low as your flexibility allows, without forcing it.",
+   "Keep the same soft knee bend through the whole range.",
+   "Don't turn the movement into a squat."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Dumbbell Shoulder Press",
+  "description": "A seated or standing dumbbell overhead press that builds the front and side delts.",
+  "instructions": [
+   "Sit or stand holding the dumbbells at shoulder height with your palms facing forward.",
+   "Press both dumbbells overhead until your arms are fully extended.",
+   "Keep your core tight and avoid arching your lower back.",
+   "Lower the dumbbells under control to shoulder height.",
+   "Don't let the dumbbells drift behind your head.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Press the dumbbells straight up without clanking them together at the top.",
+   "Keep your wrists firm and in line with your forearms.",
+   "If your lower back arches, reduce the weight."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Dumbbell Shrug",
+  "description": "Shrugging with a dumbbell in each hand to work the upper back and traps.",
+  "instructions": [
+   "Stand with a dumbbell in each hand, arms extended at your sides and eyes forward.",
+   "Raise your shoulders straight up toward your ears without rolling them or bending your elbows.",
+   "Squeeze at the top for a moment.",
+   "Lower under control until your traps are fully stretched."
+  ],
+  "tips": [
+   "Don't circle your shoulders: the path is vertical.",
+   "If your grip gives out before your traps, use straps."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Dumbbell Single-Leg Calf Raise",
+  "description": "A single-leg calf raise on a step, holding a dumbbell and using your free hand for balance.",
+  "instructions": [
+   "Stand on a step on the ball of one foot, the other leg bent and a dumbbell in the hand on the working side; rest your other hand on a wall.",
+   "Let your heel drop below the step until your calf stretches.",
+   "Rise onto your toes as high as you can without bending your knee.",
+   "Hold briefly at the top and lower under control; complete your reps and switch legs."
+  ],
+  "tips": [
+   "Push through the base of your big toe without letting your ankle roll out.",
+   "It is unilateral: do the same number of reps on each leg."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Elevated Pike Push-Up",
+  "description": "The beginner version of the pike push-up, with your hands on a stable step or chair to reduce the load.",
+  "instructions": [
+   "Place your hands shoulder-width apart on the edge of a sturdy step, bench or chair, and walk your feet back until your hips are high.",
+   "Bend your elbows and lower your head toward the support, keeping your hips high.",
+   "Stop when your head is between your hands, without losing the position.",
+   "Push with your arms until your elbows are straight."
+  ],
+  "tips": [
+   "Move your feet closer to the support to make it harder.",
+   "Check that the support doesn't move before you start."
+  ]
+ },
+ "face-pull": {
+  "name": "Cable Face Pull",
+  "description": "A cable exercise that works the rear delts and external rotators.",
+  "instructions": [
+   "Attach a rope to a high pulley.",
+   "Pull the rope toward your face, separating the ends.",
+   "Squeeze your rear delts and external rotators.",
+   "Return to the start under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your elbows high, level with your shoulders.",
+   "Squeeze your shoulder blades together at the end of each rep.",
+   "Use a light weight so your technique holds."
+  ]
+ },
+ "front-squat": {
+  "name": "Front Squat",
+  "description": "A squat with the barbell held in front on the delts, emphasizing the quads and core.",
+  "instructions": [
+   "Clean or set the bar onto your front delts with your elbows high.",
+   "Squat with an upright torso until your thighs are parallel to the floor.",
+   "Stand back up.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your elbows high to hold the bar stable.",
+   "A more upright torso increases quad involvement."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Glute Bridge",
+  "description": "A bodyweight glute exercise performed lying on the floor.",
+  "instructions": [
+   "Lie on your back with your knees bent and your feet flat on the floor.",
+   "Raise your hips by squeezing your glutes.",
+   "Hold briefly at the top with your hips fully extended.",
+   "Lower your hips under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Drive through your heels to engage the glutes better.",
+   "Avoid arching your lower back as you extend your hips.",
+   "Keep your knees in line with your feet throughout."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet Squat",
+  "description": "A beginner-friendly squat holding a kettlebell at chest height that improves posture and depth.",
+  "instructions": [
+   "Hold a kettlebell at chest height with both hands.",
+   "Squat while keeping the weight close to your chest.",
+   "Stand back up.",
+   "Repeat."
+  ],
+  "tips": [
+   "The goblet position naturally encourages an upright torso.",
+   "Push your knees out at the bottom."
+  ]
+ },
+ "good-morning": {
+  "name": "Good Morning",
+  "description": "A hip hinge with the barbell on your back to strengthen the hamstrings, glutes and lower back.",
+  "instructions": [
+   "Stand with the bar on your upper back, feet shoulder-width apart and knees slightly bent.",
+   "Push your hips back, leaning your torso forward with a neutral back.",
+   "Lower until you feel tension in your hamstrings, with your torso close to horizontal.",
+   "Drive your hips forward to stand tall again."
+  ],
+  "tips": [
+   "Start very light: the lower back works hard.",
+   "Look ahead and don't round your back."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack Squat",
+  "description": "A guided exercise on the hack squat machine that mainly works the quads through a controlled squat on the sled.",
+  "instructions": [
+   "Load the hack squat machine and set your back and shoulders against the pads.",
+   "Place your feet shoulder-width apart on the platform with your toes turned slightly out.",
+   "Release the safety handles and lower the sled by bending your knees and hips.",
+   "Descend until your thighs are at least parallel to the platform.",
+   "Drive through your heels to straighten your legs and return the sled to the start.",
+   "Lock the safety handles again at the end of the set."
+  ],
+  "tips": [
+   "Keep your lower back against the pad throughout.",
+   "Placing your feet higher on the platform shifts emphasis to the glutes and hamstrings.",
+   "Control the descent and don't bounce out of the bottom."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Dumbbell Hammer Curl",
+  "description": "A neutral-grip biceps curl variation that works the brachioradialis.",
+  "instructions": [
+   "Stand holding the dumbbells at your sides with your palms facing each other.",
+   "Curl the dumbbells, keeping your palms facing in.",
+   "Squeeze at the top and lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your elbows close to your torso throughout.",
+   "Avoid swinging your body to move the dumbbells.",
+   "Keep your wrists firm and neutral through the whole curl."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Handstand Push-Up",
+  "description": "A vertical push-up with your feet against a wall, one of the most demanding bodyweight pressing exercises.",
+  "instructions": [
+   "Face away from the wall, place your hands on the floor and walk your feet up until you are vertical with your abs tight.",
+   "Bend your elbows and lower your head under control toward the floor.",
+   "Stop when your head touches the floor or a mat.",
+   "Push until your elbows are fully straight."
+  ],
+  "tips": [
+   "Practise the handstand hold and the pike push-up first.",
+   "Put a mat under your head to build confidence."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Hanging Knee Raise",
+  "description": "A hanging core exercise that works the lower abs and hip flexors with bent knees.",
+  "instructions": [
+   "Hang from a bar with an overhand grip and your arms fully extended.",
+   "Brace your core and raise your knees toward your chest.",
+   "Hold briefly at the top.",
+   "Lower your legs slowly to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Avoid swinging: start the movement from your core.",
+   "Exhale as you raise your knees.",
+   "Progress to straight-leg raises when this becomes easy."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Hanging Leg Raise",
+  "description": "Raising straight legs to horizontal while hanging from a bar, for the abs and hip flexors.",
+  "instructions": [
+   "Hang from a bar with a grip slightly wider than your shoulders, legs together and straight.",
+   "Raise your straight legs until they are parallel to the floor, tilting your pelvis slightly back.",
+   "Hold briefly at the top without swinging.",
+   "Lower under control to the start, without letting your body sway."
+  ],
+  "tips": [
+   "If you can't manage straight legs, bend your knees.",
+   "Avoid swinging: use your abs, not momentum."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Hex Bar Deadlift",
+  "description": "A deadlift standing inside a hex bar, keeping the load centred for a more upright, back-friendly pull.",
+  "instructions": [
+   "Stand inside a loaded trap bar with your feet shoulder-width apart.",
+   "Bend your hips and knees to grip the handles.",
+   "Brace your core and keep your back flat.",
+   "Drive through your heels and extend your hips and knees to stand up.",
+   "Lock out at the top with your shoulders back.",
+   "Lower the bar to the floor under control."
+  ],
+  "tips": [
+   "Keep your chest up and your back flat as you set your grip.",
+   "Push the floor away rather than pulling the bar with your back.",
+   "Stand fully upright at the top without leaning back."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Machine Hip Abduction",
+  "description": "A machine exercise that works the outer hip muscles.",
+  "instructions": [
+   "Sit in the hip abduction machine with the pads against the outside of your thighs.",
+   "Push your legs outward against the resistance.",
+   "Hold briefly at the widest point.",
+   "Return to the start under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your back against the machine's backrest.",
+   "Open your legs without momentum, at a controlled pace.",
+   "Resist the return instead of letting the weight drop."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Machine Hip Adduction",
+  "description": "A machine exercise squeezing your legs together against resistance, isolating and strengthening the adductors on the inner thigh.",
+  "instructions": [
+   "Sit in the hip adduction machine with your back against the backrest.",
+   "Place your legs against the pads with the machine set to a comfortable stretch.",
+   "Squeeze your legs until the pads meet in the middle.",
+   "Hold the contraction briefly in the fully closed position.",
+   "Let your legs open again under control to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Choose a starting width that stretches without straining your groin.",
+   "Use the full range at a steady, controlled speed.",
+   "Don't let the weight stack slam as your legs open."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Barbell Hip Thrust",
+  "description": "A compound glute exercise using a barbell across the hips.",
+  "instructions": [
+   "Sit on the floor with your upper back against a bench and the bar over your hips.",
+   "Drive your hips up until your torso and thighs are in line.",
+   "Squeeze your glutes at the top.",
+   "Lower your hips under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your chin tucked and your ribs down.",
+   "Drive through your heels, not your toes.",
+   "Avoid arching your lower back at the top."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Horizontal Leg Press",
+  "description": "A machine leg press performed horizontally that works the quads, glutes and hamstrings.",
+  "instructions": [
+   "Sit in the horizontal leg press with your back against the pad and your feet shoulder-width apart on the platform.",
+   "Push with your feet to straighten your legs without locking your knees.",
+   "Bend your knees under control until they approach your chest.",
+   "Repeat."
+  ],
+  "tips": [
+   "Don't let your lower back lift off the seat.",
+   "Avoid fully locking your knees."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Incline Barbell Bench Press",
+  "description": "A barbell press on an incline bench that works the upper chest.",
+  "instructions": [
+   "Lie on a bench set to 30 to 45 degrees.",
+   "Grip the bar slightly wider than your shoulders and unrack it.",
+   "Lower the bar to your upper chest.",
+   "Press the bar back to full extension.",
+   "Repeat."
+  ],
+  "tips": [
+   "Pull your shoulder blades back and keep them against the bench.",
+   "Avoid bouncing the bar off your chest.",
+   "Ask for a spotter when working with heavy loads."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Incline Bench Y-Raise",
+  "description": "A Y-shaped dumbbell raise lying face down on an incline bench, for the lower and mid traps.",
+  "instructions": [
+   "Lie face down on an incline bench with your chest supported and a light dumbbell hanging from each hand.",
+   "Raise your arms forward and up in a Y shape, thumbs pointing to the ceiling.",
+   "Stop when your arms are in line with your torso, without lifting your chest off the bench.",
+   "Lower under control to the start."
+  ],
+  "tips": [
+   "Use little weight: the lower trap is a small muscle.",
+   "Keep your neck neutral, looking at the floor."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Incline Dumbbell Curl",
+  "description": "An incline-bench biceps curl for a greater stretch on the long head.",
+  "instructions": [
+   "Sit on a bench inclined to 45 degrees with the dumbbells at your sides.",
+   "Let your arms hang straight with your palms facing forward.",
+   "Curl the dumbbells toward your shoulders.",
+   "Lower under control to full extension.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your shoulders and back against the bench.",
+   "Don't let your shoulders roll forward as you curl.",
+   "Make the most of the stretch at the bottom with a slow lowering phase."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Incline Dumbbell Press",
+  "description": "An incline press that emphasizes the upper chest.",
+  "instructions": [
+   "Set the bench to a 30-degree incline and sit with the dumbbells at shoulder height.",
+   "Press the dumbbells up and together until your arms are fully extended.",
+   "Lower the dumbbells back to shoulder height under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your feet planted and your shoulder blades pulled back.",
+   "Avoid clanking the dumbbells together at the top.",
+   "Lower until you feel a gentle stretch in your chest."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Incline Push-Up",
+  "description": "A beginner-friendly push-up variation with your hands raised on a bench or step.",
+  "instructions": [
+   "Place your hands shoulder-width apart on a bench or raised surface.",
+   "Step your legs back into a plank.",
+   "Lower your chest toward the bench by bending your elbows.",
+   "Push back to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Brace your abs so your hips don't sag.",
+   "The higher the surface, the easier the exercise.",
+   "Make sure the bench can't move before you start."
+  ]
+ },
+ "inverted-row": {
+  "name": "Inverted Row",
+  "description": "A bodyweight horizontal pull under a fixed bar, pulling your chest to the bar while keeping your body rigid.",
+  "instructions": [
+   "Set a bar in a rack at about waist height.",
+   "Lie under it and grip it slightly wider than your shoulders with an overhand grip.",
+   "Hang with your arms extended, heels on the floor and your body straight from head to ankles.",
+   "Pull your chest to the bar, squeezing your shoulder blades.",
+   "Lower under control until your arms are fully extended.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your core tight so your hips don't sag.",
+   "Raise your feet to make it harder; walk them toward the bar to make it easier.",
+   "Pause briefly at the top with your chest at the bar."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Kettlebell Tibialis Raise",
+  "description": "A shin exercise done seated on a bench with a kettlebell hanging from the front of one foot. Lifting your toes toward your shin against the weight strengthens the muscles at the front of the lower leg.",
+  "instructions": [
+   "Sit at the end of a flat bench with one leg straight and your heel on the floor.",
+   "Hang a kettlebell by its handle from the front of that foot, over your toes.",
+   "Raise your toes toward your shin as far as is comfortable while your heel stays on the floor.",
+   "Hold the top position briefly.",
+   "Lower your foot slowly until your toes point to the floor.",
+   "Complete your reps, then switch legs."
+  ],
+  "tips": [
+   "Move only at the ankle; your knee and thigh stay still.",
+   "Start with a light kettlebell and build up gradually, because the shin muscles tire quickly.",
+   "Lower slowly instead of letting the weight drop."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Knee Push-Up",
+  "description": "A beginner-friendly push-up with your knees on the floor to reduce the load on your upper body.",
+  "instructions": [
+   "Start in a push-up position with your knees on the floor.",
+   "Place your hands shoulder-width apart on the floor.",
+   "Keep your body in a straight line from knees to shoulders.",
+   "Lower your chest toward the floor by bending your elbows.",
+   "Push with your hands to return to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Don't let your elbows flare too far out.",
+   "Squeeze your glutes and abs throughout.",
+   "Look at the floor to keep your neck neutral."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Kneeling Cable Row",
+  "description": "A cable row from a tall kneeling position, which removes hip momentum and keeps tension on the upper back throughout.",
+  "instructions": [
+   "Set the pulley at chest height and attach a rope or a double D-handle.",
+   "Kneel tall facing the machine, far enough away that the stack doesn't touch down.",
+   "Grip the handle with both hands and hold it extended in front of you at chest height.",
+   "Pull the handle to your breastbone, driving your elbows back and squeezing your shoulder blades.",
+   "Return under control to the stretched start position.",
+   "Repeat for the recommended number of reps."
+  ],
+  "tips": [
+   "Stay tall: don't lean back to finish the rep.",
+   "The tall kneeling position makes your core resist rotation on every pull."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Lat Pulldown",
+  "description": "A pulldown machine exercise that works the latissimus dorsi.",
+  "instructions": [
+   "Sit at the pulldown machine with your thighs secured under the pads.",
+   "Take a wide overhand grip on the bar.",
+   "Pull the bar to your upper chest, squeezing your lats.",
+   "Return the bar slowly to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Start the pull by drawing your shoulder blades down, not by bending your elbows.",
+   "Avoid swinging your torso to move the weight.",
+   "Drive your elbows down and back, not out."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Dumbbell Lateral Raise",
+  "description": "An isolation exercise for the side delt that builds shoulder width.",
+  "instructions": [
+   "Stand with dumbbells at your sides.",
+   "Raise the dumbbells out to the sides until your arms are parallel to the floor.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep a slight bend in your elbows.",
+   "Lead with your elbows, not your hands."
+  ]
+ },
+ "leg-curl": {
+  "name": "Lying Leg Curl",
+  "description": "A hamstring isolation exercise on the leg curl machine.",
+  "instructions": [
+   "Lie face down on the leg curl machine with your ankles under the pad.",
+   "Curl your heels toward your glutes.",
+   "Squeeze your hamstrings at the top.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your hips on the bench through the whole range.",
+   "Avoid arching your lower back as you raise your heels.",
+   "Choose a weight that allows a full, controlled range."
+  ]
+ },
+ "leg-extension": {
+  "name": "Leg Extension",
+  "description": "A quad isolation exercise on a machine.",
+  "instructions": [
+   "Sit in the leg extension machine with your ankles behind the pad.",
+   "Extend your legs until they are straight.",
+   "Squeeze your quads at the top.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Line your knees up with the machine's pivot.",
+   "Lift the weight without kicking it up.",
+   "Hold the handles to keep your hips on the seat."
+  ]
+ },
+ "leg-press": {
+  "name": "Leg Press",
+  "description": "A compound machine exercise for the quads and glutes.",
+  "instructions": [
+   "Sit in the leg press with your feet shoulder-width apart on the platform.",
+   "Release the safeties and lower the platform by bending your knees.",
+   "Push the platform up until your legs are almost straight.",
+   "Don't lock your knees at the top.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your lower back against the pad at all times.",
+   "Go only as low as you can without your hips lifting.",
+   "Keep your knees in line with your toes."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Leg Press Calf Raise",
+  "description": "A calf raise pushing the leg press platform with the balls of your feet.",
+  "instructions": [
+   "Sit in the leg press with your legs almost straight and only the front of your feet on the edge of the platform.",
+   "Release the safety and let your heels drop, stretching your calves.",
+   "Push the platform with the balls of your feet until you are on your toes.",
+   "Hold briefly at the top and lower again under control."
+  ],
+  "tips": [
+   "Don't lock your knees completely.",
+   "Use the full range and pause at the bottom: that is where the stimulus is earned."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Lying Leg Raise",
+  "description": "Raising both legs while lying on your back to work the lower abs and hip flexors.",
+  "instructions": [
+   "Lie on your back with your legs together and straight, hands under your glutes or at your sides.",
+   "Press your lower back into the floor by bracing your abs.",
+   "Raise your legs until they are vertical, without swinging.",
+   "Lower slowly without letting your feet touch the floor or your back arch."
+  ],
+  "tips": [
+   "If your lower back lifts off the floor, bend your knees.",
+   "Control the lowering phase: it works the abs the most."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Machine Back Extension",
+  "description": "A seated lower-back isolation exercise: with hips and legs fixed, your torso pushes back against a padded roller, extending the spine against the weight stack.",
+  "instructions": [
+   "Sit in the back extension machine with your feet on the platform and set the roller across your upper back, just below your shoulder blades.",
+   "Hold the side handles and let your torso come slightly forward: this is the start position.",
+   "Push back against the roller by extending your spine until your torso leans back and your lower back is fully contracted.",
+   "Pause briefly at full extension and return to the start under control, resisting the weight on the way.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Set the roller just below your shoulder blades: higher presses on your neck and lower costs you range.",
+   "Extend from your lower back rather than throwing your head and shoulders back, and keep both directions slow.",
+   "Stop with your torso extended in neutral instead of forcing your spine further, and start light: the lower back responds better to controlled reps than heavy loads."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Machine Biceps Curl",
+  "description": "A machine biceps curl for isolated arm training.",
+  "instructions": [
+   "Sit in the machine and adjust the pad to the length of your arms.",
+   "Take an underhand grip on the handles.",
+   "Curl the handles toward your shoulders.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your elbows on the pad at all times.",
+   "Avoid shrugging as you raise the handles.",
+   "Lower until your arms are almost straight without losing tension."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Machine Calf Raise",
+  "description": "A standing machine isolation exercise that works the gastrocnemius and soleus through the full ankle range.",
+  "instructions": [
+   "Stand in the calf raise machine with the balls of your feet on the platform.",
+   "Set the shoulder pads firmly.",
+   "Lower your heels below the platform for a full stretch.",
+   "Push through the balls of your feet to rise onto your toes.",
+   "Squeeze your calves at the top.",
+   "Lower under control and repeat."
+  ],
+  "tips": [
+   "Avoid bouncing at the bottom so you keep tension.",
+   "Keep your knees straight but not locked.",
+   "Rise straight up without letting your ankles roll out."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Machine Chest Fly",
+  "description": "A chest isolation exercise on a machine that brings the arms together in an arc in front of your body.",
+  "instructions": [
+   "Sit in the fly machine and set the seat so the handles are at chest height.",
+   "Hold the handles with a slight bend in your elbows.",
+   "Bring the handles together in front of your chest in a smooth arc.",
+   "Squeeze your pecs at the point of peak contraction.",
+   "Return to the start under control without dropping the weight.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Keep a slight, constant elbow bend throughout.",
+   "Focus on squeezing your chest rather than pushing with your arms.",
+   "Control the return instead of dropping the stack."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Machine Reverse Fly",
+  "description": "A seated machine exercise for the rear delts, also known as the reverse pec deck: facing the pad, you move both handles out and back in a wide arc against the stack. The pad keeps your torso still, so the work stays on the back of the shoulders and the muscles between the shoulder blades.",
+  "instructions": [
+   "Set the seat so the handles are at shoulder height and sit facing the machine with your chest on the pad.",
+   "Grip the handles with your arms straight in front and a slight bend in your elbows.",
+   "Keep your shoulders down, away from your ears, and brace your torso.",
+   "Sweep the handles out and back in a wide arc, leading with your elbows, until your arms are roughly in line with your shoulders.",
+   "Squeeze your shoulder blades briefly without leaning back off the pad.",
+   "Return the handles forward slowly and repeat for the planned number of reps."
+  ],
+  "tips": [
+   "Lead with your elbows rather than pulling with your hands, so the rear delts work and not the biceps.",
+   "Keep your chest on the pad and your neck relaxed; leaning back or shrugging shifts the load to the upper traps.",
+   "Choose a weight you can lower under control; a lighter load with a slow return works the rear delts better than swinging a heavy one."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Machine Seated Crunch",
+  "description": "An abdominal isolation exercise on a seated machine that flexes the spine against resistance.",
+  "instructions": [
+   "Sit in the crunch machine and hold the handles.",
+   "Set the chest pad against your torso.",
+   "Contract your abs to curl your torso forward and down.",
+   "Squeeze at the end of the range.",
+   "Return to the start under control.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Start the movement with your abs, not your arms.",
+   "Exhale as you curl your torso.",
+   "Don't swing your body for momentum."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Machine Shoulder Press",
+  "description": "A machine overhead press for the shoulders.",
+  "instructions": [
+   "Sit in the machine with your back against the pad.",
+   "Grip the handles at shoulder height.",
+   "Press the handles overhead until your arms are fully extended.",
+   "Lower under control to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Don't arch your lower back as you press.",
+   "Avoid snapping your elbows into lockout at the top.",
+   "Keep your wrists firm and in line with your forearms."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negative Pull-Up",
+  "description": "The slow lowering phase of the pull-up, to build the strength needed for full pull-ups.",
+  "instructions": [
+   "Step onto a bench or jump to get your chin above the bar, with a grip slightly wider than your shoulders.",
+   "Without any support, lower your body very slowly, over about three to five seconds.",
+   "Control the movement until your arms are fully straight.",
+   "Get back up with the help of the bench or a jump and repeat."
+  ],
+  "tips": [
+   "Keep your shoulders away from your ears on the way down.",
+   "Once you manage five slow reps, try pulling up unassisted."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic Hamstring Curl",
+  "description": "A knee flexion exercise lowering your torso forward from a kneeling position, working the hamstrings eccentrically.",
+  "instructions": [
+   "Kneel on a mat with your ankles anchored under a fixed support.",
+   "Keep your torso upright and your hips extended.",
+   "Lower your body forward slowly, resisting with your hamstrings.",
+   "Catch yourself with your hands just before reaching the floor.",
+   "Push off with your hands and pull yourself back to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Lower as slowly as you can: the eccentric phase is the goal.",
+   "Keep your hips extended and don't bend at the waist.",
+   "Brake with your hands and push lightly while you build strength."
+  ]
+ },
+ "ohp": {
+  "name": "Barbell Overhead Press",
+  "description": "A compound overhead press that works the shoulders and triceps.",
+  "instructions": [
+   "Stand with your feet shoulder-width apart and the bar at collarbone height.",
+   "Brace your core and press the bar overhead.",
+   "Lock your elbows at the top with the bar over the middle of your feet.",
+   "Lower the bar to your collarbones.",
+   "Repeat."
+  ],
+  "tips": [
+   "Don't lean too far back.",
+   "Squeeze your glutes for stability."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "One-Arm Seated Cable Row",
+  "description": "A one-arm seated cable row for the lats and upper back, keeping your torso square while the working shoulder blade moves forward and back under control.",
+  "instructions": [
+   "Sit at the cable station holding the handle with your working arm extended.",
+   "Plant your feet, sit tall and brace your torso without leaning back.",
+   "Pull the handle toward your lower ribs while drawing your shoulder blade back.",
+   "Pause briefly without twisting your torso or raising your shoulder.",
+   "Extend your arm under control, finish the set and switch sides."
+  ],
+  "tips": [
+   "Keep both shoulders facing forward through the whole rep.",
+   "Drive your elbow back close to your body rather than just bending your arm.",
+   "Let your shoulder blade move forward at the start without rounding your lower back."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Dumbbell Overhead Triceps Extension",
+  "description": "A triceps isolation exercise that emphasizes the long head.",
+  "instructions": [
+   "Standing or seated, hold a dumbbell overhead with both hands.",
+   "Lower the dumbbell behind your head by bending your elbows.",
+   "Extend your arms back to the start.",
+   "Keep your elbows close to your head throughout.",
+   "Repeat."
+  ],
+  "tips": [
+   "Move only your forearms and keep everything else still.",
+   "Avoid arching your lower back as the dumbbell lowers.",
+   "Hold the dumbbell under the top plate with both palms."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Parallel Bar Dips",
+  "description": "A bodyweight exercise on parallel bars that works the chest, triceps and shoulders.",
+  "instructions": [
+   "Support yourself on the parallel bars with your arms extended and your body hanging clear of the floor.",
+   "Lean your torso slightly forward and bend your elbows to lower under control.",
+   "Stop when your shoulders are level with your elbows, without sinking into the joint.",
+   "Push with your chest and triceps until your arms are straight again."
+  ],
+  "tips": [
+   "If you can't do clean sets, use an assisted dip machine or bands.",
+   "Don't go lower than your shoulder tolerates without discomfort."
+  ]
+ },
+ "pause-squat": {
+  "name": "Pause Squat",
+  "description": "A barbell squat with a pause at the bottom, to build control and strength without the bounce.",
+  "instructions": [
+   "Place the bar on your upper back, feet shoulder-width apart and toes slightly out.",
+   "Descend with control to depth, keeping a neutral back and your knees tracking over your feet.",
+   "Hold the bottom position for one to three seconds without relaxing your torso.",
+   "Push the floor away until you stand tall again."
+  ],
+  "tips": [
+   "Use less load than for your normal squat.",
+   "Don't bounce out of the pause: drive up continuously."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Paused Bench Press",
+  "description": "A bench press with a one to two second pause on the chest, which removes the bounce and builds strength off the bottom.",
+  "instructions": [
+   "Lie on the bench with your feet planted, shoulder blades squeezed together and the bar over your chest, grip slightly wider than your shoulders.",
+   "Lower the bar under control until it touches your chest.",
+   "Hold the bar still on your chest for one or two seconds without losing tension.",
+   "Press the bar up until your elbows are straight."
+  ],
+  "tips": [
+   "Use 10 to 15% less weight than for the regular bench press.",
+   "Have someone spot you or use the rack pins."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec Deck",
+  "description": "A chest isolation machine with moving handles that works the pecs through horizontal adduction.",
+  "instructions": [
+   "Sit in the pec deck and grip the handles with your arms open to the sides and elbows slightly bent.",
+   "Set the seat so the handles are at mid-chest height.",
+   "Squeeze the handles together in front of your chest.",
+   "Hold the contraction briefly in the middle.",
+   "Return to the start under control.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Don't let your arms travel too far back as you open.",
+   "Keep your back and shoulders against the pad.",
+   "Exhale as you bring the handles together and inhale as you open."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay Row",
+  "description": "An explosive barbell row that starts from the floor on every rep, with the torso parallel to the ground.",
+  "instructions": [
+   "With your feet under the bar and your torso almost parallel to the floor, grip the bar slightly wider than your shoulders with a neutral back.",
+   "Pull the bar powerfully to your lower chest, keeping your torso still.",
+   "Lower the bar under control until it rests on the floor and stops for a moment.",
+   "Reset your back position and repeat from the floor."
+  ],
+  "tips": [
+   "Your torso doesn't rise or fall: if it moves, the load is too heavy.",
+   "Every rep starts with the bar dead still on the floor."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike Push-Up",
+  "description": "A push-up with your body in an inverted V, which shifts the load from the chest to the shoulders with no equipment.",
+  "instructions": [
+   "Place your hands shoulder-width apart on the floor and raise your hips into an inverted V, legs almost straight.",
+   "Bend your elbows and lower your head toward the floor between your hands.",
+   "Stop when your head is close to the floor without resting it.",
+   "Push until your elbows are straight and you are back at the start."
+  ],
+  "tips": [
+   "The closer your feet are to your hands, the harder it gets.",
+   "Keep your hips high through the whole range."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol Squat",
+  "description": "A deep single-leg squat with the other leg extended forward, using bodyweight only.",
+  "instructions": [
+   "Stand on one leg with the other raised in front and your arms extended for balance.",
+   "Bend the standing knee and lower under control with your heel on the floor.",
+   "Go as low as you can without losing form, with the free leg stretched forward.",
+   "Push the floor away until you stand again; repeat and switch legs."
+  ],
+  "tips": [
+   "Start by holding a support or sitting back to a box.",
+   "Keep your knee in line with your foot."
+  ]
+ },
+ "plank": {
+  "name": "Plank",
+  "description": "An isometric core exercise that trains trunk stability by holding your body straight on forearms and toes.",
+  "instructions": [
+   "Place your forearms on the floor with your elbows under your shoulders and your legs extended.",
+   "Raise your body into a straight line from head to heels.",
+   "Brace your abs and glutes and keep your lower back neutral without letting your hips drop.",
+   "Breathe normally and hold the position for the prescribed time."
+  ],
+  "tips": [
+   "Start with short, high-quality sets before holding longer.",
+   "If your lower back sags, drop your knees to the floor or shorten the hold."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Plate-Loaded Glute Drive",
+  "description": "A hip thrust on a plate-loaded glute machine, where the built-in backrest and platform set your position so your hips extend against the load without having to set up a bench.",
+  "instructions": [
+   "Load the plate pegs evenly and sit in the machine with your upper back against the backrest and your feet flat on the platform.",
+   "Lower the pad or bar over your hips and adjust it so it sits in the hip crease, not on your stomach.",
+   "Place your feet so your shins are vertical when your hips are up, and hold the handles.",
+   "Drive your hips up, squeezing your glutes, until your thighs are in line with your torso, and hold briefly at the top.",
+   "Lower under control to just short of the end of the range and repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Put the pad in the hip crease. Leaving it on your stomach is the only truly uncomfortable thing about this machine, and you fix it by moving the pad, not by adding padding.",
+   "Finish the movement with your hips, not your lower back. If your ribs flare at the top, hip extension is over and you have started arching, which is where the machine stops training the glutes.",
+   "This is the hip thrust to turn to when the bench and barbell are taken: the backrest and platform are part of the frame, so there is no setup to get wrong."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Preacher Curl",
+  "description": "A curl variation using a preacher bench to isolate the biceps.",
+  "instructions": [
+   "Sit at the preacher bench with your arms resting on the pad.",
+   "Hold an EZ bar with an underhand grip.",
+   "Curl the bar toward your shoulders.",
+   "Lower under control until your arms are almost straight.",
+   "Repeat."
+  ],
+  "tips": [
+   "Avoid bouncing at the bottom of the range.",
+   "Keep your wrists neutral on the EZ bar.",
+   "Curl the bar without using your shoulders or back for momentum."
+  ]
+ },
+ "pull-up": {
+  "name": "Pull-Up",
+  "description": "A compound bodyweight exercise that works the lats and biceps.",
+  "instructions": [
+   "Hang from a bar with an overhand grip slightly wider than your shoulders.",
+   "Pull yourself up until your chin is above the bar.",
+   "Lower under control to a full hang.",
+   "Repeat."
+  ],
+  "tips": [
+   "Avoid swinging or using momentum.",
+   "Engage your lats by driving your elbows down."
+  ]
+ },
+ "push-press": {
+  "name": "Push Press",
+  "description": "A shoulder press with leg drive, which lets you move more load than the strict overhead press.",
+  "instructions": [
+   "Stand with the bar resting on your upper chest and shoulders, elbows slightly forward and feet hip-width apart.",
+   "Dip your knees slightly with a vertical torso, then extend your hips and knees forcefully.",
+   "Use that drive to press the bar until your arms are extended overhead.",
+   "Lower the bar under control to your chest, absorbing it with your legs."
+  ],
+  "tips": [
+   "The drive comes from your legs, not from leaning your back.",
+   "Finish with the bar over the crown of your head and your body stable."
+  ]
+ },
+ "push-up": {
+  "name": "Push-Up",
+  "description": "A fundamental bodyweight exercise for the chest, shoulders and triceps.",
+  "instructions": [
+   "Start in a high plank with your hands shoulder-width apart.",
+   "Lower your body until your chest almost touches the floor.",
+   "Push back up to the start.",
+   "Keep your body in a straight line at all times.",
+   "Repeat."
+  ],
+  "tips": [
+   "Squeeze your abs and glutes so your hips don't drop.",
+   "Don't let your elbows flare; keep them close to your torso.",
+   "Keep your neck neutral, looking at the floor."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack Pull",
+  "description": "A partial deadlift from knee height that overloads the upper back and hip extension.",
+  "instructions": [
+   "Set the bar on the rack pins at knee height or just below, with your feet hip-width apart under the bar.",
+   "Grip the bar, brace your back and abs and push the floor away.",
+   "Extend your hips and knees together until you stand upright with your shoulders back.",
+   "Lower the bar under control back onto the pins."
+  ],
+  "tips": [
+   "Set the pins at a height that lets you keep a neutral back.",
+   "Don't hyperextend your lower back at the top."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Reverse Lunge",
+  "description": "A lunge variation stepping backward for greater knee stability.",
+  "instructions": [
+   "Stand holding dumbbells at your sides.",
+   "Step back with one leg and lower that knee toward the floor.",
+   "Lower until your front thigh is parallel to the floor.",
+   "Push through your front heel to stand back up.",
+   "Repeat on both sides."
+  ],
+  "tips": [
+   "Step back far enough that the front knee doesn't pass your foot.",
+   "Keep your torso upright and the dumbbells close to your body.",
+   "Do the same number of reps on each leg."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Reverse Nordic Curl",
+  "description": "A kneeling bodyweight quad exercise, leaning your torso back under control with your hips extended.",
+  "instructions": [
+   "Kneel on a pad with your knees hip-width apart, shins and tops of your feet on the floor and your torso upright.",
+   "Keep your hips extended and your core braced.",
+   "Lean your torso back slowly, keeping your body in a straight line.",
+   "Go as far as your quads can control.",
+   "Come back up to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Keep your hips extended at all times without letting them bend.",
+   "Go only as far as you can control the movement.",
+   "Put a pad under your knees for comfort."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Romanian Deadlift",
+  "description": "A hip hinge that emphasizes the hamstrings and glutes.",
+  "instructions": [
+   "Stand holding the bar at hip height with an overhand grip.",
+   "Push your hips back and lean your torso forward, knees slightly bent and almost fixed.",
+   "Lower the bar along your legs until you feel your hamstrings stretch.",
+   "Drive your hips forward to stand back up.",
+   "Repeat."
+  ],
+  "tips": [
+   "Don't round your lower back; keep your spine neutral.",
+   "Go only as low as you can without losing your position.",
+   "Squeeze your lats to keep the bar close to your body."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Rowing Machine",
+  "description": "A full-body cardio exercise on the rowing machine: each stroke drives with the legs, swings the torso back and pulls the handle to the ribs, working legs, back and arms in one continuous cycle.",
+  "instructions": [
+   "Sit on the rower, strap your feet onto the footplates and grip the handle overhand.",
+   "Slide forward to the catch: shins vertical, torso slightly in front of your hips and arms straight toward the flywheel.",
+   "Push with your legs first, driving the seat back until your knees are almost straight.",
+   "Swing your torso back past vertical and only then pull the handle to your lower ribs, elbows passing your sides.",
+   "Reverse the order on the recovery (arms away first, then torso, then bend your knees) and slide back to the catch for the next stroke.",
+   "Continue for your chosen time, distance or number of strokes."
+  ],
+  "tips": [
+   "Keep the order: legs, body, arms on the drive, and arms, body, legs on the recovery. Bending your arms early wastes the strongest part of the stroke.",
+   "Row with a flat back and a braced core: rounding your lower back at the catch is what turns rowing into back pain instead of cardio work.",
+   "Pull the handle in a straight, level line to your lower ribs, and make the recovery about twice as slow as the drive instead of rushing back."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Seated Barbell Overhead Press",
+  "description": "A seated barbell shoulder press, using the backrest for support to keep the work on the delts.",
+  "instructions": [
+   "Sit on a bench with an upright backrest, grip the bar slightly wider than your shoulders and rest it on your upper chest.",
+   "Press the bar straight up until your elbows are straight.",
+   "Keep the bar over the crown of your head with your ribs down.",
+   "Lower under control to your collarbone."
+  ],
+  "tips": [
+   "Squeeze your glutes and abs so your back doesn't arch.",
+   "Move your head back to let the bar pass, without straining your neck."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Seated Cable Row",
+  "description": "A back exercise on a cable row, pulling a handle to your torso while seated.",
+  "instructions": [
+   "Sit at the row station and place your feet on the rests.",
+   "Hold the handle and sit tall with a slight forward lean.",
+   "Drive your elbows back and pull the handle toward your lower abdomen.",
+   "Squeeze your shoulder blades at the end of the pull.",
+   "Extend your arms under control back to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Keep your torso upright with minimal rocking.",
+   "Drive your elbows straight back, not out to the sides.",
+   "Squeeze your shoulder blades at the end of the pull."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Seated Calf Raise",
+  "description": "A seated machine calf raise that specifically targets the soleus.",
+  "instructions": [
+   "Sit in the calf raise machine with the pads resting on your thighs.",
+   "Lower your heels as far as possible.",
+   "Rise onto the balls of your feet.",
+   "Lower under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "The bent knee slackens the gastrocnemius, so the soleus does more of the work.",
+   "Use a full range of motion."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Seated Dumbbell Calf Raise",
+  "description": "A seated calf raise with dumbbells on your thighs, working the soleus with the knee bent.",
+  "instructions": [
+   "Sit on a bench with the balls of your feet on a step or plate and a dumbbell on each thigh, near your knees.",
+   "Let your heels drop as far as you can to stretch your calves.",
+   "Raise your heels as high as possible, pushing through the front of your feet.",
+   "Hold briefly at the top and lower under control."
+  ],
+  "tips": [
+   "Hold the dumbbells so they don't slide.",
+   "The bent knee shifts the work to the soleus."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Seated Dumbbell Lateral Raise",
+  "description": "A seated isolation exercise raising dumbbells to the sides, working the side delts without leg drive.",
+  "instructions": [
+   "Sit on a bench with a dumbbell in each hand at your sides.",
+   "Keep your back tall and your core tight.",
+   "Raise both dumbbells out to the sides to shoulder height.",
+   "Keep a slight bend in your elbows.",
+   "Lower the dumbbells under control.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Use a light weight to keep the raise strict.",
+   "Lead with your elbows rather than your hands.",
+   "Raise to shoulder height and lower under control."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Seated Leg Curl",
+  "description": "A seated machine hamstring isolation exercise, with constant tension and less hip flexor involvement than the lying version.",
+  "instructions": [
+   "Adjust the backrest and ankle pad so your knees line up with the machine's pivot.",
+   "Sit tall, place the back of your ankles on the pad and hold the handles.",
+   "Curl your legs down and back under the seat as far as the machine allows.",
+   "Pause at peak contraction, then return slowly to the start.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Keep your back firmly against the backrest throughout.",
+   "Pull your toes slightly toward your shins at peak contraction for more hamstring activation.",
+   "Control the eccentric: don't let the weight snap your legs back."
+  ]
+ },
+ "shrug": {
+  "name": "Barbell Shrug",
+  "description": "An isolation movement for the upper traps.",
+  "instructions": [
+   "Stand holding a barbell at arm's length with an overhand grip.",
+   "Shrug your shoulders straight up toward your ears.",
+   "Hold briefly at the top.",
+   "Lower your shoulders under control.",
+   "Repeat."
+  ],
+  "tips": [
+   "Move your shoulders straight up, without circling them.",
+   "Don't use your arms; your elbows stay straight the whole time.",
+   "Avoid using your legs to lift more weight."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Side-Lying Hip Abduction",
+  "description": "A bodyweight isolation exercise that works the gluteus medius and hip abductors.",
+  "instructions": [
+   "Lie on your side with your legs stacked.",
+   "Keep the bottom leg slightly bent.",
+   "Raise the top leg toward the ceiling.",
+   "Lower under control.",
+   "Repeat on both sides."
+  ],
+  "tips": [
+   "Keep your hips stacked throughout.",
+   "Avoid tilting your pelvis."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Side-Lying Hip Adduction",
+  "description": "A side-lying adduction exercise that raises the bottom leg against gravity to train the hip with bodyweight.",
+  "instructions": [
+   "Lie on your side with the bottom leg straight.",
+   "Bend the top leg and plant that foot flat in front of the bottom thigh.",
+   "Support your head with your bottom arm.",
+   "Raise the bottom leg toward the ceiling.",
+   "Lower the leg under control.",
+   "Complete your reps on one side, then switch."
+  ],
+  "tips": [
+   "Move only the leg; your hips and torso stay still.",
+   "Raise the leg without momentum and lower it slowly.",
+   "Line up your shoulders, hips and feet before you start moving."
+  ]
+ },
+ "side-plank": {
+  "name": "Side Plank",
+  "description": "A plank variation on your side that works the obliques and lateral core.",
+  "instructions": [
+   "Lie on your side with your forearm on the floor and your elbow under your shoulder.",
+   "Lift your hips off the floor into a straight line from head to feet.",
+   "Hold the position with your core tight.",
+   "Breathe steadily.",
+   "Repeat on both sides."
+  ],
+  "tips": [
+   "Don't let your hips sink toward the floor.",
+   "Keep your shoulders and hips in the same plane without rotating your torso.",
+   "Push the floor away with your forearm so you don't hang on your shoulder."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Single-Arm Dumbbell Row",
+  "description": "A one-arm dumbbell back exercise for balanced development.",
+  "instructions": [
+   "Rest one knee and one hand on a bench for support.",
+   "Hold a dumbbell in the other hand with your arm extended.",
+   "Row the dumbbell toward your hip, squeezing your shoulder blade.",
+   "Lower the dumbbell under control.",
+   "Repeat on both sides."
+  ],
+  "tips": [
+   "Don't twist your torso as you row; keep your hips steady.",
+   "Avoid shrugging toward your ear as you start the pull.",
+   "Do the same number of reps with each arm."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Single-Arm Plate-Loaded Lateral Raise",
+  "description": "The plate-loaded machine lateral raise one arm at a time, so each side lifts its own load and both can be trained to the same level.",
+  "instructions": [
+   "Set the seat height so the pad's pivot lines up with your shoulder, and load only the side you are about to work.",
+   "Sit with your back against the pad and place the outside of your working arm against its pad.",
+   "Hold the handle on the free side or rest that hand in your lap, and keep your torso square to the seat.",
+   "Drive the working arm out and up against the pad to shoulder height, then lower under control.",
+   "Complete all reps on that side, then load and work the other side."
+  ],
+  "tips": [
+   "Match the sides to your weak arm, not your strong one. Working one side at a time only reveals an imbalance if you let the weaker side set the rep count.",
+   "Don't let your torso lean toward the working side. With one arm loaded the machine no longer balances itself, and leaning turns the raise into a side bend.",
+   "Start with your weak arm so it sets the target, and rest both sides the same."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Single-Leg Glute Bridge",
+  "description": "A glute bridge on one leg, which raises the demand without adding equipment.",
+  "instructions": [
+   "Lie on your back with one knee bent and that foot on the floor, the other leg extended in the air.",
+   "Drive through the heel of the supporting leg and lift your hips until shoulder, hip and knee are in line.",
+   "Squeeze your glute at the top for a moment without arching your lower back.",
+   "Lower under control without resting your hips; complete your reps and switch legs."
+  ],
+  "tips": [
+   "Keep your pelvis level, without letting one hip drop.",
+   "Start with the two-leg glute bridge if this is too hard."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Skull Crusher",
+  "description": "A lying barbell triceps extension that isolates the triceps through a full range of motion.",
+  "instructions": [
+   "Lie on a flat bench holding a bar over your chest with a narrow grip.",
+   "Lower the bar toward your forehead by bending your elbows.",
+   "Extend your arms back to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your upper arms vertical throughout.",
+   "Lower slowly to protect your elbows."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Smith Machine Bench Press",
+  "description": "A Smith machine bench press whose guided path lets you train the chest with less demand for stability.",
+  "instructions": [
+   "Lie on a flat bench inside the Smith machine.",
+   "Grip the bar slightly wider than shoulder width and unhook it.",
+   "Lower the bar under control to the middle of your chest.",
+   "Pause briefly without bouncing.",
+   "Press the bar up until your arms are fully extended.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Position the bench so the bar comes down to mid-chest.",
+   "Keep your feet planted throughout the set.",
+   "Learn the wrist turn that hooks the bar before loading it."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Smith Machine Calf Raise",
+  "description": "A standing calf raise with the guided Smith machine bar across your shoulders.",
+  "instructions": [
+   "Stand under the Smith machine bar with the balls of your feet on a step or plate and the bar across your upper back.",
+   "Unhook the bar and let your heels drop until your calves stretch.",
+   "Rise onto your toes with your legs straight, without locking your knees.",
+   "Hold briefly at the top and lower under control before racking the bar."
+  ],
+  "tips": [
+   "The guided path steadies you, so use it to lift more load.",
+   "Keep your torso upright and look straight ahead."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Smith Machine Incline Bench Press",
+  "description": "An incline Smith machine press that emphasizes the upper chest and front delts on a guided path.",
+  "instructions": [
+   "Set an incline bench at 30 to 45 degrees inside the Smith machine.",
+   "Lie down and grip the bar slightly wider than shoulder width.",
+   "Unhook and lower the bar to your upper chest.",
+   "Pause briefly at the bottom.",
+   "Press the bar up until your arms are straight.",
+   "Repeat for the desired number of reps."
+  ],
+  "tips": [
+   "Position the bench so the bar reaches your upper chest.",
+   "Lower the bar without bouncing it off your chest.",
+   "Keep your glutes on the bench and your feet planted."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Smith Machine Squat",
+  "description": "A squat with the guided Smith machine bar: the fixed path reduces the balance demand and puts the effort on your legs and glutes, a good option when no free rack is available.",
+  "instructions": [
+   "Set the bar at shoulder height and get under it, with the bar on your upper back and your feet slightly in front of the bar.",
+   "Turn your wrists to unhook the bar and keep your torso upright and your core braced.",
+   "Descend by bending your knees and hips until your thighs are at least parallel to the floor, knees tracking over your feet.",
+   "Push through your whole foot until you stand again.",
+   "At the end of the set, turn your wrists to hook the bar on the pegs."
+  ],
+  "tips": [
+   "Placing your feet a little forward lets you go deeper without your heels lifting.",
+   "Set the safety stops just below the lowest point of your range."
+  ]
+ },
+ "squat": {
+  "name": "Barbell Back Squat",
+  "description": "A compound lower-body movement that works the quads, glutes and hamstrings.",
+  "instructions": [
+   "Place the bar across your upper traps.",
+   "Unrack it and step back, with your feet shoulder-width apart.",
+   "Brace your core and bend your knees and hips until your thighs are parallel to the floor.",
+   "Drive through your heels to stand back up.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your chest up throughout.",
+   "Push your knees out in line with your toes."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Standing Ab Wheel Rollout",
+  "description": "An ab wheel rollout starting from standing, with straight legs and a long range of motion.",
+  "instructions": [
+   "Standing with straight legs, hinge forward and place the ab wheel on the floor with both hands.",
+   "Roll forward with straight arms and tight abs until you are almost parallel to the floor.",
+   "Keep your hips aligned without letting your lower back sag.",
+   "Pull with your abs to roll back to the start."
+  ],
+  "tips": [
+   "Start with the kneeling version until you control the range.",
+   "Stop the rollout before your lower back sags."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Standing Calf Raise",
+  "description": "A standing calf raise to build the gastrocnemius through a full range of motion.",
+  "instructions": [
+   "Stand on the edge of a platform or in a calf raise machine.",
+   "Lower your heels below the platform.",
+   "Push up onto your toes.",
+   "Lower slowly.",
+   "Repeat."
+  ],
+  "tips": [
+   "Pause at the top to maximize the contraction.",
+   "Lowering your heel fully increases the range of motion."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Standing Hip Abduction",
+  "description": "A bodyweight side leg raise standing on the other leg. It works the gluteus medius of the raised leg and, on the standing leg, the muscles that keep your hips level.",
+  "instructions": [
+   "Stand tall with your hands on your hips and your feet together.",
+   "Shift your weight onto one leg and keep that knee slightly bent.",
+   "Raise the other leg straight out to the side, toes forward and torso upright.",
+   "Lift only as high as you can without leaning your upper body the other way.",
+   "Lower the leg slowly back beside the standing foot.",
+   "Complete the planned reps and repeat with the other leg."
+  ],
+  "tips": [
+   "Keep your hips square and your torso still; leaning away from the raised leg takes work from the hip.",
+   "Control the way down too, without letting the leg swing.",
+   "Hold a wall or chair if you can't keep your balance; add a band around your thighs once the movement is easy."
+  ]
+ },
+ "step-ups": {
+  "name": "Step-Up",
+  "description": "A single-leg step onto a box or bench that trains the quads and glutes functionally.",
+  "instructions": [
+   "Stand in front of a sturdy box or bench.",
+   "Place one foot fully on top of the box.",
+   "Drive through that heel to lift your body onto the box.",
+   "Bring your back foot up so you stand fully on the box.",
+   "Lower the back foot to the floor under control, keeping the load on the working leg.",
+   "Alternate legs or complete all reps on one side before switching."
+  ],
+  "tips": [
+   "Put your whole foot on the box.",
+   "Drive through the heel of the leading leg, not the trailing one.",
+   "Control the way down instead of dropping."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Straight-Arm Pulldown",
+  "description": "A cable isolation exercise for the lats with straight arms.",
+  "instructions": [
+   "Stand facing a pulley with a straight bar on the high position.",
+   "With your arms almost straight, sweep the bar down in an arc to your thighs.",
+   "Squeeze your lats at the bottom.",
+   "Return the bar slowly to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your arms almost straight throughout.",
+   "Move the bar toward your thighs in an arc.",
+   "Squeeze your lats at the bottom of the range."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo Deadlift",
+  "description": "A deadlift variation with a very wide stance and narrow grip that shifts the work to the glutes, adductors and quads.",
+  "instructions": [
+   "Set your feet very wide, toes slightly out and the bar over the middle of your feet.",
+   "Grip the bar inside your legs with a neutral back and your chest up.",
+   "Push the floor away with your legs, driving your knees out, until you stand with the bar close to your body.",
+   "Lock out your hips and knees at the top and lower the bar under control along the same path."
+  ],
+  "tips": [
+   "Keep the bar against your body at all times.",
+   "Your knees follow your toes; don't let them cave in."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-Bar Row",
+  "description": "A bent-over compound T-bar row that builds the lats and rhomboids with heavy loads.",
+  "instructions": [
+   "Straddle the T-bar with your feet shoulder-width apart.",
+   "Hinge at your hips until your torso is at about 45 degrees.",
+   "Grip the handles and keep your back flat.",
+   "Row the bar toward your chest, driving your elbows back.",
+   "Squeeze your shoulder blades at the top.",
+   "Lower the bar under control and repeat."
+  ],
+  "tips": [
+   "Keep your torso at about 45 degrees with a flat back.",
+   "Pull by driving your elbows back, not just with your arms.",
+   "Squeeze your shoulder blades at the top of the pull."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Cable Triceps Pushdown",
+  "description": "A cable isolation exercise for the triceps.",
+  "instructions": [
+   "Stand facing a pulley with a straight bar attachment.",
+   "Grip the bar and keep your elbows at your sides.",
+   "Push the bar down until your arms are fully extended.",
+   "Return slowly to the start.",
+   "Repeat."
+  ],
+  "tips": [
+   "Keep your torso upright.",
+   "Only your forearms should move."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "TRX Hamstring Curl",
+  "description": "A suspension trainer isolation exercise that works the hamstrings, glutes and calves by curling your heels toward your glutes.",
+  "instructions": [
+   "Lie on your back with your heels in the suspension trainer cradles and your knees bent to 90 degrees.",
+   "Lift your hips off the floor into a straight line from knees to shoulders.",
+   "Extend your legs forward, keeping your hips up and your core tight.",
+   "Pull your heels toward your glutes, contracting your hamstrings hard.",
+   "Control the movement without letting your hips drop for the whole set."
+  ],
+  "tips": [
+   "Keep your core braced so your hips don't sag.",
+   "Focus on a strong hamstring contraction at the top of the curl.",
+   "Control the eccentric by extending your legs slowly."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "V-Bar Lat Pulldown",
+  "description": "A neutral-grip pulldown with a narrow V-bar, maximizing the lat stretch and allowing a deeper contraction.",
+  "instructions": [
+   "Attach a V-bar (double D-handle) to the lat pulldown cable.",
+   "Sit with your thighs secured under the pad and grip the handle with your palms facing each other.",
+   "Start with your arms fully extended overhead.",
+   "Pull the handle to your breastbone, driving your elbows down and slightly back.",
+   "Squeeze your lats at the bottom and return slowly under control.",
+   "Repeat for the recommended number of reps."
+  ],
+  "tips": [
+   "The neutral grip is easier on the shoulders than overhand or underhand grips.",
+   "Imagine drawing your ribs toward your hips: think about your lats, not your arms."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Dumbbell Walking Lunge",
+  "description": "Alternating lunges walking forward with a dumbbell in each hand, working the quads and glutes one leg at a time.",
+  "instructions": [
+   "Stand with a dumbbell in each hand and your arms relaxed at your sides.",
+   "Take a long step forward and lower until both knees form angles of about 90 degrees.",
+   "Push through the front leg to stand and bring the back leg through into the next step.",
+   "Alternate legs, keeping your torso upright the whole way."
+  ],
+  "tips": [
+   "Step far enough that the front knee doesn't travel much past your toes.",
+   "You need clear space; if you don't have it, use reverse lunges."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Weighted Dip",
+  "description": "Parallel bar dips with added weight, holding a dumbbell between your feet or wearing a weighted vest.",
+  "instructions": [
+   "Support yourself on the parallel bars with straight arms and a dumbbell held between your feet or ankles.",
+   "Lean your torso slightly forward and bend your elbows to lower under control.",
+   "Stop when your shoulders are level with your elbows.",
+   "Push with your chest and triceps until your arms are straight."
+  ],
+  "tips": [
+   "Master bodyweight dips first.",
+   "Don't go lower than your shoulder tolerates."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Weighted Pull-Up",
+  "description": "A pull-up with added weight, holding a dumbbell between your feet or wearing a weighted vest.",
+  "instructions": [
+   "Hang from the bar with a grip slightly wider than your shoulders and a dumbbell held between your feet or ankles.",
+   "Drive your elbows down and back until your chin clears the bar.",
+   "Keep your body stable without swinging.",
+   "Lower under control until your arms are fully straight."
+  ],
+  "tips": [
+   "Master bodyweight pull-ups first.",
+   "If you use a weighted vest, increase the load gradually."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Wide-Grip Seated Cable Row",
+  "description": "A horizontal cable row with a long bar and wide grip, loading the upper back and rear shoulder.",
+  "instructions": [
+   "Sit facing the low pulley with your feet on the rest, knees slightly bent, holding the long bar with a wide grip.",
+   "With a straight back and chest up, pull the bar to your lower chest, driving your elbows out and back.",
+   "Squeeze your shoulder blades at the end and hold briefly.",
+   "Straighten your arms under control, letting your shoulder blades spread without rounding your back."
+  ],
+  "tips": [
+   "Don't rock: your back moves the weight, not your torso.",
+   "Bring the bar to your chest, not your stomach, to load the upper back."
+  ]
+ },
+ "z-press": {
+  "name": "Z Press",
+  "description": "An overhead press seated on the floor with legs straight, which removes support and demands trunk stability.",
+  "instructions": [
+   "Sit on the floor with your legs straight in front and the bar resting on your upper chest.",
+   "Keep your torso upright and press the bar straight up until your arms are extended.",
+   "Stop the bar over the crown of your head without leaning back.",
+   "Lower under control to your collarbone."
+  ],
+  "tips": [
+   "Use less weight than standing, since your trunk has to stabilize.",
+   "Squeeze your glutes and abs throughout."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher Squat",
+  "description": "A squat with the bar held in the crook of your elbows, which shifts the load forward and demands a lot from your trunk.",
+  "instructions": [
+   "Place the bar at stomach height in the crook of your elbows, with your forearms crossed or fists together.",
+   "Descend by bending your hips and knees with your chest up and elbows close to your body.",
+   "Stop when your thighs are parallel to the floor or slightly below.",
+   "Push the floor away until you stand again."
+  ],
+  "tips": [
+   "Use a pad or towel on the bar if it bothers your elbows.",
+   "Keep your abs tight so you don't tip forward."
+  ]
+ }
+}

@@ -227,11 +227,11 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P0-1 | Validador único e informe de divergencias | Mismas reglas en seed, panel e importador; aviso al arrancar y `GET /admin/exercises/seed-report`; ningún dato cambia | — | Hecho | #239 | validador, seed, informe, panel e importación en CI; no comprobado en producción |
 | P0-2 | Metadatos nuevos en datos | Migración y seed con R1; panel y API; valores equivalentes a las tablas | P0-1, D4 | Pendiente | | |
 | P0-3 | Motor y limitaciones sin ids | Se borran tabla de estímulo, tokens y overrides; golden y exclusiones idénticos; prueba que impide literales de id; un ejercicio nuevo funciona sin código | P0-2 | Pendiente | | |
-| P0-4 | Seed autoritativo | R2 completa: producción igual al seed en metadatos y traducciones, idempotente, instalación nueva equivalente; la consola marca los ejercicios del seed y bloquea su edición | P0-1 | En curso (falta comprobar producción tras desplegar) | #240 | seeder en SQLite y PostgreSQL (CI), panel, importación, consola |
+| P0-4 | Seed autoritativo | R2 completa: producción igual al seed en metadatos y traducciones, idempotente, instalación nueva equivalente; la consola marca los ejercicios del seed y bloquea su edición | P0-1 | Hecho (falta comprobar producción) | #240 | seeder en SQLite y PostgreSQL (CI), panel, importación, consola |
 | P0-5 | Revisión ejercicio a ejercicio (3 PR por patrón) | Cada ejercicio con decisión registrada; cambios de plan explicados | P0-3, P0-4 | Pendiente | | |
 | P5-1 | Escenarios de decisión | Perfiles, fatiga, estancamiento, dolor, incumplimiento; en CI | — | Pendiente | | |
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Pendiente | | |
-| C-1 | Inglés en el seed (por lotes) | `translations/en.json` completo; necesario para cerrar P0 | P0-4 | Pendiente | | |
+| C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | En curso | PR abierta | cobertura de todos los idiomas y correspondencia de pasos |
 | C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Pendiente | | |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Pendiente | | |

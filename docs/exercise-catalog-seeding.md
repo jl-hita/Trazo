@@ -9,8 +9,8 @@ startup, whatever was changed before. To change one of those exercises, change t
 - The console marks them as seed exercises and does not allow editing, hiding or showing them (`409`). Their images are still
   managed in the console: the seed ships none.
 - The DietoExpress import never changes them (it may still add images).
-- Exercises the seed does not have, and translation languages it does not have, are left alone. The seed has no English file
-  yet: until it does, only the English name is written and the other English texts in the database are kept.
+- Exercises the seed does not have, and translation languages it does not have, are left alone. The seed translates every
+  exercise into every language of the app (a test enforces it); Spanish lives in the catalog file.
 - Removing an exercise from the seed leaves its row in the database, editable again. To retire one, set `isActive: false`.
 
 The seed covers 150 exercises (100 `repdb-free` and 50 `trazo-curated`; `standing-calf-raise` is retired). It is independent of

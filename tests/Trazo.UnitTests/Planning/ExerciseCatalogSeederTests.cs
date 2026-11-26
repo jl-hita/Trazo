@@ -118,11 +118,11 @@ public sealed class ExerciseCatalogSeederTests : IDisposable
             {
                 ExerciseId = "own-press", LanguageCode = "de", Name = "Eigene", Status = "draft"
             });
-            // The seed has no English file yet: what was written in the database stays, except the name.
-            var english = await db.ExerciseCatalogTranslations.SingleAsync(x => x.ExerciseId == "bench-press" && x.LanguageCode == "en");
-            english.Name = "Old name";
-            english.Description = "Written in the console.";
-            english.Status = "published";
+            // A language the seed does not have.
+            db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
+            {
+                ExerciseId = "bench-press", LanguageCode = "xx", Name = "Other language", Status = "published"
+            });
             await db.SaveChangesAsync();
         }
 
@@ -131,9 +131,7 @@ public sealed class ExerciseCatalogSeederTests : IDisposable
         using var after = _fixture.NewContext();
         Assert.Equal("Propio", (await after.ExerciseCatalog.AsNoTracking().SingleAsync(x => x.Id == "own-press")).NameEs);
         Assert.Equal("Eigene", (await after.ExerciseCatalogTranslations.AsNoTracking().SingleAsync(x => x.ExerciseId == "own-press")).Name);
-        var kept = await after.ExerciseCatalogTranslations.AsNoTracking().SingleAsync(x => x.ExerciseId == "bench-press" && x.LanguageCode == "en");
-        Assert.Equal("Written in the console.", kept.Description);
-        Assert.Equal("published", kept.Status);
-        Assert.Equal((await ExerciseSeed.LoadAsync(_seed)).Entries.Single(e => e.Id == "bench-press").NameEn, kept.Name);
+        Assert.Equal("Other language", (await after.ExerciseCatalogTranslations.AsNoTracking()
+            .SingleAsync(x => x.ExerciseId == "bench-press" && x.LanguageCode == "xx")).Name);
     }
 }
