@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Utrullning med maghjul",
+  "description": "En bålövning där du rullar ett hjul fram och tillbaka och tränar ryggraden att motstå sträckning.",
+  "instructions": [
+   "Ställ dig på knä på golvet och grip hjulets handtag i axelbredd.",
+   "Spänn bålen kraftigt så att ländryggen hålls neutral.",
+   "Rulla hjulet långsamt framåt och sträck ut kroppen så långt du kan kontrollera.",
+   "Stanna innan höfterna sjunker eller ryggen svankar.",
+   "Dra tillbaka hjulet mot knäna genom att spänna magen."
+  ],
+  "tips": [
+   "Spänn bålen före varje rep — låt inte ländryggen svanka.",
+   "Öka rörelsebanan gradvis och stanna innan höfterna sjunker.",
+   "Använd en vägg som stopp om du inte kan kontrollera bottenläget."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnoldpress",
+  "description": "Axelpress med hantlar med vridning av handlederna som aktiverar deltamuskeln genom en lång rörelsebana.",
+  "instructions": [
+   "Sitt med rakt ryggstöd och håll hantlarna i brösthöjd med handflatorna mot dig och armbågarna framåt.",
+   "Börja pressa uppåt medan du öppnar armbågarna och vrider handflatorna framåt.",
+   "Avsluta med armarna sträckta över huvudet utan att låsa armbågarna.",
+   "Sänk och vrid handflatorna mot dig igen till utgångsläget."
+  ],
+  "tips": [
+   "Gör vridningen mjukt och utan ryck.",
+   "Håll ryggen mot ryggstödet."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Assisterade chins",
+  "description": "Chins i en assisterad maskin som tar bort en del av kroppsvikten, för att bygga den ryggstyrka som krävs för strikta chins.",
+  "instructions": [
+   "Placera knäna på dynan i maskinen för assisterade chins.",
+   "Grip stången med handflatorna utåt, lite bredare än axelbredd.",
+   "Dra bröstet mot stången genom att driva armbågarna nedåt.",
+   "Sänk dig kontrollerat tills du hänger med raka armar.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Börja rörelsen med att dra ned skulderbladen innan du böjer armbågarna.",
+   "Undvik att svinga så att ryggen inte förlorar arbete.",
+   "Ställ in motvikten så att du klarar alla reps med bra teknik."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Lårcurl på balansboll",
+  "description": "En lårcurl med kroppsvikt på balansboll, där hälarna rullas mot sätet medan höften lyfts.",
+  "instructions": [
+   "Ligg på rygg med hälarna och nedre delen av vaderna på balansbollen och armarna utsträckta för balansen.",
+   "Pressa med hälarna och lyft höften till en rak linje från axlar till anklar.",
+   "Håll höften uppe och böj knäna så att bollen rullar mot sätet.",
+   "Sträck ut benen kontrollerat utan att sänka höften.",
+   "Gör alla reps, sänk sedan höften och kliv av bollen."
+  ],
+  "tips": [
+   "Höften är uppe hela setet: det är en kombination av höftlyft och curl.",
+   "Börja med båda fötterna; gå vidare till ett ben när det blir lätt."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Stående lårcurl med band",
+  "description": "Stående lårcurl med motståndsband runt ankeln, bra på resor eller som lätt avslutning för baksida lår.",
+  "instructions": [
+   "Sätt ett motståndsband runt ena ankeln och förankra den andra änden under stödfoten eller i en fast punkt framför dig.",
+   "Stå rak, håll i något om du behöver balans, med lätt böjt stödben.",
+   "För hälen med bandet upp mot sätet med låret stilla.",
+   "Spänn baksida lår högst upp och sänk kontrollerat till full sträckning.",
+   "Gör alla reps på en sida och byt ben."
+  ],
+  "tips": [
+   "Håll låret stilla — bara underbenet rör sig.",
+   "Undvik att gunga med höften för att få fart.",
+   "Använd ett lättare band om du inte kan styra nedvägen."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Latsdrag med motståndsband",
+  "description": "Latsdrag med ett motståndsband förankrat högt upp, som alternativ till kabeln.",
+  "instructions": [
+   "Stå med bandet förankrat högt (i en dörr eller stång) och en ände i varje hand, armarna sträckta över huvudet.",
+   "Dra händerna nedåt och för armbågarna mot sidorna med högt bröst.",
+   "Kläm ihop ryggen när händerna når axelhöjd.",
+   "För armarna kontrollerat upp tills de är raka igen."
+  ],
+  "tips": [
+   "Luta inte överkroppen bakåt för att dra.",
+   "Se till att förankringen sitter säkert innan du börjar."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Band pull-apart",
+  "description": "Isärdragning av ett motståndsband med raka armar för att aktivera bakre axel och övre rygg.",
+  "instructions": [
+   "Stå och håll bandet med händerna i axelbredd och armarna raka framför dig i brösthöjd.",
+   "För isär händerna ut åt sidorna tills bandet nuddar bröstet.",
+   "Dra ihop skulderbladen i slutläget utan att lyfta axlarna.",
+   "Gå kontrollerat tillbaka utan att låta bandet dra med dig."
+  ],
+  "tips": [
+   "Välj ett band som låter dig göra minst 15 rena reps.",
+   "Håll revbenen samlade så att ländryggen inte svankar."
+  ]
+ },
+ "band-row": {
+  "name": "Rodd med motståndsband",
+  "description": "Sittande rodd med ett motståndsband fäst vid fötterna, utan annan utrustning än bandet.",
+  "instructions": [
+   "Sitt på golvet med raka ben och bandet runt fotsulorna, en ände i varje hand.",
+   "Dra med rak rygg händerna mot magen och för armbågarna bakåt.",
+   "Dra ihop skulderbladen i slutläget.",
+   "Sträck armarna kontrollerat utan att släppa spänningen i bandet."
+  ],
+  "tips": [
+   "Gunga inte för att ta hjälp av överkroppen.",
+   "Välj ett band som låter dig göra 12 till 15 rena reps."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Axelpress med motståndsband",
+  "description": "Stående axelpress på ett motståndsband, för att träna deltamuskeln med väldigt lite utrustning.",
+  "instructions": [
+   "Stå mitt på bandet med fötterna i höftbredd och en ände i varje hand i axelhöjd.",
+   "Pressa händerna uppåt tills armarna är raka över huvudet.",
+   "Håll magen spänd och revbenen samlade.",
+   "Sänk kontrollerat till axlarna utan att tappa spänningen."
+  ],
+  "tips": [
+   "Svanka inte när du pressar.",
+   "Linda bandet ett extra varv för mer motstånd."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulgariska utfall med skivstång",
+  "description": "Enbensböj med bakre foten på en bänk och skivstången på ryggen.",
+  "instructions": [
+   "Lägg ovansidan av ena foten på en bänk bakom dig, med stången högt på ryggen och det andra benet framåt.",
+   "Böj främre knät och gå ned med rak överkropp tills låret är parallellt med golvet.",
+   "Håll tyngden på främre benets häl.",
+   "Skjut ifrån golvet med främre foten tills benet är rakt; gör alla reps och byt ben."
+  ],
+  "tips": [
+   "Anpassa avståndet så att främre knät inte går långt framför tåspetsen.",
+   "Öva först utan vikt eller med hantlar."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Skivstångscurl",
+  "description": "En klassisk isolationsövning för biceps med skivstång för maximal belastning.",
+  "instructions": [
+   "Stå med en skivstång i undergrepp i axelbredd.",
+   "Curla stången upp mot axlarna.",
+   "Kläm till högst upp och sänk sedan kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Undvik att gunga med överkroppen.",
+   "Håll armbågarna tätt mot sidorna."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Höftlyft på golv med skivstång",
+  "description": "Höftlyft på golv med skivstång för större motstånd.",
+  "instructions": [
+   "Ligg på golvet med en skivstång över höfterna och böjda knän.",
+   "Lyft höften genom att klämma ihop sätet.",
+   "Håll kvar högst upp med helt sträckt höft.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Undvik att svanka när du sträcker höften.",
+   "Tryck ifrån med hälarna, inte tåspetsarna.",
+   "Dra in hakan och håll övre ryggen mot underlaget."
+  ]
+ },
+ "barbell-row": {
+  "name": "Framåtlutad skivstångsrodd",
+  "description": "En sammansatt dragrörelse som tränar övre och mellersta ryggen.",
+  "instructions": [
+   "Fäll i höften med lätt böjda knän.",
+   "Grip stången något bredare än axelbredd.",
+   "Dra stången mot nedre bröstet och kläm ihop skulderbladen.",
+   "Sänk stången kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll överkroppen i ungefär 45 grader.",
+   "Använd inte fart för att svinga upp vikten."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Stående vadpress med skivstång",
+  "description": "Stående vadpress med fri skivstång på ryggen, utan särskild maskin.",
+  "instructions": [
+   "Stå med stången högt på ryggen och framfoten på en bräda eller viktskiva, fötterna i höftbredd.",
+   "Låt hälarna sjunka tills vaderna sträcks, med upprätt överkropp.",
+   "Res dig på tå så högt du kan utan att böja knäna.",
+   "Håll ett ögonblick högst upp och sänk kontrollerat."
+  ],
+  "tips": [
+   "Börja lätt tills du har kontroll på balansen.",
+   "Gör övningen i en ställning med säkerhetsstöden på lämplig höjd."
+  ]
+ },
+ "bench-press": {
+  "name": "Bänkpress med skivstång",
+  "description": "En sammansatt pressrörelse som tränar bröst, axlar och triceps.",
+  "instructions": [
+   "Ligg på bänken med ögonen under stången.",
+   "Grip stången med händerna lite bredare än axelbredd.",
+   "Lyft av stången och sänk den till mitten av bröstet.",
+   "Pressa tillbaka stången till helt raka armar.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Håll fötterna platt mot golvet.",
+   "Behåll en lätt svank i ländryggen.",
+   "Tryck benen mot golvet för att ligga stabilt."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Omvänd rodd med böjda knän",
+  "description": "Nybörjarvariant av omvänd rodd: med böjda knän och fötterna nära kroppen är den lättare och enklare att kontrollera.",
+  "instructions": [
+   "Ligg under en låg, stadig stång, grip den lite bredare än axlarna och håll överkroppen rak med böjda knän och fotsulorna i golvet.",
+   "Dra bröstet mot stången, för armbågarna bakåt och dra ihop skulderbladen.",
+   "Håll ett ögonblick högst upp utan att låta höften sjunka.",
+   "Sänk kontrollerat tills armarna är raka."
+  ],
+  "tips": [
+   "Flytta fötterna närmare för att göra det lättare eller längre bort för att öka.",
+   "När du klarar 12 reps, gå vidare till omvänd rodd med raka ben."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Vadpress med kroppsvikt",
+  "description": "En vadpress med kroppsvikt, en grundövning för att stärka vaderna.",
+  "instructions": [
+   "Stå med fötterna i höftbredd på ett plant underlag.",
+   "Res dig på tå så högt som möjligt.",
+   "Kläm ihop vaderna högst upp.",
+   "Sänk hälarna kontrollerat till golvet.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Fördela tyngden över alla tår när du går upp.",
+   "Håll benen raka så att arbetet hamnar i vaden.",
+   "Fäst blicken på en punkt för att hålla balansen."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Bakåtutfall med kroppsvikt",
+  "description": "Bakåtutfall utan utrustning, stabilare och snällare mot knäna än utfall framåt.",
+  "instructions": [
+   "Stå med fötterna ihop och händerna i midjan, med högt bröst.",
+   "Ta ett långt steg bakåt och böj båda knäna tills bakre knät är nära golvet.",
+   "Håll överkroppen rak och tyngden på främre foten.",
+   "Skjut ifrån med främre benet tillbaka till utgångsläget; gör alla reps och byt ben."
+  ],
+  "tips": [
+   "Ta ett tillräckligt långt steg så att främre knät inte går långt framför tån.",
+   "Håll i ett stöd om balansen fortfarande är svår."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Knäböj med kroppsvikt",
+  "description": "Grundläggande knäböj utan utrustning, perfekt för att lära sig rörelsen och träna benen var som helst.",
+  "instructions": [
+   "Stå med fötterna i axelbredd, tårna lätt utåt och armarna raka framåt.",
+   "För höften bakåt och nedåt som om du satte dig, med högt bröst och neutral rygg.",
+   "Gå ned tills låren är parallella med golvet, med knäna i fötternas riktning.",
+   "Skjut ifrån golvet med hela foten tills du står rakt igen."
+  ],
+  "tips": [
+   "Håll hälarna i golvet genom hela rörelsen.",
+   "Är det svårt att gå ned, sätt dig på en stol och res dig utan fart."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgariska utfall",
+  "description": "En ensidig knäböjsvariant med bakre foten upphöjd.",
+  "instructions": [
+   "Stå framför en bänk och lägg ena foten bakom dig på bänken.",
+   "Håll hantlar längs sidorna.",
+   "Sänk kroppen tills främre låret är parallellt med golvet.",
+   "Tryck ifrån med främre hälen tillbaka till stående.",
+   "Upprepa på båda sidor."
+  ],
+  "tips": [
+   "Håll nästan all tyngd på det främre benet.",
+   "Justera avståndet till bänken tills utfallet känns stabilt.",
+   "Gör alla reps på ett ben innan du byter."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Kabelcrunch",
+  "description": "En knästående magcrunch med rep i hög kabel, som gör att du kan öka belastningen gradvis för raka magmuskeln.",
+  "instructions": [
+   "Ställ dig på knä framför en kabel med repet fäst högt upp.",
+   "Håll repet nära pannan med böjda armbågar.",
+   "Gå ned genom att böja ryggraden och föra armbågarna mot låren.",
+   "Spänn magen hårt längst ned.",
+   "Gå tillbaka till utgångsläget och upprepa."
+  ],
+  "tips": [
+   "Böj ryggraden i stället för att dra med armarna.",
+   "Undvik att sätta dig bakåt med höften i varje rep.",
+   "Andas ut kraftigt på vägen ned för att spänna magen bättre."
+  ]
+ },
+ "cable-curl": {
+  "name": "Kabelcurl",
+  "description": "En bicepscurl med kabelmotstånd för konstant spänning.",
+  "instructions": [
+   "Stå framför en låg kabel med rak stång eller EZ-stång.",
+   "Grip stången i undergrepp med armbågarna tätt mot sidorna.",
+   "Curla stången upp mot axlarna.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Undvik att armbågarna går framåt när du lyfter stången.",
+   "Gunga inte med överkroppen för att hjälpa till.",
+   "Ställ dig lite längre från kabeln för att behålla spänningen."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Utåtrotation i kabel",
+  "description": "En utåtrotation i kabel med armbågen mot sidan, som stärker rotatorkuffens utåtrotatorer med hjälp av bakre deltamuskeln.",
+  "instructions": [
+   "Ställ in kabeln i armbågshöjd och grip handtaget.",
+   "Stå med sidan mot maskinen och arbetsarmens armbåge böjd 90 grader.",
+   "Håll armbågen mot sidan och rotera underarmen utåt.",
+   "Pausa i slutläget.",
+   "Gå kontrollerat tillbaka. Gör alla reps på en sida och byt sedan."
+  ],
+  "tips": [
+   "Undvik att dra upp axlarna när du roterar armen.",
+   "Träna lätt, långsamt och kontrollerat.",
+   "Håll handleden stadig i linje med underarmen."
+  ]
+ },
+ "cable-fly": {
+  "name": "Kabelflyes",
+  "description": "En isolationsövning för bröstet med kabelmotstånd för konstant spänning.",
+  "instructions": [
+   "Stå mellan två kabeltorn med handtagen i de övre trissorna.",
+   "Öppna armarna ut åt sidorna med lätt böjda armbågar.",
+   "För ihop händerna framför bröstet i en kramrörelse.",
+   "Gå långsamt tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll samma vinkel i armbågarna så att det inte blir en press.",
+   "Kläm ihop bröstet en sekund när händerna möts.",
+   "Skjut inte fram axlarna när armarna är öppna."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Frontlyft i kabel",
+  "description": "Frontlyft i låg kabel som ger konstant spänning genom hela rörelsen.",
+  "instructions": [
+   "Stå med ryggen mot den låga trissan, vajern mellan benen och handtaget i en hand med rak arm framför låret.",
+   "Lyft armen framåt till axelhöjd med lätt böjd armbåge.",
+   "Håll ett ögonblick högst upp utan att luta dig bakåt.",
+   "Sänk kontrollerat utan att vikten vilar; upprepa och byt arm."
+  ],
+  "tips": [
+   "Ställ dig så långt bort att vajern drar bakåt.",
+   "Håll magen spänd så att ryggen inte svankar."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Sidolyft i kabel",
+  "description": "Ett enarms sidolyft i kabel som ger konstant spänning i mellersta deltamuskeln.",
+  "instructions": [
+   "Stå med sidan mot en låg kabel och grip handtaget med handen längst från maskinen.",
+   "Håll armbågen lätt böjd och låt vajern gå framför kroppen.",
+   "Lyft armen ut åt sidan tills den är parallell med golvet.",
+   "Sänk kontrollerat. Gör reps per sida och byt.",
+   "Behåll spänningen — låt inte vikten vila längst ned."
+  ],
+  "tips": [
+   "Led med armbågen, inte handen.",
+   "Pausa kort högst upp, utan att gunga.",
+   "Använd mindre vikt än med hantel — kabelns spänning är konstant."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Tricepsextension över huvudet i kabel",
+  "description": "En tricepsövning i kabel: med ryggen mot viktstapeln håller du ett rep bakom huvudet och sträcker armbågarna för att pressa det uppåt över huvudet. Läget över huvudet sträcker tricepsens långa huvud och kabeln håller muskeln spänd genom hela rörelsen.",
+  "instructions": [
+   "Fäst ett rep i den låga trissan och välj en lätt vikt.",
+   "Grip repet med båda händerna, vänd ryggen mot viktstapeln och ta ett steg fram i gångstående så att kabeln drar dig bakåt.",
+   "För repet upp över huvudet med böjda armbågar och överarmarna nära öronen, så att händerna hamnar bakom huvudet.",
+   "Spänn bålen och håll överarmarna stilla, sträck sedan armbågarna och pressa repet uppåt tills armarna är helt raka över huvudet.",
+   "Pausa kort högst upp och böj sedan armbågarna för att kontrollerat sänka repet bakom huvudet igen.",
+   "Upprepa planerat antal reps."
+  ],
+  "tips": [
+   "Låt armbågarna peka framåt och överarmarna vara stilla; öppnar de sig eller flyttar sig blir sträckningen en press.",
+   "Ta ett tillräckligt långt steg fram så att kabeln håller dig stabil och undvik att svanka när armarna går upp över huvudet.",
+   "Använd en vikt du kan styra i hela sträckningen; tunga vikter får armbågarna att glida isär."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallofpress",
+  "description": "En bålövning mot rotation där kabeln drar dig åt sidan medan du pressar handtaget rakt ut från bröstet och vägrar låta överkroppen vrida sig.",
+  "instructions": [
+   "Ställ trissan i brösthöjd och ta handtaget med båda händerna, med sidan mot maskinen.",
+   "Gå ut tills vajern är ordentligt spänd, med fötterna i axelbredd och lätt böjda knän.",
+   "För handtaget till mitten av bröstet och spänn bål och säte.",
+   "Pressa handtaget rakt fram tills armarna är sträckta och stå emot draget som vill vrida dig mot maskinen.",
+   "Håll det utsträckta läget ett ögonblick och för sedan kontrollerat tillbaka handtaget till bröstet.",
+   "Gör önskat antal reps, vänd dig sedan om och upprepa åt andra hållet."
+  ],
+  "tips": [
+   "Ingenting ska rotera. Vrids axlarna mot trissan när du pressar, sänk vikten — det är rotationen som uteblir som tränar dig.",
+   "Ju längre från maskinen du står, desto längre hävarm och tyngre blir det, så du kan ändra svårigheten utan att röra viktstapeln.",
+   "Håll armarna i brösthöjd och axlarna nere; låter du handtaget stiga blir det ett frontlyft."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Omvända flyes i kabel",
+  "description": "En stående kabelövning för bakre deltamuskeln: vänd mot utrymmet mellan två kabeltorn håller du motsatta handtag med vajrarna korsade framför dig och för armarna ut och bakåt tills de är i axelhöjd. Kablarna håller bakre axeln spänd genom hela bågen.",
+  "instructions": [
+   "Ställ båda trissorna ungefär i axelhöjd och stå mitt emellan de två kabeltornen.",
+   "Grip vänster handtag med höger hand och höger handtag med vänster hand, så att vajrarna korsas framför dig.",
+   "Stå rak med armarna sträckta framåt i axelhöjd och lätt böjda armbågar.",
+   "För armarna ut och bakåt i en vid båge, led med armbågarna, tills de är i linje med axlarna.",
+   "Dra ihop skulderbladen kort utan att svanka.",
+   "För handtagen långsamt tillbaka till det korsade utgångsläget och upprepa planerat antal reps."
+  ],
+  "tips": [
+   "Håll armbågarna lätt böjda och låsta i vinkeln; böjer och sträcker du dem blir flyen en rodd.",
+   "Håll axlarna nere och nacken avslappnad så att bakre deltamuskeln arbetar och inte övre trapezius.",
+   "Använd lätt vikt och långsam återgång; kablarna drar hårdast i slutet av bågen, så styr det läget."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Knälyft i romersk stol",
+  "description": "En övning med kroppsvikt i romersk stol som tränar nedre magen och höftböjarna.",
+  "instructions": [
+   "Sätt dig i den romerska stolen med ryggen platt mot ryggstödet och underarmarna på stöden.",
+   "Låt benen hänga rakt ned.",
+   "Spänn bålen och lyft knäna mot bröstet.",
+   "Håll kort högst upp och sänk sedan långsamt till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Undvik att svinga benen för att få fart.",
+   "Andas ut när du lyfter knäna.",
+   "Håll ryggen mot ryggstödet hela övningen."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Bröstpress i maskin",
+  "description": "En pressrörelse för bröstet i maskin, perfekt för nybörjare.",
+  "instructions": [
+   "Sitt i maskinen med ryggen platt mot ryggstödet.",
+   "Grip handtagen i brösthöjd.",
+   "Pressa handtagen framåt tills armarna är helt raka.",
+   "Gå långsamt tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Ställ in sätet så att handtagen hamnar i brösthöjd.",
+   "Pressa utan att slå i lås med armbågarna.",
+   "Gå kontrollerat tillbaka utan att släppa vikten."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Hantelrodd med bröststöd",
+  "description": "En hantelrodd med bröststöd som avlastar ländryggen och isolerar ryggmusklerna.",
+  "instructions": [
+   "Ligg på mage på en lutande bänk med hantlarna hängande under.",
+   "Ro hantlarna mot sidorna.",
+   "Kläm till högst upp och sänk.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Bröststödet tar bort tröttheten i ryggslutet.",
+   "Fokusera på att dra ihop skulderbladen."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Kettlebellrodd med bröststöd",
+  "description": "Övningen tränar ryggen, främst breda ryggmuskeln och romboiderna, genom att du ror en kettlebell i varje hand mot höfterna med överkroppen stödd mot en lutande bänk.",
+  "instructions": [
+   "Ligg på mage på en lutande bänk och låt armarna hänga fritt med en kettlebell i varje hand.",
+   "Spänn magen och dra ihop skulderbladen.",
+   "Dra kettlebellerna mot höfterna och kläm ihop skulderbladen.",
+   "Pausa kort högst upp och känn sammandragningen i ryggen.",
+   "Sänk kettlebellerna långsamt och kontrollerat till utgångsläget."
+  ],
+  "tips": [
+   "Håll överkroppen stabil genom hela rörelsen; undvik att gunga.",
+   "Fokusera på att starta draget med ryggmusklerna, inte bara armarna.",
+   "Håll armbågarna nära kroppen för att betona breda ryggmuskeln."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Maskinrodd med bröststöd",
+  "description": "En sittande roddövning i maskin där en bröstdyna stöder överkroppen, så att latsen och musklerna mellan skulderbladen drar och ländryggen lämnas utanför. Du drar handtagen bakåt med armbågarna bakom dig och låter dem sedan gå framåt kontrollerat.",
+  "instructions": [
+   "Ställ sätet så att handtagen hamnar i höjd med nedre bröstet och sitt med bröstet mot dynan och fötterna stadigt.",
+   "Sträck dig framåt och grip handtagen med raka armar och avslappnade axlar.",
+   "Spänn bålen och dra handtagen bakåt med armbågarna bakom dig.",
+   "Dra ihop skulderbladen i slutet av draget utan att lätta bröstet från dynan.",
+   "Pausa kort och sträck sedan armarna för att kontrollerat föra handtagen framåt.",
+   "Upprepa planerat antal reps med bröstet mot dynan hela tiden."
+  ],
+  "tips": [
+   "Dra med armbågarna i stället för händerna, så att latsen och mellersta ryggen gör jobbet och biceps hjälper till.",
+   "Håll bröstet mot dynan och axlarna nere; drar du upp axlarna eller lutar dig bak blir rodden ett drag för övre trapezius.",
+   "Låt skulderbladen gå isär framåt i början av varje rep för full sträckning före nästa drag."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "T-rodd med bröststöd",
+  "description": "T-rodd med bröstet mot en lutande bänk, som isolerar ryggen utan belastning på ländryggen.",
+  "instructions": [
+   "Luta bröstet mot den lutande bänken med fötterna stadigt i golvet och grip T-stångens handtag med raka armar.",
+   "Dra handtaget mot bröstet med armbågarna bakåt och nära kroppen.",
+   "Kläm ihop skulderbladen ett ögonblick högst upp.",
+   "Sänk kontrollerat till raka armar utan att lätta bröstet från bänken."
+  ],
+  "tips": [
+   "Håll huvudet i linje med ryggraden.",
+   "Måste du lyfta bröstet från bänken för att få upp vikten, minska den."
+  ]
+ },
+ "chin-ups": {
+  "name": "Chins (undergrepp)",
+  "description": "En variant av chins med undergrepp som aktiverar biceps kraftigt tillsammans med breda ryggmuskeln.",
+  "instructions": [
+   "Häng i en stång med undergrepp i axelbredd.",
+   "Dra dig upp tills hakan är över stången.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll bålen spänd genom hela övningen.",
+   "Undvik för mycket sving."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Smal bänkpress",
+  "description": "Bänkpress med händerna närmare varandra, vilket ökar tricepsens insats och behåller bröstets arbete.",
+  "instructions": [
+   "Ligg på bänken och grip stången med händerna i axelbredd eller något smalare.",
+   "Lyft av stången och för den över bröstet med raka armar.",
+   "Sänk kontrollerat tills den nuddar nedre bröstet, med armbågarna nära kroppen.",
+   "Pressa stången uppåt tills armbågarna är raka."
+  ],
+  "tips": [
+   "Sätt inte händerna för tätt: handlederna far illa; axelbredd räcker.",
+   "Ta hjälp av någon eller använd ställning med säkerhetsstöd när du tränar nära utmattning."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Hantelpress på bänk",
+  "description": "En sammansatt bröstövning med hantlar som ger längre rörelsebana än bänkpress med skivstång.",
+  "instructions": [
+   "Ligg på en plan bänk med en hantel i varje hand i brösthöjd.",
+   "Pressa hantlarna uppåt tills armarna är helt raka.",
+   "Sänk dem långsamt till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll handlederna neutrala genom hela övningen.",
+   "Kläm ihop bröstet i toppläget."
+  ]
+ },
+ "db-fly": {
+  "name": "Hantelflyes",
+  "description": "En isolationsövning som sträcker och drar ihop bröstmuskeln genom en vid rörelsebåge.",
+  "instructions": [
+   "Ligg på en bänk med hantlarna över bröstet och handflatorna mot varandra.",
+   "Sänk hantlarna ut åt sidorna med lätt böjda armbågar.",
+   "Gå tillbaka till utgångsläget och kläm ihop bröstet.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll samma böjning i armbågarna genom hela övningen.",
+   "Sänk inte hantlarna för långt."
+  ]
+ },
+ "db-squat": {
+  "name": "Knäböj med hantlar",
+  "description": "En knäböj med en hantel i varje hand längs sidorna, möjlig utan skivstång.",
+  "instructions": [
+   "Stå med fötterna i axelbredd och en hantel i varje hand längs sidorna.",
+   "Spänn bålen och håll bröstet uppe.",
+   "Gå ned i knäböj genom att böja höfter och knän.",
+   "Sänk tills låren är parallella eller lägre.",
+   "Tryck ifrån med hälarna för att gå upp."
+  ],
+  "tips": [
+   "Håll bröstet uppe och ryggen rak.",
+   "Pressa knäna i linje med tårna.",
+   "Använd dragremmar om greppet blir det som begränsar."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "En bålövning i ryggläge som samordnar sträckning av motsatt arm och ben för att träna den djupa bålstabiliteten.",
+  "instructions": [
+   "Ligg på rygg med armarna mot taket och knäna i 90 grader.",
+   "Sänk höger arm och vänster ben mot golvet med ländryggen pressad mot underlaget.",
+   "Gå tillbaka till utgångsläget.",
+   "Upprepa på andra sidan.",
+   "Växla sida."
+  ],
+  "tips": [
+   "Pressa ländryggen mot golvet hela tiden.",
+   "Rör dig långsamt."
+  ]
+ },
+ "deadlift": {
+  "name": "Marklyft med skivstång",
+  "description": "Ett sammansatt helkroppslyft som främst tränar kroppens baksida.",
+  "instructions": [
+   "Stå med fötterna i höftbredd och stången över mitten av foten.",
+   "Fäll i höften och grip stången.",
+   "Spänn bålen och lyft genom att sträcka höfter och knän.",
+   "Res dig helt upp och sänk sedan kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll stången nära kroppen.",
+   "Runda inte ländryggen."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Marklyft från upphöjning",
+  "description": "Marklyft stående på en låg upphöjning, vilket ökar rörelsebanan och kraven i starten.",
+  "instructions": [
+   "Ställ dig på en 2–5 cm hög platta med fötterna under stången och grip den med neutral rygg och axlarna över stången.",
+   "Spänn kroppen och skjut ifrån golvet medan stången börjar röra sig tätt längs benen.",
+   "Sträck höfter och knän samtidigt tills du står helt rakt.",
+   "Sänk stången kontrollerat till golvet med neutral rygg."
+  ],
+  "tips": [
+   "Börja med liten upphöjning och lätt vikt för att finslipa tekniken.",
+   "Runda inte ryggen när stången lämnar golvet."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "En avancerad magövning där den stela kroppen bara vilar på axlarna och höjs och sänks som en hävstång.",
+  "instructions": [
+   "Ligg på en bänk, grip kanten bakom huvudet och lyft kroppen rak så att bara axlar och övre rygg bär.",
+   "Sänk den raka kroppen, utan att böja i höften, till nästan parallellt med golvet.",
+   "Håll mage och säte spända utan att nudda bänken.",
+   "Lyft den raka kroppen till lodrätt igen; klarar du inte det, börja med bara nedfasen."
+  ],
+  "tips": [
+   "Börja med böjda knän eller bara den excentriska fasen.",
+   "Att inte böja i höften är övningens kärna."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Framåtlutad hantelrodd",
+  "description": "Rodd med en hantel i varje hand och framåtlutad överkropp: tränar lats och övre rygg med bara ett par hantlar.",
+  "instructions": [
+   "Stå med en hantel i varje hand, böj knäna lätt och fäll överkroppen från höften nästan parallellt med golvet, med rak rygg.",
+   "Låt armarna hänga med handflatorna mot varandra.",
+   "Dra hantlarna mot höfterna, för armbågarna bakåt och dra ihop skulderbladen.",
+   "Pausa kort högst upp och sänk kontrollerat till raka armar."
+  ],
+  "tips": [
+   "Håll överkroppen stilla: behöver du gunga för att få upp hantlarna är de för tunga.",
+   "Håll nacken i linje med ryggraden med blicken i golvet.",
+   "Tröttnar ländryggen före övre ryggen, ta mindre vikt eller välj en rodd med stöd."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Hantelcurl",
+  "description": "Armbågsböjning med en hantel i varje hand som tränar biceps med fri rörelsebana.",
+  "instructions": [
+   "Stå med en hantel i varje hand, armarna raka längs sidorna och handflatorna framåt.",
+   "Håll armbågarna mot överkroppen och curla hantlarna genom att böja armbågarna utan att gunga.",
+   "Spänn biceps ett ögonblick högst upp utan att lyfta axlarna.",
+   "Sänk kontrollerat tills armbågen är helt sträckt."
+  ],
+  "tips": [
+   "Ta inte sats med ryggen: behöver du det, minska vikten.",
+   "Styr nedvägen, den ska ta minst dubbelt så lång tid som uppvägen."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmers walk med hantlar",
+  "description": "Denna helkroppsövning innebär att gå med tunga hantlar och bygger effektivt greppstyrka, bålstabilitet och allmän muskeluthållighet.",
+  "instructions": [
+   "Stå rak med en hantel i varje hand och armarna längs sidorna.",
+   "Dra ihop skulderbladen och spänn bålen med neutral ryggrad.",
+   "Gå långsamt och medvetet en bestämd sträcka eller tid, med korta kontrollerade steg.",
+   "Håll bröstet uppe och undvik att luta åt sidan medan du går.",
+   "Fokusera på en stark och stabil hållning genom hela rörelsen."
+  ],
+  "tips": [
+   "Använd de tyngsta hantlar du kan kontrollera utan att tekniken blir lidande.",
+   "Andas djupt och rytmiskt för att behålla bålspänningen.",
+   "Föreställ dig att du balanserar ett glas vatten på huvudet."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Frontlyft med hantlar",
+  "description": "Lyft av hantlarna framåt till axelhöjd för att träna främre deltamuskeln.",
+  "instructions": [
+   "Stå med en hantel i varje hand framför låren och nästan raka armar.",
+   "Lyft hantlarna framåt till axelhöjd med lätt böjda armbågar.",
+   "Stanna vid vågrätt utan att gunga med överkroppen.",
+   "Sänk kontrollerat till låren."
+  ],
+  "tips": [
+   "Ta inte sats med ryggen: gör du det, minska vikten.",
+   "Främre deltamuskeln jobbar redan mycket i pressövningar; överdriv inte volymen."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Omvända flyes med hantlar",
+  "description": "En framåtlutad isolationsövning där hantlarna lyfts ut åt sidorna och tränar bakre deltamuskeln och övre ryggen.",
+  "instructions": [
+   "Fäll framåt från höften med hantlar i hängande armar.",
+   "Håll ryggen rak och knäna lätt böjda.",
+   "Lyft hantlarna ut åt sidorna till axelhöjd.",
+   "Kläm ihop skulderbladen högst upp.",
+   "Sänk hantlarna kontrollerat.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Använd lätt vikt så att bakre deltamuskeln arbetar, inte farten.",
+   "Kläm ihop skulderbladen högst upp.",
+   "Håll armbågarna mjukt böjda i samma vinkel hela tiden."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Rumänska marklyft med hantlar",
+  "description": "Rumänska marklyft med hantlar som betonar sträckningen i baksida lår genom höftfällning.",
+  "instructions": [
+   "Stå med hantlar framför låren och lätt böjda knän.",
+   "Fäll i höften och skjut sätet bakåt.",
+   "Sänk hantlarna längs benen tills du känner sträckning i baksida lår.",
+   "Håll ryggen rak och axlarna bakåt.",
+   "Skjut höften framåt för att komma upp till stående.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Gå så långt ned som rörligheten tillåter, utan att tvinga.",
+   "Behåll samma mjuka knäböjning genom hela rörelsen.",
+   "Gör inte om rörelsen till en knäböj."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Axelpress med hantlar",
+  "description": "En vertikal press med hantlar, sittande eller stående, som utvecklar främre och mellersta delen av deltamuskeln.",
+  "instructions": [
+   "Sitt eller stå med hantlarna i axelhöjd och handflatorna framåt.",
+   "Pressa båda hantlarna över huvudet tills armarna är helt raka.",
+   "Håll bålen spänd och undvik att svanka.",
+   "Sänk hantlarna kontrollerat till axelhöjd.",
+   "Låt inte hantlarna hamna bakom huvudet.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "För hantlarna rakt upp utan att slå ihop dem högst upp.",
+   "Håll handlederna stadiga i linje med underarmarna.",
+   "Svankar ländryggen, minska vikten."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Axelryckningar med hantlar",
+  "description": "Axellyft med en hantel i varje hand för att träna övre ryggen och trapezius.",
+  "instructions": [
+   "Stå med en hantel i varje hand, armarna raka längs sidorna och blicken framåt.",
+   "Lyft axlarna rakt upp mot öronen utan att rotera dem eller böja armbågarna.",
+   "Håll sammandragningen ett ögonblick högst upp.",
+   "Sänk kontrollerat tills trapezius är helt sträckt."
+  ],
+  "tips": [
+   "Gör inga cirklar med axlarna: rörelsen är lodrät.",
+   "Ger greppet upp före trapezius, använd dragremmar."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Enbens vadpress med hantel",
+  "description": "Vadpress på ett ben på en kant, med en hantel och andra handen som stöd för balansen.",
+  "instructions": [
+   "Stå på en kant med ena framfoten, det andra benet böjt och en hantel i handen på samma sida; stöd andra handen mot en vägg.",
+   "Låt hälen sjunka under kanten tills vaden sträcks.",
+   "Res dig på tå så högt du kan utan att böja knät.",
+   "Håll ett ögonblick högst upp och sänk kontrollerat; gör alla reps och byt ben."
+  ],
+  "tips": [
+   "Tryck med stortåns trampdyna utan att fotleden viker utåt.",
+   "Övningen är ensidig: gör lika många reps med varje ben."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pike-armhävningar med upphöjda händer",
+  "description": "Nybörjarvariant av pike-armhävningen, med händerna på en kant eller stadig stol för att minska belastningen.",
+  "instructions": [
+   "Sätt händerna på kanten av ett trappsteg, en bänk eller stadig stol i axelbredd och gå bakåt med fötterna tills höften är högt.",
+   "Böj armbågarna och sänk huvudet mot underlaget med höften högt.",
+   "Stanna när huvudet är mellan händerna utan att tappa läget.",
+   "Pressa ifrån tills armbågarna är raka."
+  ],
+  "tips": [
+   "Flytta fötterna närmare underlaget för att göra det tyngre.",
+   "Kontrollera att underlaget inte rör sig innan du börjar."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull i kabel",
+  "description": "En kabelövning som tränar bakre deltamuskeln och utåtrotatorerna.",
+  "instructions": [
+   "Fäst ett rep i en hög trissa.",
+   "Dra repet mot ansiktet och för isär ändarna.",
+   "Kläm åt bakre deltamuskeln och utåtrotatorerna.",
+   "Gå kontrollerat tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll armbågarna höga i linje med axlarna.",
+   "Dra ihop skulderbladen i slutet av varje rep.",
+   "Träna med lätt vikt så att tekniken hålls."
+  ]
+ },
+ "front-squat": {
+  "name": "Frontböj",
+  "description": "En knäböj med stången framtill på deltamusklerna som betonar framsida lår och bål.",
+  "instructions": [
+   "Vänd eller lägg stången på främre deltamusklerna med höga armbågar.",
+   "Gå ned med rak överkropp tills låren är parallella med golvet.",
+   "Res dig upp igen.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll armbågarna höga för att hålla stången stabil.",
+   "En mer upprätt överkropp ökar aktiveringen av framsida lår."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Höftlyft på golv",
+  "description": "En aktiveringsövning för sätet med kroppsvikt, liggande på golvet.",
+  "instructions": [
+   "Ligg på rygg med böjda knän och fötterna platt i golvet.",
+   "Lyft höften genom att klämma ihop sätet.",
+   "Håll kort högst upp med helt sträckt höft.",
+   "Sänk höften kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Tryck ifrån med hälarna för att aktivera sätet bättre.",
+   "Undvik att svanka när du sträcker höften.",
+   "Håll knäna i linje med fötterna hela rörelsen."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Gobletböj",
+  "description": "En nybörjarvänlig knäböj med en kettlebell i brösthöjd som förbättrar hållning och djup.",
+  "instructions": [
+   "Håll en kettlebell i brösthöjd med båda händerna.",
+   "Gå ned i knäböj med vikten nära bröstet.",
+   "Res dig upp igen.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Gobletläget ger naturligt en rak överkropp.",
+   "Pressa ut knäna i bottenläget."
+  ]
+ },
+ "good-morning": {
+  "name": "Good morning",
+  "description": "Höftfällning med stången på ryggen, för att stärka baksida lår, säte och ländrygg.",
+  "instructions": [
+   "Stå med stången högt på ryggen, fötterna i axelbredd och lätt böjda knän.",
+   "För höften bakåt och fäll överkroppen framåt med neutral rygg.",
+   "Gå ned tills du känner spänning i baksida lår, med överkroppen nära vågrätt.",
+   "Skjut höften framåt för att resa dig igen."
+  ],
+  "tips": [
+   "Börja mycket lätt: ländryggen arbetar hårt.",
+   "Titta framåt och runda inte ryggen."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hacklyft",
+  "description": "En styrd övning i hacklyftsmaskinen som främst tränar framsida lår med ett kontrollerat knäböjsmönster på släden.",
+  "instructions": [
+   "Lasta hacklyftsmaskinen och ställ dig med rygg och axlar mot dynorna.",
+   "Placera fötterna i axelbredd på plattan, lätt utåtvridna.",
+   "Lossa säkerhetsspärrarna och sänk släden genom att böja knän och höfter.",
+   "Gå ned tills låren är minst parallella med plattan.",
+   "Tryck ifrån med hälarna för att sträcka benen och föra tillbaka släden.",
+   "Haka fast säkerhetsspärrarna igen efter setet."
+  ],
+  "tips": [
+   "Håll ländryggen mot dynan genom hela rörelsen.",
+   "Fötterna högre upp på plattan flyttar betoningen till säte och baksida lår.",
+   "Styr nedvägen; ta inte sats från bottenläget."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Hammercurl med hantlar",
+  "description": "En variant av bicepscurl med neutralt grepp som tränar överarmsstrålbensmuskeln.",
+  "instructions": [
+   "Stå med hantlarna längs sidorna och handflatorna mot varandra.",
+   "Lyft hantlarna med handflatorna inåt.",
+   "Kläm till högst upp och sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll armbågarna mot överkroppen genom hela rörelsen.",
+   "Undvik att gunga för att få upp hantlarna.",
+   "Handlederna hålls stadiga och neutrala genom hela curlen."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Handstående armhävningar",
+  "description": "Armhävning i handstående med fötterna mot väggen, en av de mest krävande pressövningarna med kroppsvikt.",
+  "instructions": [
+   "Vänd ryggen mot väggen, sätt händerna i golvet och för upp fötterna till handstående med spänd mage.",
+   "Böj armbågarna och sänk huvudet kontrollerat mot golvet.",
+   "Stanna när huvudet nuddar golvet eller en matta.",
+   "Pressa ifrån tills armbågarna är helt raka."
+  ],
+  "tips": [
+   "Öva först handstående och pike-armhävning.",
+   "Lägg en matta under huvudet för trygghetens skull."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Hängande knälyft",
+  "description": "En hängande bålövning i stång som tränar nedre magen och höftböjarna med böjda knän.",
+  "instructions": [
+   "Häng i en stång med övergrepp och helt raka armar.",
+   "Spänn bålen och lyft knäna mot bröstet.",
+   "Håll kort högst upp.",
+   "Sänk benen långsamt till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Undvik att svinga — starta rörelsen från bålen.",
+   "Andas ut när du lyfter knäna.",
+   "Gå vidare till benlyft med raka ben när det blir lätt."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Hängande benlyft",
+  "description": "Lyft av raka ben till vågrätt hängande i en stång, för magen och höftböjarna.",
+  "instructions": [
+   "Häng i en stång med grepp något bredare än axlarna och benen raka tillsammans.",
+   "Lyft de raka benen till parallellt med golvet och tippa bäckenet lätt bakåt.",
+   "Håll ett ögonblick högst upp utan att svinga.",
+   "Sänk kontrollerat till utgångsläget utan att kroppen pendlar."
+  ],
+  "tips": [
+   "Klarar du inte raka ben, böj knäna.",
+   "Undvik sving: använd magen, inte farten."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Marklyft med hexstång",
+  "description": "Ett stående marklyft inne i en hexstång, med belastningen centrerad för ett mer upprätt och ryggvänligt drag.",
+  "instructions": [
+   "Ställ dig inne i en lastad hexstång med fötterna i axelbredd.",
+   "Böj höfter och knän och grip handtagen.",
+   "Spänn bålen och håll ryggen platt.",
+   "Tryck ifrån med hälarna och sträck höfter och knän till stående.",
+   "Lås högst upp med axlarna bakåt.",
+   "Sänk stången kontrollerat till golvet."
+  ],
+  "tips": [
+   "Håll bröstet uppe och ryggen platt medan du justerar greppet.",
+   "Skjut ifrån golvet i stället för att dra stången med ryggen.",
+   "Res dig helt upp utan att luta bakåt."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Höftabduktion i maskin",
+  "description": "En maskinövning för höftens yttre muskler.",
+  "instructions": [
+   "Sitt i abduktionsmaskinen med dynorna mot lårens utsida.",
+   "Pressa benen utåt mot motståndet.",
+   "Håll kort i det bredaste läget.",
+   "Gå kontrollerat tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll ryggen mot maskinens ryggstöd.",
+   "Öppna benen utan ryck, i ett kontrollerat tempo.",
+   "Bromsa vägen in mot mitten i stället för att släppa vikten."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Höftadduktion i maskin",
+  "description": "En maskinövning där benen pressas mot varandra mot motstånd och isolerar och stärker adduktorerna på lårens insida.",
+  "instructions": [
+   "Sitt i adduktionsmaskinen med ryggen mot ryggstödet.",
+   "Placera benen mot dynorna med maskinen inställd på en bekväm sträckning.",
+   "Pressa ihop benen tills dynorna möts i mitten.",
+   "Håll sammandragningen kort i helt stängt läge.",
+   "Låt benen öppna sig kontrollerat tillbaka till start.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Välj en startbredd som sträcker utan att tvinga ljumsken.",
+   "Gå hela rörelsebanan i jämn, kontrollerad takt.",
+   "Låt inte viktplattan slå i när benen öppnas."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Höftlyft med skivstång",
+  "description": "En sammansatt sätesövning med en skivstång vilande över höfterna.",
+  "instructions": [
+   "Sitt på golvet med övre ryggen mot en bänk och stången över höfterna.",
+   "Pressa upp höften tills överkropp och lår är i linje.",
+   "Kläm ihop sätet högst upp.",
+   "Sänk höften kontrollerat igen.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll hakan indragen och revbenen nere.",
+   "Tryck ifrån med hälarna, inte tårna.",
+   "Undvik att svanka högst upp."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Horisontell benpress",
+  "description": "En benpress i maskin i vågrätt läge som tränar framsida lår, säte och baksida lår.",
+  "instructions": [
+   "Sitt i den vågräta benpressen med ryggen mot ryggstödet och fötterna i axelbredd på plattan.",
+   "Tryck ifrån med fötterna och sträck benen utan att låsa knäna.",
+   "Böj knäna kontrollerat tills de närmar sig bröstet.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Låt inte ländryggen lätta från sätet.",
+   "Undvik att låsa knäna helt."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Lutande bänkpress med skivstång",
+  "description": "En pressrörelse med skivstång på lutande bänk som tränar övre delen av bröstet.",
+  "instructions": [
+   "Ligg på en bänk lutad 30–45 grader.",
+   "Grip stången något bredare än axlarna och lyft av den.",
+   "Sänk stången till övre delen av bröstet.",
+   "Pressa tillbaka stången till full sträckning.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Dra ihop skulderbladen och håll dem mot bänken.",
+   "Undvik att studsa stången på bröstet.",
+   "Be om passning när du tränar tungt."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Y-lyft på lutande bänk",
+  "description": "Y-lyft med hantlar liggande på mage på en lutande bänk, för nedre och mellersta trapezius.",
+  "instructions": [
+   "Ligg på mage på en lutande bänk med bröstet stödd och en lätt hantel hängande i varje hand.",
+   "Lyft armarna framåt och uppåt i ett Y, med tummarna mot taket.",
+   "Stanna när armarna är i linje med överkroppen utan att lätta bröstet från bänken.",
+   "Sänk kontrollerat till utgångsläget."
+  ],
+  "tips": [
+   "Använd lite vikt: nedre trapezius är en liten muskel.",
+   "Håll nacken neutral med blicken i golvet."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Hantelcurl på lutande bänk",
+  "description": "En bicepscurl på lutande bänk för större sträckning av det långa huvudet.",
+  "instructions": [
+   "Sitt på en bänk lutad 45 grader med hantlar längs sidorna.",
+   "Låt armarna hänga rakt med handflatorna framåt.",
+   "Curla hantlarna mot axlarna.",
+   "Sänk kontrollerat till full sträckning.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll axlar och rygg mot bänken.",
+   "Skjut inte fram axlarna när hantlarna går upp.",
+   "Utnyttja sträckningen längst ned med en långsam nedväg."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Lutande hantelpress",
+  "description": "En pressrörelse på lutande bänk som betonar övre delen av bröstet.",
+  "instructions": [
+   "Ställ bänken på 30 graders lutning och sitt med hantlarna i axelhöjd.",
+   "Pressa hantlarna upp och ihop tills armarna är helt raka.",
+   "Sänk hantlarna kontrollerat till axelhöjd.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll fötterna stadigt i golvet och skulderbladen ihopdragna.",
+   "Undvik att slå ihop hantlarna högst upp.",
+   "Sänk tills du känner en mjuk sträckning i bröstet."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Lutande armhävningar",
+  "description": "En nybörjarvänlig variant av armhävningen med händerna upphöjda på en bänk eller kant.",
+  "instructions": [
+   "Sätt händerna på en bänk eller upphöjd yta i axelbredd.",
+   "Sträck benen bakåt till plankposition.",
+   "Sänk bröstet mot bänken genom att böja armbågarna.",
+   "Pressa tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Spänn magen så att höften inte sjunker.",
+   "Ju högre underlag, desto lättare blir övningen.",
+   "Se till att bänken inte rör sig innan du börjar."
+  ]
+ },
+ "inverted-row": {
+  "name": "Omvänd rodd",
+  "description": "En horisontell dragövning med kroppsvikt under en fast stång, där bröstet dras mot stången med stel kropp.",
+  "instructions": [
+   "Placera en stång i en ställning ungefär i midjehöjd.",
+   "Lägg dig under och grip stången något bredare än axlarna med övergrepp.",
+   "Häng med raka armar, hälarna i golvet och kroppen rak från huvud till anklar.",
+   "Dra bröstet mot stången och kläm ihop skulderbladen.",
+   "Sänk dig kontrollerat tills armarna är helt raka.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll bålen spänd — utan att höften sjunker.",
+   "Gör det tyngre genom att höja fötterna; lättare genom att gå med fötterna mot stången.",
+   "Pausa kort högst upp med bröstet mot stången."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Tibialislyft med kettlebell",
+  "description": "En övning för skenbenen sittande på en bänk med en kettlebell hängande över framfoten. Att lyfta tårna mot skenbenet mot vikten stärker musklerna framtill på underbenet.",
+  "instructions": [
+   "Sitt längst ut på en plan bänk med ett ben sträckt och hälen i golvet.",
+   "Häng en kettlebell i handtaget över framfoten, ovanför tårna.",
+   "Lyft tårna mot skenbenet så långt det känns bekvämt medan hälen ligger kvar i golvet.",
+   "Håll toppläget kort.",
+   "Sänk foten långsamt tills tårna pekar mot golvet.",
+   "Gör alla reps och byt sedan ben."
+  ],
+  "tips": [
+   "Gör rörelsen bara från ankeln; knä och lår är stilla.",
+   "Börja med en lätt kettlebell och öka efter hand; skenbensmusklerna tröttnar fort.",
+   "Sänk långsamt i stället för att släppa vikten."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Knästående kabelrodd",
+  "description": "En kabelrodd från upprätt knästående, som tar bort höftsving och håller spänningen i övre ryggen genom hela rörelsen.",
+  "instructions": [
+   "Ställ in trissan i brösthöjd och sätt på ett rep eller dubbelt D-handtag.",
+   "Stå rakt på knä framför maskinen så långt bort att viktpaketet inte går i botten.",
+   "Grip handtaget med båda händerna och håll det utsträckt framför dig i brösthöjd.",
+   "För handtaget mot bröstbenet med armbågarna bakåt och kläm ihop skulderbladen.",
+   "Gå kontrollerat tillbaka till det sträckta utgångsläget.",
+   "Upprepa rekommenderat antal reps."
+  ],
+  "tips": [
+   "Håll dig upprätt: luta inte bakåt för att avsluta repen.",
+   "Det upprätta knästående läget tvingar bålen att stå emot rotation i varje drag."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Armhävningar på knä",
+  "description": "En nybörjarvänlig armhävning med knäna i golvet för att minska belastningen på överkroppen.",
+  "instructions": [
+   "Börja i armhävningsläge med knäna i golvet.",
+   "Sätt händerna i axelbredd på golvet.",
+   "Håll kroppen i en rak linje från knän till axlar.",
+   "Sänk bröstet mot golvet genom att böja armbågarna.",
+   "Pressa med händerna tillbaka till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Spreta inte för mycket med armbågarna.",
+   "Spänn säte och mage genom hela rörelsen.",
+   "Titta i golvet för att hålla nacken neutral."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Sidolyft med hantlar",
+  "description": "En isolationsrörelse som tränar mellersta deltamuskeln för bredare axlar.",
+  "instructions": [
+   "Stå med hantlar längs sidorna.",
+   "Lyft hantlarna ut åt sidorna tills armarna är parallella med golvet.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Lätt böjda armbågar.",
+   "Led med armbågarna, inte händerna."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Latsdrag till bröstet",
+  "description": "En kabelmaskinsövning som tränar breda ryggmuskeln.",
+  "instructions": [
+   "Sitt i latsdragsmaskinen med låren fästa under dynorna.",
+   "Grip den breda stången med övergrepp.",
+   "Dra stången till övre delen av bröstet och kläm ihop latsen.",
+   "För stången långsamt tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Börja draget genom att dra ned skulderbladen, inte genom att böja armbågarna.",
+   "Undvik att gunga med överkroppen för att flytta vikten.",
+   "Rikta armbågarna nedåt och bakåt, inte utåt."
+  ]
+ },
+ "leg-curl": {
+  "name": "Liggande lårcurl",
+  "description": "En isolationsövning för baksida lår i lårcurlmaskinen.",
+  "instructions": [
+   "Ligg på mage i lårcurlmaskinen med anklarna under dynan.",
+   "Curla hälarna mot sätet.",
+   "Kläm åt baksida lår i toppläget.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll höften mot bänken genom hela rörelsen.",
+   "Undvik att svanka när hälarna går upp.",
+   "Välj en vikt som tillåter full och kontrollerad rörelsebana."
+  ]
+ },
+ "leg-extension": {
+  "name": "Bensträck",
+  "description": "En isolationsövning för framsida lår i maskin.",
+  "instructions": [
+   "Sitt i bensträcksmaskinen med anklarna bakom dynan.",
+   "Sträck benen tills de är raka.",
+   "Kläm åt framsida lår högst upp.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Rikta in knäna mot maskinens vridaxel.",
+   "Lyft vikten utan att kasta upp den.",
+   "Håll i handtagen så att höften ligger still mot sätet."
+  ]
+ },
+ "leg-press": {
+  "name": "Benpress",
+  "description": "En sammansatt maskinrörelse för framsida lår och säte.",
+  "instructions": [
+   "Sitt i benpressen med fötterna i axelbredd på plattan.",
+   "Lossa spärrarna och sänk plattan genom att böja knäna.",
+   "Pressa upp plattan tills benen är nästan raka.",
+   "Lås inte knäna högst upp.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll ländryggen mot ryggstödet hela tiden.",
+   "Gå bara så långt ned att höften inte lättar.",
+   "Håll knäna i linje med tårna."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Vadpress i benpress",
+  "description": "Vadpress där benpressens platta trycks med framfötterna.",
+  "instructions": [
+   "Sitt i benpressen med nästan raka ben och bara framfötterna på plattans nederkant.",
+   "Lossa spärren och låt hälarna sjunka så att vaderna sträcks.",
+   "Tryck ifrån plattan med framfötterna tills du står på tå.",
+   "Håll ett ögonblick i toppen och sänk kontrollerat igen."
+  ],
+  "tips": [
+   "Lås inte knäna helt.",
+   "Gå hela rörelsebanan och pausa i botten: det är där stimulansen finns."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Liggande benlyft",
+  "description": "Lyft av båda benen liggande på rygg för nedre magen och höftböjarna.",
+  "instructions": [
+   "Ligg på rygg med benen raka tillsammans och händerna under sätet eller längs sidorna.",
+   "Pressa ländryggen mot golvet genom att spänna magen.",
+   "Lyft benen tills de är lodräta mot golvet, utan sving.",
+   "Sänk långsamt utan att fötterna nuddar golvet eller ryggen svankar."
+  ],
+  "tips": [
+   "Lättar ländryggen från golvet, böj knäna.",
+   "Styr nedvägen: det är där magen arbetar mest."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Ryggresning i maskin",
+  "description": "En sittande isolationsövning för ländryggen: med höft och ben fixerade pressar överkroppen bakåt mot en vadderad rulle och sträcker ryggraden mot viktpaketet.",
+  "instructions": [
+   "Sitt i ryggresningsmaskinen med fötterna på plattan och ställ rullen över övre ryggen, strax under skulderbladen.",
+   "Grip sidohandtagen och låt överkroppen gå lätt framåt: det är utgångsläget.",
+   "Pressa bakåt mot rullen genom att sträcka ryggraden tills överkroppen lutar bakåt och ländryggen är helt sammandragen.",
+   "Pausa kort i full sträckning och gå kontrollerat tillbaka till start medan du bromsar vikten.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Placera rullen strax under skulderbladen: högre trycker mot nacken och lägre kortar rörelsen.",
+   "Sträck från ländryggen i stället för att kasta huvud och axlar bakåt, och håll rörelsen långsam åt båda håll.",
+   "Stanna med överkroppen sträckt i neutralt läge i stället för att tvinga ryggraden längre, och börja lätt: ländryggen svarar bättre på kontrollerade reps än på tunga vikter."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Bicepscurl i maskin",
+  "description": "En bicepscurl i maskin för isolerad armträning.",
+  "instructions": [
+   "Sitt i maskinen och ställ in dynan efter armarnas längd.",
+   "Grip handtagen med undergrepp.",
+   "Curla handtagen mot axlarna.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll armbågarna på dynan hela tiden.",
+   "Undvik att dra upp axlarna när handtagen går upp.",
+   "Sänk till nästan raka armar utan att tappa spänningen."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Vadpress i maskin",
+  "description": "En stående isolationsövning i maskin som tränar vadmuskeln och soleus genom fotledens fulla rörelsebana.",
+  "instructions": [
+   "Ställ dig i vadpressmaskinen med framfötterna på plattan.",
+   "Placera axeldynorna stadigt.",
+   "Sänk hälarna under plattan för full sträckning.",
+   "Tryck ifrån med framfötterna och res dig på tå.",
+   "Kläm ihop vaderna högst upp.",
+   "Sänk kontrollerat och upprepa."
+  ],
+  "tips": [
+   "Undvik att studsa i botten så att spänningen inte försvinner.",
+   "Håll knäna raka men utan att låsa dem.",
+   "Gå rakt upp utan att fotlederna viker utåt."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Flyes i maskin",
+  "description": "En isolationsövning för bröstet i en maskin som för armarna ihop i en båge framför kroppen.",
+  "instructions": [
+   "Sitt i flyesmaskinen och ställ sätet så att armarna hamnar i brösthöjd.",
+   "Håll armarna med lätt böjda armbågar.",
+   "För armarna ihop framför bröstet i en mjuk båge.",
+   "Kläm ihop bröstet i toppläget.",
+   "Gå kontrollerat tillbaka utan att släppa vikten.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Håll en lätt och konstant armbågsböjning genom hela rörelsen.",
+   "Fokusera på att dra ihop bröstet snarare än att trycka med armarna.",
+   "Styr återgången i stället för att låta viktpaketet falla."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Omvända flyes i maskin",
+  "description": "En sittande maskinövning för bakre deltamuskeln, även kallad omvänd pec deck: vänd mot dynan för du båda handtagen ut och bakåt i en vid båge mot viktpaketet. Dynan håller överkroppen stilla, så arbetet stannar i bakre axeln och musklerna mellan skulderbladen.",
+  "instructions": [
+   "Ställ sätet så att handtagen hamnar i axelhöjd och sitt vänd mot maskinen med bröstet mot dynan.",
+   "Grip handtagen med armarna sträckta framåt och lätt böjda armbågar.",
+   "Håll axlarna nere, bort från öronen, och spänn bålen.",
+   "För handtagen ut och bakåt i en vid båge, led med armbågarna, tills armarna är ungefär i linje med axlarna.",
+   "Dra ihop skulderbladen kort utan att luta dig bakåt från dynan.",
+   "För handtagen långsamt framåt och upprepa planerat antal reps."
+  ],
+  "tips": [
+   "Led med armbågarna i stället för att dra med händerna, så att bakre deltamuskeln arbetar och inte biceps.",
+   "Håll bröstet mot dynan och nacken avslappnad; lutar du bakåt eller drar upp axlarna går belastningen till övre trapezius.",
+   "Välj en vikt du kan sänka kontrollerat; lättare vikt med långsam återgång tränar bakre deltamuskeln bättre än sving med tung vikt."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Sittande crunch i maskin",
+  "description": "En isolationsövning för magen i sittande maskin där ryggraden böjs mot motstånd.",
+  "instructions": [
+   "Sitt i magmaskinen och håll i handtagen.",
+   "Placera bröstdynan mot överkroppen.",
+   "Spänn magen och böj överkroppen framåt och nedåt.",
+   "Spänn i slutläget.",
+   "Gå kontrollerat tillbaka till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Starta rörelsen med magen, inte armarna.",
+   "Andas ut när du böjer överkroppen.",
+   "Undvik att gunga för att få fart."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Axelpress i maskin",
+  "description": "En axelpress över huvudet i maskin.",
+  "instructions": [
+   "Sitt i maskinen med ryggen mot ryggstödet.",
+   "Grip handtagen i axelhöjd.",
+   "Pressa handtagen över huvudet tills armarna är helt raka.",
+   "Sänk kontrollerat till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Svanka inte när du pressar uppåt.",
+   "Undvik att slå i lås med armbågarna högst upp.",
+   "Håll handlederna stadiga i linje med underarmarna."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negativa pull-ups",
+  "description": "Den långsamma nedfasen av pull-up, för att bygga styrkan som krävs för hela pull-ups.",
+  "instructions": [
+   "Kliv upp på en bänk eller hoppa så att hakan hamnar över stången, med grepp något bredare än axlarna.",
+   "Sänk kroppen utan stöd mycket långsamt, på ungefär tre till fem sekunder.",
+   "Styr rörelsen tills armarna är helt raka.",
+   "Ta dig upp igen med hjälp av bänken eller ett hopp och upprepa."
+  ],
+  "tips": [
+   "Håll axlarna borta från öronen på nedvägen.",
+   "När du klarar fem långsamma reps, prova att dra dig upp utan hjälp."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordisk lårcurl",
+  "description": "En knäböjningsövning där överkroppen sänks framåt från knästående och tränar baksida lår excentriskt.",
+  "instructions": [
+   "Stå på knä på en matta med anklarna förankrade under ett fast stöd.",
+   "Håll överkroppen rak och höften sträckt.",
+   "Sänk kroppen långsamt framåt och bromsa med baksida lår.",
+   "Ta emot dig med händerna strax före golvet.",
+   "Skjut ifrån med händerna och dra dig tillbaka till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Sänk så långsamt du kan: den excentriska fasen är målet.",
+   "Håll höften sträckt; vik dig inte i midjan.",
+   "Bromsa med händerna och skjut lätt ifrån medan du blir starkare."
+  ]
+ },
+ "ohp": {
+  "name": "Militärpress med skivstång",
+  "description": "En sammansatt pressrörelse över huvudet som tränar axlar och triceps.",
+  "instructions": [
+   "Stå med fötterna i axelbredd och stången i höjd med nyckelbenen.",
+   "Spänn bålen och pressa stången över huvudet.",
+   "Lås armbågarna högst upp med stången över mitten av foten.",
+   "Sänk stången till höjd med nyckelbenen.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Luta dig inte för långt bakåt.",
+   "Kläm ihop sätet för bättre stabilitet."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Enarms sittande kabelrodd",
+  "description": "En enarms sittande kabelrodd för lats och övre rygg, med överkroppen framåtvänd medan arbetssidans skulderblad rör sig fram och bak kontrollerat.",
+  "instructions": [
+   "Sitt vid kabelstationen och håll handtaget med arbetsarmen sträckt.",
+   "Sätt fötterna stadigt, sitt rakt och spänn bålen utan att luta bakåt.",
+   "Dra handtaget mot nedre revbenen medan du drar bak skulderbladet.",
+   "Pausa kort utan att vrida överkroppen eller lyfta axeln.",
+   "Sträck armen kontrollerat, avsluta setet och byt sida."
+  ],
+  "tips": [
+   "Håll båda axlarna framåtvända genom hela repen.",
+   "För armbågen bakåt nära kroppen i stället för att bara böja armen.",
+   "Låt skulderbladet gå fram i början utan att runda ländryggen."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Tricepsextension över huvudet med hantel",
+  "description": "En isolationsövning för triceps som betonar det långa huvudet.",
+  "instructions": [
+   "Stå eller sitt och håll en hantel över huvudet med båda händerna.",
+   "Sänk hanteln bakom huvudet genom att böja armbågarna.",
+   "Sträck armarna tillbaka till utgångsläget.",
+   "Håll armbågarna nära huvudet genom hela övningen.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Rör bara underarmarna och håll allt annat stilla.",
+   "Undvik att svanka när hanteln går ned.",
+   "Håll hanteln under den övre viktskivan med båda handflatorna."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dips i barr",
+  "description": "Övning med kroppsvikt i parallella stänger som tränar bröst, triceps och axlar.",
+  "instructions": [
+   "Stöd dig på stängerna med raka armar och kroppen fritt, utan att nudda golvet.",
+   "Luta överkroppen lätt framåt och böj armbågarna för att sänka dig kontrollerat.",
+   "Stanna när axlarna är i armbågshöjd, utan att sjunka ned i leden.",
+   "Pressa ifrån med bröst och triceps tills armarna är raka igen."
+  ],
+  "tips": [
+   "Klarar du inte rena set, använd en assisterad dipsmaskin eller band.",
+   "Gå inte längre ned än axeln tål utan obehag."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Bänkpress med paus",
+  "description": "Bänkpress med en paus på en till två sekunder på bröstet, vilket tar bort studsen och förbättrar styrkan i starten.",
+  "instructions": [
+   "Ligg på bänken med fötterna stadigt i golvet, skulderbladen ihop och stången över bröstet i grepp något bredare än axlarna.",
+   "Sänk stången kontrollerat tills den nuddar bröstet.",
+   "Håll stången stilla på bröstet en till två sekunder utan att släppa spänningen.",
+   "Pressa stången uppåt tills armbågarna är raka."
+  ],
+  "tips": [
+   "Använd 10 till 15 % mindre vikt än i vanlig bänkpress.",
+   "Be någon passa eller använd ställningens säkerhetsstöd."
+  ]
+ },
+ "pause-squat": {
+  "name": "Knäböj med paus",
+  "description": "Knäböj med skivstång och paus i bottenläget, för kontroll och styrka utan studs.",
+  "instructions": [
+   "Lägg stången högt på ryggen, fötterna i axelbredd och tårna lätt utåt.",
+   "Gå ned med kontrollerat djup, neutral rygg och knäna i fötternas riktning.",
+   "Håll det lägsta läget i en till tre sekunder utan att släppa bålspänningen.",
+   "Skjut ifrån golvet med fötterna tills du står rakt igen."
+  ],
+  "tips": [
+   "Minska vikten jämfört med din vanliga knäböj.",
+   "Studsa inte ur pausen: tryck jämnt."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "En isolationsmaskin för bröstet med rörliga armar som tränar bröstmuskeln genom horisontell adduktion.",
+  "instructions": [
+   "Sitt i pec deck-maskinen och grip handtagen med armarna öppna åt sidorna och armbågarna lätt böjda.",
+   "Ställ sätet så att handtagen hamnar i höjd med mitten av bröstet.",
+   "För ihop handtagen framför bröstet och kläm till.",
+   "Håll sammandragningen kort i mitten.",
+   "Gå kontrollerat tillbaka till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Låt inte armarna gå för långt bakåt när du öppnar.",
+   "Håll rygg och axlar mot ryggstödet.",
+   "Andas ut när handtagen möts och in när du öppnar."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlayrodd",
+  "description": "Explosiv skivstångsrodd från golvet i varje rep, med överkroppen parallell med golvet.",
+  "instructions": [
+   "Med fötterna under stången och överkroppen nästan vågrätt, grip lite bredare än axlarna med neutral rygg.",
+   "Dra stången kraftfullt tills den nuddar nedre bröstet, utan att röra överkroppen.",
+   "Sänk stången kontrollerat till golvet och stanna ett ögonblick.",
+   "Spänn ryggen på nytt och upprepa från golvet."
+  ],
+  "tips": [
+   "Överkroppen går varken upp eller ned: rör den sig är vikten för tung.",
+   "Varje rep börjar med stången vilande på golvet."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike-armhävningar",
+  "description": "Armhävning med kroppen som ett uppochnedvänt V, som flyttar belastningen från bröst till axlar utan utrustning.",
+  "instructions": [
+   "Sätt händerna i golvet i axelbredd och lyft höften till ett uppochnedvänt V med nästan raka ben.",
+   "Böj armbågarna och sänk huvudet mot golvet mellan händerna.",
+   "Stanna när huvudet är nära golvet utan att vila mot det.",
+   "Pressa med armarna tills armbågarna är raka och du är tillbaka i start."
+  ],
+  "tips": [
+   "Ju närmare fötterna är händerna, desto tyngre blir övningen.",
+   "Håll höften högt genom hela rörelsen."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol squat (enbensböj)",
+  "description": "Djup enbensböj med andra benet sträckt framåt, med bara kroppsvikt.",
+  "instructions": [
+   "Stå på ett ben med det andra lyft framåt och armarna framför dig för balansen.",
+   "Böj ståbenets knä och gå kontrollerat ned med hälen i golvet.",
+   "Gå så långt ned du kan utan att tappa tekniken, med det fria benet sträckt framåt.",
+   "Skjut ifrån golvet tills du står upp igen; upprepa och byt ben."
+  ],
+  "tips": [
+   "Börja med att hålla i ett stöd eller sätta dig på en låda.",
+   "Håll knät i linje med foten."
+  ]
+ },
+ "plank": {
+  "name": "Plankan",
+  "description": "Statisk bålövning som tränar stabiliteten genom att hålla kroppen rak på underarmar och tår.",
+  "instructions": [
+   "Sätt underarmarna i golvet med armbågarna under axlarna och benen raka.",
+   "Lyft kroppen till en rak linje från huvud till hälar.",
+   "Spänn mage och säte med neutral ländrygg utan att höften sjunker.",
+   "Andas normalt och håll läget angiven tid."
+  ],
+  "tips": [
+   "Börja med korta set av god kvalitet innan du förlänger tiden.",
+   "Sjunker ländryggen, sätt ned knäna eller korta tiden."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Höftlyft i viktlastad maskin",
+  "description": "Höftlyft i viktlastad höftlyftsmaskin, vars ryggstöd och platta håller läget så att höften sträcks mot vikten utan att rigga en bänk.",
+  "instructions": [
+   "Lasta viktpinnarna jämnt och sitt med övre ryggen mot ryggstödet och fötterna platt på plattan.",
+   "Sänk dynan eller stången över höften så att den vilar i höftvecket och inte på magen.",
+   "Placera fötterna så att underbenen är lodräta när höften är uppe, och håll i handtagen.",
+   "Pressa upp höften och kläm ihop sätet tills låren är i linje med överkroppen, och håll ett ögonblick.",
+   "Sänk kontrollerat till strax före botten och upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Lägg dynan i höftvecket. Att låta den vila mot magen är det enda riktigt obekväma med maskinen, och det löser man genom att flytta dynan, inte med mer polstring.",
+   "Avsluta rörelsen med höften, inte ländryggen. Öppnar sig revbenen i toppen är höftsträckningen klar och du har börjat svanka — där slutar maskinen träna sätet.",
+   "Det här är höftlyftet att välja när bänk och stång är upptagna: ryggstöd och platta hör till ramen, så det finns ingen uppriggning att göra fel."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Scottcurl",
+  "description": "En curlvariant på scottbänk som isolerar biceps.",
+  "instructions": [
+   "Sätt dig på scottbänken med armarna på dynan.",
+   "Håll en EZ-stång med undergrepp.",
+   "Curla stången upp mot axlarna.",
+   "Sänk kontrollerat tills armarna är nästan raka.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Undvik att studsa längst ned.",
+   "Håll handlederna neutrala på EZ-stången.",
+   "Lyft stången utan att ta sats med axlar eller rygg."
+  ]
+ },
+ "pull-up": {
+  "name": "Pull-ups",
+  "description": "En sammansatt övning med kroppsvikt för breda ryggmuskeln och biceps.",
+  "instructions": [
+   "Häng i stången med övergrepp, lite bredare än axelbredd.",
+   "Dra dig upp tills hakan är över stången.",
+   "Sänk kontrollerat till fullt häng.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Undvik att svinga eller ta sats.",
+   "Aktivera latsen genom att föra armbågarna nedåt."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Axelpress med benskjuts, som tillåter mer vikt än strikt militärpress.",
+  "instructions": [
+   "Stå med stången vilande på övre bröstet och axlarna, armbågarna lätt framåt och fötterna i höftbredd.",
+   "Böj knäna lätt med lodrät överkropp och sträck höfter och knän explosivt.",
+   "Utnyttja farten för att pressa stången till raka armar över huvudet.",
+   "Sänk stången kontrollerat till bröstet och dämpa med benen."
+  ],
+  "tips": [
+   "Kraften kommer från benen, inte från att luta ryggen bakåt.",
+   "Avsluta med stången över hjässan och stabil kropp."
+  ]
+ },
+ "push-up": {
+  "name": "Armhävningar",
+  "description": "En grundläggande övning med kroppsvikt för bröst, axlar och triceps.",
+  "instructions": [
+   "Börja i hög planka med händerna i axelbredd.",
+   "Sänk kroppen tills bröstet nästan nuddar golvet.",
+   "Pressa upp till utgångsläget.",
+   "Håll kroppen rak hela tiden.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Spänn mage och säte så att höften inte sjunker.",
+   "Spreta inte för mycket med armbågarna; håll dem nära kroppen.",
+   "Håll nacken neutral med blicken nedåt."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack pull",
+  "description": "Partiellt marklyft från knähöjd, som belastar övre rygg och höftsträckning extra.",
+  "instructions": [
+   "Lägg stången på stöden i knähöjd eller strax under, med fötterna i höftbredd under den.",
+   "Grip stången, spänn rygg och mage och skjut ifrån golvet med fötterna.",
+   "Sträck höfter och knän samtidigt tills du står rakt med axlarna bakåt.",
+   "Sänk stången kontrollerat tills den vilar på stöden."
+  ],
+  "tips": [
+   "Ställ stöden i en höjd där du kan hålla ryggen neutral.",
+   "Översträck inte ländryggen i slutet."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Bakåtutfall med hantlar",
+  "description": "En utfallsvariant med steg bakåt för bättre knästabilitet.",
+  "instructions": [
+   "Stå med hantlar längs sidorna.",
+   "Ta ett steg bakåt med ena benet och sänk knät mot golvet.",
+   "Gå ned tills främre låret är parallellt med golvet.",
+   "Tryck ifrån med främre hälen tillbaka till stående.",
+   "Upprepa på båda sidor."
+  ],
+  "tips": [
+   "Ta tillräckligt långt steg bakåt så att främre knät inte går förbi foten.",
+   "Håll överkroppen rak och hantlarna nära kroppen.",
+   "Gör lika många reps med varje ben."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Omvänd nordisk curl",
+  "description": "En övning för framsida lår med kroppsvikt på knä, där överkroppen lutas bakåt kontrollerat med sträckt höft.",
+  "instructions": [
+   "Stå på knä på en matta med knäna i höftbredd, underben och vrister i golvet och rak överkropp.",
+   "Håll höften sträckt och bålen aktiv.",
+   "Luta överkroppen långsamt bakåt med kroppen i en rak linje.",
+   "Gå så långt ned som framsida lår kan kontrollera.",
+   "Res dig tillbaka till utgångsläget.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Håll höften sträckt hela tiden utan att vika dig.",
+   "Gå bara så långt ned att du styr rörelsen.",
+   "Använd en dyna under knäna för komfort."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Rumänska marklyft",
+  "description": "En höftfällning som betonar baksida lår och säte.",
+  "instructions": [
+   "Stå med stången i höfthöjd med övergrepp.",
+   "För höften bakåt och fäll överkroppen med lätt böjda, nästan fasta knän.",
+   "Sänk stången längs benen tills du känner sträckning i baksida lår.",
+   "Skjut höften framåt för att komma upp till stående.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Runda inte ländryggen; håll ryggraden neutral.",
+   "Gå bara så långt ned du kan utan att tappa hållningen.",
+   "Spänn latsen för att hålla stången nära kroppen."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Roddmaskin",
+  "description": "En konditionsövning för hela kroppen i roddmaskin: varje tag skjuter ifrån med benen, för överkroppen bakåt och drar handtaget till revbenen, så att ben, rygg och armar arbetar i en sammanhängande cykel.",
+  "instructions": [
+   "Sätt dig på roddmaskinen, spänn fast fötterna i fotplattornas remmar och grip handtaget med övergrepp.",
+   "Glid fram till startläget: underbenen lodräta, överkroppen lätt framför höften och armarna raka mot svänghjulet.",
+   "Skjut först ifrån med benen och för sätet bakåt tills knäna är nästan raka.",
+   "Fäll överkroppen bakåt förbi lodrätt och dra sedan handtaget mot nedre revbenen med armbågarna förbi sidorna.",
+   "Vänd ordningen på returen — armarna fram först, sedan överkroppen och sist böj knäna — och glid tillbaka till startläget för nästa tag.",
+   "Fortsätt så lång tid, sträcka eller så många tag du vill."
+  ],
+  "tips": [
+   "Håll ordningen: ben, överkropp, armar i draget och armar, överkropp, ben i returen. Att böja armarna för tidigt slösar bort tagets starkaste del.",
+   "Ro med platt rygg och aktiv bål: en rundad ländrygg i startläget gör rodden till ont i ryggen i stället för kondition.",
+   "Låt handtaget gå rakt och vågrätt till nedre revbenen och låt returen ta ungefär dubbelt så lång tid som draget i stället för att skjuta tillbaka."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Sittande militärpress med skivstång",
+  "description": "Sittande axelpress med skivstång och ryggstöd, så att arbetet samlas i deltamuskeln.",
+  "instructions": [
+   "Sitt på en bänk med lodrätt ryggstöd, grip lite bredare än axlarna och vila stången på övre bröstet.",
+   "Pressa stången rakt upp tills armbågarna är raka.",
+   "Håll stången över hjässan med samlade revben.",
+   "Sänk kontrollerat till nyckelbenen."
+  ],
+  "tips": [
+   "Spänn säte och mage så att ryggen inte svankar.",
+   "Dra huvudet bakåt för att ge stången plats utan att tvinga nacken."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Sittande kabelrodd",
+  "description": "En ryggövning i kabelrodd där ett handtag dras mot överkroppen sittande.",
+  "instructions": [
+   "Sätt dig vid roddstationen med fötterna på stöden.",
+   "Håll handtaget och sitt rakt med lätt framåtlutning.",
+   "För armbågarna bakåt och dra handtaget mot nedre delen av magen.",
+   "Dra ihop skulderbladen i slutet av draget.",
+   "Sträck armarna kontrollerat tillbaka till start.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Håll överkroppen rak med minimal gungning.",
+   "För armbågarna rakt bakåt, inte utåt sidorna.",
+   "Dra ihop skulderbladen i slutet av draget."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Sittande vadpress i maskin",
+  "description": "Sittande vadpress i maskin inriktad på soleusmuskeln.",
+  "instructions": [
+   "Sätt dig i maskinen med dynorna på låren.",
+   "Sänk hälarna så långt det går.",
+   "Res dig upp på framfoten.",
+   "Sänk kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Det böjda knät avlastar vadmuskeln, så att soleus tar mer av arbetet.",
+   "Använd hela rörelsebanan."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Sittande vadpress med hantlar",
+  "description": "Sittande vadpress med hantlar på låren, som tränar soleus med böjt knä.",
+  "instructions": [
+   "Sitt på en bänk med framfötterna på en bräda eller viktskiva och en hantel på varje lår nära knät.",
+   "Låt hälarna sjunka så långt du kan för att sträcka vaden.",
+   "Lyft hälarna genom att trycka med framfoten till toppen.",
+   "Håll ett ögonblick högst upp och sänk kontrollerat."
+  ],
+  "tips": [
+   "Håll i hantlarna så att de inte glider.",
+   "Det böjda knät flyttar arbetet till soleus."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Sittande sidolyft med hantlar",
+  "description": "En sittande isolationsövning där hantlarna lyfts ut åt sidorna för mellersta deltamuskeln utan hjälp från benen.",
+  "instructions": [
+   "Sitt på en bänk med en hantel i varje hand längs sidorna.",
+   "Håll ryggen rak och bålen spänd.",
+   "Lyft båda hantlarna ut åt sidorna till axelhöjd.",
+   "Håll en lätt böjning i armbågarna.",
+   "Sänk hantlarna kontrollerat.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Använd lätt vikt för att hålla lyftet strikt.",
+   "Led med armbågarna i stället för händerna.",
+   "Lyft till axelhöjd och sänk kontrollerat."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Sittande lårcurl",
+  "description": "En sittande isolationsövning för baksida lår i maskin, med jämn spänning och mindre inblandning av höftböjarna än den liggande varianten.",
+  "instructions": [
+   "Ställ in ryggstöd och ankeldyna så att knäna är i linje med maskinens axel.",
+   "Sitt rakt, lägg baksidan av anklarna på dynan och håll i handtagen.",
+   "Böj benen nedåt och bakåt under sätet så långt maskinen tillåter.",
+   "Pausa i full sammandragning och gå långsamt tillbaka.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Håll ryggen stadigt mot ryggstödet hela rörelsen.",
+   "Dra fötterna lätt mot smalbenen i full sammandragning för mer aktivering i baksida lår.",
+   "Styr den excentriska fasen — låt inte vikten rycka tillbaka benen."
+  ]
+ },
+ "shrug": {
+  "name": "Axelryckningar med skivstång",
+  "description": "En isolationsrörelse för övre trapezius.",
+  "instructions": [
+   "Stå med en skivstång i raka armar med övergrepp.",
+   "Lyft axlarna rakt upp mot öronen.",
+   "Håll kort högst upp.",
+   "Sänk axlarna kontrollerat.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Lyft axlarna lodrätt utan cirklar.",
+   "Använd inte armarna; armbågarna är raka hela tiden.",
+   "Ta inte sats med benen för att lyfta mer."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Sidliggande höftabduktion",
+  "description": "En isolationsövning med kroppsvikt för mellersta sätesmuskeln och höftens abduktorer.",
+  "instructions": [
+   "Ligg på sidan med benen ovanpå varandra.",
+   "Håll undre benet lätt böjt.",
+   "Lyft övre benet mot taket.",
+   "Sänk kontrollerat.",
+   "Upprepa på båda sidor."
+  ],
+  "tips": [
+   "Håll höfterna ovanpå varandra genom hela övningen.",
+   "Undvik att vicka bäckenet."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Sidliggande höftadduktion",
+  "description": "En sidliggande adduktionsövning där undre benet lyfts mot tyngdkraften och tränar höften med kroppsvikt.",
+  "instructions": [
+   "Ligg på sidan med undre benet sträckt.",
+   "Böj övre benet och sätt foten platt framför undre låret.",
+   "Stöd huvudet på undre armen.",
+   "Lyft undre benet mot taket.",
+   "Sänk benet kontrollerat.",
+   "Gör klart en sida och byt."
+  ],
+  "tips": [
+   "Rör bara benet; höft och överkropp är stilla.",
+   "Lyft benet utan sving och sänk långsamt.",
+   "Rikta in axlar, höft och fötter innan du börjar."
+  ]
+ },
+ "side-plank": {
+  "name": "Sidoplanka",
+  "description": "En sidoplanksvariant för sneda magmuskler och bålens sidor.",
+  "instructions": [
+   "Ligg på sidan med underarmen i golvet och armbågen under axeln.",
+   "Lyft höften till en rak linje från huvud till fötter.",
+   "Håll läget med spänd bål.",
+   "Andas jämnt.",
+   "Upprepa på båda sidor."
+  ],
+  "tips": [
+   "Låt inte höften sjunka mot golvet.",
+   "Håll axlar och höft i samma plan utan att vrida överkroppen.",
+   "Tryck ifrån golvet med underarmen så att du inte hänger i axeln."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Enarms hantelrodd",
+  "description": "En ensidig ryggövning med hantel för jämn utveckling.",
+  "instructions": [
+   "Sätt ett knä och en hand på en bänk som stöd.",
+   "Håll en hantel i andra handen med rak arm.",
+   "Dra hanteln mot höften och kläm skulderbladet bakåt.",
+   "Sänk hanteln kontrollerat.",
+   "Upprepa på båda sidor."
+  ],
+  "tips": [
+   "Vrid inte överkroppen i draget; håll höften stabil.",
+   "Dra inte upp axeln mot örat när draget börjar.",
+   "Gör lika många reps med varje arm."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Enarms sidolyft i viktlastad maskin",
+  "description": "Sidolyft i viktlastad maskin en arm i taget, så att varje sida lyfter sin egen vikt och båda kan tränas till samma nivå.",
+  "instructions": [
+   "Ställ sätet så att dynans axel är i linje med axeln och lasta bara sidan du ska träna.",
+   "Sitt med ryggen mot ryggstödet och lägg utsidan av arbetsarmen mot dynan.",
+   "Håll i handtaget på den fria sidan eller vila handen i knät, med överkroppen rakt mot sätet.",
+   "Pressa arbetsarmen utåt och uppåt mot dynan till axelhöjd och sänk kontrollerat.",
+   "Gör alla reps på den sidan, lasta sedan och träna den andra."
+  ],
+  "tips": [
+   "Matcha sidorna efter den svaga armen, inte den starka. Att träna en sida i taget avslöjar bara en skillnad om den svaga sidan bestämmer antalet.",
+   "Låt inte överkroppen luta mot arbetssidan. Med vikt på bara en arm balanserar maskinen inte sig själv, och lutar du dig blir lyftet en sidoböjning.",
+   "Börja med den svaga armen så att den sätter målet, och ge båda sidor samma vila."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Enbens höftlyft",
+  "description": "Höftlyft på ett stödben, som ökar kraven utan extra utrustning.",
+  "instructions": [
+   "Ligg på rygg med ett knä böjt och foten i golvet, det andra benet sträckt i luften.",
+   "Tryck ifrån med stödbenets häl och lyft höften tills axel, höft och knä är i linje.",
+   "Kläm ihop sätet ett ögonblick högst upp utan att svanka.",
+   "Sänk kontrollerat utan att vila höften; gör alla reps och byt ben."
+  ],
+  "tips": [
+   "Håll bäckenet vågrätt utan att ena höften sjunker.",
+   "Börja med höftlyft på två ben om det är svårt."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Skullcrusher",
+  "description": "Liggande tricepsextension med skivstång som isolerar triceps genom hela rörelsebanan.",
+  "instructions": [
+   "Ligg på en plan bänk med stången över bröstet i smalt grepp.",
+   "Sänk stången mot pannan genom att böja armbågarna.",
+   "Sträck armarna tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll överarmarna lodräta genom hela övningen.",
+   "Sänk långsamt för att skona armbågarna."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Bänkpress i smithmaskin",
+  "description": "Bänkpress i smithmaskin, där den styrda banan låter dig träna bröstet med mindre krav på stabilisering.",
+  "instructions": [
+   "Ligg på en plan bänk inne i smithmaskinen.",
+   "Grip stången något bredare än axelbredd och lossa den.",
+   "Sänk stången kontrollerat till mitten av bröstet.",
+   "Håll en kort paus utan studs.",
+   "Pressa stången uppåt till helt raka armar.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Ställ bänken så att stången går ned mitt på bröstet.",
+   "Håll fötterna stadigt i golvet hela setet.",
+   "Lär dig handledsvridningen som hakar fast stången innan du lastar på."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Vadpress i smithmaskin",
+  "description": "Stående vadpress med smithmaskinens styrda stång på axlarna.",
+  "instructions": [
+   "Ställ dig under smithstången med framfötterna på en bräda eller viktskiva och stången högt på ryggen.",
+   "Lossa stången och låt hälarna sjunka tills vaderna sträcks.",
+   "Gå upp på tå med raka ben utan att låsa knäna.",
+   "Håll ett ögonblick högst upp och sänk kontrollerat innan du hakar fast stången."
+  ],
+  "tips": [
+   "Skenan stabiliserar dig: utnyttja det för att lasta mer.",
+   "Håll överkroppen rak och blicken framåt."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Lutande bänkpress i smithmaskin",
+  "description": "Lutande press i smithmaskin som betonar övre bröstet och främre deltamuskeln i en styrd bana.",
+  "instructions": [
+   "Ställ en lutande bänk på 30–45 grader inne i smithmaskinen.",
+   "Lägg dig och grip stången något bredare än axelbredd.",
+   "Lossa och sänk stången till övre delen av bröstet.",
+   "Håll en kort paus längst ned.",
+   "Pressa upp stången till raka armar.",
+   "Upprepa önskat antal reps."
+  ],
+  "tips": [
+   "Justera bänken så att stången når övre delen av bröstet.",
+   "Sänk stången utan att den studsar mot bröstet.",
+   "Håll sätet på bänken och fötterna stadigt."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Knäböj i smithmaskin",
+  "description": "Knäböj med smithmaskinens styrda stång: den fasta banan minskar kravet på balans och lägger arbetet på ben och säte, ett bra val utan ledig ställning.",
+  "instructions": [
+   "Ställ stången i axelhöjd och ställ dig under, med stången högt på ryggen och fötterna lite framför.",
+   "Vrid handlederna för att lossa hakarna, med rak överkropp och aktiv bål.",
+   "Böj knän och höfter tills låren är minst parallella med golvet, med knäna i fötternas riktning.",
+   "Tryck hela foten mot golvet tills du står upp igen.",
+   "Vrid handlederna efter setet och haka fast stången i stoppen."
+  ],
+  "tips": [
+   "Fötterna lite framför låter dig gå djupare utan att hälarna lyfter.",
+   "Ställ säkerhetsstoppen strax under rörelsens lägsta punkt."
+  ]
+ },
+ "squat": {
+  "name": "Knäböj med skivstång på ryggen",
+  "description": "En sammansatt underkroppsrörelse för framsida lår, säte och baksida lår.",
+  "instructions": [
+   "Placera stången över övre trapezius.",
+   "Lyft stången ur ställningen och ta ett steg bakåt med fötterna i axelbredd.",
+   "Spänn bålen och böj knän och höfter tills låren är parallella med golvet.",
+   "Tryck ifrån med hälarna tillbaka till stående.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll bröstet uppe hela rörelsen.",
+   "Pressa knäna utåt i tårnas riktning."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Stående utrullning med maghjul",
+  "description": "Utrullning med maghjul från stående, med raka ben och lång rörelsebana.",
+  "instructions": [
+   "Stå med raka ben, fäll dig framåt och sätt maghjulet i golvet med båda händerna.",
+   "Rulla framåt med raka armar och spänd mage tills du är nästan parallell med golvet.",
+   "Håll höften i linje utan att ländryggen sjunker.",
+   "Dra med magen för att rulla tillbaka till start."
+  ],
+  "tips": [
+   "Börja med den knästående varianten tills du styr rörelsebanan.",
+   "Stanna innan ländryggen sjunker."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Stående hälhävningar",
+  "description": "Stående vadpress som utvecklar vadmuskeln genom hela rörelsebanan.",
+  "instructions": [
+   "Stå på kanten av en plattform eller vadmaskin.",
+   "Sänk hälarna under plattformen.",
+   "Tryck upp på tå.",
+   "Sänk långsamt.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Pausa högst upp för maximal sammandragning.",
+   "Att sänka hälen helt ger längre rörelsebana."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Stående höftabduktion",
+  "description": "Benlyft åt sidan med kroppsvikt, stående på det andra benet. Tränar mellersta sätesmuskeln på den lyfta sidan och, i ståbenet, musklerna som håller höften vågrät.",
+  "instructions": [
+   "Stå rakt med händerna i sidorna och fötterna ihop.",
+   "Flytta tyngden till ett ben och håll det knät lätt böjt.",
+   "Lyft det andra raka benet ut åt sidan med tårna framåt och rak överkropp.",
+   "Lyft benet bara så högt du kan utan att luta överkroppen åt andra hållet.",
+   "Sänk benet långsamt ned bredvid stödfoten.",
+   "Gör planerat antal reps och upprepa med det andra benet."
+  ],
+  "tips": [
+   "Håll höften rak och kroppen stilla; att luta bort från det lyfta benet tar arbete från höften.",
+   "Styr även nedvägen; låt inte benet svinga.",
+   "Håll i en vägg eller stol om balansen sviker; lägg ett band runt låren när rörelsen blir lätt."
+  ]
+ },
+ "step-ups": {
+  "name": "Step-up",
+  "description": "Step-up på låda eller bänk med ett ben, som tränar framsida lår och säte funktionellt.",
+  "instructions": [
+   "Stå framför en stadig låda eller bänk.",
+   "Sätt hela ena foten på lådan.",
+   "Tryck ifrån med den hälen för att lyfta upp kroppen på lådan.",
+   "Ta upp bakre foten så att du står helt på lådan.",
+   "Sänk bakre foten kontrollerat till golvet med tyngden på arbetsbenet.",
+   "Växla ben eller gör alla reps på en sida innan du byter."
+  ],
+  "tips": [
+   "Sätt hela foten på lådan.",
+   "Skjut ifrån med hälen på benet som går upp, inte det bakre.",
+   "Styr nedvägen i stället för att falla."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Latsdrag med raka armar",
+  "description": "En isolationsövning för latsen i kabel med raka armar.",
+  "instructions": [
+   "Stå framför en kabel med rak stång i den övre trissan.",
+   "Pressa med nästan raka armar stången nedåt i en båge mot låren.",
+   "Kläm ihop latsen längst ned.",
+   "För stången långsamt tillbaka till utgångsläget.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll armarna nästan raka hela rörelsen.",
+   "För stången till låren i en båge.",
+   "Kläm ihop latsen i rörelsens botten."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumomarklyft",
+  "description": "En marklyftsvariant med mycket bred fotställning och smalt grepp, som flyttar arbetet till säte, insida lår och framsida lår.",
+  "instructions": [
+   "Stå mycket brett med tårna lätt utåt och stången över mitten av foten.",
+   "Grip stången med händerna innanför benen, neutral rygg och lyft bröst.",
+   "Skjut ifrån golvet med benen och pressa ut knäna tills du står med stången tätt mot kroppen.",
+   "Lås höft och knän högst upp och sänk stången kontrollerat samma väg."
+  ],
+  "tips": [
+   "Håll alltid stången tätt mot kroppen.",
+   "Knäna följer tårnas riktning; låt dem inte falla inåt."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-rodd",
+  "description": "Sammansatt T-rodd med framåtlutad överkropp som utvecklar lats och romboider med tunga vikter.",
+  "instructions": [
+   "Ställ dig över T-stången med fötterna i axelbredd.",
+   "Fäll i höften tills överkroppen är ungefär 45 grader.",
+   "Grip handtagen och håll ryggen platt.",
+   "Dra stången mot bröstet med armbågarna bakåt.",
+   "Kläm ihop skulderbladen högst upp.",
+   "Sänk stången kontrollerat och upprepa."
+  ],
+  "tips": [
+   "Luta överkroppen ungefär 45 grader med platt rygg.",
+   "Dra genom att föra armbågarna bakåt, inte bara med armarna.",
+   "Dra ihop skulderbladen i toppen av draget."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Tricepspushdown i kabel",
+  "description": "En isolationsövning för triceps i kabel.",
+  "instructions": [
+   "Stå framför en kabel med rak stång.",
+   "Grip stången och håll armbågarna mot sidorna.",
+   "Pressa stången nedåt till helt raka armar.",
+   "Gå långsamt tillbaka till start.",
+   "Upprepa."
+  ],
+  "tips": [
+   "Håll överkroppen rak.",
+   "Bara underarmarna ska röra sig."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Lårcurl i TRX",
+  "description": "Denna isolationsövning använder en slyngtränare för baksida lår, säte och vader genom att dra hälarna mot sätet.",
+  "instructions": [
+   "Ligg på rygg med hälarna i slyngorna och knäna böjda 90 grader.",
+   "Lyft höften från golvet till en rak linje från knän till axlar.",
+   "Sträck benen framåt med höften uppe och spänd bål.",
+   "Dra hälarna mot sätet och spänn baksida lår kraftigt.",
+   "Styr rörelsen och undvik att höften sjunker under setet."
+  ],
+  "tips": [
+   "Håll bålen spänd så att höften inte sjunker.",
+   "Fokusera på att spänna baksida lår kraftigt i toppen av curlen.",
+   "Styr den excentriska fasen genom att sträcka benen långsamt."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Latsdrag med V-handtag",
+  "description": "Latsdrag med neutralt grepp på ett smalt V-handtag, för maximal sträckning av latsen och djupare sammandragning.",
+  "instructions": [
+   "Sätt ett V-handtag (dubbelt D) på latsdragskabeln.",
+   "Sitt med låren fästa under dynan och grip handtaget med handflatorna mot varandra.",
+   "Börja med helt raka armar över huvudet.",
+   "Dra handtaget mot bröstbenet genom att pressa armbågarna ned och lätt bakåt.",
+   "Kläm ihop latsen i botten och gå långsamt och kontrollerat upp.",
+   "Upprepa rekommenderat antal reps."
+  ],
+  "tips": [
+   "Neutralt grepp är skonsammare för axlarna än över- eller undergrepp.",
+   "Tänk att du drar revbenen mot höften: tänk på latsen, inte armarna."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Gående utfall med hantlar",
+  "description": "Växelvisa utfall framåt med en hantel i varje hand; tränar framsida lår och säte ensidigt.",
+  "instructions": [
+   "Stå med en hantel i varje hand och avslappnade armar längs sidorna.",
+   "Ta ett långt steg framåt och sänk tills båda knäna är böjda ungefär 90 grader.",
+   "Skjut ifrån med främre benet för att resa dig och för fram bakre benet till nästa steg.",
+   "Växla ben med rak överkropp hela vägen."
+  ],
+  "tips": [
+   "Ta så långa steg att främre knät inte går långt förbi tåspetsen.",
+   "Du behöver fri yta; saknas den, använd bakåtutfall."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Viktade dips",
+  "description": "Dips i parallella stänger med extra vikt, med en hantel mellan fötterna eller viktväst.",
+  "instructions": [
+   "Stöd dig på stängerna med raka armar och en hantel mellan fötter eller anklar.",
+   "Luta överkroppen lätt och böj armbågarna för att sänka dig kontrollerat.",
+   "Stanna när axlarna är i armbågshöjd.",
+   "Pressa med bröst och triceps till raka armar."
+  ],
+  "tips": [
+   "Bemästra först dips med kroppsvikt.",
+   "Gå inte längre ned än axeln tål."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Viktade pull-ups",
+  "description": "Pull-up med extra vikt, med en hantel mellan fötterna eller viktväst.",
+  "instructions": [
+   "Häng lite bredare än axlarna och håll en hantel mellan fötter eller anklar.",
+   "Dra armbågarna ned och bakåt tills hakan är över stången.",
+   "Håll kroppen stabil utan sving.",
+   "Sänk kontrollerat till helt raka armar."
+  ],
+  "tips": [
+   "Bemästra först pull-ups med kroppsvikt.",
+   "Använder du viktväst, öka vikten gradvis."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Sittande kabelrodd med brett grepp",
+  "description": "Horisontell kabelrodd med lång stång och brett grepp, som tränar övre rygg och bakre axel.",
+  "instructions": [
+   "Sitt framför den låga trissan med fötterna på stödet, lätt böjda knän och brett grepp om den långa stången.",
+   "Dra med rak rygg och lyft bröst stången mot nedre bröstet, med armbågarna utåt och bakåt.",
+   "Dra ihop skulderbladen i slutet och håll spänningen ett ögonblick.",
+   "Sträck armarna kontrollerat och låt skulderbladen gå isär utan att runda ryggen."
+  ],
+  "tips": [
+   "Gunga inte: ryggen gör rörelsen, inte överkroppen.",
+   "Dra stången mot bröstet, inte magen, för att träna övre ryggen."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercherböj",
+  "description": "Knäböj med stången i armvecken, som flyttar tyngden framåt och ställer stora krav på bålen.",
+  "instructions": [
+   "Placera stången i magehöjd i armvecken med korsade underarmar eller knäppta händer.",
+   "Böj höfter och knän med lyft bröst och armbågarna tätt mot kroppen.",
+   "Stanna när låren är parallella med golvet eller strax under.",
+   "Skjut ifrån golvet med fötterna tills du står rakt igen."
+  ],
+  "tips": [
+   "Använd en dyna eller handduk på stången om den gör ont i armbågarna.",
+   "Håll magen spänd så att du inte tippar framåt."
+  ]
+ },
+ "z-press": {
+  "name": "Z-press",
+  "description": "Militärpress sittande på golvet med raka ben, som tar bort stödet och kräver en stabil bål.",
+  "instructions": [
+   "Sitt på golvet med benen sträckta framåt och stången på övre bröstet.",
+   "Håll överkroppen rak och pressa stången rakt upp till raka armar.",
+   "Stoppa stången över hjässan utan att luta dig bakåt.",
+   "Sänk kontrollerat till nyckelbenen."
+  ],
+  "tips": [
+   "Använd mindre vikt än stående: bålen får stabilisera.",
+   "Spänn säte och mage genom hela rörelsen."
+  ]
+ }
+}
