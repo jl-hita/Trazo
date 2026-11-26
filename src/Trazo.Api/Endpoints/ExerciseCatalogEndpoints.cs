@@ -46,7 +46,7 @@ public static class ExerciseCatalogEndpoints
                 x.Id, x.Source, x.NameEs, x.NameEn, x.DescriptionEs, x.InstructionsEs, x.TipsEs,
                 x.ForceType, x.Mechanic, x.Difficulty, x.Equipment, x.RequiredEquipment, x.BodyPart,
                 x.Met, x.IsUnilateral, x.IsBodyweight, x.MovementPattern, x.PrimaryMuscles,
-                x.SecondaryMuscles, x.MinimumExperience, x.SuitableGoals, x.SelectionPriority))
+                x.SecondaryMuscles, x.MinimumExperience, x.SuitableGoals, x.SelectionPriority, x.AllowedTechniques))
             .ToListAsync(cancellationToken);
 
         return Results.Ok(exercises);
@@ -247,7 +247,8 @@ public static class ExerciseCatalogEndpoints
                 x.SecondaryMuscles,
                 x.MinimumExperience,
                 x.SuitableGoals,
-                x.SelectionPriority))
+                x.SelectionPriority,
+                x.AllowedTechniques))
             .SingleOrDefaultAsync(cancellationToken);
 
         return exercise is null ? Results.NotFound() : Results.Ok(exercise);
@@ -300,7 +301,9 @@ public sealed record ExerciseCatalogDetail(
     string[] SecondaryMuscles,
     string MinimumExperience,
     string[] SuitableGoals,
-    int SelectionPriority);
+    int SelectionPriority,
+    // The set techniques a manual plan may use on this exercise; empty means straight sets only.
+    string[] AllowedTechniques);
 
 public sealed record FilterOption(string Key, string Label, int Count);
 
