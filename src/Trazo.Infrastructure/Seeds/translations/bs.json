@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Kotrljanje točkom za trbuh",
+  "description": "Vježba za trup u kojoj kotrljaš točak naprijed i natrag i treniraš opiranje ispružanju kičme.",
+  "instructions": [
+   "Klekni na pod i primi ručke točka u širini ramena.",
+   "Snažno stegni trup tako da donji dio leđa ostane u neutralnom položaju.",
+   "Polako kotrljaj točak naprijed i ispruži tijelo koliko daleko možeš kontrolirati.",
+   "Stani prije nego što kukovi potonu ili se leđa uviju.",
+   "Povuci točak natrag prema koljenima stežući trbušne mišiće."
+  ],
+  "tips": [
+   "Stegni trup prije svakog ponavljanja — ne dopusti da se donji dio leđa uvije.",
+   "Opseg povećavaj postupno i stani prije nego što kukovi potonu.",
+   "Ako ne kontroliraš donji položaj, upotrijebi zid kao graničnik."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnoldov potisak",
+  "description": "Potisak bučicama za ramena s okretanjem zapešća, koji uključuje deltoid kroz velik opseg.",
+  "instructions": [
+   "Sjedi s uspravnim naslonom, drži bučice u visini prsa s dlanovima prema sebi i laktovima naprijed.",
+   "Počni potiskivati uvis dok otvaraš laktove i okrećeš dlanove prema naprijed.",
+   "Završi s rukama ispruženima iznad glave bez zaključavanja laktova.",
+   "Spusti okrećući dlanove ponovo prema sebi do početnog položaja."
+  ],
+  "tips": [
+   "Okret izvedi glatko, bez zamaha.",
+   "Leđa drži oslonjena na naslon."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Potpomognuti zgibovi",
+  "description": "Zgib na potpomognutoj mašini koji preuzima dio tjelesne težine i gradi snagu leđa potrebnu za strogi zgib.",
+  "instructions": [
+   "Stavi koljena na jastuk mašine za potpomognute zgibove.",
+   "Primi šipku s dlanovima od sebe, malo šire od ramena.",
+   "Povuci prsa prema šipki gurajući laktove prema dolje.",
+   "Kontrolirano se spusti dok ne visiš ispruženih ruku.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Pokret započni spuštanjem lopatica prije savijanja laktova.",
+   "Ne njiši se, da leđima ne oduzmeš rad.",
+   "Podesi protuteg tako da sva ponavljanja izvedeš dobrom tehnikom."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Pregib nogu na lopti",
+  "description": "Pregib za stražnju ložu vlastitom težinom na lopti: pete kotrljaš prema stražnjici dok podižeš kukove.",
+  "instructions": [
+   "Lezi na leđa s petama i donjim dijelom listova na lopti i rukama ispruženima radi ravnoteže.",
+   "Pritisni petama i podigni kukove u ravnu liniju od ramena do gležnjeva.",
+   "Držeći kukove gore, savij koljena i dokotrljaj loptu prema stražnjici.",
+   "Kontrolirano ispruži noge natrag bez spuštanja kukova.",
+   "Odradi sva ponavljanja, zatim spusti kukove i siđi s lopte."
+  ],
+  "tips": [
+   "Kukovi ostaju gore tokom cijele serije: riječ je o spoju mosta i pregiba.",
+   "Počni s oba stopala; prijeđi na jednu nogu kad postane lako."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Stojeći pregib noge s trakom",
+  "description": "Stojeći pregib noge s trakom oko gležnja, koristan na putovanju ili kao lagani završetak za stražnju ložu.",
+  "instructions": [
+   "Stavi traku oko jednog gležnja, a drugi kraj učvrsti ispod stajaće noge ili na čvrstoj tački ispred sebe.",
+   "Stoj uspravno, po potrebi se primi za oslonac, stajaća noga blago savijena.",
+   "Podigni petu s trakom prema stražnjici, a bedro drži mirno.",
+   "Stegni stražnju ložu gore pa kontrolirano spusti do punog istezanja.",
+   "Odradi sva ponavljanja na jednoj strani i promijeni nogu."
+  ],
+  "tips": [
+   "Bedro drži mirno — pomiče se samo potkoljenica.",
+   "Ne zamahuj kukom radi zaleta.",
+   "Upotrijebi slabiju traku ako ne kontroliraš spuštanje."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Povlačenje prema dolje s trakom",
+  "description": "Okomito povlačenje trakom učvršćenom visoko, kao zamjena za sajlu.",
+  "instructions": [
+   "Stoj s trakom učvršćenom visoko (vrata ili vratilo), po jedan kraj u svakoj ruci, ruke iznad glave.",
+   "Povlači ruke prema dolje vodeći laktove uz tijelo, prsa visoko.",
+   "Stisni leđa kad ruke dođu u visinu ramena.",
+   "Kontrolirano vrati ruke dok ne budu ispružene."
+  ],
+  "tips": [
+   "Ne naginji trup unazad da bi povukao.",
+   "Dobro osiguraj učvršćenje prije početka."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Razvlačenje trake",
+  "description": "Razvlačenje elastične trake ispruženih ruku za aktivaciju stražnjeg dijela ramena i gornjih leđa.",
+  "instructions": [
+   "Stoj i drži traku u širini ramena s rukama ispruženima ispred sebe u visini prsa.",
+   "Razmiči ruke u stranu dok traka ne dotakne prsa.",
+   "U završnom položaju spoji lopatice bez podizanja ramena.",
+   "Kontrolirano se vrati i ne daj da te traka povuče."
+  ],
+  "tips": [
+   "Odaberi traku s kojom možeš 15 ili više čistih ponavljanja.",
+   "Rebra drži uvučena da se donji dio leđa ne uvije."
+  ]
+ },
+ "band-row": {
+  "name": "Veslanje s trakom",
+  "description": "Sjedeće veslanje trakom zakvačenom za stopala; osim trake ne treba ti ništa.",
+  "instructions": [
+   "Sjedni na pod ispruženih nogu, traku provuci oko tabana i drži po jedan kraj u svakoj ruci.",
+   "Ravnih leđa povuci ruke prema trbuhu vodeći laktove unazad.",
+   "U završnom položaju spoji lopatice.",
+   "Kontrolirano ispruži ruke bez popuštanja napetosti trake."
+  ],
+  "tips": [
+   "Ne ljuljaj se kako bi si pomogao trupom.",
+   "Odaberi traku za 12 do 15 čistih ponavljanja."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Potisak za ramena s trakom",
+  "description": "Stojeći potisak za ramena na traci, za trening deltoida s vrlo malo opreme.",
+  "instructions": [
+   "Stani na sredinu trake sa stopalima u širini kukova i krajevima u rukama u visini ramena.",
+   "Potisni ruke uvis dok ne budu ispružene iznad glave.",
+   "Trbuh drži čvrstim, a rebra uvučenima.",
+   "Kontrolirano spusti do ramena bez gubitka napetosti."
+  ],
+  "tips": [
+   "Ne uvijaj leđa pri potisku.",
+   "Omotaj traku još jedanput za veći otpor."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bugarski čučanj sa šipkom",
+  "description": "Čučanj na jednoj nozi sa stražnjim stopalom na klupi i šipkom na leđima.",
+  "instructions": [
+   "Osloni hrbat jednog stopala na klupu iza sebe, šipka na gornjim leđima, druga noga naprijed.",
+   "Savij prednje koljeno i spuštaj se uspravnog trupa dok bedro ne bude usporedno s podom.",
+   "Težinu drži na peti prednje noge.",
+   "Odguri se prednjom nogom do ispružanja; odradi ponavljanja i promijeni nogu."
+  ],
+  "tips": [
+   "Podesi razmak tako da prednje koljeno ne prelazi mnogo preko prstiju.",
+   "Najprije vježbaj bez tega ili s bučicama."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Pregib za biceps sa šipkom",
+  "description": "Klasična izolacijska vježba za biceps sa šipkom za najveće opterećenje.",
+  "instructions": [
+   "Stoj i drži šipku pothvatom u širini ramena.",
+   "Savij šipku prema ramenima.",
+   "Stisni na vrhu, zatim kontrolirano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne njiši trup.",
+   "Laktove drži uz bokove."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Glutealni most sa šipkom",
+  "description": "Glutealni most sa šipkom za veći otpor.",
+  "instructions": [
+   "Lezi na pod sa šipkom preko kukova i savijenim koljenima.",
+   "Podigni kukove stežući stražnjicu.",
+   "Zadrži gore s potpuno ispruženim kukovima.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne uvijaj donji dio leđa dok ispružaš kukove.",
+   "Potiskuj petama, ne prstima.",
+   "Uvuci bradu i gornja leđa drži na podlozi."
+  ]
+ },
+ "barbell-row": {
+  "name": "Veslanje šipkom u pretklonu",
+  "description": "Složena vježba povlačenja za gornji i srednji dio leđa.",
+  "instructions": [
+   "Nagni se iz kukova s blago savijenim koljenima.",
+   "Primi šipku malo šire od ramena.",
+   "Povuci šipku prema donjem dijelu prsa stežući lopatice.",
+   "Šipku spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup drži pod kutom od otprilike 45 stepeni.",
+   "Ne koristi zalet za podizanje težine."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Podizanje na prste stojeći sa šipkom",
+  "description": "Stojeće podizanje na prste sa slobodnom šipkom na leđima, bez posebne mašine.",
+  "instructions": [
+   "Stoj sa šipkom na gornjim leđima, prednjim dijelom stopala na stepenici ili tegu u širini kukova.",
+   "Pusti pete da se spuste dok se listovi ne istegnu, trup uspravan.",
+   "Podigni se na prste koliko možeš bez savijanja koljena.",
+   "Zadrži trenutak gore i kontrolirano spusti."
+  ],
+  "tips": [
+   "Počni s malom težinom dok ne ovladaš ravnotežom.",
+   "Vježbaj u stalku s graničnicima na prikladnoj visini."
+  ]
+ },
+ "bench-press": {
+  "name": "Potisak s klupe sa šipkom",
+  "description": "Složena potisna vježba za prsa, ramena i triceps.",
+  "instructions": [
+   "Lezi na klupu s očima ispod šipke.",
+   "Primi šipku malo šire od ramena.",
+   "Skini šipku sa stalka i spusti je na sredinu prsa.",
+   "Potisni šipku natrag do potpunog ispružanja ruku.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Stopala drži cijelom površinom na podu.",
+   "Zadrži blagi luk u donjem dijelu leđa.",
+   "Upri nogama o pod da ostaneš stabilan."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Obrnuto veslanje sa savijenim koljenima",
+  "description": "Početnička inačica obrnutog veslanja: sa savijenim koljenima i stopalima blizu tijela lakša je i bolje se kontrolira.",
+  "instructions": [
+   "Lezi ispod niske, čvrste šipke, primi je malo šire od ramena i drži trup ravnim sa savijenim koljenima i tabanima na podu.",
+   "Povuci prsa prema šipki vodeći laktove unazad i spajajući lopatice.",
+   "Zadrži trenutak gore bez spuštanja kukova.",
+   "Kontrolirano se spusti do ispruženih ruku."
+  ],
+  "tips": [
+   "Približi stopala tijelu da olakšaš ili ih odmakni za napredak.",
+   "Kad svladaš 12 ponavljanja, prijeđi na obrnuto veslanje ispruženih nogu."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Podizanje na prste vlastitom težinom",
+  "description": "Podizanje na prste vlastitom težinom, osnovna vježba za jačanje listova.",
+  "instructions": [
+   "Stoj sa stopalima u širini kukova na ravnoj podlozi.",
+   "Podigni se na prste što više.",
+   "Stisni listove na vrhu.",
+   "Kontrolirano spusti pete na pod.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Pri podizanju rasporedi težinu na sve prste.",
+   "Noge drži ravnima kako bi radio ponajprije list.",
+   "Gledaj u jednu tačku radi ravnoteže."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Iskorak unazad vlastitom težinom",
+  "description": "Iskorak unazad bez opreme, stabilniji i blaži za koljena od iskoraka naprijed.",
+  "instructions": [
+   "Stoj skupljenih stopala i ruku na bokovima, prsa visoko.",
+   "Napravi dug korak unazad i savij oba koljena dok stražnje ne bude blizu poda.",
+   "Trup drži uspravnim, a težinu na prednjem stopalu.",
+   "Odguri se prednjom nogom u početni položaj; odradi ponavljanja i promijeni nogu."
+  ],
+  "tips": [
+   "Korak neka bude dovoljno dug da prednje koljeno ne prelazi mnogo preko prstiju.",
+   "Primi se za oslonac ako ti ravnoteža još stvara teškoće."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Čučanj vlastitom težinom",
+  "description": "Osnovni čučanj bez opreme, idealan za učenje pokreta i trening nogu bilo gdje.",
+  "instructions": [
+   "Stoj sa stopalima u širini ramena, prstima blago prema van i rukama ispruženima naprijed.",
+   "Vodi kukove natrag i dolje kao da sjedaš, prsa visoko i leđa neutralna.",
+   "Spusti se dok bedra ne budu usporedna s podom, koljena u smjeru stopala.",
+   "Cijelim stopalom odgurni pod dok ponovo ne stojiš uspravno."
+  ],
+  "tips": [
+   "Pete drži na podu cijelim putem.",
+   "Ako se teško spuštaš, sjedni na stolac i ustani bez zamaha."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bugarski čučanj",
+  "description": "Jednostrana inačica čučnja s podignutim stražnjim stopalom.",
+  "instructions": [
+   "Stani ispred klupe i stavi jedno stopalo iza sebe na klupu.",
+   "Drži bučice uz bokove.",
+   "Spuštaj tijelo dok prednje bedro ne bude usporedno s podom.",
+   "Potisni prednjom petom natrag u stojeći položaj.",
+   "Ponovi na obje strane."
+  ],
+  "tips": [
+   "Gotovo svu težinu drži na prednjoj nozi.",
+   "Podešavaj udaljenost od klupe dok iskorak ne bude stabilan.",
+   "Odradi sva ponavljanja jednom nogom prije promjene."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Trbušnjaci na sajli",
+  "description": "Klečeći trbušnjak na visokoj sajli s užetom, koji omogućuje postupno dodavanje opterećenja za ravni trbušni mišić.",
+  "instructions": [
+   "Klekni ispred sajle s užetom pričvršćenim gore.",
+   "Drži uže blizu čela sa savijenim laktovima.",
+   "Spuštaj se savijajući kičmu i vodeći laktove prema bedrima.",
+   "Dolje snažno stisni trbušne mišiće.",
+   "Vrati se u početni položaj i ponovi."
+  ],
+  "tips": [
+   "Savijaj kičmu umjesto da vučeš rukama.",
+   "Ne sjedaj kukovima unazad pri svakom ponavljanju.",
+   "Snažno izdahni pri spuštanju da bolje stegneš trbuh."
+  ]
+ },
+ "cable-curl": {
+  "name": "Pregib za biceps na sajli",
+  "description": "Pregib za biceps s otporom sajle za stalnu napetost.",
+  "instructions": [
+   "Stani ispred donje sajle s ravnom šipkom ili EZ šipkom.",
+   "Primi šipku pothvatom, laktovi uz bokove.",
+   "Savij šipku prema ramenima.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne daj da laktovi pobjegnu naprijed dok podižeš šipku.",
+   "Ne njiši trup da bi si pomogao.",
+   "Odmakni se malo od sajle kako bi zadržao napetost."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Vanjska rotacija na sajli",
+  "description": "Vanjska rotacija na sajli s laktom uz bok, koja uz pomoć stražnjeg deltoida jača vanjske rotatore rotatorne manšete.",
+  "instructions": [
+   "Namjesti sajlu u visinu lakta i primi ručku.",
+   "Stani bočno uz mašinu s laktom radne ruke savijenim pod 90 stepeni.",
+   "Lakat drži uz bok i okreći podlakticu prema van.",
+   "Zastani u završnom položaju.",
+   "Kontrolirano se vrati. Odradi ponavljanja na jednoj strani pa promijeni."
+  ],
+  "tips": [
+   "Ne podiži ramena dok okrećeš ruku.",
+   "Radi s malom težinom, polako i kontrolirano.",
+   "Zapešće drži čvrstim u liniji s podlakticom."
+  ]
+ },
+ "cable-fly": {
+  "name": "Razvlačenje na sajli",
+  "description": "Izolacijska vježba za prsa s otporom sajle za stalnu napetost.",
+  "instructions": [
+   "Stani između dvaju stupova sa sajlama s ručkama na gornjim koloturima.",
+   "S blago savijenim laktovima raširi ruke u stranu.",
+   "Spoji ruke ispred prsa pokretom zagrljaja.",
+   "Polako se vrati u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Kut u laktovima drži istim da ne postane potisak.",
+   "Stisni prsa sekundu kad se ruke sretnu.",
+   "Ne guraj ramena naprijed dok su ruke raširene."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Prednje podizanje na sajli",
+  "description": "Prednje podizanje na donjoj sajli sa stalnom napetošću kroz cijeli opseg.",
+  "instructions": [
+   "Stoj leđima prema donjoj sajli, sajla među nogama, ručka u jednoj ruci ispruženoj ispred bedra.",
+   "Podigni ruku naprijed do visine ramena s blago savijenim laktom.",
+   "Zadrži trenutak gore bez naginjanja unazad.",
+   "Kontrolirano spusti ne odmarajući teg; ponovi i promijeni ruku."
+  ],
+  "tips": [
+   "Stani dovoljno daleko da sajla vuče unazad.",
+   "Trbuh drži čvrstim da se leđa ne uviju."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Bočno podizanje na sajli",
+  "description": "Jednoručno bočno podizanje na sajli sa stalnom napetošću na bočnom deltoidu.",
+  "instructions": [
+   "Stani bočno uz donju sajlu i primi ručku rukom udaljenijom od mašine.",
+   "Lakat drži blago savijenim i pusti sajlu da prolazi ispred tijela.",
+   "Podiži ruku u stranu dok ne bude usporedna s podom.",
+   "Spuštaj kontrolirano. Ponavljanja po strani pa promijeni.",
+   "Zadrži napetost — ne odmaraj teg dolje."
+  ],
+  "tips": [
+   "Vodi laktom, ne šakom.",
+   "Kratko zastani gore, bez ljuljanja.",
+   "Uzmi manju težinu nego s bučicom — napetost sajle je stalna."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Ekstenzija tricepsa iznad glave na sajli",
+  "description": "Vježba za triceps na sajli: leđima prema tegovima držiš uže iza glave i ispružanjem laktova guraš ga uvis iznad glave. Položaj iznad glave isteže dugu glavu tricepsa, a sajla drži mišić napetim kroz cijeli pokret.",
+  "instructions": [
+   "Zakvači uže na donju sajlu i odaberi malu težinu.",
+   "Primi uže objema rukama, okreni se leđima prema tegovima i iskorači naprijed tako da te sajla vuče unazad.",
+   "Podigni uže iznad glave sa savijenim laktovima i nadlakticama blizu ušiju, tako da šake budu iza glave.",
+   "Stegni trup i nadlaktice drži mirnima, zatim ispruži laktove i gurni uže uvis dok ruke iznad glave ne budu potpuno ispružene.",
+   "Kratko zastani gore pa savij laktove i kontrolirano spusti uže natrag iza glave.",
+   "Ponovi predviđeni broj ponavljanja."
+  ],
+  "tips": [
+   "Laktove drži usmjerene naprijed, a nadlaktice mirne; ako se rašire ili pomaknu, ekstenzija postaje potisak.",
+   "Iskorači dovoljno naprijed da te sajla drži stabilnim i ne uvijaj leđa dok ruke idu iznad glave.",
+   "Uzmi težinu koju kontroliraš u cijelom istezanju; teška opterećenja razmiču laktove."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallofov potisak",
+  "description": "Vježba protiv rotacije: sajla te vuče u stranu dok ručku guraš ravno od prsa i ne daš trupu da se okrene.",
+  "instructions": [
+   "Namjesti sajlu u visinu prsa i primi ručku objema rukama, bočno uz mašinu.",
+   "Odmakni se dok sajla ne bude stvarno napeta, stopala u širini ramena i koljena blago savijena.",
+   "Dovedi ručku na sredinu prsa i stegni trup i stražnjicu.",
+   "Gurni ručku ravno naprijed do ispruženih ruku, opirući se povlačenju koje te želi okrenuti prema mašini.",
+   "Zadrži trenutak ispruženi položaj pa kontrolirano vrati ručku na prsa.",
+   "Odradi željena ponavljanja, zatim se okreni i ponovi na drugu stranu."
+  ],
+  "tips": [
+   "Ništa se ne smije okretati. Ako se ramena pri potisku okreću prema koloturu, smanji težinu — vježba je upravo rotacija koja se ne dogodi.",
+   "Što si dalje od mašine, to je poluga duža i teže je, pa težinu vježbe mijenjaš bez diranja tega.",
+   "Ruke drži u visini prsa, a ramena dolje; ako pustiš da se ručka diže, dobivaš prednje podizanje."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Obrnuto razvlačenje na sajli",
+  "description": "Stojeća vježba na sajlama za stražnje deltoide: okrenut prostoru između dvaju tornjeva držiš suprotne ručke s prekriženim sajlama i vodiš ruke van i natrag do visine ramena. Sajle drže stražnja ramena napetima kroz cijeli luk.",
+  "instructions": [
+   "Namjesti oba kolotura otprilike u visinu ramena i stani u sredinu između dvaju tornjeva.",
+   "Primi lijevu ručku desnom rukom, a desnu lijevom, tako da se sajle križaju ispred tebe.",
+   "Stoj uspravno s rukama ispruženima naprijed u visini ramena i blago savijenim laktovima.",
+   "Vodi ruke van i natrag u širokom luku, predvodeći laktovima, dok ne budu u liniji s ramenima.",
+   "Kratko spoji lopatice bez uvijanja leđa.",
+   "Polako vrati ručke u prekriženi početni položaj i ponovi predviđeni broj."
+  ],
+  "tips": [
+   "Laktove drži blago savijenima i zaključanima u tom kutu; ako ih savijaš i ispružaš, razvlačenje postaje veslanje.",
+   "Ramena drži spuštenima, a vrat opuštenim, da rade stražnji deltoidi, a ne gornji trapez.",
+   "Upotrijebi malu težinu i spor povratak; na kraju luka sajle vuku najjače, pa kontroliraj taj položaj."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Podizanje koljena na stolici",
+  "description": "Vježba vlastitom težinom na stolici za podizanje nogu za donji trbuh i pregibače kuka.",
+  "instructions": [
+   "Namjesti se na stolicu s leđima uz naslon i podlakticama na osloncima.",
+   "Pusti noge da slobodno vise.",
+   "Stegni trup i podigni koljena prema prsima.",
+   "Kratko zadrži gore pa polako spusti u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Ne zamahuj nogama radi zaleta.",
+   "Izdahni dok podižeš koljena.",
+   "Leđa drži uz naslon tokom cijele vježbe."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Potisak za prsa na mašini",
+  "description": "Potisna vježba za prsa na mašini, idealna za početnike.",
+  "instructions": [
+   "Sjedni na mašinu s leđima uz naslon.",
+   "Primi ručke u visini prsa.",
+   "Gurni ručke naprijed dok ruke ne budu potpuno ispružene.",
+   "Polako se vrati u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Namjesti sjedalo tako da ručke budu u visini prsa.",
+   "Potiskuj bez naglog zaključavanja laktova.",
+   "Vraćaj se kontrolirano, bez ispuštanja težine."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Veslanje bučicama s osloncem za prsa",
+  "description": "Veslanje bučicama s osloncem za prsa, koje rasterećuje donja leđa i izolira leđne mišiće.",
+  "instructions": [
+   "Lezi potrbuške na kosu klupu s bučicama koje vise ispod tebe.",
+   "Veslaj bučicama prema bokovima.",
+   "Stisni gore pa spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Oslonac za prsa uklanja zamor donjih leđa.",
+   "Usredotoči se na spajanje lopatica."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Veslanje kettlebellom s osloncem za prsa",
+  "description": "Vježba radi leđa, ponajprije široki leđni mišić i romboide: s kettlebellom u svakoj ruci veslaš prema bokovima dok je trup oslonjen na kosu klupu.",
+  "instructions": [
+   "Lezi potrbuške na kosu klupu i pusti ruke da slobodno vise s kettlebellom u svakoj.",
+   "Stegni trbuh i povuci lopatice.",
+   "Povuci kettlebelle prema bokovima stežući lopatice.",
+   "Kratko zastani gore i osjeti stezanje u leđima.",
+   "Polako i kontrolirano spusti kettlebelle u početni položaj."
+  ],
+  "tips": [
+   "Trup drži stabilnim cijelo vrijeme; ne ljuljaj se.",
+   "Usredotoči se na to da povlačenje počnu leđni mišići, a ne samo ruke.",
+   "Laktove drži uz tijelo da naglasiš široki leđni mišić."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Veslanje na mašini s osloncem za prsa",
+  "description": "Sjedeće veslanje na mašini s jastukom za prsa koji podupire trup, pa povlače široki leđni mišići i mišići među lopaticama, a donja leđa ostaju izvan toga. Ručke povlačiš natrag s laktovima iza sebe i zatim ih kontrolirano puštaš naprijed.",
+  "instructions": [
+   "Namjesti sjedalo tako da ručke budu u visini donjeg dijela prsa i sjedni s prsima na jastuku i stopalima čvrsto na podu.",
+   "Posegni naprijed i primi ručke ispruženih ruku i opuštenih ramena.",
+   "Stegni trup i povuci ručke natrag s laktovima iza sebe.",
+   "Na kraju povlačenja spoji lopatice ne odižući prsa s jastuka.",
+   "Kratko zastani pa ispruži ruke i kontrolirano vrati ručke naprijed.",
+   "Ponovi predviđeni broj držeći prsa cijelo vrijeme na jastuku."
+  ],
+  "tips": [
+   "Povlači laktovima, a ne šakama, da rade široki leđni mišići i sredina leđa, a bicepsi pomažu.",
+   "Prsa drži na jastuku, a ramena dolje; ako ih podigneš ili se nagneš unazad, veslanje postaje povlačenje gornjim trapezom.",
+   "Na početku svakog ponavljanja pusti lopatice da kliznu naprijed radi punog istezanja prije sljedećeg povlačenja."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "T-veslanje s osloncem za prsa",
+  "description": "T-veslanje s prsima na kosoj klupi, koje izolira leđa bez opterećenja donjih leđa.",
+  "instructions": [
+   "Osloni prsa na kosu klupu sa stopalima čvrsto na podu i primi ručku T-šipke ispruženih ruku.",
+   "Povuci ručku prema prsima vodeći laktove natrag i uz tijelo.",
+   "Gore na trenutak stisni lopatice.",
+   "Kontrolirano spusti do ispruženih ruku ne odižući prsa s klupe."
+  ],
+  "tips": [
+   "Glavu drži u liniji s kičmom.",
+   "Ako moraš odići prsa s klupe da bi podigao težinu, smanji je."
+  ]
+ },
+ "chin-ups": {
+  "name": "Zgibovi pothvatom",
+  "description": "Inačica zgibova pothvatom koja uz široki leđni mišić snažno uključuje bicepse.",
+  "instructions": [
+   "Objesi se na vratilo pothvatom u širini ramena.",
+   "Povuci se dok brada ne prijeđe šipku.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup drži stegnutim tokom cijele vježbe.",
+   "Izbjegavaj pretjerano njihanje."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Potisak s klupe uskim hvatom",
+  "description": "Potisak s klupe s rukama bliže jedna drugoj, koji povećava udio tricepsa uz zadržan rad prsa.",
+  "instructions": [
+   "Lezi na klupu i primi šipku u širini ramena ili nešto uže.",
+   "Skini šipku i ispruženih ruku dovedi je iznad prsa.",
+   "Kontrolirano spuštaj dok ne dotakne donji dio prsa, laktovi uz tijelo.",
+   "Potiskuj šipku uvis dok se laktovi ne ispruže."
+  ],
+  "tips": [
+   "Ne stavljaj ruke preblizu: zapešća trpe; dovoljna je širina ramena.",
+   "Zatraži pomoć ili koristi stalak s graničnicima kad vježbaš blizu otkaza."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Potisak bučicama na klupi",
+  "description": "Složena vježba za prsa s bučicama s većim opsegom pokreta od potiska šipkom.",
+  "instructions": [
+   "Lezi na ravnu klupu s bučicom u svakoj ruci u visini prsa.",
+   "Potisni bučice uvis do potpuno ispruženih ruku.",
+   "Polako ih spusti u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Zapešća drži neutralnima tokom cijele vježbe.",
+   "Stisni prsa na vrhu pokreta."
+  ]
+ },
+ "db-fly": {
+  "name": "Razvlačenje bučicama",
+  "description": "Izolacijska vježba koja isteže i steže prsni mišić kroz širok luk pokreta.",
+  "instructions": [
+   "Lezi na klupu s bučicama iznad prsa i dlanovima jedan prema drugome.",
+   "S blago savijenim laktovima spusti bučice u stranu.",
+   "Vrati se u početni položaj stežući prsa.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Savijenost laktova drži istom tokom cijele vježbe.",
+   "Ne spuštaj bučice prenisko."
+  ]
+ },
+ "db-squat": {
+  "name": "Čučanj s bučicama",
+  "description": "Čučanj s bučicom u svakoj ruci uz tijelo, izvediv bez šipke.",
+  "instructions": [
+   "Stopala u širini ramena, po jedna bučica u rukama uz bokove.",
+   "Stegni trup i drži prsa gore.",
+   "Spusti se u čučanj savijajući kukove i koljena.",
+   "Spuštaj se dok bedra ne budu usporedna ili niže.",
+   "Potisni petama natrag gore."
+  ],
+  "tips": [
+   "Prsa gore i leđa ravna.",
+   "Gurni koljena u smjeru prstiju.",
+   "Upotrijebi trake za dizanje ako hvat postane ograničenje."
+  ]
+ },
+ "dead-bug": {
+  "name": "Mrtvi kukac",
+  "description": "Vježba za trup ležeći na leđima koja usklađenim ispružanjem suprotnih udova trenira duboku stabilnost.",
+  "instructions": [
+   "Lezi na leđa s rukama prema stropu i koljenima pod pravim kutom.",
+   "Spusti desnu ruku i lijevu nogu prema podu držeći donja leđa pritisnuta uz pod.",
+   "Vrati se u početni položaj.",
+   "Ponovi na drugoj strani.",
+   "Izmjenjuj strane."
+  ],
+  "tips": [
+   "Donja leđa cijelo vrijeme pritišći uz pod.",
+   "Kreći se polako."
+  ]
+ },
+ "deadlift": {
+  "name": "Mrtvo dizanje sa šipkom",
+  "description": "Složeno dizanje cijelog tijela koje ponajprije opterećuje stražnji lanac.",
+  "instructions": [
+   "Stoj sa stopalima u širini kukova i šipkom iznad sredine stopala.",
+   "Nagni se iz kukova i primi šipku.",
+   "Stegni trup i podigni ispružanjem kukova i koljena.",
+   "Gore se potpuno uspravi pa kontrolirano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Šipku drži uz tijelo.",
+   "Ne zaobljuj donja leđa."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Mrtvo dizanje s povišenja",
+  "description": "Mrtvo dizanje s niskog povišenja, koje produžuje opseg i otežava početak.",
+  "instructions": [
+   "Stani na ploču visoku 2 do 5 cm sa stopalima ispod šipke i primi je neutralnih leđa s ramenima iznad nje.",
+   "Stegni tijelo i odguruj pod dok se šipka diže tik uz noge.",
+   "Ispruži kukove i koljena istodobno dok ne stojiš potpuno uspravno.",
+   "Kontrolirano spusti šipku na pod neutralnih leđa."
+  ],
+  "tips": [
+   "Počni s malim povišenjem i laganim tegom i brusi tehniku.",
+   "Ne zaobljuj leđa pri odvajanju od poda."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Zmajeva zastava",
+  "description": "Napredna vježba za trbuh: ukrućeno tijelo oslanja se samo na ramena te se diže i spušta poput poluge.",
+  "instructions": [
+   "Lezi na klupu, primi rub iza glave i podigni ravno tijelo tako da ga nose samo ramena i gornja leđa.",
+   "Spuštaj ravno tijelo bez savijanja u kukovima gotovo do vodoravnog.",
+   "Trbuh i stražnjicu drži čvrstima ne dodirujući klupu.",
+   "Ponovo podigni ravno tijelo do okomice; ako ne možeš, počni samo spuštanjem."
+  ],
+  "tips": [
+   "Počni sa savijenim koljenima ili samo s ekscentričnom fazom.",
+   "Bit vježbe je ne saviti se u kukovima."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Veslanje bučicama u pretklonu",
+  "description": "Veslanje s bučicom u svakoj ruci u pretklonu: široki leđni mišići i gornja leđa samo s bučicama.",
+  "instructions": [
+   "Stoj s bučicama, blago savij koljena i nagni trup iz kukova gotovo usporedno s podom, ravnih leđa.",
+   "Pusti ruke da vise s dlanovima jedan prema drugome.",
+   "Povuci bučice prema bokovima vodeći laktove unazad i spajajući lopatice.",
+   "Kratko zastani gore i kontrolirano spusti do ispruženih ruku."
+  ],
+  "tips": [
+   "Trup drži mirnim: ako se moraš ljuljati da ih podigneš, preteške su.",
+   "Vrat drži u liniji s kičmom, pogled u pod.",
+   "Ako se donja leđa umore prije gornjih, uzmi manju težinu ili veslanje s osloncem."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Pregib za biceps bučicama",
+  "description": "Pregib lakta s bučicom u svakoj ruci za trening bicepsa u slobodnom opsegu pokreta.",
+  "instructions": [
+   "Stoj s bučicama, ruke ispružene uz tijelo i dlanovi naprijed.",
+   "Laktove drži uz trup i podiži bučice savijanjem laktova bez ljuljanja.",
+   "Stegni biceps na trenutak gore ne podižući ramena.",
+   "Kontrolirano spuštaj do potpuno ispruženog lakta."
+  ],
+  "tips": [
+   "Ne pomaži si leđima: ako moraš, smanji težinu.",
+   "Kontroliraj spuštanje, neka traje barem dvostruko duže od podizanja."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmerski hod s bučicama",
+  "description": "Ova vježba cijelog tijela je hodanje s teškim bučicama i učinkovito razvija snagu hvata, stabilnost trupa i opću mišićnu izdržljivost.",
+  "instructions": [
+   "Stoj uspravno s bučicom u svakoj ruci i rukama uz tijelo.",
+   "Povuci lopatice i stegni trup s neutralnom kičmom.",
+   "Hodaj polako i promišljeno zadanu udaljenost ili vrijeme kratkim, kontroliranim koracima.",
+   "Prsa drži uspravnima i ne naginji se u stranu dok hodaš.",
+   "Usredotoči se na snažno i stabilno držanje tokom cijelog pokreta."
+  ],
+  "tips": [
+   "Koristi najteže bučice koje kontroliraš bez narušavanja tehnike.",
+   "Diši duboko i ritmično da zadržiš napetost trupa.",
+   "Zamisli da na glavi balansiraš čašu vode."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Prednje podizanje bučica",
+  "description": "Podizanje bučica prema naprijed do visine ramena za prednji dio deltoida.",
+  "instructions": [
+   "Stoj s bučicama ispred bedara i gotovo ispruženim rukama.",
+   "Podigni bučice naprijed do visine ramena s blago savijenim laktovima.",
+   "Stani u vodoravnom položaju bez njihanja trupa.",
+   "Kontrolirano spusti do bedara."
+  ],
+  "tips": [
+   "Ne zamahuj leđima: ako to radiš, smanji težinu.",
+   "Prednji deltoid već mnogo radi u potiscima; ne pretjeruj s volumenom."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Obrnuto razvlačenje bučicama",
+  "description": "Izolacijska vježba u pretklonu s podizanjem bučica u stranu za stražnje deltoide i gornja leđa.",
+  "instructions": [
+   "Nagni se naprijed iz kukova s bučicama u spuštenim rukama.",
+   "Leđa drži ravnima, a koljena blago savijenima.",
+   "Podigni bučice u stranu do visine ramena.",
+   "Stisni lopatice na vrhu.",
+   "Kontrolirano spusti bučice.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Uzmi malu težinu da rade stražnji deltoidi, a ne zalet.",
+   "Gore stisni lopatice jednu uz drugu.",
+   "Laktove cijelo vrijeme drži u blagom, nepromijenjenom pregibu."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Rumunsko mrtvo dizanje bučicama",
+  "description": "Rumunsko mrtvo dizanje bučicama koje pregibom u kukovima naglašava istezanje stražnje lože.",
+  "instructions": [
+   "Stoj s bučicama ispred bedara i blago savijenim koljenima.",
+   "Nagni se iz kukova i gurni stražnjicu unazad.",
+   "Spuštaj bučice uz noge dok ne osjetiš istezanje stražnje lože.",
+   "Leđa drži ravnima, a ramena natrag.",
+   "Gurni kukove naprijed da se vratiš u stojeći položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Spusti se koliko ti gipkost dopušta, bez siljenja.",
+   "Isti blagi pregib koljena zadrži kroz cijeli opseg.",
+   "Ne pretvaraj pokret u čučanj."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Potisak bučicama za ramena",
+  "description": "Okomiti potisak bučicama, sjedeći ili stojeći, koji razvija prednji i bočni dio deltoida.",
+  "instructions": [
+   "Sjedi ili stoj s bučicama u visini ramena, dlanovi prema naprijed.",
+   "Potisni obje bučice iznad glave do potpuno ispruženih ruku.",
+   "Trup drži stegnutim i ne uvijaj donja leđa.",
+   "Kontrolirano spusti bučice do visine ramena.",
+   "Ne daj da bučice odu iza glave.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Bučice podiži ravno uvis, bez sudaranja na vrhu.",
+   "Zapešća drži čvrstima u liniji s podlakticama.",
+   "Ako se donja leđa uvijaju, smanji težinu."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Slijeganje ramenima s bučicama",
+  "description": "Podizanje ramena s bučicom u svakoj ruci za gornja leđa i trapez.",
+  "instructions": [
+   "Stoj s bučicama, ruke ispružene uz tijelo i pogled naprijed.",
+   "Podigni ramena ravno prema ušima, bez kruženja i savijanja laktova.",
+   "Zadrži stezanje na trenutak gore.",
+   "Kontrolirano spuštaj dok se trapez potpuno ne istegne."
+  ],
+  "tips": [
+   "Ne kruži ramenima: pokret je okomit.",
+   "Ako hvat popusti prije trapeza, upotrijebi trake."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Podizanje na prste na jednoj nozi s bučicom",
+  "description": "Podizanje na prste na jednoj nozi na stepenici s bučicom, drugom se rukom pridržavaš radi ravnoteže.",
+  "instructions": [
+   "Stoj na stepenici na prstima jednog stopala, drugu nogu savij, a bučicu drži na istoj strani; drugom se rukom osloni o zid.",
+   "Pusti petu da se spusti ispod stepenice dok se list ne istegne.",
+   "Podigni se na prste koliko možeš bez savijanja koljena.",
+   "Zadrži trenutak gore i kontrolirano spusti; odradi ponavljanja i promijeni nogu."
+  ],
+  "tips": [
+   "Guraj jastučićem ispod palca, ne daj da gležanj bježi prema van.",
+   "Vježba je jednostrana: na svakoj nozi napravi isti broj ponavljanja."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pike sklekovi s povišenim rukama",
+  "description": "Početnička inačica pike skleka s rukama na stepenici ili stabilnom stolcu radi manjeg opterećenja.",
+  "instructions": [
+   "Osloni ruke na rub stepenice, klupe ili čvrstog stolca u širini ramena i hodaj stopalima unazad dok kukovi ne budu visoko.",
+   "Savij laktove i spuštaj glavu prema osloncu s kukovima visoko.",
+   "Stani kad je glava među rukama, bez gubitka položaja.",
+   "Odguri se rukama dok se laktovi ne ispruže."
+  ],
+  "tips": [
+   "Približi stopala osloncu da otežaš.",
+   "Provjeri da se oslonac ne miče prije početka."
+  ]
+ },
+ "face-pull": {
+  "name": "Povlačenje prema licu na sajli",
+  "description": "Vježba na sajli za stražnje deltoide i vanjske rotatore.",
+  "instructions": [
+   "Zakvači uže na gornji kolotur.",
+   "Povuci uže prema licu razmičući krajeve.",
+   "Stisni stražnje deltoide i vanjske rotatore.",
+   "Kontrolirano se vrati u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Laktove drži visoko, u nivou ramena.",
+   "Na kraju svakog ponavljanja spoji lopatice.",
+   "Radi s laganom težinom da ne izgubiš tehniku."
+  ]
+ },
+ "front-squat": {
+  "name": "Prednji čučanj",
+  "description": "Čučanj sa šipkom sprijeda na deltoidima, koji naglašava četveroglavi mišić i trup.",
+  "instructions": [
+   "Nabaci ili postavi šipku na prednje deltoide s visokim laktovima.",
+   "Spusti se u čučanj uspravnog trupa dok bedra ne budu usporedna s podom.",
+   "Ustani natrag.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Laktove drži visoko da šipka bude stabilna.",
+   "Uspravniji trup povećava aktivaciju četveroglavog mišića."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Glutealni most",
+  "description": "Vježba aktivacije gluteusa vlastitom težinom, ležeći na podu.",
+  "instructions": [
+   "Lezi na leđa sa savijenim koljenima i stopalima na podu.",
+   "Podigni kukove stežući stražnjicu.",
+   "Kratko zadrži gore s potpuno ispruženim kukovima.",
+   "Kontrolirano spusti kukove.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Potiskuj petama da bolje uključiš gluteuse.",
+   "Ne uvijaj donja leđa dok ispružaš kukove.",
+   "Koljena drži u liniji sa stopalima cijelim putem."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet čučanj",
+  "description": "Čučanj prikladan za početnike s kettlebellom u visini prsa, koji poboljšava držanje i dubinu.",
+  "instructions": [
+   "Drži kettlebell u visini prsa objema rukama.",
+   "Spusti se u čučanj držeći težinu blizu prsa.",
+   "Ustani natrag.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Goblet položaj prirodno potiče uspravan trup.",
+   "Dolje gurni koljena prema van."
+  ]
+ },
+ "good-morning": {
+  "name": "Dobro jutro",
+  "description": "Pregib u kukovima sa šipkom na leđima za jačanje stražnje lože, gluteusa i donjih leđa.",
+  "instructions": [
+   "Stoj sa šipkom na gornjim leđima, stopala u širini ramena, koljena blago savijena.",
+   "Vodi kukove unazad naginjući trup naprijed neutralnih leđa.",
+   "Spuštaj se dok ne osjetiš napetost u stražnjoj loži, trup gotovo vodoravan.",
+   "Gurni kukove naprijed da se ponovo uspraviš."
+  ],
+  "tips": [
+   "Počni s vrlo malom težinom: donja leđa intenzivno rade.",
+   "Gledaj naprijed i ne zaobljuj leđa."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack čučanj",
+  "description": "Vođena vježba na mašini za hack čučanj koja kontroliranim čučnjem na saonicama ponajprije opterećuje četveroglavi mišić.",
+  "instructions": [
+   "Napuni mašinu i nasloni leđa i ramena na jastuke.",
+   "Postavi stopala na platformu u širini ramena, prsti blago prema van.",
+   "Otpusti sigurnosne ručke i spusti saonice savijajući koljena i kukove.",
+   "Spuštaj se dok bedra ne budu barem usporedna s platformom.",
+   "Potisni petama da ispružiš noge i vratiš saonice.",
+   "Nakon serije ponovo zakvači sigurnosne ručke."
+  ],
+  "tips": [
+   "Donja leđa drži uz jastuk tokom cijelog pokreta.",
+   "Stopala više na platformi prebacuju naglasak na gluteuse i stražnju ložu.",
+   "Kontroliraj spuštanje; ne odbijaj se iz najniže tačke."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Čekić pregib bučicama",
+  "description": "Inačica pregiba za biceps neutralnim hvatom za brahioradijalis.",
+  "instructions": [
+   "Stoj s bučicama uz bokove, dlanovi jedan prema drugome.",
+   "Podiži bučice s dlanovima stalno prema unutra.",
+   "Stisni gore i kontrolirano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Laktove drži uz trup kroz cijeli opseg.",
+   "Ne njiši tijelo da bi podigao bučice.",
+   "Zapešća ostaju čvrsta i neutralna kroz cijeli pregib."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Sklekovi u stoju na rukama",
+  "description": "Sklek u stoju na rukama sa stopalima uza zid, jedna od najzahtjevnijih potisnih vježbi vlastitom težinom.",
+  "instructions": [
+   "Okreni se leđima prema zidu, stavi ruke na pod i popni se stopalima u stoj sa čvrstim trbuhom.",
+   "Savij laktove i kontrolirano spuštaj glavu prema podu.",
+   "Stani kad glava dotakne pod ili strunjaču.",
+   "Potisni se dok se laktovi potpuno ne ispruže."
+  ],
+  "tips": [
+   "Najprije vježbaj stoj na rukama i pike sklek.",
+   "Stavi strunjaču pod glavu radi sigurnosti."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Podizanje koljena u visu",
+  "description": "Vježba za trup u visu na vratilu, sa savijenim koljenima, za donji trbuh i pregibače kuka.",
+  "instructions": [
+   "Objesi se na vratilo nathvatom s potpuno ispruženim rukama.",
+   "Stegni trup i podigni koljena prema prsima.",
+   "Kratko zadrži gore.",
+   "Polako spusti noge u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Izbjegavaj njihanje — pokret počni iz trupa.",
+   "Izdahni dok podižeš koljena.",
+   "Prijeđi na podizanje ispruženih nogu kad ovo postane lako."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Podizanje nogu u visu",
+  "description": "Podizanje ispruženih nogu do vodoravnog u visu na vratilu, za trbuh i pregibače kuka.",
+  "instructions": [
+   "Objesi se na vratilo hvatom malo širim od ramena, noge skupljene i ispružene.",
+   "Podigni ispružene noge dok ne budu usporedne s podom, blago naginjući zdjelicu unazad.",
+   "Zadrži trenutak gore bez njihanja.",
+   "Kontrolirano spusti u početni položaj, ne daj da se tijelo zanjiše."
+  ],
+  "tips": [
+   "Ako ne ide s ispruženim nogama, savij koljena.",
+   "Izbjegavaj njihanje: radi trbuhom, ne zaletom."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Mrtvo dizanje šesterokutnom šipkom",
+  "description": "Stojeće mrtvo dizanje unutar šesterokutne šipke, s teretom u sredini za uspravnije i za leđa blaže povlačenje.",
+  "instructions": [
+   "Stani unutar napunjene šesterokutne šipke sa stopalima u širini ramena.",
+   "Savij kukove i koljena i primi ručke.",
+   "Stegni trup i drži leđa ravnima.",
+   "Potisni petama i ispruži kukove i koljena da se uspraviš.",
+   "Zaključaj gore s ramenima natrag.",
+   "Kontrolirano spusti šipku na pod."
+  ],
+  "tips": [
+   "Prsa drži gore, a leđa ravnima dok namještaš hvat.",
+   "Odguruj pod umjesto da šipku vučeš leđima.",
+   "Potpuno se uspravi gore bez naginjanja unazad."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Abdukcija na mašini",
+  "description": "Vježba na mašini za vanjske mišiće kuka.",
+  "instructions": [
+   "Sjedni na mašinu za abdukciju s jastucima uz vanjsku stranu bedara.",
+   "Gurni noge prema van protiv otpora.",
+   "Kratko zadrži u najširem položaju.",
+   "Kontrolirano se vrati u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Leđa drži uz naslon mašine.",
+   "Širi noge bez zamaha, kontroliranim tempom.",
+   "Opiri se povratku prema sredini umjesto da ispustiš težinu."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Addukcija na mašini",
+  "description": "Vježba na mašini u kojoj stišćeš noge jednu prema drugoj protiv otpora i izolirano jačaš aduktore na unutarnjoj strani bedara.",
+  "instructions": [
+   "Sjedni na mašinu za addukciju s leđima uz naslon.",
+   "Stavi noge uz jastuke sa mašinom namještenim na ugodno istezanje.",
+   "Stišći noge dok se jastuci ne spoje u sredini.",
+   "Kratko zadrži stezanje u potpuno zatvorenom položaju.",
+   "Pusti noge da se kontrolirano otvore natrag na početak.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Odaberi početni razmak koji isteže bez naprezanja prepone.",
+   "Prođi cijeli opseg ujednačenom, kontroliranom brzinom.",
+   "Ne daj da tegovi udare dok otvaraš noge."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust sa šipkom",
+  "description": "Složena vježba za gluteuse sa šipkom oslonjenom preko kukova.",
+  "instructions": [
+   "Sjedni na pod s gornjim leđima uz klupu i šipkom preko kukova.",
+   "Gurni kukove uvis dok trup i bedra ne budu u liniji.",
+   "Stisni gluteuse na vrhu.",
+   "Kontrolirano ponovo spusti kukove.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Bradu drži uvučenom, a rebra dolje.",
+   "Potiskuj petama, ne prstima.",
+   "Ne uvijaj donja leđa na vrhu."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Vodoravna nožna preša",
+  "description": "Vodoravna nožna preša na mašini za četveroglavi mišić, gluteuse i stražnju ložu.",
+  "instructions": [
+   "Sjedni na vodoravnu prešu s leđima uz naslon i stopalima na platformi u širini ramena.",
+   "Potisni stopalima i ispruži noge bez zaključavanja koljena.",
+   "Kontrolirano savijaj koljena dok se ne približe prsima.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne daj da se donja leđa odvoje od sjedala.",
+   "Ne zaključavaj koljena do kraja."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Potisak šipkom na kosoj klupi",
+  "description": "Potisak šipkom na kosoj klupi za gornji dio prsa.",
+  "instructions": [
+   "Lezi na klupu nagnutu 30 do 45 stepeni.",
+   "Primi šipku malo šire od ramena i skini je.",
+   "Spusti šipku do gornjeg dijela prsa.",
+   "Potisni je natrag do punog ispružanja.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Spoji lopatice i drži ih na klupi.",
+   "Ne odbijaj šipku od prsa.",
+   "Zatraži pomoć pri radu s velikim težinama."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Y podizanje na kosoj klupi",
+  "description": "Podizanje bučica u obliku slova Y ležeći potrbuške na kosoj klupi, za donji i srednji trapez.",
+  "instructions": [
+   "Lezi potrbuške na kosu klupu s oslonjenim prsima i laganom bučicom u svakoj visećoj ruci.",
+   "Podigni ruke naprijed i uvis u obliku slova Y, s palčevima prema stropu.",
+   "Stani kad su ruke u liniji s trupom, ne odižući prsa s klupe.",
+   "Kontrolirano spusti u početni položaj."
+  ],
+  "tips": [
+   "Uzmi malu težinu: donji trapez je mali mišić.",
+   "Vrat drži neutralnim, pogled u pod."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Pregib za biceps na kosoj klupi",
+  "description": "Pregib za biceps na kosoj klupi za veće istezanje duge glave.",
+  "instructions": [
+   "Sjedni na klupu nagnutu 45 stepeni s bučicama uz bokove.",
+   "Pusti ruke da slobodno vise s dlanovima naprijed.",
+   "Savij bučice prema ramenima.",
+   "Kontrolirano spuštaj do punog ispružanja.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ramena i leđa drži na klupi.",
+   "Ne guraj ramena naprijed dok podižeš bučice.",
+   "Iskoristi istezanje dolje sporim spuštanjem."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Potisak bučicama na kosoj klupi",
+  "description": "Potisak na kosoj klupi koji naglašava gornji dio prsa.",
+  "instructions": [
+   "Namjesti klupu na nagib od 30 stepeni i sjedni s bučicama u visini ramena.",
+   "Potisni bučice uvis i jednu prema drugoj do potpuno ispruženih ruku.",
+   "Kontrolirano spusti bučice natrag do visine ramena.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Stopala drži čvrsto na podu, a lopatice skupljene.",
+   "Ne sudaraj bučice na vrhu.",
+   "Spuštaj dok ne osjetiš blago istezanje u prsima."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Kosi sklekovi",
+  "description": "Inačica skleka prikladna za početnike s rukama na klupi ili stepenici.",
+  "instructions": [
+   "Stavi ruke na klupu ili povišenu podlogu u širini ramena.",
+   "Ispruži noge unazad u položaj planka.",
+   "Spusti prsa prema klupi savijajući laktove.",
+   "Potisni se natrag u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Stegni trbuh da kukovi ne potonu.",
+   "Što je podloga viša, vježba je lakša.",
+   "Provjeri da se klupa ne miče prije početka."
+  ]
+ },
+ "inverted-row": {
+  "name": "Obrnuto veslanje",
+  "description": "Vodoravno povlačenje vlastitom težinom ispod učvršćene šipke, u kojem prsa povlačiš prema šipki držeći tijelo ukrućenim.",
+  "instructions": [
+   "Postavi šipku u stalak otprilike u visini struka.",
+   "Lezi ispod nje i primi je nathvatom malo šire od ramena.",
+   "Visi s ispruženim rukama, petama na podu i tijelom ravnim od glave do gležnjeva.",
+   "Povuci prsa prema šipki stežući lopatice.",
+   "Kontrolirano se spusti do potpuno ispruženih ruku.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup drži stegnutim — kukovi ne smiju potonuti.",
+   "Da otežaš, podigni stopala; da olakšaš, pomakni ih prema šipki.",
+   "Kratko zastani gore s prsima uz šipku."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Podizanje za potkoljenicu s kettlebellom",
+  "description": "Vježba za potkoljenice sjedeći na klupi s kettlebellom obješenim preko prednjeg dijela stopala. Podizanje prstiju prema potkoljenici protiv težine jača mišiće na prednjoj strani noge.",
+  "instructions": [
+   "Sjedni na kraj ravne klupe s jednom ispruženom nogom i petom na podu.",
+   "Objesi kettlebell za ručku preko prednjeg dijela stopala, iznad prstiju.",
+   "Podigni prste prema potkoljenici koliko ti je ugodno dok peta ostaje na podu.",
+   "Kratko zadrži gornji položaj.",
+   "Polako spusti stopalo dok prsti ne gledaju u pod.",
+   "Odradi ponavljanja pa promijeni nogu."
+  ],
+  "tips": [
+   "Pokret izvodi samo iz gležnja; koljeno i bedro miruju.",
+   "Počni s laganim kettlebellom i postupno povećavaj; mišići potkoljenice brzo se umaraju.",
+   "Spuštaj polako umjesto da ispustiš težinu."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Veslanje na sajli klečeći",
+  "description": "Veslanje na sajli iz uspravnog klečećeg položaja, bez zamaha kukovima, s napetošću u gornjim leđima cijelim pokretom.",
+  "instructions": [
+   "Namjesti sajlu u visinu prsa i zakvači uže ili dvostruku D ručku.",
+   "Klekni uspravno ispred mašine dovoljno daleko da tegovi ne sjednu.",
+   "Primi ručku objema rukama i drži je ispruženu ispred sebe u visini prsa.",
+   "Povuci ručku prema prsnoj kosti vodeći laktove unazad i stežući lopatice.",
+   "Kontrolirano se vrati u istegnuti početni položaj.",
+   "Ponovi preporučeni broj ponavljanja."
+  ],
+  "tips": [
+   "Ostani uspravan: ne naginji se unazad da dovršiš ponavljanje.",
+   "Uspravni klečeći položaj tjera trup da se pri svakom povlačenju opire rotaciji."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Sklekovi na koljenima",
+  "description": "Sklek za početnike s koljenima na podu, koji smanjuje opterećenje gornjeg dijela tijela.",
+  "instructions": [
+   "Počni u položaju skleka s koljenima na podu.",
+   "Stavi ruke na pod u širini ramena.",
+   "Tijelo drži u ravnoj liniji od koljena do ramena.",
+   "Spusti prsa prema podu savijajući laktove.",
+   "Potisni rukama natrag u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Ne širi laktove previše u stranu.",
+   "Stražnjicu i trbuh drži stegnutima cijelim pokretom.",
+   "Gledaj u pod da vrat ostane neutralan."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Bočno podizanje bučica",
+  "description": "Izolacijski pokret za bočni deltoid, za šira ramena.",
+  "instructions": [
+   "Stoj s bučicama uz bokove.",
+   "Podiži bučice u stranu dok ruke ne budu usporedne s podom.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Laktovi blago savijeni.",
+   "Vodi laktovima, ne šakama."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Povlačenje na prsa",
+  "description": "Vježba na sajli za široki leđni mišić.",
+  "instructions": [
+   "Sjedni na mašinu s bedrima učvršćenima ispod valjaka.",
+   "Primi široku šipku nathvatom.",
+   "Povuci šipku do gornjeg dijela prsa stežući široke leđne mišiće.",
+   "Polako vrati šipku u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Povlačenje počni spuštanjem lopatica, a ne savijanjem laktova.",
+   "Ne njiši trup da bi pomaknuo težinu.",
+   "Laktove vodi dolje i natrag, ne u stranu."
+  ]
+ },
+ "leg-curl": {
+  "name": "Pregib nogu ležeći",
+  "description": "Izolacijska vježba za stražnju ložu na mašini za pregib nogu.",
+  "instructions": [
+   "Lezi potrbuške na mašinu s gležnjevima ispod valjka.",
+   "Savij pete prema stražnjici.",
+   "Stisni stražnju ložu na vrhu.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Kukove drži na klupi kroz cijeli opseg.",
+   "Ne uvijaj donja leđa dok podižeš pete.",
+   "Odaberi težinu koja dopušta pun i kontroliran opseg."
+  ]
+ },
+ "leg-extension": {
+  "name": "Ekstenzija nogu",
+  "description": "Izolacijska vježba za četveroglavi mišić na mašini.",
+  "instructions": [
+   "Sjedni na mašinu za ekstenziju nogu s gležnjevima iza valjka.",
+   "Ispruži noge dok ne budu ravne.",
+   "Stisni četveroglavi mišić na vrhu.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Poravnaj koljena s osi okretanja mašine.",
+   "Podigni težinu bez izbacivanja zamahom.",
+   "Drži se za ručke da kukovi ostanu na sjedalu."
+  ]
+ },
+ "leg-press": {
+  "name": "Nožna preša",
+  "description": "Složeni pokret na mašini za četveroglavi mišić i gluteuse.",
+  "instructions": [
+   "Sjedni na nožnu prešu sa stopalima na platformi u širini ramena.",
+   "Otpusti osigurače i spusti platformu savijajući koljena.",
+   "Potisni platformu dok noge ne budu gotovo ispružene.",
+   "Ne zaključavaj koljena na vrhu.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Donja leđa cijelo vrijeme drži uz naslon.",
+   "Spuštaj samo toliko da se kukovi ne odvoje.",
+   "Poravnaj koljena s prstima stopala."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Podizanje na prste na preši",
+  "description": "Podizanje na prste guranjem platforme nožne preše prednjim dijelom stopala.",
+  "instructions": [
+   "Sjedni na prešu s gotovo ispruženim nogama i samo prednjim dijelom stopala na donjem rubu platforme.",
+   "Otpusti osigurač i pusti pete da se spuste istežući listove.",
+   "Gurni platformu prednjim dijelom stopala dok ne budeš na prstima.",
+   "Zadrži trenutak gore i ponovo kontrolirano spusti."
+  ],
+  "tips": [
+   "Ne zaključavaj koljena do kraja.",
+   "Radi puni opseg i zastani dolje: ondje nastaje podražaj."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Podizanje nogu ležeći",
+  "description": "Podizanje obiju nogu ležeći na leđima za donji trbuh i pregibače kuka.",
+  "instructions": [
+   "Lezi na leđa sa skupljenim ispruženim nogama i rukama pod stražnjicom ili uz tijelo.",
+   "Pritisni donja leđa uz pod stežući trbuh.",
+   "Podigni noge dok ne budu okomite na pod, bez zamaha.",
+   "Polako spuštaj, ne dopuštajući da stopala dotaknu pod ni da se leđa uviju."
+  ],
+  "tips": [
+   "Ako se donja leđa odvajaju od poda, savij koljena.",
+   "Kontroliraj spuštanje: tu trbuh najviše radi."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Ekstenzija leđa na mašini",
+  "description": "Sjedeća izolacijska vježba za donja leđa: s fiksiranim kukovima i nogama trup gura unazad u obloženi valjak i ispruža kičmu protiv tega.",
+  "instructions": [
+   "Sjedni na mašinu za ekstenziju leđa sa stopalima na platformi i namjesti valjak na gornja leđa, tik ispod lopatica.",
+   "Primi bočne ručke i pusti trup da dođe malo naprijed: to je početni položaj.",
+   "Gurni unazad u valjak ispružajući kičmu dok se trup ne nagne unazad i donja leđa potpuno stegnu.",
+   "Kratko zastani u punom ispružanju i kontrolirano se vrati na početak, zadržavajući težinu na putu.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Valjak postavi tik ispod lopatica: više pritišće vrat, a niže skraćuje opseg.",
+   "Ispružaj iz donjih leđa umjesto da bacaš glavu i ramena unazad, a pokret drži sporim u oba smjera.",
+   "Stani s trupom ispruženim u neutralnom položaju umjesto da kičmu tjeraš dalje i počni lagano: donjim leđima više koriste kontrolirana ponavljanja nego velike težine."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Pregib za biceps na mašini",
+  "description": "Pregib za biceps na mašini za izolirani trening ruku.",
+  "instructions": [
+   "Sjedni na mašinu i namjesti jastuk prema dužini ruku.",
+   "Primi ručke pothvatom.",
+   "Savij ručke prema ramenima.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Laktove cijelo vrijeme drži na jastuku.",
+   "Ne podiži ramena dok dižeš ručke.",
+   "Spusti gotovo do ispruženih ruku bez gubitka napetosti."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Podizanje na prste na mašini",
+  "description": "Stojeća izolacijska vježba na mašini za dvoglavi i listoliki mišić potkoljenice u punom opsegu gležnja.",
+  "instructions": [
+   "Stani na mašinu za listove s jastučićima stopala na platformi.",
+   "Čvrsto namjesti jastuke na ramena.",
+   "Spusti pete ispod platforme radi punog istezanja.",
+   "Odguri se jastučićima stopala i podigni na prste.",
+   "Stisni listove na vrhu.",
+   "Kontrolirano spusti i ponovi."
+  ],
+  "tips": [
+   "Ne odbijaj se dolje da ne izgubiš napetost.",
+   "Koljena drži ispruženima, ali ih ne zaključavaj.",
+   "Diži se okomito, ne okrećući gležnjeve prema van."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Razvlačenje na mašini",
+  "description": "Izolacijska vježba za prsa na mašini koji spaja krakove u luku ispred tijela.",
+  "instructions": [
+   "Sjedni na mašinu i namjesti sjedalo tako da krakovi budu u visini prsa.",
+   "Drži krakove s blago savijenim laktovima.",
+   "Spoji ih ispred prsa u mekom luku.",
+   "Stegni prsni mišić u tački najvećeg stezanja.",
+   "Kontrolirano se vrati bez ispuštanja težine.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Blagi i stalni pregib lakta zadrži cijelim pokretom.",
+   "Usredotoči se na stezanje prsa, a ne na guranje rukama.",
+   "Kontroliraj povratak umjesto da pustiš tegove da padnu."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Obrnuto razvlačenje na mašini",
+  "description": "Sjedeća vježba na mašini za stražnje deltoide, poznata i kao obrnuti pec deck: licem prema jastuku obje ručke vodiš van i natrag u širokom luku protiv tega. Jastuk drži trup mirnim, pa rad ostaje u stražnjim ramenima i mišićima među lopaticama.",
+  "instructions": [
+   "Namjesti sjedalo tako da ručke budu u visini ramena i sjedni licem prema mašini s prsima na jastuku.",
+   "Primi ručke ispruženih ruku naprijed i blago savijenih laktova.",
+   "Ramena drži spuštena, dalje od ušiju, i stegni trup.",
+   "Vodi ručke van i natrag u širokom luku, predvodeći laktovima, dok ruke ne budu otprilike u liniji s ramenima.",
+   "Kratko spoji lopatice ne naginjući se unazad od jastuka.",
+   "Polako vrati ručke naprijed i ponovi predviđeni broj."
+  ],
+  "tips": [
+   "Vodi pokret laktovima umjesto da vučeš šakama, da rade stražnji deltoidi, a ne bicepsi.",
+   "Prsa drži na jastuku, a vrat opuštenim; ako se nagneš unazad ili podigneš ramena, opterećenje prelazi na gornji trapez.",
+   "Odaberi težinu koju možeš kontrolirano spustiti; manja težina sa sporim povratkom bolje radi stražnje deltoide nego zamah s velikom."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Sjedeći trbušnjaci na mašini",
+  "description": "Izolacijska vježba za trbuh na sjedećoj mašini, u kojoj savijaš kičmu protiv otpora.",
+  "instructions": [
+   "Sjedni na mašinu za trbušnjake i primi ručke.",
+   "Prisloni jastuk za prsa uz trup.",
+   "Stezanjem trbuha savij trup naprijed i dolje.",
+   "Stegni na kraju opsega.",
+   "Kontrolirano se vrati u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Pokret počni trbuhom, ne rukama.",
+   "Izdahni dok savijaš trup.",
+   "Ne ljuljaj se radi zaleta."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Potisak za ramena na mašini",
+  "description": "Potisak iznad glave na mašini za ramena.",
+  "instructions": [
+   "Sjedni na mašinu s leđima uz naslon.",
+   "Primi ručke u visini ramena.",
+   "Potisni ručke iznad glave do potpuno ispruženih ruku.",
+   "Kontrolirano spusti u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne uvijaj donja leđa dok potiskuješ.",
+   "Ne zaključavaj naglo laktove na vrhu.",
+   "Zapešća drži čvrstima u liniji s podlakticama."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negativni zgibovi",
+  "description": "Spora faza spuštanja zgiba, koja gradi snagu potrebnu za cijele zgibove.",
+  "instructions": [
+   "Popni se na klupu ili poskoči tako da brada bude iznad šipke, hvat malo širi od ramena.",
+   "Bez oslonca spuštaj tijelo vrlo polako, otprilike tri do pet sekundi.",
+   "Kontroliraj pokret dok se ruke potpuno ne ispruže.",
+   "Vrati se gore uz pomoć klupe ili skoka i ponovi."
+  ],
+  "tips": [
+   "Tokom spuštanja drži ramena dalje od ušiju.",
+   "Kad svladaš pet sporih ponavljanja, pokušaj se podići bez pomoći."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordijski pregib",
+  "description": "Vježba pregiba koljena u kojoj iz klečećeg položaja spuštaš trup naprijed i ekscentrično treniraš stražnju ložu.",
+  "instructions": [
+   "Klekni na strunjaču s gležnjevima učvršćenima ispod čvrstog oslonca.",
+   "Trup drži uspravnim, a kukove ispruženima.",
+   "Polako spuštaj tijelo naprijed, kočeći stražnjom ložom.",
+   "Dočekaj se rukama tik prije poda.",
+   "Odguri se rukama i povuci natrag u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Spuštaj se što sporije: cilj je ekscentrična faza.",
+   "Kukove drži ispruženima; ne savijaj se u struku.",
+   "Koči rukama i lagano se odguruj dok jačaš."
+  ]
+ },
+ "ohp": {
+  "name": "Potisak šipkom iznad glave",
+  "description": "Složeni potisak iznad glave za ramena i triceps.",
+  "instructions": [
+   "Stoj sa stopalima u širini ramena i šipkom u visini ključnih kostiju.",
+   "Stegni trup i potisni šipku iznad glave.",
+   "Zaključaj laktove gore sa šipkom iznad sredine stopala.",
+   "Spusti šipku do visine ključnih kostiju.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne naginji se previše unazad.",
+   "Stisni gluteuse za veću stabilnost."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Jednoručno sjedeće veslanje na sajli",
+  "description": "Jednoručno sjedeće veslanje na sajli za široke leđne mišiće i gornja leđa: trup ostaje okrenut naprijed dok se lopatica radne strane kontrolirano giba naprijed i natrag.",
+  "instructions": [
+   "Sjedni na stanicu sa sajlom i drži ručku ispružene radne ruke.",
+   "Dobro osloni stopala, sjedni uspravno i stegni trup bez naginjanja unazad.",
+   "Povuci ručku prema donjim rebrima povlačeći lopaticu.",
+   "Kratko zastani bez okretanja trupa i podizanja ramena.",
+   "Kontrolirano ispruži ruku, dovrši seriju i promijeni stranu."
+  ],
+  "tips": [
+   "Oba ramena drži okrenuta naprijed tokom cijelog ponavljanja.",
+   "Vodi lakat unazad blizu tijela umjesto da samo savijaš ruku.",
+   "Pusti lopaticu da na početku klizne naprijed ne zaobljujući donja leđa."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Ekstenzija tricepsa iznad glave bučicom",
+  "description": "Izolacijska vježba za triceps koja naglašava dugu glavu.",
+  "instructions": [
+   "Stojeći ili sjedeći drži bučicu iznad glave objema rukama.",
+   "Spusti bučicu iza glave savijajući laktove.",
+   "Ispruži ruke natrag u početni položaj.",
+   "Laktove drži blizu glave tokom cijele vježbe.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Pomiči samo podlaktice, a sve ostalo drži mirnim.",
+   "Ne uvijaj donja leđa dok bučica ide dolje.",
+   "Primi bučicu ispod gornjeg diska objema dlanovima."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Propadanja na paralelnim šipkama",
+  "description": "Vježba vlastitom težinom na paralelnim šipkama za prsa, triceps i ramena.",
+  "instructions": [
+   "Osloni se na šipke ispruženih ruku s tijelom u zraku, ne dodirujući pod.",
+   "Blago nagni trup naprijed i savij laktove za kontrolirano spuštanje.",
+   "Stani kad su ramena u visini laktova, ne propadajući u zglob.",
+   "Potisni prsima i tricepsom dok se ruke ponovo ne ispruže."
+  ],
+  "tips": [
+   "Ako ne možeš odraditi čiste serije, upotrijebi mašinu s pomoći ili trake.",
+   "Ne spuštaj se niže nego što tvoje rame podnosi bez nelagode."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Potisak s klupe s pauzom",
+  "description": "Potisak s klupe s pauzom od jedne do dvije sekunde na prsima, koja uklanja odbijanje i poboljšava snagu pri pokretanju.",
+  "instructions": [
+   "Lezi na klupu sa stopalima čvrsto na podu, skupljenim lopaticama i šipkom iznad prsa u hvatu malo širem od ramena.",
+   "Kontrolirano spuštaj šipku dok ne dotakne prsa.",
+   "Drži šipku mirnom na prsima jednu do dvije sekunde bez popuštanja napetosti.",
+   "Potiskuj šipku uvis dok se laktovi ne ispruže."
+  ],
+  "tips": [
+   "Uzmi 10 do 15 % manju težinu nego u običnom potisku.",
+   "Zamoli nekoga da te čuva ili koristi graničnike stalka."
+  ]
+ },
+ "pause-squat": {
+  "name": "Čučanj s pauzom",
+  "description": "Čučanj sa šipkom s pauzom u najnižoj tački, za kontrolu i snagu bez odbijanja.",
+  "instructions": [
+   "Postavi šipku na gornja leđa, stopala u širini ramena i prste blago prema van.",
+   "Spuštaj se kontrolirajući dubinu, neutralnih leđa i koljena u smjeru stopala.",
+   "Zadrži najniži položaj od jedne do tri sekunde bez opuštanja trupa.",
+   "Odguruj pod stopalima dok ponovo ne stojiš uspravno."
+  ],
+  "tips": [
+   "Smanji opterećenje u odnosu na uobičajeni čučanj.",
+   "Ne odbijaj se iz pauze: potiskuj ujednačeno."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Izolacijska mašina za prsa s pomičnim krakovima koji prsne mišiće radi vodoravnim primicanjem.",
+  "instructions": [
+   "Sjedni na pec deck i primi ručke s rukama raširenima u stranu i blago savijenim laktovima.",
+   "Namjesti sjedalo tako da ručke budu u visini sredine prsa.",
+   "Spoji ručke ispred prsa stišćući.",
+   "Kratko zadrži stezanje u sredini.",
+   "Kontrolirano se vrati u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Ne puštaj ruke predaleko unazad pri otvaranju.",
+   "Leđa i ramena drži uz naslon.",
+   "Izdahni kad se ručke spoje, a udahni pri otvaranju."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay veslanje",
+  "description": "Eksplozivno veslanje šipkom s poda u svakom ponavljanju, s trupom usporednim s podom.",
+  "instructions": [
+   "Sa stopalima ispod šipke i gotovo vodoravnim trupom primi je malo šire od ramena, neutralnih leđa.",
+   "Snažno povuci šipku dok ne dotakne donji dio prsa, ne pomičući trup.",
+   "Kontrolirano spusti šipku na pod i na trenutak stani.",
+   "Ponovo stegni leđa i ponovi s poda."
+  ],
+  "tips": [
+   "Trup se ne diže i ne spušta: ako se miče, težina je prevelika.",
+   "Svako ponavljanje počinje sa šipkom u mirovanju na podu."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike sklekovi",
+  "description": "Sklek s tijelom u obliku obrnutog slova V, koji bez opreme prebacuje opterećenje s prsa na ramena.",
+  "instructions": [
+   "Stavi ruke na pod u širini ramena i podigni kukove u obrnuto V s gotovo ispruženim nogama.",
+   "Savij laktove i spuštaj glavu prema podu među rukama.",
+   "Stani kad je glava blizu poda, ne oslanjajući se na njega.",
+   "Potisni rukama do ispruženih laktova natrag na početak."
+  ],
+  "tips": [
+   "Što su stopala bliže rukama, vježba je teža.",
+   "Kukove drži visoko cijelim pokretom."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Čučanj na jednoj nozi (pištolj)",
+  "description": "Duboki čučanj na jednoj nozi s drugom ispruženom naprijed, samo vlastitom težinom.",
+  "instructions": [
+   "Stoj na jednoj nozi s drugom podignutom naprijed i rukama ispred sebe radi ravnoteže.",
+   "Savij koljeno stajaće noge i kontrolirano se spuštaj s petom na podu.",
+   "Spusti se koliko možeš bez gubitka tehnike, slobodnu nogu drži naprijed.",
+   "Odguruj pod dok ponovo ne stojiš; ponovi i promijeni nogu."
+  ],
+  "tips": [
+   "U početku se pridržavaj za oslonac ili sjedaj na kutiju.",
+   "Koljeno drži u liniji sa stopalom."
+  ]
+ },
+ "plank": {
+  "name": "Plank",
+  "description": "Statična vježba za trup koja trenira stabilnost držeći tijelo ravnim na podlakticama i prstima.",
+  "instructions": [
+   "Osloni podlaktice na pod s laktovima ispod ramena i ispruženim nogama.",
+   "Podigni tijelo u ravnu liniju od glave do peta.",
+   "Stegni trbuh i gluteuse držeći donja leđa neutralnima, bez spuštanja kukova.",
+   "Diši normalno i zadrži položaj zadano vrijeme."
+  ],
+  "tips": [
+   "Počni kratkim, kvalitetnim serijama prije produživanja vremena.",
+   "Ako donja leđa propadaju, spusti koljena ili skrati vrijeme."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Podizanje kukova na mašini s pločama",
+  "description": "Podizanje kukova na mašini s pločama čiji naslon i platforma drže položaj, pa kukove ispružaš protiv težine bez namještanja klupe.",
+  "instructions": [
+   "Napuni nosače jednako i sjedni s gornjim leđima uz naslon i stopalima cijelom površinom na platformi.",
+   "Spusti jastuk ili šipku na kukove tako da leži u pregibu kukova, a ne na trbuhu.",
+   "Postavi stopala tako da potkoljenice budu okomite kad su kukovi gore i drži se za ručke.",
+   "Gurni kukove uvis stežući gluteuse dok bedra ne budu u liniji s trupom i zadrži trenutak.",
+   "Kontrolirano spuštaj do tik prije dna i ponovi željeni broj."
+  ],
+  "tips": [
+   "Stavi jastuk u pregib kukova. Oslanjanje na trbuh jedina je stvarno neugodna stvar na ovoj mašini i rješava se pomicanjem jastuka, a ne dodatnim oblaganjem.",
+   "Završi pokret kukom, a ne donjim leđima. Ako se rebra na vrhu otvaraju, ispružanje kuka je gotovo i počeo si uvijati leđa — tu mašina prestaje raditi gluteuse.",
+   "To je podizanje kukova koje biraš kad su klupa i šipka zauzete: naslon i platforma dio su okvira, pa nema što pogrešno namjestiti."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Pregib na Scott klupi",
+  "description": "Inačica pregiba na Scott klupi koja izolira bicepse.",
+  "instructions": [
+   "Sjedni na Scott klupu s rukama na jastuku.",
+   "Drži EZ šipku pothvatom.",
+   "Savij šipku prema ramenima.",
+   "Kontrolirano spuštaj dok ruke ne budu gotovo ispružene.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Izbjegavaj odbijanje u donjem dijelu pokreta.",
+   "Zapešća na EZ šipci drži neutralnima.",
+   "Podigni šipku bez zamaha ramenima ili leđima."
+  ]
+ },
+ "pull-up": {
+  "name": "Zgibovi nathvatom",
+  "description": "Složena vježba vlastitom težinom za široki leđni mišić i bicepse.",
+  "instructions": [
+   "Objesi se na vratilo nathvatom, malo šire od ramena.",
+   "Povuci se dok brada ne bude iznad šipke.",
+   "Kontrolirano se spusti do punog visa.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Izbjegavaj njihanje i zalet.",
+   "Uključi široke leđne mišiće vodeći laktove prema dolje."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Potisak iznad glave s odrazom nogu, koji dopušta veću težinu od strogog vojničkog potiska.",
+  "instructions": [
+   "Stoj sa šipkom na gornjem dijelu prsa i ramenima, laktovi blago naprijed i stopala u širini kukova.",
+   "Blago savij koljena s okomitim trupom i eksplozivno ispruži kukove i koljena.",
+   "Iskoristi zamah i potisni šipku do ispruženih ruku iznad glave.",
+   "Kontrolirano spusti šipku na prsa i ublaži nogama."
+  ],
+  "tips": [
+   "Snaga dolazi iz nogu, a ne iz naginjanja leđa unazad.",
+   "Završi sa šipkom iznad tjemena i stabilnim tijelom."
+  ]
+ },
+ "push-up": {
+  "name": "Sklekovi",
+  "description": "Osnovna vježba vlastitom težinom za prsa, ramena i triceps.",
+  "instructions": [
+   "Počni u visokom planku s rukama u širini ramena.",
+   "Spuštaj tijelo dok prsa gotovo ne dotaknu pod.",
+   "Potisni se u početni položaj.",
+   "Tijelo cijelo vrijeme drži ravnim.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Stegni trbuh i gluteuse da kukovi ne potonu.",
+   "Ne širi previše laktove; drži ih uz tijelo.",
+   "Vrat drži neutralnim, pogled prema dolje."
+  ]
+ },
+ "rack-pull": {
+  "name": "Mrtvo dizanje sa stalka",
+  "description": "Djelomično mrtvo dizanje s visine koljena, koje snažno opterećuje gornja leđa i ispružanje kuka.",
+  "instructions": [
+   "Postavi šipku na oslonce u visini koljena ili tik ispod, sa stopalima u širini kukova ispod nje.",
+   "Primi šipku, stegni leđa i trbuh i odguruj pod stopalima.",
+   "Ispruži kukove i koljena istodobno dok ne stojiš uspravno s ramenima natrag.",
+   "Kontrolirano spusti šipku dok ne sjedne na oslonce."
+  ],
+  "tips": [
+   "Namjesti oslonce na visinu na kojoj možeš zadržati neutralna leđa.",
+   "Na kraju ne ispružaj pretjerano donja leđa."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Iskorak unazad s bučicama",
+  "description": "Inačica iskoraka s korakom unazad radi bolje stabilnosti koljena.",
+  "instructions": [
+   "Stoj s bučicama uz bokove.",
+   "Jednom nogom napravi korak unazad i spusti koljeno prema podu.",
+   "Spuštaj se dok prednje bedro ne bude usporedno s podom.",
+   "Potisni prednjom petom natrag u stojeći položaj.",
+   "Ponovi na obje strane."
+  ],
+  "tips": [
+   "Korakni dovoljno daleko unazad da prednje koljeno ne prelazi stopalo.",
+   "Trup drži uspravnim, a bučice uz tijelo.",
+   "Na svakoj nozi napravi isti broj ponavljanja."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Obrnuti nordijski pregib",
+  "description": "Vježba za četveroglavi mišić vlastitom težinom na koljenima, naginjanjem trupa unazad s ispruženim kukom, kontrolirano.",
+  "instructions": [
+   "Klekni na jastuk s koljenima u širini kukova, potkoljenicama i hrptovima stopala na podu te uspravnim trupom.",
+   "Kuk drži ispruženim, a trup aktivnim.",
+   "Polako naginji trup unazad držeći tijelo u ravnoj liniji.",
+   "Spuštaj se koliko četveroglavi mišić može kontrolirati.",
+   "Vrati se u početni položaj.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Kuk cijelo vrijeme drži ispruženim, bez lomljenja.",
+   "Spuštaj se samo toliko da kontroliraš pokret.",
+   "Stavi jastuk pod koljena radi udobnosti."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Rumunsko mrtvo dizanje",
+  "description": "Pregib u kukovima koji naglašava stražnju ložu i gluteuse.",
+  "instructions": [
+   "Stoj sa šipkom u visini kukova, nathvatom.",
+   "Vodi kukove unazad i naginji trup s blago savijenim, gotovo nepomičnim koljenima.",
+   "Spuštaj šipku uz noge dok ne osjetiš istezanje stražnje lože.",
+   "Gurni kukove naprijed da se vratiš u stojeći položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne zaobljuj donja leđa; kičmu drži neutralnom.",
+   "Spuštaj se samo koliko možeš bez gubitka držanja.",
+   "Stegni široke leđne mišiće da šipka ostane uz tijelo."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Veslački trenažer",
+  "description": "Kardio vježba cijelog tijela na veslačkom trenažeru: svaki zaveslaj odgurne nogama, nagne trup unazad i povuče ručku prema rebrima, pa noge, leđa i ruke rade u povezanom ciklusu.",
+  "instructions": [
+   "Sjedni na trenažer, učvrsti stopala remenima na papučama i primi ručku nathvatom.",
+   "Kliži naprijed u položaj zahvata: potkoljenice okomite, trup blago ispred kukova i ruke ispružene prema zamašnjaku.",
+   "Najprije potisni nogama, gurajući sjedalo unazad dok koljena ne budu gotovo ispružena.",
+   "Nagni trup unazad preko okomice, zatim povuci ručku prema donjim rebrima s laktovima iza bokova.",
+   "Pri povratku obrni redoslijed — najprije ruke naprijed, zatim trup i na kraju savij koljena — te se vrati u položaj zahvata za sljedeći zaveslaj.",
+   "Nastavi željeno vrijeme, udaljenost ili broj zaveslaja."
+  ],
+  "tips": [
+   "Drži se redoslijeda: noge, trup, ruke pri povlačenju i ruke, trup, noge pri povratku. Prerano savijanje ruku troši najsnažniji dio zaveslaja.",
+   "Veslaj ravnih leđa i aktivnog trupa: zaobljena donja leđa u zahvatu pretvaraju veslanje u bol u križima umjesto u kondiciju.",
+   "Vodi ručku ravno i vodoravno prema donjim rebrima i neka povratak traje otprilike dvostruko duže od povlačenja umjesto da se zalijećeš natrag."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Sjedeći potisak šipkom",
+  "description": "Sjedeći potisak šipkom za ramena s naslonom, koji usmjerava rad na deltoid.",
+  "instructions": [
+   "Sjedni na klupu s okomitim naslonom, primi šipku malo šire od ramena i osloni je na gornji dio prsa.",
+   "Potisni šipku ravno uvis dok se laktovi ne ispruže.",
+   "Drži šipku iznad tjemena sa skupljenim rebrima.",
+   "Kontrolirano spusti do ključnih kostiju."
+  ],
+  "tips": [
+   "Stegni gluteuse i trbuh da se leđa ne uviju.",
+   "Povuci glavu unazad da pustiš šipku bez naprezanja vrata."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Sjedeće veslanje na sajli",
+  "description": "Vježba za leđa na donjoj sajli u kojoj sjedeći povlačiš ručku prema trupu.",
+  "instructions": [
+   "Sjedni na stanicu za veslanje sa stopalima na osloncima.",
+   "Drži ručku i sjedi uspravno s blagim naginjanjem naprijed.",
+   "Vodi laktove unazad povlačeći ručku prema donjem dijelu trbuha.",
+   "Na kraju povlačenja spoji lopatice.",
+   "Kontrolirano ispruži ruke natrag na početak.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Trup drži uspravnim uz minimalno njihanje.",
+   "Vodi laktove ravno unazad, a ne u stranu.",
+   "Na kraju povlačenja spoji lopatice."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Sjedeće podizanje na prste na mašini",
+  "description": "Sjedeće podizanje na prste na mašini usmjereno na listoliki mišić.",
+  "instructions": [
+   "Sjedni na mašinu s jastucima na bedrima.",
+   "Spusti pete što je niže moguće.",
+   "Podigni se na prednji dio stopala.",
+   "Spuštaj kontrolirano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Savijeno koljeno opušta dvoglavi mišić potkoljenice, pa listoliki preuzima više rada.",
+   "Koristi cijeli opseg pokreta."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Sjedeće podizanje na prste s bučicama",
+  "description": "Sjedeće podizanje na prste s bučicama na bedrima, koje trenira listoliki mišić sa savijenim koljenom.",
+  "instructions": [
+   "Sjedni na klupu s prednjim dijelom stopala na stepenici ili tegu i bučicom na svakom bedru blizu koljena.",
+   "Pusti pete da se spuste koliko možeš kako bi istegnuo list.",
+   "Podigni pete gurajući prednjim dijelom stopala do vrha.",
+   "Zadrži trenutak gore i kontrolirano spusti."
+  ],
+  "tips": [
+   "Pridržavaj bučice da ne klize.",
+   "Savijeno koljeno prebacuje rad na listoliki mišić."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Sjedeće bočno podizanje bučica",
+  "description": "Sjedeća izolacijska vježba s podizanjem bučica u stranu za bočni deltoid bez pomoći nogu.",
+  "instructions": [
+   "Sjedni na klupu s bučicama uz bokove.",
+   "Leđa drži ravnima, a trup stegnutim.",
+   "Podigni obje bučice u stranu do visine ramena.",
+   "Zadrži blagi pregib u laktovima.",
+   "Kontrolirano spusti bučice.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Uzmi malu težinu da podizanje ostane čisto.",
+   "Vodi laktovima, a ne šakama.",
+   "Podigni do visine ramena i kontrolirano spusti."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Sjedeći pregib nogu",
+  "description": "Sjedeća izolacijska vježba za stražnju ložu na mašini, sa stalnom napetošću i manjim uključivanjem pregibača kuka nego ležeća.",
+  "instructions": [
+   "Namjesti naslon i jastuk za gležnjeve tako da koljena budu u osi mašine.",
+   "Sjedni uspravno, osloni stražnji dio gležnjeva na jastuk i primi ručke.",
+   "Savijaj noge dolje i natrag ispod sjedala koliko mašina dopušta.",
+   "Zastani u punom stezanju i polako se vrati.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Leđa drži čvrsto uz naslon cijelim pokretom.",
+   "U punom stezanju blago privuci stopala prema potkoljenicama za veću aktivaciju stražnje lože.",
+   "Kontroliraj ekscentričnu fazu — ne daj da težina naglo povuče noge natrag."
+  ]
+ },
+ "shrug": {
+  "name": "Slijeganje ramenima sa šipkom",
+  "description": "Izolacijski pokret za gornji trapez.",
+  "instructions": [
+   "Stoj sa šipkom u ispruženim rukama, nathvatom.",
+   "Podigni ramena ravno prema ušima.",
+   "Kratko zadrži gore.",
+   "Kontrolirano spusti ramena.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Podiži ramena okomito, bez kruženja.",
+   "Ne koristi ruke; laktovi ostaju ispruženi.",
+   "Ne odguruj se nogama da bi podigao više."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Abdukcija ležeći na boku",
+  "description": "Izolacijska vježba vlastitom težinom za srednji gluteus i abduktore kuka.",
+  "instructions": [
+   "Lezi na bok s nogama jednom na drugoj.",
+   "Donju nogu drži blago savijenom.",
+   "Podigni gornju nogu prema stropu.",
+   "Spuštaj kontrolirano.",
+   "Ponovi na obje strane."
+  ],
+  "tips": [
+   "Kukove drži jedan iznad drugoga tokom cijele vježbe.",
+   "Ne naginji zdjelicu."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Addukcija ležeći na boku",
+  "description": "Addukcija ležeći na boku u kojoj donju nogu podižeš protiv gravitacije i treniraš kuk vlastitom težinom.",
+  "instructions": [
+   "Lezi na bok s ispruženom donjom nogom.",
+   "Gornju nogu savij i stavi stopalo ispred donjeg bedra.",
+   "Glavu osloni na donju ruku.",
+   "Podigni donju nogu prema stropu.",
+   "Kontrolirano spusti nogu.",
+   "Dovrši jednu stranu i promijeni."
+  ],
+  "tips": [
+   "Pomiči samo nogu; kuk i trup ostaju mirni.",
+   "Podigni nogu bez zamaha i polako je spusti.",
+   "Poravnaj ramena, kuk i stopala prije početka."
+  ]
+ },
+ "side-plank": {
+  "name": "Bočni plank",
+  "description": "Inačica bočnog planka za kose trbušne mišiće i bočni dio trupa.",
+  "instructions": [
+   "Lezi na bok s podlakticom na podu i laktom ispod ramena.",
+   "Podigni kukove u ravnu liniju od glave do stopala.",
+   "Zadrži položaj stegnutog trupa.",
+   "Diši ravnomjerno.",
+   "Ponovi na obje strane."
+  ],
+  "tips": [
+   "Ne daj da kuk potone prema podu.",
+   "Ramena i kuk drži u istoj ravnini bez okretanja trupa.",
+   "Odguruj pod podlakticom da ne visiš na ramenu."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Jednoručno veslanje bučicom",
+  "description": "Jednostrana vježba za leđa s bučicom za uravnotežen razvoj.",
+  "instructions": [
+   "Osloni jedno koljeno i ruku na klupu.",
+   "U drugoj ruci drži bučicu ispružene ruke.",
+   "Povuci bučicu prema boku stežući lopaticu.",
+   "Kontrolirano spusti bučicu.",
+   "Ponovi na obje strane."
+  ],
+  "tips": [
+   "Ne okreći trup pri povlačenju; kuk drži stabilnim.",
+   "Ne povlači rame prema uhu na početku povlačenja.",
+   "Svakom rukom napravi isti broj ponavljanja."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Jednoručno bočno podizanje na mašini s pločama",
+  "description": "Bočno podizanje na mašini s pločama jednom po jednom rukom, tako da svaka strana diže svoju težinu i obje možeš dovesti na isti nivo.",
+  "instructions": [
+   "Namjesti visinu sjedala tako da os jastuka bude u liniji s ramenom i napuni samo stranu koju ćeš trenirati.",
+   "Sjedni s leđima uz naslon i osloni vanjsku stranu radne ruke na jastuk.",
+   "Primi ručku na slobodnoj strani ili odloži ruku u krilo, trup ravno uz sjedalo.",
+   "Gurni radnu ruku van i uvis uz jastuk do visine ramena i kontrolirano spusti.",
+   "Odradi sva ponavljanja na toj strani, zatim napuni i treniraj drugu."
+  ],
+  "tips": [
+   "Strane izjednačavaj prema slabijoj ruci, a ne jačoj. Rad jedne po jedne strane otkriva razliku samo ako slabija strana određuje broj.",
+   "Ne naginji trup prema radnoj strani. S težinom samo na jednoj ruci mašina se ne uravnotežuje sam, a naginjanje pretvara podizanje u otklon.",
+   "Počni slabijom rukom da ona postavi cilj i objema daj isti odmor."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Glutealni most na jednoj nozi",
+  "description": "Glutealni most na jednoj oslonačnoj nozi, koji povećava zahtjev bez dodatne opreme.",
+  "instructions": [
+   "Lezi na leđa s jednim savijenim koljenom i stopalom na podu, drugu nogu ispruži u zrak.",
+   "Potisni petom oslonačne noge i podigni kukove dok rame, kuk i koljeno ne budu u liniji.",
+   "Na trenutak stisni gluteus gore bez uvijanja donjih leđa.",
+   "Kontrolirano spusti bez odmaranja kukova; odradi ponavljanja i promijeni nogu."
+  ],
+  "tips": [
+   "Zdjelicu drži vodoravnom, ne daj da jedna strana potone.",
+   "Ako je teško, počni mostom na obje noge."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Francuski potisak ležeći",
+  "description": "Ležeća ekstenzija tricepsa sa šipkom koja izolira triceps u punom opsegu.",
+  "instructions": [
+   "Lezi na ravnu klupu sa šipkom iznad prsa u uskom hvatu.",
+   "Spusti šipku prema čelu savijajući laktove.",
+   "Ispruži ruke natrag u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Nadlaktice drži okomitima tokom cijele vježbe.",
+   "Spuštaj polako radi zaštite laktova."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Potisak s klupe na Smith mašini",
+  "description": "Potisak s klupe na Smith mašini, čija vođena putanja omogućuje trening prsa s manjim zahtjevom za stabilizacijom.",
+  "instructions": [
+   "Lezi na ravnu klupu unutar Smith mašine.",
+   "Primi šipku malo šire od ramena i otkvači je.",
+   "Kontrolirano spusti šipku na sredinu prsa.",
+   "Kratko zastani bez odbijanja.",
+   "Potisni šipku uvis do potpuno ispruženih ruku.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Poravnaj klupu tako da šipka silazi na sredinu prsa.",
+   "Stopala drži čvrsto na podu tokom cijele serije.",
+   "Nauči okret zapešća kojim se šipka zakvači prije nego je napuniš."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Podizanje na prste na Smith mašini",
+  "description": "Stojeće podizanje na prste s vođenom šipkom Smith mašine na ramenima.",
+  "instructions": [
+   "Namjesti se ispod šipke s prednjim dijelom stopala na stepenici ili tegu i šipkom na gornjim leđima.",
+   "Otkvači šipku i pusti pete da se spuste istežući listove.",
+   "Podigni se na prste ispruženih nogu bez zaključavanja koljena.",
+   "Zadrži trenutak gore i kontrolirano spusti prije nego zakvačiš šipku."
+  ],
+  "tips": [
+   "Vodilica te stabilizira: iskoristi to za veće opterećenje.",
+   "Trup drži uspravnim i gledaj naprijed."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Kosi potisak na Smith mašini",
+  "description": "Kosi potisak na Smith mašini koji naglašava gornji dio prsa i prednje deltoide na vođenoj putanji.",
+  "instructions": [
+   "Postavi kosu klupu od 30 do 45 stepeni unutar Smith mašine.",
+   "Lezi i primi šipku malo šire od ramena.",
+   "Otkvači i spusti šipku do gornjeg dijela prsa.",
+   "Dolje kratko zastani.",
+   "Potisni šipku do ispruženih ruku.",
+   "Ponovi željeni broj ponavljanja."
+  ],
+  "tips": [
+   "Namjesti klupu tako da šipka pada na gornji dio prsa.",
+   "Spuštaj šipku ne dopuštajući da se odbije od prsa.",
+   "Stražnjicu drži na klupi, a stopala čvrsto na podu."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Čučanj na Smith mašini",
+  "description": "Čučanj s vođenom šipkom Smith mašine: fiksna putanja smanjuje potrebu za ravnotežom i usmjerava rad na noge i gluteuse, dobar izbor kad nema slobodnog stalka.",
+  "instructions": [
+   "Namjesti šipku u visinu ramena i stani ispod nje, šipka na gornjim leđima i stopala malo naprijed.",
+   "Okreni zapešća da otkvačiš kuke, s uspravnim trupom i aktivnom sredinom.",
+   "Savijaj koljena i kukove dok bedra ne budu barem usporedna s podom, koljena u smjeru stopala.",
+   "Cijelim stopalom gurni pod dok ponovo ne stojiš.",
+   "Nakon serije okreni zapešća i zakvači šipku na graničnike."
+  ],
+  "tips": [
+   "Stopala malo naprijed omogućuju dublji čučanj bez odizanja peta.",
+   "Postavi sigurnosne graničnike tik ispod najniže tačke pokreta."
+  ]
+ },
+ "squat": {
+  "name": "Stražnji čučanj sa šipkom",
+  "description": "Složeni pokret donjeg dijela tijela za četveroglavi mišić, gluteuse i stražnju ložu.",
+  "instructions": [
+   "Postavi šipku na gornji trapez.",
+   "Skini šipku sa stalka i napravi korak unazad sa stopalima u širini ramena.",
+   "Stegni trup i savij koljena i kukove dok bedra ne budu usporedna s podom.",
+   "Potisni petama natrag u stojeći položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Prsa drži gore cijelim pokretom.",
+   "Gurni koljena van u smjeru prstiju."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Kotrljanje točkom stojeći",
+  "description": "Kotrljanje točkom iz stojećeg položaja ispruženih nogu i velikog opsega.",
+  "instructions": [
+   "Stoj ispruženih nogu, sagni se i objema rukama stavi točak na pod.",
+   "Kotrljaj naprijed ispruženih ruku i stegnutog trbuha dok ne budeš gotovo usporedan s podom.",
+   "Kukove drži u liniji ne dopuštajući da donja leđa potonu.",
+   "Povuci trbuhom da se otkotrljaš natrag na početak."
+  ],
+  "tips": [
+   "Počni s klečećom inačicom dok ne ovladaš opsegom.",
+   "Stani prije nego što donja leđa potonu."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Podizanje peta stojeći",
+  "description": "Stojeće podizanje na prste koje razvija dvoglavi mišić potkoljenice u punom opsegu.",
+  "instructions": [
+   "Stani na rub platforme ili mašine za listove.",
+   "Spusti pete ispod platforme.",
+   "Potisni se na prste.",
+   "Spuštaj polako.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Zastani gore radi najvećeg stezanja.",
+   "Potpuno spuštanje pete povećava opseg pokreta."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Stojeća abdukcija noge",
+  "description": "Bočno podizanje noge vlastitom težinom stojeći na drugoj. Radi srednji gluteus podignute strane i, na stajaćoj nozi, mišiće koji drže kukove vodoravnima.",
+  "instructions": [
+   "Stoj uspravno s rukama na bokovima i skupljenim stopalima.",
+   "Prebaci težinu na jednu nogu i njezino koljeno drži blago savijenim.",
+   "Podigni drugu, ispruženu nogu u stranu s prstima naprijed i uspravnim trupom.",
+   "Podiži nogu samo koliko možeš bez naginjanja trupa na suprotnu stranu.",
+   "Polako spusti nogu pokraj stopala na kojem stojiš.",
+   "Odradi planirana ponavljanja i ponovi drugom nogom."
+  ],
+  "tips": [
+   "Kukove drži ravnima, a tijelo mirnim; naginjanje od podignute noge oduzima rad kuku.",
+   "Kontroliraj i spuštanje; ne daj da se noga njiše.",
+   "Pridrži se za zid ili stolac ako ravnoteža popusti; dodaj traku oko bedara kad pokret postane lak."
+  ]
+ },
+ "step-ups": {
+  "name": "Penjanje na kutiju",
+  "description": "Penjanje na kutiju ili klupu jednom nogom, funkcionalni trening četveroglavog mišića i gluteusa.",
+  "instructions": [
+   "Stani ispred čvrste kutije ili klupe.",
+   "Stavi cijelo stopalo jedne noge na kutiju.",
+   "Potisni tom petom da podigneš tijelo na kutiju.",
+   "Privuci stražnje stopalo tako da cijeli stojiš na kutiji.",
+   "Kontrolirano spusti stražnje stopalo na pod s težinom na radnoj nozi.",
+   "Izmjenjuj noge ili odradi sva ponavljanja na jednoj strani prije promjene."
+  ],
+  "tips": [
+   "Stavi cijelo stopalo na površinu kutije.",
+   "Odgurni se petom noge koja se penje, a ne stražnje.",
+   "Kontroliraj spuštanje umjesto da padneš."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Povlačenje ravnim rukama",
+  "description": "Izolacijska vježba za široke leđne mišiće na sajli ispruženim rukama.",
+  "instructions": [
+   "Stoj ispred sajle s ravnom šipkom na gornjem koloturu.",
+   "Gotovo ispruženim rukama potisni šipku u luku prema bedrima.",
+   "Dolje stisni široke leđne mišiće.",
+   "Polako vrati šipku u početni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ruke drži gotovo ispruženima cijelim pokretom.",
+   "Vodi šipku do bedara u luku.",
+   "Stisni široke leđne mišiće na dnu pokreta."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo mrtvo dizanje",
+  "description": "Inačica mrtvog dizanja s vrlo širokim stavom i uskim hvatom, koja prebacuje rad na gluteuse, unutarnju i prednju stranu bedara.",
+  "instructions": [
+   "Stani vrlo široko s prstima blago prema van i šipkom iznad sredine stopala.",
+   "Primi šipku rukama unutar nogu, neutralnih leđa i podignutih prsa.",
+   "Odguruj pod nogama gurajući koljena van dok ne stojiš sa šipkom uz tijelo.",
+   "Zaključaj kukove i koljena gore i kontrolirano spusti šipku istim putem."
+  ],
+  "tips": [
+   "Šipku uvijek drži uz tijelo.",
+   "Koljena prate smjer prstiju; ne daj da padnu prema unutra."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-veslanje",
+  "description": "Složeno T-veslanje u pretklonu koje razvija široke leđne mišiće i romboide s velikim težinama.",
+  "instructions": [
+   "Stani iznad T-šipke sa stopalima u širini ramena.",
+   "Nagni se iz kukova dok trup ne bude otprilike pod 45 stepeni.",
+   "Primi ručke i drži leđa ravnima.",
+   "Povuci šipku prema prsima s laktovima unazad.",
+   "Stisni lopatice na vrhu.",
+   "Kontrolirano spusti i ponovi."
+  ],
+  "tips": [
+   "Nagni trup otprilike na 45 stepeni ravnih leđa.",
+   "Povlači vodeći laktove unazad, a ne samo rukama.",
+   "Na vrhu povlačenja spoji lopatice."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Potisak za triceps na sajli",
+  "description": "Izolacijska vježba za triceps na sajli.",
+  "instructions": [
+   "Stoj ispred sajle s ravnom šipkom.",
+   "Primi šipku i drži laktove uz bokove.",
+   "Potisni šipku dolje do potpuno ispruženih ruku.",
+   "Polako se vrati na početak.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup drži uspravnim.",
+   "Smiju se micati samo podlaktice."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Pregib nogu na TRX-u",
+  "description": "Ova izolacijska vježba koristi trener s trakama za stražnju ložu, gluteuse i listove povlačenjem peta prema stražnjici.",
+  "instructions": [
+   "Lezi na leđa s petama u omčama i koljenima savijenima pod 90 stepeni.",
+   "Podigni kukove s poda u ravnu liniju od koljena do ramena.",
+   "Ispruži noge naprijed držeći kukove gore i stegnut trup.",
+   "Povuci pete prema stražnjici snažno stežući stražnju ložu.",
+   "Kontroliraj pokret i ne daj da kukovi padnu tokom serije."
+  ],
+  "tips": [
+   "Trup drži stegnutim da kukovi ne potonu.",
+   "Usredotoči se na snažno stezanje stražnje lože na vrhu pregiba.",
+   "Kontroliraj ekscentričnu fazu polako ispružajući noge."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Povlačenje V-ručkom",
+  "description": "Povlačenje neutralnim hvatom na uskoj V-ručki, za najveće istezanje širokih leđnih mišića i dublje stezanje.",
+  "instructions": [
+   "Zakvači V-ručku (dvostruko D) na gornju sajlu.",
+   "Sjedni s bedrima učvršćenima ispod jastuka i primi ručku s dlanovima jedan prema drugome.",
+   "Počni s rukama potpuno ispruženima iznad glave.",
+   "Povuci ručku prema prsnoj kosti gurajući laktove dolje i blago unazad.",
+   "Dolje stisni široke leđne mišiće i polako se, kontrolirano, vrati gore.",
+   "Ponovi preporučeni broj ponavljanja."
+  ],
+  "tips": [
+   "Neutralni hvat blaži je za ramena od nathvata ili pothvata.",
+   "Zamisli da privlačiš rebra kukovima: misli na leđa, ne na ruke."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Hodajući iskoraci s bučicama",
+  "description": "Naizmjenični iskoraci naprijed s bučicom u svakoj ruci; jednostrani trening četveroglavog mišića i gluteusa.",
+  "instructions": [
+   "Stoj s bučicama i opuštenim rukama uz tijelo.",
+   "Napravi dug korak naprijed i spusti se dok oba koljena ne budu savijena otprilike 90 stepeni.",
+   "Odguri se prednjom nogom da ustaneš i dovedi stražnju naprijed u sljedeći korak.",
+   "Izmjenjuj noge s uspravnim trupom cijelim putem."
+  ],
+  "tips": [
+   "Korači dovoljno dugo da prednje koljeno ne prelazi mnogo preko prstiju.",
+   "Treba ti slobodan prostor; ako ga nema, radi iskorake unazad."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Propadanja s dodatnom težinom",
+  "description": "Propadanja na paralelnim šipkama s dodatnom težinom, s bučicom među stopalima ili prslukom s tegovima.",
+  "instructions": [
+   "Osloni se na šipke ispruženih ruku s bučicom među stopalima ili gležnjevima.",
+   "Blago nagni trup i savij laktove za kontrolirano spuštanje.",
+   "Stani kad su ramena u visini laktova.",
+   "Potisni prsima i tricepsom do ispruženih ruku."
+  ],
+  "tips": [
+   "Najprije svladaj propadanja vlastitom težinom.",
+   "Ne spuštaj se niže nego što rame podnosi."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Zgibovi s dodatnom težinom",
+  "description": "Zgib s dodatnom težinom, s bučicom među stopalima ili prslukom s tegovima.",
+  "instructions": [
+   "Objesi se malo šire od ramena i drži bučicu među stopalima ili gležnjevima.",
+   "Vodi laktove dolje i natrag dok brada ne prijeđe šipku.",
+   "Tijelo drži stabilnim, bez njihanja.",
+   "Kontrolirano se spusti do potpuno ispruženih ruku."
+  ],
+  "tips": [
+   "Najprije svladaj zgibove vlastitom težinom.",
+   "Ako koristiš prsluk, težinu povećavaj postupno."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Sjedeće veslanje širokim hvatom",
+  "description": "Vodoravno veslanje na sajli dugom šipkom i širokim hvatom, koje opterećuje gornja leđa i stražnja ramena.",
+  "instructions": [
+   "Sjedni ispred donjeg kolotura sa stopalima na osloncu, blago savijenim koljenima i širokim hvatom duge šipke.",
+   "Ravnih leđa i podignutih prsa povlači šipku prema donjem dijelu prsa, laktovi van i natrag.",
+   "Na kraju spoji lopatice i zadrži napetost trenutak.",
+   "Kontrolirano ispruži ruke puštajući lopatice da se razmaknu bez zaobljivanja leđa."
+  ],
+  "tips": [
+   "Ne ljuljaj se: pokret izvode leđa, a ne trup.",
+   "Vodi šipku do prsa, a ne trbuha, da opteretiš gornja leđa."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher čučanj",
+  "description": "Čučanj sa šipkom u pregibu laktova, koji pomiče težinu naprijed i traži mnogo od trupa.",
+  "instructions": [
+   "Postavi šipku u visini trbuha u pregib laktova, s prekriženim podlakticama ili spojenim šakama.",
+   "Savij kukove i koljena s podignutim prsima i laktovima uz tijelo.",
+   "Stani kad su bedra usporedna s podom ili malo niže.",
+   "Odguruj pod stopalima dok ponovo ne stojiš uspravno."
+  ],
+  "tips": [
+   "Stavi jastuk ili peškir na šipku ako smeta laktovima.",
+   "Trbuh drži čvrstim da se ne prevrneš naprijed."
+  ]
+ },
+ "z-press": {
+  "name": "Z potisak",
+  "description": "Potisak iznad glave sjedeći na podu ispruženih nogu, koji uklanja oslonac i traži stabilan trup.",
+  "instructions": [
+   "Sjedni na pod s nogama ispruženima naprijed i šipkom na gornjem dijelu prsa.",
+   "Drži trup uspravnim i potisni šipku ravno uvis do ispruženih ruku.",
+   "Zaustavi šipku iznad tjemena bez naginjanja unazad.",
+   "Kontrolirano spusti do ključnih kostiju."
+  ],
+  "tips": [
+   "Uzmi manju težinu nego stojeći: trup mora stabilizirati.",
+   "Stražnjicu i trbuh drži stegnutima cijelim pokretom."
+  ]
+ }
+}
