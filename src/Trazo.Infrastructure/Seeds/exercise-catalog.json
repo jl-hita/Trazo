@@ -1,7 +1,7 @@
 [
   {
     "id": "ab-wheel-rollout",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Rueda Abdominal",
     "nameEn": "Ab Wheel Rollout",
@@ -50,6 +50,8 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [
+      "LowerBack",
+      "Shoulder",
       "Wrist"
     ],
     "metadataReviewed": true
@@ -164,7 +166,7 @@
   },
   {
     "id": "ball-leg-curl",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Curl de Piernas con Pelota de Estabilidad",
     "nameEn": "Stability Ball Leg Curl",
@@ -199,7 +201,6 @@
     "minimumExperience": "Intermediate",
     "suitableGoals": [
       "Hypertrophy",
-      "Strength",
       "GeneralFitness"
     ],
     "requiredEquipment": [
@@ -2197,7 +2198,7 @@
   },
   {
     "id": "dragon-flag",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Dragon Flag",
     "nameEn": "Dragon Flag",
@@ -2242,7 +2243,10 @@
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
-    "limitationAreas": [],
+    "limitationAreas": [
+      "LowerBack",
+      "Shoulder"
+    ],
     "metadataReviewed": true
   },
   {
@@ -3158,7 +3162,7 @@
   },
   {
     "id": "hanging-knee-raise",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Elevación de Rodillas Colgado",
     "nameEn": "Hanging Knee Raise",
@@ -3205,12 +3209,14 @@
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
-    "limitationAreas": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
     "metadataReviewed": true
   },
   {
     "id": "hanging-leg-raise",
-    "version": 4,
+    "version": 5,
     "source": "trazo-curated",
     "nameEs": "Elevación de Piernas Colgado",
     "nameEn": "Hanging Leg Raise",
@@ -3255,7 +3261,9 @@
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
-    "limitationAreas": [],
+    "limitationAreas": [
+      "Shoulder"
+    ],
     "metadataReviewed": true
   },
   {
@@ -3317,7 +3325,7 @@
   },
   {
     "id": "hip-abduction",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Abducción de Cadera en Máquina",
     "nameEn": "Machine Hip Abduction",
@@ -3344,11 +3352,10 @@
     "isBodyweight": false,
     "movementPattern": "Accessory",
     "primaryMuscles": [
-      "Glutes"
-    ],
-    "secondaryMuscles": [
+      "Glutes",
       "Abductors"
     ],
+    "secondaryMuscles": [],
     "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
@@ -3366,7 +3373,7 @@
   },
   {
     "id": "hip-adduction",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Aducción de Cadera en Máquina",
     "nameEn": "Machine Hip Adduction",
@@ -3397,7 +3404,7 @@
       "Adductors"
     ],
     "secondaryMuscles": [],
-    "minimumExperience": "Intermediate",
+    "minimumExperience": "Beginner",
     "suitableGoals": [
       "Hypertrophy",
       "GeneralFitness"
@@ -4329,7 +4336,7 @@
   },
   {
     "id": "machine-back-extension",
-    "version": 3,
+    "version": 4,
     "source": "repdb-free",
     "nameEs": "Extensión de Espalda en Máquina",
     "nameEn": "Machine Back Extension",
@@ -4372,10 +4379,7 @@
     ],
     "selectionPriority": 85,
     "isActive": true,
-    "effectiveSecondaryMuscles": [
-      "Glutes",
-      "Hamstrings"
-    ],
+    "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [
       "LowerBack"
@@ -5311,7 +5315,7 @@
   },
   {
     "id": "plank",
-    "version": 4,
+    "version": 5,
     "source": "trazo-curated",
     "nameEs": "Plancha Frontal",
     "nameEn": "Plank",
@@ -5354,9 +5358,7 @@
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
-    "limitationAreas": [
-      "Wrist"
-    ],
+    "limitationAreas": [],
     "metadataReviewed": true
   },
   {
@@ -6332,7 +6334,7 @@
   },
   {
     "id": "side-plank",
-    "version": 4,
+    "version": 5,
     "source": "repdb-free",
     "nameEs": "Plancha Lateral",
     "nameEn": "Side Plank",
@@ -6375,9 +6377,7 @@
     "isActive": true,
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
-    "limitationAreas": [
-      "Wrist"
-    ],
+    "limitationAreas": [],
     "metadataReviewed": true
   },
   {
@@ -6842,7 +6842,7 @@
   },
   {
     "id": "standing-ab-wheel-rollout",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Rueda Abdominal de Pie",
     "nameEn": "Standing Ab Wheel Rollout",
@@ -6889,6 +6889,8 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [
+      "LowerBack",
+      "Shoulder",
       "Wrist"
     ],
     "metadataReviewed": true
@@ -7568,7 +7570,7 @@
   },
   {
     "id": "zercher-squat",
-    "version": 3,
+    "version": 4,
     "source": "trazo-curated",
     "nameEs": "Sentadilla Zercher",
     "nameEn": "Zercher Squat",
@@ -7613,6 +7615,7 @@
     "effectiveSecondaryMuscles": [],
     "emphasis": [],
     "limitationAreas": [
+      "Elbow",
       "LowerBack",
       "Wrist"
     ],

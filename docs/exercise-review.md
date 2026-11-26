@@ -149,3 +149,96 @@ combinaciones probadas apenas usan el banco Scott ni el remo en polea de rodilla
 
 - En los tirones verticales la espalda alta no cuenta como serie; en los remos es primaria.
 - El antebrazo y los erectores en remos con barra no cuentan: su trabajo es de agarre o isométrico.
+
+## Lote 3 · Pierna, core y resto (70 ejercicios, 2026-11-26)
+
+12 cambiados, 58 sin cambios. Con este lote los 150 ejercicios del seed están revisados.
+
+| Ejercicio | Decisión |
+|---|---|
+| `ab-wheel-rollout` | **Cambiado.** Se evita también con limitación de hombro (carga con los brazos por encima de la cabeza) y lumbar (alta exigencia contra la extensión). |
+| `ball-leg-curl` | **Cambiado.** Deja de ofrecerse para fuerza, como los demás curls femorales sin carga progresiva. |
+| `banded-standing-curl` | Sin cambios |
+| `barbell-bulgarian-split-squat` | Sin cambios |
+| `barbell-glute-bridge` | Sin cambios |
+| `barbell-standing-calf-raise` | Sin cambios |
+| `bodyweight-calf-raise` | Sin cambios |
+| `bodyweight-reverse-lunge` | Sin cambios |
+| `bodyweight-squat` | Sin cambios |
+| `bulgarian-split-squat` | Sin cambios |
+| `cable-crunch` | Sin cambios |
+| `cable-pallof-press` | Sin cambios |
+| `captains-chair-knee-raise` | Sin cambios |
+| `db-squat` | Sin cambios |
+| `dead-bug` | Sin cambios |
+| `deadlift` | Sin cambios |
+| `deficit-deadlift` | Sin cambios |
+| `dragon-flag` | **Cambiado.** Se evita con limitación de hombro y lumbar: el cuerpo entero hace palanca sobre ambos. |
+| `dumbbell-farmers-walk` | Sin cambios |
+| `dumbbell-romanian-deadlift` | Sin cambios |
+| `dumbbell-single-leg-calf-raise` | Sin cambios |
+| `front-squat` | Sin cambios |
+| `glute-bridge` | Sin cambios |
+| `goblet-squat` | Sin cambios |
+| `good-morning` | Sin cambios |
+| `hack-squat` | Sin cambios |
+| `hanging-knee-raise` | **Cambiado.** Se evita con limitación de hombro: colgarse carga el hombro por encima de la cabeza y hay alternativas. |
+| `hanging-leg-raise` | **Cambiado.** Igual que la elevación de rodillas colgado: hombro. |
+| `hex-bar-deadlift` | Sin cambios |
+| `hip-abduction` | **Cambiado.** Los abductores pasan a primarios junto al glúteo, como en las abducciones sin máquina; antes la máquina de abducción no sumaba ni una serie de abductores. |
+| `hip-adduction` | **Cambiado.** Pasa a principiante: es una máquina guiada, como la de abducción. |
+| `hip-thrust` | Sin cambios |
+| `horizontal-leg-press` | Sin cambios |
+| `kettlebell-tibialis-raise` | Sin cambios |
+| `leg-curl` | Sin cambios |
+| `leg-extension` | Sin cambios |
+| `leg-press` | Sin cambios |
+| `leg-press-calf-raise` | Sin cambios |
+| `lying-leg-raise` | Sin cambios |
+| `machine-back-extension` | **Cambiado.** Glúteo e isquiotibiales dejan de contar: según sus instrucciones la cadera y las piernas quedan fijas y se mueve la columna. |
+| `machine-calf-raise` | Sin cambios |
+| `machine-seated-crunch` | Sin cambios |
+| `nordic-hamstring-curl` | Sin cambios |
+| `pause-squat` | Sin cambios |
+| `pistol-squat` | Sin cambios |
+| `plank` | **Cambiado.** Deja de evitarse con limitación de muñeca: se apoya en los antebrazos. La exclusión venía de su nombre. |
+| `plate-loaded-glute-drive` | Sin cambios |
+| `rack-pull` | Sin cambios |
+| `reverse-lunge` | Sin cambios |
+| `reverse-nordic-curl` | Sin cambios |
+| `romanian-deadlift` | Sin cambios |
+| `rowing-machine` | Sin cambios |
+| `seated-calf-raise` | Sin cambios |
+| `seated-dumbbell-calf-raise` | Sin cambios |
+| `seated-leg-curl` | Sin cambios |
+| `side-lying-hip-abduction` | Sin cambios |
+| `side-lying-hip-adduction` | Sin cambios |
+| `side-plank` | **Cambiado.** Deja de evitarse con limitación de muñeca: se apoya en el antebrazo. La exclusión venía de su nombre. |
+| `single-leg-glute-bridge` | Sin cambios |
+| `smith-machine-calf-raise` | Sin cambios |
+| `smith-machine-squat` | Sin cambios |
+| `squat` | Sin cambios |
+| `standing-ab-wheel-rollout` | **Cambiado.** Igual que la versión de rodillas: hombro y lumbar. |
+| `standing-calf-raise` | Sin cambios |
+| `standing-hip-abduction` | Sin cambios |
+| `step-ups` | Sin cambios |
+| `sumo-deadlift` | Sin cambios |
+| `trx-hamstring-curl` | Sin cambios |
+| `walking-lunge` | Sin cambios |
+| `zercher-squat` | **Cambiado.** Se evita también con limitación de codo: la barra descansa en la flexión de los codos. |
+
+### Efecto en los planes
+
+Comparados con el resultado del lote 2 en las mismas 1.890 combinaciones: cambian 48, solo en datos de la prescripción (misma
+selección y mismas series). El volumen estimado de abductores sube un 7,1 % porque la máquina de abducción ahora lo cuenta.
+Ninguna combinación deja de generar plan.
+
+### Decisiones tomadas sin evidencia directa
+
+Todas son criterio de producto, abiertas a la revisión de un entrenador:
+
+- **Sentadilla en máquina Smith y peso muerto con barra hexagonal con limitación lumbar:** se mantienen como estaban (la
+  Smith no se evita; la barra hexagonal sí). Evitar la Smith dejaría sin plan a quien solo tiene esa máquina, porque la
+  sentadilla nunca se elimina de un plan.
+- **Extensión de cuádriceps con limitación de rodilla:** se mantiene; es un ejercicio habitual en readaptación.
+- **Exclusiones nuevas de core:** el core directo solo entra en un plan con prioridad explícita, así que su efecto es pequeño.
