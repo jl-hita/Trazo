@@ -15,7 +15,9 @@ public sealed record ObserverInput(
     IReadOnlyCollection<int> Periods,
     DateTimeOffset Now,
     /// <summary>Sequences of the preparation blocks (a deliberate low volume, so nothing is learned from them). Null when the plan has none.</summary>
-    IReadOnlySet<int>? PreparationSequences = null);
+    IReadOnlySet<int>? PreparationSequences = null,
+    /// <summary>Effective secondary muscles of the catalog, for sessions stored before prescriptions carried them.</summary>
+    IReadOnlyDictionary<string, IReadOnlyList<string>>? StoredStimulus = null);
 
 /// <summary>
 /// Turns the workouts of a plan into one observation per muscle and period (<see cref="MuscleWeekObservation"/>). Pure and deterministic.
@@ -79,11 +81,10 @@ public static class MuscleWeekObserver
 
             foreach (var session in sessions)
             {
-                var prescription = PrescriptionJson.Read(session.PrescriptionJson);
+                var prescription = PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(session.PrescriptionJson, input.StoredStimulus));
                 var muscles = new Dictionary<string, IReadOnlyCollection<string>>(StringComparer.OrdinalIgnoreCase);
                 foreach (var e in prescription)
-                    muscles.TryAdd(e.ExerciseId, TrainingStimulus.EffectiveMuscles(
-                        e.ExerciseId, e.PrimaryMuscleGroups.Select(m => m.ToString()), e.SecondaryMuscleGroups.Select(m => m.ToString())));
+                    muscles.TryAdd(e.ExerciseId, e.StimulatedMuscles().Select(m => m.ToString()).ToList());
                 var prescribedBySessionMuscle = new Dictionary<string, int>(StringComparer.Ordinal);
                 foreach (var exercise in prescription)
                     foreach (var muscle in muscles[exercise.ExerciseId])

@@ -17,6 +17,7 @@ interface Draft {
   movementPattern: string; difficulty: string; minimumExperience: string; forceType: string; mechanic: string;
   bodyPart: string; equipment: string; requiredEquipment: string; primaryMuscles: string; secondaryMuscles: string;
   suitableGoals: string; met: number; selectionPriority: number; isUnilateral: boolean; isBodyweight: boolean;
+  effectiveSecondaryMuscles: string; emphasis: string; limitationAreas: string; metadataReviewed: boolean;
 }
 
 type Kind = 'text' | 'textarea' | 'lines' | 'tags' | 'number';
@@ -25,7 +26,8 @@ interface Field { key: keyof Draft; label: string; kind: Kind; options?: keyof A
 const EMPTY: Draft = {
   id: '', nameEs: '', nameEn: '', descriptionEs: '', instructionsEs: '', tipsEs: '', movementPattern: '', difficulty: '',
   minimumExperience: '', forceType: '', mechanic: '', bodyPart: '', equipment: '', requiredEquipment: '', primaryMuscles: '',
-  secondaryMuscles: '', suitableGoals: '', met: 3.5, selectionPriority: 50, isUnilateral: false, isBodyweight: false
+  secondaryMuscles: '', suitableGoals: '', met: 3.5, selectionPriority: 50, isUnilateral: false, isBodyweight: false,
+  effectiveSecondaryMuscles: '', emphasis: '', limitationAreas: '', metadataReviewed: false
 };
 
 const F = UI_COPY.exercises.fields;
@@ -41,6 +43,9 @@ const FIELDS: Field[] = [
   { key: 'minimumExperience', label: F.minimumExperience, kind: 'text', options: 'experiences', required: true },
   { key: 'primaryMuscles', label: F.primaryMuscles, kind: 'tags', options: 'muscles', required: true, hint: F.primaryMusclesHint },
   { key: 'secondaryMuscles', label: F.secondaryMuscles, kind: 'tags', options: 'muscles', hint: F.secondaryMusclesHint },
+  { key: 'effectiveSecondaryMuscles', label: F.effectiveSecondaryMuscles, kind: 'tags', options: 'muscles', hint: F.effectiveSecondaryMusclesHint },
+  { key: 'emphasis', label: F.emphasis, kind: 'tags', options: 'emphases', hint: F.emphasisHint },
+  { key: 'limitationAreas', label: F.limitationAreas, kind: 'tags', options: 'limitationAreas', hint: F.limitationAreasHint },
   { key: 'equipment', label: F.equipment, kind: 'text', options: 'equipment' },
   { key: 'requiredEquipment', label: F.requiredEquipment, kind: 'tags', options: 'equipment', hint: F.requiredEquipmentHint },
   { key: 'suitableGoals', label: F.suitableGoals, kind: 'tags', options: 'goals', required: true, hint: F.suitableGoalsHint },
@@ -52,7 +57,8 @@ const FIELDS: Field[] = [
 ];
 
 const OPTION_LISTS: (keyof AdminExerciseOptions)[] = [
-  'movementPatterns', 'difficulties', 'experiences', 'equipment', 'forceTypes', 'mechanics', 'bodyParts', 'muscles', 'goals'
+  'movementPatterns', 'difficulties', 'experiences', 'equipment', 'forceTypes', 'mechanics', 'bodyParts', 'muscles', 'goals',
+  'emphases', 'limitationAreas'
 ];
 
 const lines = (value: string) => value.split('\n').map(v => v.trim()).filter(Boolean);
@@ -274,7 +280,9 @@ export class ExercisesPageComponent {
       bodyPart: d.bodyPart, equipment: d.equipment ?? '', requiredEquipment: d.requiredEquipment.join(', '),
       primaryMuscles: d.primaryMuscles.join(', '), secondaryMuscles: d.secondaryMuscles.join(', '),
       suitableGoals: d.suitableGoals.join(', '), met: d.met, selectionPriority: d.selectionPriority,
-      isUnilateral: d.isUnilateral, isBodyweight: d.isBodyweight
+      isUnilateral: d.isUnilateral, isBodyweight: d.isBodyweight,
+      effectiveSecondaryMuscles: d.effectiveSecondaryMuscles.join(', '), emphasis: d.emphasis.join(', '),
+      limitationAreas: d.limitationAreas.join(', '), metadataReviewed: d.metadataReviewed
     });
   }
 
@@ -287,7 +295,9 @@ export class ExercisesPageComponent {
       isUnilateral: d.isUnilateral, isBodyweight: d.isBodyweight, movementPattern: d.movementPattern,
       primaryMuscles: tags(d.primaryMuscles), secondaryMuscles: tags(d.secondaryMuscles),
       minimumExperience: d.minimumExperience, suitableGoals: tags(d.suitableGoals), requiredEquipment: tags(d.requiredEquipment),
-      selectionPriority: Number.isFinite(Number(d.selectionPriority)) ? Number(d.selectionPriority) : 50
+      selectionPriority: Number.isFinite(Number(d.selectionPriority)) ? Number(d.selectionPriority) : 50,
+      effectiveSecondaryMuscles: tags(d.effectiveSecondaryMuscles), emphasis: tags(d.emphasis),
+      limitationAreas: tags(d.limitationAreas), metadataReviewed: d.metadataReviewed
     };
   }
 

@@ -9,7 +9,7 @@ internal static class PlanTestCatalog
 {
     private static ExerciseCatalogItem I(string id, string pattern, string[] primary, string[] secondary, string[] equipment,
         string experience = "Beginner", int priority = 70, string[]? goals = null) =>
-        ExerciseCandidateMapperTests.Item(id, pattern, experience, goals, primary, secondary, equipment, priority: priority);
+        ExerciseCandidateMapperTests.Item(id, pattern, experience, goals, primary, secondary, equipment, priority: priority).Described();
 
     public static IReadOnlyList<ExerciseCatalogItem> Items() =>
     [

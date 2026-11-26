@@ -123,7 +123,7 @@ public sealed class TrainingProgramGeneratorTests
             [TrainingGoal.GeneralFitness, TrainingGoal.Hypertrophy, TrainingGoal.Strength],
             TrainingExperience.Beginner, 40, true,
             [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes],
-            [TrainingMuscleGroup.Hamstrings]);
+            [TrainingMuscleGroup.Hamstrings]).Described();
         var result = TrainingProgramGenerator.Generate(
             Request() with { DurationWeeks = 4 },
             Catalog().Append(alternative).ToArray());
@@ -148,7 +148,7 @@ public sealed class TrainingProgramGeneratorTests
             [TrainingGoal.GeneralFitness, TrainingGoal.Hypertrophy, TrainingGoal.Strength],
             TrainingExperience.Beginner, 40, true,
             [TrainingMuscleGroup.UpperBack, TrainingMuscleGroup.Lats],
-            [TrainingMuscleGroup.Biceps]);
+            [TrainingMuscleGroup.Biceps]).Described();
         var result = TrainingProgramGenerator.Generate(
             Request() with
             {
@@ -202,7 +202,7 @@ public sealed class TrainingProgramGeneratorTests
                 TrainingMovementPattern.Accessory, [],
                 [TrainingGoal.GeneralFitness, TrainingGoal.Hypertrophy, TrainingGoal.Strength],
                 TrainingExperience.Beginner, 100, true,
-                [TrainingMuscleGroup.Abdominals], []))
+                [TrainingMuscleGroup.Abdominals], []).Described())
             .ToArray();
 
         var result = TrainingProgramGenerator.Generate(
@@ -250,7 +250,7 @@ public sealed class TrainingProgramGeneratorTests
                 [TrainingGoal.GeneralFitness, TrainingGoal.Hypertrophy, TrainingGoal.Strength],
                 TrainingExperience.Beginner, 40, true,
                 [TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Glutes],
-                [TrainingMuscleGroup.ErectorSpinae])).ToArray());
+                [TrainingMuscleGroup.ErectorSpinae]).Described()).ToArray());
 
         Assert.True(result.Succeeded, string.Join("; ", result.Errors));
         Assert.DoesNotContain(result.Prescription!.Sessions.SelectMany(x => x.Exercises),
@@ -716,7 +716,7 @@ public sealed class TrainingProgramGeneratorTests
             "seated-leg-curl", "test", "Curl femoral sentado", TrainingMovementPattern.Accessory,
             ["leg-curl-machine"], [TrainingGoal.Hypertrophy, TrainingGoal.GeneralFitness],
             TrainingExperience.Beginner, 10, true,
-            [TrainingMuscleGroup.Hamstrings], [TrainingMuscleGroup.Calves])).ToArray();
+            [TrainingMuscleGroup.Hamstrings], [TrainingMuscleGroup.Calves]).Described()).ToArray();
 
         var generated = TrainingProgramGenerator.Generate(
             Request() with { MaximumSessionDurationMinutes = 90 }, catalog);
@@ -740,7 +740,7 @@ public sealed class TrainingProgramGeneratorTests
             "banded-standing-curl", "test", "Curl de pierna de pie con banda", TrainingMovementPattern.Accessory,
             ["resistance-band"], [TrainingGoal.Hypertrophy, TrainingGoal.GeneralFitness],
             TrainingExperience.Beginner, 42, true,
-            [TrainingMuscleGroup.Hamstrings], [TrainingMuscleGroup.Calves])).ToArray();
+            [TrainingMuscleGroup.Hamstrings], [TrainingMuscleGroup.Calves]).Described()).ToArray();
 
         var generated = TrainingProgramGenerator.Generate(
             Request() with
@@ -770,7 +770,7 @@ public sealed class TrainingProgramGeneratorTests
             [], [TrainingGoal.Hypertrophy, TrainingGoal.GeneralFitness],
             TrainingExperience.Intermediate, 58, true,
             [TrainingMuscleGroup.Quadriceps],
-            [TrainingMuscleGroup.HipFlexors, TrainingMuscleGroup.Abdominals])).ToArray();
+            [TrainingMuscleGroup.HipFlexors, TrainingMuscleGroup.Abdominals]).Described()).ToArray();
 
         var generated = TrainingProgramGenerator.Generate(
             Request() with
@@ -807,7 +807,7 @@ public sealed class TrainingProgramGeneratorTests
             "leg-extension", "test", "Extensión de cuádriceps", TrainingMovementPattern.Accessory,
             ["leg-extension-machine"], [TrainingGoal.Hypertrophy],
             TrainingExperience.Beginner, 1, true,
-            [TrainingMuscleGroup.Quadriceps], [])).ToArray();
+            [TrainingMuscleGroup.Quadriceps], []).Described()).ToArray();
 
         var generated = TrainingProgramGenerator.Generate(
             Request() with
@@ -840,7 +840,7 @@ public sealed class TrainingProgramGeneratorTests
             "seated-leg-curl", "test", "Curl femoral sentado", TrainingMovementPattern.Accessory,
             ["leg-curl-machine"], [TrainingGoal.Hypertrophy, TrainingGoal.GeneralFitness],
             TrainingExperience.Beginner, 10, true,
-            [TrainingMuscleGroup.Hamstrings], [TrainingMuscleGroup.Calves])).ToArray();
+            [TrainingMuscleGroup.Hamstrings], [TrainingMuscleGroup.Calves]).Described()).ToArray();
 
         var targetAlreadyMet = TrainingProgramGenerator.Generate(
             Request() with
@@ -868,11 +868,11 @@ public sealed class TrainingProgramGeneratorTests
             .Append(new TrainingExerciseCandidate(
                 "biceps-curl", "test", "Curl de bíceps", TrainingMovementPattern.Accessory,
                 [], [TrainingGoal.Hypertrophy], TrainingExperience.Beginner, 55, true,
-                [TrainingMuscleGroup.Biceps], []))
+                [TrainingMuscleGroup.Biceps], []).Described())
             .Append(new TrainingExerciseCandidate(
                 "leg-extension", "test", "Extensión de cuádriceps", TrainingMovementPattern.Accessory,
                 [], [TrainingGoal.Hypertrophy], TrainingExperience.Beginner, 55, true,
-                [TrainingMuscleGroup.Quadriceps], []))
+                [TrainingMuscleGroup.Quadriceps], []).Described())
             .ToArray();
         // Engine 0.10.0: this used a strength plan. Its compound lifts now start with enough sets (three on the
         // main lift, two on single-leg work) to cover the small strength target of the quadriceps, so no leg
@@ -994,7 +994,7 @@ public sealed class TrainingProgramGeneratorTests
         var candidate = new TrainingExerciseCandidate(
             "bench-press", "test", "Press banca", TrainingMovementPattern.HorizontalPush,
             [], [TrainingGoal.Hypertrophy], TrainingExperience.Beginner, 50, true,
-            [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]);
+            [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]).Described();
         var manual = TrainingProgramQualityAnalyzer.AnalyzeManual(
             [candidate],
             [new TrainingManualVolumeSessionInput(
@@ -1008,7 +1008,7 @@ public sealed class TrainingProgramGeneratorTests
                     [new TrainingExercisePrescription(
                         "bench-press", "test", "Press banca", 1, 3, 8, 12, 2m, 120,
                         TrainingProgressionRule.DoubleProgression, "Test",
-                        [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps])])]));
+                        [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Triceps]).Described()])]));
 
         var manualMuscles = manual.QualityReport.WeeklyMuscleVolumes.Single().Muscles;
         var generatedMuscles = generated.WeeklyMuscleVolumes.Single().Muscles;
@@ -1029,25 +1029,25 @@ public sealed class TrainingProgramGeneratorTests
             {
                 new TrainingExerciseCandidate("straight-arm-pulldown", "catalog-2026-10", "Jalón con brazos rectos",
                     TrainingMovementPattern.Accessory, ["cable"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 58, true, [TrainingMuscleGroup.Lats], []),
+                    TrainingExperience.Beginner, 58, true, [TrainingMuscleGroup.Lats], []).Described(),
                 new TrainingExerciseCandidate("cable-fly", "catalog-2026-10", "Aperturas en polea",
                     TrainingMovementPattern.Accessory, ["cable"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Deltoids]),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Deltoids]).Described(),
                 new TrainingExerciseCandidate("cable-lateral-raise", "catalog-2026-10", "Elevación lateral en polea",
                     TrainingMovementPattern.Accessory, ["cable"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], [TrainingMuscleGroup.UpperBack]),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], [TrainingMuscleGroup.UpperBack]).Described(),
                 new TrainingExerciseCandidate("lateral-raise", "catalog-2026-10", "Elevación lateral",
                     TrainingMovementPattern.Accessory, ["dumbbell"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], []),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], []).Described(),
                 new TrainingExerciseCandidate("machine-calf-raise", "catalog-2026-10", "Gemelo en máquina",
                     TrainingMovementPattern.Accessory, ["calf-raise-machine"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Calves], []),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Calves], []).Described(),
                 new TrainingExerciseCandidate("leg-extension", "catalog-2026-10", "Extensión de cuádriceps",
                     TrainingMovementPattern.Accessory, ["leg-extension-machine"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Quadriceps], []),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Quadriceps], []).Described(),
                 new TrainingExerciseCandidate("shrug", "catalog-2026-10", "Encogimientos",
                     TrainingMovementPattern.Accessory, ["dumbbell"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.UpperBack], [])
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.UpperBack], []).Described()
             })
             .ToArray();
         var request = new TrainingProgramGenerationRequest(
@@ -1087,19 +1087,19 @@ public sealed class TrainingProgramGeneratorTests
             {
                 new TrainingExerciseCandidate("straight-arm-pulldown", "catalog-2026-10", "Jalón con brazos rectos",
                     TrainingMovementPattern.Accessory, ["cable"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 58, true, [TrainingMuscleGroup.Lats], []),
+                    TrainingExperience.Beginner, 58, true, [TrainingMuscleGroup.Lats], []).Described(),
                 new TrainingExerciseCandidate("cable-fly", "catalog-2026-10", "Aperturas en polea",
                     TrainingMovementPattern.Accessory, ["cable"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Deltoids]),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Chest], [TrainingMuscleGroup.Deltoids]).Described(),
                 new TrainingExerciseCandidate("lateral-raise", "catalog-2026-10", "Elevación lateral",
                     TrainingMovementPattern.Accessory, ["dumbbell"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], []),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Deltoids], []).Described(),
                 new TrainingExerciseCandidate("machine-calf-raise", "catalog-2026-10", "Gemelo en máquina",
                     TrainingMovementPattern.Accessory, ["calf-raise-machine"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Calves], []),
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Calves], []).Described(),
                 new TrainingExerciseCandidate("leg-extension", "catalog-2026-10", "Extensión de cuádriceps",
                     TrainingMovementPattern.Accessory, ["leg-extension-machine"], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Quadriceps], [])
+                    TrainingExperience.Beginner, 72, true, [TrainingMuscleGroup.Quadriceps], []).Described()
             })
             .ToArray();
 
@@ -1163,16 +1163,16 @@ public sealed class TrainingProgramGeneratorTests
             {
                 new TrainingExerciseCandidate("lateral-raise", "catalog-2026-10", "Elevación lateral",
                     TrainingMovementPattern.Accessory, [], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Deltoids], []),
+                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Deltoids], []).Described(),
                 new TrainingExerciseCandidate("cable-curl", "catalog-2026-10", "Curl en polea",
                     TrainingMovementPattern.Accessory, [], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Biceps], []),
+                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Biceps], []).Described(),
                 new TrainingExerciseCandidate("tricep-pushdown", "catalog-2026-10", "Extensión de tríceps en polea",
                     TrainingMovementPattern.Accessory, [], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Triceps], []),
+                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Triceps], []).Described(),
                 new TrainingExerciseCandidate("machine-calf-raise", "catalog-2026-10", "Gemelo en máquina",
                     TrainingMovementPattern.Accessory, [], [TrainingGoal.Hypertrophy],
-                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Calves], [])
+                    TrainingExperience.Beginner, 50, true, [TrainingMuscleGroup.Calves], []).Described()
             })
             .ToArray();
 
@@ -1247,7 +1247,7 @@ public sealed class TrainingProgramGeneratorTests
                 50,
                 true,
                 primary,
-                secondary);
+                secondary).Described();
         }).ToArray();
     }
 

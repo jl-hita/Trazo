@@ -198,7 +198,6 @@ calcula cuando se fije la métrica principal. Solo datos anónimos o agregados, 
 | ID | Decisión | Recomendación | Bloquea |
 |---|---|---|---|
 | D3 | DietoExpress mientras cambia el motor | Congelar el port hasta cerrar P0 | — |
-| D4 | Modelo de metadatos | R1 | P0-2 |
 | D5 | Modelo de prescripción, volumen y matriz del generador | R3–R5 | P1 |
 | D6 | Precedencia manual | R6 | P2 |
 | D7 | Lista de programas y reparto Free/Premium | R7–R8 | P3 |
@@ -225,13 +224,13 @@ batería de P5 empieza con P0 porque protege sus cambios.
 |---|---|---|---|---|---|---|
 | P0-0 | Roadmap | Este documento, enlazado desde #48 | — | Hecho | #238 | solo documentación |
 | P0-1 | Validador único e informe de divergencias | Mismas reglas en seed, panel e importador; aviso al arrancar y `GET /admin/exercises/seed-report`; ningún dato cambia | — | Hecho | #239 | validador, seed, informe, panel e importación en CI; no comprobado en producción |
-| P0-2 | Metadatos nuevos en datos | Migración y seed con R1; panel y API; valores equivalentes a las tablas | P0-1, D4 | Pendiente | | |
-| P0-3 | Motor y limitaciones sin ids | Se borran tabla de estímulo, tokens y overrides; golden y exclusiones idénticos; prueba que impide literales de id; un ejercicio nuevo funciona sin código | P0-2 | Pendiente | | |
-| P0-4 | Seed autoritativo | R2 completa: producción igual al seed en metadatos y traducciones, idempotente, instalación nueva equivalente; la consola marca los ejercicios del seed y bloquea su edición | P0-1 | Hecho (falta comprobar producción) | #240 | seeder en SQLite y PostgreSQL (CI), panel, importación, consola |
+| P0-2 | Metadatos nuevos en datos | Migración y seed con R1; panel y API; valores equivalentes a las tablas | P0-1, D4 | Hecho | PR abierta | migración, validador, panel, seeder |
+| P0-3 | Motor y limitaciones sin ids | Se borran tabla de estímulo, tokens y overrides; planes y exclusiones idénticos; prueba que impide literales de id; un ejercicio nuevo funciona sin código | P0-2 | Hecho | PR abierta | golden intacto; 1.890 planes del catálogo real idénticos a los de `main` (comprobación puntual) |
+| P0-4 | Seed autoritativo | R2 completa: producción igual al seed en metadatos y traducciones, idempotente, instalación nueva equivalente; la consola marca los ejercicios del seed y bloquea su edición | P0-1 | Hecho (producción comprobada tras desplegar) | #240 | seeder en SQLite y PostgreSQL (CI), panel, importación, consola |
 | P0-5 | Revisión ejercicio a ejercicio (3 PR por patrón) | Cada ejercicio con decisión registrada; cambios de plan explicados | P0-3, P0-4 | Pendiente | | |
 | P5-1 | Escenarios de decisión | Perfiles, fatiga, estancamiento, dolor, incumplimiento; en CI | — | Pendiente | | |
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Pendiente | | |
-| C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | En curso | #241 | cobertura de todos los idiomas y correspondencia de pasos |
+| C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | Hecho (sin revisión nativa) | #241 | cobertura de todos los idiomas y correspondencia de pasos |
 | C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Pendiente | | |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Pendiente | | |
@@ -257,6 +256,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | Se adopta este roadmap con precedencia sobre las prioridades de producto de #48. Recomendaciones R1 y R3–R10 pendientes de aprobación. |
 | 2026-11-26 | D1: el seed es la línea base, con traducciones en todos los idiomas, sobrescribe la base de datos en sus ejercicios y la consola los identifica (R2). |
 | 2026-11-26 | D2: la pista de lanzamiento va justo después de este roadmap. |
+| 2026-11-26 | D4: aprobado el modelo de metadatos R1. Los valores iniciales reproducen las reglas anteriores; corregirlos es P0-5. |
 
 ## 7. Evidencia consultada
 

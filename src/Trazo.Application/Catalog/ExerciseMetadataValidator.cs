@@ -7,7 +7,10 @@ public sealed record ExerciseMetadata(
     string Id, string NameEs, string NameEn, string DescriptionEs, string[] InstructionsEs, string[] TipsEs, string ForceType,
     string Mechanic, string Difficulty, string? Equipment, string BodyPart, double Met, bool IsUnilateral, bool IsBodyweight,
     string MovementPattern, string[] PrimaryMuscles, string[] SecondaryMuscles, string MinimumExperience,
-    string[] SuitableGoals, string[] RequiredEquipment, int SelectionPriority);
+    string[] SuitableGoals, string[] RequiredEquipment, int SelectionPriority,
+    string[]? EffectiveSecondaryMuscles = null, string[]? Emphasis = null,
+    // Null means nobody said; an empty list means the exercise is avoided for no area.
+    string[]? LimitationAreas = null, bool MetadataReviewed = false);
 
 /// <summary>The texts of an exercise in one language.</summary>
 public sealed record ExerciseText(string Name, string Description, string[] Instructions, string[] Tips);
@@ -92,6 +95,16 @@ public static partial class ExerciseMetadataValidator
         if (pattern == "SingleLeg" && !input.IsUnilateral)
             Fail("isUnilateral", "A single-leg exercise is unilateral.");
 
+        var effective = Many("effectiveSecondaryMuscles", input.EffectiveSecondaryMuscles, ExerciseCatalogVocabulary.Muscles, 0);
+        if (effective.Except(secondary, StringComparer.OrdinalIgnoreCase).Any())
+            Fail("effectiveSecondaryMuscles", "Only secondary muscles of the exercise can count as a set.");
+        var emphasis = Many("emphasis", input.Emphasis, ExerciseCatalogVocabulary.Emphases, 0);
+        if (emphasis.Contains("LateralDeltoid") && !primary.Contains("Deltoids"))
+            Fail("emphasis", "A lateral deltoid exercise has the deltoids as a primary muscle.");
+        var areas = Many("limitationAreas", input.LimitationAreas, ExerciseCatalogVocabulary.LimitationAreas, 0);
+        if (input.MetadataReviewed && input.LimitationAreas is null)
+            Fail("limitationAreas", "A reviewed exercise says which areas it is avoided for, even if none.");
+
         var displayEquipment = input.Equipment?.Trim();
         if (string.IsNullOrEmpty(displayEquipment)) displayEquipment = null;
         else if (!DisplayEquipmentPattern().IsMatch(displayEquipment))
@@ -114,7 +127,7 @@ public static partial class ExerciseMetadataValidator
             input.Met, input.IsUnilateral, input.IsBodyweight, pattern, primary, secondary,
             One("minimumExperience", input.MinimumExperience, ExerciseCatalogVocabulary.Experiences),
             Many("suitableGoals", input.SuitableGoals, ExerciseCatalogVocabulary.Goals, 1),
-            equipment, input.SelectionPriority);
+            equipment, input.SelectionPriority, effective, emphasis, input.LimitationAreas is null ? null : areas, input.MetadataReviewed);
 
         return new ExerciseValidation(clean, errors.ToDictionary(e => e.Key, e => e.Value.ToArray(), StringComparer.Ordinal));
     }

@@ -14,6 +14,11 @@ public static class ExerciseCatalogVocabulary
     public static readonly IReadOnlyList<string> Goals = Enum.GetNames<TrainingGoal>();
     public static readonly IReadOnlyList<string> Experiences = Enum.GetNames<TrainingExperience>();
 
+    public static readonly IReadOnlyList<string> Emphases = Enum.GetNames<TrainingExerciseEmphasis>();
+
+    /// <summary>Body areas a user can declare a limitation in; each exercise declares the ones it is avoided for.</summary>
+    public static readonly IReadOnlyList<string> LimitationAreas = ["Elbow", "Knee", "LowerBack", "Shoulder", "Wrist"];
+
     public static readonly IReadOnlyList<string> Difficulties = ["beginner", "intermediate", "advanced"];
     public static readonly IReadOnlyList<string> Mechanics = ["compound", "isolation"];
     public static readonly IReadOnlyList<string> ForceTypes = ["push", "pull", "static", "dynamic"];

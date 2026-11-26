@@ -34,7 +34,7 @@ export interface AdminExerciseDetail {
   isUnilateral: boolean; isBodyweight: boolean; movementPattern: string; primaryMuscles: string[]; secondaryMuscles: string[];
   minimumExperience: string; suitableGoals: string[]; requiredEquipment: string[]; selectionPriority: number;
   isActive: boolean; locallyCurated: boolean; importedFrom: string | null; imageSlots: number[]; createdAt: string; updatedAt: string;
-  fromSeed: boolean;
+  fromSeed: boolean; effectiveSecondaryMuscles: string[]; emphasis: string[]; limitationAreas: string[]; metadataReviewed: boolean;
 }
 
 export interface AdminExerciseInput {
@@ -42,11 +42,12 @@ export interface AdminExerciseInput {
   forceType: string; mechanic: string; difficulty: string; equipment: string; bodyPart: string; met: number;
   isUnilateral: boolean; isBodyweight: boolean; movementPattern: string; primaryMuscles: string[]; secondaryMuscles: string[];
   minimumExperience: string; suitableGoals: string[]; requiredEquipment: string[]; selectionPriority: number;
+  effectiveSecondaryMuscles: string[]; emphasis: string[]; limitationAreas: string[]; metadataReviewed: boolean;
 }
 
 export interface AdminExerciseOptions {
   movementPatterns: string[]; difficulties: string[]; experiences: string[]; equipment: string[]; forceTypes: string[];
-  mechanics: string[]; bodyParts: string[]; sources: string[]; muscles: string[]; goals: string[];
+  mechanics: string[]; bodyParts: string[]; sources: string[]; muscles: string[]; goals: string[]; emphases: string[]; limitationAreas: string[];
 }
 
 export interface ExerciseFilters {

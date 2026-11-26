@@ -462,7 +462,7 @@ public sealed class MesocycleTraceUnitTests
         Assert.Equal(["a", "z"], exercises[1].GetProperty("requiredEquipment").EnumerateArray().Select(e => e.GetString()!).ToArray());
         Assert.Equal(JsonValueKind.Number, exercises[0].GetProperty("selectionPriority").ValueKind);
         Assert.Equal(JsonValueKind.True, exercises[0].GetProperty("isReviewed").ValueKind);
-        Assert.Equal(1, json.RootElement.GetProperty("fingerprintVersion").GetInt32());
+        Assert.Equal(2, json.RootElement.GetProperty("fingerprintVersion").GetInt32());
     }
 
     [Fact]

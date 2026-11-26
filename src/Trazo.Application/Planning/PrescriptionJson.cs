@@ -65,6 +65,28 @@ public static class PrescriptionJson
             ?["supersetGroup"]?.GetValue<string>();
     }
 
+    /// <summary>
+    /// A prescription stored before it carried the secondary muscles that count, completed from today's catalog: those of the
+    /// exercise's secondary muscles that the catalog marks as effective. The stored text is not changed, and a prescription that
+    /// already says which count is returned as it is.
+    /// </summary>
+    public static string CompleteStimulus(string json, IReadOnlyDictionary<string, IReadOnlyList<string>>? catalog)
+    {
+        const string field = "effectiveSecondaryMuscleGroups";
+        if (catalog is null || JsonNode.Parse(json) is not JsonObject root || root["exercises"] is not JsonArray array) return json;
+        var changed = false;
+        foreach (var item in array.OfType<JsonObject>())
+        {
+            if (item[field] is JsonArray || (string?)item["exerciseId"] is not { } id) continue;
+            var effective = catalog.TryGetValue(id, out var found) ? found : [];
+            var secondary = item["secondaryMuscleGroups"] as JsonArray ?? [];
+            item[field] = new JsonArray(secondary.Select(m => m?.GetValueKind() == JsonValueKind.String ? (string?)m : null)
+                .Where(m => m is not null && effective.Contains(m)).Select(m => (JsonNode?)JsonValue.Create(m)).ToArray());
+            changed = true;
+        }
+        return changed ? root.ToJsonString(Options) : json;
+    }
+
     public static IReadOnlyList<TrainingExercisePrescription> Read(string json)
     {
         var root = JsonNode.Parse(json) as JsonObject;

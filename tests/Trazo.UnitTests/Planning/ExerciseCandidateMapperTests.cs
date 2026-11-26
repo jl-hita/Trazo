@@ -17,7 +17,7 @@ public sealed class ExerciseCandidateMapperTests
         MinimumExperience = experience, SuitableGoals = goals ?? ["GeneralFitness", "Hypertrophy", "Strength"],
         PrimaryMuscles = primary ?? ["Chest"], SecondaryMuscles = secondary ?? ["Triceps"],
         RequiredEquipment = equipment ?? ["barbell", "bench"], SelectionPriority = priority, IsActive = active,
-        SeedVersion = 1, UpdatedAt = new DateTimeOffset(2026, 11, 13, 10, 30, 0, TimeSpan.Zero)
+        SeedVersion = 1, UpdatedAt = new DateTimeOffset(2026, 11, 13, 10, 30, 0, TimeSpan.Zero), MetadataReviewed = true
     };
 
     [Fact]

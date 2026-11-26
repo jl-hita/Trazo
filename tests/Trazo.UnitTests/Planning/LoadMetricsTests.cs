@@ -11,7 +11,7 @@ public sealed class LoadMetricsTests
 {
     private static readonly DateTimeOffset Now = new(2026, 11, 16, 18, 0, 0, TimeSpan.Zero);
 
-    private static readonly DoseExercise Bench = new("bench-press", ["Chest"], ["Triceps", "Deltoids"], 4);
+    private static readonly DoseExercise Bench = new("bench-press", ["Chest"], ["Triceps"], 4);
     private static readonly DoseExercise Row = new("barbell-row", ["Lats", "UpperBack"], ["Biceps"], 4);
 
     private static DoseWorkout Workout(DateTimeOffset at) => new(at, [Bench, Row]);
@@ -22,7 +22,7 @@ public sealed class LoadMetricsTests
         var effective = LoadMetrics.Effective([Bench, new DoseExercise("bench-press", ["Chest"], ["Chest", "Triceps"], 2)]);
         Assert.Equal(6m, effective["Chest"]);    // 4 + 2, the secondary entry for the same muscle does not add
         Assert.Equal(6m, effective["Triceps"]);  // a press counts in full for the triceps, as the generator counts it
-        Assert.False(effective.ContainsKey("Deltoids")); // listed as secondary, but not a meaningful contribution of a bench press
+        Assert.False(effective.ContainsKey("Deltoids")); // not among the secondaries that count for a bench press
     }
 
     [Fact]

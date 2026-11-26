@@ -30,6 +30,9 @@ public sealed class ClassicalPlanGoldenTests
         ["dumbbell", "bench"]
     ];
 
+    private static string WithoutStimulusField(string json) =>
+        System.Text.RegularExpressions.Regex.Replace(json, ",\"effectiveSecondaryMuscleGroups\":\\[[^\\]]*\\]", "");
+
     private static IEnumerable<(string Name, string Text)> Cases()
     {
         var catalog = PlanTestCatalog.Candidates();
@@ -55,7 +58,7 @@ public sealed class ClassicalPlanGoldenTests
             var text = new StringBuilder();
             if (!result.Succeeded) text.Append("ERRORS " + string.Join(" || ", result.Errors)).Append((char)10);
             foreach (var session in result.Sessions)
-                text.Append($"{session.WeekNumber}|{session.Date:yyyy-MM-dd}|{session.Day}|{session.Title}|{session.EstimatedDurationMinutes}|{session.PrescriptionJson}").Append((char)10);
+                text.Append($"{session.WeekNumber}|{session.Date:yyyy-MM-dd}|{session.Day}|{session.Title}|{session.EstimatedDurationMinutes}|{WithoutStimulusField(session.PrescriptionJson)}").Append((char)10);
             if (result.Quality is { } quality) text.Append("WARN " + string.Join(" || ", quality.Warnings)).Append((char)10);
             yield return (name, text.ToString());
         }

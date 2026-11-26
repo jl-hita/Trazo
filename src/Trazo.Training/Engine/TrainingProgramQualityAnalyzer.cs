@@ -78,7 +78,8 @@ public static class TrainingProgramQualityAnalyzer
                     candidate.ExerciseId, candidate.CatalogVersion, candidate.Name, exercises.Count + 1,
                     input.Sets, 8, 12, null, 90, TrainingProgressionRule.None,
                     "Prescripción manual; metadatos declarados del catálogo.",
-                    candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups));
+                    candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups,
+                    EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? []));
             }
 
             var title = string.IsNullOrWhiteSpace(inputSession.Title) ? "Sesión manual" : inputSession.Title.Trim();
@@ -169,8 +170,7 @@ public static class TrainingProgramQualityAnalyzer
                 // Preserve raw primary/secondary counts for traceability; effective volume
                 // is calculated separately from the exercise-specific stimulus audit.
                 var estimatedEffectiveSets = sessions.SelectMany(session => session.Exercises)
-                    .Where(exercise => TrainingExerciseStimulus.GetEffectiveMuscles(
-                        exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups).Contains(muscle))
+                    .Where(exercise => exercise.StimulatedMuscles().Contains(muscle))
                     .Sum(exercise => exercise.Sets);
                 muscles.Add(new TrainingMuscleVolume(muscle, primarySets, secondarySets,
                     primaryFrequency, secondaryFrequency, estimatedEffectiveSets));
@@ -185,8 +185,7 @@ public static class TrainingProgramQualityAnalyzer
                     var primary = session.Exercises.Where(exercise => exercise.PrimaryMuscleGroups.Contains(muscle)).Sum(exercise => exercise.Sets);
                     var secondary = session.Exercises.Where(exercise => exercise.SecondaryMuscleGroups.Contains(muscle)).Sum(exercise => exercise.Sets);
                     var effective = session.Exercises
-                        .Where(exercise => TrainingExerciseStimulus.GetEffectiveMuscles(
-                            exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups).Contains(muscle))
+                        .Where(exercise => exercise.StimulatedMuscles().Contains(muscle))
                         .Sum(exercise => exercise.Sets);
                     return new TrainingMuscleVolume(muscle, primary, secondary,
                         primary > 0 ? 1 : 0, secondary > 0 ? 1 : 0, effective);
@@ -209,8 +208,7 @@ public static class TrainingProgramQualityAnalyzer
                 foreach (var muscle in MajorMuscleFrequencyReviewMuscles)
                 {
                     var effectiveFrequency = sessions.Count(session => session.Exercises.Any(exercise =>
-                        TrainingExerciseStimulus.GetEffectiveMuscles(
-                            exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+                        exercise.StimulatedMuscles()
                             .Contains(muscle)));
                     if (effectiveFrequency > 0 && effectiveFrequency / weeksPerGroup < 2m)
                         warnings.Add($"{GroupLabel(week, rotation)}: {muscle} recibe estímulo efectivo en {(!rotation ? "1 sesión" : $"{effectiveFrequency / weeksPerGroup:0.#} sesiones por semana")}. ACSM 2026 destaca al menos dos sesiones semanales de entrenamiento de fuerza; aplicar esa frecuencia a cada músculo es una heurística interna de revisión, no un mínimo universal ni una recomendación de frecuencia para hipertrofia. Revisa la distribución del split.");

@@ -49,11 +49,13 @@ public static class ExerciseCandidateMapper
                 SuitableGoals: goals,
                 MinimumExperience: experience,
                 SelectionPriority: Math.Clamp(item.SelectionPriority, 0, 100),
-                // Imported exercises were approved and reviewed in DietoExpress and administrators curate the rest,
-                // so every active catalog exercise carries reviewed metadata.
-                IsReviewed: true,
+                // Only an exercise whose metadata somebody reviewed is planned automatically.
+                IsReviewed: item.MetadataReviewed,
                 PrimaryMuscleGroups: primary,
-                SecondaryMuscleGroups: secondary));
+                SecondaryMuscleGroups: secondary,
+                EffectiveSecondaryMuscleGroups: ParseAll<TrainingMuscleGroup>(item.EffectiveSecondaryMuscles).Where(secondary.Contains).ToList(),
+                Emphasis: ParseAll<TrainingExerciseEmphasis>(item.Emphasis),
+                LimitationAreas: item.LimitationAreas.ToList()));
         }
         return new CandidateMappingResult(candidates, skipped);
     }

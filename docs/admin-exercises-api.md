@@ -38,7 +38,18 @@ Creating, editing and showing (`activate`) an exercise, the seed and the DietoEx
 (`ExerciseMetadataValidator`): closed vocabularies for pattern, muscles, goals, experience, difficulty, mechanic, force type,
 body part and required equipment (listed by `GET /options`); at least one primary muscle and one goal; no muscle both primary
 and secondary; at least three instructions; equipment required unless the exercise is bodyweight; single-leg exercises are
-unilateral. Errors are returned per field. An import with any invalid record writes nothing.
+unilateral. Errors are returned per field.
+
+Planning metadata, which the engine reads instead of deducing anything from the identifier:
+
+| Field | Meaning |
+|---|---|
+| `effectiveSecondaryMuscles` | Secondary muscles that count a set (subset of `secondaryMuscles`) |
+| `emphasis` | Part of a muscle the plan reserves direct work for (`LateralDeltoid`, primary deltoids) |
+| `limitationAreas` | `Elbow`, `Knee`, `LowerBack`, `Shoulder`, `Wrist`: avoided for users with a limitation there |
+| `metadataReviewed` | Only a reviewed exercise is planned automatically; it must state `limitationAreas`, even empty. Any limitation avoids an unreviewed one |
+
+A DietoExpress import does not carry these fields: it leaves the exercises it adds or changes unreviewed. An import with any invalid record writes nothing.
 
 ## Seed report
 

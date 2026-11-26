@@ -123,16 +123,13 @@ text so the same mapping works on PostgreSQL and on SQLite in tests. A partial u
 5. **Determinism.** The generator is pure. The plan keeps a random `Seed` chosen at creation; selection rotation uses
    `seed % 1000 + block number`, so the same profile, seed and history always give the same plan, and different users with
    the same profile can get different (equivalent) exercises.
-6. **Limitations are an exclusion list, not a diagnosis.** The catalog has no contraindication metadata, so
-   `LimitationRules` maps five areas (`Knee`, `Shoulder`, `LowerBack`, `Wrist`, `Elbow`) to exercises to avoid. Each area
-   combines structural rules read from reviewed metadata (pattern, primary muscles, equipment: `Shoulder` excludes every
-   vertical press and every direct deltoid raise whatever the implement, `LowerBack` barbell squats and unsupported
-   barbell rows, `Wrist` bodyweight pressing on the hands) with id tokens for movements the metadata cannot describe
-   (`dip`, `skull-crusher`, `lunge`...). They narrow the choice; the plan states it is not medical advice. Since engine
-   0.10.0 an area never makes a plan impossible by itself: when overhead pressing or single-leg work is left without
-   exercises the session keeps its sibling pattern (horizontal press, hinge) or receives it as a substitute, and a
-   warning says so. Squat, hinge, horizontal press and row are never dropped: a profile left without one of them still
-   fails with the engine's own explanation (`422 plan_generation_failed`). Users can also exclude exercises by id.
+6. **Limitations are an exclusion list, not a diagnosis.** Each catalog exercise declares the areas (`Knee`, `Shoulder`,
+   `LowerBack`, `Wrist`, `Elbow`) it is avoided for, and `LimitationRules` applies them; an unreviewed exercise is avoided for
+   any limitation. They narrow the choice; the plan states it is not medical advice. Since engine 0.10.0 an area never makes a
+   plan impossible by itself: when overhead pressing or single-leg work is left without exercises the session keeps its sibling
+   pattern (horizontal press, hinge) or receives it as a substitute, and a warning says so. Squat, hinge, horizontal press and
+   row are never dropped: a profile left without one of them still fails with the engine's own explanation
+   (`422 plan_generation_failed`). Users can also exclude exercises by id.
 7. **Equipment.** Tokens are normalised (lower case, hyphens). An empty list means *everything is available*; the engine
    treats `machine` as interchangeable with `*-machine`.
 8. **Calendar.** A plan week is the seven days starting at the plan's start date (the day it was created by default).
@@ -638,9 +635,11 @@ Reviewed and left as they were, with the reason: the selection of exercises (Smi
 
 ## Indirect stimulus coverage
 
-A secondary muscle counts as a set only where `TrainingExerciseStimulus` says the contribution is meaningful (an audited table, binary: it
-counts a full set or nothing; it is a planning convention, not a measurement). Every active exercise of the seed now has an explicit decision
-(`IsReviewed`), and a test fails when a new seed exercise is added without one. `inverted-row` counts biceps like its bent-knee sibling;
+A secondary muscle counts as a set only where the catalog says the contribution is meaningful (`effectiveSecondaryMuscles`, binary: it
+counts a full set or nothing; it is a planning convention, not a measurement). Prescriptions carry the decision
+(`effectiveSecondaryMuscleGroups`); sessions stored before are completed from the catalog when read. Every seed exercise is
+reviewed (`metadataReviewed`) and states these fields, and a test fails otherwise. Nothing is deduced from exercise identifiers: emphasis
+and injury exclusions (`limitationAreas`) are catalog data too, and a test forbids exercise ids in the code. `inverted-row` counts biceps like its bent-knee sibling;
 `cable-reverse-fly` and `rowing-machine` have no meaningful secondary. A graded model (fractions of a set) was not introduced: there is no
 evidence base in the product to calibrate the fractions.
 

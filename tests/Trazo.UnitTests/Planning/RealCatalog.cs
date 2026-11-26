@@ -14,6 +14,8 @@ internal static class RealCatalog
         public string MovementPattern { get; init; } = ""; public string[] PrimaryMuscles { get; init; } = []; public string[] SecondaryMuscles { get; init; } = [];
         public string MinimumExperience { get; init; } = ""; public string[] SuitableGoals { get; init; } = []; public string[] RequiredEquipment { get; init; } = [];
         public int SelectionPriority { get; init; } = 50; public bool IsActive { get; init; } = true;
+        public string[] EffectiveSecondaryMuscles { get; init; } = []; public string[] Emphasis { get; init; } = []; public string[] LimitationAreas { get; init; } = [];
+        public bool MetadataReviewed { get; init; }
     }
 
     private static IReadOnlyCollection<TrainingExerciseCandidate>? cached;
@@ -30,7 +32,8 @@ internal static class RealCatalog
             Id = s.Id, Source = "trazo-curated", NameEn = s.NameEn, NameEs = s.NameEs, DescriptionEs = "x", ForceType = "x", Mechanic = "x", Difficulty = "x",
             BodyPart = "x", MovementPattern = s.MovementPattern, MinimumExperience = s.MinimumExperience, SuitableGoals = s.SuitableGoals,
             PrimaryMuscles = s.PrimaryMuscles, SecondaryMuscles = s.SecondaryMuscles, RequiredEquipment = s.RequiredEquipment,
-            SelectionPriority = s.SelectionPriority, IsActive = s.IsActive, SeedVersion = 1
+            SelectionPriority = s.SelectionPriority, IsActive = s.IsActive, SeedVersion = 1, EffectiveSecondaryMuscles = s.EffectiveSecondaryMuscles,
+            Emphasis = s.Emphasis, LimitationAreas = s.LimitationAreas, MetadataReviewed = s.MetadataReviewed
         }).Where(i => i.IsActive).ToList();
         return cached = ExerciseCandidateMapper.Map(items).Candidates;
     }

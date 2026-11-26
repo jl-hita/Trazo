@@ -31,7 +31,7 @@ public sealed class TrainingMuscleFeedbackMapperTests
     [Fact]
     public void MapperAndPlannedVolumeUseOnlyReviewedMeaningfulSecondaryStimulus()
     {
-        const string rowPrescription = """{"exercises":[{"exerciseId":"seated-cable-row","sets":3,"primaryMuscleGroups":["Lats","UpperBack"],"secondaryMuscleGroups":["Biceps","Forearms"]}]}""";
+        const string rowPrescription = """{"exercises":[{"exerciseId":"seated-cable-row","sets":3,"primaryMuscleGroups":["Lats","UpperBack"],"secondaryMuscleGroups":["Biceps","Forearms"],"effectiveSecondaryMuscleGroups":["Biceps"]}]}""";
 
         var exposures = TrainingMuscleFeedbackMapper.Map([
             new(new DateOnly(2026, 11, 6), "completed",

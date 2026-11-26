@@ -96,8 +96,7 @@ public static class TrainingProgramVolumeAllocator
             var weekKeys = output.Keys.Where(key => key.WeekNumber == week).OrderBy(key => key.Day).ToArray();
             var weekSessions = weekKeys.Select(key => output[key]).ToArray();
             var stimulatedMuscles = weekSessions.SelectMany(x => x.Exercises)
-                .SelectMany(x => TrainingExerciseStimulus.GetEffectiveMuscles(
-                    x.ExerciseId, x.PrimaryMuscleGroups, x.SecondaryMuscleGroups))
+                .SelectMany(x => x.StimulatedMuscles())
                 .Distinct()
                 .ToArray();
             // A target muscle that the draft does not train at all is reported, not silently dropped.
@@ -130,11 +129,9 @@ public static class TrainingProgramVolumeAllocator
                         var score = DeficitScore(exercise, primaryVolume, applicableTargets, goal, experience, preferences, step);
                         if (score <= 0m)
                             continue;
-                        var localPrimaryVolume = TrainingExerciseStimulus.GetEffectiveMuscles(
-                            exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+                        var localPrimaryVolume = exercise.StimulatedMuscles()
                             .Select(muscle => session.Exercises
-                                .Where(item => TrainingExerciseStimulus.GetEffectiveMuscles(
-                                    item.ExerciseId, item.PrimaryMuscleGroups, item.SecondaryMuscleGroups).Contains(muscle))
+                                .Where(item => item.StimulatedMuscles().Contains(muscle))
                                 .Sum(item => (decimal)item.Sets))
                             .DefaultIfEmpty(0m)
                             .Average();
@@ -189,8 +186,7 @@ public static class TrainingProgramVolumeAllocator
                                 exercise.Sets >= MaximumSetsFor(exercise, goal, true) ||
                                 duration + AdditionalSetSeconds(exercise) > limit)
                                 continue;
-                            var tracked = TrainingExerciseStimulus.GetEffectiveMuscles(
-                                    exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+                            var tracked = exercise.StimulatedMuscles()
                                 .Where(applicableTargets.ContainsKey)
                                 .ToArray();
                             if (tracked.Length == 0 ||
@@ -279,8 +275,7 @@ public static class TrainingProgramVolumeAllocator
         var volume = new Dictionary<TrainingMuscleGroup, decimal>();
         foreach (var exercise in sessions.SelectMany(x => x.Exercises))
         {
-            foreach (var muscle in TrainingExerciseStimulus.GetEffectiveMuscles(
-                         exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups))
+            foreach (var muscle in exercise.StimulatedMuscles())
                 volume[muscle] = volume.GetValueOrDefault(muscle) + exercise.Sets;
         }
         return volume;
@@ -312,8 +307,7 @@ public static class TrainingProgramVolumeAllocator
         // Targets refer to effective sets. A compound may continue contributing while all
         // its stimulated muscles remain inside their accepted ranges, even if one has passed
         // its central target. Stop before the next set would exceed any upper bound.
-        var primaryMuscles = TrainingExerciseStimulus.GetEffectiveMuscles(
-                exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+        var primaryMuscles = exercise.StimulatedMuscles()
             .Where(targets.ContainsKey)
             .ToArray();
         if (primaryMuscles.Length == 0)
@@ -350,8 +344,7 @@ public static class TrainingProgramVolumeAllocator
     {
         var limiting = exercise.PrimaryMuscleGroups.Where(targets.ContainsKey).ToArray();
         if (limiting.Length == 0)
-            limiting = TrainingExerciseStimulus.GetEffectiveMuscles(
-                    exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+            limiting = exercise.StimulatedMuscles()
                 .Where(targets.ContainsKey).ToArray();
         if (limiting.Any(muscle =>
             {
@@ -361,8 +354,7 @@ public static class TrainingProgramVolumeAllocator
             return true;
 
         // Synergists do not stop a lift at their own ceiling, but nothing goes past the absolute weekly ceiling.
-        return TrainingExerciseStimulus.GetEffectiveMuscles(
-                exercise.ExerciseId, exercise.PrimaryMuscleGroups, exercise.SecondaryMuscleGroups)
+        return exercise.StimulatedMuscles()
             .Where(muscle => targets.ContainsKey(muscle) && !HasRaisedExplicitTarget(preferences, muscle))
             .Any(muscle => volume.GetValueOrDefault(muscle) + Math.Max(step, addedSets) > AbsoluteWeeklySetCeiling);
     }

@@ -49,10 +49,8 @@ public static class PriorityDelivery
     {
         var total = new Dictionary<TrainingMuscleGroup, decimal>();
         foreach (var exercise in sessions.SelectMany(s => s))
-            foreach (var name in TrainingStimulus.EffectiveMuscles(
-                         exercise.ExerciseId, exercise.PrimaryMuscleGroups.Select(m => m.ToString()), exercise.SecondaryMuscleGroups.Select(m => m.ToString())))
-                if (Enum.TryParse<TrainingMuscleGroup>(name, out var muscle))
-                    total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets;
+            foreach (var muscle in exercise.StimulatedMuscles())
+                total[muscle] = total.GetValueOrDefault(muscle) + exercise.Sets;
         return total;
     }
 }

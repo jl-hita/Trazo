@@ -167,9 +167,12 @@ public static class CatalogFingerprint
             requiredEquipment = Sorted(c.RequiredEquipment),
             suitableGoals = Sorted(c.SuitableGoals.Select(g => g.ToString())),
             primaryMuscles = Sorted(c.PrimaryMuscleGroups.Select(m => m.ToString())),
-            secondaryMuscles = Sorted(c.SecondaryMuscleGroups.Select(m => m.ToString()))
+            secondaryMuscles = Sorted(c.SecondaryMuscleGroups.Select(m => m.ToString())),
+            effectiveSecondaryMuscles = Sorted((c.EffectiveSecondaryMuscleGroups ?? []).Select(m => m.ToString())),
+            emphasis = Sorted((c.Emphasis ?? []).Select(e => e.ToString())),
+            limitationAreas = Sorted(c.LimitationAreas ?? [])
         }).ToArray();
-        return JsonSerializer.Serialize(new { fingerprintVersion = 1, exercises }, Canonical);
+        return JsonSerializer.Serialize(new { fingerprintVersion = 2, exercises }, Canonical);
     }
 
     public static string Compute(IEnumerable<TrainingExerciseCandidate> catalog) =>

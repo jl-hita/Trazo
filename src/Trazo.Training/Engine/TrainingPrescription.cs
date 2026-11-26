@@ -48,7 +48,9 @@ public sealed record TrainingExercisePrescription(
     int? WarmupSets = null,
     string? WarmupNote = null,
     decimal? TargetLoadKg = null,
-    string? LoadBasis = null);
+    string? LoadBasis = null,
+    // The secondary muscles that count as a set. Null only in prescriptions stored before the field existed.
+    IReadOnlyList<TrainingMuscleGroup>? EffectiveSecondaryMuscleGroups = null);
 
 /// <summary>Controlled vocabulary for reviewed exercise muscle metadata.</summary>
 public enum TrainingMuscleGroup
@@ -199,169 +201,34 @@ public static class TrainingPrescriptionValidator
 
 
 /// <summary>
-/// Exercise-specific stimulus audit for weekly hypertrophy volume. Primary muscles always count.
-/// A secondary muscle counts only when the exercise loads it dynamically through a meaningful
-/// range of motion; stabilizers, grip-only work and incidental co-contraction do not count.
-/// This is a conservative, explicit curation of the 97-exercise RepDB generator catalog, not
-/// a universal biomechanical classifier.
-/// </summary>
-internal static class TrainingExerciseStimulus
-{
-    private static readonly IReadOnlyDictionary<string, TrainingMuscleGroup[]> MeaningfulSecondary =
-        new Dictionary<string, TrainingMuscleGroup[]>(StringComparer.OrdinalIgnoreCase)
-        {
-            // Horizontal/vertical pressing: elbow extension is a meaningful loaded action.
-            ["bench-press"] = [TrainingMuscleGroup.Triceps],
-            ["db-bench-press"] = [TrainingMuscleGroup.Triceps],
-            ["incline-bench-press"] = [TrainingMuscleGroup.Triceps],
-            ["incline-db-press"] = [TrainingMuscleGroup.Triceps],
-            ["smith-machine-bench-press"] = [TrainingMuscleGroup.Triceps],
-            ["smith-machine-incline-bench-press"] = [TrainingMuscleGroup.Triceps],
-            ["chest-press-machine"] = [TrainingMuscleGroup.Triceps],
-            ["push-up"] = [TrainingMuscleGroup.Triceps],
-            ["knee-push-ups"] = [TrainingMuscleGroup.Triceps],
-            ["incline-push-ups"] = [TrainingMuscleGroup.Triceps],
-            ["ohp"] = [TrainingMuscleGroup.Triceps],
-            ["dumbbell-shoulder-press"] = [TrainingMuscleGroup.Triceps],
-            ["machine-shoulder-press"] = [TrainingMuscleGroup.Triceps],
-
-            // Rows load elbow flexors and lats dynamically; vertical pulls load elbow flexors.
-            ["barbell-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["single-arm-db-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["chest-supported-db-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["seated-cable-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["chest-supported-machine-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["t-bar-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["chest-supported-kettlebell-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["kneeling-cable-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["one-arm-seated-cable-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["lat-pulldown"] = [TrainingMuscleGroup.Biceps],
-            ["v-bar-lat-pulldown"] = [TrainingMuscleGroup.Biceps],
-            ["assisted-pull-ups"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["pull-up"] = [TrainingMuscleGroup.Biceps],
-            ["chin-ups"] = [TrainingMuscleGroup.Biceps],
-
-            // Knee-dominant compounds: both quads and glutes can receive meaningful dynamic work.
-            ["squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["front-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["goblet-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["db-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["leg-press"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["horizontal-leg-press"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["hack-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["bulgarian-split-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["reverse-lunge"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["step-ups"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-
-            // Hip hinges: hamstrings and glutes are loaded through hip extension.
-            ["deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["hex-bar-deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["romanian-deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["dumbbell-romanian-deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-
-            // Rear-delt fly/face-pull variations dynamically load the upper back as well.
-            ["dumbbell-reverse-fly"] = [TrainingMuscleGroup.UpperBack],
-            ["machine-reverse-fly"] = [TrainingMuscleGroup.UpperBack],
-            ["face-pull"] = [TrainingMuscleGroup.UpperBack],
-
-            // Hip-extension back extensions and loaded knee raises also train these muscles dynamically.
-            ["machine-back-extension"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["hanging-knee-raise"] = [TrainingMuscleGroup.HipFlexors],
-            ["captains-chair-knee-raise"] = [TrainingMuscleGroup.HipFlexors],
-
-            // TRAZO additions. Same criteria as above: a secondary muscle counts only when the exercise loads it
-            // dynamically through a meaningful range of motion.
-            ["wide-grip-seated-cable-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["chest-supported-t-bar-row"] = [TrainingMuscleGroup.Biceps],
-            ["pendlay-row"] = [TrainingMuscleGroup.Biceps],
-            ["weighted-pull-up"] = [TrainingMuscleGroup.Biceps],
-            ["arnold-press"] = [TrainingMuscleGroup.Triceps],
-            ["seated-barbell-overhead-press"] = [TrainingMuscleGroup.Triceps],
-            ["push-press"] = [TrainingMuscleGroup.Triceps],
-            ["z-press"] = [TrainingMuscleGroup.Triceps],
-            ["pike-push-up"] = [TrainingMuscleGroup.Triceps],
-            ["handstand-push-up"] = [TrainingMuscleGroup.Triceps],
-            ["paused-bench-press"] = [TrainingMuscleGroup.Triceps],
-            ["pause-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["zercher-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["barbell-bulgarian-split-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["pistol-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["rack-pull"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["deficit-deadlift"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["good-morning"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Hamstrings],
-            ["hanging-leg-raise"] = [TrainingMuscleGroup.HipFlexors],
-            ["bodyweight-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["bodyweight-reverse-lunge"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps],
-            ["bent-knee-inverted-row"] = [TrainingMuscleGroup.Biceps],
-            ["inverted-row"] = [TrainingMuscleGroup.Biceps], // same movement as the bent-knee version, audited with it
-            ["negative-pull-up"] = [TrainingMuscleGroup.Biceps],
-            ["band-row"] = [TrainingMuscleGroup.Biceps],
-            ["band-lat-pulldown"] = [TrainingMuscleGroup.Biceps],
-            ["band-shoulder-press"] = [TrainingMuscleGroup.Triceps],
-            ["elevated-pike-push-up"] = [TrainingMuscleGroup.Triceps],
-            ["dumbbell-bent-over-row"] = [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.Lats],
-            ["smith-machine-squat"] = [TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Quadriceps]
-        };
-
-    // Explicitly audited catalog isolates/accessories whose secondary tags do not represent
-    // enough dynamic stimulus to add a full hypertrophy set to another muscle.
-    private static readonly HashSet<string> ReviewedWithoutMeaningfulSecondary =
-    [
-        "straight-arm-pulldown", "hip-thrust", "plate-loaded-glute-drive", "barbell-glute-bridge",
-        "cable-fly", "db-fly", "pec-deck", "lateral-raise", "cable-lateral-raise", "shrug",
-        "barbell-curl", "hammer-curl", "incline-db-curl", "preacher-curl", "cable-curl",
-        "tricep-pushdown", "cable-overhead-tricep-extension", "overhead-tricep-extension", "skull-crusher",
-        "leg-extension", "reverse-nordic-curl", "leg-curl", "seated-leg-curl", "nordic-hamstring-curl",
-        "ball-leg-curl", "banded-standing-curl", "trx-hamstring-curl", "standing-calf-raise",
-        "seated-calf-raise", "kettlebell-tibialis-raise", "cable-external-rotation", "hip-adduction",
-        "standing-hip-abduction", "hip-abduction", "cable-crunch", "ab-wheel-rollout",
-        "cable-pallof-press", "side-plank", "dumbbell-farmers-walk", "seated-dumbbell-lateral-raise",
-        "machine-seated-crunch", "dead-bug", "machine-chest-fly", "machine-bicep-curl",
-        "single-arm-plate-loaded-lateral-raise", "machine-calf-raise", "side-lying-hip-abduction",
-        "side-lying-hip-adduction", "glute-bridge", "bodyweight-calf-raise",
-        // TRAZO additions: the secondary tags do not add a full set to another muscle.
-        "dumbbell-shrug", "band-pull-apart", "incline-bench-y-raise", "leg-press-calf-raise",
-        "dumbbell-single-leg-calf-raise", "seated-dumbbell-calf-raise", "smith-machine-calf-raise",
-        "barbell-standing-calf-raise", "dumbbell-front-raise", "cable-front-raise", "weighted-dip",
-        "dragon-flag", "standing-ab-wheel-rollout", "single-leg-glute-bridge",
-        // TRAZO seed exercises that predate the table (decision: no meaningful secondary).
-        "dumbbell-curl", "parallel-bar-dips", "plank", "walking-lunge", "sumo-deadlift",
-        "close-grip-bench-press", "lying-leg-raise",
-        // Audited later: a rear-delt isolation and a cardio machine (not part of hypertrophy programs).
-        "cable-reverse-fly", "rowing-machine"
-    ];
-
-    public static bool IsReviewed(string exerciseId) =>
-        MeaningfulSecondary.ContainsKey(exerciseId) || ReviewedWithoutMeaningfulSecondary.Contains(exerciseId);
-
-    public static IReadOnlySet<TrainingMuscleGroup> GetEffectiveMuscles(
-        string exerciseId,
-        IReadOnlyList<TrainingMuscleGroup> primary,
-        IReadOnlyList<TrainingMuscleGroup> secondary)
-    {
-        var result = primary.ToHashSet();
-        if (!MeaningfulSecondary.TryGetValue(exerciseId, out var meaningful))
-            return result;
-
-        foreach (var muscle in secondary)
-            if (meaningful.Contains(muscle))
-                result.Add(muscle);
-
-        return result;
-    }
-}
-
-/// <summary>
-/// The engine's own reading of which muscles an exercise really stimulates (its primary muscles plus the secondary ones with a meaningful
-/// dynamic contribution), by name, for the parts of the application that measure dose and must agree with what the generator planned.
+/// Which muscles an exercise really stimulates: its primary muscles plus the secondary ones with a meaningful dynamic
+/// contribution. That decision is reviewed catalog data (<see cref="TrainingExerciseCandidate.EffectiveSecondaryMuscleGroups"/>,
+/// copied into every prescription), never something deduced from the exercise's identifier. A set counts fully or not at all:
+/// it is a planning convention, not a measurement of stimulus.
 /// </summary>
 public static class TrainingStimulus
 {
-    public static IReadOnlyCollection<string> EffectiveMuscles(string exerciseId, IEnumerable<string> primary, IEnumerable<string> secondary)
+    public static IReadOnlySet<TrainingMuscleGroup> Of(
+        IEnumerable<TrainingMuscleGroup> primary, IEnumerable<TrainingMuscleGroup>? effectiveSecondary)
     {
-        static List<TrainingMuscleGroup> Parse(IEnumerable<string> names) =>
+        var result = primary.ToHashSet();
+        foreach (var muscle in effectiveSecondary ?? [])
+            result.Add(muscle);
+        return result;
+    }
+
+    public static IReadOnlySet<TrainingMuscleGroup> StimulatedMuscles(this TrainingExercisePrescription exercise) =>
+        Of(exercise.PrimaryMuscleGroups, exercise.EffectiveSecondaryMuscleGroups);
+
+    public static IReadOnlySet<TrainingMuscleGroup> StimulatedMuscles(this TrainingExerciseCandidate exercise) =>
+        Of(exercise.PrimaryMuscleGroups, exercise.EffectiveSecondaryMuscleGroups);
+
+    /// <summary>The same by name, for the parts of the application that measure dose and must agree with what the generator planned.</summary>
+    public static IReadOnlyCollection<string> EffectiveMuscles(IEnumerable<string> primary, IEnumerable<string> effectiveSecondary)
+    {
+        static IEnumerable<TrainingMuscleGroup> Parse(IEnumerable<string> names) =>
             names.Select(name => Enum.TryParse<TrainingMuscleGroup>(name, out var muscle) ? (TrainingMuscleGroup?)muscle : null)
-                .Where(muscle => muscle is not null).Select(muscle => muscle!.Value).ToList();
-        return TrainingExerciseStimulus.GetEffectiveMuscles(exerciseId, Parse(primary), Parse(secondary)).Select(muscle => muscle.ToString()).ToList();
+                .Where(muscle => muscle is not null).Select(muscle => muscle!.Value);
+        return Of(Parse(primary), Parse(effectiveSecondary)).Select(muscle => muscle.ToString()).ToList();
     }
 }

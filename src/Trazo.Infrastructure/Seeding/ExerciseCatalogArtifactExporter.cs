@@ -47,7 +47,11 @@ public sealed class ExerciseCatalogArtifactExporter(
         int SeedVersion,
         bool IsActive,
         DateTimeOffset CreatedAt,
-        DateTimeOffset UpdatedAt);
+        DateTimeOffset UpdatedAt,
+        string[] EffectiveSecondaryMuscles,
+        string[] Emphasis,
+        string[] LimitationAreas,
+        bool MetadataReviewed);
 
     private sealed record Artifact(
         int SchemaVersion,
@@ -87,7 +91,11 @@ public sealed class ExerciseCatalogArtifactExporter(
                 x.SeedVersion,
                 x.IsActive,
                 x.CreatedAt,
-                x.UpdatedAt))
+                x.UpdatedAt,
+                x.EffectiveSecondaryMuscles,
+                x.Emphasis,
+                x.LimitationAreas,
+                x.MetadataReviewed))
             .ToListAsync(cancellationToken);
 
         var artifact = new Artifact(

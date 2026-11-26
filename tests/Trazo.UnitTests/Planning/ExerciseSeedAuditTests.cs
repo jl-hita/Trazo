@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Trazo.Training;
 using Xunit;
 
 namespace Trazo.UnitTests.Planning;
@@ -37,36 +36,26 @@ public sealed class ExerciseSeedAuditTests
     }
 
     [Fact]
-    public void EveryCuratedSeedExerciseHasAnExplicitStimulusDecision()
+    public void EverySeedExerciseIsReviewedAndStatesItsPlanningMetadata()
     {
-        var missing = Entries()
-            .Where(x => x.GetProperty("source").GetString() == "trazo-curated")
-            .Select(x => x.GetProperty("id").GetString()!)
-            .Where(id => !TrainingExerciseStimulus.IsReviewed(id))
-            .ToList();
-
-        Assert.True(missing.Count == 0, "Add these exercises to TrainingExerciseStimulus: " + string.Join(", ", missing));
+        Assert.All(Entries(), x =>
+        {
+            Assert.True(x.GetProperty("metadataReviewed").GetBoolean(), x.GetProperty("id").GetString());
+            Assert.True(x.TryGetProperty("effectiveSecondaryMuscles", out _) && x.TryGetProperty("emphasis", out _) &&
+                x.TryGetProperty("limitationAreas", out _), x.GetProperty("id").GetString());
+        });
     }
 
-    [Fact]
-    public void MeaningfulSecondaryMusclesCountAsSetsOnlyWhereTheTableSaysSo()
+    [Theory]
+    [InlineData("pendlay-row", "Biceps", "ErectorSpinae")]
+    [InlineData("pike-push-up", "Triceps", "UpperBack")]
+    [InlineData("rack-pull", "Hamstrings", "Forearms")]
+    public void ASecondaryMuscleCountsAsASetOnlyWhereTheCatalogSaysSo(string id, string counts, string incidental)
     {
-        var row = TrainingExerciseStimulus.GetEffectiveMuscles("pendlay-row", [TrainingMuscleGroup.Lats, TrainingMuscleGroup.UpperBack],
-            [TrainingMuscleGroup.Biceps, TrainingMuscleGroup.ErectorSpinae, TrainingMuscleGroup.Forearms]);
-        Assert.Contains(TrainingMuscleGroup.Biceps, row);
-        Assert.DoesNotContain(TrainingMuscleGroup.ErectorSpinae, row);
+        var entry = Entries().Single(x => x.GetProperty("id").GetString() == id);
 
-        var press = TrainingExerciseStimulus.GetEffectiveMuscles("pike-push-up", [TrainingMuscleGroup.Deltoids],
-            [TrainingMuscleGroup.Triceps, TrainingMuscleGroup.UpperBack]);
-        Assert.Contains(TrainingMuscleGroup.Triceps, press);
-        Assert.DoesNotContain(TrainingMuscleGroup.UpperBack, press);
-
-        var hinge = TrainingExerciseStimulus.GetEffectiveMuscles("rack-pull", [TrainingMuscleGroup.UpperBack, TrainingMuscleGroup.Glutes],
-            [TrainingMuscleGroup.Hamstrings, TrainingMuscleGroup.Forearms]);
-        Assert.Contains(TrainingMuscleGroup.Hamstrings, hinge);
-
-        var calves = TrainingExerciseStimulus.GetEffectiveMuscles("dumbbell-front-raise", [TrainingMuscleGroup.Deltoids], [TrainingMuscleGroup.Triceps]);
-        Assert.Equal([TrainingMuscleGroup.Deltoids], calves);
+        Assert.Contains(counts, Names(entry, "effectiveSecondaryMuscles"));
+        Assert.DoesNotContain(incidental, Names(entry, "effectiveSecondaryMuscles"));
     }
 
     [Fact]
@@ -189,16 +178,5 @@ public sealed class ExerciseSeedAuditTests
         });
         Assert.Equal(entries.Count, entries.Select(x => x.GetProperty("nameEs").GetString()!.Trim().ToLowerInvariant()).Distinct().Count());
         Assert.Equal(entries.Count, entries.Select(x => x.GetProperty("nameEn").GetString()!.Trim().ToLowerInvariant()).Distinct().Count());
-    }
-
-    [Fact]
-    public void EveryActiveSeedExerciseHasAReviewedIndirectStimulusDecision()
-    {
-        var unreviewed = Entries()
-            .Where(item => !item.TryGetProperty("isActive", out var active) || active.GetBoolean())
-            .Select(item => item.GetProperty("id").GetString()!)
-            .Where(id => !TrainingExerciseStimulus.IsReviewed(id))
-            .ToList();
-        Assert.True(unreviewed.Count == 0, "Exercises without an indirect-stimulus decision: " + string.Join(", ", unreviewed));
     }
 }
