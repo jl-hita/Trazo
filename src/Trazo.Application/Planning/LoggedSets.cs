@@ -34,6 +34,22 @@ public static class LoggedSets
             .Sum(set => set.Any(s => s.SegmentIndex == 0) ? 1m + (set.Any(s => s.SegmentIndex > 0) ? SegmentsWeight : 0m) : 0m);
 
     /// <summary>
+    /// The reserve recovery should read for one exercise of a workout: the average of its main sets (null unless all of them say
+    /// it), and no more than <see cref="TechniqueRir"/> when a segment was done, because a technique set ends close to failure.
+    /// A product heuristic.
+    /// </summary>
+    public static decimal? RecoveryRir(IEnumerable<WorkoutSetLog> sets)
+    {
+        var done = sets.Where(s => s.Completed).ToList();
+        var main = done.Main().ToList();
+        var rirs = main.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
+        var average = rirs.Count > 0 && rirs.Count == main.Count ? rirs.Average() : (decimal?)null;
+        return done.Any(s => s.SegmentIndex > 0) ? Math.Min(average ?? TechniqueRir, TechniqueRir) : average;
+    }
+
+    public const decimal TechniqueRir = 1m;
+
+    /// <summary>
     /// One record per main set, as the progression rules read them. Pain reported on a segment belongs to its set; why a segment
     /// stopped does not, because stopping is how a segment ends.
     /// </summary>

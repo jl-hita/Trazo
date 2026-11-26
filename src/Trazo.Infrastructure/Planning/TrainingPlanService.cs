@@ -62,7 +62,7 @@ public interface ITrainingPlanService
 /// training history without pre-generating the whole macrocycle. A period is a calendar week in calendar mode and a group
 /// of consecutive sessions in sequence mode. Every method is scoped to the supplied user and their active plan.
 /// </summary>
-public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions, RequestLanguage language) : ITrainingPlanService
+public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions, RequestLanguage language, ClientCapabilities client) : ITrainingPlanService
 {
     public const string LockedMessage = "Este plan se generó automáticamente: para usarlo necesitas Premium.";
     public const string AdaptationLockedMessage = "La adaptación automática es una función Premium.";
@@ -1425,11 +1425,9 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 var exercise = prescribed.FirstOrDefault(e => string.Equals(e.ExerciseId, group.Key, StringComparison.OrdinalIgnoreCase));
                 if (exercise is null) continue;
-                var main = group.Main().ToList();
-                var rirs = main.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
                 exercises.Add(new RecoveryExercise(
                     exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), EffectiveSecondary(exercise),
-                    LoggedSets.EffectiveCount(group), rirs.Count > 0 && rirs.Count == main.Count ? rirs.Average() : null, loaded.Contains(group.Key), exercise.ExerciseId));
+                    LoggedSets.EffectiveCount(group), LoggedSets.RecoveryRir(group), loaded.Contains(group.Key), exercise.ExerciseId));
             }
             exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
         }
@@ -2558,11 +2556,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             last is not null && last.TryGetValue(e.ExerciseId, out var lp) ? lp : null,
             PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId),
             PrescriptionJson.IsExtra(session.PrescriptionJson, e.ExerciseId),
-            ReplacedReference(session, e.ExerciseId, last))).ToList(),
+            ReplacedReference(session, e.ExerciseId, last),
+            client.Techniques ? e.Technique : null)).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
-            log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber).ThenBy(s => s.SegmentIndex)
+            (client.Techniques ? log.Sets : log.Sets.Main()).OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber).ThenBy(s => s.SegmentIndex)
                 .Select(s => new LoggedSetView(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList(),
             log.PerformedAt, log.PerformedOn),
-        session.SequenceIndex);
+        session.SequenceIndex,
+        client.Techniques ? PrescriptionJson.Supersets(session.PrescriptionJson) : null);
 }

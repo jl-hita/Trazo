@@ -235,7 +235,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | Hecho (sin revisión nativa) | #241 | cobertura de todos los idiomas y correspondencia de pasos |
 | C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Hecho (D5 aprobada) | #248 | `prescription-techniques.md` |
-| P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | En curso: registro (P1-2a) y técnicas admitidas por ejercicio hechos; falta prescripción y capacidad | #250, #251 | `prescription-techniques.md` §5 |
+| P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Hecho: registro, técnicas admitidas, prescripción y capacidad | #250, #251, #252 | `prescription-techniques.md` §5 |
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Pendiente | | |
 | P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Pendiente | | |
 | P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Pendiente | | |

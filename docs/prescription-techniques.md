@@ -1,6 +1,6 @@
 # Técnicas avanzadas: modelo de prescripción y registro (P1-1)
 
-Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Implementado: el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5) y las técnicas admitidas por ejercicio en el catálogo (`exercise-review.md`). Las cifras son **valores por defecto de
+Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Implementado: el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5) las técnicas admitidas por ejercicio en el catálogo (`exercise-review.md`) y la prescripción con su capacidad de cliente (P1-2b). Las cifras son **valores por defecto de
 producto**, no recomendaciones demostradas; la sección 9 dice en qué se apoya cada una.
 
 ## 1. Punto de partida
@@ -100,9 +100,20 @@ La interfaz muestra por separado «segmentos hechos» y «series efectivas estim
   Intelligence incluyen el segmento.
 - La lectura común está en `LoggedSets`: serie principal para el rendimiento; 1 + 0,5 para el volumen; dolor en cualquier
   fila (el de un segmento cuenta para su serie). El motivo por el que se para un segmento no se trata como serie omitida.
-- La recuperación usa las series efectivas y el RIR de las principales. **Falta** que una serie con técnica de fatiga pese
-  como cercana al fallo: necesita saber la técnica prescrita, que llega en P1-2b.
-- **Falta en P1-2b** ocultar los segmentos a las apps sin la capacidad `techniques-1`. Ninguna app publicada los envía.
+- La recuperación usa las series efectivas; si un ejercicio tiene algún segmento completado, su RIR se lee como 1 como
+  máximo (heurística de producto).
+
+### Estado tras P1-2b
+
+- La prescripción admite `technique` por ejercicio y `supersets` por sesión (`prescriptionVersion: 2` solo cuando los hay;
+  lo guardado y los planes generados no cambian). `TechniqueRules` es el validador único y fija los valores por defecto;
+  segmentos máximos: drop set 3, rest-pause 5, myo-reps y match 10.
+- La técnica se quita de un ejercicio cuando se le reducen series, se le sube la reserva, entra en descarga o se cambia por
+  otro que no la admite. Devolver series no la recupera. La carga objetivo y las superseries no se tocan.
+- Sin `X-Client-Capabilities: techniques-1`, las vistas de plan y registro omiten técnica, rondas y segmentos. La
+  exportación de la cuenta los incluye siempre.
+- Nada crea técnicas todavía. **Quedan para P1-3**, junto con la creación en planes manuales: aceptar técnica y rondas en
+  la entrada, impedir que una app sin la capacidad edite un plan que las tiene y sumar segmentos y descansos a la duración.
 
 ## 6. Compatibilidad
 

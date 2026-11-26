@@ -20,6 +20,29 @@ public static class PrescriptionJson
     public static string Serialize(IEnumerable<TrainingExercisePrescription> exercises) =>
         JsonSerializer.Serialize(new { exercises }, Options);
 
+    /// <summary>The layout version written when a prescription carries techniques or superset rounds.</summary>
+    public const int TechniqueVersion = 2;
+
+    /// <summary>Superset groups plus how each is alternated, and the version that says the session carries techniques.</summary>
+    public static string Serialize(
+        IEnumerable<TrainingExercisePrescription> exercises, IReadOnlyDictionary<string, string> supersetGroups,
+        IReadOnlyCollection<TrainingSupersetPrescription> supersets)
+    {
+        var list = exercises.ToList();
+        var json = Serialize(list, supersetGroups);
+        if (supersets.Count == 0 && list.All(e => e.Technique is null)) return json;
+        var root = JsonNode.Parse(json)!.AsObject();
+        root["prescriptionVersion"] = TechniqueVersion;
+        if (supersets.Count > 0) root["supersets"] = JsonSerializer.SerializeToNode(supersets, Options);
+        return root.ToJsonString(Options);
+    }
+
+    /// <summary>How the supersets of a session are alternated; empty for sessions stored without it.</summary>
+    public static IReadOnlyList<TrainingSupersetPrescription> Supersets(string json) =>
+        JsonNode.Parse(json) is JsonObject root && root["supersets"] is JsonArray array
+            ? array.Deserialize<List<TrainingSupersetPrescription>>(Options) ?? []
+            : [];
+
     /// <summary>
     /// Serializes with superset groups (exercise id to group letter). The group is stored beside the engine's fields, like
     /// <c>swappedFromExerciseId</c>, so the engine's adjuster keeps it untouched when it edits the prescription.
