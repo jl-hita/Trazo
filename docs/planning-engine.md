@@ -773,3 +773,10 @@ its last three exposures, none at all while pain is declared in the last five wo
 days late is never a reference (its load is lighter on purpose / its order is unreliable). The exercise then has no prescribed load and the
 user chooses it. The history itself is untouched: the last performance shown to the user still reads every workout
 (`LoadReferencePainTests`).
+
+## Engine 0.12.0: emphasis that adds volume
+
+An emphasized muscle gets one extra accessory slot per session after the regular ones, used only while that muscle is under its
+weekly target and the exercise fits the session time. A raised target no longer removes the absolute ceiling for lifts that train
+the muscle indirectly: the limit is 20 weekly sets, or the range of a higher professional target. Plans without priorities do not
+change. Measurements: `validation-scenarios.md`.
