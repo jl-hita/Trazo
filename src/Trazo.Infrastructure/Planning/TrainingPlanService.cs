@@ -1425,10 +1425,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 var exercise = prescribed.FirstOrDefault(e => string.Equals(e.ExerciseId, group.Key, StringComparison.OrdinalIgnoreCase));
                 if (exercise is null) continue;
-                var rirs = group.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
+                var main = group.Main().ToList();
+                var rirs = main.Where(s => s.Rir is not null).Select(s => s.Rir!.Value).ToList();
                 exercises.Add(new RecoveryExercise(
                     exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), EffectiveSecondary(exercise),
-                    group.Count(), rirs.Count == group.Count() ? rirs.Average() : null, loaded.Contains(group.Key), exercise.ExerciseId));
+                    LoggedSets.EffectiveCount(group), rirs.Count > 0 && rirs.Count == main.Count ? rirs.Average() : null, loaded.Contains(group.Key), exercise.ExerciseId));
             }
             exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
         }
@@ -1570,7 +1571,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             var session = sessions[log.PlannedSessionId];
             var planned = PrescriptionJson.Read(session.PrescriptionJson).Sum(e => e.Sets);
             return new HistoryItem(session.Id, session.WeekNumber, session.Date, TitleOf(session.Title), log.Outcome.ToString(),
-                log.LoggedAt, log.Sets.Count(s => s.Completed), planned, log.PerformedAt);
+                log.LoggedAt, log.Sets.Main().Count(s => s.Completed), planned, log.PerformedAt);
         }).ToList();
     }
 
@@ -1585,14 +1586,14 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
                           join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
                           where log.UserId == userId && set.Completed
-                          select new { set.ExerciseId, LogId = log.Id, LoggedAt = log.PerformedAt, set.WeightKg, set.Repetitions }).ToListAsync(ct);
+                          select new { set.ExerciseId, LogId = log.Id, LoggedAt = log.PerformedAt, set.WeightKg, set.Repetitions, set.SetNumber, set.SegmentIndex }).ToListAsync(ct);
         var ids = rows.Select(r => r.ExerciseId).Distinct().ToList();
         var catalog = await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id))
             .Select(e => new { e.Id, e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct);
         var info = catalog.ToDictionary(e => e.Id, e => new ProgressExerciseInfo(e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles));
         var goal = (await ActivePlanAsync(userId, ct))?.SessionsPerPeriod ?? 0;
         return ProgressCalculator.Build(
-            rows.Select(r => new ProgressSetRow(r.ExerciseId, r.LogId, r.LoggedAt, r.WeightKg, r.Repetitions)).ToList(), info, zone, Today, goal);
+            rows.Select(r => new ProgressSetRow(r.ExerciseId, r.LogId, r.LoggedAt, r.WeightKg, r.Repetitions, r.SetNumber, r.SegmentIndex)).ToList(), info, zone, Today, goal);
     }
 
     public async Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct)
@@ -1606,7 +1607,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id)
             .Select(s => new { s.Id, s.WeekNumber, s.PrescriptionJson }).ToListAsync(ct);
         var logs = await db.WorkoutLogs.AsNoTracking().Where(l => l.PlanId == plan.Id)
-            .Select(l => new { l.PlannedSessionId, Completed = l.Sets.Count(s => s.Completed) }).ToListAsync(ct);
+            .Select(l => new { l.PlannedSessionId, Completed = l.Sets.Count(s => s.Completed && s.SegmentIndex == 0) }).ToListAsync(ct);
         var weekOfSession = sessions.ToDictionary(s => s.Id, s => s.WeekNumber);
         var plannedByWeek = sessions.GroupBy(s => s.WeekNumber)
             .ToDictionary(g => g.Key, g => (Sets: g.Sum(s => PrescriptionJson.Read(s.PrescriptionJson).Sum(e => e.Sets)), Sessions: g.Count()));
@@ -1650,7 +1651,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var windowStart = now.AddDays(-7);
         var workouts = recent.Where(l => l.PerformedAt > windowStart).Select(l => new DoseWorkout(l.PerformedAt,
             l.Sets.Where(s => s.Completed && muscles.ContainsKey(s.ExerciseId)).GroupBy(s => s.ExerciseId)
-                .Select(g => new DoseExercise(g.Key, muscles[g.Key].Primary, muscles[g.Key].Secondary, g.Count())).ToList())).ToList();
+                .Select(g => new DoseExercise(g.Key, muscles[g.Key].Primary, muscles[g.Key].Secondary, LoggedSets.EffectiveCount(g))).ToList())).ToList();
 
         var slot = SlotsOf(plan).FirstOrDefault(s => s.Contains(position.Week));
         var blockSessions = slot is null ? [] : prescribed.Where(s => slot.Contains(s.Week)).ToList();
@@ -1743,7 +1744,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             workout.Sets.Add(new WorkoutSetLog
             {
                 Id = Guid.NewGuid(), WorkoutLogId = workout.Id, ExerciseId = prescribed.First(e => string.Equals(e.ExerciseId, set.ExerciseId, StringComparison.OrdinalIgnoreCase)).ExerciseId,
-                SetNumber = set.SetNumber, WeightKg = set.WeightKg, Repetitions = set.Repetitions, Rir = set.Rir,
+                SetNumber = set.SetNumber, SegmentIndex = set.Segment, WeightKg = set.WeightKg, Repetitions = set.Repetitions, Rir = set.Rir,
                 Completed = set.Completed, SkippedReason = set.SkippedReason, PainReported = set.Pain
             });
         db.WorkoutLogs.Add(workout);
@@ -1800,7 +1801,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             || stored.Sets.Count != sent.Sets.Count)
             return false;
         return sent.Sets.All(set => stored.Sets.Any(s =>
-            string.Equals(s.ExerciseId, set.ExerciseId, StringComparison.OrdinalIgnoreCase) && s.SetNumber == set.SetNumber
+            string.Equals(s.ExerciseId, set.ExerciseId, StringComparison.OrdinalIgnoreCase) && s.SetNumber == set.SetNumber && s.SegmentIndex == set.Segment
             && s.WeightKg == set.WeightKg && s.Repetitions == set.Repetitions && s.Rir == set.Rir && s.Completed == set.Completed
             && s.SkippedReason == set.SkippedReason && s.PainReported == set.Pain));
     }
@@ -1841,8 +1842,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                            && !PrescriptionJson.IsAdaptationDeload(session.PrescriptionJson);
             foreach (var exercise in exercises)
             {
-                var sets = log.Sets.Where(s => s.ExerciseId == exercise.ExerciseId).OrderBy(s => s.SetNumber)
-                    .Select(s => new SetRecord(s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported)).ToArray();
+                var sets = LoggedSets.ProgressionRecords(log.Sets.Where(s => s.ExerciseId == exercise.ExerciseId));
                 exposures.Add(new ExerciseExposureRecord(
                     log.PerformedAt, exercise.ExerciseId, exercise.Sets, exercise.MinRepetitions, exercise.MaxRepetitions,
                     exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome, log.Recovery,
@@ -1850,7 +1850,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             }
             var plannedSets = exercises.Sum(e => e.Sets);
             sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason, log.Recovery, log.PainReported,
-                log.SessionRpe, plannedSets > 0 ? Math.Min(1m, (decimal)log.Sets.Count(s => s.Completed) / plannedSets) : null));
+                log.SessionRpe, plannedSets > 0 ? Math.Min(1m, (decimal)log.Sets.Main().Count(s => s.Completed) / plannedSets) : null));
         }
 
         // Cooldowns run on the timeline of the evidence (EvidenceAt), so a late registration cannot start or skip one.
@@ -2264,7 +2264,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var ids = ranges.Keys.ToList();
         var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
                           join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
-                          where log.UserId == userId && ids.Contains(set.ExerciseId) && set.Completed && !set.PainReported
+                          where log.UserId == userId && ids.Contains(set.ExerciseId) && set.Completed && !set.PainReported && set.SegmentIndex == 0
                           select new { set.ExerciseId, log.Id, LoggedAt = log.PerformedAt, log.PerformedOn, set.SetNumber, set.WeightKg, set.Repetitions, set.Rir })
             .ToListAsync(ct);
         foreach (var byExercise in rows.GroupBy(r => r.ExerciseId))
@@ -2491,7 +2491,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             {
                 var late = (exposure.Log.LoggedAt - exposure.Log.PerformedAt).TotalDays > Trazo.Application.Planning.Longitudinal.LongitudinalPolicy.LateRegistrationDays;
                 if (late || deloadSessions.Contains(exposure.Log.PlannedSessionId)) continue;
-                var done = exposure.Sets.Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).ToList();
+                var done = exposure.Sets.Main().Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).ToList();
                 if (done.Count == 0) continue;
                 var top = done.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
                 references.Add(new TrainingLoadReference(exercise.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
@@ -2561,8 +2561,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             ReplacedReference(session, e.ExerciseId, last))).ToList(),
         log is null ? null : new LogView(
             log.Id, log.LoggedAt, log.Outcome.ToString(), log.NonCompletionReason, log.Recovery, log.SessionRpe, log.PainReported, log.Notes,
-            log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
-                .Select(s => new LoggedSetView(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported)).ToList(),
+            log.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber).ThenBy(s => s.SegmentIndex)
+                .Select(s => new LoggedSetView(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList(),
             log.PerformedAt, log.PerformedOn),
         session.SequenceIndex);
 }

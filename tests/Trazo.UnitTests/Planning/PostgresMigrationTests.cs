@@ -100,6 +100,48 @@ public sealed class PostgresMigrationTests : IDisposable
         foreach (var table in LearningTables) Assert.Contains(table, up);
     }
 
+    private const string BeforeSegments = "20261206100000_ExercisePlanningMetadata";
+
+    [ScenarioFact]
+    public void The_segment_migration_keeps_every_logged_set_as_a_main_set_and_goes_down_and_up_again()
+    {
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeSegments);
+        var (user, plan, block, session, log) = (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+        InsertMinimalRow("users", new() { ["Id"] = $"'{user}'", ["Role"] = "'user'" });
+        InsertMinimalRow("training_plans", new()
+        {
+            ["Id"] = $"'{plan}'", ["UserId"] = $"'{user}'", ["Status"] = "'Archived'", ["Origin"] = "'Generated'", ["SchedulingMode"] = "'Calendar'"
+        });
+        InsertMinimalRow("training_mesocycles", new() { ["Id"] = $"'{block}'", ["PlanId"] = $"'{plan}'", ["Sequence"] = "1" });
+        InsertMinimalRow("planned_sessions", new()
+        {
+            ["Id"] = $"'{session}'", ["PlanId"] = $"'{plan}'", ["MesocycleId"] = $"'{block}'", ["PrescriptionJson"] = "'{\"exercises\":[]}'", ["Status"] = "'Planned'"
+        });
+        InsertMinimalRow("workout_logs", new()
+        {
+            ["Id"] = $"'{log}'", ["UserId"] = $"'{user}'", ["PlanId"] = $"'{plan}'", ["PlannedSessionId"] = $"'{session}'", ["Outcome"] = "'Completed'"
+        });
+        InsertMinimalRow("workout_set_logs", new() { ["WorkoutLogId"] = $"'{log}'", ["ExerciseId"] = "'curl'", ["SetNumber"] = "1" });
+
+        using (var db = Context()) db.Database.Migrate();
+        using (var db = Context()) Assert.Empty(db.Database.GetPendingMigrations());
+        const string Rows = "SELECT concat_ws('|', \"ExerciseId\", \"SetNumber\", \"SegmentIndex\") FROM workout_set_logs ORDER BY \"SegmentIndex\"";
+        Assert.Equal(["curl|1|0"], Query(_connection, Rows));
+
+        // Written explicitly: the helper leaves out columns that have a default, and the segment is one.
+        var segment = "INSERT INTO workout_set_logs (\"Id\", \"WorkoutLogId\", \"ExerciseId\", \"SetNumber\", \"SegmentIndex\", \"Completed\", \"PainReported\") " +
+            $"VALUES (gen_random_uuid(), '{log}', 'curl', 1, 1, true, false)";
+        Execute(_connection, segment);
+        Assert.Equal(["curl|1|0", "curl|1|1"], Query(_connection, Rows));
+        Assert.ThrowsAny<Exception>(() => Execute(_connection, segment));
+
+        // Going down keeps the sets and drops the segments, which the previous version cannot hold.
+        using (var db = Context()) db.GetService<IMigrator>().Migrate(BeforeSegments);
+        Assert.Equal("curl", Query(_connection, "SELECT \"ExerciseId\" FROM workout_set_logs").Single());
+        using (var db = Context()) db.Database.Migrate();
+        Assert.Equal(["curl|1|0"], Query(_connection, Rows));
+    }
+
     private const string BeforeTrace = "20261126100000_FrequencyProposals";
     private const string BeforePrescriptionHistory = "20261127100000_MesocycleGenerationTrace";
     private const string BeforeSessionVersion = "20261128100000_PrescriptionAdaptationHistory";

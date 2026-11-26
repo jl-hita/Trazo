@@ -1,6 +1,6 @@
 # Técnicas avanzadas: modelo de prescripción y registro (P1-1)
 
-Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Nada de esto está implementado todavía. Las cifras son **valores por defecto de
+Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Implementado: solo el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5). Las cifras son **valores por defecto de
 producto**, no recomendaciones demostradas; la sección 9 dice en qué se apoya cada una.
 
 ## 1. Punto de partida
@@ -92,6 +92,17 @@ Todos los consumidores deben leer los segmentos; ninguno puede contar filas como
 | Exportaciones (Intelligence, investigación) | Incluyen el segmento y la técnica |
 
 La interfaz muestra por separado «segmentos hechos» y «series efectivas estimadas».
+
+### Estado tras P1-2a
+
+- `POST .../log` acepta `segment` (0 o ausente, la serie principal; 1-10). Un segmento sin su serie principal, repetido o
+  fuera de rango se rechaza; máximo 60 series y 200 filas por sesión. Las vistas del registro y la exportación de cuenta e
+  Intelligence incluyen el segmento.
+- La lectura común está en `LoggedSets`: serie principal para el rendimiento; 1 + 0,5 para el volumen; dolor en cualquier
+  fila (el de un segmento cuenta para su serie). El motivo por el que se para un segmento no se trata como serie omitida.
+- La recuperación usa las series efectivas y el RIR de las principales. **Falta** que una serie con técnica de fatiga pese
+  como cercana al fallo: necesita saber la técnica prescrita, que llega en P1-2b.
+- **Falta en P1-2b** ocultar los segmentos a las apps sin la capacidad `techniques-1`. Ninguna app publicada los envía.
 
 ## 6. Compatibilidad
 

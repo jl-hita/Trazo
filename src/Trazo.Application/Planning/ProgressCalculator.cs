@@ -22,7 +22,8 @@ public sealed record ProgressView(
     ProgressSummary Summary, IReadOnlyList<DateOnly> WeekStarts, IReadOnlyList<MuscleVolumeView> Muscles,
     IReadOnlyList<ExerciseProgressView> Exercises);
 
-public sealed record ProgressSetRow(string ExerciseId, Guid LogId, DateTimeOffset LoggedAt, decimal? WeightKg, int? Repetitions);
+public sealed record ProgressSetRow(
+    string ExerciseId, Guid LogId, DateTimeOffset LoggedAt, decimal? WeightKg, int? Repetitions, int SetNumber = 0, int Segment = 0);
 
 public sealed record ProgressExerciseInfo(string Name, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles);
 
@@ -58,18 +59,20 @@ public static class ProgressCalculator
         while (weeksWithSession.Contains(cursor)) { streak++; cursor = cursor.AddDays(-7); }
         var summary = new ProgressSummary(
             sessions.Count, sessions.Count(d => d > today.AddDays(-30) && d <= today), sessions.Count(d => WeekStart(d) == thisWeek),
-            weeklyGoal, streak, rows.Count,
+            weeklyGoal, streak, rows.Count(r => r.Segment == 0),
             Math.Round(rows.Where(r => r.WeightKg is > 0 && r.Repetitions is > 0).Sum(r => r.WeightKg!.Value * r.Repetitions!.Value), 0));
 
         var weekStarts = Enumerable.Range(0, Weeks).Select(i => thisWeek.AddDays(-7 * (Weeks - 1 - i))).ToList();
         var muscleSets = new Dictionary<string, decimal[]>(StringComparer.Ordinal);
-        foreach (var row in rows)
+        // A set counts once, and its segments add a fixed part between all of them (see LoggedSets).
+        var segmented = rows.Where(r => r.Segment > 0).GroupBy(r => (r.LogId, r.ExerciseId, r.SetNumber)).Select(g => (Row: g.First(), Weight: LoggedSets.SegmentsWeight));
+        foreach (var (row, weight) in rows.Where(r => r.Segment == 0).Select(r => (Row: r, Weight: 1m)).Concat(segmented))
         {
             if (!info.TryGetValue(row.ExerciseId, out var exercise)) continue;
             var index = weekStarts.IndexOf(WeekStart(Local(row.LoggedAt)));
             if (index < 0) continue;
-            foreach (var m in exercise.PrimaryMuscles) Add(muscleSets, m, index, 1m);
-            foreach (var m in exercise.SecondaryMuscles) Add(muscleSets, m, index, 0.5m);
+            foreach (var m in exercise.PrimaryMuscles) Add(muscleSets, m, index, weight);
+            foreach (var m in exercise.SecondaryMuscles) Add(muscleSets, m, index, weight * 0.5m);
         }
         var muscles = muscleSets.OrderByDescending(p => p.Value.Sum()).ThenBy(p => p.Key, StringComparer.Ordinal)
             .Select(p => new MuscleVolumeView(p.Key, p.Value)).ToList();
@@ -90,13 +93,15 @@ public static class ProgressCalculator
     {
         var points = rows.GroupBy(r => r.LogId).Select(g =>
         {
-            var withLoad = g.Where(r => r.WeightKg is > 0).ToList();
+            // Records and estimates come from the main sets; the tonnage includes everything that was lifted.
+            var main = g.Where(r => r.Segment == 0).ToList();
+            var withLoad = main.Where(r => r.WeightKg is > 0).ToList();
             var top = withLoad.Count == 0 ? 0m : withLoad.Max(r => r.WeightKg!.Value);
-            var repsAtTop = (withLoad.Count == 0 ? g : withLoad.Where(r => r.WeightKg == top)).Max(r => r.Repetitions ?? 0);
+            var repsAtTop = (withLoad.Count == 0 ? main : withLoad.Where(r => r.WeightKg == top)).Select(r => r.Repetitions ?? 0).DefaultIfEmpty(0).Max();
             var estimates = withLoad.Select(r => r.Repetitions is { } reps ? EstimatedOneRepMax(r.WeightKg!.Value, reps) : null)
                 .Where(e => e is not null).Select(e => e!.Value).ToList();
             var volume = g.Where(r => r.WeightKg is > 0 && r.Repetitions is > 0).Sum(r => r.WeightKg!.Value * r.Repetitions!.Value);
-            return new ExercisePointView(local(g.First().LoggedAt), top, repsAtTop, estimates.Count == 0 ? null : estimates.Max(), Math.Round(volume, 0), g.Count());
+            return new ExercisePointView(local(g.First().LoggedAt), top, repsAtTop, estimates.Count == 0 ? null : estimates.Max(), Math.Round(volume, 0), main.Count);
         }).OrderBy(p => p.Date).ToList();
 
         var withEstimate = points.Where(p => p.EstimatedOneRepMaxKg is not null).ToList();

@@ -80,7 +80,7 @@ public sealed record LastSetView(int SetNumber, decimal? WeightKg, int? Repetiti
 /// </summary>
 public sealed record LastPerformanceView(DateOnly Date, IReadOnlyList<LastSetView> Sets, decimal? SuggestedLoadKg, string? SuggestionBasis, int? BasedOnSessions = null);
 
-public sealed record LoggedSetView(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool Pain);
+public sealed record LoggedSetView(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool Pain, int Segment = 0);
 
 public sealed record LogView(
     Guid Id, DateTimeOffset LoggedAt, string Outcome, string NonCompletionReason, string Recovery, decimal? SessionRpe,
@@ -263,7 +263,9 @@ public sealed record DayOption(string Id, int IsoNumber, string Label, string Sh
 
 public sealed record LogSetRequest(
     string? ExerciseId, int? SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool? Completed,
-    string? SkippedReason, bool? PainReported);
+    string? SkippedReason, bool? PainReported,
+    // 0 (or absent) is the main set; 1-10 are the segments that follow it.
+    int? Segment = null);
 
 public sealed record LogSessionRequest(
     string? Outcome, string? NonCompletionReason, string? Recovery, decimal? SessionRpe, bool? PainReported,

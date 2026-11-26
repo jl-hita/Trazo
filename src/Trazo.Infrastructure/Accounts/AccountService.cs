@@ -337,8 +337,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
             logs.Select(l => new ExportWorkoutLog(
                 l.Id, l.PlanId, l.PlannedSessionId, l.LoggedAt, l.Outcome.ToString(), l.NonCompletionReason, l.Recovery, l.SessionRpe,
                 l.PainReported, l.Notes,
-                l.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber)
-                    .Select(s => new ExportSet(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported)).ToList()))
+                l.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber).ThenBy(s => s.SegmentIndex)
+                    .Select(s => new ExportSet(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList()))
                 .ToList(),
             adaptations.Select(a => new ExportAdaptation(a.PlanId, a.WorkoutLogId, a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation, a.AppliedAt)).ToList(),
             subscriptions.Select(s => new ExportSubscription(
@@ -405,7 +405,7 @@ public sealed record ExportWorkoutLog(
     Guid Id, Guid PlanId, Guid SessionId, DateTimeOffset LoggedAt, string Outcome, string NonCompletionReason, string Recovery,
     decimal? SessionRpe, bool PainReported, string? Notes, IReadOnlyList<ExportSet> Sets);
 
-public sealed record ExportSet(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool PainReported);
+public sealed record ExportSet(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool PainReported, int Segment = 0);
 public sealed record ExportAdaptation(Guid PlanId, Guid? WorkoutLogId, string Kind, string[] ExerciseIds, int SessionsChanged, string Explanation, DateTimeOffset AppliedAt);
 public sealed record ExportSubscription(string Source, string ProductId, string Status, DateTimeOffset StartedAt, DateTimeOffset ExpiresAt, bool AutoRenewing, string? LatestOrderId, bool IsTestPurchase);
 public sealed record ExportDevice(string? DeviceName, DateTimeOffset SignedInAt, DateTimeOffset ExpiresAt, DateTimeOffset? RevokedAt);
