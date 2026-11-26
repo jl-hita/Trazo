@@ -257,6 +257,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | D1: el seed es la línea base, con traducciones en todos los idiomas, sobrescribe la base de datos en sus ejercicios y la consola los identifica (R2). |
 | 2026-11-26 | D2: la pista de lanzamiento va justo después de este roadmap. |
 | 2026-11-26 | D4: aprobado el modelo de metadatos R1. Los valores iniciales reproducen las reglas anteriores; corregirlos es P0-5. |
+| 2026-11-26 | Cierre de P0: los 150 ejercicios revisados (asistido, sin entrenador) y con textos completos en los 29 idiomas del seed, con los mismos pasos y consejos que el original (lo exige una prueba). Pendiente: revisión nativa de las traducciones y comprobación en producción con `seed-report`. |
 
 ## 7. Evidencia consultada
 
