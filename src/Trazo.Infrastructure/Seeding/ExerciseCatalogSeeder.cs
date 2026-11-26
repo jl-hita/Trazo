@@ -66,9 +66,6 @@ public sealed class ExerciseCatalogSeeder(
             Write(translations, entry.Id, "es", new(metadata.NameEs, metadata.DescriptionEs, metadata.InstructionsEs, metadata.TipsEs), now);
             foreach (var (language, texts) in seed.Translations)
                 if (texts.TryGetValue(entry.Id, out var text)) Write(translations, entry.Id, language, text, now);
-
-            // Until the seed has its own English file, it only owns the English name: the other English texts stay as they are.
-            if (!seed.Translations.ContainsKey("en")) WriteEnglishName(translations, entry.Id, metadata.NameEn, now);
         }
 
         await db.SaveChangesAsync(cancellationToken);
@@ -119,23 +116,5 @@ public sealed class ExerciseCatalogSeeder(
         row.Name = text.Name; row.Description = text.Description; row.Instructions = text.Instructions; row.Tips = text.Tips;
         row.Status = "published"; row.UpdatedAt = now;
         translationsUpdated++;
-    }
-
-    private void WriteEnglishName(Dictionary<(string, string), ExerciseCatalogTranslation> stored, string id, string name, DateTimeOffset now)
-    {
-        if (!stored.TryGetValue((id, "en"), out var row))
-        {
-            db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
-            {
-                ExerciseId = id, LanguageCode = "en", Name = name, Status = "draft", UpdatedAt = now
-            });
-            translationsAdded++;
-        }
-        else if (row.Name != name)
-        {
-            row.Name = name;
-            row.UpdatedAt = now;
-            translationsUpdated++;
-        }
     }
 }

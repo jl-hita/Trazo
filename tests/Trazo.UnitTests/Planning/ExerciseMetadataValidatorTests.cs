@@ -83,14 +83,29 @@ public sealed class ExerciseMetadataValidatorTests
         Assert.True(problems.Count == 0, string.Join(Environment.NewLine, problems));
     }
 
-    /// <summary>English is the only language still to be written: remove it from here when its file arrives.</summary>
     [Fact]
-    public async Task TheSeedTranslatesEveryExerciseIntoEveryLanguageButEnglish()
+    public async Task TheSeedTranslatesEveryExerciseIntoEveryLanguage()
     {
         var coverage = ExerciseSeedReportService.Coverage(await SeedAsync());
 
-        Assert.Equal(["en"], coverage.Where(c => c.Incomplete > 0).Select(c => c.Language).ToArray());
         Assert.Equal(28, coverage.Count);
+        Assert.Empty(coverage.Where(c => c.Incomplete > 0));
+    }
+
+    /// <summary>A translation says the same as the Spanish original: no step or tip is lost, and the English name is the catalog's.</summary>
+    [Fact]
+    public async Task EveryTranslationKeepsTheStepsAndTipsOfTheOriginal()
+    {
+        var seed = await SeedAsync();
+        var entries = seed.Entries.ToDictionary(e => e.Id);
+
+        var problems = seed.Translations.SelectMany(language => language.Value
+            .Where(t => !entries.TryGetValue(t.Key, out var e) ||
+                t.Value.Instructions.Length != e.InstructionsEs.Length || t.Value.Tips.Length != e.TipsEs.Length ||
+                (language.Key == "en" && t.Value.Name != e.NameEn))
+            .Select(t => $"{language.Key}:{t.Key}")).ToList();
+
+        Assert.True(problems.Count == 0, string.Join(", ", problems));
     }
 
     private static ExerciseCatalogItem Row(ExerciseSeedEntry e) => new()
