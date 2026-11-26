@@ -104,6 +104,8 @@ export class ExercisesPageComponent {
   protected readonly fieldErrors = signal<Record<string, string>>({});
   protected readonly confirming = signal<ExerciseAction | null>(null);
   protected readonly isNew = computed(() => this.editing() && this.detail() === null);
+  /** Seed exercises are changed in the seed, not here. */
+  protected readonly readOnly = computed(() => this.detail()?.fromSeed ?? false);
 
   constructor() {
     void this.load();

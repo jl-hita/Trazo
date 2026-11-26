@@ -25,7 +25,7 @@ export type UserAction = 'disable' | 'enable' | 'revoke-sessions' | 'unlock' | '
 export interface AdminExerciseSummary {
   id: string; source: string; nameEs: string; nameEn: string; difficulty: string; equipment: string | null;
   movementPattern: string; minimumExperience: string; primaryMuscles: string[]; secondaryMuscles: string[];
-  selectionPriority: number; isActive: boolean; locallyCurated: boolean; imageCount: number;
+  selectionPriority: number; isActive: boolean; locallyCurated: boolean; imageCount: number; fromSeed: boolean;
 }
 
 export interface AdminExerciseDetail {
@@ -34,6 +34,7 @@ export interface AdminExerciseDetail {
   isUnilateral: boolean; isBodyweight: boolean; movementPattern: string; primaryMuscles: string[]; secondaryMuscles: string[];
   minimumExperience: string; suitableGoals: string[]; requiredEquipment: string[]; selectionPriority: number;
   isActive: boolean; locallyCurated: boolean; importedFrom: string | null; imageSlots: number[]; createdAt: string; updatedAt: string;
+  fromSeed: boolean;
 }
 
 export interface AdminExerciseInput {

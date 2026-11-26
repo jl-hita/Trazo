@@ -6,18 +6,12 @@ Routes under `/api/v1/admin/exercises`, all restricted to the `superadmin` role.
 | Method | Route | Purpose |
 |---|---|---|
 | GET | `/` | List exercises. Query: `q` (name or identifier), `movementPattern`, `difficulty`, `experience`, `equipment`, `muscle`, `source`, `status` (`active`, `inactive`), `sort` (`priority`, `updated`; default is name), `page`, `pageSize` (max 100) |
-| GET | `/options` | Values already used in the catalog (patterns, levels, equipment, muscles, goals...), used as suggestions in the editor |
+| GET | `/options` | The accepted vocabularies (patterns, levels, equipment, muscles, goals...) and the sources in use, offered by the editor |
 | GET | `/{id}` | Full exercise, with image slots and curation state |
 | POST | `/` | Create an exercise (source `trazo`). The identifier is generated from the English name when omitted |
 | PUT | `/{id}` | Replace every editable field of an exercise |
 | POST | `/{id}/deactivate`, `/activate` | Hide or show an exercise in the public catalog |
 | POST | `/{id}/release-curation` | Let the next DietoExpress import overwrite an exercise again |
-
-## Required fields
-
-`nameEs`, `nameEn`, `descriptionEs`, at least one entry in `instructionsEs`, `movementPattern`, `difficulty`,
-`minimumExperience`, at least one `primaryMuscles` and at least one `suitableGoals`. `selectionPriority` is 0-100
-(default 50). Validation errors are returned as a standard problem document keyed by field name.
 
 ## Interaction with the DietoExpress import
 
@@ -30,8 +24,13 @@ Routes under `/api/v1/admin/exercises`, all restricted to the `superadmin` role.
 
 ## Not included yet
 
-Uploading or replacing images, bulk edits and deleting exercises. Deleting is deliberately left out: hiding keeps
-history intact for plans that may reference an exercise.
+Bulk edits and deleting exercises. Deleting is deliberately left out: hiding keeps history intact for plans that may
+reference an exercise.
+
+## Seed exercises
+
+Summaries and details carry `fromSeed`. Exercises of the seed are read only: update, activate, deactivate and
+release-curation answer `409`. Their images can be uploaded and removed.
 
 ## Validation
 

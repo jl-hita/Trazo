@@ -205,6 +205,33 @@ public sealed class AdminExercisesApiTests : IDisposable
         Assert.Equal(HttpStatusCode.OK, (await anonymous.GetAsync("/api/v1/exercises/hidden-press")).StatusCode);
     }
 
+    [Fact]
+    public async Task SeedExercises_AreMarkedAndReadOnly_ExceptForTheirImages()
+    {
+        var client = await ClientAsync("superadmin");
+        using (var db = _fixture.NewContext())
+        {
+            // A row with the id of a seed exercise, as the seeder would leave it.
+            var row = Planning.ExerciseCandidateMapperTests.Item("bench-press");
+            row.Source = "repdb-free";
+            db.ExerciseCatalog.Add(row);
+            await db.SaveChangesAsync();
+        }
+        await client.PostAsJsonAsync("/api/v1/admin/exercises", Input("Own Press", "own-press"));
+
+        var items = (await JsonAsync(await client.GetAsync("/api/v1/admin/exercises"))).GetProperty("items").EnumerateArray()
+            .ToDictionary(e => e.GetProperty("id").GetString()!, e => e.GetProperty("fromSeed").GetBoolean());
+        Assert.True(items["bench-press"]);
+        Assert.False(items["own-press"]);
+        Assert.True((await JsonAsync(await client.GetAsync("/api/v1/admin/exercises/bench-press"))).GetProperty("fromSeed").GetBoolean());
+
+        Assert.Equal(HttpStatusCode.Conflict, (await client.PutAsJsonAsync("/api/v1/admin/exercises/bench-press", Input())).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsync("/api/v1/admin/exercises/bench-press/deactivate", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsync("/api/v1/admin/exercises/bench-press/activate", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, (await client.PostAsync("/api/v1/admin/exercises/bench-press/release-curation", null)).StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await client.PutAsync("/api/v1/admin/exercises/bench-press/images/0", Body(Webp()))).StatusCode);
+    }
+
     private static byte[] Webp(int extra = 24, byte fill = 1)
     {
         var bytes = new byte[12 + extra];

@@ -14,9 +14,10 @@ namespace Trazo.Infrastructure.Seeding;
 /// <summary>
 /// Receives the private DietoExpress exercise-library archive. Imports only approved global
 /// records, validates every checksum before opening a database transaction, and preserves
-/// records/images that have been locally curated in TRAZO.
+/// records/images that have been locally curated in TRAZO. Exercises of the seed are never changed (their images still are).
 /// </summary>
-public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<ExerciseLibraryImportService> logger)
+public sealed class ExerciseLibraryImportService(
+    TrazoDbContext db, ExerciseSeedIndex seedIndex, ILogger<ExerciseLibraryImportService> logger)
 {
     private const int MaxArchiveBytes = 512 * 1024 * 1024;
     private const int MaxImageBytes = 2 * 1024 * 1024;
@@ -91,7 +92,9 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
         if (manifest.Images.Any(image => !exerciseIds.Contains(image.ExerciseId)))
             throw new InvalidDataException("An image references an exercise outside the approved export.");
 
-        var records = exercises.Select(record => (Record: record, Parsed: ReadExercise(record))).ToList();
+        var records = exercises.Where(record => !seedIndex.Contains(RequiredString(record, "id")))
+            .Select(record => (Record: record, Parsed: ReadExercise(record))).ToList();
+        var seedOwned = exercises.Length - records.Count;
         var invalid = records.Where(r => !r.Parsed.Validation.IsValid).ToList();
         if (invalid.Count > 0)
             throw new InvalidDataException($"{invalid.Count} exercise(s) have invalid metadata; nothing was imported. " + string.Join(" ",
@@ -130,8 +133,8 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
             }
 
             await transaction.CommitAsync(cancellationToken);
-            logger.LogInformation("Imported DietoExpress exercise library: {Inserted} new, {Updated} refreshed, {Preserved} locally curated, {Images} images.",
-                inserted, updated, preserved, imageImported);
+            logger.LogInformation("Imported DietoExpress exercise library: {Inserted} new, {Updated} refreshed, {Preserved} locally curated, {SeedOwned} owned by the seed, {Images} images.",
+                inserted, updated, preserved, seedOwned, imageImported);
             return new
             {
                 exerciseCount = manifest.ExerciseCount,
@@ -139,6 +142,7 @@ public sealed class ExerciseLibraryImportService(TrazoDbContext db, ILogger<Exer
                 imported = inserted,
                 updated,
                 preserved,
+                seedOwned,
                 imagesImported = imageImported,
                 imagesPreserved = imagePreserved,
                 attribution = manifest.Attribution,

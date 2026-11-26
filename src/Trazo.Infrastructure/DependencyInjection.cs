@@ -67,6 +67,7 @@ public static class DependencyInjection
         services.AddScoped<Trazo.Infrastructure.Planning.ITrainingPlanService, Trazo.Infrastructure.Planning.TrainingPlanService>();
         services.AddScoped<ExerciseCatalogSeeder>();
         services.AddScoped<ExerciseSeedReportService>();
+        services.AddSingleton<ExerciseSeedIndex>();
         services.AddScoped<ExerciseCatalogArtifactExporter>();
         services.AddScoped<ExerciseImageSeeder>();
         services.AddScoped<ExerciseLibraryExporter>();

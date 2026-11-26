@@ -16,6 +16,6 @@ The receiver validates the archive schema, exercise approval state, stable ident
 
 The effective reviewed fields populate the catalog consumed by the training engine. The original DietoExpress record, review provenance and RepDB attribution are retained in `exercise_catalog_import_metadata`. Images are stored in `exercise_catalog_images` and served by the TRAZO API at `/api/v1/exercises/{id}/images/{slot}`.
 
-The operation is idempotent. Existing TRAZO entries without DietoExpress import provenance are preserved. Imported entries marked as locally curated are also protected from future source refreshes. Image rows are refreshed only when their existing provenance is DietoExpress. All database writes happen in one transaction; checksum or validation errors abort before writes.
+The operation is idempotent. Exercises that belong to the TRAZO exercise seed are skipped (their metadata and texts come only from the seed; missing images are still imported). Existing TRAZO entries without DietoExpress import provenance are preserved. Imported entries marked as locally curated are also protected from future source refreshes. Image rows are refreshed only when their existing provenance is DietoExpress. All database writes happen in one transaction; checksum or validation errors abort before writes.
 
 RepDB data/assets must remain inside the private applications. Do not expose this endpoint as a public bulk export/download facility or redistribute the imported catalogue.

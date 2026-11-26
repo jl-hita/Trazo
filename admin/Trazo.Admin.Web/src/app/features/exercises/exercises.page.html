@@ -55,7 +55,8 @@
                 <td>
                   @if (!e.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">{{ copy.hidden }}</trazo-badge> }
                   @if (e.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.edited }}</trazo-badge> }
-                  <trazo-badge badgeClass="badge" tone="neutral">{{ e.source === 'trazo' ? 'TRAZO' : copy.importedLabel }}</trazo-badge>
+                  @if (e.fromSeed) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.seedLabel }}</trazo-badge> }
+                  @else { <trazo-badge badgeClass="badge" tone="neutral">{{ e.source === 'trazo' ? 'TRAZO' : copy.importedLabel }}</trazo-badge> }
                   @if (e.imageCount === 0) { <trazo-badge badgeClass="badge warn" tone="warning">{{ copy.noImages }}</trazo-badge> }
                 </td>
               </tr>
@@ -82,10 +83,14 @@
             <div class="meta">
               @if (!d.isActive) { <trazo-badge badgeClass="badge bad" tone="danger">{{ copy.hiddenFromCatalog }}</trazo-badge> }
               @if (d.locallyCurated) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.editedLocally }}</trazo-badge> }
-              <trazo-badge badgeClass="badge" tone="neutral">{{ d.importedFrom ? copy.importedFrom + ' ' + d.importedFrom : copy.createdIn + ' TRAZO' }}</trazo-badge>
+              @if (d.fromSeed) { <trazo-badge badgeClass="badge good" tone="success">{{ copy.fromSeed }}</trazo-badge> }
+              @else { <trazo-badge badgeClass="badge" tone="neutral">{{ d.importedFrom ? copy.importedFrom + ' ' + d.importedFrom : copy.createdIn + ' TRAZO' }}</trazo-badge> }
             </div>
             @if (d.locallyCurated) {
               <p class="notice">{{ copy.curatedNotice }}</p>
+            }
+            @if (d.fromSeed) {
+              <p class="notice">{{ copy.seedNotice }}</p>
             }
             <div class="images" [attr.aria-label]="copy.images">
               @for (slot of imageSlots; track slot) {
@@ -105,6 +110,7 @@
             <p class="hint">{{ copy.createFirst }}</p>
           }
 
+          <fieldset class="ex-fields" [disabled]="readOnly()">
           @for (f of fields; track f.key) {
             @if (!f.newOnly || isNew()) {
               <trazo-form-field [label]="f.required ? f.label + ' *' : f.label" [controlId]="'exercise-field-' + f.key">
@@ -121,6 +127,7 @@
           }
           <label class="check"><input type="checkbox" [ngModel]="draft().isUnilateral" (ngModelChange)="patch('isUnilateral', $event)"> {{ copy.unilateral }}</label>
           <label class="check"><input type="checkbox" [ngModel]="draft().isBodyweight" (ngModelChange)="patch('isBodyweight', $event)"> {{ copy.bodyweight }}</label>
+          </fieldset>
 
           @for (list of optionLists; track list) {
             <datalist [id]="'list-' + list">
@@ -129,8 +136,10 @@
           }
 
           <div class="actions">
-            <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy()">{{ isNew() ? copy.createTitle : copy.saveChanges }}</trazo-button>
-            @if (detail(); as d) {
+            @if (!readOnly()) {
+              <trazo-button variant="primary" type="button" (pressed)="save()" [disabled]="busy()">{{ isNew() ? copy.createTitle : copy.saveChanges }}</trazo-button>
+            }
+            @if (!readOnly() && detail(); as d) {
               @if (d.isActive) {
                 <trazo-button [variant]="confirming() === 'deactivate' ? 'danger' : 'secondary'" type="button" (pressed)="run('deactivate')" [disabled]="busy()">
                   {{ confirming() === 'deactivate' ? copy.confirmHide : copy.hideFromCatalog }}

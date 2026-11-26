@@ -1,188 +1,141 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Trazo.Application.Catalog;
 using Trazo.Domain.Training;
 using Trazo.Infrastructure.Persistence;
 
 namespace Trazo.Infrastructure.Seeding;
 
 /// <summary>
-/// Bootstraps the complete, reviewed exercise-library snapshot. Seed versions update only
-/// untouched rows from the same source; administrator edits and rows from other sources win.
-/// Safe to execute on every startup and serialized across concurrent API instances.
+/// Writes the exercise seed into the database. The seed is the baseline of the catalog and wins: every exercise it holds gets
+/// its metadata, visibility and texts from it, whatever was edited before, so those exercises are changed by changing the seed.
+/// Exercises and translation languages the seed does not have are left alone. Only rows that differ are written, so it is safe
+/// on every startup, and it is serialized across concurrent API instances.
 /// </summary>
 public sealed class ExerciseCatalogSeeder(
     TrazoDbContext db,
     ILogger<ExerciseCatalogSeeder> logger)
 {
-    /// <summary>
-    /// The translated catalog texts, one file per language (<c>Seeds/translations/{code}.json</c>, keyed by exercise id). Only missing rows
-    /// are added: whatever the administrator has since edited stays.
-    /// </summary>
-    private async Task<int> SeedTranslationsAsync(ExerciseSeed seed, DateTimeOffset now, CancellationToken cancellationToken)
-    {
-        var exerciseIds = seed.Entries.Select(x => x.Id).ToHashSet(StringComparer.Ordinal);
-        var added = 0;
-        foreach (var (language, entries) in seed.Translations)
-        {
-            var present = (await db.ExerciseCatalogTranslations.Where(x => x.LanguageCode == language)
-                .Select(x => x.ExerciseId).ToListAsync(cancellationToken)).ToHashSet(StringComparer.Ordinal);
-            foreach (var (id, text) in entries.Where(e => exerciseIds.Contains(e.Key) && !present.Contains(e.Key)))
-            {
-                db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
-                {
-                    ExerciseId = id, LanguageCode = language, Name = text.Name, Description = text.Description,
-                    Instructions = text.Instructions, Tips = text.Tips, Status = "published", UpdatedAt = now
-                });
-                added++;
-            }
-        }
-        await db.SaveChangesAsync(cancellationToken);
-        return added;
-    }
+    private int translationsAdded;
+    private int translationsUpdated;
 
-    public async Task SeedAsync(CancellationToken cancellationToken = default)
+    public async Task SeedAsync(CancellationToken cancellationToken = default, string? folder = null)
     {
-        var seed = await ExerciseSeed.LoadAsync(ExerciseSeed.DefaultFolder, cancellationToken);
+        var seed = await ExerciseSeed.LoadAsync(folder ?? ExerciseSeed.DefaultFolder, cancellationToken);
         var problems = seed.Problems();
         if (problems.Count > 0)
             throw new InvalidDataException("Exercise catalog seed failed validation. " + string.Join(" ", problems));
-        var entries = seed.Entries;
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
-        await db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(731904221)", cancellationToken);
+        if (db.Database.IsNpgsql())
+            await db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(731904221)", cancellationToken);
+
+        var ids = seed.Entries.Select(e => e.Id).ToList();
+        var rows = await db.ExerciseCatalog.Where(x => ids.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, StringComparer.Ordinal, cancellationToken);
+        var translations = (await db.ExerciseCatalogTranslations.Where(x => ids.Contains(x.ExerciseId)).ToListAsync(cancellationToken))
+            .ToDictionary(x => (x.ExerciseId, x.LanguageCode));
+        translationsAdded = translationsUpdated = 0;
 
         var now = DateTimeOffset.UtcNow;
         var inserted = 0;
         var updated = 0;
-        var preserved = 0;
-        var translationsAdded = 0;
-
-        foreach (var entry in entries)
+        foreach (var entry in seed.Entries)
         {
-            var existing = await db.ExerciseCatalog.SingleOrDefaultAsync(x => x.Id == entry.Id, cancellationToken);
-            if (existing is null)
+            var metadata = ExerciseMetadataValidator.Validate(entry.Metadata()).Metadata;
+            if (!rows.TryGetValue(entry.Id, out var row))
             {
-                db.ExerciseCatalog.Add(new ExerciseCatalogItem
+                row = new ExerciseCatalogItem
                 {
-                    Id = entry.Id,
-                    Source = entry.Source,
-                    NameEn = entry.NameEn,
-                    NameEs = entry.NameEs,
-                    DescriptionEs = entry.DescriptionEs,
-                    InstructionsEs = entry.InstructionsEs,
-                    TipsEs = entry.TipsEs,
-                    ForceType = entry.ForceType,
-                    Mechanic = entry.Mechanic,
-                    Difficulty = entry.Difficulty,
-                    Equipment = entry.Equipment,
-                    BodyPart = entry.BodyPart,
-                    Met = entry.Met,
-                    IsUnilateral = entry.IsUnilateral,
-                    IsBodyweight = entry.IsBodyweight,
-                    MovementPattern = entry.MovementPattern,
-                    PrimaryMuscles = entry.PrimaryMuscles,
-                    SecondaryMuscles = entry.SecondaryMuscles,
-                    MinimumExperience = entry.MinimumExperience,
-                    SuitableGoals = entry.SuitableGoals,
-                    RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment),
-                    SelectionPriority = entry.SelectionPriority,
-                    SeedVersion = entry.Version,
-                    IsActive = entry.IsActive,
-                    CreatedAt = now,
-                    UpdatedAt = now
-                });
+                    Id = entry.Id, Source = entry.Source, NameEn = metadata.NameEn, NameEs = metadata.NameEs,
+                    DescriptionEs = metadata.DescriptionEs, ForceType = metadata.ForceType, Mechanic = metadata.Mechanic,
+                    Difficulty = metadata.Difficulty, BodyPart = metadata.BodyPart, MovementPattern = metadata.MovementPattern,
+                    MinimumExperience = metadata.MinimumExperience, CreatedAt = now, UpdatedAt = now
+                };
+                Apply(row, entry, metadata);
+                db.ExerciseCatalog.Add(row);
                 inserted++;
-
-                db.ExerciseCatalogTranslations.AddRange(
-                    new ExerciseCatalogTranslation
-                    {
-                        ExerciseId = entry.Id,
-                        LanguageCode = "es",
-                        Name = entry.NameEs,
-                        Description = entry.DescriptionEs,
-                        Instructions = entry.InstructionsEs,
-                        Tips = entry.TipsEs,
-                        Status = "published",
-                        UpdatedAt = now
-                    },
-                    new ExerciseCatalogTranslation
-                    {
-                        ExerciseId = entry.Id,
-                        LanguageCode = "en",
-                        Name = entry.NameEn,
-                        Status = "draft",
-                        UpdatedAt = now
-                    });
-                translationsAdded += 2;
-                continue;
             }
-
-            if (existing.Source == entry.Source &&
-                existing.SeedVersion < entry.Version &&
-                existing.UpdatedAt == existing.CreatedAt)
+            else if (!Matches(row, entry, metadata))
             {
-                existing.NameEn = entry.NameEn;
-                existing.NameEs = entry.NameEs;
-                existing.DescriptionEs = entry.DescriptionEs;
-                existing.InstructionsEs = entry.InstructionsEs;
-                existing.TipsEs = entry.TipsEs;
-                existing.ForceType = entry.ForceType;
-                existing.Mechanic = entry.Mechanic;
-                existing.Difficulty = entry.Difficulty;
-                existing.Equipment = entry.Equipment;
-                existing.BodyPart = entry.BodyPart;
-                existing.Met = entry.Met;
-                existing.IsUnilateral = entry.IsUnilateral;
-                existing.IsBodyweight = entry.IsBodyweight;
-                existing.MovementPattern = entry.MovementPattern;
-                existing.PrimaryMuscles = entry.PrimaryMuscles;
-                existing.SecondaryMuscles = entry.SecondaryMuscles;
-                existing.MinimumExperience = entry.MinimumExperience;
-                existing.SuitableGoals = entry.SuitableGoals;
-                existing.RequiredEquipment = ExerciseEquipmentRequirements.Normalize(entry.Id, entry.RequiredEquipment);
-                existing.SelectionPriority = entry.SelectionPriority;
-                existing.IsActive = entry.IsActive;
-                existing.SeedVersion = entry.Version;
-                existing.UpdatedAt = now;
+                Apply(row, entry, metadata);
+                row.UpdatedAt = now;
                 updated++;
             }
-            else
-            {
-                preserved++;
-            }
 
-            // Repair missing language rows without replacing translations already curated in the admin.
-            var languages = await db.ExerciseCatalogTranslations
-                .Where(x => x.ExerciseId == entry.Id)
-                .Select(x => x.LanguageCode)
-                .ToListAsync(cancellationToken);
-            if (!languages.Contains("es", StringComparer.Ordinal))
-            {
-                db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
-                {
-                    ExerciseId = entry.Id, LanguageCode = "es", Name = entry.NameEs,
-                    Description = entry.DescriptionEs, Instructions = entry.InstructionsEs,
-                    Tips = entry.TipsEs, Status = "published", UpdatedAt = now
-                });
-                translationsAdded++;
-            }
-            if (!languages.Contains("en", StringComparer.Ordinal))
-            {
-                db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
-                {
-                    ExerciseId = entry.Id, LanguageCode = "en", Name = entry.NameEn,
-                    Status = "draft", UpdatedAt = now
-                });
-                translationsAdded++;
-            }
+            Write(translations, entry.Id, "es", new(metadata.NameEs, metadata.DescriptionEs, metadata.InstructionsEs, metadata.TipsEs), now);
+            foreach (var (language, texts) in seed.Translations)
+                if (texts.TryGetValue(entry.Id, out var text)) Write(translations, entry.Id, language, text, now);
+
+            // Until the seed has its own English file, it only owns the English name: the other English texts stay as they are.
+            if (!seed.Translations.ContainsKey("en")) WriteEnglishName(translations, entry.Id, metadata.NameEn, now);
         }
 
         await db.SaveChangesAsync(cancellationToken);
-        translationsAdded += await SeedTranslationsAsync(seed, now, cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation(
-            "Complete exercise catalog seed processed: {SeedEntries} entries, {Inserted} inserted, {Updated} untouched rows refreshed, {Preserved} existing rows preserved, {TranslationsAdded} missing translations added.",
-            entries.Count, inserted, updated, preserved, translationsAdded);
+            "Exercise catalog seed applied: {SeedEntries} exercises, {Inserted} inserted, {Updated} brought back to the seed; {TranslationsAdded} translations added, {TranslationsUpdated} updated.",
+            seed.Entries.Count, inserted, updated, translationsAdded, translationsUpdated);
+    }
+
+    private static bool Matches(ExerciseCatalogItem row, ExerciseSeedEntry entry, ExerciseMetadata m) =>
+        row.Source == entry.Source && row.SeedVersion == entry.Version && row.IsActive == entry.IsActive &&
+        row.NameEn == m.NameEn && row.NameEs == m.NameEs && row.DescriptionEs == m.DescriptionEs &&
+        row.InstructionsEs.SequenceEqual(m.InstructionsEs) && row.TipsEs.SequenceEqual(m.TipsEs) &&
+        row.ForceType == m.ForceType && row.Mechanic == m.Mechanic && row.Difficulty == m.Difficulty &&
+        row.Equipment == m.Equipment && row.BodyPart == m.BodyPart && row.Met.Equals(m.Met) &&
+        row.IsUnilateral == m.IsUnilateral && row.IsBodyweight == m.IsBodyweight && row.MovementPattern == m.MovementPattern &&
+        row.PrimaryMuscles.SequenceEqual(m.PrimaryMuscles) && row.SecondaryMuscles.SequenceEqual(m.SecondaryMuscles) &&
+        row.MinimumExperience == m.MinimumExperience && row.SuitableGoals.SequenceEqual(m.SuitableGoals) &&
+        row.RequiredEquipment.SequenceEqual(m.RequiredEquipment) && row.SelectionPriority == m.SelectionPriority;
+
+    private static void Apply(ExerciseCatalogItem row, ExerciseSeedEntry entry, ExerciseMetadata m)
+    {
+        row.Source = entry.Source; row.SeedVersion = entry.Version; row.IsActive = entry.IsActive;
+        row.NameEn = m.NameEn; row.NameEs = m.NameEs; row.DescriptionEs = m.DescriptionEs;
+        row.InstructionsEs = m.InstructionsEs; row.TipsEs = m.TipsEs; row.ForceType = m.ForceType; row.Mechanic = m.Mechanic;
+        row.Difficulty = m.Difficulty; row.Equipment = m.Equipment; row.BodyPart = m.BodyPart; row.Met = m.Met;
+        row.IsUnilateral = m.IsUnilateral; row.IsBodyweight = m.IsBodyweight; row.MovementPattern = m.MovementPattern;
+        row.PrimaryMuscles = m.PrimaryMuscles; row.SecondaryMuscles = m.SecondaryMuscles;
+        row.MinimumExperience = m.MinimumExperience; row.SuitableGoals = m.SuitableGoals;
+        row.RequiredEquipment = m.RequiredEquipment; row.SelectionPriority = m.SelectionPriority;
+    }
+
+    private void Write(Dictionary<(string, string), ExerciseCatalogTranslation> stored, string id, string language, ExerciseText text, DateTimeOffset now)
+    {
+        if (!stored.TryGetValue((id, language), out var row))
+        {
+            db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
+            {
+                ExerciseId = id, LanguageCode = language, Name = text.Name, Description = text.Description,
+                Instructions = text.Instructions, Tips = text.Tips, Status = "published", UpdatedAt = now
+            });
+            translationsAdded++;
+            return;
+        }
+        if (row.Name == text.Name && row.Description == text.Description && row.Status == "published" &&
+            (row.Instructions ?? []).SequenceEqual(text.Instructions) && (row.Tips ?? []).SequenceEqual(text.Tips)) return;
+        row.Name = text.Name; row.Description = text.Description; row.Instructions = text.Instructions; row.Tips = text.Tips;
+        row.Status = "published"; row.UpdatedAt = now;
+        translationsUpdated++;
+    }
+
+    private void WriteEnglishName(Dictionary<(string, string), ExerciseCatalogTranslation> stored, string id, string name, DateTimeOffset now)
+    {
+        if (!stored.TryGetValue((id, "en"), out var row))
+        {
+            db.ExerciseCatalogTranslations.Add(new ExerciseCatalogTranslation
+            {
+                ExerciseId = id, LanguageCode = "en", Name = name, Status = "draft", UpdatedAt = now
+            });
+            translationsAdded++;
+        }
+        else if (row.Name != name)
+        {
+            row.Name = name;
+            row.UpdatedAt = now;
+            translationsUpdated++;
+        }
     }
 }
