@@ -14,6 +14,7 @@ public sealed record TimeZoneRequest(string? TimeZone);
 public sealed record DeletionRequestBody(string? Email);
 public sealed record LanguageRequest(string? Language);
 public sealed record ResearchConsentRequest(bool Consent);
+public sealed record HealthConsentRequest(bool Consent);
 public sealed record DeletionConfirmBody(string? Token, string? Code);
 
 /// <summary>
@@ -44,6 +45,9 @@ public static class AccountEndpoints
             .Produces(StatusCodes.Status204NoContent).ProducesValidationProblem();
         group.MapPut("/research-consent", SetResearchConsentAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetResearchConsent")
             .WithSummary("Optional and revocable: lets the anonymous statistics kept when the account is deleted be grouped per plan. Never needed to use the app.")
+            .Produces(StatusCodes.Status204NoContent);
+        group.MapPut("/health-consent", SetHealthConsentAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetHealthConsent")
+            .WithSummary("Explicit consent for health data (injuries, pain, discomfort, illness). Withdrawing it erases that data. Never needed to use the app.")
             .Produces(StatusCodes.Status204NoContent);
         group.MapPut("/time-zone", SetTimeZoneAsync).RequireAuthorization().RequireRateLimiting(RateLimitPolicy).WithName("SetTimeZone")
             .WithSummary("Saves the IANA time zone (for example Europe/Madrid) used for today and the current plan week.")
@@ -103,6 +107,12 @@ public static class AccountEndpoints
     {
         if (UserId(principal) is not { } id) return Results.Unauthorized();
         return await accounts.SetResearchConsentAsync(id, request.Consent, ct) ? Results.NoContent() : Results.Unauthorized();
+    }
+
+    private static async Task<IResult> SetHealthConsentAsync(HealthConsentRequest request, ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } id) return Results.Unauthorized();
+        return await accounts.SetHealthConsentAsync(id, request.Consent, ct) ? Results.NoContent() : Results.Unauthorized();
     }
 
     private static async Task<IResult> SetTimeZoneAsync(TimeZoneRequest request, ClaimsPrincipal principal, IAccountService accounts, CancellationToken ct)
