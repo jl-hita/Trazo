@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Valjanje s kolesom za trebuh",
+  "description": "Vaja za trup, pri kateri kolo valjaš naprej in nazaj ter uri upiranje iztegu hrbtenice.",
+  "instructions": [
+   "Poklekni na tla in primi ročaja kolesa v širini ramen.",
+   "Močno napni trup, da ledveni del ostane v nevtralnem položaju.",
+   "Kolo počasi valjaj naprej in telo iztegni tako daleč, kot ga lahko nadzoruješ.",
+   "Ustavi se, preden se boki povesijo ali se hrbet usloči.",
+   "Kolo potegni nazaj proti kolenom s krčenjem trebušnih mišic."
+  ],
+  "tips": [
+   "Pred vsako ponovitvijo napni trup — ne dovoli, da se ledveni del usloči.",
+   "Obseg povečuj postopoma in se ustavi, preden se boki povesijo.",
+   "Če spodnjega položaja ne obvladaš, uporabi steno kot omejilo."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnoldov potisk",
+  "description": "Potisk za ramena z ročkama z obračanjem zapestij, ki vključi deltasto mišico v dolgem obsegu.",
+  "instructions": [
+   "Sedi z ravnim naslonom, ročki drži v višini prsi z dlanmi proti sebi in komolci spredaj.",
+   "Začni potiskati navzgor, medtem ko odpiraš komolce in obračaš dlani naprej.",
+   "Končaj z rokami nad glavo, ne da bi zaklenil komolce.",
+   "Spuščaj in dlani spet obračaj proti sebi do začetnega položaja."
+  ],
+  "tips": [
+   "Obrat naredi tekoče, brez zamaha.",
+   "Hrbet naj ostane na naslonu."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Podprti zgibi",
+  "description": "Zgib na podpornem stroju, ki razbremeni del telesne teže in gradi moč hrbta, potrebno za čiste zgibe.",
+  "instructions": [
+   "Kolena položi na blazino stroja za podprte zgibe.",
+   "Drog primi z dlanmi naprej, nekoliko širše od ramen.",
+   "Prsi potegni proti drogu s potiskanjem komolcev navzdol.",
+   "Nadzorovano se spusti do vese z iztegnjenimi rokami.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Gib začni s spuščanjem lopatic, šele nato pokrči komolce.",
+   "Ne zibaj se, da hrbtu ne vzameš dela.",
+   "Protiutež nastavi tako, da vse ponovitve opraviš z dobro tehniko."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Upogib kolen na žogi za ravnotežje",
+  "description": "Upogib kolen z lastno težo na žogi za ravnotežje, pri katerem pete valjaš proti zadnjici in dvigaš boke.",
+  "instructions": [
+   "Lezi na hrbet s petami in spodnjim delom meč na žogi ter iztegnjenimi rokami za ravnotežje.",
+   "Pritisni s petami in dvigni boke, da je telo ravna črta od ramen do gležnjev.",
+   "Boke drži zgoraj, pokrči kolena in žogo privaljaj proti zadnjici.",
+   "Noge nadzorovano iztegni nazaj, ne da bi spustil boke.",
+   "Opravi vse ponovitve, nato spusti boke in stopi z žoge."
+  ],
+  "tips": [
+   "Boki so zgoraj vso serijo: gre za spoj mostička in upogiba.",
+   "Začni z obema nogama; ko postane lahko, preidi na eno."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Upogib kolena stoje z elastiko",
+  "description": "Upogib kolena stoje z elastiko okoli gležnja, primeren na poti ali kot lahek zaključek za zadnje stegenske mišice.",
+  "instructions": [
+   "Elastiko namesti okoli enega gležnja, drugi konec pa pritrdi pod stojno nogo ali na trdno točko pred seboj.",
+   "Stoj vzravnano, po potrebi se primi za oporo, stojna noga naj bo rahlo pokrčena.",
+   "Peto z elastiko dvigni proti zadnjici, stegno naj miruje.",
+   "Zgoraj napni zadnjo stegensko mišico in nadzorovano spusti do polnega raztega.",
+   "Opravi vse ponovitve na eni strani in zamenjaj nogo."
+  ],
+  "tips": [
+   "Stegno naj miruje — premika se le golen.",
+   "Ne pomagaj si z zamahom bokov.",
+   "Če spusta ne obvladaš, uporabi šibkejšo elastiko."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Poteg navzdol z elastiko",
+  "description": "Navpični poteg z elastiko, pritrjeno visoko, kot zamenjava za škripec.",
+  "instructions": [
+   "Stoj, elastika naj bo pritrjena visoko (vrata ali drog), v vsaki roki en konec, roke iztegnjene nad glavo.",
+   "Roke vleci navzdol in komolce vodi ob boke, prsi dvignjene.",
+   "Ko roke dosežejo višino ramen, stisni hrbet.",
+   "Roke nadzorovano dvigni nazaj do iztega."
+  ],
+  "tips": [
+   "Trupa ne nagibaj nazaj, da bi si pomagal.",
+   "Pred začetkom preveri, da pritrditev drži."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Razteg elastike",
+  "description": "Razteg elastike z iztegnjenimi rokami za aktivacijo zadnjega dela ramen in zgornjega dela hrbta.",
+  "instructions": [
+   "Stoj in drži elastiko v širini ramen z iztegnjenimi rokami pred seboj v višini prsi.",
+   "Roke razmikaj vstran, dokler se elastika ne dotakne prsi.",
+   "V končnem položaju stisni lopatici, ne da bi dvignil ramena.",
+   "Nadzorovano se vrni in ne dovoli, da te elastika potegne."
+  ],
+  "tips": [
+   "Izberi elastiko, s katero zmoreš vsaj 15 čistih ponovitev.",
+   "Rebra drži potegnjena, da se ledveni del ne usloči."
+  ]
+ },
+ "band-row": {
+  "name": "Veslanje z elastiko",
+  "description": "Veslanje sede z elastiko, zataknjeno za stopali; razen elastike ne potrebuješ ničesar.",
+  "instructions": [
+   "Sedi na tla z iztegnjenimi nogami, elastiko spelji okoli podplatov in v vsaki roki drži en konec.",
+   "Z ravnim hrbtom vleci roke proti trebuhu in komolce vodi nazaj.",
+   "V končnem položaju stisni lopatici.",
+   "Roke nadzorovano iztegni in ne popusti napetosti elastike."
+  ],
+  "tips": [
+   "Ne pomagaj si z zibanjem trupa.",
+   "Izberi elastiko za 12 do 15 čistih ponovitev."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Potisk za ramena z elastiko",
+  "description": "Potisk za ramena stoje na elastiki za vadbo deltaste mišice z zelo malo opreme.",
+  "instructions": [
+   "Stopi na sredino elastike s stopali v širini bokov in koncema v rokah v višini ramen.",
+   "Roke potisni navzgor, dokler niso iztegnjene nad glavo.",
+   "Trebuh naj bo napet in rebra potegnjena.",
+   "Nadzorovano spusti do ramen brez izgube napetosti."
+  ],
+  "tips": [
+   "Pri potisku se ne usloči.",
+   "Za večji upor elastiko ovij še enkrat."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bolgarski počep z dolgo ročko",
+  "description": "Počep na eni nogi z zadnjim stopalom na klopi in dolgo ročko na hrbtu.",
+  "instructions": [
+   "Nart enega stopala položi na klop za seboj, ročka naj bo na zgornjem delu hrbta, druga noga spredaj.",
+   "Pokrči sprednje koleno in se z vzravnanim trupom spuščaj, dokler stegno ni vzporedno s tlemi.",
+   "Teža naj bo na peti sprednje noge.",
+   "S sprednjo nogo se odrini do iztega; opravi ponovitve in zamenjaj nogo."
+  ],
+  "tips": [
+   "Razdaljo prilagodi tako, da sprednje koleno ne sega daleč čez prste.",
+   "Najprej vadi brez teže ali z ročkama."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Pregib za biceps z dolgo ročko",
+  "description": "Klasična izolacijska vaja za biceps z dolgo ročko za največjo obremenitev.",
+  "instructions": [
+   "Stoj in drži dolgo ročko s podprijemom v širini ramen.",
+   "Ročko upogni proti ramenom.",
+   "Zgoraj stisni, nato nadzorovano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne zibaj trupa.",
+   "Komolce drži ob telesu."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Mostiček za zadnjico z dolgo ročko",
+  "description": "Mostiček za zadnjico z dolgo ročko za večji upor.",
+  "instructions": [
+   "Lezi na tla z ročko čez boke in pokrčenimi koleni.",
+   "Boke dvigni s stiskom zadnjice.",
+   "Zgoraj zadrži s povsem iztegnjenimi boki.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Pri iztegu bokov se v ledvenem delu ne usloči.",
+   "Potiskaj s petami, ne s prsti.",
+   "Brado potegni noter in zgornji del hrbta drži na podlagi."
+  ]
+ },
+ "barbell-row": {
+  "name": "Veslanje z dolgo ročko v predklonu",
+  "description": "Sestavljena vlečna vaja za zgornji in srednji del hrbta.",
+  "instructions": [
+   "Upogni se v kolkih z rahlo pokrčenimi koleni.",
+   "Ročko primi nekoliko širše od ramen.",
+   "Ročko vleci proti spodnjemu delu prsi in stiskaj lopatici.",
+   "Ročko nadzorovano spuščaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup drži pod kotom približno 45 stopinj.",
+   "Teže ne dvigaj z zamahom."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Dvigi na prste stoje z dolgo ročko",
+  "description": "Dvigi na prste stoje s prosto ročko na hrbtu, brez posebnega stroja.",
+  "instructions": [
+   "Stoj z ročko na zgornjem delu hrbta, prsti stopal na stopnici ali plošči v širini bokov.",
+   "Pete spusti, da se meča raztegnejo, trup naj bo vzravnan.",
+   "Dvigni se na prste čim višje, ne da bi krčil kolena.",
+   "Zgoraj za trenutek zadrži in nadzorovano spusti."
+  ],
+  "tips": [
+   "Začni z majhno težo, dokler ne obvladaš ravnotežja.",
+   "Vajo delaj v stojalu z varovali na primerni višini."
+  ]
+ },
+ "bench-press": {
+  "name": "Potisk s prsi na klopi",
+  "description": "Sestavljena potisna vaja za prsi, ramena in triceps.",
+  "instructions": [
+   "Lezi na klop z očmi pod drogom.",
+   "Drog primi nekoliko širše od ramen.",
+   "Ročko snemi s stojala in jo spusti na sredino prsi.",
+   "Ročko potisni nazaj do popolnega iztega rok.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Stopala naj bodo plosko na tleh.",
+   "V ledvenem delu ohrani rahel lok.",
+   "Z nogami pritiskaj v tla, da ostaneš stabilni."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Obrnjeno veslanje s pokrčenimi koleni",
+  "description": "Začetniška različica obrnjenega veslanja: s pokrčenimi koleni in stopali blizu telesa je lažja in bolj obvladljiva.",
+  "instructions": [
+   "Lezi pod nizek, trden drog, primi ga nekoliko širše od ramen in drži trup raven s pokrčenimi koleni in podplati na tleh.",
+   "Prsi potegni proti drogu, komolce nazaj in lopatici skupaj.",
+   "Zgoraj za trenutek zadrži, ne da bi se boki povesili.",
+   "Nadzorovano spusti do iztegnjenih rok."
+  ],
+  "tips": [
+   "Stopala približaj za lažjo vajo ali jih odmakni za napredek.",
+   "Ko zmoreš 12 ponovitev, preidi na obrnjeno veslanje z iztegnjenimi nogami."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Dvigi na prste z lastno težo",
+  "description": "Dvigi na prste z lastno težo, osnovna vaja za krepitev meč.",
+  "instructions": [
+   "Stoj s stopali v širini bokov na ravni podlagi.",
+   "Dvigni se na prste čim višje.",
+   "Zgoraj stisni meča.",
+   "Pete nadzorovano spusti na tla.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Pri dvigu težo porazdeli na vse prste.",
+   "Noge naj bodo iztegnjene, da delajo predvsem meča.",
+   "Za ravnotežje glej v eno točko."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Izpadni korak nazaj z lastno težo",
+  "description": "Izpadni korak nazaj brez opreme, stabilnejši in prijaznejši do kolen kot korak naprej.",
+  "instructions": [
+   "Stoj s stopali skupaj in rokami v bokih, prsi dvignjene.",
+   "Naredi dolg korak nazaj in krči obe koleni, dokler zadnje ni tik nad tlemi.",
+   "Trup drži vzravnan in težo na sprednjem stopalu.",
+   "S sprednjo nogo se odrini v začetni položaj; opravi ponovitve in zamenjaj nogo."
+  ],
+  "tips": [
+   "Korak naj bo dovolj dolg, da sprednje koleno ne sega daleč čez prste.",
+   "Če ti ravnotežje še dela težave, se primi za oporo."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Počep z lastno težo",
+  "description": "Osnovni počep brez opreme, idealen za učenje giba in vadbo nog kjer koli.",
+  "instructions": [
+   "Stoj s stopali v širini ramen, prsti rahlo navzven, roke iztegnjene pred seboj.",
+   "Boke vodi nazaj in navzdol, kot bi sedel, prsi dvignjene in hrbet nevtralen.",
+   "Spuščaj se, dokler stegna niso vzporedna s tlemi, kolena v smeri stopal.",
+   "S celim stopalom potiskaj v tla, dokler spet ne stojiš."
+  ],
+  "tips": [
+   "Pete naj ves čas ostanejo na tleh.",
+   "Če se težko spustiš, sedi na stol in vstani brez zamaha."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bolgarski počep",
+  "description": "Enostranska različica počepa z dvignjenim zadnjim stopalom.",
+  "instructions": [
+   "Stopi pred klop in eno stopalo položi nanjo za seboj.",
+   "Ročki drži ob straneh.",
+   "Spuščaj se, dokler sprednje stegno ni vzporedno s tlemi.",
+   "Potisni se s sprednjo peto nazaj v stojo.",
+   "Ponovi na obeh straneh."
+  ],
+  "tips": [
+   "Skoraj vso težo drži na sprednji nogi.",
+   "Razdaljo do klopi prilagajaj, dokler izpadni korak ni stabilen.",
+   "Pred menjavo opravi vse ponovitve z eno nogo."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Trebušnjaki na škripcu",
+  "description": "Trebušnjak kleče na zgornjem škripcu z vrvjo, pri katerem lahko postopno dodaja obremenitev za premo trebušno mišico.",
+  "instructions": [
+   "Poklekni pred škripec z vrvjo, pritrjeno zgoraj.",
+   "Vrv drži blizu čela s pokrčenimi komolci.",
+   "Spusti se z upogibom hrbtenice in komolce vodi proti stegnom.",
+   "Spodaj močno stisni trebušne mišice.",
+   "Vrni se v začetni položaj in ponovi."
+  ],
+  "tips": [
+   "Upogibaj hrbtenico, namesto da vlečeš z rokami.",
+   "Ob vsaki ponovitvi se z boki ne usedaj nazaj.",
+   "Pri spustu močno izdihni, da trebuh bolje stisneš."
+  ]
+ },
+ "cable-curl": {
+  "name": "Pregib za biceps na škripcu",
+  "description": "Pregib za biceps z uporom škripca za stalno napetost.",
+  "instructions": [
+   "Stoj pred spodnjim škripcem z ravno palico ali EZ palico.",
+   "Palico primi s podprijemom, komolci ob telesu.",
+   "Ročko upogni proti ramenom.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Pri dvigu palice komolcem ne dovoli zdrsa naprej.",
+   "Ne pomagaj si z zibanjem trupa.",
+   "Od škripca stopi nekoliko dlje, da ohraniš napetost."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Zunanja rotacija na škripcu",
+  "description": "Zunanja rotacija na škripcu s komolcem ob telesu, ki ob pomoči zadnje delte krepi zunanje rotatorje rotatorne manšete.",
+  "instructions": [
+   "Škripec nastavi v višino komolca in primi ročaj.",
+   "Stoj bočno na napravo s komolcem delovne roke pokrčenim na 90 stopinj.",
+   "Komolec drži ob telesu in podlaket obračaj navzven.",
+   "V končnem položaju se ustavi.",
+   "Nadzorovano se vrni. Opravi ponovitve na eni strani in zamenjaj."
+  ],
+  "tips": [
+   "Pri obračanju roke ne dvigaj ramen.",
+   "Delaj z majhno težo, počasi in nadzorovano.",
+   "Zapestje naj bo čvrsto v liniji s podlaktjo."
+  ]
+ },
+ "cable-fly": {
+  "name": "Razpiranje na škripcu",
+  "description": "Izolacijska vaja za prsi z uporom škripcev za stalno napetost.",
+  "instructions": [
+   "Stoj med dvema stebroma škripcev z ročaji na zgornjih škripcih.",
+   "Z rahlo pokrčenimi komolci razpri roke vstran.",
+   "Roke združi pred prsmi z gibom objema.",
+   "Počasi se vrni v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Kot v komolcih naj ostane enak, da vaja ne postane potisk.",
+   "Ko se roki srečata, za sekundo stisni prsi.",
+   "Pri razprtih rokah ramen ne potiskaj naprej."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Dvig rok naprej na škripcu",
+  "description": "Dvig roke naprej na spodnjem škripcu s stalno napetostjo v celotnem obsegu.",
+  "instructions": [
+   "Stoj s hrbtom proti spodnjemu škripcu, jeklenica med nogami, ročaj v eni roki, iztegnjeni pred stegnom.",
+   "Roko dvigni naprej do višine rame z rahlo pokrčenim komolcem.",
+   "Zgoraj za trenutek zadrži, ne da bi se nagnil nazaj.",
+   "Nadzorovano spusti in uteži ne odlagaj; ponovi in zamenjaj roko."
+  ],
+  "tips": [
+   "Stoj dovolj daleč, da jeklenica vleče nazaj.",
+   "Trebuh naj bo napet, da se hrbet ne usloči."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Odmik roke na škripcu",
+  "description": "Enoročni odmik na škripcu s stalno napetostjo v stranski delti.",
+  "instructions": [
+   "Stoj bočno na spodnji škripec in ročaj primi z oddaljenejšo roko.",
+   "Komolec naj bo rahlo pokrčen, jeklenica pa naj teče pred telesom.",
+   "Roko dviguj vstran, dokler ni vzporedna s tlemi.",
+   "Nadzorovano spusti. Ponovitve na stran, nato zamenjaj.",
+   "Ohrani napetost — spodaj uteži ne odlagaj."
+  ],
+  "tips": [
+   "Gib vodi s komolcem, ne z dlanjo.",
+   "Zgoraj se na kratko ustavi, brez zibanja.",
+   "Uporabi manjšo težo kot z ročko — napetost škripca je stalna."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Izteg za triceps nad glavo na škripcu",
+  "description": "Vaja za triceps na škripcu: s hrbtom proti utežem drži vrv za glavo in z iztegom komolcev jo potiskaš navzgor nad glavo. Položaj nad glavo raztegne dolgo glavo tricepsa, škripec pa ohranja mišico napeto ves gib.",
+  "instructions": [
+   "Na spodnji škripec pripni vrv in izberi majhno težo.",
+   "Vrv primi z obema rokama, obrni hrbet utežem in stopi naprej v razkorak, da te škripec vleče nazaj.",
+   "Vrv dvigni nad glavo s pokrčenimi komolci in nadlaktmi blizu ušes, tako da so roke za glavo.",
+   "Napni trup in nadlakti drži pri miru, nato iztegni komolce in potisni vrv navzgor, dokler roke nad glavo niso povsem iztegnjene.",
+   "Zgoraj se na kratko ustavi, nato pokrči komolce in vrv nadzorovano spusti nazaj za glavo.",
+   "Ponovi predvideno število ponovitev."
+  ],
+  "tips": [
+   "Komolci naj gledajo naprej in nadlakti naj mirujejo; če se razprejo ali premaknejo, izteg postane potisk.",
+   "Stopi dovolj daleč naprej, da te škripec drži stabilne, in se pri dvigu rok ne usloči.",
+   "Uporabi težo, ki jo obvladaš v celotnem raztegu; velike teže razmikajo komolce."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallofov potisk",
+  "description": "Vaja proti rotaciji: škripec te vleče vstran, medtem ko ročaj potiskaš naravnost od prsi in ne dovoli, da se trup obrne.",
+  "instructions": [
+   "Škripec nastavi v višino prsi in ročaj primi z obema rokama, bočno na napravo.",
+   "Odstopi, dokler jeklenica ni res napeta, stopala v širini ramen in kolena rahlo pokrčena.",
+   "Ročaj pritegni na sredino prsi ter napni trup in zadnjico.",
+   "Ročaj potisni naravnost naprej do iztega rok in se upri vleku, ki te želi obrniti proti napravi.",
+   "V iztegnjenem položaju za trenutek zadrži, nato ročaj nadzorovano vrni k prsim.",
+   "Opravi želene ponovitve, se obrni in ponovi na drugo stran."
+  ],
+  "tips": [
+   "Nič se ne sme vrteti. Če se med potiskom ramena obračajo proti škripcu, zmanjšaj težo — vadi prav rotacija, do katere ne pride.",
+   "Dlje ko stojiš od naprave, daljša je ročica in težja je vaja, zato lahko zahtevnost spreminjaš brez dotika uteži.",
+   "Roke drži v višini prsi in ramena nizko; če ročaj zleze navzgor, vaja postane dvig naprej."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Obratno razpiranje na škripcu",
+  "description": "Vaja na škripcih stoje za zadnje delte: obrnjeni v prostor med dvema stolpoma drži nasprotna ročaja s prekrižanima jeklenicama in vodi roke ven in nazaj do višine ramen. Jeklenici ohranjata zadnja ramena napeta v celotnem loku.",
+  "instructions": [
+   "Oba škripca nastavi približno v višino ramen in stopi na sredino med stolpa.",
+   "Levi ročaj primi z desno roko, desnega z levo, tako da se jeklenici pred teboj križata.",
+   "Stoj vzravnano z rokami, iztegnjenimi naprej v višini ramen, komolci rahlo pokrčeni.",
+   "Roke v širokem loku vodi ven in nazaj, komolci naprej, dokler niso v liniji z rameni.",
+   "Lopatici na kratko stisni, ne da bi se usločil.",
+   "Ročaja počasi vrni v prekrižan začetni položaj in ponovi predvideno število."
+  ],
+  "tips": [
+   "Komolci naj bodo rahlo pokrčeni in zaklenjeni v tem kotu; če jih krčiš in izteguješ, razpiranje postane veslanje.",
+   "Ramena drži nizko in vrat sproščen, da delajo zadnje delte in ne zgornji trapez.",
+   "Uporabi majhno težo in počasno vračanje; na koncu loka jeklenici vlečeta najmočneje, zato ta položaj nadzoruj."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Dvigi kolen na stolu",
+  "description": "Vaja z lastno težo na stolu za dvige nog za spodnji del trebuha in upogibalke kolka.",
+  "instructions": [
+   "Namesti se na stol s hrbtom na naslonu in podlaktmi na oporah.",
+   "Noge naj prosto visijo.",
+   "Napni trup in dvigni kolena proti prsim.",
+   "Zgoraj na kratko zadrži in počasi spusti v začetni položaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Z nogami ne zamahuj za zagon.",
+   "Med dvigom kolen izdihni.",
+   "Hrbet naj bo vso vajo na naslonu."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Potisk s prsi na stroju",
+  "description": "Potisna vaja za prsi na stroju, idealna za začetnike.",
+  "instructions": [
+   "Sedi v stroj s hrbtom na naslonu.",
+   "Ročaja primi v višini prsi.",
+   "Ročaja potisni naprej do popolnega iztega rok.",
+   "Počasi se vrni v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Sedež nastavi tako, da sta ročaja v višini prsi.",
+   "Potiskaj brez sunkovitega zaklepanja komolcev.",
+   "Nadzorovano se vračaj in teže ne spusti."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Veslanje z ročkama z oporo prsi",
+  "description": "Veslanje z ročkama z oporo prsi, ki razbremeni ledveni del in izolira hrbtne mišice.",
+  "instructions": [
+   "Lezi na trebuh na poševno klop z ročkama, ki visita pod teboj.",
+   "Ročki veslaj proti bokom.",
+   "Zgoraj stisni in spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Opora prsi odpravi utrujanje ledvenega dela.",
+   "Osredotoči se na stiskanje lopatic."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Veslanje s kettlebellom z oporo prsi",
+  "description": "Vaja krepi hrbet, predvsem široko hrbtno mišico in romboide: s kettlebellom v vsaki roki veslaš proti bokom, trup pa je podprt na poševni klopi.",
+  "instructions": [
+   "Lezi na trebuh na poševno klop in pusti rokama prosto viseti s kettlebelloma.",
+   "Napni trebuh in povleci lopatici nazaj.",
+   "Kettlebella vleci proti bokom in stiskaj lopatici.",
+   "Zgoraj se na kratko ustavi in začutiš krčenje v hrbtu.",
+   "Kettlebella počasi in nadzorovano spusti v začetni položaj."
+  ],
+  "tips": [
+   "Trup naj bo ves čas stabilen; ne zibaj se.",
+   "Poteg začni s hrbtnimi mišicami, ne le z rokami.",
+   "Komolce drži ob telesu, da poudariš široko hrbtno mišico."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Veslanje na stroju z oporo prsi",
+  "description": "Veslanje sede na stroju z blazino za prsi, ki podpira trup, tako da vlečejo široke hrbtne mišice in mišice med lopaticama, ledveni del pa je izključen. Ročaja vlečeš nazaj s komolci za seboj in ju nato nadzorovano spusti naprej.",
+  "instructions": [
+   "Sedež nastavi tako, da sta ročaja v višini spodnjega dela prsi, in sedi s prsmi na blazini in stopali trdno na tleh.",
+   "Sezi naprej in primi ročaja z iztegnjenimi rokami in sproščenimi rameni.",
+   "Napni trup in ročaja vleci nazaj s komolci za seboj.",
+   "Na koncu potega stisni lopatici, ne da bi prsi odmaknil od blazine.",
+   "Na kratko se ustavi, nato iztegni roke in ročaja nadzorovano vrni naprej.",
+   "Ponovi predvideno število s prsmi ves čas na blazini."
+  ],
+  "tips": [
+   "Vleci s komolci namesto z dlanmi, da delajo široke hrbtne mišice in sredina hrbta, bicepsa pa pomagata.",
+   "Prsi naj ostanejo na blazini in ramena nizko; če jih dvigneš ali se nagneš nazaj, veslanje postane poteg zgornjega trapeza.",
+   "Na začetku vsake ponovitve pusti lopaticama zdrsniti naprej za poln razteg pred naslednjim potegom."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Veslanje s T-palico z oporo prsi",
+  "description": "Veslanje s T-palico s prsmi na poševni klopi, ki izolira hrbet brez obremenitve ledvenega dela.",
+  "instructions": [
+   "Prsi nasloni na poševno klop s stopali trdno na tleh in primi ročaj T-palice z iztegnjenimi rokami.",
+   "Ročaj vleci proti prsim, komolce nazaj in ob telesu.",
+   "Zgoraj za trenutek stisni lopatici.",
+   "Nadzorovano spusti do iztegnjenih rok, ne da bi prsi odmaknil od klopi."
+  ],
+  "tips": [
+   "Glava naj bo v liniji s hrbtenico.",
+   "Če moraš za dvig prsi odmakniti od klopi, zmanjšaj težo."
+  ]
+ },
+ "chin-ups": {
+  "name": "Zgibi s podprijemom",
+  "description": "Različica zgibov s podprijemom, ki ob široki hrbtni mišici močno vključi bicepsa.",
+  "instructions": [
+   "Obesi se na drog s podprijemom v širini ramen.",
+   "Potegni se, dokler brada ni nad drogom.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup naj bo napet vso vajo.",
+   "Ne zibaj se preveč."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Potisk na klopi z ozkim prijemom",
+  "description": "Potisk na klopi z ožjim prijemom, ki poveča delež tricepsa in ohrani delo prsi.",
+  "instructions": [
+   "Lezi na klop in primi drog v širini ramen ali nekoliko ožje.",
+   "Snemi ročko in jo z iztegnjenimi rokami prenesi nad prsi.",
+   "Nadzorovano spuščaj, dokler se ne dotakne spodnjega dela prsi, komolci ob telesu.",
+   "Ročko potisni navzgor do iztega komolcev."
+  ],
+  "tips": [
+   "Rok ne postavi preozko: zapestja trpijo; širina ramen zadošča.",
+   "Pri vadbi blizu odpovedi prosi za pomoč ali uporabi stojalo z varovali."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Potisk na klopi z ročkama",
+  "description": "Sestavljena vaja za prsi z ročkama z večjim obsegom giba kot potisk z dolgo ročko.",
+  "instructions": [
+   "Lezi na ravno klop z ročko v vsaki roki v višini prsi.",
+   "Ročki potisni navzgor do popolnega iztega rok.",
+   "Počasi ju spusti v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Zapestja naj bodo vso vajo nevtralna.",
+   "V zgornjem položaju stisni prsi."
+  ]
+ },
+ "db-fly": {
+  "name": "Razpiranje z ročkama",
+  "description": "Izolacijska vaja, ki prsno mišico razteguje in krči v širokem loku.",
+  "instructions": [
+   "Lezi na klop z ročkama nad prsmi in dlanmi obrnjenimi druga proti drugi.",
+   "Z rahlo pokrčenimi komolci spusti ročki vstran.",
+   "Vrni se v začetni položaj s stiskom prsi.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Upognjenost komolcev naj bo vso vajo enaka.",
+   "Ročk ne spuščaj prenizko."
+  ]
+ },
+ "db-squat": {
+  "name": "Počep z ročkama",
+  "description": "Počep z ročko v vsaki roki ob telesu, izvedljiv brez dolge ročke.",
+  "instructions": [
+   "Stopala v širini ramen, v vsaki roki ročka ob strani.",
+   "Napni trup in drži prsi gor.",
+   "Spusti se v počep s krčenjem kolkov in kolen.",
+   "Spuščaj se, dokler stegna niso vzporedna ali nižje.",
+   "S petami se potisni nazaj gor."
+  ],
+  "tips": [
+   "Prsi gor in hrbet raven.",
+   "Kolena potiskaj v smeri prstov.",
+   "Če te začne omejevati prijem, uporabi trakove za dvigovanje."
+  ]
+ },
+ "dead-bug": {
+  "name": "Mrtvi hrošč",
+  "description": "Vaja za trup leže na hrbtu, ki z usklajenim iztegom nasprotnih okončin uri globoko stabilnost.",
+  "instructions": [
+   "Lezi na hrbet z rokami proti stropu in koleni pod pravim kotom.",
+   "Desno roko in levo nogo spuščaj proti tlom, ledveni del pa naj bo pritisnjen ob tla.",
+   "Vrni se v začetni položaj.",
+   "Ponovi na drugi strani.",
+   "Izmenjuj."
+  ],
+  "tips": [
+   "Ledveni del ves čas pritiskaj ob tla.",
+   "Gibaj se počasi."
+  ]
+ },
+ "deadlift": {
+  "name": "Mrtvi dvig z dolgo ročko",
+  "description": "Sestavljen dvig za celotno telo, ki obremeni predvsem zadnjo verigo.",
+  "instructions": [
+   "Stoj s stopali v širini bokov in drogom nad sredino stopal.",
+   "Upogni se v kolkih in primi drog.",
+   "Napni trup in dvigni z iztegom kolkov in kolen.",
+   "Zgoraj se povsem vzravnaj, nato nadzorovano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ročko drži blizu telesa.",
+   "Ledvenega dela ne krivi."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Mrtvi dvig s podstavka",
+  "description": "Mrtvi dvig z nizkega podstavka, ki podaljša obseg giba in oteži začetek.",
+  "instructions": [
+   "Stopi na 2–5 cm visoko ploščad s stopali pod drogom in ga primi z nevtralnim hrbtom in rameni nad njim.",
+   "Napni telo in potiskaj v tla, medtem ko se ročka dviga tik ob nogah.",
+   "Kolke in kolena izteguj hkrati do popolne vzravnanosti.",
+   "Ročko nadzorovano spusti na tla z nevtralnim hrbtom."
+  ],
+  "tips": [
+   "Začni z majhnim podstavkom in lahko težo ter pili tehniko.",
+   "Pri odlepljanju od tal hrbta ne krivi."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Zmajeva zastava",
+  "description": "Zahtevna trebušna vaja: togo telo se opira le na ramena ter se dviga in spušča kot vzvod.",
+  "instructions": [
+   "Lezi na klop, primi se za rob za glavo in dvigni ravno telo, da ga nosijo le ramena in zgornji del hrbta.",
+   "Ravno telo brez upogiba v kolkih spuščaj skoraj do vodoravnega.",
+   "Trebuh in zadnjica naj bosta napeta, klopi se ne dotikaj.",
+   "Ravno telo spet dvigni do navpičnega; če ne gre, začni samo s spustom."
+  ],
+  "tips": [
+   "Začni s pokrčenimi koleni ali le z ekscentrično fazo.",
+   "Bistvo vaje je, da se v kolkih ne upogneš."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Veslanje z ročkama v predklonu",
+  "description": "Veslanje z ročko v vsaki roki v predklonu: široke hrbtne mišice in zgornji hrbet samo z ročkama.",
+  "instructions": [
+   "Stoj z ročkama, rahlo pokrči kolena in trup v kolkih nagni skoraj vzporedno s tlemi z ravnim hrbtom.",
+   "Roke naj visijo z dlanmi druga proti drugi.",
+   "Ročki vleci proti bokom, komolce nazaj in lopatici skupaj.",
+   "Zgoraj se na kratko ustavi in nadzorovano spusti do iztega."
+  ],
+  "tips": [
+   "Trup naj miruje: če se moraš zibati, da ju dvigneš, sta pretežki.",
+   "Vrat drži v liniji s hrbtenico, pogled v tla.",
+   "Če se ledveni del utrudi pred zgornjim hrbtom, vzemi manjšo težo ali veslanje z oporo."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Pregib za biceps z ročkama",
+  "description": "Upogib komolca z ročko v vsaki roki za vadbo bicepsa v prostem obsegu giba.",
+  "instructions": [
+   "Stoj z ročkama, roke iztegnjene ob telesu, dlani naprej.",
+   "Komolce drži ob trupu in ročki dviguj z upogibom komolcev brez zibanja.",
+   "Zgoraj za trenutek napni biceps, ne da bi dvignil ramena.",
+   "Nadzorovano spuščaj do popolnega iztega komolca."
+  ],
+  "tips": [
+   "Ne pomagaj si s hrbtom: če moraš, zmanjšaj težo.",
+   "Spust nadzoruj, traja naj vsaj dvakrat dlje kot dvig."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Kmečka hoja z ročkama",
+  "description": "Ta vaja za celotno telo je hoja s težkima ročkama in učinkovito gradi moč prijema, stabilnost trupa in splošno mišično vzdržljivost.",
+  "instructions": [
+   "Stoj vzravnano z ročko v vsaki roki in rokami ob telesu.",
+   "Povleci lopatici nazaj in napni trup z nevtralno hrbtenico.",
+   "Počasi in premišljeno hodi določeno razdaljo ali čas s kratkimi nadzorovanimi koraki.",
+   "Prsi naj bodo dvignjene in med hojo se ne nagibaj vstran.",
+   "Osredotoči se na močno in stabilno držo ves čas giba."
+  ],
+  "tips": [
+   "Uporabi najtežji ročki, ki ju obvladaš brez poslabšanja tehnike.",
+   "Dihaj globoko in ritmično, da ohraniš napetost trupa.",
+   "Predstavljaj si, da na glavi loviš kozarec vode."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Dvig ročk naprej",
+  "description": "Dvig ročk naprej do višine ramen za sprednji del deltaste mišice.",
+  "instructions": [
+   "Stoj z ročkama pred stegni in skoraj iztegnjenimi rokami.",
+   "Ročki dvigni naprej do višine ramen z rahlo pokrčenimi komolci.",
+   "Ustavi se v vodoravnem položaju brez zibanja trupa.",
+   "Nadzorovano spusti k stegnom."
+  ],
+  "tips": [
+   "Ne pomagaj si s hrbtom: če si, zmanjšaj težo.",
+   "Sprednja delta veliko dela že pri potiskih; z obsegom ne pretiravaj."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Obratno razpiranje z ročkama",
+  "description": "Izolacijska vaja v predklonu z dvigom ročk vstran za zadnje delte in zgornji hrbet.",
+  "instructions": [
+   "Nagni se naprej v kolkih z ročkama v visečih rokah.",
+   "Hrbet naj bo raven in kolena rahlo pokrčena.",
+   "Ročki dvigni vstran do višine ramen.",
+   "Zgoraj stisni lopatici.",
+   "Ročki nadzorovano spusti.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Uporabi majhno težo, da delajo zadnje delte in ne zamah.",
+   "Zgoraj stisni lopatici skupaj.",
+   "Komolci naj ves čas ostanejo mehko in enako pokrčeni."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Romunski mrtvi dvig z ročkama",
+  "description": "Romunski mrtvi dvig z ročkama, ki z upogibom v kolkih poudari razteg zadnjih stegenskih mišic.",
+  "instructions": [
+   "Stoj z ročkama pred stegni in rahlo pokrčenimi koleni.",
+   "Upogni se v kolkih in potisni zadnjico nazaj.",
+   "Ročki spuščaj ob nogah, dokler ne začutiš raztega v zadnjih stegenskih mišicah.",
+   "Hrbet naj bo raven in ramena nazaj.",
+   "Boke potisni naprej, da se vrneš v stojo.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Spusti se le tako nizko, kot dopušča gibljivost, brez siljenja.",
+   "Enako rahlo pokrčenost kolen ohrani v celotnem obsegu.",
+   "Giba ne spremeniš v počep."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Potisk za ramena z ročkama",
+  "description": "Navpični potisk z ročkama sede ali stoje, ki razvija sprednji in stranski del deltaste mišice.",
+  "instructions": [
+   "Sedi ali stoj z ročkama v višini ramen, dlani naprej.",
+   "Obe ročki potisni nad glavo do popolnega iztega rok.",
+   "Trup naj bo napet in v ledvenem delu se ne usloči.",
+   "Ročki nadzorovano spusti do višine ramen.",
+   "Ročk ne spuščaj za glavo.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Ročki dvigni naravnost gor, zgoraj ju ne udarjaj skupaj.",
+   "Zapestja naj bodo čvrsta v liniji s podlaktmi.",
+   "Če se ledveni del usloči, zmanjšaj težo."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Skomigi z ročkama",
+  "description": "Dvig ramen z ročko v vsaki roki za zgornji hrbet in trapez.",
+  "instructions": [
+   "Stoj z ročkama, roke iztegnjene ob telesu, pogled naprej.",
+   "Ramena dvigni naravnost proti ušesom, brez kroženja in krčenja komolcev.",
+   "Krčenje zgoraj za trenutek zadrži.",
+   "Nadzorovano spuščaj do popolnega raztega trapeza."
+  ],
+  "tips": [
+   "Z rameni ne kroži: gib je navpičen.",
+   "Če prijem popusti pred trapezom, uporabi trakove."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Dvig na prste na eni nogi z ročko",
+  "description": "Dvig na prste na eni nogi na stopnici z ročko, z drugo roko se drži za ravnotežje.",
+  "instructions": [
+   "Stoj na stopnici na prstih enega stopala, drugo nogo pokrči, ročko drži na isti strani; z drugo roko se opri ob steno.",
+   "Peto spusti pod stopnico, da se meča raztegnejo.",
+   "Dvigni se na prste čim višje, ne da bi pokrčil koleno.",
+   "Zgoraj za trenutek zadrži in nadzorovano spusti; opravi ponovitve in zamenjaj nogo."
+  ],
+  "tips": [
+   "Potiskaj z blazinico pod palcem, gleženj naj ne uhaja navzven.",
+   "Vaja je enostranska: na vsaki nogi opravi enako število ponovitev."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pike sklece z dvignjenimi rokami",
+  "description": "Začetniška različica pike sklec z rokami na stopnici ali stabilnem stolu za manjšo obremenitev.",
+  "instructions": [
+   "Roke opri na rob stopnice, klopi ali trdnega stola v širini ramen in se z nogami pomikaj nazaj, dokler boki niso visoko.",
+   "Pokrči komolce in glavo spuščaj proti opori z visokimi boki.",
+   "Ustavi se, ko je glava med rokama, ne da bi izgubil položaj.",
+   "Potisni se z rokami do iztega komolcev."
+  ],
+  "tips": [
+   "Stopala približaj opori, da vajo otežiš.",
+   "Pred začetkom preveri, da se opora ne premika."
+  ]
+ },
+ "face-pull": {
+  "name": "Poteg k obrazu na škripcu",
+  "description": "Vaja na škripcu za zadnje delte in zunanje rotatorje.",
+  "instructions": [
+   "Na zgornji škripec pripni vrv.",
+   "Vrv vleci proti obrazu in razmikaj konca.",
+   "Stisni zadnje delte in zunanje rotatorje.",
+   "Nadzorovano se vrni v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Komolce drži visoko v višini ramen.",
+   "Na koncu vsake ponovitve stisni lopatici.",
+   "Delaj z lahko težo, da ne izgubiš tehnike."
+  ]
+ },
+ "front-squat": {
+  "name": "Prednji počep",
+  "description": "Počep z drogom spredaj na deltah, ki poudari sprednja stegna in trup.",
+  "instructions": [
+   "Ročko naloži ali postavi na sprednje delte z visokimi komolci.",
+   "Spusti se v počep z vzravnanim trupom, dokler stegna niso vzporedna s tlemi.",
+   "Vstani nazaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Komolce drži visoko, da je drog stabilen.",
+   "Bolj pokončen trup močneje vključi sprednje stegenske mišice."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Mostiček za zadnjico",
+  "description": "Aktivacijska vaja za zadnjico z lastno težo leže na tleh.",
+  "instructions": [
+   "Lezi na hrbet s pokrčenimi koleni in stopali na tleh.",
+   "Boke dvigni s stiskom zadnjice.",
+   "Zgoraj na kratko zadrži s povsem iztegnjenimi boki.",
+   "Boke nadzorovano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Potiskaj s petami, da zadnjico bolje vključiš.",
+   "Pri iztegu bokov se v ledvenem delu ne usloči.",
+   "Kolena naj bodo ves čas v liniji s stopali."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet počep",
+  "description": "Začetnikom prijazen počep s kettlebellom v višini prsi, ki izboljša držo in globino.",
+  "instructions": [
+   "Kettlebell drži v višini prsi z obema rokama.",
+   "Spusti se v počep s težo blizu prsi.",
+   "Vstani nazaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Goblet položaj naravno spodbuja vzravnan trup.",
+   "Spodaj potisni kolena navzven."
+  ]
+ },
+ "good-morning": {
+  "name": "Dobro jutro",
+  "description": "Upogib v kolkih z drogom na hrbtu za krepitev zadnjih stegenskih mišic, zadnjice in ledvenega dela.",
+  "instructions": [
+   "Stoj z drogom na zgornjem delu hrbta, stopala v širini ramen, kolena rahlo pokrčena.",
+   "Boke potisni nazaj in trup nagni naprej z nevtralnim hrbtom.",
+   "Spuščaj se, dokler ne začutiš napetosti v zadnjih stegenskih mišicah, trup skoraj vodoraven.",
+   "Boke potisni naprej, da se spet vzravnaš."
+  ],
+  "tips": [
+   "Začni z zelo majhno težo: ledveni del dela intenzivno.",
+   "Glej naprej in hrbta ne krivi."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack počep",
+  "description": "Vodena vaja na stroju za hack počep, ki z nadzorovanim gibom sani obremeni predvsem sprednja stegna.",
+  "instructions": [
+   "Naloži stroj in se s hrbtom in rameni nasloni na blazine.",
+   "Stopala postavi na ploščo v širini ramen, prsti rahlo navzven.",
+   "Sprosti varovala in sani spusti s krčenjem kolen in kolkov.",
+   "Spuščaj se, dokler stegna niso vsaj vzporedna s ploščo.",
+   "S petami potisni, iztegni noge in vrni sani v začetni položaj.",
+   "Po seriji varovala znova zapni."
+  ],
+  "tips": [
+   "Ledveni del naj bo ves gib na blazini.",
+   "Stopala višje na plošči prenesejo poudarek na zadnjico in zadnja stegna.",
+   "Spust nadzoruj; iz spodnjega položaja se ne odrivaj sunkovito."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Kladivasti pregib z ročkama",
+  "description": "Različica pregiba za biceps z nevtralnim prijemom za nadlahtno-koželjnično mišico.",
+  "instructions": [
+   "Stoj z ročkama ob straneh, dlani druga proti drugi.",
+   "Ročki dviguj z dlanmi ves čas navznoter.",
+   "Zgoraj stisni in nadzorovano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Komolce drži ob trupu v celotnem obsegu.",
+   "Ne zibaj telesa, da bi ročki dvignil.",
+   "Zapestja naj bodo ves pregib čvrsta in nevtralna."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Sklece v stoji na rokah",
+  "description": "Sklece v stoji na rokah z nogami ob steni, ena najzahtevnejših potisnih vaj z lastno težo.",
+  "instructions": [
+   "S hrbtom proti steni postavi roke na tla in se z nogami povzpni v stojo z napetim trebuhom.",
+   "Pokrči komolce in glavo nadzorovano spuščaj proti tlom.",
+   "Ustavi se, ko se glava dotakne tal ali blazine.",
+   "Potisni se do popolnega iztega komolcev."
+  ],
+  "tips": [
+   "Najprej vadi stojo na rokah in pike sklece.",
+   "Za večjo samozavest daj pod glavo blazino."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Dvigi kolen v vesi",
+  "description": "Vaja za trup v vesi na drogu za spodnji del trebuha in upogibalke kolka s pokrčenimi koleni.",
+  "instructions": [
+   "Obesi se na drog z nadprijemom in povsem iztegnjenimi rokami.",
+   "Napni trup in dvigni kolena proti prsim.",
+   "Zgoraj na kratko zadrži.",
+   "Noge počasi spusti v začetni položaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Ne zibaj se — gib začni iz trupa.",
+   "Med dvigom kolen izdihni.",
+   "Ko postane lahko, preidi na dvige iztegnjenih nog."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Dvigi nog v vesi",
+  "description": "Dvig iztegnjenih nog do vodoravnega v vesi na drogu za trebuh in upogibalke kolka.",
+  "instructions": [
+   "Obesi se na drog nekoliko širše od ramen z iztegnjenimi nogami skupaj.",
+   "Iztegnjene noge dvigni do vzporednosti s tlemi in medenico rahlo nagni nazaj.",
+   "Zgoraj za trenutek zadrži brez zibanja.",
+   "Nadzorovano spusti v začetni položaj, telo naj ne niha."
+  ],
+  "tips": [
+   "Če z iztegnjenimi nogami ne gre, pokrči kolena.",
+   "Ne zibaj se: dela naj trebuh, ne zamah."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Mrtvi dvig s šesterokotno palico",
+  "description": "Mrtvi dvig stoje znotraj šesterokotne palice z obremenitvijo na sredini za bolj pokončen in hrbtu prijazen poteg.",
+  "instructions": [
+   "Stopi v naloženo šesterokotno palico s stopali v širini ramen.",
+   "Pokrči kolke in kolena ter primi ročaje.",
+   "Napni trup in hrbet drži raven.",
+   "S petami potisni ter iztegni kolke in kolena v stojo.",
+   "Zgoraj zakleni z rameni nazaj.",
+   "Palico nadzorovano spusti na tla."
+  ],
+  "tips": [
+   "Med popravljanjem prijema naj bodo prsi gor in hrbet raven.",
+   "Potiskaj v tla, namesto da palico vlečeš s hrbtom.",
+   "Zgoraj se povsem vzravnaj, ne da bi se nagnil nazaj."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Odmik nog na stroju",
+  "description": "Vaja na stroju za zunanje mišice kolka.",
+  "instructions": [
+   "Sedi v stroj za odmik nog z blazinami na zunanji strani stegen.",
+   "Noge potisni navzven proti uporu.",
+   "V najširšem položaju na kratko zadrži.",
+   "Nadzorovano se vrni.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Hrbet naj bo na naslonu stroja.",
+   "Noge razmikaj brez zamaha v nadzorovanem tempu.",
+   "Vračanju proti sredini se upiraj in teže ne spusti."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Primik nog na stroju",
+  "description": "Vaja na stroju, pri kateri noge stiskaš skupaj proti uporu in izolirano krepi primikalke na notranji strani stegen.",
+  "instructions": [
+   "Sedi v stroj za primik nog s hrbtom na naslonu.",
+   "Noge nasloni na blazine, stroj pa nastavi na udoben razteg.",
+   "Noge stiskaj, dokler se blazini na sredini ne srečata.",
+   "V zaprtem položaju krčenje na kratko zadrži.",
+   "Nogam dovoli, da se nadzorovano razprejo nazaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Izberi začetno razprtost, ki raztegne, a ne obremeni dimelj.",
+   "Celoten obseg opravi z enakomerno, nadzorovano hitrostjo.",
+   "Pri razpiranju uteži ne smejo udariti."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust z dolgo ročko",
+  "description": "Sestavljena vaja za zadnjico z dolgo ročko čez boke.",
+  "instructions": [
+   "Sedi na tla z zgornjim hrbtom ob klopi in ročko čez boke.",
+   "Boke potisni navzgor, dokler trup in stegna niso v eni liniji.",
+   "Zgoraj stisni zadnjico.",
+   "Boke nadzorovano spet spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Brada potegnjena, rebra dol.",
+   "Potiskaj s petami, ne s prsti.",
+   "Zgoraj se v ledvenem delu ne usloči."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Vodoravni leg press",
+  "description": "Vodoravni leg press na stroju za sprednja stegna, zadnjico in zadnja stegna.",
+  "instructions": [
+   "Sedi v vodoravni leg press s hrbtom na naslonu in stopali na plošči v širini ramen.",
+   "S stopali potisni in iztegni noge, ne da bi zaklenil kolena.",
+   "Kolena nadzorovano krči, dokler se ne približajo prsim.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ledveni del naj se ne odlepi od sedeža.",
+   "Kolen ne zaklepaj do konca."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Potisk z dolgo ročko na poševni klopi",
+  "description": "Potisk z dolgo ročko na poševni klopi za zgornji del prsi.",
+  "instructions": [
+   "Lezi na klop z naklonom 30 do 45 stopinj.",
+   "Drog primi nekoliko širše od ramen in ga snemi.",
+   "Ročko spusti k zgornjemu delu prsi.",
+   "Potisni jo nazaj do popolnega iztega.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Lopatici stisni in ju drži na klopi.",
+   "Ročke ne odbijaj od prsi.",
+   "Pri velikih težah prosi za pomoč."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Dvig v črko Y na poševni klopi",
+  "description": "Dvig ročk v črko Y leže na trebuhu na poševni klopi za spodnji in srednji trapez.",
+  "instructions": [
+   "Lezi na trebuh na poševno klop s podprtimi prsmi in lahko ročko v vsaki viseči roki.",
+   "Roke dvigni naprej in navzgor v črko Y, palca proti stropu.",
+   "Ustavi se, ko so roke v liniji s trupom, prsi pa naj ostanejo na klopi.",
+   "Nadzorovano spusti v začetni položaj."
+  ],
+  "tips": [
+   "Uporabi majhno težo: spodnji trapez je majhna mišica.",
+   "Vrat naj bo nevtralen, pogled v tla."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Pregib za biceps na poševni klopi",
+  "description": "Pregib za biceps na poševni klopi za večji razteg dolge glave.",
+  "instructions": [
+   "Sedi na klop z naklonom 45 stopinj z ročkama ob straneh.",
+   "Roke naj prosto visijo z dlanmi naprej.",
+   "Ročki upogni proti ramenom.",
+   "Nadzorovano spuščaj do popolnega iztega.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ramena in hrbet naj ostanejo na klopi.",
+   "Pri dvigu ramen ne potiskaj naprej.",
+   "Razteg spodaj izkoristi s počasnim spustom."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Potisk z ročkama na poševni klopi",
+  "description": "Potisk na poševni klopi, ki poudari zgornji del prsi.",
+  "instructions": [
+   "Klop nastavi na 30 stopinj in sedi z ročkama v višini ramen.",
+   "Ročki potisni navzgor in skupaj do popolnega iztega rok.",
+   "Ročki nadzorovano spusti nazaj do višine ramen.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Stopala trdno na tleh in lopatici stisnjeni.",
+   "Zgoraj ročk ne udarjaj skupaj.",
+   "Spuščaj, dokler ne začutiš nežnega raztega v prsih."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Nagnjene sklece",
+  "description": "Začetnikom prijazna različica sklec z rokami na klopi ali stopnici.",
+  "instructions": [
+   "Roke opri na klop ali dvignjeno podlago v širini ramen.",
+   "Noge iztegni nazaj v položaj deske.",
+   "Prsi spuščaj proti klopi s krčenjem komolcev.",
+   "Potisni se nazaj v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Napni trebuh, da se boki ne povesijo.",
+   "Višja ko je opora, lažja je vaja.",
+   "Pred začetkom preveri, da se klop ne premika."
+  ]
+ },
+ "inverted-row": {
+  "name": "Obrnjeno veslanje",
+  "description": "Vodoravni poteg z lastno težo pod pritrjenim drogom, pri katerem prsi vlečeš k drogu s togim telesom.",
+  "instructions": [
+   "Drog namesti v stojalo približno v višini pasu.",
+   "Lezi pod drog in ga primi z nadprijemom nekoliko širše od ramen.",
+   "Viseti moraš z iztegnjenimi rokami, petami na tleh in ravnim telesom od glave do gležnjev.",
+   "Prsi vleci k drogu in stiskaj lopatici.",
+   "Nadzorovano se spusti do popolnega iztega rok.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup naj bo napet — boki se ne smejo povesiti.",
+   "Za težjo vajo dvigni stopala; za lažjo se z njimi pomakni proti drogu.",
+   "Zgoraj se na kratko ustavi s prsmi ob drogu."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Dvig za golen s kettlebellom",
+  "description": "Vaja za golen sede na klopi s kettlebellom, obešenim čez sprednji del stopala. Dvigovanje prstov proti goleni proti teži krepi mišice na sprednji strani goleni.",
+  "instructions": [
+   "Sedi na konec ravne klopi z eno nogo iztegnjeno in peto na tleh.",
+   "Kettlebell za ročaj obesi čez sprednji del stopala nad prsti.",
+   "Prste dvigni proti goleni, kolikor je udobno, peta pa naj ostane na tleh.",
+   "Zgornji položaj na kratko zadrži.",
+   "Stopalo počasi spuščaj, dokler prsti ne gledajo v tla.",
+   "Opravi ponovitve in nato zamenjaj nogo."
+  ],
+  "tips": [
+   "Gib naj gre samo iz gležnja; koleno in stegno mirujeta.",
+   "Začni z lahkim kettlebellom in postopoma dodajaj; mišice goleni se hitro utrudijo.",
+   "Spuščaj počasi, teže ne izpusti."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Veslanje na škripcu kleče",
+  "description": "Veslanje na škripcu iz vzravnanega klečečega položaja, brez zamaha v bokih in z napetostjo v zgornjem hrbtu ves gib.",
+  "instructions": [
+   "Škripec nastavi v višino prsi in pripni vrv ali dvojni D-ročaj.",
+   "Poklekni vzravnano pred napravo dovolj daleč, da uteži ne sedejo na dno.",
+   "Ročaj primi z obema rokama in ga drži iztegnjenega pred seboj v višini prsi.",
+   "Ročaj vleci proti prsnici, komolce nazaj in stiskaj lopatici.",
+   "Nadzorovano se vrni v raztegnjen začetni položaj.",
+   "Ponovi priporočeno število ponovitev."
+  ],
+  "tips": [
+   "Ostani vzravnan: ne nagibaj se nazaj, da bi ponovitev dokončal.",
+   "Vzravnan klečeči položaj sili trup, da se pri vsakem potegu upira rotaciji."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Sklece na kolenih",
+  "description": "Začetnikom prijazna sklec s koleni na tleh, ki zmanjša obremenitev zgornjega dela telesa.",
+  "instructions": [
+   "Začni v položaju sklece s koleni na tleh.",
+   "Roke postavi na tla v širini ramen.",
+   "Telo drži v ravni črti od kolen do ramen.",
+   "Prsi spuščaj proti tlom s krčenjem komolcev.",
+   "Z rokami se potisni nazaj v začetni položaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Komolcev ne razpiraj preveč vstran.",
+   "Zadnjica in trebuh naj bosta napeta ves gib.",
+   "Glej v tla, da vrat ostane nevtralen."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Odmiki rok z ročkama",
+  "description": "Izolacijski gib za stransko delto za širša ramena.",
+  "instructions": [
+   "Stoj z ročkama ob straneh.",
+   "Ročki dviguj vstran, dokler roki nista vzporedni s tlemi.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Komolci rahlo pokrčeni.",
+   "Gib vodi s komolci, ne z dlanmi."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Poteg navzdol k prsim",
+  "description": "Vaja na škripčni napravi za široko hrbtno mišico.",
+  "instructions": [
+   "Sedi k napravi s stegni, zapetimi pod valjema.",
+   "Široki drog primi z nadprijemom.",
+   "Drog potegni k zgornjemu delu prsi in stisni široke hrbtne mišice.",
+   "Drog počasi vrni v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Poteg začni s spuščanjem lopatic, ne s krčenjem komolcev.",
+   "Ne zibaj trupa, da bi premaknil težo.",
+   "Komolce usmeri navzdol in nazaj, ne vstran."
+  ]
+ },
+ "leg-curl": {
+  "name": "Upogib kolen leže",
+  "description": "Izolacijska vaja za zadnje stegenske mišice na stroju za pregib kolen.",
+  "instructions": [
+   "Lezi na trebuh na stroj z gležnji pod valjem.",
+   "Pete upogni proti zadnjici.",
+   "Zgoraj stisni zadnje stegenske mišice.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Boki naj ostanejo na klopi v celotnem obsegu.",
+   "Pri dvigu pet se v ledvenem delu ne usloči.",
+   "Izberi težo, ki omogoča poln in nadzorovan obseg giba."
+  ]
+ },
+ "leg-extension": {
+  "name": "Izteg kolen",
+  "description": "Izolacijska vaja za sprednja stegna na stroju.",
+  "instructions": [
+   "Sedi na stroj za iztegovanje nog z gležnji za valjem.",
+   "Noge iztegni do ravnega.",
+   "Zgoraj stisni sprednje stegenske mišice.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Kolena poravnaj z osjo vrtenja stroja.",
+   "Teže ne meči z zamahom.",
+   "Primi se za ročaje, da boki ostanejo na sedežu."
+  ]
+ },
+ "leg-press": {
+  "name": "Leg press",
+  "description": "Sestavljen gib na stroju za sprednja stegna in zadnjico.",
+  "instructions": [
+   "Sedi v leg press s stopali na plošči v širini ramen.",
+   "Sprosti varovala in ploščo spusti s krčenjem kolen.",
+   "Ploščo potisni, dokler noge niso skoraj iztegnjene.",
+   "Zgoraj kolen ne zaklepaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ledveni del naj bo ves čas na naslonu.",
+   "Spuščaj se le toliko, da se boki ne odlepijo.",
+   "Kolena poravnaj s prsti stopal."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Dvigi na prste na leg pressu",
+  "description": "Dvigi na prste s potiskanjem plošče leg pressa s prsti stopal.",
+  "instructions": [
+   "Sedi v napravo s skoraj iztegnjenimi nogami, na spodnjem robu plošče naj bo le sprednji del stopal.",
+   "Sprosti varovalo in pete spusti, da se meča raztegnejo.",
+   "Ploščo potisni s prsti, dokler nisi na prstih.",
+   "Zgoraj za trenutek zadrži in nadzorovano spet spusti."
+  ],
+  "tips": [
+   "Kolen ne zakleni povsem.",
+   "Delaj v polnem obsegu in se spodaj ustavi: tam nastane dražljaj."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Dvigi nog leže",
+  "description": "Dvig obeh nog leže na hrbtu za spodnji del trebuha in upogibalke kolka.",
+  "instructions": [
+   "Lezi na hrbet z iztegnjenimi nogami skupaj, roke pod zadnjico ali ob telesu.",
+   "Ledveni del pritisni ob tla s krčenjem trebuha.",
+   "Noge dvigni do navpičnega položaja brez zamaha.",
+   "Počasi spuščaj, ne da bi se stopala dotaknila tal ali se hrbet usločil."
+  ],
+  "tips": [
+   "Če se ledveni del odlepi od tal, pokrči kolena.",
+   "Spust nadzoruj: tam trebuh dela največ."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Izteg hrbta na stroju",
+  "description": "Izolacijska vaja za ledveni del sede: s fiksiranimi boki in nogami trup potiska nazaj v oblazinjen valj in izteguje hrbtenico proti utežem.",
+  "instructions": [
+   "Sedi v stroj za iztegovanje hrbta s stopali na plošči in valj nastavi na zgornji hrbet, tik pod lopaticama.",
+   "Primi stranska ročaja in pusti trupu rahlo naprej: to je začetni položaj.",
+   "Potiskaj nazaj v valj z iztegom hrbtenice, dokler trup ni nagnjen nazaj in ledveni del povsem skrčen.",
+   "V polnem iztegu se na kratko ustavi in se nadzorovano vrni, težo pa zaviraj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Valj postavi tik pod lopatici: višje pritiska na vrat, nižje skrajša obseg.",
+   "Izteguj iz ledvenega dela, ne meči glave in ramen nazaj, gib pa naj bo počasen v obe smeri.",
+   "Ustavi se s trupom v nevtralnem iztegu in hrbtenice ne sili dlje ter začni lahko: ledvenemu delu bolj koristijo nadzorovane ponovitve kot velike teže."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Pregib za biceps na stroju",
+  "description": "Pregib za biceps na stroju za izolirano vadbo rok.",
+  "instructions": [
+   "Sedi v stroj in blazino prilagodi dolžini rok.",
+   "Ročaja primi s podprijemom.",
+   "Ročaja upogni proti ramenom.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Komolci naj bodo ves čas na blazini.",
+   "Pri dvigu ročajev ne dvigaj ramen.",
+   "Spusti skoraj do iztega brez izgube napetosti."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Dvigi na prste na stroju",
+  "description": "Izolacijska vaja stoje na stroju za dvoglavo in veliko mečno mišico v celotnem obsegu gležnja.",
+  "instructions": [
+   "Postavi se v stroj z blazinicami stopal na ploščadi.",
+   "Ramenski blazini trdno namesti.",
+   "Pete spusti pod ploščad za poln razteg.",
+   "Potisni z blazinicami stopal in se dvigni na prste.",
+   "Zgoraj stisni meča.",
+   "Nadzorovano spusti in ponovi."
+  ],
+  "tips": [
+   "Spodaj ne poskakuj, da ne izgubiš napetosti.",
+   "Kolena naj bodo iztegnjena, a ne zaklenjena.",
+   "Dviguj se navpično, gležnjev ne obračaj navzven."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Razpiranje na stroju",
+  "description": "Izolacijska vaja za prsi na stroju, ki ročici v loku pripelje skupaj pred telesom.",
+  "instructions": [
+   "Sedi v stroj in sedež nastavi tako, da sta ročici v višini prsi.",
+   "Drži ju z rahlo pokrčenimi komolci.",
+   "Ročici v mehkem loku združi pred prsmi.",
+   "V točki največjega krčenja stisni prsne mišice.",
+   "Nadzorovano se vrni in teže ne spusti.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Rahlo in enako pokrčenost komolcev ohrani ves gib.",
+   "Osredotoči se na krčenje prsi, ne na potiskanje z rokami.",
+   "Vračanje nadzoruj in uteži ne pusti pasti."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Obratno razpiranje na stroju",
+  "description": "Vaja sede na stroju za zadnje delte, imenovana tudi obratni pec deck: obrnjeni proti blazini ročaja v širokem loku vodi ven in nazaj proti utežem. Blazina drži trup pri miru, zato delo ostane v zadnjih ramenih in mišicah med lopaticama.",
+  "instructions": [
+   "Sedež nastavi tako, da sta ročaja v višini ramen, in sedi obrnjeni k napravi s prsmi na blazini.",
+   "Ročaja primi z rokami, iztegnjenimi naprej, in rahlo pokrčenimi komolci.",
+   "Ramena drži nizko, stran od ušes, in napni trup.",
+   "Ročaja v širokem loku vodi ven in nazaj, komolci naprej, dokler roke niso približno v liniji z rameni.",
+   "Lopatici na kratko stisni, ne da bi se nagnil nazaj od blazine.",
+   "Ročaja počasi vrni naprej in ponovi predvideno število."
+  ],
+  "tips": [
+   "Gib vodi s komolci in ne vleci z dlanmi, da delajo zadnje delte in ne bicepsa.",
+   "Prsi naj bodo na blazini in vrat sproščen; če se nagneš nazaj ali dvigneš ramena, se obremenitev preseli v zgornji trapez.",
+   "Izberi težo, ki jo lahko nadzorovano spustiš; lažja teža s počasnim vračanjem bolje obremeni zadnje delte kot zamah s težko."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Trebušnjaki sede na stroju",
+  "description": "Izolacijska vaja za trebuh na stroju sede, pri kateri hrbtenico upogibaš proti uporu.",
+  "instructions": [
+   "Sedi v stroj za trebušnjake in primi ročaja.",
+   "Prsno blazino prisloni k trupu.",
+   "S krčenjem trebuha upogni trup naprej in navzdol.",
+   "Na koncu obsega stisni.",
+   "Nadzorovano se vrni.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Gib začni s trebuhom, ne z rokami.",
+   "Med upogibom trupa izdihni.",
+   "Ne zibaj se za zagon."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Potisk za ramena na stroju",
+  "description": "Potisk nad glavo na stroju za ramena.",
+  "instructions": [
+   "Sedi v stroj s hrbtom na naslonu.",
+   "Ročaja primi v višini ramen.",
+   "Ročaja potisni nad glavo do popolnega iztega rok.",
+   "Nadzorovano spusti v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Pri potisku navzgor se v ledvenem delu ne usloči.",
+   "Zgoraj komolcev ne zaklepaj sunkovito.",
+   "Zapestja naj bodo čvrsta v liniji s podlaktmi."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negativni zgibi",
+  "description": "Počasna faza spusta pri zgibu, ki gradi moč za cele zgibe.",
+  "instructions": [
+   "Stopi na klop ali poskoči, da je brada nad drogom, prijem nekoliko širši od ramen.",
+   "Brez opore se spuščaj zelo počasi, približno tri do pet sekund.",
+   "Gib nadzoruj do popolnega iztega rok.",
+   "S pomočjo klopi ali poskoka se vrni gor in ponovi."
+  ],
+  "tips": [
+   "Med spustom naj bodo ramena stran od ušes.",
+   "Ko obvladaš pet počasnih ponovitev, se poskusi potegniti brez pomoči."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordijski upogib",
+  "description": "Vaja za upogib kolena, pri kateri iz klečečega položaja trup spuščaš naprej in ekscentrično uri zadnja stegna.",
+  "instructions": [
+   "Poklekni na blazino z gležnji, pritrjenimi pod trdno oporo.",
+   "Trup naj bo vzravnan in boki iztegnjeni.",
+   "Telo počasi spuščaj naprej in zaviraj z zadnjimi stegni.",
+   "Tik pred tlemi se ujemi z rokami.",
+   "Odrini se z rokami in se potegni nazaj v začetni položaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Spuščaj se čim počasneje: cilj je ekscentrična faza.",
+   "Boki naj ostanejo iztegnjeni; ne upogibaj se v pasu.",
+   "Zaviraj z rokami in se rahlo odrivaj, dokler ne postaneš močnejši."
+  ]
+ },
+ "ohp": {
+  "name": "Potisk nad glavo z dolgo ročko",
+  "description": "Sestavljen potisk nad glavo za ramena in triceps.",
+  "instructions": [
+   "Stoj s stopali v širini ramen in drogom v višini ključnic.",
+   "Napni trup in ročko potisni nad glavo.",
+   "Zgoraj zakleni komolce z drogom nad sredino stopal.",
+   "Ročko spusti do višine ključnic.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne nagibaj se preveč nazaj.",
+   "Za večjo stabilnost stisni zadnjico."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Enoročno veslanje sede na škripcu",
+  "description": "Enoročno veslanje sede na škripcu za široke hrbtne mišice in zgornji hrbet: trup ostane obrnjen naprej, lopatica delovne strani pa se nadzorovano premika naprej in nazaj.",
+  "instructions": [
+   "Sedi k škripcu in drži ročaj z iztegnjeno delovno roko.",
+   "Stopala dobro opri, sedi vzravnano in napni trup brez nagibanja nazaj.",
+   "Ročaj vleci k spodnjim rebrom in lopatico potegni nazaj.",
+   "Na kratko se ustavi, ne da bi zasukal trup ali dvignil ramo.",
+   "Roko nadzorovano iztegni, dokončaj serijo in zamenjaj stran."
+  ],
+  "tips": [
+   "Obe rami naj gledata naprej vso ponovitev.",
+   "Komolec vodi nazaj ob telesu, namesto da samo krčiš roko.",
+   "Na začetku pusti lopatici zdrsniti naprej, ledvenega dela pa ne krivi."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Izteg za triceps nad glavo z ročko",
+  "description": "Izolacijska vaja za triceps, ki poudari dolgo glavo.",
+  "instructions": [
+   "Stoje ali sede z obema rokama drži ročko nad glavo.",
+   "Ročko spuščaj za glavo s krčenjem komolcev.",
+   "Roke iztegni nazaj v začetni položaj.",
+   "Komolce vso vajo drži blizu glave.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Premikaj le podlakti, vse drugo naj miruje.",
+   "Ko ročka gre dol, se v ledvenem delu ne usloči.",
+   "Ročko z obema dlanema primi pod zgornjim diskom."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Sklece na bradlji",
+  "description": "Vaja z lastno težo na bradlji za prsi, triceps in ramena.",
+  "instructions": [
+   "Opri se na bradljo z iztegnjenimi rokami in telesom v zraku, brez dotika tal.",
+   "Trup rahlo nagni naprej in s krčenjem komolcev se nadzorovano spuščaj.",
+   "Ustavi se, ko so ramena v višini komolcev, ne da bi se ugreznil v sklep.",
+   "Potisni se s prsmi in tricepsoma do iztegnjenih rok."
+  ],
+  "tips": [
+   "Če čistih serij ne zmoreš, uporabi stroj s pomočjo ali elastike.",
+   "Ne spuščaj se nižje, kot tvoja rama prenese brez težav."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Potisk na klopi s premorom",
+  "description": "Potisk na klopi z eno do dve sekundi premora na prsih, ki odpravi odboj in izboljša moč na začetku.",
+  "instructions": [
+   "Lezi na klop s stopali trdno na tleh, stisnjenima lopaticama in drogom nad prsmi v prijemu, nekoliko širšem od ramen.",
+   "Ročko nadzorovano spuščaj, dokler se ne dotakne prsi.",
+   "Drog drži mirno na prsih eno do dve sekundi, ne da bi popustil napetost.",
+   "Ročko potisni navzgor do iztega komolcev."
+  ],
+  "tips": [
+   "Uporabi 10 do 15 % manjšo težo kot pri običajnem potisku.",
+   "Prosi za varovanje ali uporabi varovala stojala."
+  ]
+ },
+ "pause-squat": {
+  "name": "Počep s premorom",
+  "description": "Počep z dolgo ročko s premorom v najnižji točki za nadzor in moč brez odboja.",
+  "instructions": [
+   "Drog položi na zgornji hrbet, stopala v širini ramen, prsti rahlo navzven.",
+   "Spuščaj se z nadzorovano globino, nevtralnim hrbtom in koleni v smeri stopal.",
+   "Najnižji položaj zadrži eno do tri sekunde, ne da bi sprostil trup.",
+   "S stopali potiskaj v tla, dokler spet ne stojiš vzravnano."
+  ],
+  "tips": [
+   "Obremenitev zmanjšaj glede na običajni počep.",
+   "Iz premora se ne odbijaj: potiskaj enakomerno."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "Izolacijski stroj za prsi s premičnima ročicama, ki prsne mišice obremeni z vodoravnim primikom.",
+  "instructions": [
+   "Sedi v pec deck in primi ročaja z rokami, razprtimi vstran, in rahlo pokrčenimi komolci.",
+   "Sedež nastavi tako, da sta ročaja v višini sredine prsi.",
+   "Ročaja združi pred prsmi in stisni.",
+   "Krčenje na sredini na kratko zadrži.",
+   "Nadzorovano se vrni v začetni položaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Pri razpiranju rokam ne dovoli predaleč nazaj.",
+   "Hrbet in ramena drži na naslonu.",
+   "Izdihni, ko se ročaja srečata, in vdihni pri razpiranju."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlayevo veslanje",
+  "description": "Eksplozivno veslanje z dolgo ročko s tal pri vsaki ponovitvi, s trupom vzporedno s tlemi.",
+  "instructions": [
+   "S stopali pod drogom in skoraj vodoravnim trupom ga primi nekoliko širše od ramen z nevtralnim hrbtom.",
+   "Ročko silovito potegni, dokler se ne dotakne spodnjega dela prsi, trup naj miruje.",
+   "Ročko nadzorovano spusti na tla in se za trenutek ustavi.",
+   "Znova napni hrbet in ponovi s tal."
+  ],
+  "tips": [
+   "Trup se ne dviga in ne spušča: če se premika, je teža prevelika.",
+   "Vsaka ponovitev se začne z ročko v mirovanju na tleh."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike sklece",
+  "description": "Sklec s telesom v obliki obrnjene črke V, ki brez opreme prenese obremenitev s prsi na ramena.",
+  "instructions": [
+   "Roke postavi na tla v širini ramen in boke dvigni v obrnjeno črko V s skoraj iztegnjenimi nogami.",
+   "Pokrči komolce in glavo spuščaj proti tlom med roki.",
+   "Ustavi se, ko je glava blizu tal, ne da bi se nanje naslonil.",
+   "Potisni se z rokami do iztegnjenih komolcev nazaj v začetek."
+  ],
+  "tips": [
+   "Bližje ko so stopala rokam, težja je vaja.",
+   "Boke drži visoko ves gib."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Počep na eni nogi (pištola)",
+  "description": "Globok počep na eni nogi z drugo iztegnjeno naprej, samo z lastno težo.",
+  "instructions": [
+   "Stoj na eni nogi, drugo dvigni naprej in roke iztegni pred seboj za ravnotežje.",
+   "Pokrči koleno stojne noge in se nadzorovano spuščaj s peto na tleh.",
+   "Spusti se tako nizko, kot zmoreš brez izgube tehnike, prosta noga naprej.",
+   "Potiskaj v tla, dokler spet ne stojiš; ponovi in zamenjaj nogo."
+  ],
+  "tips": [
+   "Sprva se drži opore ali se usedaj na skrinjo.",
+   "Koleno drži v liniji s stopalom."
+  ]
+ },
+ "plank": {
+  "name": "Deska",
+  "description": "Statična vaja za trup, ki uri stabilnost z ravnim telesom na podlakteh in prstih nog.",
+  "instructions": [
+   "Podlakti položi na tla, komolci pod rameni, noge iztegnjene.",
+   "Telo dvigni v ravno črto od glave do pet.",
+   "Napni trebuh in zadnjico z nevtralnim ledvenim delom, boki naj se ne povesijo.",
+   "Dihaj normalno in zadrži predpisani čas."
+  ],
+  "tips": [
+   "Začni s kratkimi kakovostnimi serijami, šele nato podaljšuj čas.",
+   "Če se ledveni del povesi, spusti kolena ali skrajšaj čas."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Dvig bokov na stroju s ploščami",
+  "description": "Dvig bokov na stroju s ploščami, katerega naslon in plošča držita položaj, da boke izteguješ proti teži brez postavljanja klopi.",
+  "instructions": [
+   "Nosilce obremeni enakomerno in sedi z zgornjim hrbtom ob naslon in stopali plosko na plošči.",
+   "Blazino ali palico spusti na boke tako, da leži v pregibu kolkov in ne na trebuhu.",
+   "Stopala postavi tako, da so goleni v zgornjem položaju navpične, in se drži za ročaje.",
+   "Boke potisni gor in stisni zadnjico, dokler stegna niso v liniji s trupom, ter za trenutek zadrži.",
+   "Nadzorovano spuščaj tik pred spodnjo točko in ponovi želeno število."
+  ],
+  "tips": [
+   "Blazino namesti v pregib kolkov. Naslonitev na trebuh je edina res neprijetna stvar na tem stroju in se reši s premikom blazine, ne z dodatnim oblazinjenjem.",
+   "Gib končaj s kolki, ne z ledvenim delom. Če se zgoraj odprejo rebra, je iztega kolkov konec in si se začel usločevati — tam stroj neha obremenjevati zadnjico.",
+   "To je dvig bokov, ki ga izbereš, ko sta klop in ročka zasedeni: naslon in plošča sta del ogrodja, zato ni česa napačno nastaviti."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Pregib na Scottovi klopi",
+  "description": "Različica pregiba na Scottovi klopi, ki izolira bicepsa.",
+  "instructions": [
+   "Sedi za Scottovo klop z rokami na blazini.",
+   "EZ palico drži s podprijemom.",
+   "Ročko upogni proti ramenom.",
+   "Nadzorovano spuščaj, dokler roke niso skoraj iztegnjene.",
+   "Ponovi."
+  ],
+  "tips": [
+   "V spodnjem delu giba se ne odbijaj.",
+   "Zapestja na EZ palici naj bodo nevtralna.",
+   "Palico dvigni brez zamaha z rameni ali hrbtom."
+  ]
+ },
+ "pull-up": {
+  "name": "Zgibi z nadprijemom",
+  "description": "Sestavljena vaja z lastno težo za široko hrbtno mišico in bicepsa.",
+  "instructions": [
+   "Obesi se na drog z nadprijemom, nekoliko širše od ramen.",
+   "Potegni se, dokler brada ni nad drogom.",
+   "Nadzorovano se spusti do polne vese.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ne zibaj se in si ne pomagaj z zamahom.",
+   "Široke hrbtne mišice vključi tako, da komolce vodiš navzdol."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Potisk nad glavo z odrivom nog, ki omogoča večjo težo kot strogi potisk.",
+  "instructions": [
+   "Stoj z drogom na zgornjem delu prsi in ramenih, komolci rahlo naprej, stopala v širini bokov.",
+   "Rahlo pokrči kolena z navpičnim trupom ter eksplozivno iztegni kolke in kolena.",
+   "Izkoristi zagon in ročko potisni do iztegnjenih rok nad glavo.",
+   "Ročko nadzorovano spusti na prsi in ublaži z nogami."
+  ],
+  "tips": [
+   "Moč pride iz nog, ne iz nagibanja hrbta nazaj.",
+   "Končaj z drogom nad temenom in stabilnim telesom."
+  ]
+ },
+ "push-up": {
+  "name": "Sklece",
+  "description": "Osnovna vaja z lastno težo za prsi, ramena in triceps.",
+  "instructions": [
+   "Začni v visoki deski z rokami v širini ramen.",
+   "Telo spuščaj, dokler se prsi skoraj ne dotaknejo tal.",
+   "Potisni se v začetni položaj.",
+   "Telo naj bo ves čas ravno.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Napni trebuh in zadnjico, da se boki ne povesijo.",
+   "Komolcev ne razpiraj preveč; drži jih ob telesu.",
+   "Vrat naj bo nevtralen, pogled navzdol."
+  ]
+ },
+ "rack-pull": {
+  "name": "Mrtvi dvig s stojala",
+  "description": "Delni mrtvi dvig z višine kolen, ki močno obremeni zgornji hrbet in izteg kolkov.",
+  "instructions": [
+   "Ročko položi na oporo v višini kolen ali tik pod njimi, stopala v širini bokov pod njo.",
+   "Primi drog, napni hrbet in trebuh ter s stopali potiskaj v tla.",
+   "Kolke in kolena izteguj hkrati, dokler ne stojiš vzravnano z rameni nazaj.",
+   "Ročko nadzorovano spusti, da počiva na opori."
+  ],
+  "tips": [
+   "Oporo nastavi na višino, pri kateri ohraniš nevtralen hrbet.",
+   "Na koncu ledvenega dela ne preizteguj."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Izpadni korak nazaj z ročkama",
+  "description": "Različica izpadnega koraka s korakom nazaj za boljšo stabilnost kolena.",
+  "instructions": [
+   "Stoj z ročkama ob straneh.",
+   "Z eno nogo stopi nazaj in koleno spuščaj proti tlom.",
+   "Spuščaj se, dokler sprednje stegno ni vzporedno s tlemi.",
+   "Potisni se s sprednjo peto nazaj v stojo.",
+   "Ponovi na obeh straneh."
+  ],
+  "tips": [
+   "Stopi dovolj daleč nazaj, da sprednje koleno ne preseže stopala.",
+   "Trup vzravnan in ročki ob telesu.",
+   "Na vsaki nogi enako število ponovitev."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Obratni nordijski upogib",
+  "description": "Vaja za sprednja stegna z lastno težo kleče: trup nadzorovano nagibaš nazaj z iztegnjenimi boki.",
+  "instructions": [
+   "Poklekni na blazino s koleni v širini bokov, goleni in nartoma na tleh in vzravnanim trupom.",
+   "Boki naj bodo iztegnjeni in trup napet.",
+   "Trup počasi nagibaj nazaj s telesom v ravni črti.",
+   "Spusti se tako daleč, kot lahko sprednja stegna nadzorujejo.",
+   "Vrni se v začetni položaj.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Boki naj bodo ves čas iztegnjeni, brez prelamljanja.",
+   "Pojdi le tako nizko, kot gib obvladaš.",
+   "Za udobje daj pod kolena blazino."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Romunski mrtvi dvig",
+  "description": "Upogib v kolkih, ki poudari zadnja stegna in zadnjico.",
+  "instructions": [
+   "Stoj z drogom v višini bokov z nadprijemom.",
+   "Boke potisni nazaj in trup nagni z rahlo pokrčenimi, skoraj nespremenjenimi koleni.",
+   "Drog spuščaj ob nogah, dokler ne začutiš raztega v zadnjih stegenskih mišicah.",
+   "Boke potisni naprej, da se vrneš v stojo.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ledvenega dela ne krivi; hrbtenica naj ostane nevtralna.",
+   "Spusti se le tako nizko, da ne izgubiš drže.",
+   "Napni široke hrbtne mišice, da drog ostane ob telesu."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Veslaški trenažer",
+  "description": "Vzdržljivostna vaja za celo telo na veslaškem trenažerju: vsak zaveslaj se odrine z nogami, nagne trup nazaj in potegne ročaj k rebrom, tako da noge, hrbet in roke delajo v povezanem ciklu.",
+  "instructions": [
+   "Sedi na trenažer, stopala pritrdi s trakovi na opornikih in primi ročaj z nadprijemom.",
+   "Zdrsni naprej v začetni položaj: goleni navpične, trup rahlo pred boki, roke iztegnjene proti vztrajniku.",
+   "Najprej potisni z nogami in sedež pomikaj nazaj, dokler kolena niso skoraj iztegnjena.",
+   "Trup nagni nazaj čez navpičnico in nato potegni ročaj k spodnjim rebrom s komolci mimo bokov.",
+   "Ob vračanju obrni vrstni red — najprej roke naprej, nato trup in na koncu pokrči kolena — ter zdrsni nazaj v začetni položaj za naslednji zaveslaj.",
+   "Nadaljuj želeni čas, razdaljo ali število zaveslajev."
+  ],
+  "tips": [
+   "Ohrani vrstni red: noge, trup, roke pri potegu in roke, trup, noge pri vračanju. Prezgodnje krčenje rok zapravi najmočnejši del zaveslaja.",
+   "Veslaj z ravnim hrbtom in napetim trupom: ukrivljen ledveni del v začetnem položaju spremeni veslanje v bolečino v križu namesto v kondicijo.",
+   "Ročaj vodi naravnost in vodoravno k spodnjim rebrom, vračanje pa naj traja približno dvakrat dlje kot poteg, brez zaletavanja nazaj."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Potisk z dolgo ročko sede",
+  "description": "Potisk za ramena z dolgo ročko sede z naslonom, ki delo osredotoči na deltasto mišico.",
+  "instructions": [
+   "Sedi na klop z navpičnim naslonom, drog primi nekoliko širše od ramen in ga nasloni na zgornji del prsi.",
+   "Ročko potisni naravnost gor do iztegnjenih komolcev.",
+   "Drog drži nad temenom z zbranimi rebri.",
+   "Nadzorovano spusti do ključnic."
+  ],
+  "tips": [
+   "Napni zadnjico in trebuh, da se hrbet ne usloči.",
+   "Glavo potegni nazaj, da drog spustiš mimo brez napenjanja vratu."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Veslanje sede na spodnjem škripcu",
+  "description": "Vaja za hrbet na spodnjem škripcu, pri kateri sede vlečeš ročaj proti trupu.",
+  "instructions": [
+   "Sedi k veslaški postaji s stopali na opornikih.",
+   "Drži ročaj in sedi vzravnano z rahlim nagibom naprej.",
+   "Komolce vodi nazaj in ročaj vleci k spodnjemu delu trebuha.",
+   "Na koncu potega stisni lopatici.",
+   "Roke nadzorovano iztegni nazaj v začetek.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Trup naj bo vzravnan z malo zibanja.",
+   "Komolce vodi naravnost nazaj, ne vstran.",
+   "Na koncu potega stisni lopatici."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Dvigi na prste sede na stroju",
+  "description": "Dvigi na prste sede na stroju, usmerjeni v veliko mečno mišico.",
+  "instructions": [
+   "Sedi v stroj z blazinama na stegnih.",
+   "Pete spusti čim nižje.",
+   "Dvigni se na blazinice stopal.",
+   "Spuščaj nadzorovano.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Pokrčeno koleno razbremeni dvoglavo mečno mišico, zato več dela prevzame velika mečna mišica.",
+   "Uporabi celoten obseg giba."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Dvigi na prste sede z ročkama",
+  "description": "Dvigi na prste sede z ročkama na stegnih za veliko mečno mišico s pokrčenim kolenom.",
+  "instructions": [
+   "Sedi na klop z blazinicami stopal na stopnici ali plošči in ročko na vsakem stegnu ob kolenu.",
+   "Pete spusti čim nižje, da se meča raztegnejo.",
+   "Pete dvigni s potiskom blazinic stopal do vrha.",
+   "Zgoraj za trenutek zadrži in nadzorovano spusti."
+  ],
+  "tips": [
+   "Ročki drži, da ne zdrsneta.",
+   "Pokrčeno koleno prenese delo na veliko mečno mišico."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Odmiki rok sede z ročkama",
+  "description": "Izolacijska vaja sede: dvig ročk vstran za stransko delto brez pomoči nog.",
+  "instructions": [
+   "Sedi na klop z ročkama ob straneh.",
+   "Hrbet raven in trup napet.",
+   "Obe ročki dvigni vstran do višine ramen.",
+   "Komolci naj bodo rahlo pokrčeni.",
+   "Ročki nadzorovano spusti.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Uporabi lahko težo, da dvig ostane čist.",
+   "Vodi s komolci namesto z dlanmi.",
+   "Dvigni do višine ramen in nadzorovano spusti."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Upogib kolen sede",
+  "description": "Izolacijska vaja sede za zadnja stegna na stroju s stalno napetostjo in manjšim vključevanjem upogibalk kolka kot leže.",
+  "instructions": [
+   "Naslon in valj pri gležnjih nastavi tako, da so kolena v osi stroja.",
+   "Sedi vzravnano, zadnji del gležnjev položi na valj in se drži za ročaja.",
+   "Noge krči dol in nazaj pod sedež, kolikor stroj dopušča.",
+   "V polnem krčenju se ustavi in se počasi vrni.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Hrbet naj bo ves gib trdno na naslonu.",
+   "V polnem krčenju stopali rahlo potegni proti goleni za večjo vključitev zadnjih stegen.",
+   "Ekscentrično fazo nadzoruj — teža naj nog ne potegne sunkovito nazaj."
+  ]
+ },
+ "shrug": {
+  "name": "Skomigi z dolgo ročko",
+  "description": "Izolacijski gib za zgornji trapez.",
+  "instructions": [
+   "Stoj z dolgo ročko v iztegnjenih rokah z nadprijemom.",
+   "Ramena dvigni naravnost proti ušesom.",
+   "Zgoraj na kratko zadrži.",
+   "Ramena nadzorovano spusti.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Ramena dviguj navpično, brez kroženja.",
+   "Rok ne uporabljaj; komolci ostanejo iztegnjeni.",
+   "Ne odrivaj se z nogami, da bi dvignil več."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Odmik noge leže na boku",
+  "description": "Izolacijska vaja z lastno težo za srednjo zadnjično mišico in odmikalke kolka.",
+  "instructions": [
+   "Lezi na bok z nogama drugo na drugi.",
+   "Spodnja noga naj bo rahlo pokrčena.",
+   "Zgornjo nogo dvigni proti stropu.",
+   "Spuščaj nadzorovano.",
+   "Ponovi na obeh straneh."
+  ],
+  "tips": [
+   "Boki naj bodo vso vajo drug nad drugim.",
+   "Medenice ne nagibaj."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Primik noge leže na boku",
+  "description": "Primik leže na boku, pri katerem spodnjo nogo dviguješ proti gravitaciji in kolk uri z lastno težo.",
+  "instructions": [
+   "Lezi na bok z iztegnjeno spodnjo nogo.",
+   "Zgornjo nogo pokrči in stopalo postavi pred spodnje stegno.",
+   "Glavo opri na spodnjo roko.",
+   "Spodnjo nogo dvigni proti stropu.",
+   "Nogo nadzorovano spusti.",
+   "Dokončaj eno stran in zamenjaj."
+  ],
+  "tips": [
+   "Premika se le noga; boki in trup mirujejo.",
+   "Nogo dvigni brez zamaha in počasi spusti.",
+   "Pred začetkom poravnaj ramena, boke in stopala."
+  ]
+ },
+ "side-plank": {
+  "name": "Stranska deska",
+  "description": "Različica stranske deske za poševne trebušne mišice in stranski del trupa.",
+  "instructions": [
+   "Lezi na bok s podlaktjo na tleh in komolcem pod ramo.",
+   "Boke dvigni v ravno črto od glave do stopal.",
+   "Položaj zadrži z napetim trupom.",
+   "Dihaj enakomerno.",
+   "Ponovi na obeh straneh."
+  ],
+  "tips": [
+   "Bokom ne dovoli, da se povesijo proti tlom.",
+   "Ramena in boke drži v isti ravnini brez zasuka trupa.",
+   "S podlaktjo potiskaj v tla, da ne visiš na rami."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Enoročno veslanje z ročko",
+  "description": "Enostranska vaja za hrbet z ročko za uravnotežen razvoj.",
+  "instructions": [
+   "Eno koleno in roko opri na klop.",
+   "V drugi roki drži ročko z iztegnjeno roko.",
+   "Ročko vleci proti boku in stisni lopatico.",
+   "Ročko nadzorovano spusti.",
+   "Ponovi na obeh straneh."
+  ],
+  "tips": [
+   "Med potegom trupa ne suči; boki naj bodo stabilni.",
+   "Na začetku potega rame ne vleci k ušesu.",
+   "Z vsako roko enako število ponovitev."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Enoročni odmik na stroju s ploščami",
+  "description": "Odmik na stroju s ploščami z eno roko naenkrat, tako da vsaka stran dvigne svojo težo in lahko obe privedeš na isto raven.",
+  "instructions": [
+   "Višino sedeža nastavi tako, da je os blazine v liniji z ramo, in obremeni samo stran, ki jo boš vadil.",
+   "Sedi s hrbtom ob naslon in zunanjo stran delovne roke prisloni k blazini.",
+   "Na prosti strani drži ročaj ali roko položi v naročje, trup naravnost glede na sedež.",
+   "Delovno roko potisni ven in navzgor ob blazino do višine rame in nadzorovano spusti.",
+   "Opravi vse ponovitve na tej strani, nato obremeni in vadi drugo."
+  ],
+  "tips": [
+   "Strani izenačuj po šibkejši roki, ne po močnejši. Vadba ene strani naenkrat razkrije razliko le, če število določa šibkejša stran.",
+   "Trupa ne nagibaj na delovno stran. Ker je teža le na eni roki, se stroj ne uravnoteži sam, in če se nagneš, dvig postane odklon trupa.",
+   "Začni s šibkejšo roko, da določi cilj, in obema privošči enak počitek."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Mostiček na eni nogi",
+  "description": "Mostiček na eni oporni nogi, ki poveča zahtevnost brez dodatne opreme.",
+  "instructions": [
+   "Lezi na hrbet z enim pokrčenim kolenom in stopalom na tleh, drugo nogo iztegni v zrak.",
+   "Potisni s peto oporne noge in boke dvigni, dokler rama, kolk in koleno niso v liniji.",
+   "Zgoraj za trenutek stisni zadnjico, ne da bi se usločil v ledvenem delu.",
+   "Nadzorovano spusti, ne da bi boke odložil; opravi ponovitve in zamenjaj nogo."
+  ],
+  "tips": [
+   "Medenico drži vodoravno, noben bok naj se ne povesi.",
+   "Če je težko, začni z mostičkom na obeh nogah."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Francoski potisk leže",
+  "description": "Francoski potisk leže z dolgo ročko, ki izolira triceps v celotnem obsegu.",
+  "instructions": [
+   "Lezi na ravno klop z drogom nad prsmi v ozkem prijemu.",
+   "Drog spuščaj proti čelu s krčenjem komolcev.",
+   "Roke iztegni nazaj v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Nadlakti naj bodo vso vajo navpične.",
+   "Spuščaj počasi, da varuješ komolce."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Potisk s prsi na Smithovem stroju",
+  "description": "Potisk s prsi na Smithovem stroju, katerega vodena pot omogoča vadbo prsi z manj zahtevne stabilizacije.",
+  "instructions": [
+   "Lezi na ravno klop znotraj Smithovega stroja.",
+   "Drog primi nekoliko širše od ramen in ga sprosti.",
+   "Drog nadzorovano spusti na sredino prsi.",
+   "Na kratko se ustavi brez odboja.",
+   "Drog potisni navzgor do popolnega iztega rok.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Klop poravnaj tako, da se drog spusti na sredino prsi.",
+   "Stopala naj bodo vso serijo trdno na tleh.",
+   "Preden obremeniš, se nauči obrata zapestij, ki zatakne drog."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Dvigi na prste na Smithovem stroju",
+  "description": "Dvigi na prste stoje z vodenim drogom Smithovega stroja na ramenih.",
+  "instructions": [
+   "Stopi pod drog z blazinicami stopal na stopnici ali plošči in drogom na zgornjem delu hrbta.",
+   "Sprosti drog in pete spusti, da se meča raztegnejo.",
+   "Dvigni se na prste z iztegnjenimi nogami, ne da bi zaklenil kolena.",
+   "Zgoraj za trenutek zadrži in nadzorovano spusti, preden drog zatakneš."
+  ],
+  "tips": [
+   "Vodilo te stabilizira: to izkoristi in obremeni več.",
+   "Trup vzravnan in pogled naprej."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Poševni potisk na Smithovem stroju",
+  "description": "Poševni potisk na Smithovem stroju, ki na vodeni poti poudari zgornji del prsi in sprednje delte.",
+  "instructions": [
+   "V Smithov stroj postavi klop z naklonom 30 do 45 stopinj.",
+   "Lezi in drog primi nekoliko širše od ramen.",
+   "Sprosti in drog spusti k zgornjemu delu prsi.",
+   "Spodaj se na kratko ustavi.",
+   "Drog potisni do iztegnjenih rok.",
+   "Ponovi želeno število ponovitev."
+  ],
+  "tips": [
+   "Klop nastavi tako, da drog pade na zgornji del prsi.",
+   "Drog spuščaj, ne da bi se odbil od prsi.",
+   "Zadnjica na klopi in stopala trdno na tleh."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Počep na Smithovem stroju",
+  "description": "Počep na Smithovem stroju: stalna pot zmanjša zahtevo po ravnotežju in delo osredotoči v noge in zadnjico, dobra izbira, ko ni prostega stojala.",
+  "instructions": [
+   "Drog nastavi v višino ramen in stopi podenj z drogom na zgornjem hrbtu in stopali nekoliko spredaj.",
+   "Z obratom zapestij sprosti kljuke, trup vzravnan in napet.",
+   "Krči kolena in kolke, dokler stegna niso vsaj vzporedna s tlemi, kolena v smeri stopal.",
+   "S celim stopalom potiskaj v tla, dokler spet ne stojiš.",
+   "Po seriji obrni zapestja in drog zatakni na omejila."
+  ],
+  "tips": [
+   "Stopala nekoliko spredaj omogočajo globlji počep brez dviga pet.",
+   "Varnostna omejila postavi tik pod najnižjo točko giba."
+  ]
+ },
+ "squat": {
+  "name": "Zadnji počep z dolgo ročko",
+  "description": "Sestavljen gib za spodnji del telesa: sprednja stegna, zadnjica in zadnja stegna.",
+  "instructions": [
+   "Drog namesti na zgornji trapez.",
+   "Ročko snemi s stojala in stopi nazaj s stopali v širini ramen.",
+   "Napni trup ter krči kolena in kolke, dokler stegna niso vzporedna s tlemi.",
+   "S petami potisni nazaj v stojo.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Prsi naj bodo ves gib dvignjene.",
+   "Kolena potiskaj navzven v smeri prstov."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Valjanje s kolesom stoje",
+  "description": "Valjanje s kolesom stoje z iztegnjenimi nogami in velikim obsegom.",
+  "instructions": [
+   "Stoj z iztegnjenimi nogami, se skloni naprej in z obema rokama postavi kolo na tla.",
+   "Valjaj naprej z iztegnjenimi rokami in napetim trebuhom, dokler nisi skoraj vzporedni s tlemi.",
+   "Boki naj ostanejo v liniji, ledveni del se ne sme povesiti.",
+   "Povleci s trebuhom, da se zakotališ nazaj v začetek."
+  ],
+  "tips": [
+   "Začni s klečečo različico, dokler ne obvladaš obsega.",
+   "Ustavi se, preden se ledveni del povesi."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Dvigi pet stoje",
+  "description": "Dvigi na prste stoje, ki razvijajo mečno mišico v celotnem obsegu.",
+  "instructions": [
+   "Stopi na rob ploščadi ali stroja za meča.",
+   "Pete spusti pod ploščad.",
+   "Potisni se na prste.",
+   "Spuščaj počasi.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Zgoraj se ustavi za največje krčenje.",
+   "Popoln spust pete poveča obseg giba."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Odmik noge stoje",
+  "description": "Odmik noge z lastno težo stoje na drugi nogi. Obremeni srednjo zadnjično mišico dvignjene strani in na stojni nogi mišice, ki držijo medenico vodoravno.",
+  "instructions": [
+   "Stoj vzravnano z rokami v bokih in stopali skupaj.",
+   "Težo prenesi na eno nogo in njeno koleno rahlo pokrči.",
+   "Drugo iztegnjeno nogo dvigni vstran s prsti naprej in vzravnanim trupom.",
+   "Nogo dvigni le tako visoko, da se trup ne nagne na nasprotno stran.",
+   "Nogo počasi spusti ob stojno stopalo.",
+   "Opravi načrtovane ponovitve in ponovi z drugo nogo."
+  ],
+  "tips": [
+   "Boki ravno in telo mirno; nagib stran od dvignjene noge kolku odvzame delo.",
+   "Nadzoruj tudi spust; noga naj ne niha.",
+   "Če ravnotežje popušča, se opri ob steno ali stol; ko gib postane lahek, dodaj elastiko okoli stegen."
+  ]
+ },
+ "step-ups": {
+  "name": "Stopanje na skrinjo",
+  "description": "Stopanje na skrinjo ali klop z eno nogo, ki funkcionalno obremeni sprednja stegna in zadnjico.",
+  "instructions": [
+   "Stopi pred trdno skrinjo ali klop.",
+   "Celo stopalo ene noge postavi na skrinjo.",
+   "Potisni s to peto in telo dvigni na skrinjo.",
+   "Pritegni zadnjo nogo, da v celoti stojiš na skrinji.",
+   "Zadnjo nogo nadzorovano spusti na tla s težo na delovni nogi.",
+   "Noge izmenjuj ali opravi vse ponovitve na eni strani pred menjavo."
+  ],
+  "tips": [
+   "Na skrinjo postavi celo stopalo.",
+   "Odrini se s peto noge, ki stopa gor, ne z zadnjo.",
+   "Sestop nadzoruj, ne pusti se pasti."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Poteg navzdol z iztegnjenimi rokami",
+  "description": "Izolacijska vaja za široke hrbtne mišice na škripcu z iztegnjenimi rokami.",
+  "instructions": [
+   "Stoj pred škripcem z ravnim drogom na zgornjem škripcu.",
+   "S skoraj iztegnjenimi rokami drog potisni v loku proti stegnom.",
+   "Spodaj stisni široke hrbtne mišice.",
+   "Drog počasi vrni v začetni položaj.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Roke naj bodo ves gib skoraj iztegnjene.",
+   "Drog v loku pripelji do stegen.",
+   "V spodnjem delu giba stisni široke hrbtne mišice."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumo mrtvi dvig",
+  "description": "Različica mrtvega dviga z zelo široko stojo in ozkim prijemom, ki delo prenese na zadnjico, notranja in sprednja stegna.",
+  "instructions": [
+   "Stoj zelo široko s prsti rahlo navzven in drogom nad sredino stopal.",
+   "Drog primi z rokama znotraj nog, z nevtralnim hrbtom in dvignjenimi prsmi.",
+   "Z nogami potiskaj v tla in kolena potiskaj navzven, dokler ne stojiš z ročko tik ob telesu.",
+   "Zgoraj zakleni kolke in kolena ter ročko po isti poti nadzorovano spusti."
+  ],
+  "tips": [
+   "Ročko vedno drži tik ob telesu.",
+   "Kolena sledijo smeri prstov; ne pusti jim padati navznoter."
+  ]
+ },
+ "t-bar-row": {
+  "name": "Veslanje s T-palico",
+  "description": "Sestavljeno veslanje s T-palico v predklonu, ki z velikimi težami razvija široke hrbtne mišice in romboide.",
+  "instructions": [
+   "Stopi nad T-palico s stopali v širini ramen.",
+   "Upogni se v kolkih, dokler trup ni pod kotom približno 45 stopinj.",
+   "Primi ročaje in hrbet drži raven.",
+   "Palico vleci proti prsim s komolci nazaj.",
+   "Zgoraj stisni lopatici.",
+   "Nadzorovano spusti in ponovi."
+  ],
+  "tips": [
+   "Trup nagni približno na 45 stopinj z ravnim hrbtom.",
+   "Vleci tako, da komolce vodiš nazaj, ne le z rokami.",
+   "Na vrhu potega stisni lopatici."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Potisk za triceps na škripcu",
+  "description": "Izolacijska vaja za triceps na škripcu.",
+  "instructions": [
+   "Stoj pred škripcem z ravnim drogom.",
+   "Primi drog in komolce drži ob telesu.",
+   "Drog potisni navzdol do popolnega iztega rok.",
+   "Počasi se vrni.",
+   "Ponovi."
+  ],
+  "tips": [
+   "Trup vzravnan.",
+   "Premikajo naj se le podlakti."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Upogib kolen na TRX",
+  "description": "Ta izolacijska vaja uporablja viseči trenažer za zadnja stegna, zadnjico in meča z vlečenjem pet proti zadnjici.",
+  "instructions": [
+   "Lezi na hrbet s petami v zankah in koleni, pokrčenimi na 90 stopinj.",
+   "Boke dvigni od tal v ravno črto od kolen do ramen.",
+   "Noge iztegni naprej z dvignjenimi boki in napetim trupom.",
+   "Pete potegni proti zadnjici z močnim krčenjem zadnjih stegen.",
+   "Gib nadzoruj in bokov med serijo ne spuščaj."
+  ],
+  "tips": [
+   "Trup naj bo napet, da se boki ne povesijo.",
+   "Osredotoči se na močno krčenje zadnjih stegen na vrhu pregiba.",
+   "Ekscentrično fazo nadzoruj s počasnim iztegovanjem nog."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Poteg navzdol z V-ročajem",
+  "description": "Poteg navzdol z nevtralnim prijemom na ozkem V-ročaju za največji razteg širokih hrbtnih mišic in globlje krčenje.",
+  "instructions": [
+   "Na zgornji škripec pripni V-ročaj (dvojni D).",
+   "Sedi s stegni, zapetimi pod blazino, in ročaj primi z dlanmi druga proti drugi.",
+   "Začni s povsem iztegnjenimi rokami nad glavo.",
+   "Ročaj vleci proti prsnici s potiskanjem komolcev navzdol in rahlo nazaj.",
+   "Spodaj stisni široke hrbtne mišice in se počasi ter nadzorovano vrni gor.",
+   "Ponovi priporočeno število ponovitev."
+  ],
+  "tips": [
+   "Nevtralni prijem je do ramen prijaznejši kot nadprijem ali podprijem.",
+   "Predstavljaj si, da rebra vlečeš proti bokom: misli na hrbet, ne na roke."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Hoja z izpadnimi koraki z ročkama",
+  "description": "Izmenični izpadni koraki naprej z ročko v vsaki roki; enostranska vadba sprednjih stegen in zadnjice.",
+  "instructions": [
+   "Stoj z ročkama in sproščenimi rokami ob telesu.",
+   "Naredi dolg korak naprej in se spuščaj, dokler obe koleni nista pokrčeni približno na 90 stopinj.",
+   "S sprednjo nogo se odrini v stojo in zadnjo nogo prenesi naprej v naslednji korak.",
+   "Noge izmenjuj z vzravnanim trupom vso pot."
+  ],
+  "tips": [
+   "Koraki naj bodo dovolj dolgi, da sprednje koleno ne sega daleč čez prste.",
+   "Potrebuješ prost prostor; če ga ni, delaj korake nazaj."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Sklece na bradlji z dodano težo",
+  "description": "Sklece na bradlji z dodano težo, z ročko med stopali ali obteženim telovnikom.",
+  "instructions": [
+   "Opri se na bradljo z iztegnjenimi rokami in ročko med stopali ali gležnji.",
+   "Trup rahlo nagni in s krčenjem komolcev se nadzorovano spuščaj.",
+   "Ustavi se, ko so ramena v višini komolcev.",
+   "Potisni se s prsmi in tricepsoma do iztegnjenih rok."
+  ],
+  "tips": [
+   "Najprej obvladaj sklece na bradlji z lastno težo.",
+   "Ne spuščaj se nižje, kot rama prenese."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Zgibi z dodano težo",
+  "description": "Zgib z dodano težo, z ročko med stopali ali obteženim telovnikom.",
+  "instructions": [
+   "Obesi se nekoliko širše od ramen in drži ročko med stopali ali gležnji.",
+   "Komolce vodi dol in nazaj, dokler brada ni nad drogom.",
+   "Telo stabilno, brez zibanja.",
+   "Nadzorovano spusti do popolnega iztega rok."
+  ],
+  "tips": [
+   "Najprej obvladaj zgibe z lastno težo.",
+   "Če uporabljaš telovnik, težo povečuj postopoma."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Veslanje sede s širokim prijemom",
+  "description": "Vodoravno veslanje na škripcu z dolgim drogom in širokim prijemom za zgornji hrbet in zadnja ramena.",
+  "instructions": [
+   "Sedi pred spodnji škripec s stopali na opori, rahlo pokrčenimi koleni in širokim prijemom dolgega droga.",
+   "Z ravnim hrbtom in dvignjenimi prsmi vleci drog k spodnjemu delu prsi, komolci ven in nazaj.",
+   "Na koncu stisni lopatici in napetost za trenutek zadrži.",
+   "Roke nadzorovano iztegni in pusti lopaticama, da se razmakneta, ne da bi ukrivil hrbet."
+  ],
+  "tips": [
+   "Ne zibaj se: gib dela hrbet, ne trup.",
+   "Drog pripelji k prsim, ne k trebuhu, da obremeniš zgornji hrbet."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercherjev počep",
+  "description": "Počep z drogom v komolčnih pregibih, ki težo prenese naprej in zahteva močan trup.",
+  "instructions": [
+   "Drog namesti v višini trebuha v komolčne pregibe, s prekrižanimi podlaktmi ali sklenjenimi rokami.",
+   "Krči kolke in kolena z dvignjenimi prsmi in komolci ob telesu.",
+   "Ustavi se, ko so stegna vzporedna s tlemi ali nekoliko nižje.",
+   "S stopali potiskaj v tla, dokler spet ne stojiš vzravnano."
+  ],
+  "tips": [
+   "Če drog pritiska na komolce, nanj daj blazino ali brisačo.",
+   "Trebuh naj bo napet, da se ne prevrneš naprej."
+  ]
+ },
+ "z-press": {
+  "name": "Z-potisk",
+  "description": "Potisk nad glavo sede na tleh z iztegnjenimi nogami, ki odvzame oporo in zahteva stabilen trup.",
+  "instructions": [
+   "Sedi na tla z nogami, iztegnjenimi naprej, in drogom na zgornjem delu prsi.",
+   "Trup vzravnan, ročko potisni naravnost gor do iztegnjenih rok.",
+   "Drog ustavi nad temenom, ne da bi se nagnil nazaj.",
+   "Nadzorovano spusti do ključnic."
+  ],
+  "tips": [
+   "Uporabi manjšo težo kot stoje: trup mora stabilizirati.",
+   "Zadnjica in trebuh naj bosta napeta ves gib."
+  ]
+ }
+}
