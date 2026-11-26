@@ -1,0 +1,2299 @@
+{
+ "ab-wheel-rollout": {
+  "name": "Mavehjul",
+  "description": "En coreøvelse, hvor et hjul rulles frem og tilbage, og som træner rygsøjlens evne til at modstå svaj.",
+  "instructions": [
+   "Knæl på gulvet, og grib hjulets håndtag i skulderbredde.",
+   "Spænd core kraftigt, så lænden holdes neutral.",
+   "Rul hjulet langsomt fremad, og stræk kroppen så langt ud, som du kan kontrollere.",
+   "Stop, før hofterne synker, eller ryggen svajer.",
+   "Træk hjulet tilbage mod knæene ved at spænde mavemusklerne."
+  ],
+  "tips": [
+   "Spænd core før hver gentagelse — lad ikke lænden svaje.",
+   "Øg bevægelsen gradvist, og stop, før hofterne synker.",
+   "Brug væggen som stopklods, hvis du ikke kan kontrollere den lave position."
+  ]
+ },
+ "arnold-press": {
+  "name": "Arnold-pres",
+  "description": "Skulderpres med håndvægte og drejning af håndleddene, der aktiverer deltamusklen i et stort bevægeudslag.",
+  "instructions": [
+   "Sid med rank ryg mod ryglænet, hold håndvægtene i brysthøjde med håndfladerne mod dig og albuerne foran.",
+   "Begynd at presse opad, mens du åbner albuerne og drejer håndfladerne fremad.",
+   "Slut med strakte arme over hovedet uden at låse albuerne.",
+   "Sænk, mens du igen drejer håndfladerne mod dig, til startpositionen."
+  ],
+  "tips": [
+   "Udfør drejningen flydende, uden sving.",
+   "Hold ryggen mod ryglænet."
+  ]
+ },
+ "assisted-pull-ups": {
+  "name": "Assisteret pull-up",
+  "description": "En pull-up i assisteret maskine, der modvirker en del af kropsvægten og opbygger den rygstyrke, strenge pull-ups kræver.",
+  "instructions": [
+   "Placér knæene på puden i den assisterede pull-up-maskine.",
+   "Grib stangen med håndfladerne væk fra dig, lidt bredere end skuldrene.",
+   "Træk brystet mod stangen ved at drive albuerne nedad.",
+   "Sænk dig kontrolleret, til du hænger med strakte arme.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Start bevægelsen med at trække skulderbladene ned, før du bøjer albuerne.",
+   "Undgå at svinge, så ryggen ikke mister arbejde.",
+   "Indstil modvægten, så du kan tage alle gentagelser med god teknik."
+  ]
+ },
+ "ball-leg-curl": {
+  "name": "Leg curl på balancebold",
+  "description": "En leg curl med kropsvægt på balancebold, hvor hælene rulles mod ballerne, mens hoften løftes.",
+  "instructions": [
+   "Lig på ryggen med hæle og nederste del af læggene på bolden og armene strakt ud for balancen.",
+   "Pres med hælene, så hofterne løftes til en lige linje fra skuldre til ankler.",
+   "Hold hofterne oppe, og bøj knæene, så bolden ruller mod ballerne.",
+   "Stræk benene kontrolleret ud igen uden at sænke hofterne.",
+   "Gennemfør alle gentagelser, sænk så hofterne, og kom fri af bolden."
+  ],
+  "tips": [
+   "Hofterne bliver oppe hele sættet: det er en kombination af bro og curl.",
+   "Start med begge fødder; gå til ét ben, når det bliver let."
+  ]
+ },
+ "banded-standing-curl": {
+  "name": "Stående leg curl med elastik",
+  "description": "En stående leg curl med elastik om anklen, god på rejsen eller som let afslutning for baglårene.",
+  "instructions": [
+   "Sæt en elastik om den ene ankel, og fastgør den anden ende under standfoden eller i et fast punkt foran dig.",
+   "Stå oprejst, hold fast i noget, hvis du har brug for balance, med let bøjet standben.",
+   "Løft hælen med elastikken mod ballen, mens låret holdes stille.",
+   "Spænd baglåret øverst, og sænk kontrolleret til fuld strækning.",
+   "Gennemfør alle gentagelser på den ene side, og skift ben."
+  ],
+  "tips": [
+   "Hold låret stille — kun underbenet bevæger sig.",
+   "Undgå at svinge hoften for at få fart.",
+   "Brug en lettere elastik, hvis du ikke kan kontrollere nedturen."
+  ]
+ },
+ "band-lat-pulldown": {
+  "name": "Nedtræk med elastik",
+  "description": "Lodret træk med elastik fastgjort højt oppe, som alternativ til kablet.",
+  "instructions": [
+   "Stå med elastikken fastgjort højt (i en dør eller stang) og en ende i hver hånd, armene strakt over hovedet.",
+   "Træk hænderne ned ved at føre albuerne mod siderne med løftet bryst.",
+   "Klem ryggen sammen, når hænderne når skulderhøjde.",
+   "Løft armene kontrolleret, til de igen er strakte."
+  ],
+  "tips": [
+   "Læn ikke overkroppen bagover for at trække.",
+   "Sørg for, at fastgørelsen sidder godt, før du begynder."
+  ]
+ },
+ "band-pull-apart": {
+  "name": "Pull-apart med elastik",
+  "description": "Træk en elastik fra hinanden med strakte arme for at aktivere bagsiden af skulderen og øvre ryg.",
+  "instructions": [
+   "Stå med elastikken i skulderbredde og armene strakt frem i brysthøjde.",
+   "Før armene ud til siderne, til elastikken rører brystet.",
+   "Saml skulderbladene til sidst uden at løfte skuldrene.",
+   "Vend kontrolleret tilbage uden at lade elastikken trække dig."
+  ],
+  "tips": [
+   "Vælg en elastik, der tillader 15 eller flere rene gentagelser.",
+   "Hold ribbenene samlet, så lænden ikke svajer."
+  ]
+ },
+ "band-row": {
+  "name": "Roning med elastik",
+  "description": "Siddende roning med elastik om fødderne, der kun kræver elastikken.",
+  "instructions": [
+   "Sid på gulvet med strakte ben og elastikken om fodsålerne, en ende i hver hånd.",
+   "Med rank ryg trækker du hænderne mod maven og albuerne bagud.",
+   "Saml skulderbladene til sidst.",
+   "Stræk armene kontrolleret uden at slippe spændingen."
+  ],
+  "tips": [
+   "Sving ikke overkroppen for at hjælpe til.",
+   "Vælg en elastik, der tillader 12 til 15 rene gentagelser."
+  ]
+ },
+ "band-shoulder-press": {
+  "name": "Skulderpres med elastik",
+  "description": "Stående skulderpres på en elastik, der træner deltamusklen med meget lidt udstyr.",
+  "instructions": [
+   "Stå midt på elastikken med fødderne i hoftebredde og en ende i hver hånd i skulderhøjde.",
+   "Pres hænderne op, til armene er strakte over hovedet.",
+   "Hold maven spændt og ribbenene samlet.",
+   "Sænk kontrolleret til skuldrene uden at miste spændingen."
+  ],
+  "tips": [
+   "Svaj ikke i ryggen, når du presser.",
+   "Sno elastikken en omgang mere for større modstand."
+  ]
+ },
+ "barbell-bulgarian-split-squat": {
+  "name": "Bulgarsk split squat med vægtstang",
+  "description": "Etbens squat med bageste fod hævet på en bænk og vægtstangen på ryggen.",
+  "instructions": [
+   "Hvil vristen på en bænk bag dig, med stangen øverst på ryggen og det andet ben fremme.",
+   "Bøj det forreste knæ, og sænk med rank overkrop, til låret er parallelt med gulvet.",
+   "Hold vægten på hælen af det forreste ben.",
+   "Skub fra med forreste fod, til benet er strakt; gør gentagelserne færdige, og skift ben."
+  ],
+  "tips": [
+   "Justér afstanden, så det forreste knæ ikke går langt forbi tåspidsen.",
+   "Øv først uden vægt eller med håndvægte."
+  ]
+ },
+ "barbell-curl": {
+  "name": "Bicepscurl med vægtstang",
+  "description": "En klassisk isolationsøvelse for biceps, der bruger vægtstangen til størst mulig belastning.",
+  "instructions": [
+   "Stå med en vægtstang i underhåndsgreb i skulderbredde.",
+   "Løft stangen mod skuldrene.",
+   "Klem øverst, og sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Undgå at svinge overkroppen.",
+   "Hold albuerne ind til siderne."
+  ]
+ },
+ "barbell-glute-bridge": {
+  "name": "Glute bridge med vægtstang",
+  "description": "En vægtet glute bridge med vægtstang for større modstand.",
+  "instructions": [
+   "Lig på gulvet med en vægtstang over hofterne og bøjede knæ.",
+   "Løft hofterne ved at klemme ballerne sammen.",
+   "Hold øverst med fuldt strakte hofter.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Undgå at svaje i lænden, når hoften strækkes.",
+   "Pres med hælene, ikke med tåspidserne.",
+   "Træk hagen ind, og hold den øvre ryg understøttet."
+  ]
+ },
+ "barbell-row": {
+  "name": "Foroverbøjet roning med vægtstang",
+  "description": "En sammensat trækbevægelse for øvre og midterste ryg.",
+  "instructions": [
+   "Læn dig frem i hoften med let bøjede knæ.",
+   "Grib stangen lidt bredere end skulderbredde.",
+   "Træk stangen mod nederste del af brystet, mens du klemmer skulderbladene sammen.",
+   "Sænk stangen kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold overkroppen i cirka 45 grader.",
+   "Brug ikke fart til at svinge vægten."
+  ]
+ },
+ "barbell-standing-calf-raise": {
+  "name": "Stående læghævning med vægtstang",
+  "description": "Stående hælhævning med fri vægtstang på ryggen uden behov for særlig maskine.",
+  "instructions": [
+   "Stå med stangen øverst på ryggen og forfoden på et step eller en skive, i hoftebredde.",
+   "Lad hælene synke, til læggene strækkes, med rank overkrop.",
+   "Gå så højt op på tæer, du kan, uden at bøje knæene.",
+   "Hold et øjeblik øverst, og sænk kontrolleret."
+  ],
+  "tips": [
+   "Begynd med let vægt, til du har styr på balancen.",
+   "Udfør øvelsen i et stativ med sikkerhedsstænger i passende højde."
+  ]
+ },
+ "bench-press": {
+  "name": "Bænkpres med vægtstang",
+  "description": "En sammensat presbevægelse for bryst, skuldre og triceps.",
+  "instructions": [
+   "Lig på bænken med øjnene under stangen.",
+   "Grib stangen lidt bredere end skulderbredde.",
+   "Løft stangen af stativet, og sænk den til midten af brystet.",
+   "Pres stangen op igen til fuldt strakte arme.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Hold fødderne fladt på gulvet.",
+   "Bevar et let svaj i lænden.",
+   "Skub med benene mod gulvet for at holde dig stabil."
+  ]
+ },
+ "bent-knee-inverted-row": {
+  "name": "Omvendt roning med bøjede knæ",
+  "description": "Begynderudgaven af omvendt roning: med bøjede knæ og fødderne tæt på kroppen vejer den mindre og er lettere at styre.",
+  "instructions": [
+   "Lig under en lav, stabil stang, grib den lidt bredere end skuldrene, og hold kroppen lige med bøjede knæ og fodsålerne i gulvet.",
+   "Træk brystet mod stangen med albuerne bagud og skulderbladene samlet.",
+   "Hold et øjeblik øverst uden at lade hofterne falde.",
+   "Sænk kontrolleret, til armene er strakte."
+  ],
+  "tips": [
+   "Ryk fødderne tættere på for at gøre det lettere, eller længere væk for at gå videre.",
+   "Når du mestrer 12 gentagelser, så gå til omvendt roning med strakte ben."
+  ]
+ },
+ "bodyweight-calf-raise": {
+  "name": "Læghævning med kropsvægt",
+  "description": "En hælhævning med kropsvægt, en grundøvelse til stærkere lægge.",
+  "instructions": [
+   "Stå med fødderne i hoftebredde på et fladt underlag.",
+   "Gå så højt op på tæer som muligt.",
+   "Spænd læggene øverst.",
+   "Sænk hælene kontrolleret til gulvet.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Fordel vægten på alle tæer, når du går op.",
+   "Hold benene strakte, så arbejdet samles i lægmusklen.",
+   "Fæstn blikket på et punkt for at holde balancen."
+  ]
+ },
+ "bodyweight-reverse-lunge": {
+  "name": "Baglæns lunge med kropsvægt",
+  "description": "Baglæns lunge uden udstyr, mere stabil og skånsom for knæene end den forlæns.",
+  "instructions": [
+   "Stå med samlede fødder, hænderne i siden og løftet bryst.",
+   "Tag et langt skridt tilbage, og sænk dig med begge knæ bøjet, til bageste knæ er tæt på gulvet.",
+   "Hold overkroppen rank og vægten på forreste fod.",
+   "Skub fra med forreste ben tilbage til start; gør gentagelserne færdige, og skift ben."
+  ],
+  "tips": [
+   "Tag så langt et skridt, at forreste knæ ikke går langt forbi tåspidsen.",
+   "Hold fat i en støtte, hvis balancen stadig er svær."
+  ]
+ },
+ "bodyweight-squat": {
+  "name": "Squat med kropsvægt",
+  "description": "Grundlæggende squat uden udstyr, ideel til at lære bevægemønsteret og træne ben hvor som helst.",
+  "instructions": [
+   "Stå med fødderne i skulderbredde, tæerne let udad og armene strakt frem.",
+   "Før hofterne bagud og ned, som om du sætter dig, med løftet bryst og neutral ryg.",
+   "Sænk til lårene er parallelle med gulvet, med knæene i fødderne retning.",
+   "Skub med hele foden mod gulvet, til du står ret igen."
+  ],
+  "tips": [
+   "Hold hælene i gulvet gennem hele bevægelsen.",
+   "Er det svært at gå ned, så sæt dig på en stol, og rejs dig uden sving."
+  ]
+ },
+ "bulgarian-split-squat": {
+  "name": "Bulgarsk split squat",
+  "description": "En etbens squatvariant med bageste fod hævet.",
+  "instructions": [
+   "Stå foran en bænk, og placér den ene fod bag dig på bænken.",
+   "Hold håndvægte langs siderne.",
+   "Sænk kroppen, til forreste lår er parallelt med gulvet.",
+   "Pres med forreste hæl tilbage til stående.",
+   "Gentag til begge sider."
+  ],
+  "tips": [
+   "Hold næsten al vægt på det forreste ben.",
+   "Justér afstanden til bænken, til udfaldet er stabilt.",
+   "Gør alle gentagelser med ét ben, før du skifter."
+  ]
+ },
+ "cable-crunch": {
+  "name": "Cable crunch",
+  "description": "En knælende mavebøjning i øvre kabel med reb, der tillader gradvist større belastning af den lige mavemuskel.",
+  "instructions": [
+   "Knæl foran et kabel med rebgrebet øverst.",
+   "Hold rebet ved panden med bøjede albuer.",
+   "Bøj ned ved at runde rygsøjlen og føre albuerne mod lårene.",
+   "Spænd mavemusklerne hårdt nederst.",
+   "Vend tilbage til start, og gentag."
+  ],
+  "tips": [
+   "Bøj rygsøjlen i stedet for at trække med armene.",
+   "Undgå at sætte hoften bagud i hver gentagelse.",
+   "Pust kraftigt ud på vej ned for at spænde maven bedre."
+  ]
+ },
+ "cable-curl": {
+  "name": "Bicepscurl i kabel",
+  "description": "En bicepscurl med kabelmodstand for konstant spænding.",
+  "instructions": [
+   "Stå foran en lav trisse med lige stang eller EZ-stang.",
+   "Grib stangen i underhåndsgreb med albuerne ind til siderne.",
+   "Løft stangen mod skuldrene.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Undgå, at albuerne glider frem, når du løfter stangen.",
+   "Sving ikke overkroppen for at hjælpe med vægten.",
+   "Træd lidt væk fra trissen for at bevare spændingen."
+  ]
+ },
+ "cable-external-rotation": {
+  "name": "Udadrotation i kabel",
+  "description": "En udadrotation i kabel med albuen ind til siden, der styrker rotator cuffens udadrotatorer med hjælp fra den bageste deltamuskel.",
+  "instructions": [
+   "Indstil trissen i albuehøjde, og grib håndtaget.",
+   "Stå med siden til maskinen og den arbejdende albue bøjet 90 grader.",
+   "Hold albuen ind til siden, og drej underarmen udad.",
+   "Hold pause i yderstillingen.",
+   "Vend kontrolleret tilbage. Gør den ene side færdig, og skift."
+  ],
+  "tips": [
+   "Undgå at løfte skuldrene, mens du drejer armen.",
+   "Arbejd med let vægt, langsomt og kontrolleret.",
+   "Hold håndleddet fast og på linje med underarmen."
+  ]
+ },
+ "cable-fly": {
+  "name": "Flyes i kabel",
+  "description": "En isolationsøvelse for brystet med kabelmodstand og konstant spænding.",
+  "instructions": [
+   "Stå mellem to kabelsøjler med håndtagene sat på de øvre trisser.",
+   "Med let bøjede albuer åbner du armene ud til siderne.",
+   "Før hænderne sammen foran brystet i en omfavnende bevægelse.",
+   "Vend langsomt tilbage til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold albuevinklen konstant, så det ikke bliver til et pres.",
+   "Klem brystet i et sekund, når hænderne mødes.",
+   "Skub ikke skuldrene frem, når armene er åbne."
+  ]
+ },
+ "cable-front-raise": {
+  "name": "Frontløft i kabel",
+  "description": "Frontløft fra lav trisse, der holder konstant spænding gennem hele bevægelsen.",
+  "instructions": [
+   "Stå med ryggen til den lave trisse, kablet mellem benene og håndtaget i den ene hånd, armen strakt foran låret.",
+   "Løft armen frem til skulderhøjde med let bøjet albue.",
+   "Hold et øjeblik øverst uden at læne overkroppen bagover.",
+   "Sænk kontrolleret uden at lade vægten hvile; gentag, og skift arm."
+  ],
+  "tips": [
+   "Stå langt nok væk til, at kablet trækker bagud.",
+   "Hold maven spændt, så ryggen ikke svajer."
+  ]
+ },
+ "cable-lateral-raise": {
+  "name": "Sidehævning i kabel",
+  "description": "En enarms sidehævning i kabel, der giver konstant spænding på den midterste deltamuskel.",
+  "instructions": [
+   "Stå med siden til en lav trisse, og grib håndtaget med hånden længst fra maskinen.",
+   "Hold albuen let bøjet, og lad kablet krydse foran kroppen.",
+   "Løft armen ud til siden, til den er parallel med gulvet.",
+   "Sænk kontrolleret. Tag gentagelserne på den ene side, og skift.",
+   "Bevar spændingen — lad ikke vægten hvile nederst."
+  ],
+  "tips": [
+   "Før an med albuen, ikke hånden.",
+   "Hold kort pause øverst, uden sving.",
+   "Brug mindre vægt end med håndvægt — kablets spænding er konstant."
+  ]
+ },
+ "cable-overhead-tricep-extension": {
+  "name": "Triceps over hovedet i kabel",
+  "description": "En tricepsøvelse i kabel: med ryggen til vægtstakken holder du et reb bag hovedet og strækker albuerne for at presse det op over hovedet. Positionen over hovedet strækker tricepsens lange hoved, og kablet holder musklen spændt hele vejen.",
+  "instructions": [
+   "Sæt et reb på den lave trisse, og vælg en let vægt.",
+   "Grib rebet med begge hænder, vend ryggen til stakken, og træd frem i forskudt stilling, så kablet trækker dig bagud.",
+   "Løft rebet over hovedet med bøjede albuer og overarmene tæt ved ørerne, så hænderne er bag hovedet.",
+   "Spænd kroppen, hold overarmene stille, og stræk albuerne, så rebet presses op, til armene er helt strakte over hovedet.",
+   "Hold kort pause øverst, og bøj så albuerne, så rebet kontrolleret sænkes bag hovedet.",
+   "Gentag det planlagte antal gentagelser."
+  ],
+  "tips": [
+   "Hold albuerne pegende frem og overarmene stille; spreder eller flytter de sig, bliver strækket til et pres.",
+   "Tag et så langt skridt frem, at kablet holder dig stabil, og undgå at svaje i lænden, når armene løftes.",
+   "Brug en vægt, du kan styre i hele strækket; tunge vægte trækker albuerne fra hinanden."
+  ]
+ },
+ "cable-pallof-press": {
+  "name": "Pallof-pres i kabel",
+  "description": "En anti-rotationsøvelse for core: kablet trækker dig til siden, mens du presser håndtaget lige ud fra brystet og nægter at lade overkroppen dreje.",
+  "instructions": [
+   "Sæt trissen i brysthøjde, og tag håndtaget med begge hænder med siden til maskinen.",
+   "Træd ud, til der er rigtig spænding i kablet, med fødderne i skulderbredde og let bøjede knæ.",
+   "Før håndtaget ind til midten af brystet, og spænd mave og baller.",
+   "Pres håndtaget lige frem til strakte arme, mens du modstår trækket, der vil dreje dig mod maskinen.",
+   "Hold den strakte position et øjeblik, og før så håndtaget kontrolleret tilbage til brystet.",
+   "Gennemfør gentagelserne, vend dig om, og gentag til den anden side."
+  ],
+  "tips": [
+   "Intet må dreje. Drejer skuldrene mod trissen, når du presser, så sænk vægten — det er rotationen, der ikke sker, der træner dig.",
+   "Jo længere fra maskinen, desto længere vægtarm og desto hårdere, så du kan ændre sværhedsgraden uden at røre stakken.",
+   "Hold armene i brysthøjde og skuldrene nede; lader du håndtaget stige, bliver det til et frontløft."
+  ]
+ },
+ "cable-reverse-fly": {
+  "name": "Omvendte flyes i kabel",
+  "description": "En stående kabeløvelse for bageste deltamuskler: med front mod mellemrummet mellem to tårne holder du de modsatte håndtag med krydsede kabler og fører armene ud og tilbage til skulderhøjde. Kablerne holder bagskuldrene spændt gennem hele buen.",
+  "instructions": [
+   "Sæt begge trisser cirka i skulderhøjde, og stil dig midt mellem tårnene.",
+   "Grib venstre håndtag med højre hånd og højre med venstre, så kablerne krydser foran dig.",
+   "Stå ret med armene strakt frem i skulderhøjde og let bøjede albuer.",
+   "Før armene ud og tilbage i en bred bue, styret af albuerne, til de er på linje med skuldrene.",
+   "Saml skulderbladene kort uden at svaje i lænden.",
+   "Før langsomt håndtagene tilbage til krydset startposition, og gentag det planlagte antal."
+  ],
+  "tips": [
+   "Hold albuerne let bøjede og stille; bøjer og strækker du dem, bliver flyes til en roning.",
+   "Hold skuldrene nede og nakken afslappet, så bagskuldrene arbejder og ikke øvre trapezius.",
+   "Brug let vægt og langsom tilbageføring; kablerne trækker hårdest sidst i buen, så styr den position."
+  ]
+ },
+ "captains-chair-knee-raise": {
+  "name": "Knæløft i romerstol",
+  "description": "En kropsvægtsøvelse i romerstol for nedre mave og hoftebøjere.",
+  "instructions": [
+   "Placér dig i romerstolen med ryggen fladt mod ryglænet og underarmene på støtterne.",
+   "Lad benene hænge lige ned.",
+   "Spænd core, og løft knæene mod brystet.",
+   "Hold kort øverst, og sænk langsomt til start.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Undgå at svinge benene for at få fart.",
+   "Pust ud, når knæene løftes.",
+   "Hold ryggen mod ryglænet gennem hele øvelsen."
+  ]
+ },
+ "chest-press-machine": {
+  "name": "Brystpres i maskine",
+  "description": "En presbevægelse for brystet i maskine, ideel for begyndere.",
+  "instructions": [
+   "Sid i maskinen med ryggen fladt mod ryglænet.",
+   "Grib håndtagene i brysthøjde.",
+   "Pres håndtagene frem til helt strakte arme.",
+   "Vend langsomt tilbage til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Indstil sædet, så håndtagene er i brysthøjde.",
+   "Pres uden at låse albuerne brat.",
+   "Før kontrolleret tilbage uden at slippe vægten."
+  ]
+ },
+ "chest-supported-db-row": {
+  "name": "Brystunderstøttet håndvægtsroning",
+  "description": "En brystunderstøttet håndvægtsroning, der fjerner belastningen på lænden og isolerer rygmusklerne.",
+  "instructions": [
+   "Lig på maven på en skrå bænk med håndvægtene hængende nedad.",
+   "Ro håndvægtene op langs siderne.",
+   "Klem øverst, og sænk.",
+   "Gentag."
+  ],
+  "tips": [
+   "Bryststøtten fjerner trætheden i ryggen.",
+   "Fokusér på at samle skulderbladene."
+  ]
+ },
+ "chest-supported-kettlebell-row": {
+  "name": "Brystunderstøttet kettlebellroning",
+  "description": "Øvelsen træner rygmusklerne, især den brede rygmuskel og rhomboideerne, ved at ro en kettlebell i hver hånd mod hofterne, mens overkroppen hviler på en skrå bænk.",
+  "instructions": [
+   "Lig på maven på en skrå bænk, og lad armene hænge frit med en kettlebell i hver hånd.",
+   "Spænd maven, og træk skulderbladene tilbage.",
+   "Træk kettlebells mod hofterne, mens du klemmer skulderbladene sammen.",
+   "Hold kort pause øverst, og mærk spændingen i ryggen.",
+   "Sænk langsomt og kontrolleret kettlebells til start."
+  ],
+  "tips": [
+   "Hold overkroppen stabil hele vejen; undgå at svinge.",
+   "Fokusér på at starte trækket med rygmusklerne, ikke kun armene.",
+   "Hold albuerne tæt på kroppen for at fremhæve den brede rygmuskel."
+  ]
+ },
+ "chest-supported-machine-row": {
+  "name": "Brystunderstøttet maskinroning",
+  "description": "Siddende roning i maskine med brystpude, der støtter overkroppen, så latsene og musklerne mellem skulderbladene trækker, og lænden holdes ude. Træk håndtagene tilbage med albuerne bag dig, og før dem kontrolleret frem.",
+  "instructions": [
+   "Indstil sædet, så håndtagene er ud for nederste bryst, og sid med brystet mod puden og fødderne solidt i gulvet.",
+   "Ræk frem, og grib håndtagene med strakte arme og afslappede skuldre.",
+   "Spænd kroppen, og træk håndtagene tilbage med albuerne bag dig.",
+   "Saml skulderbladene til sidst uden at løfte brystet fra puden.",
+   "Hold kort pause, og stræk så armene, så håndtagene føres kontrolleret frem.",
+   "Gentag det planlagte antal med brystet på puden hele tiden."
+  ],
+  "tips": [
+   "Træk med albuerne frem for hænderne, så latsene og midtryggen fører, og biceps hjælper.",
+   "Hold brystet på puden og skuldrene nede; trækker du skuldrene op eller læner dig bagud, bliver det til et træk for øvre trapezius.",
+   "Lad skulderbladene glide frem i starten af hver gentagelse for fuldt stræk før næste træk."
+  ]
+ },
+ "chest-supported-t-bar-row": {
+  "name": "Brystunderstøttet T-bar-roning",
+  "description": "T-bar-roning med brystet på en skrå bænk, der isolerer ryggen uden belastning på lænden.",
+  "instructions": [
+   "Læg brystet mod den skrå bænk med fødderne fast i gulvet, og grib T-barens håndtag med strakte arme.",
+   "Træk håndtaget mod brystet med albuerne bagud og tæt på kroppen.",
+   "Klem skulderbladene et øjeblik øverst.",
+   "Sænk kontrolleret til strakte arme uden at løfte brystet fra bænken."
+  ],
+  "tips": [
+   "Hold hovedet på linje med rygsøjlen.",
+   "Må du løfte brystet fra bænken for at komme op, så sænk vægten."
+  ]
+ },
+ "chin-ups": {
+  "name": "Chin-ups",
+  "description": "En pull-up-variant i underhåndsgreb, der aktiverer biceps kraftigt sammen med den brede rygmuskel.",
+  "instructions": [
+   "Hæng i en stang i underhåndsgreb i skulderbredde.",
+   "Træk dig op, til hagen er over stangen.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold core spændt gennem hele øvelsen.",
+   "Undgå for meget sving."
+  ]
+ },
+ "close-grip-bench-press": {
+  "name": "Smal bænkpres",
+  "description": "Bænkpres med smallere greb, der øger tricepsens andel og bevarer brystets arbejde.",
+  "instructions": [
+   "Lig på bænken, og grib stangen i skulderbredde eller lidt smallere.",
+   "Løft stangen af, og før den ind over brystet med strakte arme.",
+   "Sænk kontrolleret, til den strejfer nederste bryst, med albuerne tæt på kroppen.",
+   "Pres stangen op, til albuerne er strakte."
+  ],
+  "tips": [
+   "Grib ikke for smalt, det belaster håndleddet; skulderbredde er nok.",
+   "Få en spotter, eller brug et stativ med sikkerhedsstænger, når du træner tæt på failure."
+  ]
+ },
+ "db-bench-press": {
+  "name": "Bænkpres med håndvægte",
+  "description": "En sammensat brystøvelse med håndvægte, der giver større bevægeudslag end bænkpres med stang.",
+  "instructions": [
+   "Lig på en flad bænk med en håndvægt i hver hånd i brysthøjde.",
+   "Pres håndvægtene op, til armene er helt strakte.",
+   "Sænk dem langsomt til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold håndleddene neutrale gennem hele øvelsen.",
+   "Klem brystet øverst i bevægelsen."
+  ]
+ },
+ "db-fly": {
+  "name": "Flyes med håndvægte",
+  "description": "En isolationsøvelse, der strækker og spænder brystmusklen i en bred bue.",
+  "instructions": [
+   "Lig på en bænk med håndvægtene over brystet og håndfladerne mod hinanden.",
+   "Med let bøjede albuer sænker du håndvægtene ud til siderne.",
+   "Vend tilbage til start, mens du klemmer brystet.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold samme bøjning i albuerne hele vejen.",
+   "Sænk ikke håndvægtene for langt."
+  ]
+ },
+ "db-squat": {
+  "name": "Squat med håndvægte",
+  "description": "En squat med en håndvægt i hver hånd langs siderne, mulig uden vægtstang.",
+  "instructions": [
+   "Fødder i skulderbredde, en håndvægt i hver hånd langs siderne.",
+   "Spænd core, og hold brystet oppe.",
+   "Gå ned i squat ved at bøje hofter og knæ.",
+   "Gå ned, til lårene er parallelle eller lavere.",
+   "Pres med hælene for at komme op."
+  ],
+  "tips": [
+   "Hold brystet oppe og ryggen ret.",
+   "Pres knæene i tæernes retning.",
+   "Brug straps, hvis grebet bliver begrænsningen."
+  ]
+ },
+ "dead-bug": {
+  "name": "Dead bug",
+  "description": "En coreøvelse på ryggen, der koordinerer stræk af modsatte arm og ben for at træne dyb corestabilitet.",
+  "instructions": [
+   "Lig på ryggen med armene mod loftet og knæene i 90 grader.",
+   "Sænk højre arm og venstre ben mod gulvet, mens lænden presses mod gulvet.",
+   "Vend tilbage til start.",
+   "Gentag til den anden side.",
+   "Skift side hver gang."
+  ],
+  "tips": [
+   "Pres lænden mod gulvet hele tiden.",
+   "Bevæg dig langsomt."
+  ]
+ },
+ "deadlift": {
+  "name": "Dødløft med vægtstang",
+  "description": "Et sammensat helkropsløft, der primært træner bagkæden.",
+  "instructions": [
+   "Stå med fødderne i hoftebredde og stangen over midten af foden.",
+   "Bøj i hoften, og grib stangen.",
+   "Spænd core, og løft ved at strække hofter og knæ.",
+   "Stå helt ret øverst, og sænk så kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold stangen tæt på kroppen.",
+   "Rund ikke lænden."
+  ]
+ },
+ "deficit-deadlift": {
+  "name": "Deficit-dødløft",
+  "description": "Dødløft stående på en lav platform, der øger bevægeudslaget og kravet i starten.",
+  "instructions": [
+   "Stå på en platform på 2–5 cm med fødderne under stangen, og grib den med neutral ryg og skuldrene over den.",
+   "Spænd kroppen, og skub gulvet væk, mens stangen stiger tæt langs benene.",
+   "Stræk hofter og knæ samtidig, til du står helt ret.",
+   "Sænk stangen kontrolleret til gulvet med neutral ryg."
+  ],
+  "tips": [
+   "Begynd med lille deficit og let vægt for at finpudse teknikken.",
+   "Rund ikke ryggen, når stangen forlader gulvet."
+  ]
+ },
+ "dragon-flag": {
+  "name": "Dragon flag",
+  "description": "En avanceret maveøvelse, hvor den stive krop kun støttes på skuldrene og løftes og sænkes som en vægtstang.",
+  "instructions": [
+   "Lig på en bænk, grib kanten bag hovedet, og løft kroppen lige, kun støttet på skuldre og øvre ryg.",
+   "Sænk den lige krop uden at bøje i hoften, til den næsten er parallel med gulvet.",
+   "Hold mave og baller spændt uden at røre bænken.",
+   "Løft den lige krop tilbage til lodret; kan du ikke, så start kun med nedfasen."
+  ],
+  "tips": [
+   "Begynd med bøjede knæ eller kun den excentriske fase.",
+   "Nøglen er ikke at bøje i hoften."
+  ]
+ },
+ "dumbbell-bent-over-row": {
+  "name": "Foroverbøjet håndvægtsroning",
+  "description": "Roning med en håndvægt i hver hånd og foroverbøjet overkrop: træner lats og øvre ryg kun med håndvægte.",
+  "instructions": [
+   "Stå med en håndvægt i hver hånd, bøj knæene let, og læn overkroppen fra hoften, til den næsten er vandret, med ret ryg.",
+   "Lad armene hænge med håndfladerne mod hinanden.",
+   "Træk håndvægtene mod hofterne med albuerne bagud og skulderbladene samlet.",
+   "Hold kort pause øverst, og sænk kontrolleret til strakte arme."
+  ],
+  "tips": [
+   "Hold overkroppen stille: må du svinge for at løfte, er de for tunge.",
+   "Hold nakken på linje med ryggen, og se ned.",
+   "Trættes lænden før ryggen, så brug mindre vægt eller en støttet roning."
+  ]
+ },
+ "dumbbell-curl": {
+  "name": "Bicepscurl med håndvægte",
+  "description": "Albuebøjning med en håndvægt i hver hånd for biceps i frit bevægeudslag.",
+  "instructions": [
+   "Stå med en håndvægt i hver hånd, armene langs kroppen og håndfladerne frem.",
+   "Hold albuerne mod overkroppen, og løft håndvægtene uden at svinge kroppen.",
+   "Spænd biceps et øjeblik øverst uden at løfte skuldrene.",
+   "Sænk kontrolleret til helt strakt albue."
+  ],
+  "tips": [
+   "Tag ikke fart med ryggen: er det nødvendigt, så sænk vægten.",
+   "Styr nedturen; den skal vare mindst dobbelt så længe som løftet."
+  ]
+ },
+ "dumbbell-farmers-walk": {
+  "name": "Farmer's walk med håndvægte",
+  "description": "Denne helkropsøvelse er gang med tunge håndvægte og opbygger effektivt gribestyrke, corestabilitet og generel udholdenhed.",
+  "instructions": [
+   "Stå ret med en håndvægt i hver hånd og armene langs siderne.",
+   "Træk skulderbladene tilbage, spænd core, og hold rygsøjlen neutral.",
+   "Gå langsomt og bevidst en fastsat distance eller tid med korte, kontrollerede skridt.",
+   "Hold brystet rankt, og undgå at hælde til siden, mens du går.",
+   "Hold en stærk og stabil holdning gennem hele bevægelsen."
+  ],
+  "tips": [
+   "Brug de tungeste håndvægte, du kan styre uden at gå på kompromis med teknikken.",
+   "Træk vejret dybt og rytmisk for at holde spændingen i core.",
+   "Forestil dig, at du balancerer et glas vand på hovedet."
+  ]
+ },
+ "dumbbell-front-raise": {
+  "name": "Frontløft med håndvægte",
+  "description": "Løft håndvægtene frem til skulderhøjde for den forreste deltamuskel.",
+  "instructions": [
+   "Stå med en håndvægt i hver hånd foran lårene og næsten strakte arme.",
+   "Løft håndvægtene frem til skulderhøjde med let bøjede albuer.",
+   "Stop i vandret uden at svinge overkroppen.",
+   "Sænk kontrolleret til lårene."
+  ],
+  "tips": [
+   "Brug ikke ryggen til at tage fart; gør du det, så sænk vægten.",
+   "Den forreste deltamuskel arbejder allerede meget i pres; overdriv ikke volumen."
+  ]
+ },
+ "dumbbell-reverse-fly": {
+  "name": "Omvendte flyes med håndvægte",
+  "description": "En foroverbøjet isolationsøvelse, hvor håndvægtene løftes ud til siderne for bageste deltamuskler og øvre ryg.",
+  "instructions": [
+   "Læn dig frem fra hoften med håndvægtene hængende i armene.",
+   "Hold ryggen ret og knæene let bøjede.",
+   "Løft håndvægtene ud til siderne til skulderhøjde.",
+   "Klem skulderbladene sammen øverst.",
+   "Sænk håndvægtene kontrolleret.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Brug let vægt, så bagskuldrene arbejder, ikke farten.",
+   "Klem skulderbladene godt sammen øverst.",
+   "Hold hele tiden en blød, fast bøjning i albuerne."
+  ]
+ },
+ "dumbbell-romanian-deadlift": {
+  "name": "Rumænsk dødløft med håndvægte",
+  "description": "En rumænsk dødløft med håndvægte, der fremhæver strækket i baglårene via hoftebøjning.",
+  "instructions": [
+   "Stå med håndvægte foran lårene og let bøjede knæ.",
+   "Bøj fra hoften, og skub ballerne bagud.",
+   "Sænk håndvægtene langs benene, til baglårene strækkes.",
+   "Hold ryggen ret og skuldrene tilbage.",
+   "Skub hofterne frem for at komme op at stå.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Gå så langt ned, som din smidighed tillader, uden at tvinge.",
+   "Hold samme bløde knæbøjning hele vejen.",
+   "Gør ikke bevægelsen til en squat."
+  ]
+ },
+ "dumbbell-shoulder-press": {
+  "name": "Skulderpres med håndvægte",
+  "description": "Et lodret håndvægtspres, siddende eller stående, der udvikler den forreste og midterste deltamuskel.",
+  "instructions": [
+   "Sid eller stå med håndvægtene i skulderhøjde og håndfladerne frem.",
+   "Pres begge håndvægte over hovedet, til armene er helt strakte.",
+   "Hold core spændt, og undgå at svaje i lænden.",
+   "Sænk håndvægtene kontrolleret til skulderhøjde.",
+   "Lad ikke håndvægtene vandre om bag hovedet.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Løft håndvægtene i en lige linje uden at slå dem sammen øverst.",
+   "Hold håndleddene faste og på linje med underarmene.",
+   "Svajer lænden, så sænk vægten."
+  ]
+ },
+ "dumbbell-shrug": {
+  "name": "Shrugs med håndvægte",
+  "description": "Skuldertræk med en håndvægt i hver hånd for øvre ryg og trapezius.",
+  "instructions": [
+   "Stå med en håndvægt i hver hånd, armene langs kroppen og blikket frem.",
+   "Løft skuldrene lige op mod ørerne uden at rotere dem eller bøje albuerne.",
+   "Hold spændingen et øjeblik øverst.",
+   "Sænk kontrolleret, til trapezius er helt strakt."
+  ],
+  "tips": [
+   "Lav ikke cirkler med skuldrene: bevægelsen er lodret.",
+   "Svigter grebet før trapezius, så brug straps."
+  ]
+ },
+ "dumbbell-single-leg-calf-raise": {
+  "name": "Etbens læghævning med håndvægt",
+  "description": "Etbens læghævning på et step med en håndvægt og den anden hånd som støtte for balancen.",
+  "instructions": [
+   "Stå på et step på forfoden af det ene ben, det andet bøjet og en håndvægt i samme sides hånd; støt den anden hånd mod en væg.",
+   "Lad hælen synke under steppet, til læggen strækkes.",
+   "Gå så højt op på tå, du kan, uden at bøje knæet.",
+   "Hold et øjeblik øverst, og sænk kontrolleret; gør gentagelserne færdige, og skift ben."
+  ],
+  "tips": [
+   "Skub fra storetåens rod uden at lade anklen vride udad.",
+   "Det er ensidigt: tag lige mange gentagelser med hvert ben."
+  ]
+ },
+ "elevated-pike-push-up": {
+  "name": "Pike push-up med hænderne hævet",
+  "description": "Begynderudgaven af pike push-up med hænderne på et step eller en stabil stol for mindre belastning.",
+  "instructions": [
+   "Sæt hænderne på kanten af et stabilt step, en bænk eller stol i skulderbredde, og gå fødderne bagud, til hoften løftes.",
+   "Bøj albuerne, og sænk hovedet mod støtten med høj hofte.",
+   "Stop, når hovedet er mellem hænderne, uden at miste positionen.",
+   "Pres med armene, til albuerne er strakte."
+  ],
+  "tips": [
+   "Ryk fødderne tættere på støtten for at gøre det sværere.",
+   "Tjek, at støtten ikke flytter sig, før du begynder."
+  ]
+ },
+ "face-pull": {
+  "name": "Face pull i kabel",
+  "description": "En kabeløvelse for bageste deltamuskler og udadrotatorer.",
+  "instructions": [
+   "Sæt et reb på en høj trisse.",
+   "Træk rebet mod ansigtet, mens du skiller enderne ad.",
+   "Klem bageste deltamuskler og udadrotatorer.",
+   "Vend kontrolleret tilbage til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold albuerne højt, på linje med skuldrene.",
+   "Saml skulderbladene til sidst i hver gentagelse.",
+   "Træn let, så teknikken ikke går tabt."
+  ]
+ },
+ "front-squat": {
+  "name": "Front squat",
+  "description": "En squat med stangen foran på deltamusklerne, der fremhæver forlår og core.",
+  "instructions": [
+   "Vend eller læg stangen på de forreste deltamuskler med høje albuer.",
+   "Gå ned med rank overkrop, til lårene er parallelle med gulvet.",
+   "Kom op igen.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold albuerne højt for at stabilisere stangen.",
+   "En mere lodret overkrop øger forlårenes aktivering."
+  ]
+ },
+ "glute-bridge": {
+  "name": "Glute bridge",
+  "description": "En øvelse med kropsvægt til at aktivere ballerne, liggende på gulvet.",
+  "instructions": [
+   "Lig på ryggen med bøjede knæ og fødderne fladt.",
+   "Løft hofterne ved at klemme ballerne sammen.",
+   "Hold kort øverst med helt strakte hofter.",
+   "Sænk hofterne kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Pres med hælene for bedre aktivering af ballerne.",
+   "Undgå at svaje i lænden, når hofterne strækkes.",
+   "Hold knæene på linje med fødderne hele vejen."
+  ]
+ },
+ "goblet-squat": {
+  "name": "Goblet squat",
+  "description": "En begyndervenlig squat med kettlebell i brysthøjde, der forbedrer holdning og dybde.",
+  "instructions": [
+   "Hold en kettlebell i brysthøjde med begge hænder.",
+   "Gå ned i squat med vægten tæt på brystet.",
+   "Kom op igen.",
+   "Gentag."
+  ],
+  "tips": [
+   "Goblet-positionen giver naturligt en rank overkrop.",
+   "Pres knæene udad nederst."
+  ]
+ },
+ "good-morning": {
+  "name": "Good morning",
+  "description": "Hoftebøjning med stangen på ryggen til at styrke baglår, baller og lænd.",
+  "instructions": [
+   "Stå med stangen øverst på ryggen, fødderne i skulderbredde og let bøjede knæ.",
+   "Før hofterne bagud, mens du læner overkroppen frem med neutral ryg.",
+   "Gå ned, til baglårene spændes, med overkroppen næsten vandret.",
+   "Skub hofterne frem for at rette dig op."
+  ],
+  "tips": [
+   "Begynd med meget let vægt: lænden arbejder hårdt.",
+   "Se frem, og rund ikke ryggen."
+  ]
+ },
+ "hack-squat": {
+  "name": "Hack squat",
+  "description": "En styret øvelse i hack squat-maskinen, der primært træner forlårene i et kontrolleret squatmønster på slæden.",
+  "instructions": [
+   "Læs hack squat-maskinen, og placér ryg og skuldre mod puderne.",
+   "Sæt fødderne i skulderbredde på pladen, let udadrettede.",
+   "Frigør sikringshåndtagene, og sænk slæden ved at bøje knæ og hofter.",
+   "Gå ned, til lårene mindst er parallelle med pladen.",
+   "Pres med hælene for at strække benene og føre slæden tilbage.",
+   "Sæt sikringshåndtagene på igen efter sættet."
+  ],
+  "tips": [
+   "Hold lænden mod puden gennem hele bevægelsen.",
+   "Fødderne højere på pladen flytter vægten til baller og baglår.",
+   "Styr nedturen; tag ikke fart fra bunden."
+  ]
+ },
+ "hammer-curl": {
+  "name": "Hammercurl med håndvægte",
+  "description": "En variant af bicepscurl med neutralt greb, der træner brachioradialis.",
+  "instructions": [
+   "Stå med håndvægtene langs siderne og håndfladerne mod hinanden.",
+   "Løft håndvægtene med håndfladerne indad.",
+   "Klem øverst, og sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold albuerne mod overkroppen hele vejen.",
+   "Undgå at svinge kroppen for at få håndvægtene op.",
+   "Håndleddene holdes faste og neutrale under hele curlen."
+  ]
+ },
+ "handstand-push-up": {
+  "name": "Håndstående armstræk",
+  "description": "Håndstående armstræk med fødderne mod væggen, en af de hårdeste presøvelser med kropsvægt.",
+  "instructions": [
+   "Stil dig med ryggen til væggen, sæt hænderne i gulvet, og gå fødderne op til lodret med spændt mave.",
+   "Bøj albuerne, og sænk kontrolleret hovedet mod gulvet.",
+   "Stop, når hovedet strejfer gulvet eller en måtte.",
+   "Pres med armene, til albuerne er helt strakte."
+  ],
+  "tips": [
+   "Øv først håndstanden og pike push-up.",
+   "Læg en måtte under hovedet for mere tryghed."
+  ]
+ },
+ "hanging-knee-raise": {
+  "name": "Hængende knæløft",
+  "description": "En coreøvelse hængende i en stang, der træner nedre mave og hoftebøjere med bøjede knæ.",
+  "instructions": [
+   "Hæng i stangen i overhåndsgreb med helt strakte arme.",
+   "Spænd core, og løft knæene mod brystet.",
+   "Hold kort øverst.",
+   "Sænk benene langsomt til start.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Undgå sving — start bevægelsen fra core.",
+   "Pust ud, når knæene løftes.",
+   "Gå videre til strakte benløft, når dette bliver let."
+  ]
+ },
+ "hanging-leg-raise": {
+  "name": "Hængende benløft",
+  "description": "Løft strakte ben til vandret, hængende i en stang, for mave og hoftebøjere.",
+  "instructions": [
+   "Hæng lidt bredere end skuldrene med samlede, strakte ben.",
+   "Løft de strakte ben parallelt med gulvet, og vip bækkenet let bagud.",
+   "Hold et øjeblik øverst uden at svinge.",
+   "Sænk kontrolleret til start uden at lade kroppen pendle."
+  ],
+  "tips": [
+   "Kan du ikke med strakte ben, så bøj knæene.",
+   "Undgå sving: brug maven, ikke farten."
+  ]
+ },
+ "hex-bar-deadlift": {
+  "name": "Dødløft med trap bar",
+  "description": "Dødløft stående inde i en trap bar, der holder vægten centreret for et mere oprejst og rygvenligt træk.",
+  "instructions": [
+   "Stå inde i en læsset trap bar med fødderne i skulderbredde.",
+   "Bøj hofter og knæ for at gribe håndtagene.",
+   "Spænd core, og hold ryggen flad.",
+   "Pres med hælene, og stræk hofter og knæ for at rejse dig.",
+   "Lås øverst med skuldrene tilbage.",
+   "Sænk stangen kontrolleret til gulvet."
+  ],
+  "tips": [
+   "Hold brystet oppe og ryggen flad, mens du justerer grebet.",
+   "Skub gulvet væk i stedet for at trække stangen med ryggen.",
+   "Stå helt ret øverst uden at læne dig bagud."
+  ]
+ },
+ "hip-abduction": {
+  "name": "Hofteabduktion i maskine",
+  "description": "En maskinøvelse for hoftens ydre muskler.",
+  "instructions": [
+   "Sæt dig i abduktionsmaskinen med puderne mod ydersiden af lårene.",
+   "Pres benene udad mod modstanden.",
+   "Hold kort i den yderste position.",
+   "Vend kontrolleret tilbage.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold ryggen mod maskinens ryglæn.",
+   "Åbn benene uden sving i et kontrolleret tempo.",
+   "Hold igen på vej ind i stedet for at slippe vægten."
+  ]
+ },
+ "hip-adduction": {
+  "name": "Hofteadduktion i maskine",
+  "description": "En maskinøvelse, hvor benene klemmes sammen mod modstand og isolerer og styrker inderlårenes adduktorer.",
+  "instructions": [
+   "Sæt dig i adduktionsmaskinen med ryggen mod ryglænet.",
+   "Placér benene mod puderne med maskinen indstillet til et behageligt stræk.",
+   "Pres benene sammen, til puderne mødes på midten.",
+   "Hold spændingen kort i helt lukket position.",
+   "Lad benene åbne kontrolleret tilbage til start.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Vælg en startåbning, der strækker uden at presse lysken.",
+   "Kør hele udslaget i jævn, kontrolleret fart.",
+   "Lad ikke vægtpladen slå i, når benene åbnes."
+  ]
+ },
+ "hip-thrust": {
+  "name": "Hip thrust med vægtstang",
+  "description": "En sammensat balleøvelse med en vægtstang hvilende på hofterne.",
+  "instructions": [
+   "Sid på gulvet med øvre ryg mod en bænk og stangen over hofterne.",
+   "Pres hofterne op, til overkrop og lår er på linje.",
+   "Klem ballerne øverst.",
+   "Sænk hofterne kontrolleret igen.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold hagen inde og ribbenene nede.",
+   "Pres gennem hælene, ikke tåspidserne.",
+   "Undgå at svaje i lænden øverst."
+  ]
+ },
+ "horizontal-leg-press": {
+  "name": "Vandret benpres",
+  "description": "Benpres i maskine i vandret position, der træner forlår, baller og baglår.",
+  "instructions": [
+   "Sid i den vandrette benpres med ryggen mod ryglænet og fødderne i skulderbredde på pladen.",
+   "Pres med fødderne for at strække benene uden at låse knæene.",
+   "Bøj knæene kontrolleret, til de nærmer sig brystet.",
+   "Gentag."
+  ],
+  "tips": [
+   "Lad ikke lænden slippe sædet.",
+   "Undgå at låse knæene helt."
+  ]
+ },
+ "incline-bench-press": {
+  "name": "Skrå bænkpres med vægtstang",
+  "description": "Et pres med vægtstang på skrå bænk, der træner øverste bryst.",
+  "instructions": [
+   "Lig på en skrå bænk på 30–45 grader.",
+   "Grib stangen lidt bredere end skuldrene, og løft den af.",
+   "Sænk stangen til øverste del af brystet.",
+   "Pres stangen op til fuld strækning.",
+   "Gentag."
+  ],
+  "tips": [
+   "Træk skulderbladene tilbage, og hold dem mod bænken.",
+   "Lad ikke stangen hoppe på brystet.",
+   "Få hjælp ved tunge vægte."
+  ]
+ },
+ "incline-bench-y-raise": {
+  "name": "Y-løft på skrå bænk",
+  "description": "Y-løft med håndvægte liggende på maven på en skrå bænk, for nedre og midterste trapezius.",
+  "instructions": [
+   "Lig på maven på en skrå bænk med brystet støttet og en let håndvægt hængende i hver hånd.",
+   "Løft armene frem og op i et Y med tommelfingrene mod loftet.",
+   "Stop, når armene er på linje med overkroppen, uden at løfte brystet.",
+   "Sænk kontrolleret til start."
+  ],
+  "tips": [
+   "Brug let vægt: nedre trapezius er en lille muskel.",
+   "Hold nakken neutral, og se ned."
+  ]
+ },
+ "incline-db-curl": {
+  "name": "Håndvægtscurl på skrå bænk",
+  "description": "En bicepscurl på skrå bænk for større stræk af det lange hoved.",
+  "instructions": [
+   "Sid på en bænk på 45 grader med håndvægtene langs siderne.",
+   "Lad armene hænge lige ned med håndfladerne frem.",
+   "Løft håndvægtene mod skuldrene.",
+   "Sænk kontrolleret til fuld strækning.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold skuldre og ryg mod bænken.",
+   "Skub ikke skuldrene frem, når du løfter.",
+   "Udnyt strækket nederst med en langsom nedtur."
+  ]
+ },
+ "incline-db-press": {
+  "name": "Skrå håndvægtspres",
+  "description": "Et skråt pres, der fremhæver øverste bryst.",
+  "instructions": [
+   "Indstil bænken til 30 grader, og sid med håndvægtene i skulderhøjde.",
+   "Pres håndvægtene op og sammen, til armene er helt strakte.",
+   "Sænk håndvægtene kontrolleret til skulderhøjde.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold fødderne solidt i gulvet og skulderbladene trukket sammen.",
+   "Undgå at slå håndvægtene sammen øverst.",
+   "Sænk, til du mærker et blidt stræk i brystet."
+  ]
+ },
+ "incline-push-ups": {
+  "name": "Skrå armstræk",
+  "description": "En begyndervenlig armstrækvariant med hænderne hævet på en bænk eller et step.",
+  "instructions": [
+   "Sæt hænderne på en bænk eller hævet flade i skulderbredde.",
+   "Stræk benene bagud i plankeposition.",
+   "Sænk brystet mod bænken ved at bøje albuerne.",
+   "Pres tilbage til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Spænd maven, så hoften ikke synker.",
+   "Jo højere flade, desto lettere øvelse.",
+   "Sørg for, at bænken ikke flytter sig, før du begynder."
+  ]
+ },
+ "inverted-row": {
+  "name": "Omvendt roning",
+  "description": "Et vandret træk med kropsvægt under en fast stang: brystet trækkes mod stangen med stiv krop.",
+  "instructions": [
+   "Placér en stang i et stativ cirka i taljehøjde.",
+   "Lig under den, og grib lidt bredere end skuldrene i overhåndsgreb.",
+   "Hæng med strakte arme, hælene i gulvet og kroppen lige fra hoved til ankler.",
+   "Træk brystet mod stangen, og klem skulderbladene sammen.",
+   "Sænk dig kontrolleret, til armene er helt strakte.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold core spændt — uden at hofterne synker.",
+   "Gør det sværere ved at hæve fødderne; lettere ved at gå fødderne mod stangen.",
+   "Hold kort pause øverst med brystet mod stangen."
+  ]
+ },
+ "kettlebell-tibialis-raise": {
+  "name": "Tibialisløft med kettlebell",
+  "description": "En skinnebensøvelse siddende på en bænk med en kettlebell hængende på forfoden. At løfte tæerne mod skinnebenet mod vægten styrker musklerne foran på underbenet.",
+  "instructions": [
+   "Sid på enden af en flad bænk med det ene ben strakt og hælen i gulvet.",
+   "Hæng en kettlebell i håndtaget over forfoden, oven på tæerne.",
+   "Løft tæerne mod skinnebenet så langt, det føles godt, mens hælen bliver i gulvet.",
+   "Hold kort øverst.",
+   "Sænk langsomt foden, til tæerne peger mod gulvet.",
+   "Gennemfør gentagelserne, og skift ben."
+  ],
+  "tips": [
+   "Bevægelsen sker kun i anklen; knæ og lår holdes stille.",
+   "Begynd med en let kettlebell, og øg gradvist; skinnebensmusklerne trættes hurtigt.",
+   "Sænk langsomt i stedet for at lade vægten falde."
+  ]
+ },
+ "kneeling-cable-row": {
+  "name": "Knælende kabelroning",
+  "description": "En kabelroning knælende med oprejst krop, der fjerner hoftesving og holder øvre ryg spændt hele vejen.",
+  "instructions": [
+   "Indstil trissen i brysthøjde, og sæt reb eller dobbelt D-håndtag på.",
+   "Knæl oprejst foran maskinen, langt nok væk til, at vægten ikke når stoppet.",
+   "Grib håndtaget med begge hænder, og hold det strakt frem i brysthøjde.",
+   "Træk håndtaget mod brystbenet med albuerne bagud og skulderbladene samlet.",
+   "Vend kontrolleret tilbage til den strakte startposition.",
+   "Gentag det anbefalede antal."
+  ],
+  "tips": [
+   "Bliv oprejst: læn dig ikke bagud for at afslutte gentagelsen.",
+   "Den oprejste knælende stilling tvinger core til at modstå rotation i hvert træk."
+  ]
+ },
+ "knee-push-ups": {
+  "name": "Armstræk på knæene",
+  "description": "En begyndervenlig armstræk med knæene i gulvet for mindre belastning af overkroppen.",
+  "instructions": [
+   "Start i armstrækposition med knæene i gulvet.",
+   "Placér hænderne i gulvet i skulderbredde.",
+   "Hold kroppen lige fra knæ til skuldre.",
+   "Sænk brystet mod gulvet ved at bøje albuerne.",
+   "Pres fra med hænderne tilbage til start.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Spred ikke albuerne for meget ud til siderne.",
+   "Spænd baller og mave hele vejen.",
+   "Se ned for at holde nakken neutral."
+  ]
+ },
+ "lateral-raise": {
+  "name": "Sidehævning med håndvægte",
+  "description": "En isolationsbevægelse for den midterste deltamuskel til bredere skuldre.",
+  "instructions": [
+   "Stå med håndvægtene langs siderne.",
+   "Løft håndvægtene ud til siderne, til armene er parallelle med gulvet.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Let bøjede albuer.",
+   "Før an med albuerne, ikke hænderne."
+  ]
+ },
+ "lat-pulldown": {
+  "name": "Nedtræk til brystet",
+  "description": "En kabelmaskinøvelse for den brede rygmuskel.",
+  "instructions": [
+   "Sid i nedtræksmaskinen med lårene fastholdt under rullerne.",
+   "Grib den brede stang i overhåndsgreb.",
+   "Træk stangen til øverste bryst, og klem latsene.",
+   "Før langsomt stangen tilbage.",
+   "Gentag."
+  ],
+  "tips": [
+   "Start trækket ved at sænke skulderbladene, ikke ved at bøje albuerne.",
+   "Undgå at svinge overkroppen for at flytte vægten.",
+   "Før albuerne ned og bagud, ikke udad."
+  ]
+ },
+ "leg-curl": {
+  "name": "Liggende leg curl",
+  "description": "En isolationsøvelse for baglårene i leg curl-maskinen.",
+  "instructions": [
+   "Lig på maven i maskinen med anklerne under rullen.",
+   "Træk hælene mod ballerne.",
+   "Spænd baglårene øverst.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold hofterne mod bænken hele vejen.",
+   "Undgå at svaje i lænden, når hælene løftes.",
+   "Vælg en vægt, der giver fuld, kontrolleret bevægelse."
+  ]
+ },
+ "leg-extension": {
+  "name": "Leg extension",
+  "description": "En isolationsøvelse for forlårene i maskine.",
+  "instructions": [
+   "Sid i leg extension-maskinen med anklerne bag rullen.",
+   "Stræk benene, til de er lige.",
+   "Spænd forlårene øverst.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Placér knæene ud for maskinens omdrejningspunkt.",
+   "Løft vægten uden at kaste den med sving.",
+   "Hold i håndtagene, så hoften bliver stabil i sædet."
+  ]
+ },
+ "leg-press": {
+  "name": "Benpres",
+  "description": "En sammensat maskinbevægelse for forlår og baller.",
+  "instructions": [
+   "Sid i benpressen med fødderne i skulderbredde på pladen.",
+   "Frigør sikringen, og sænk pladen ved at bøje knæene.",
+   "Pres pladen op, til benene er næsten strakte.",
+   "Lås ikke knæene øverst.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold lænden mod ryglænet hele tiden.",
+   "Gå kun så langt ned, at hoften ikke letter.",
+   "Hold knæene på linje med tåspidserne."
+  ]
+ },
+ "leg-press-calf-raise": {
+  "name": "Læghævning i benpres",
+  "description": "Læghævning ved at presse benpressens plade med forfødderne.",
+  "instructions": [
+   "Sid i pressen med næsten strakte ben og kun forfødderne på pladens kant.",
+   "Frigør sikringen, og lad hælene synke, så læggene strækkes.",
+   "Pres pladen med forfødderne, til du står på tå.",
+   "Hold et øjeblik øverst, og sænk kontrolleret."
+  ],
+  "tips": [
+   "Lås ikke knæene helt.",
+   "Tag fuldt udslag med pause nederst: det er der, stimulus opnås."
+  ]
+ },
+ "lying-leg-raise": {
+  "name": "Liggende benløft",
+  "description": "Løft begge ben liggende på ryggen for nedre mave og hoftebøjere.",
+  "instructions": [
+   "Lig på ryggen med samlede, strakte ben og hænderne under ballerne eller langs siderne.",
+   "Pres lænden i gulvet ved at spænde maven.",
+   "Løft benene, til de er lodrette, uden at svinge.",
+   "Sænk langsomt, uden at fødderne rører gulvet, eller ryggen svajer."
+  ],
+  "tips": [
+   "Letter lænden fra gulvet, så bøj knæene.",
+   "Styr nedturen: det er den, der træner maven mest."
+  ]
+ },
+ "machine-back-extension": {
+  "name": "Rygstræk i maskine",
+  "description": "En siddende isolationsøvelse for lænden: hofte og ben er låst, overkroppen presser bagud mod en polstret rulle og strækker rygsøjlen mod vægten.",
+  "instructions": [
+   "Sid i rygstrækmaskinen med fødderne på pladen, og indstil rullen øverst på ryggen lige under skulderbladene.",
+   "Grib sidehåndtagene, og lad overkroppen komme lidt frem: det er startpositionen.",
+   "Pres bagud mod rullen ved at strække ryggen, til overkroppen læner bagud og lænden er helt spændt.",
+   "Hold kort pause i fuld strækning, og vend kontrolleret tilbage mod modstanden.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Sæt rullen lige under skulderbladene: højere presser nakken, lavere mister du udslag.",
+   "Stræk fra lænden i stedet for at kaste hoved og skuldre bagud, og bevæg dig langsomt begge veje.",
+   "Stop i neutral strækning uden at tvinge ryggen videre, og begynd let: lænden svarer bedre på kontrollerede gentagelser end på tunge belastninger."
+  ]
+ },
+ "machine-bicep-curl": {
+  "name": "Bicepscurl i maskine",
+  "description": "En bicepscurl i maskine til isoleret armtræning.",
+  "instructions": [
+   "Sæt dig i maskinen, og indstil rullen efter dine armes længde.",
+   "Grib håndtagene i underhåndsgreb.",
+   "Træk håndtagene mod skuldrene.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold albuerne mod puden hele tiden.",
+   "Undgå at løfte skuldrene, når håndtagene løftes.",
+   "Sænk næsten til strakte arme uden at miste spændingen."
+  ]
+ },
+ "machine-calf-raise": {
+  "name": "Læghævning i maskine",
+  "description": "En stående isolationsøvelse i maskine for lægge og soleus i fuldt ankeludslag.",
+  "instructions": [
+   "Stil dig i lægmaskinen med forfødderne på pladen.",
+   "Placér skulderpuderne solidt.",
+   "Sænk hælene under pladen for fuld strækning.",
+   "Pres med forfødderne op på tå.",
+   "Spænd læggene øverst.",
+   "Sænk kontrolleret, og gentag."
+  ],
+  "tips": [
+   "Undgå at hoppe nederst, så spændingen ikke mistes.",
+   "Hold knæene strakte uden at låse dem.",
+   "Gå lodret op uden at vælte anklerne udad."
+  ]
+ },
+ "machine-chest-fly": {
+  "name": "Brystflyes i maskine",
+  "description": "En isolationsøvelse for brystet i en maskine, der samler armene i en bue foran kroppen.",
+  "instructions": [
+   "Sid i flyesmaskinen, og indstil sædet, så armene er i brysthøjde.",
+   "Hold armene med let bøjede albuer.",
+   "Før armene sammen foran brystet i en blød bue.",
+   "Spænd brystmusklen i det mest sammentrukne punkt.",
+   "Vend kontrolleret tilbage uden at slippe vægten.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Hold en let, konstant bøjning i albuen hele vejen.",
+   "Fokusér på at spænde brystet frem for at presse med armene.",
+   "Styr tilbageturen i stedet for at lade vægtstakken falde."
+  ]
+ },
+ "machine-reverse-fly": {
+  "name": "Omvendte flyes i maskine",
+  "description": "En siddende maskinøvelse for bageste deltamuskler, også kaldet omvendt pec deck: med front mod puden fører du begge håndtag ud og bagud i en bred bue mod vægten. Puden holder overkroppen stille, så arbejdet bliver bag på skuldrene og mellem skulderbladene.",
+  "instructions": [
+   "Indstil sædet, så håndtagene er i skulderhøjde, og sid med front mod maskinen og brystet mod puden.",
+   "Grib håndtagene med armene strakt frem og let bøjede albuer.",
+   "Hold skuldrene nede og væk fra ørerne, og spænd kroppen.",
+   "Før håndtagene ud og tilbage i en bred bue, styret af albuerne, til armene er omtrent på linje med skuldrene.",
+   "Saml skulderbladene kort uden at læne dig bagud væk fra puden.",
+   "Før langsomt håndtagene frem, og gentag det planlagte antal."
+  ],
+  "tips": [
+   "Styr med albuerne i stedet for at trække med hænderne, så bagskuldrene arbejder og ikke biceps.",
+   "Hold brystet på puden og nakken afslappet; læner du dig bagud eller løfter skuldrene, går belastningen til øvre trapezius.",
+   "Vælg en vægt, du kan sænke kontrolleret; lettere med langsom tilbageføring træner bagskuldrene bedre end sving med tung vægt."
+  ]
+ },
+ "machine-seated-crunch": {
+  "name": "Siddende crunch i maskine",
+  "description": "En isolationsøvelse for maven i siddende maskine, der bøjer rygsøjlen mod modstand.",
+  "instructions": [
+   "Sid i mavemaskinen, og grib håndtagene.",
+   "Placér brystpuden mod overkroppen.",
+   "Spænd maven, og bøj overkroppen frem og ned.",
+   "Spænd i yderstillingen.",
+   "Vend kontrolleret tilbage.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Start bevægelsen med maven, ikke armene.",
+   "Pust ud, mens du bøjer overkroppen.",
+   "Undgå at tage fart ved at svinge kroppen."
+  ]
+ },
+ "machine-shoulder-press": {
+  "name": "Skulderpres i maskine",
+  "description": "Et pres over hovedet i maskine for skuldrene.",
+  "instructions": [
+   "Sid i maskinen med ryggen mod ryglænet.",
+   "Grib håndtagene i skulderhøjde.",
+   "Pres håndtagene over hovedet, til armene er helt strakte.",
+   "Sænk kontrolleret til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Svaj ikke i lænden, når du presser.",
+   "Undgå at låse albuerne brat øverst.",
+   "Hold håndleddene faste og på linje med underarmene."
+  ]
+ },
+ "negative-pull-up": {
+  "name": "Negative pull-ups",
+  "description": "Den langsomme nedfase af pull-up, der opbygger styrken til hele pull-ups.",
+  "instructions": [
+   "Træd op på en bænk, eller hop, så hagen er over stangen, med greb lidt bredere end skuldrene.",
+   "Uden støtte sænker du kroppen meget langsomt over cirka tre til fem sekunder.",
+   "Styr bevægelsen, til armene er helt strakte.",
+   "Kom op igen med bænken eller et hop, og gentag."
+  ],
+  "tips": [
+   "Hold skuldrene væk fra ørerne på vej ned.",
+   "Når du mestrer fem langsomme gentagelser, så prøv at trække dig op selv."
+  ]
+ },
+ "nordic-hamstring-curl": {
+  "name": "Nordic hamstring curl",
+  "description": "En knæbøjningsøvelse, hvor overkroppen sænkes frem fra knælende stilling og træner baglårene excentrisk.",
+  "instructions": [
+   "Knæl på en måtte med anklerne fastholdt under en fast støtte.",
+   "Hold overkroppen rank og hofterne strakte.",
+   "Sænk kroppen langsomt frem, mens baglårene holder igen.",
+   "Tag fra med hænderne lige før gulvet.",
+   "Skub fra med hænderne tilbage til startpositionen.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Gå så langsomt ned som muligt: den excentriske fase er målet.",
+   "Hold hofterne strakte; knæk ikke i livet.",
+   "Brems med hænderne, og skub let, mens du bliver stærkere."
+  ]
+ },
+ "ohp": {
+  "name": "Overhead press med vægtstang",
+  "description": "En sammensat presbevægelse over hovedet for skuldre og triceps.",
+  "instructions": [
+   "Stå med fødderne i skulderbredde og stangen ved kravebenene.",
+   "Spænd core, og pres stangen over hovedet.",
+   "Lås albuerne øverst med stangen over midten af foden.",
+   "Sænk stangen til kravebenene.",
+   "Gentag."
+  ],
+  "tips": [
+   "Læn dig ikke for langt bagud.",
+   "Spænd ballerne for større stabilitet."
+  ]
+ },
+ "one-arm-seated-cable-row": {
+  "name": "Enarms siddende kabelroning",
+  "description": "En enarms siddende kabelroning for lats og øvre ryg, med front fremad, mens den aktive sides skulderblad bevæger sig kontrolleret frem og tilbage.",
+  "instructions": [
+   "Sæt dig ved kablet, og hold håndtaget med den arbejdende arm strakt.",
+   "Sæt fødderne solidt, sid ret, og spænd kroppen uden at læne dig tilbage.",
+   "Træk håndtaget mod de nederste ribben, mens skulderbladet trækkes tilbage.",
+   "Hold kort pause uden at dreje overkroppen eller løfte skulderen.",
+   "Stræk armen kontrolleret, gør sættet færdigt, og skift side."
+  ],
+  "tips": [
+   "Hold begge skuldre fremad gennem hele gentagelsen.",
+   "Før albuen tilbage tæt på kroppen i stedet for kun at bøje armen.",
+   "Lad skulderbladet gå frem i starten uden at runde lænden."
+  ]
+ },
+ "overhead-tricep-extension": {
+  "name": "Triceps over hovedet med håndvægt",
+  "description": "En isolationsøvelse for triceps, der fremhæver det lange hoved.",
+  "instructions": [
+   "Stående eller siddende holder du en håndvægt over hovedet med begge hænder.",
+   "Sænk håndvægten bag hovedet ved at bøje albuerne.",
+   "Stræk armene tilbage til start.",
+   "Hold albuerne tæt på hovedet hele øvelsen.",
+   "Gentag."
+  ],
+  "tips": [
+   "Bevæg kun underarmene, og hold alt andet stille.",
+   "Undgå at svaje i lænden, når håndvægten går ned.",
+   "Grib håndvægten under den øverste skive med begge håndflader."
+  ]
+ },
+ "parallel-bar-dips": {
+  "name": "Dips i parallelbarrer",
+  "description": "En kropsvægtsøvelse i parallelbarrer for bryst, triceps og skuldre.",
+  "instructions": [
+   "Støt dig på barrerne med strakte arme og kroppen hængende uden at røre gulvet.",
+   "Læn overkroppen let frem, og bøj albuerne for at sænke dig kontrolleret.",
+   "Stop, når skuldrene er i albuehøjde, uden at synke ned i leddet.",
+   "Pres med bryst og triceps, til armene er strakte igen."
+  ],
+  "tips": [
+   "Kan du ikke tage rene sæt, så brug assisteret dipsmaskine eller elastikker.",
+   "Gå ikke længere ned, end skulderen tåler uden ubehag."
+  ]
+ },
+ "paused-bench-press": {
+  "name": "Bænkpres med pause",
+  "description": "Bænkpres med et til to sekunders pause på brystet, der fjerner hoppet og forbedrer startstyrken.",
+  "instructions": [
+   "Lig på bænken med fødderne solidt, samlede skulderblade og stangen over brystet med greb lidt bredere end skuldrene.",
+   "Sænk stangen kontrolleret, til den strejfer brystet.",
+   "Hold stangen stille på brystet i et til to sekunder uden at slippe spændingen.",
+   "Pres stangen op, til albuerne er strakte."
+  ],
+  "tips": [
+   "Brug 10–15 % mindre vægt end i almindeligt pres.",
+   "Få en til at spotte, eller brug stativets sikkerhedsstænger."
+  ]
+ },
+ "pause-squat": {
+  "name": "Squat med pause",
+  "description": "Squat med pause nederst for kontrol og styrke uden hop.",
+  "instructions": [
+   "Læg stangen øverst på ryggen, fødder i skulderbredde og tæerne let udad.",
+   "Gå ned med styr på dybden, neutral ryg og knæene i fødderne retning.",
+   "Hold den nederste position et til tre sekunder uden at slappe af i kroppen.",
+   "Skub med fødderne, til du står ret igen."
+  ],
+  "tips": [
+   "Sænk vægten i forhold til din almindelige squat.",
+   "Hop ikke ud af pausen: pres jævnt."
+  ]
+ },
+ "pec-deck": {
+  "name": "Pec deck",
+  "description": "En isolationsmaskine for brystet med bevægelige håndtag, der træner brystmusklerne via vandret adduktion.",
+  "instructions": [
+   "Sid i pec deck-maskinen, og grib håndtagene med armene åbne og let bøjede albuer.",
+   "Indstil sædet, så håndtagene er midt på brystet.",
+   "Pres håndtagene sammen foran brystet.",
+   "Hold spændingen kort på midten.",
+   "Vend kontrolleret tilbage til startpositionen.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Lad ikke armene gå for langt bagud, når du åbner.",
+   "Hold ryg og skuldre mod ryglænet.",
+   "Pust ud, når håndtagene samles, og ind, når du åbner."
+  ]
+ },
+ "pendlay-row": {
+  "name": "Pendlay-roning",
+  "description": "Eksplosiv roning med vægtstang fra gulvet i hver gentagelse, med overkroppen parallel med gulvet.",
+  "instructions": [
+   "Med fødderne under stangen og overkroppen næsten vandret griber du lidt bredere end skuldrene med neutral ryg.",
+   "Træk stangen kraftigt, til den rører nederste bryst, med overkroppen i ro.",
+   "Sænk stangen kontrolleret til gulvet, og stop et øjeblik.",
+   "Indstil ryggen igen, og gentag fra gulvet."
+  ],
+  "tips": [
+   "Overkroppen går hverken op eller ned: bevæger den sig, er vægten for tung.",
+   "Hver gentagelse starter med stangen i ro på gulvet."
+  ]
+ },
+ "pike-push-up": {
+  "name": "Pike push-up",
+  "description": "Armstræk med kroppen som et omvendt V, der flytter belastningen fra bryst til skulder uden udstyr.",
+  "instructions": [
+   "Sæt hænderne i gulvet i skulderbredde, og løft hofterne til et omvendt V med næsten strakte ben.",
+   "Bøj albuerne, og sænk hovedet mod gulvet mellem hænderne.",
+   "Stop, når hovedet er tæt på gulvet, uden at støtte det.",
+   "Pres med armene, til albuerne er strakte, og du er tilbage ved start."
+  ],
+  "tips": [
+   "Jo tættere fødderne er på hænderne, desto sværere er øvelsen.",
+   "Hold hofterne højt hele vejen."
+  ]
+ },
+ "pistol-squat": {
+  "name": "Pistol squat",
+  "description": "Dyb etbens squat med det andet ben strakt frem, kun med kropsvægt.",
+  "instructions": [
+   "Stå på ét ben med det andet løftet foran og armene frem for balancen.",
+   "Bøj standknæet, og sænk kontrolleret med hælen i gulvet.",
+   "Gå så langt ned, du kan uden at miste teknikken, med det frie ben strakt frem.",
+   "Skub gulvet væk, til du står igen; gentag, og skift ben."
+  ],
+  "tips": [
+   "Begynd ved at holde i en støtte eller sætte dig på en kasse.",
+   "Hold knæet på linje med foden."
+  ]
+ },
+ "plank": {
+  "name": "Planke",
+  "description": "Statisk coreøvelse, der træner stabilitet ved at holde kroppen lige på underarme og tæer.",
+  "instructions": [
+   "Sæt underarmene i gulvet med albuerne under skuldrene og strakte ben.",
+   "Løft kroppen til en lige linje fra hoved til hæle.",
+   "Spænd mave og baller, og hold lænden neutral uden at lade hoften falde.",
+   "Træk vejret normalt, og hold positionen i den angivne tid."
+  ],
+  "tips": [
+   "Begynd med korte sæt i god kvalitet, før du forlænger tiden.",
+   "Synker lænden, så sæt knæene i gulvet eller forkort tiden."
+  ]
+ },
+ "plate-loaded-glute-drive": {
+  "name": "Glute drive i skivemaskine",
+  "description": "Hofteløft i skivebelastet ballemaskine, hvor ryglæn og plade fastlåser positionen, så hofterne strækkes mod vægten uden at stille en bænk op.",
+  "instructions": [
+   "Læs skiveholderne ens, og sæt dig med øvre ryg mod ryglænet og fødderne fladt på pladen.",
+   "Sænk puden eller stangen ned over hofterne, så den hviler i hoftefolden og ikke på maven.",
+   "Placér fødderne, så skinnebenene er lodrette, når hofterne er oppe, og hold i håndtagene.",
+   "Pres hofterne op, og klem ballerne, til lårene flugter med overkroppen, og hold et øjeblik.",
+   "Sænk kontrolleret til lige før bunden, og gentag det ønskede antal."
+  ],
+  "tips": [
+   "Læg puden i hoftefolden. At lade den ligge på maven er det eneste virkelig ubehagelige ved maskinen, og det løses ved at flytte puden, ikke ved mere polstring.",
+   "Afslut bevægelsen med hoften, ikke lænden. Åbner ribbenene sig øverst, er hoftestrækket slut, og du er begyndt at svaje — dér holder maskinen op med at træne ballerne.",
+   "Det er det hofteløft, man tager, når bænk og stang er optaget: ryglæn og plade er en del af stellet, så der er intet opsætningsarbejde at lave forkert."
+  ]
+ },
+ "preacher-curl": {
+  "name": "Preacher curl",
+  "description": "En curlvariant på preacher-bænk, der isolerer biceps.",
+  "instructions": [
+   "Sæt dig på preacher-bænken med armene på puden.",
+   "Hold en EZ-stang i underhåndsgreb.",
+   "Løft stangen mod skuldrene.",
+   "Sænk kontrolleret, til armene næsten er strakte.",
+   "Gentag."
+  ],
+  "tips": [
+   "Undgå at hoppe nederst i bevægelsen.",
+   "Hold håndleddene neutrale på EZ-stangen.",
+   "Løft stangen uden sving fra skuldre eller ryg."
+  ]
+ },
+ "pull-up": {
+  "name": "Pull-ups",
+  "description": "En sammensat kropsvægtsøvelse for den brede rygmuskel og biceps.",
+  "instructions": [
+   "Hæng i stangen i overhåndsgreb, lidt bredere end skulderbredde.",
+   "Træk dig op, til hagen er over stangen.",
+   "Sænk kontrolleret til fuldt hæng.",
+   "Gentag."
+  ],
+  "tips": [
+   "Undgå at svinge eller tage fart.",
+   "Aktivér latsene ved at føre albuerne nedad."
+  ]
+ },
+ "push-press": {
+  "name": "Push press",
+  "description": "Skulderpres med benafsæt, der tillader mere vægt end strengt overhead press.",
+  "instructions": [
+   "Stå med stangen øverst på bryst og skuldre, albuerne let frem og fødderne i hoftebredde.",
+   "Bøj knæene let med lodret overkrop, og stræk hofter og knæ eksplosivt.",
+   "Udnyt afsættet til at presse stangen op til strakte arme over hovedet.",
+   "Sænk stangen kontrolleret til brystet, og tag af med benene."
+  ],
+  "tips": [
+   "Kraften kommer fra benene, ikke fra at læne ryggen bagud.",
+   "Slut med stangen over issen og stabil krop."
+  ]
+ },
+ "push-up": {
+  "name": "Armstræk",
+  "description": "En grundlæggende kropsvægtsøvelse for bryst, skuldre og triceps.",
+  "instructions": [
+   "Start i høj planke med hænderne i skulderbredde.",
+   "Sænk kroppen, til brystet næsten rører gulvet.",
+   "Pres op til startpositionen.",
+   "Hold kroppen lige hele tiden.",
+   "Gentag."
+  ],
+  "tips": [
+   "Spænd mave og baller, så hoften ikke falder.",
+   "Spred ikke albuerne for meget; hold dem tæt på kroppen.",
+   "Hold nakken neutral, og se ned."
+  ]
+ },
+ "rack-pull": {
+  "name": "Rack pull",
+  "description": "Delvis dødløft fra knæhøjde, der overbelaster øvre ryg og hoftestræk.",
+  "instructions": [
+   "Læg stangen på støtterne i knæhøjde eller lige under, med fødderne i hoftebredde under den.",
+   "Grib stangen, spænd ryg og mave, og skub gulvet væk med fødderne.",
+   "Stræk hofter og knæ samtidig, til du står ret med skuldrene tilbage.",
+   "Sænk stangen kontrolleret, til den hviler på støtterne."
+  ],
+  "tips": [
+   "Sæt støtterne i en højde, hvor ryggen kan holdes neutral.",
+   "Overstræk ikke lænden til sidst."
+  ]
+ },
+ "reverse-lunge": {
+  "name": "Baglæns lunge med håndvægte",
+  "description": "En lungevariant med skridt bagud for bedre knæstabilitet.",
+  "instructions": [
+   "Stå med håndvægte langs siderne.",
+   "Træd bagud med ét ben, og sænk knæet mod gulvet.",
+   "Gå ned, til forreste lår er parallelt med gulvet.",
+   "Pres med forreste hæl tilbage til stående.",
+   "Gentag til begge sider."
+  ],
+  "tips": [
+   "Tag et så langt skridt bagud, at forreste knæ ikke går forbi foden.",
+   "Hold overkroppen rank og håndvægtene tæt på kroppen.",
+   "Tag samme antal gentagelser med hvert ben."
+  ]
+ },
+ "reverse-nordic-curl": {
+  "name": "Omvendt nordic curl",
+  "description": "En forlårsøvelse med kropsvægt på knæ, hvor overkroppen lænes kontrolleret bagud med strakt hofte.",
+  "instructions": [
+   "Knæl på en pude med knæene i hoftebredde, skinneben og vriste i gulvet og rank overkrop.",
+   "Hold hoften strakt og core aktiveret.",
+   "Læn langsomt overkroppen bagud med kroppen i en lige linje.",
+   "Gå så langt ned, som forlårene kan kontrollere.",
+   "Kom op igen til start.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Hold hoften strakt hele tiden uden at knække.",
+   "Gå kun så langt ned, som du kan styre bevægelsen.",
+   "Brug en pude under knæene for komfort."
+  ]
+ },
+ "romanian-deadlift": {
+  "name": "Rumænsk dødløft",
+  "description": "En hoftebøjning, der fremhæver baglår og baller.",
+  "instructions": [
+   "Stå med stangen i hoftehøjde i overhåndsgreb.",
+   "Før hofterne bagud, og læn overkroppen med let bøjede, næsten faste knæ.",
+   "Sænk stangen langs benene, til du mærker stræk i baglårene.",
+   "Skub hofterne frem for at komme op at stå.",
+   "Gentag."
+  ],
+  "tips": [
+   "Rund ikke nedre ryg; hold rygsøjlen neutral.",
+   "Gå kun så langt ned, du kan uden at miste holdningen.",
+   "Spænd latsene for at holde stangen tæt på kroppen."
+  ]
+ },
+ "rowing-machine": {
+  "name": "Romaskine",
+  "description": "En konditionsøvelse for hele kroppen i romaskinen: hvert tag presser med benene, fører overkroppen bagud og trækker håndtaget til ribbenene, så ben, ryg og arme arbejder i en uafbrudt cyklus.",
+  "instructions": [
+   "Sæt dig i romaskinen, spænd fødderne fast på fodpladerne, og grib håndtaget i overhåndsgreb.",
+   "Glid frem til indfangningen: skinneben lodrette, overkroppen lidt foran hoften og armene strakt mod svinghjulet.",
+   "Pres først med benene, og før sædet bagud, til knæene næsten er strakte.",
+   "Læn overkroppen bagud forbi lodret, og træk så håndtaget til de nedre ribben med albuerne forbi siderne.",
+   "Vend rækkefølgen på tilbagevejen — først armene frem, så overkroppen og til sidst bøjede knæ — og glid tilbage til indfangningen til næste tag.",
+   "Fortsæt i den tid, distance eller det antal tag, du ønsker."
+  ],
+  "tips": [
+   "Hold rækkefølgen: ben, overkrop, arme i trækket og arme, overkrop, ben på tilbagevejen. Bøjer du armene for tidligt, spildes den stærkeste del af taget.",
+   "Ro med flad ryg og aktiv core: en rundet lænd i indfangningen gør roning til rygsmerter i stedet for kondition.",
+   "Før håndtaget lige og vandret til de nedre ribben, og lad tilbagevejen være cirka dobbelt så langsom som trækket frem for at ryge tilbage."
+  ]
+ },
+ "seated-barbell-overhead-press": {
+  "name": "Siddende overhead press med vægtstang",
+  "description": "Siddende skulderpres med stang og ryglæn, så arbejdet samles i deltamusklen.",
+  "instructions": [
+   "Sid på en bænk med lodret ryglæn, grib lidt bredere end skuldrene, og hvil stangen øverst på brystet.",
+   "Pres stangen lige op, til albuerne er strakte.",
+   "Hold stangen over issen med samlede ribben.",
+   "Sænk kontrolleret til kravebenet."
+  ],
+  "tips": [
+   "Spænd baller og mave, så ryggen ikke svajer.",
+   "Før hovedet tilbage for at give stangen plads uden at presse nakken."
+  ]
+ },
+ "seated-cable-row": {
+  "name": "Siddende kabelroning",
+  "description": "En rygøvelse i kabelromaskine, hvor et håndtag trækkes mod overkroppen siddende.",
+  "instructions": [
+   "Sæt dig ved rostationen med fødderne på støtterne.",
+   "Hold håndtaget, og sid ret med let foroverhæld.",
+   "Før albuerne bagud, og træk håndtaget mod nedre mave.",
+   "Saml skulderbladene til sidst i trækket.",
+   "Stræk armene kontrolleret tilbage til start.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Hold overkroppen rank med minimalt sving.",
+   "Før albuerne lige bagud, ikke ud til siderne.",
+   "Saml skulderbladene til sidst i trækket."
+  ]
+ },
+ "seated-calf-raise": {
+  "name": "Siddende læghævning i maskine",
+  "description": "Siddende læghævning i maskine, målrettet soleusmusklen.",
+  "instructions": [
+   "Sæt dig i maskinen med puderne på lårene.",
+   "Sænk hælene så langt som muligt.",
+   "Løft dig op på forfødderne.",
+   "Sænk kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Det bøjede knæ slapper lægmusklen af, så soleus overtager mere arbejde.",
+   "Brug fuldt bevægeudslag."
+  ]
+ },
+ "seated-dumbbell-calf-raise": {
+  "name": "Siddende læghævning med håndvægte",
+  "description": "Siddende læghævning med håndvægte på lårene, der træner soleus med bøjet knæ.",
+  "instructions": [
+   "Sid på en bænk med forfoden på et step eller en skive og en håndvægt på hvert lår tæt på knæet.",
+   "Lad hælene synke så langt, du kan, for at strække læggen.",
+   "Løft hælene ved at presse med forfoden til toppen.",
+   "Hold et øjeblik øverst, og sænk kontrolleret."
+  ],
+  "tips": [
+   "Hold håndvægtene med hænderne, så de ikke glider.",
+   "Det bøjede knæ flytter arbejdet til soleus."
+  ]
+ },
+ "seated-dumbbell-lateral-raise": {
+  "name": "Siddende sidehævning med håndvægte",
+  "description": "En siddende isolationsøvelse, hvor håndvægtene løftes til siderne for midterste deltamuskler uden hjælp fra benene.",
+  "instructions": [
+   "Sid på en bænk med en håndvægt i hver hånd langs siderne.",
+   "Hold ryggen rank og core spændt.",
+   "Løft begge håndvægte ud til siderne til skulderhøjde.",
+   "Hold en let bøjning i albuerne.",
+   "Sænk håndvægtene kontrolleret.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Brug let vægt for at holde løftet strengt.",
+   "Før an med albuerne i stedet for hænderne.",
+   "Løft til skulderhøjde, og sænk kontrolleret."
+  ]
+ },
+ "seated-leg-curl": {
+  "name": "Siddende leg curl",
+  "description": "En siddende isolationsøvelse for baglårene i maskine med konstant spænding og mindre hoftebøjerinvolvering end den liggende variant.",
+  "instructions": [
+   "Indstil ryglæn og ankelpude, så knæene flugter med maskinens omdrejningspunkt.",
+   "Sid ret, læg bagsiden af anklerne på puden, og hold i håndtagene.",
+   "Bøj benene ned og bagud under sædet, så langt maskinen tillader.",
+   "Hold pause i fuld sammentrækning, og vend langsomt tilbage.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Hold ryggen fast mod ryglænet hele vejen.",
+   "Træk fødderne let mod skinnebenet i fuld sammentrækning for mere aktivering af baglårene.",
+   "Styr den excentriske fase — lad ikke vægten rive benene tilbage."
+  ]
+ },
+ "shrug": {
+  "name": "Shrugs med vægtstang",
+  "description": "En isolationsbevægelse for øvre trapezius.",
+  "instructions": [
+   "Stå med en vægtstang i strakte arme i overhåndsgreb.",
+   "Træk skuldrene lige op mod ørerne.",
+   "Hold kort øverst.",
+   "Sænk skuldrene kontrolleret.",
+   "Gentag."
+  ],
+  "tips": [
+   "Løft skuldrene lodret uden cirkler.",
+   "Brug ikke armene; albuerne er strakte hele tiden.",
+   "Tag ikke afsæt med benene for at løfte mere."
+  ]
+ },
+ "side-lying-hip-abduction": {
+  "name": "Sideliggende hofteabduktion",
+  "description": "En isolationsøvelse med kropsvægt for den mellemste ballemuskel og hoftens abduktorer.",
+  "instructions": [
+   "Lig på siden med benene oven på hinanden.",
+   "Hold nederste ben let bøjet.",
+   "Løft øverste ben mod loftet.",
+   "Sænk kontrolleret.",
+   "Gentag til begge sider."
+  ],
+  "tips": [
+   "Hold hofterne oven på hinanden hele øvelsen.",
+   "Undgå at vippe bækkenet."
+  ]
+ },
+ "side-lying-hip-adduction": {
+  "name": "Sideliggende hofteadduktion",
+  "description": "En sideliggende adduktionsøvelse, hvor nederste ben løftes mod tyngdekraften og træner hoften med kropsvægt.",
+  "instructions": [
+   "Lig på siden med nederste ben strakt.",
+   "Bøj øverste ben, og sæt foden fladt foran nederste lår.",
+   "Støt hovedet på nederste arm.",
+   "Løft nederste ben mod loftet.",
+   "Sænk benet kontrolleret.",
+   "Gør den ene side færdig, og skift."
+  ],
+  "tips": [
+   "Bevæg kun benet; hofte og overkrop er stille.",
+   "Løft benet uden sving, og sænk langsomt.",
+   "Ret skuldre, hofte og fødder ind, før du begynder."
+  ]
+ },
+ "side-plank": {
+  "name": "Sideplanke",
+  "description": "En sideplankevariant for skrå mavemuskler og sidecore.",
+  "instructions": [
+   "Lig på siden med underarmen i gulvet og albuen under skulderen.",
+   "Løft hofterne til en lige linje fra hoved til fødder.",
+   "Hold positionen med spændt core.",
+   "Træk vejret roligt.",
+   "Gentag til begge sider."
+  ],
+  "tips": [
+   "Lad ikke hoften synke mod gulvet.",
+   "Hold skuldre og hofte i samme plan uden at dreje overkroppen.",
+   "Skub mod gulvet med underarmen, så du ikke hænger i skulderen."
+  ]
+ },
+ "single-arm-db-row": {
+  "name": "Enarms håndvægtsroning",
+  "description": "En ensidig rygøvelse med håndvægt for balanceret udvikling.",
+  "instructions": [
+   "Sæt det ene knæ og den ene hånd på en bænk som støtte.",
+   "Hold en håndvægt i den anden hånd med strakt arm.",
+   "Træk håndvægten mod hoften, og klem skulderbladet.",
+   "Sænk håndvægten kontrolleret.",
+   "Gentag til begge sider."
+  ],
+  "tips": [
+   "Drej ikke overkroppen i trækket; hold hoften stabil.",
+   "Træk ikke skulderen mod øret, når trækket starter.",
+   "Tag samme antal gentagelser med hver arm."
+  ]
+ },
+ "single-arm-plate-loaded-lateral-raise": {
+  "name": "Enarms sidehævning i skivemaskine",
+  "description": "Sidehævning i skivemaskine med én arm ad gangen, så hver side løfter sin egen vægt, og begge kan trænes til samme niveau.",
+  "instructions": [
+   "Indstil sædehøjden, så pudens akse flugter med skulderen, og læs kun den side, du vil træne.",
+   "Sid med ryggen mod ryglænet, og læg ydersiden af den arbejdende arm mod puden.",
+   "Hold i den frie sides håndtag eller læg hånden i skødet, og hold overkroppen på linje med sædet.",
+   "Pres den arbejdende arm ud og op mod puden til skulderhøjde, og sænk kontrolleret.",
+   "Tag alle gentagelser på den side, læs så og træn den anden."
+  ],
+  "tips": [
+   "Match siderne efter den svage arm, ikke den stærke. At træne én side ad gangen afslører kun en ubalance, hvis den svage side bestemmer antallet.",
+   "Lad ikke overkroppen læne mod den arbejdende side. Med vægt på kun én arm balancerer maskinen ikke selv, og læner du dig, bliver løftet til en sidebøjning.",
+   "Begynd med den svage arm, så den sætter målet, og giv begge sider samme hvile."
+  ]
+ },
+ "single-leg-glute-bridge": {
+  "name": "Etbens glute bridge",
+  "description": "Glute bridge på ét støtteben, der øger kravet uden ekstra udstyr.",
+  "instructions": [
+   "Lig på ryggen med det ene knæ bøjet og foden i gulvet, det andet ben strakt i luften.",
+   "Pres gennem støttebenets hæl, og løft hoften, til skulder, hofte og knæ er på linje.",
+   "Klem ballen et øjeblik øverst uden at svaje i lænden.",
+   "Sænk kontrolleret uden at hvile hoften; gør gentagelserne færdige, og skift ben."
+  ],
+  "tips": [
+   "Hold bækkenet vandret uden at lade en hofte falde.",
+   "Begynd med glute bridge på to ben, hvis det er svært."
+  ]
+ },
+ "skull-crusher": {
+  "name": "Skull crusher",
+  "description": "Liggende tricepsstræk med vægtstang, der isolerer triceps i fuldt udslag.",
+  "instructions": [
+   "Lig på en flad bænk med stangen over brystet i smalt greb.",
+   "Sænk stangen mod panden ved at bøje albuerne.",
+   "Stræk armene tilbage til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold overarmene lodrette hele øvelsen.",
+   "Sænk langsomt for at skåne albuerne."
+  ]
+ },
+ "smith-machine-bench-press": {
+  "name": "Bænkpres i Smith-maskine",
+  "description": "Bænkpres i Smith-maskinen, hvor den styrede bane gør det muligt at træne brystet med mindre krav til stabilisering.",
+  "instructions": [
+   "Lig på en flad bænk inde i Smith-maskinen.",
+   "Grib stangen lidt bredere end skulderbredde, og lås den op.",
+   "Sænk stangen kontrolleret til midten af brystet.",
+   "Hold kort pause uden hop.",
+   "Pres stangen op til helt strakte arme.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Ret bænken til, så stangen går ned midt på brystet.",
+   "Hold fødderne solidt i gulvet hele sættet.",
+   "Lær håndledsdrejet, der hægter stangen, før du læsser vægt på."
+  ]
+ },
+ "smith-machine-calf-raise": {
+  "name": "Læghævning i Smith-maskine",
+  "description": "Stående læghævning med Smith-maskinens styrede stang på skuldrene.",
+  "instructions": [
+   "Stil dig under Smith-stangen med forfoden på et step eller en skive og stangen øverst på ryggen.",
+   "Frigør stangen, og lad hælene synke, til læggene strækkes.",
+   "Gå op på tå med strakte ben uden at låse knæene.",
+   "Hold et øjeblik øverst, og sænk kontrolleret, før stangen hægtes på."
+  ],
+  "tips": [
+   "Skinnen stabiliserer dig: udnyt det til mere vægt.",
+   "Hold overkroppen rank og blikket frem."
+  ]
+ },
+ "smith-machine-incline-bench-press": {
+  "name": "Skrå pres i Smith-maskine",
+  "description": "Skråt pres i Smith-maskine, der fremhæver øverste bryst og forreste deltamuskler i en styret bane.",
+  "instructions": [
+   "Stil en skrå bænk på 30–45 grader inde i Smith-maskinen.",
+   "Læg dig, og grib stangen lidt bredere end skulderbredde.",
+   "Lås op, og sænk stangen til øverste bryst.",
+   "Hold kort pause nederst.",
+   "Pres stangen op til strakte arme.",
+   "Gentag det ønskede antal gentagelser."
+  ],
+  "tips": [
+   "Indstil bænken, så stangen rammer øverste bryst.",
+   "Sænk stangen uden at lade den hoppe på brystet.",
+   "Hold ballerne på bænken og fødderne solidt."
+  ]
+ },
+ "smith-machine-squat": {
+  "name": "Squat i Smith-maskine",
+  "description": "Squat med Smith-maskinens styrede stang: den faste bane mindsker balancekravet og lægger arbejdet i ben og baller, et godt valg når intet stativ er ledigt.",
+  "instructions": [
+   "Indstil stangen i skulderhøjde, og stil dig under den med stangen øverst på ryggen og fødderne lidt foran.",
+   "Drej håndleddene for at frigøre krogene, og hold overkroppen rank og core aktiv.",
+   "Bøj knæ og hofter, til lårene mindst er parallelle med gulvet, med knæene i fødderne retning.",
+   "Pres hele foden mod gulvet, til du står igen.",
+   "Efter sættet drejer du håndleddene og hægter stangen på stoppene."
+  ],
+  "tips": [
+   "Lidt fremskudte fødder lader dig gå dybere, uden at hælene letter.",
+   "Sæt sikkerhedsstoppene lige under det laveste punkt i din bevægelse."
+  ]
+ },
+ "squat": {
+  "name": "Back squat med vægtstang",
+  "description": "En sammensat underkropsbevægelse for forlår, baller og baglår.",
+  "instructions": [
+   "Læg stangen over øvre trapezius.",
+   "Løft stangen af stativet, og træd et skridt tilbage med fødderne i skulderbredde.",
+   "Spænd core, og bøj knæ og hofter, til lårene er parallelle med gulvet.",
+   "Pres gennem hælene tilbage til stående.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold brystet oppe hele vejen.",
+   "Pres knæene udad i tæernes retning."
+  ]
+ },
+ "standing-ab-wheel-rollout": {
+  "name": "Stående mavehjul",
+  "description": "Rollout med mavehjul startende stående, med strakte ben og stort udslag.",
+  "instructions": [
+   "Stå med strakte ben, bøj forover, og sæt mavehjulet i gulvet med begge hænder.",
+   "Rul frem med strakte arme og spændt mave, til du næsten er parallel med gulvet.",
+   "Hold hofterne på linje uden at lade lænden falde.",
+   "Træk med maven for at rulle tilbage til start."
+  ],
+  "tips": [
+   "Begynd med den knælende udgave, til du styrer udslaget.",
+   "Stop, før lænden synker."
+  ]
+ },
+ "standing-calf-raise": {
+  "name": "Stående hælhævning",
+  "description": "Stående læghævning, der udvikler lægmusklen i fuldt udslag.",
+  "instructions": [
+   "Stå på kanten af en platform eller lægmaskine.",
+   "Sænk hælene under platformen.",
+   "Pres op på tå.",
+   "Sænk langsomt.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold pause øverst for størst sammentrækning.",
+   "At sænke hælen helt øger bevægeudslaget."
+  ]
+ },
+ "standing-hip-abduction": {
+  "name": "Stående hofteabduktion",
+  "description": "Et sideløft af benet med kropsvægt, stående på det andet. Træner den mellemste ballemuskel på den løftede side og, i støttebenet, musklerne der holder hofterne vandrette.",
+  "instructions": [
+   "Stå ret med hænderne i siden og samlede fødder.",
+   "Flyt vægten til det ene ben, og hold det knæ let bøjet.",
+   "Løft det andet strakte ben ud til siden med tæerne frem og rank overkrop.",
+   "Løft kun benet så højt, du kan uden at læne overkroppen den modsatte vej.",
+   "Sænk benet langsomt ned ved siden af standfoden.",
+   "Gennemfør det planlagte antal, og gentag med det andet ben."
+  ],
+  "tips": [
+   "Hold hofterne lige og kroppen stille; læner du dig væk fra det løftede ben, mister hoften arbejde.",
+   "Styr også nedturen; lad ikke benet svinge.",
+   "Hold fast i en væg eller stol, hvis balancen svigter; læg en elastik om lårene, når bevægelsen bliver let."
+  ]
+ },
+ "step-ups": {
+  "name": "Step-up",
+  "description": "Et step-up på kasse eller bænk med ét ben, der træner forlår og baller funktionelt.",
+  "instructions": [
+   "Stå foran en solid kasse eller bænk.",
+   "Sæt hele den ene fod på kassens flade.",
+   "Pres gennem den hæl for at løfte kroppen op på kassen.",
+   "Sæt den bageste fod op, så du står helt på kassen.",
+   "Sænk bageste fod kontrolleret til gulvet, mens vægten bliver på det arbejdende ben.",
+   "Skift mellem benene, eller tag alle gentagelser på én side, før du skifter."
+  ],
+  "tips": [
+   "Sæt hele foden på kassens flade.",
+   "Skub fra med hælen på det ben, der går op, ikke det bageste.",
+   "Styr nedturen i stedet for at falde."
+  ]
+ },
+ "straight-arm-pulldown": {
+  "name": "Nedtræk med strakte arme",
+  "description": "En isolationsøvelse for latsene i kabel med strakte arme.",
+  "instructions": [
+   "Stå foran et kabel med lige stang på den øvre trisse.",
+   "Med næsten strakte arme presser du stangen ned i en bue mod lårene.",
+   "Klem latsene nederst.",
+   "Før langsomt stangen tilbage.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold armene næsten strakte hele vejen.",
+   "Før stangen til lårene i en bue.",
+   "Klem latsene nederst i bevægelsen."
+  ]
+ },
+ "sumo-deadlift": {
+  "name": "Sumodødløft",
+  "description": "En dødløftvariant med meget bred stance og smalt greb, der flytter arbejdet til baller, inderlår og forlår.",
+  "instructions": [
+   "Stå meget bredt med tæerne let udad og stangen over midten af foden.",
+   "Grib stangen med hænderne inden for benene, neutral ryg og løftet bryst.",
+   "Skub gulvet væk med benene, og pres knæene udad, til du står med stangen tæt på kroppen.",
+   "Lås hofte og knæ øverst, og sænk stangen kontrolleret samme vej."
+  ],
+  "tips": [
+   "Hold altid stangen tæt på kroppen.",
+   "Knæene følger tæernes retning; lad dem ikke falde indad."
+  ]
+ },
+ "t-bar-row": {
+  "name": "T-bar-roning",
+  "description": "En sammensat T-bar-roning med foroverbøjet overkrop, der udvikler lats og rhomboideer med tunge vægte.",
+  "instructions": [
+   "Stil dig over T-baren med fødderne i skulderbredde.",
+   "Bøj i hoften, til overkroppen er cirka 45 grader.",
+   "Grib håndtagene, og hold ryggen flad.",
+   "Træk stangen mod brystet med albuerne bagud.",
+   "Klem skulderbladene sammen øverst.",
+   "Sænk stangen kontrolleret, og gentag."
+  ],
+  "tips": [
+   "Læn overkroppen cirka 45 grader med flad ryg.",
+   "Træk ved at føre albuerne bagud, ikke kun med armene.",
+   "Saml skulderbladene øverst i trækket."
+  ]
+ },
+ "tricep-pushdown": {
+  "name": "Triceps pushdown i kabel",
+  "description": "En isolationsøvelse for triceps i kabel.",
+  "instructions": [
+   "Stå foran et kabel med lige stang.",
+   "Grib stangen, og hold albuerne ind til siderne.",
+   "Pres stangen ned til helt strakte arme.",
+   "Vend langsomt tilbage til start.",
+   "Gentag."
+  ],
+  "tips": [
+   "Hold overkroppen rank.",
+   "Kun underarmene må bevæge sig."
+  ]
+ },
+ "trx-hamstring-curl": {
+  "name": "Leg curl med TRX",
+  "description": "Denne isolationsøvelse bruger en slyngetræner til baglår, baller og lægge ved at trække hælene mod ballerne.",
+  "instructions": [
+   "Lig på ryggen med hælene i slyngerne og knæene bøjet 90 grader.",
+   "Løft hofterne fra gulvet til en lige linje fra knæ til skuldre.",
+   "Stræk benene frem, mens hofterne holdes oppe og core spændt.",
+   "Træk hælene mod ballerne med kraftig spænding i baglårene.",
+   "Styr bevægelsen, og undgå, at hofterne falder gennem sættet."
+  ],
+  "tips": [
+   "Hold core spændt, så hofterne ikke synker.",
+   "Fokusér på kraftig spænding i baglårene på toppen af curlen.",
+   "Styr den excentriske fase ved langsomt at strække benene."
+  ]
+ },
+ "v-bar-lat-pulldown": {
+  "name": "Nedtræk med V-greb",
+  "description": "Nedtræk med neutralt greb på et smalt V-håndtag, der giver maksimalt stræk i latsene og dybere sammentrækning.",
+  "instructions": [
+   "Sæt et V-håndtag (dobbelt D) på nedtrækskablet.",
+   "Sid med lårene fastholdt under puden, og grib håndtaget med håndfladerne mod hinanden.",
+   "Start med armene helt strakte over hovedet.",
+   "Træk håndtaget mod brystbenet ved at presse albuerne ned og let bagud.",
+   "Klem latsene nederst, og før langsomt og kontrolleret op.",
+   "Gentag det anbefalede antal."
+  ],
+  "tips": [
+   "Neutralt greb er skånsommere for skuldrene end over- eller underhåndsgreb.",
+   "Forestil dig, at du trækker ribbenene mod hofterne: tænk på latsene, ikke armene."
+  ]
+ },
+ "walking-lunge": {
+  "name": "Gående lunges med håndvægte",
+  "description": "Skiftende udfald fremad med en håndvægt i hver hånd; træner forlår og baller ensidigt.",
+  "instructions": [
+   "Stå med en håndvægt i hver hånd og afslappede arme langs siderne.",
+   "Tag et langt skridt frem, og sænk, til begge knæ er bøjet cirka 90 grader.",
+   "Skub fra med forreste ben for at rejse dig, og før bageste ben frem i næste skridt.",
+   "Skift ben med rank overkrop hele vejen."
+  ],
+  "tips": [
+   "Tag så lange skridt, at forreste knæ ikke går langt forbi tåspidsen.",
+   "Du skal bruge fri plads; har du ikke det, så brug baglæns lunges."
+  ]
+ },
+ "weighted-dip": {
+  "name": "Dips med vægt",
+  "description": "Dips i parallelbarrer med ekstra vægt, med en håndvægt mellem fødderne eller vægtvest.",
+  "instructions": [
+   "Støt dig på barrerne med strakte arme og en håndvægt holdt mellem fødder eller ankler.",
+   "Læn overkroppen let, og bøj albuerne for at sænke dig kontrolleret.",
+   "Stop, når skuldrene er i albuehøjde.",
+   "Pres med bryst og triceps til strakte arme."
+  ],
+  "tips": [
+   "Mestr først dips med kropsvægt.",
+   "Gå ikke længere ned, end skulderen tåler."
+  ]
+ },
+ "weighted-pull-up": {
+  "name": "Pull-ups med vægt",
+  "description": "Pull-up med ekstra vægt, med en håndvægt mellem fødderne eller vægtvest.",
+  "instructions": [
+   "Hæng lidt bredere end skuldrene, og hold en håndvægt mellem fødder eller ankler.",
+   "Træk albuerne ned og bagud, til hagen er over stangen.",
+   "Hold kroppen stabil uden sving.",
+   "Sænk kontrolleret til helt strakte arme."
+  ],
+  "tips": [
+   "Mestr først pull-ups med kropsvægt.",
+   "Bruger du vægtvest, så øg vægten gradvist."
+  ]
+ },
+ "wide-grip-seated-cable-row": {
+  "name": "Siddende kabelroning med bredt greb",
+  "description": "Vandret kabelroning med lang stang og bredt greb, der belaster øvre ryg og bagskulder.",
+  "instructions": [
+   "Sid foran den lave trisse med fødderne på støtten, let bøjede knæ og bredt greb om den lange stang.",
+   "Med rank ryg og løftet bryst trækker du stangen mod nederste bryst med albuerne ud og bagud.",
+   "Saml skulderbladene til sidst, og hold spændingen et øjeblik.",
+   "Stræk armene kontrolleret, og lad skulderbladene glide fra hinanden uden at runde ryggen."
+  ],
+  "tips": [
+   "Sving ikke: ryggen laver bevægelsen, ikke overkroppen.",
+   "Før stangen til brystet, ikke maven, for at belaste øvre ryg."
+  ]
+ },
+ "zercher-squat": {
+  "name": "Zercher squat",
+  "description": "Squat med stangen i albuebøjningen, der flytter vægten frem og kræver meget af kroppens kerne.",
+  "instructions": [
+   "Placér stangen i mavehøjde i albuebøjningen med krydsede underarme eller samlede næver.",
+   "Bøj hofter og knæ med løftet bryst og albuerne tæt på kroppen.",
+   "Stop, når lårene er parallelle med gulvet eller lidt under.",
+   "Skub med fødderne, til du står ret igen."
+  ],
+  "tips": [
+   "Brug en pude eller et håndklæde på stangen, hvis den generer albuerne.",
+   "Hold maven spændt, så du ikke tipper forover."
+  ]
+ },
+ "z-press": {
+  "name": "Z press",
+  "description": "Overhead press siddende på gulvet med strakte ben, der fjerner støtten og kræver stabil kerne.",
+  "instructions": [
+   "Sid på gulvet med benene strakt frem og stangen øverst på brystet.",
+   "Hold overkroppen rank, og pres stangen lige op til strakte arme.",
+   "Stop stangen over issen uden at læne dig bagud.",
+   "Sænk kontrolleret til kravebenet."
+  ],
+  "tips": [
+   "Brug mindre vægt end stående: kroppen skal stabilisere.",
+   "Spænd baller og mave hele vejen."
+  ]
+ }
+}
