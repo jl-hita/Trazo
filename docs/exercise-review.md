@@ -96,3 +96,56 @@ lesiones; siguen abiertas a la revisión de un entrenador.
 4. **Aperturas con mancuernas con limitación de hombro: se evitan.** Las fuentes de entrenadores la señalan como la apertura
    más exigente para el hombro; no hay datos controlados de lesiones. Ante una limitación declarada pesa la prudencia: el
    pecho sigue entrenándose con press, con el coste de volumen indicado arriba. Es la decisión más discutible del lote.
+
+## Lote 2 · Tirón, espalda y bíceps (35 ejercicios, 2026-11-26)
+
+4 cambiados, 31 sin cambios. El face pull y la separación con banda se revisaron en el lote 1.
+
+| Ejercicio | Decisión |
+|---|---|
+| `assisted-pull-ups` | Sin cambios |
+| `band-lat-pulldown` | Sin cambios |
+| `band-row` | Sin cambios |
+| `barbell-curl` | Sin cambios |
+| `barbell-row` | Sin cambios |
+| `bent-knee-inverted-row` | **Cambiado.** Deja de evitarse con limitación lumbar: la barra es solo el soporte, no hay carga axial. La exclusión venía de que exige barra. |
+| `cable-curl` | Sin cambios |
+| `chest-supported-db-row` | Sin cambios |
+| `chest-supported-kettlebell-row` | Sin cambios |
+| `chest-supported-machine-row` | Sin cambios |
+| `chest-supported-t-bar-row` | Sin cambios |
+| `chin-ups` | Sin cambios |
+| `dumbbell-bent-over-row` | Sin cambios |
+| `dumbbell-curl` | Sin cambios |
+| `dumbbell-shrug` | Sin cambios |
+| `hammer-curl` | Sin cambios |
+| `incline-bench-y-raise` | Sin cambios |
+| `incline-db-curl` | Sin cambios |
+| `inverted-row` | **Cambiado.** Deja de evitarse con limitación lumbar: la barra es solo el soporte, no hay carga axial. La exclusión venía de que exige barra. |
+| `kneeling-cable-row` | **Cambiado.** La espalda alta pasa a primaria, como en los demás remos en polea; antes no contaba ninguna serie para ella. |
+| `lat-pulldown` | Sin cambios |
+| `machine-bicep-curl` | Sin cambios |
+| `negative-pull-up` | Sin cambios |
+| `one-arm-seated-cable-row` | Sin cambios |
+| `pendlay-row` | Sin cambios |
+| `preacher-curl` | **Cambiado.** Prioridad 72, como los demás curls: nada justifica dejarlo detrás (mismo criterio que el pec deck). |
+| `pull-up` | Sin cambios |
+| `seated-cable-row` | Sin cambios |
+| `shrug` | Sin cambios |
+| `single-arm-db-row` | Sin cambios |
+| `straight-arm-pulldown` | Sin cambios |
+| `t-bar-row` | Sin cambios |
+| `v-bar-lat-pulldown` | Sin cambios |
+| `weighted-pull-up` | Sin cambios |
+| `wide-grip-seated-cable-row` | Sin cambios |
+
+### Efecto en los planes
+
+Comparados con el resultado del lote 1 en las mismas 1.890 combinaciones: cambian 24, todas por selección. Casi todas son planes con
+limitación lumbar que ahora pueden usar el remo invertido en lugar de repetir remos en polea. Ninguna deja de generar plan. Las
+combinaciones probadas apenas usan el banco Scott ni el remo en polea de rodillas, así que esos cambios casi no se notan en ellas.
+
+### Convenciones que se mantienen
+
+- En los tirones verticales la espalda alta no cuenta como serie; en los remos es primaria.
+- El antebrazo y los erectores en remos con barra no cuentan: su trabajo es de agarre o isométrico.
