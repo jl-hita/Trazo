@@ -101,7 +101,8 @@ export const LANDING_LANGUAGES: LandingLanguage[] = [
   { code: 'tr', path: 'tr', name: 'Türkçe', load: () => import('./i18n/tr').then(m => m.default) },
   { code: 'ko', path: 'ko', name: '한국어', load: () => import('./i18n/ko').then(m => m.default) },
   { code: 'ja', path: 'ja', name: '日本語', load: () => import('./i18n/ja').then(m => m.default) },
-  { code: 'zh', path: 'zh', name: '中文', load: () => import('./i18n/zh').then(m => m.default) }
+  { code: 'zh', path: 'zh', name: '中文', load: () => import('./i18n/zh').then(m => m.default) },
+  { code: 'ar', path: 'ar', name: 'العربية', rtl: true, load: () => import('./i18n/ar').then(m => m.default) }
 ];
 
 export const landingLanguage = (code: string | null | undefined): LandingLanguage =>
