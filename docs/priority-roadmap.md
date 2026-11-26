@@ -216,7 +216,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 
 | ID | PR | Objetivo y criterios de aceptación | Depende | Estado | PR | Pruebas |
 |---|---|---|---|---|---|---|
-| P0-0 | Roadmap | Este documento, enlazado desde #48 | — | En curso | — | solo documentación |
+| P0-0 | Roadmap | Este documento, enlazado desde #48 | — | Hecho | #238 | solo documentación |
 | P0-1 | Validador único e informe de divergencias | Mismas reglas en seeder, panel e importador; CI/consola listan diferencias producción–seed; ningún dato cambia | D1 | Pendiente | | |
 | P0-2 | Metadatos nuevos en datos | Migración y seed con R1; panel y API; valores equivalentes a las tablas | P0-1, D4 | Pendiente | | |
 | P0-3 | Motor y limitaciones sin ids | Se borran tabla de estímulo, tokens y overrides; golden y exclusiones idénticos; prueba que impide literales de id; un ejercicio nuevo funciona sin código | P0-2 | Pendiente | | |
