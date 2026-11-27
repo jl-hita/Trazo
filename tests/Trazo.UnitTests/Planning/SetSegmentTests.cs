@@ -87,7 +87,7 @@ public sealed class LoggedSetsTests
         Assert.Equal(2, view.Summary.TotalSets);
         Assert.Equal(750m, view.Summary.TotalVolumeKg);
         Assert.Equal(2.5m, view.Muscles.Single(m => m.Muscle == "Biceps").SetsByWeek[^1]);
-        Assert.Equal(1.25m, view.Muscles.Single(m => m.Muscle == "Forearms").SetsByWeek[^1]);
+        Assert.Equal(2.5m, view.Muscles.Single(m => m.Muscle == "Forearms").SetsByWeek[^1]);
         var point = Assert.Single(view.Exercises.Single().Points);
         Assert.Equal((20m, 10, 2, 750m), (point.TopWeightKg, point.RepsAtTop, point.Sets, point.VolumeKg));
         Assert.Equal(ProgressCalculator.EstimatedOneRepMax(20m, 10), point.EstimatedOneRepMaxKg);

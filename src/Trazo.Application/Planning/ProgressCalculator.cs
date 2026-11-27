@@ -15,8 +15,20 @@ public sealed record ExerciseProgressView(
     string ExerciseId, string Name, int Sessions, DateOnly LastDate, decimal? BestWeightKg, decimal? BestEstimatedOneRepMaxKg,
     DateOnly? RecordDate, bool NewRecord, IReadOnlyList<ExercisePointView> Points);
 
-/// <summary>Effective weekly sets of one muscle (a primary muscle counts 1 per set, a secondary one 0.5), aligned with <c>WeekStarts</c>.</summary>
-public sealed record MuscleVolumeView(string Muscle, IReadOnlyList<decimal> SetsByWeek);
+/// <summary>
+/// Effective sets of one muscle, week by week (aligned with <c>WeekStarts</c>), counted as everywhere else (<see cref="LoadMetrics"/>).
+/// <c>SessionsByWeek</c> counts the workouts that really worked it; <c>PrescribedByWeek</c> is what a calendar plan asked of
+/// each of those weeks (null where it asked nothing); <c>PrescribedPerSevenDays</c> is what the current block asks per seven
+/// days; <c>Priority</c> is the user's own ("Emphasize" or "Maintain").
+/// </summary>
+public sealed record MuscleVolumeView(
+    string Muscle, IReadOnlyList<decimal> SetsByWeek, IReadOnlyList<int>? SessionsByWeek = null,
+    IReadOnlyList<decimal?>? PrescribedByWeek = null, decimal? PrescribedPerSevenDays = null, string? Priority = null);
+
+/// <summary>What the active plan asks of the muscles: its dated sessions, the current block per seven days and the priorities.</summary>
+public sealed record ProgressProgram(
+    IReadOnlyList<(DateOnly Date, IReadOnlyList<DoseExercise> Exercises)> Dated, IReadOnlyList<MuscleDoseView> PerSevenDays,
+    IReadOnlyDictionary<string, string> Priorities);
 
 public sealed record ProgressView(
     ProgressSummary Summary, IReadOnlyList<DateOnly> WeekStarts, IReadOnlyList<MuscleVolumeView> Muscles,
@@ -25,7 +37,7 @@ public sealed record ProgressView(
 public sealed record ProgressSetRow(
     string ExerciseId, Guid LogId, DateTimeOffset LoggedAt, decimal? WeightKg, int? Repetitions, int SetNumber = 0, int Segment = 0);
 
-public sealed record ProgressExerciseInfo(string Name, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> SecondaryMuscles);
+public sealed record ProgressExerciseInfo(string Name, IReadOnlyList<string> PrimaryMuscles, IReadOnlyList<string> EffectiveSecondaryMuscles);
 
 /// <summary>Pure computation of the progress tab from the completed sets the user logged.</summary>
 public static class ProgressCalculator
@@ -46,7 +58,7 @@ public static class ProgressCalculator
 
     public static ProgressView Build(
         IReadOnlyList<ProgressSetRow> rows, IReadOnlyDictionary<string, ProgressExerciseInfo> info, TimeZoneInfo zone,
-        DateOnly today, int weeklyGoal)
+        DateOnly today, int weeklyGoal, ProgressProgram? program = null)
     {
         DateOnly Local(DateTimeOffset at) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(at, zone).DateTime);
 
@@ -63,29 +75,67 @@ public static class ProgressCalculator
             Math.Round(rows.Where(r => r.WeightKg is > 0 && r.Repetitions is > 0).Sum(r => r.WeightKg!.Value * r.Repetitions!.Value), 0));
 
         var weekStarts = Enumerable.Range(0, Weeks).Select(i => thisWeek.AddDays(-7 * (Weeks - 1 - i))).ToList();
-        var muscleSets = new Dictionary<string, decimal[]>(StringComparer.Ordinal);
-        // A set counts once, and its segments add a fixed part between all of them (see LoggedSets).
-        var segmented = rows.Where(r => r.Segment > 0).GroupBy(r => (r.LogId, r.ExerciseId, r.SetNumber)).Select(g => (Row: g.First(), Weight: LoggedSets.SegmentsWeight));
-        foreach (var (row, weight) in rows.Where(r => r.Segment == 0).Select(r => (Row: r, Weight: 1m)).Concat(segmented))
-        {
-            if (!info.TryGetValue(row.ExerciseId, out var exercise)) continue;
-            var index = weekStarts.IndexOf(WeekStart(Local(row.LoggedAt)));
-            if (index < 0) continue;
-            foreach (var m in exercise.PrimaryMuscles) Add(muscleSets, m, index, weight);
-            foreach (var m in exercise.SecondaryMuscles) Add(muscleSets, m, index, weight * 0.5m);
-        }
-        var muscles = muscleSets.OrderByDescending(p => p.Value.Sum()).ThenBy(p => p.Key, StringComparer.Ordinal)
-            .Select(p => new MuscleVolumeView(p.Key, p.Value)).ToList();
+        var muscles = Muscles(rows, info, weekStarts, Local, program);
 
         var exercises = rows.GroupBy(r => r.ExerciseId).Select(g => ExerciseProgress(g.Key, g.ToList(), info, Local))
             .OrderByDescending(e => e.LastDate).ThenBy(e => e.Name, StringComparer.Ordinal).Take(MaximumExercises).ToList();
         return new ProgressView(summary, weekStarts, muscles, exercises);
     }
 
-    private static void Add(Dictionary<string, decimal[]> sets, string muscle, int index, decimal amount)
+    private static List<MuscleVolumeView> Muscles(
+        IReadOnlyList<ProgressSetRow> rows, IReadOnlyDictionary<string, ProgressExerciseInfo> info, IReadOnlyList<DateOnly> weekStarts,
+        Func<DateTimeOffset, DateOnly> local, ProgressProgram? program)
     {
-        if (!sets.TryGetValue(muscle, out var values)) sets[muscle] = values = new decimal[Weeks];
-        values[index] += amount;
+        var sets = new Dictionary<string, decimal[]>(StringComparer.Ordinal);
+        var sessions = new Dictionary<string, int[]>(StringComparer.Ordinal);
+        foreach (var workout in rows.GroupBy(r => r.LogId))
+        {
+            var index = Index(weekStarts, WeekStart(local(workout.First().LoggedAt)));
+            if (index < 0) continue;
+            // A set counts once, and its segments add a fixed part between all of them (see LoggedSets).
+            var exercises = workout.Where(r => info.ContainsKey(r.ExerciseId)).GroupBy(r => r.ExerciseId).Select(g => new DoseExercise(
+                g.Key, info[g.Key].PrimaryMuscles, info[g.Key].EffectiveSecondaryMuscles,
+                g.Count(r => r.Segment == 0) + LoggedSets.SegmentsWeight * g.Where(r => r.Segment > 0).Select(r => r.SetNumber).Distinct().Count()));
+            foreach (var (muscle, amount) in LoadMetrics.Effective(exercises))
+            {
+                if (!sets.TryGetValue(muscle, out var values))
+                {
+                    sets[muscle] = values = new decimal[Weeks];
+                    sessions[muscle] = new int[Weeks];
+                }
+                values[index] += amount;
+                if (amount >= LoadMetrics.MeaningfulSets) sessions[muscle][index]++;
+            }
+        }
+
+        var prescribed = new Dictionary<string, decimal?[]>(StringComparer.Ordinal);
+        foreach (var (date, exercises) in program?.Dated ?? [])
+        {
+            var index = Index(weekStarts, WeekStart(date));
+            if (index < 0) continue;
+            foreach (var (muscle, amount) in LoadMetrics.Effective(exercises))
+            {
+                if (!prescribed.TryGetValue(muscle, out var values)) prescribed[muscle] = values = new decimal?[Weeks];
+                values[index] = (values[index] ?? 0m) + amount;
+            }
+        }
+        var perSevenDays = (program?.PerSevenDays ?? []).ToDictionary(d => d.Muscle, d => d.Sets, StringComparer.Ordinal);
+
+        // A muscle the plan asks for and nothing worked is shown too: that is the gap worth seeing.
+        return sets.Keys.Union(prescribed.Keys).Union(perSevenDays.Keys)
+            .Select(m => new MuscleVolumeView(
+                m, sets.GetValueOrDefault(m) ?? new decimal[Weeks], sessions.GetValueOrDefault(m) ?? new int[Weeks],
+                prescribed.GetValueOrDefault(m), perSevenDays.TryGetValue(m, out var asked) ? asked : null,
+                program?.Priorities.GetValueOrDefault(m)))
+            .OrderByDescending(m => m.SetsByWeek.Sum()).ThenByDescending(m => m.PrescribedPerSevenDays ?? 0m).ThenBy(m => m.Muscle, StringComparer.Ordinal)
+            .ToList();
+    }
+
+    private static int Index(IReadOnlyList<DateOnly> weekStarts, DateOnly week)
+    {
+        for (var i = 0; i < weekStarts.Count; i++)
+            if (weekStarts[i] == week) return i;
+        return -1;
     }
 
     private static ExerciseProgressView ExerciseProgress(
