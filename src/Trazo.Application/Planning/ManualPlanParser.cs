@@ -27,6 +27,18 @@ public static class ManualPlanParser
     public const int MaximumSets = 10;
     public const int DefaultRestSeconds = 90;
 
+    /// <summary>One session, checked with the rules of a manual routine; error fields are those of the session ("exercises.1").</summary>
+    public static (ManualDay? Day, IReadOnlyDictionary<string, string[]> Errors) ParseSession(
+        ManualExerciseInput[]? exercises, ManualSupersetInput[]? supersets, DateOnly today)
+    {
+        var parsed = Parse(new ManualPlanInput("-", null, today, 1, null, null,
+            [new ManualDayInput(null, "-", exercises, supersets)], SchedulingMode: nameof(Trazo.Domain.Planning.PlanSchedulingMode.Sequence)), today);
+        return parsed.Succeeded
+            ? (parsed.Plan!.Days[0], parsed.Errors)
+            : (null, parsed.Errors.ToDictionary(
+                p => p.Key.StartsWith("days.1.", StringComparison.Ordinal) ? p.Key["days.1.".Length..] : p.Key, p => p.Value));
+    }
+
     public static ManualPlanResult Parse(ManualPlanInput input, DateOnly today)
     {
         ArgumentNullException.ThrowIfNull(input);

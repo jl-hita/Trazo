@@ -161,6 +161,19 @@ public sealed class WorkoutSetLogConfiguration : IEntityTypeConfiguration<Workou
     }
 }
 
+public sealed class PlanSessionAdjustmentConfiguration : IEntityTypeConfiguration<PlanSessionAdjustment>
+{
+    public void Configure(EntityTypeBuilder<PlanSessionAdjustment> builder)
+    {
+        builder.ToTable("plan_session_adjustments");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.SessionTitle).HasMaxLength(160).IsRequired();
+        builder.Property(x => x.AdjustmentJson).HasColumnType("text").IsRequired();
+        builder.HasIndex(x => new { x.PlanId, x.SessionTitle }).IsUnique();
+        builder.HasOne<TrainingPlan>().WithMany().HasForeignKey(x => x.PlanId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
 public sealed class PlanAdaptationConfiguration : IEntityTypeConfiguration<PlanAdaptation>
 {
     public void Configure(EntityTypeBuilder<PlanAdaptation> builder)

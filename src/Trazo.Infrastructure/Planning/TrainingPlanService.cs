@@ -54,6 +54,12 @@ public interface ITrainingPlanService
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
+    /// <summary>Rewrites a pending session of a generated plan with the user's choice; <paramref name="fromNowOn"/> keeps it for later weeks and blocks (Premium).</summary>
+    Task<PlanResult<SessionView>> EditSessionAsync(Guid userId, Guid sessionId, ManualDay wanted, bool fromNowOn, CancellationToken ct);
+    /// <summary>Changes the time per session of a generated plan, from the next block on (Premium).</summary>
+    Task<PlanResult<PlanView>> UpdateSessionMinutesAsync(Guid userId, int minutes, CancellationToken ct);
+    /// <summary>Forgets the user's lasting changes: later blocks are the engine's proposal again.</summary>
+    Task<PlanResult<bool>> ClearAdjustmentsAsync(Guid userId, CancellationToken ct);
 }
 
 /// <summary>
@@ -62,7 +68,7 @@ public interface ITrainingPlanService
 /// training history without pre-generating the whole macrocycle. A period is a calendar week in calendar mode and a group
 /// of consecutive sessions in sequence mode. Every method is scoped to the supplied user and their active plan.
 /// </summary>
-public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions, RequestLanguage language, ClientCapabilities client) : ITrainingPlanService
+public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider clock, IUserTimeZone zones, ISubscriptionService subscriptions, RequestLanguage language, ClientCapabilities client) : ITrainingPlanService
 {
     public const string LockedMessage = "Este plan se generó automáticamente: para usarlo necesitas Premium.";
     public const string AdaptationLockedMessage = "La adaptación automática es una función Premium.";
@@ -1927,6 +1933,13 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                     _ => false
                 };
                 if (!ok) continue;
+                if (action.Kind != TrainingAutoAdaptationKind.Deload)
+                {
+                    json = UserAdjustments.KeepFixed(future.PrescriptionJson, json, outcome.BlocksIncreaseFor, out var held);
+                    if (held.Count > 0 && !lateNotes.Contains(FixedKeptNote)) lateNotes.Add(FixedKeptNote);
+                    if (held.Count > 0 && System.Text.Json.Nodes.JsonNode.DeepEquals(
+                            System.Text.Json.Nodes.JsonNode.Parse(json), System.Text.Json.Nodes.JsonNode.Parse(future.PrescriptionJson))) continue;
+                }
                 changes.Add(Modified(future, future.PrescriptionJson, json));
                 future.PrescriptionJson = json;
                 future.UpdatedAt = now;
@@ -2048,6 +2061,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             foreach (var future in upcoming.Take(MaximumFutureSessionsToAdapt))
                 if (TrainingAdaptationPrescriptionAdjuster.TryAdjustSets(future.PrescriptionJson, decision.ExerciseId, delta, out var updated, out _))
                 {
+                    updated = UserAdjustments.KeepFixed(future.PrescriptionJson, updated, pain.BlocksIncreaseFor, out var held);
+                    if (held.Count > 0)
+                    {
+                        if (!notes.Contains(FixedKeptNote)) notes.Add(FixedKeptNote);
+                        continue;
+                    }
                     changes.Add(Modified(future, future.PrescriptionJson, updated));
                     future.PrescriptionJson = updated;
                     future.UpdatedAt = now;
@@ -2400,6 +2419,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
         db.LongitudinalDecisions.AddRange(decisions);
+        await ApplyAdjustmentsAsync(plan, mesocycle, candidates, now, ct);
         try
         {
             await db.SaveChangesAsync(ct);
@@ -2603,5 +2623,6 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         client.Techniques
             ? TechniqueRules.WithinSets(PrescriptionJson.Supersets(session.PrescriptionJson),
                 PrescriptionJson.Read(session.PrescriptionJson).Select(e => (PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId), e.Sets)))
-            : null);
+            : null,
+        session.PrescriptionJson.Contains(UserAdjustments.FixedMark, StringComparison.Ordinal));
 }
