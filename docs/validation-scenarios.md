@@ -60,3 +60,11 @@ peor caso pierde 4 series: el hueco nuevo ocupa tiempo de la sesión.
 | 5 | Fuerza avanzada con solo mancuernas: los glúteos llegan a 21 series en las semanas altas | P7 |
 
 Aún no cubierto: métricas con datos reales y comparación de políticas (P5-2).
+
+## Cinco y seis días (P7-2, motor 0.14.0)
+
+`ManyDaysQualityTests` (PPL 5 y 6, híbrido 5; intermedio y avanzado; 60 y 90 min): ningún ejercicio repetido en una sesión ni
+más de dos veces por semana, ningún músculo por encima del techo, y desde cinco sesiones un bloque nuevo de entrenamiento
+renueva accesorios (antes repetía todos; ahora cambia unos 6-7 de 8-9 cuando hay alternativas parecidas). Fuerza y descargas
+no cambian, ni los planes de menos de cinco días. **Límite que sigue**: las sesiones usan 31-42 minutos aunque haya 90; el
+techo semanal por músculo manda y no se rellena con volumen para ocupar el tiempo.

@@ -240,7 +240,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Hecho; sin probar en un dispositivo | #256, Trazo.Android#110 | `prescription-techniques.md` §8 |
 | P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Hecho (R6 adoptada; D6 sin confirmar) | #257 | `plan-customisation.md` |
 | P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Hecho | #257 | `plan-customisation.md` |
-| P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Parcial: editar sesión (requiere conexión); falta cambiar el tiempo por sesión; sin probar en un dispositivo | Trazo.Android#111 | pruebas unitarias |
+| P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Hecho: editar sesión y tiempo por sesión (requieren conexión); sin probar en un dispositivo | Trazo.Android#111, #115 | pruebas unitarias |
 | P7-0 | Prioridades y volumen bajo objetivo (adelantado a petición del titular) | Enfatizar añade series; con tiempo libre los músculos llegan a su objetivo | P5-1 | Hecho (quedan casos con pocas sesiones) | #249 | 2.430 planes con énfasis comparados; `validation-scenarios.md` |
 | P7-1 | Torso/pierna 5 e híbrido de 5 días | Volumen, frecuencia y recuperación probados | P0, P5-1 | Hecho (torso/pierna 5 en rotación) | #258 | `FiveDaySplitTests` |
 | P3-1 | Recetas de programa y primeros tres | Motor común, permisos, personalizables | P1-1, P2-2, D7 | Hecho (los diez) | #258 | `programs.md` |
@@ -248,8 +248,8 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P4-1 | Estadísticas por músculo (API + Android) | Prescrito, realizado, frecuencia, tendencia | X-1 | Hecho; sin probar en un dispositivo | #259, Trazo.Android#113 | `progress-statistics.md` |
 | P4-2 | Resumen por mesociclo | Comparación entre bloques honesta | P4-1 | Hecho; sin probar en un dispositivo | #259, Trazo.Android#113 | `progress-statistics.md` |
 | P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Parcial: servidor hecho; interruptor y texto legal pendientes de aprobación | #260 | `research-consent.md` |
-| P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Hecho: API y pantalla; umbrales sin validar; sin probar en un dispositivo | PR de recomendaciones, Trazo.Android#114 | `recommendations.md` |
-| P7-2 | Calidad de 5 y 6 días | Variedad, rotación entre bloques, sin relleno | P7-1 | Pendiente | | |
+| P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Hecho: API y pantalla; umbrales sin validar; sin probar en un dispositivo | #261, Trazo.Android#114 | `recommendations.md` |
+| P7-2 | Calidad de 5 y 6 días | Variedad, rotación entre bloques, sin relleno | P7-1 | Hecho: accesorios renovados entre bloques (motor 0.14.0); las sesiones largas siguen sin llenar el tiempo | #262 | `validation-scenarios.md`, `ManyDaysQualityTests` |
 | L-REV | Revisar las exclusiones por lesión (titular, idealmente con un entrenador o fisioterapeuta) | Cada zona revisada, en especial lo decidido con evidencia débil en `exercise-review.md` | Después de este roadmap y de los bloqueantes de lanzamiento | Pendiente | | |
 
 ### Registro de decisiones
@@ -264,6 +264,24 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | D5: aprobadas las cinco decisiones de `prescription-techniques.md` §11 (valores por defecto, volumen y progresión, `allowedTechniques` en el seed, capacidad `techniques-1`, sin combinar superserie y técnica de fatiga). La matriz del generador se concreta en P1-5. |
 | 2026-11-27 | D7: los diez programas son Premium (ningún permiso ni condición de suscripción cambia; se descarta regalar uno, R8). Antes de pagar se ve la ficha (días, duración, material, series semanales por músculo) y una sesión de ejemplo, no las semanas completas. |
 | 2026-11-27 | P5-2: la comparación de políticas con datos reales y la exportación de investigación usan **solo a quien lo consienta**: interruptor opcional en la app, apagado por defecto y revocable; los resultados se muestran agregados. El texto legal lo aprueba el titular. |
+
+### Estado al cierre (2026-11-27)
+
+Todo lo programable de la tabla está integrado en `main`. **Nada se ha probado en un dispositivo** y las traducciones nuevas no
+tienen revisión nativa, así que según el criterio de la cabecera esas tareas quedan verificadas solo en CI.
+
+Pendiente del titular:
+
+| Qué | Por qué | Documento |
+|---|---|---|
+| Aprobar el texto de investigación | Sin él no hay interruptor en la app y la exportación sale vacía | `research-consent.md` |
+| Revisar errores frecuentes y seguridad (C-2) | Consejos de seguridad sin revisión profesional: no publicados | `exercise-safety-draft.md` |
+| Confirmar la precedencia manual (D6) | Se aplicó la recomendación R6 sin aprobación expresa | `plan-customisation.md` |
+| Revisión por un entrenador (D8) y vídeos (D9) | Solo puede hacerlo el titular | |
+| Probar en un dispositivo | Técnicas, superseries, edición, programas, estadísticas y recomendaciones | |
+| «Comprobar seed» en producción | Verificación del seed tras los despliegues | |
+
+L-REV sigue aplazada hasta después de los bloqueantes de lanzamiento.
 
 ## 7. Evidencia consultada
 
