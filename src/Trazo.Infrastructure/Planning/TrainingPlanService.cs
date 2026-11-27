@@ -15,7 +15,11 @@ public interface ITrainingPlanService
     Task<PlanOptions> GetOptionsAsync(CancellationToken ct);
     /// <summary>The current date in the time zone of the user (request header, profile or Europe/Madrid).</summary>
     Task<DateOnly> TodayAsync(Guid userId, CancellationToken ct);
-    Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct);
+    /// <param name="name">The name the plan takes instead of the generic one (a prebuilt program); a text of the catalog.</param>
+    Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct, string? name = null);
+    Task<IReadOnlyList<ProgramView>> GetProgramsAsync(Guid userId, CancellationToken ct);
+    /// <summary>A program as it would look for the equipment and limitations given: nothing is stored.</summary>
+    Task<PlanResult<ProgramSheetView>> GetProgramSheetAsync(Guid userId, string programId, PlanProfileInput own, CancellationToken ct);
     /// <summary>Creates a plan written by the user (free): their routines repeated every week, no engine involved.</summary>
     Task<PlanResult<PlanView>> CreateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct);
     Task<PlanResult<PlanView>> UpdateManualAsync(Guid userId, ManualPlan manual, CancellationToken ct);
@@ -173,6 +177,13 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         }).ToList()
     };
 
+    /// <summary>
+    /// The splits offered to choose from. The hybrid one comes with its prebuilt program: an app published before it would
+    /// show it as an unnamed option.
+    /// </summary>
+    private static readonly TrainingProgramSplit[] OfferedSplits =
+        Enum.GetValues<TrainingProgramSplit>().Where(s => s != TrainingProgramSplit.Hybrid).ToArray();
+
     public async Task<PlanOptions> GetOptionsAsync(CancellationToken ct)
     {
         // RequiredEquipment is the single source of truth for the generator selector.
@@ -182,12 +193,12 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             .Where(token => !string.Equals(token, "machine", StringComparison.OrdinalIgnoreCase))
             .Distinct().OrderBy(token => token, StringComparer.Ordinal).ToArray();
         return new PlanOptions(
-            Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
+            Names<TrainingGoal>(), Names<TrainingExperience>(), OfferedSplits.Select(s => s.ToString()).ToArray(),
             WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
             2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
             WeekDaysIn(Lang), nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
             PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod,
-            Enum.GetValues<TrainingProgramSplit>().Select(split => new SplitSupportOption(
+            OfferedSplits.Select(split => new SplitSupportOption(
                 split.ToString(),
                 Enumerable.Range(2, 5).Where(days => TrainingSessionRotation.IsSupportedWeekly(split, days)).ToArray(),
                 Enumerable.Range(TrainingSessionRotation.MinimumSessionsPerPeriod, TrainingSessionRotation.MaximumSessionsPerPeriod)
@@ -202,7 +213,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
 
     // ---------------------------------------------------------------- create
 
-    public async Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct)
+    public async Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct, string? name = null)
     {
         await UseUserClockAsync(userId, ct);
         if (await db.TrainingPlans.AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct))
@@ -229,7 +240,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             MusclePriorities = EncodePriorities(profile.MusclePriorities),
             IncludeDeloadPhases = profile.IncludeDeloadPhases, DeloadEveryTrainingWeeks = profile.DeloadEveryTrainingWeeks,
             Readiness = profile.Readiness.ToString(), PreparationWeeks = profile.PreparationWeeks,
-            Seed = planSeed, EngineVersion = string.Empty, MacrocycleName = macrocycle.Draft.Name,
+            Seed = planSeed, EngineVersion = string.Empty, MacrocycleName = name ?? macrocycle.Draft.Name,
             MacrocycleNotes = macrocycle.Draft.Notes, CreatedAt = now, UpdatedAt = now
         };
         var calendar = profile.SchedulingMode == PlanSchedulingMode.Calendar;

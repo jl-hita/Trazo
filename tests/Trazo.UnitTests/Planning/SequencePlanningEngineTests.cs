@@ -17,6 +17,7 @@ public sealed class SequencePlanningEngineTests
     private static readonly string[] FullBodyCycle = ["Cuerpo completo A", "Cuerpo completo B"];
     private static readonly string[] UpperLowerCycle = ["Tren superior A", "Tren inferior A", "Tren superior B", "Tren inferior B"];
     private static readonly string[] PushPullLegsCycle = ["Empuje", "Tracción", "Pierna", "Empuje B", "Tracción B", "Pierna B"];
+    private static readonly string[] HybridCycle = ["Tren superior A", "Tren inferior A", "Empuje", "Pierna", "Tracción"];
 
     /// <summary>What a trainer expects the rotation of a split to be (written independently of the engine's tables).</summary>
     private static string[] CycleOf(TrainingProgramSplit split, int sessions) => (split == TrainingProgramSplit.Automatic
@@ -25,6 +26,7 @@ public sealed class SequencePlanningEngineTests
     {
         TrainingProgramSplit.FullBody => FullBodyCycle,
         TrainingProgramSplit.UpperLower => UpperLowerCycle,
+        TrainingProgramSplit.Hybrid => HybridCycle,
         _ => PushPullLegsCycle
     };
 
@@ -50,8 +52,8 @@ public sealed class SequencePlanningEngineTests
     [Fact]
     public void TheSupportedCombinationsAreExactlyTheOnesTheProductAsked()
     {
-        // Full body 2-6, upper/lower 2-6, push/pull/legs 3-6 and automatic 2-6.
-        Assert.Equal(5 + 5 + 4 + 5, SupportedCombinations().Count());
+        // Full body 2-6, upper/lower 2-6, push/pull/legs 3-6, hybrid 4-6 and automatic 2-6.
+        Assert.Equal(5 + 5 + 4 + 3 + 5, SupportedCombinations().Count());
         Assert.False(TrainingSessionRotation.IsSupportedSequence(TrainingProgramSplit.PushPullLegs, 2));
         Assert.False(TrainingSessionRotation.IsSupportedSequence(TrainingProgramSplit.FullBody, 1));
         Assert.False(TrainingSessionRotation.IsSupportedSequence(TrainingProgramSplit.FullBody, 7));

@@ -238,13 +238,13 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Hecho; sin probar en un dispositivo | #253, #254, Trazo.Android#108 | `prescription-techniques.md` §5 |
 | P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Hecho; sin probar en un dispositivo | #255, Trazo.Android#109 | `prescription-techniques.md` |
 | P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Hecho; sin probar en un dispositivo | #256, Trazo.Android#110 | `prescription-techniques.md` §8 |
-| P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Hecho (R6 adoptada; D6 sin confirmar) | PR de esta rama | `plan-customisation.md` |
-| P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Hecho | PR de esta rama | `plan-customisation.md` |
+| P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Hecho (R6 adoptada; D6 sin confirmar) | #257 | `plan-customisation.md` |
+| P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Hecho | #257 | `plan-customisation.md` |
 | P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Parcial: editar sesión (requiere conexión); falta cambiar el tiempo por sesión; sin probar en un dispositivo | Trazo.Android#111 | pruebas unitarias |
 | P7-0 | Prioridades y volumen bajo objetivo (adelantado a petición del titular) | Enfatizar añade series; con tiempo libre los músculos llegan a su objetivo | P5-1 | Hecho (quedan casos con pocas sesiones) | #249 | 2.430 planes con énfasis comparados; `validation-scenarios.md` |
-| P7-1 | Torso/pierna 5 e híbrido de 5 días | Volumen, frecuencia y recuperación probados | P0, P5-1 | Pendiente | | |
-| P3-1 | Recetas de programa y primeros tres | Motor común, permisos, personalizables | P1-1, P2-2, D7 | Pendiente | | |
-| P3-2 | Diez programas y pantalla Android | Revisados y documentados | P3-1, P7-1 | Pendiente | | |
+| P7-1 | Torso/pierna 5 e híbrido de 5 días | Volumen, frecuencia y recuperación probados | P0, P5-1 | Hecho (torso/pierna 5 en rotación) | PR de programas | `FiveDaySplitTests` |
+| P3-1 | Recetas de programa y primeros tres | Motor común, permisos, personalizables | P1-1, P2-2, D7 | Hecho (los diez) | PR de programas | `programs.md` |
+| P3-2 | Diez programas y pantalla Android | Revisados y documentados | P3-1, P7-1 | Parcial: servidor hecho; falta la pantalla; sin revisión de entrenador | PR de programas | `programs.md` |
 | P4-1 | Estadísticas por músculo (API + Android) | Prescrito, realizado, frecuencia, tendencia | X-1 | Pendiente | | |
 | P4-2 | Resumen por mesociclo | Comparación entre bloques honesta | P4-1 | Pendiente | | |
 | P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Pendiente | | |
