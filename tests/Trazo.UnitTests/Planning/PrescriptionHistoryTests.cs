@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -239,6 +240,193 @@ public abstract class PrescriptionHistoryScenarios(string? postgres) : PlansApiB
         AssertChain(now, rows);
         Assert.Contains(exercise, ExerciseIds(now.OriginalPrescriptionJson!));
     }
+
+    // ------------------------------------------------------------------ how far the user's swap reaches
+
+    private static string? ScopeOf(PlanAdaptation row) => PrescriptionChangeTrace.ReadScope(row.ChangesJson);
+
+    /// <summary>A generated plan followed by sequence: any of its sessions can be used, so there can be pending ones before the selected one.</summary>
+    private static object ByProgram() => new
+    {
+        goal = "Hypertrophy", experience = "Intermediate", totalWeeks = 12, schedulingMode = "Sequence", split = "UpperLower",
+        sessionsPerPeriod = 4, maxSessionMinutes = 75,
+        availableEquipment = new[] { "barbell", "bench", "squat-rack", "dumbbell", "cable", "machine", "pull-up-bar" },
+        excludedExerciseIds = Array.Empty<string>(), limitations = Array.Empty<string>()
+    };
+
+    /// <summary>The first exercise that is in at least <paramref name="times"/> sessions of one block, with those sessions in program order.</summary>
+    private async Task<(List<PlannedSession> Occurrences, string Exercise)> RepeatedExerciseAsync(int times)
+    {
+        var sessions = await SessionsAsync();
+        return sessions.SelectMany(s => ExerciseIds(s.PrescriptionJson).Select(e => (Session: s, Exercise: e)))
+            .GroupBy(x => (x.Session.MesocycleId, x.Exercise))
+            .Where(g => g.Count() >= times)
+            .Select(g => (g.Select(x => x.Session).OrderBy(s => s.SequenceIndex).ToList(), g.Key.Exercise))
+            .First();
+    }
+
+    private async Task<string> ReplacementAsync(HttpClient client, Guid session, string exercise)
+    {
+        var listing = await client.GetAsync(Url(session, $"exercises/{exercise}/alternatives"));
+        Assert.True(listing.IsSuccessStatusCode, await listing.Content.ReadAsStringAsync());
+        return (await JsonAsync(listing)).GetProperty("alternatives")[0].GetProperty("exerciseId").GetString()!;
+    }
+
+    private static List<Guid> Changed(List<PlannedSession> before, List<PlannedSession> after) =>
+        after.Where(s => s.PrescriptionJson != before.Single(b => b.Id == s.Id).PrescriptionJson).Select(s => s.Id).OrderBy(i => i).ToList();
+
+    [ScenarioFact]
+    public async Task A_swap_of_this_session_only_changes_that_session_and_records_the_session_scope()
+    {
+        var (_, client, _) = await StartPlanAsync("scope1@example.com", ByProgram());
+        var (occurrences, exercise) = await RepeatedExerciseAsync(3);
+        var selected = occurrences[1];
+        var replacement = await ReplacementAsync(client, selected.Id, exercise);
+        var before = await SessionsAsync();
+
+        var swapped = await client.PostAsJsonAsync(Url(selected.Id, $"exercises/{exercise}/swap"),
+            new { replacementExerciseId = replacement, applyToRemainingBlock = false });
+        Assert.Equal(HttpStatusCode.OK, swapped.StatusCode);
+
+        Assert.Equal([selected.Id], Changed(before, await SessionsAsync()));
+        var row = Assert.Single(await RowsAsync(TrainingPlanService.SwapKind));
+        Assert.Equal(PrescriptionChangeTrace.SessionScope, ScopeOf(row));
+        Assert.Equal(PrescriptionChangeTrace.SchemaVersion, row.SchemaVersion);
+        Assert.Equal(PrescriptionChangeTrace.SchemaVersion, (int)JsonNode.Parse(row.ChangesJson!)!["schemaVersion"]!);
+        var change = Assert.Single(PrescriptionChangeTrace.Read(row.ChangesJson!));
+        Assert.Equal(selected.PrescriptionJson, change.Before!, JsonComparer);
+        Assert.Contains(replacement, ExerciseIds(change.After!));
+    }
+
+    [ScenarioFact]
+    public async Task A_swap_of_the_block_changes_the_pending_sessions_from_the_selected_one_and_leaves_earlier_and_done_ones()
+    {
+        var (_, client, _) = await StartPlanAsync("scope2@example.com", ByProgram());
+        var (occurrences, exercise) = await RepeatedExerciseAsync(4);
+        var (earlier, selected, done) = (occurrences[0], occurrences[1], occurrences[2]);
+        await InDbAsync(db => db.PlannedSessions.Where(s => s.Id == done.Id)
+            .ExecuteUpdateAsync(u => u.SetProperty(s => s.Status, PlannedSessionStatus.Completed)));
+        var replacement = await ReplacementAsync(client, selected.Id, exercise);
+        var before = await SessionsAsync();
+
+        var swapped = await client.PostAsJsonAsync(Url(selected.Id, $"exercises/{exercise}/swap"),
+            new { replacementExerciseId = replacement, applyToRemainingBlock = true });
+        Assert.Equal(HttpStatusCode.OK, swapped.StatusCode);
+
+        var expected = occurrences.Skip(1).Where(s => s.Id != done.Id).Select(s => s.Id).OrderBy(i => i).ToList();
+        var after = await SessionsAsync();
+        Assert.Equal(expected, Changed(before, after));
+        Assert.DoesNotContain(earlier.Id, expected);
+        var row = Assert.Single(await RowsAsync(TrainingPlanService.SwapKind));
+        Assert.Equal(PrescriptionChangeTrace.BlockScope, ScopeOf(row));
+        Assert.Equal(expected.Count, row.SessionsChanged);
+        var changes = PrescriptionChangeTrace.Read(row.ChangesJson!);
+        Assert.Equal(expected, changes.Select(c => c.SessionId).OrderBy(i => i));
+        Assert.All(changes, c =>
+        {
+            Assert.Equal(before.Single(b => b.Id == c.SessionId).PrescriptionJson, c.Before!, JsonComparer);
+            Assert.Equal(after.Single(a => a.Id == c.SessionId).PrescriptionJson, c.After!, JsonComparer);
+        });
+    }
+
+    [ScenarioFact]
+    public async Task A_block_swap_that_reaches_a_single_session_is_still_recorded_as_a_block_swap()
+    {
+        var (_, client, _) = await StartPlanAsync("scope3@example.com", ByProgram());
+        var (occurrences, exercise) = await RepeatedExerciseAsync(2);
+        var last = occurrences[^1];
+        var replacement = await ReplacementAsync(client, last.Id, exercise);
+
+        var swapped = await client.PostAsJsonAsync(Url(last.Id, $"exercises/{exercise}/swap"),
+            new { replacementExerciseId = replacement, applyToRemainingBlock = true });
+        Assert.Equal(HttpStatusCode.OK, swapped.StatusCode);
+
+        var row = Assert.Single(await RowsAsync(TrainingPlanService.SwapKind));
+        Assert.Equal(1, row.SessionsChanged);
+        Assert.Equal(PrescriptionChangeTrace.BlockScope, ScopeOf(row));
+    }
+
+    // ------------------------------------------------------------------ the scope in the research export
+
+    [ScenarioFact]
+    public async Task The_research_export_carries_the_scope_of_consenting_people_only_and_leaves_older_swaps_without_one()
+    {
+        var (user, client, _) = await StartPlanAsync("scope-export@example.com", ByProgram());
+        Assert.Equal(HttpStatusCode.NoContent,
+            (await client.PutAsJsonAsync("/api/v1/account/research-consent", new { consent = true })).StatusCode);
+        var (occurrences, exercise) = await RepeatedExerciseAsync(3);
+        var replacement = await ReplacementAsync(client, occurrences[0].Id, exercise);
+        Assert.True((await client.PostAsJsonAsync(Url(occurrences[0].Id, $"exercises/{exercise}/swap"),
+            new { replacementExerciseId = replacement })).IsSuccessStatusCode);
+        var nextReplacement = await ReplacementAsync(client, occurrences[1].Id, exercise);
+        Assert.True((await client.PostAsJsonAsync(Url(occurrences[1].Id, $"exercises/{exercise}/swap"),
+            new { replacementExerciseId = nextReplacement, applyToRemainingBlock = true })).IsSuccessStatusCode);
+        // A swap recorded before the scope existed: layout 1, several sessions or not, it says nothing about what the user chose.
+        await InDbAsync(async db =>
+        {
+            db.PlanAdaptations.Add(new PlanAdaptation
+            {
+                Id = Guid.NewGuid(), PlanId = occurrences[0].PlanId, Kind = TrainingPlanService.SwapKind, ExerciseIds = ["a", "b"], SessionsChanged = 1,
+                Explanation = "El usuario cambió un ejercicio por otro en esta sesión.", AppliedAt = DateTimeOffset.UtcNow,
+                Source = PrescriptionSources.User, SchemaVersion = 1, ChangesJson = """{"schemaVersion":1,"sessions":[]}"""
+            });
+            return await db.SaveChangesAsync();
+        });
+
+        // Somebody who did not consent, doing the same.
+        var other = ClientFor(await AddUserAsync("scope-private@example.com"));
+        Assert.Equal(HttpStatusCode.Created, (await other.PostAsJsonAsync("/api/v1/plans", Profile())).StatusCode);
+        var week = await JsonAsync(await other.GetAsync("/api/v1/plans/current/week"));
+        var theirs = week.GetProperty("sessions")[0];
+        var theirSession = theirs.GetProperty("id").GetGuid();
+        var theirExercise = theirs.GetProperty("exercises")[0].GetProperty("exerciseId").GetString()!;
+        var theirReplacement = await ReplacementAsync(other, theirSession, theirExercise);
+        Assert.True((await other.PostAsJsonAsync(Url(theirSession, $"exercises/{theirExercise}/swap"),
+            new { replacementExerciseId = theirReplacement, applyToRemainingBlock = true })).IsSuccessStatusCode);
+
+        var admin = ClientFor(await AddUserAsync("scope-admin@trazo.test", role: "superadmin"));
+        var from = DateTimeOffset.UtcNow.AddMonths(-6).ToString("yyyy-MM-ddTHH:mm:ssZ");
+        var until = DateTimeOffset.UtcNow.AddYears(1).ToString("yyyy-MM-ddTHH:mm:ssZ");
+        var response = await admin.GetAsync($"/api/v1/admin/intelligence/export?from={from}&to={until}");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var archive = new ZipArchive(new MemoryStream(await response.Content.ReadAsByteArrayAsync()), ZipArchiveMode.Read);
+        async Task<string> TextAsync(string name)
+        {
+            using var reader = new StreamReader(archive.GetEntry(name)!.Open());
+            return await reader.ReadToEndAsync();
+        }
+
+        var research = await TextAsync("research.json");
+        var swaps = JsonNode.Parse(research)!["adaptations"]!.AsArray()
+            .Where(a => (string?)Property(a!, "kind") == TrainingPlanService.SwapKind).ToList();
+        Assert.Equal(["(none)", "block", "session"], swaps.Select(a => (string?)Property(a!, "scope") ?? "(none)").Order(StringComparer.Ordinal));
+        foreach (var swap in swaps.Where(a => Property(a!, "scope") is not null))
+        {
+            var changes = JsonNode.Parse((string)Property(swap!, "changes")!)!;
+            Assert.Equal((string?)Property(swap!, "scope"), (string?)changes["scope"]);
+            Assert.All(changes["sessions"]!.AsArray(), s => { Assert.NotNull(s!["before"]); Assert.NotNull(s["after"]); });
+        }
+
+        var csv = await TextAsync("adaptations.csv");
+        Assert.Contains("scope", csv.Split('\n')[0], StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(4, csv.Split('\n', StringSplitOptions.RemoveEmptyEntries).Length); // the header and the consenting person's three swaps
+
+        var ids = await InDbAsync(async db =>
+            (await db.Users.Select(u => u.Id).ToListAsync())
+            .Concat(await db.TrainingPlans.Select(p => p.Id).ToListAsync())
+            .Concat(await db.PlannedSessions.Select(s => s.Id).ToListAsync())
+            .Concat(await db.PlanAdaptations.Select(a => a.Id).ToListAsync()).ToList());
+        Assert.Contains(user.Id, ids);
+        foreach (var text in new[] { research, csv })
+        {
+            Assert.DoesNotContain("@example.com", text, StringComparison.OrdinalIgnoreCase);
+            Assert.All(ids, id => Assert.DoesNotContain(id.ToString(), text, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    /// <summary>A property of an exported object whatever its casing.</summary>
+    private static JsonNode? Property(JsonNode node, string name) =>
+        node.AsObject().FirstOrDefault(p => string.Equals(p.Key, name, StringComparison.OrdinalIgnoreCase)).Value;
 
     // ------------------------------------------------------------------ concurrent edits (optimistic concurrency of the session)
 
@@ -640,19 +828,22 @@ public abstract class PrescriptionHistoryScenarios(string? postgres) : PlansApiB
     {
         var (_, client, _) = await StartPlanAsync("hist9@example.com");
         var (session, exercise, replacement) = await SwapTargetAsync(client);
-        var before = (await SessionsAsync()).Single(s => s.Id == session.Id);
+        var before = await SessionsAsync();
         await InDbAsync(db => db.Database.ExecuteSqlRawAsync(!OnPostgres
             ? "CREATE TRIGGER fail_history BEFORE INSERT ON plan_adaptations WHEN NEW.\"Kind\" = 'user_swap_exercise' BEGIN SELECT RAISE(ABORT, 'history write failed'); END;"
             : "CREATE FUNCTION fail_history() RETURNS trigger AS $$ BEGIN RAISE EXCEPTION 'history write failed'; END $$ LANGUAGE plpgsql;"
               + " CREATE TRIGGER fail_history BEFORE INSERT ON plan_adaptations FOR EACH ROW WHEN (NEW.\"Kind\" = 'user_swap_exercise') EXECUTE FUNCTION fail_history();"));
 
         HttpResponseMessage? response = null;
-        try { response = await client.PostAsJsonAsync(Url(session.Id, $"exercises/{exercise}/swap"), new { replacementExerciseId = replacement }); }
+        try
+        {
+            response = await client.PostAsJsonAsync(Url(session.Id, $"exercises/{exercise}/swap"),
+                new { replacementExerciseId = replacement, applyToRemainingBlock = true });
+        }
         catch (Exception) { /* the host surfaces the failure as an exception or as a 500: either way nothing may be committed */ }
         if (response is not null) Assert.False(response.IsSuccessStatusCode);
 
-        var after = (await SessionsAsync()).Single(s => s.Id == session.Id);
-        Assert.Equal(before.PrescriptionJson, after.PrescriptionJson);
+        Assert.Empty(Changed(before, await SessionsAsync())); // none of the sessions of the block, not only the selected one
         Assert.Empty(await RowsAsync());
     }
 
@@ -782,6 +973,30 @@ public abstract class PrescriptionHistoryScenarios(string? postgres) : PlansApiB
     {
         public bool Equals(string? x, string? y) => x is not null && y is not null && JsonNode.DeepEquals(JsonNode.Parse(x), JsonNode.Parse(y));
         public int GetHashCode(string value) => 0;
+    }
+}
+
+/// <summary>Reading the scope of a stored record: no database involved.</summary>
+public sealed class PrescriptionChangeScopeTests
+{
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("not json")]
+    [InlineData("""{"schemaVersion":1,"sessions":[]}""")]
+    [InlineData("""{"schemaVersion":2,"scope":"forever","sessions":[]}""")]
+    [InlineData("""{"schemaVersion":2,"scope":7,"sessions":[]}""")]
+    public void A_record_without_a_known_scope_has_none(string? json) => Assert.Null(PrescriptionChangeTrace.ReadScope(json));
+
+    [Fact]
+    public void Appending_to_a_record_of_an_older_layout_marks_it_with_the_current_one_and_invents_no_scope()
+    {
+        var appended = PrescriptionChangeTrace.Append("""{"schemaVersion":1,"sessions":[]}""",
+            [new SessionChange(PrescriptionChangeTrace.Modified, Guid.NewGuid(), Guid.NewGuid(), 1, 1, "{}", "{}")]);
+
+        Assert.Equal(PrescriptionChangeTrace.SchemaVersion, (int)JsonNode.Parse(appended)!["schemaVersion"]!);
+        Assert.Single(PrescriptionChangeTrace.Read(appended));
+        Assert.Null(PrescriptionChangeTrace.ReadScope(appended));
     }
 }
 

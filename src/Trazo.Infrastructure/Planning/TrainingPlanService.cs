@@ -420,14 +420,14 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     /// Stamps an adaptation row with who made the change and which sessions it touched (exact prescription before and after). It is saved in the
     /// same <c>SaveChanges</c> as the prescription it describes, so one cannot be committed without the other.
     /// </summary>
-    private static PlanAdaptation Traced(PlanAdaptation row, string source, IReadOnlyCollection<SessionChange> changes)
+    private static PlanAdaptation Traced(PlanAdaptation row, string source, IReadOnlyCollection<SessionChange> changes, string? scope = null)
     {
         row.Source = source;
         if (source == PrescriptionSources.Engine) row.EngineVersion = TrainingProgramGenerator.EngineVersion;
         if (changes.Count > 0)
         {
             row.SchemaVersion = PrescriptionChangeTrace.SchemaVersion;
-            row.ChangesJson = PrescriptionChangeTrace.Serialize(changes);
+            row.ChangesJson = PrescriptionChangeTrace.Serialize(changes, scope);
         }
         return row;
     }
@@ -2142,7 +2142,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             Explanation = applyToRemainingBlock
                 ? "El usuario cambió un ejercicio por otro en esta sesión y en las pendientes del bloque."
                 : "El usuario cambió un ejercicio por otro en esta sesión."
-        }, PrescriptionSources.User, swaps));
+        }, PrescriptionSources.User, swaps,
+            applyToRemainingBlock ? PrescriptionChangeTrace.BlockScope : PrescriptionChangeTrace.SessionScope));
         if (!await SaveUnlessConflictAsync(ct)) return PlanResult<SessionView>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         return PlanResult<SessionView>.Ok(ToSessionView(context.Session, null));
     }

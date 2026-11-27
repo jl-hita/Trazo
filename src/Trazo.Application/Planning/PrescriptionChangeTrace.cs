@@ -13,8 +13,11 @@ public sealed record SessionChange(
 /// </summary>
 public static class PrescriptionChangeTrace
 {
-    /// <summary>Layout version of <c>PlanAdaptation.ChangesJson</c>.</summary>
-    public const int SchemaVersion = 1;
+    /// <summary>
+    /// Layout version of <c>PlanAdaptation.ChangesJson</c>. 1: <c>sessions</c>. 2: adds the optional root <c>scope</c>, written when the user
+    /// chose how far a change reaches (an exercise swap). A record without it has an unknown scope: it is never guessed from its sessions.
+    /// </summary>
+    public const int SchemaVersion = 2;
     /// <summary>Layout version of <c>PlannedSession.OriginalPrescriptionJson</c>: the engine's <see cref="PrescriptionJson"/> layout, copied verbatim.</summary>
     public const int SnapshotSchemaVersion = 1;
 
@@ -22,10 +25,19 @@ public static class PrescriptionChangeTrace
     public const string Added = "added";
     public const string Removed = "removed";
 
+    /// <summary>The user chose to change only the session they were looking at.</summary>
+    public const string SessionScope = "session";
+    /// <summary>The user chose that session and the pending ones after it in its block, however many that turned out to be.</summary>
+    public const string BlockScope = "block";
+
     private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web);
 
-    public static string Serialize(IEnumerable<SessionChange> changes) =>
-        Build(changes).ToJsonString(Options);
+    public static string Serialize(IEnumerable<SessionChange> changes, string? scope = null)
+    {
+        var root = Build(changes);
+        if (scope is not null) root["scope"] = scope;
+        return root.ToJsonString(Options);
+    }
 
     /// <summary>Adds sessions to a record already stored (the same operation reaching more sessions). The entries already there are kept as they are.</summary>
     public static string Append(string? existing, IEnumerable<SessionChange> changes)
@@ -34,6 +46,7 @@ public static class PrescriptionChangeTrace
         var sessions = root["sessions"] as JsonArray ?? [];
         foreach (var entry in Entries(changes)) sessions.Add(entry);
         root["sessions"] = sessions;
+        root["schemaVersion"] = SchemaVersion; // the record is rewritten in the current layout, as its row says
         return root.ToJsonString(Options);
     }
 
@@ -47,6 +60,18 @@ public static class PrescriptionChangeTrace
                 (string)item["operation"]!, Guid.Parse((string)item["sessionId"]!), Guid.Parse((string)item["mesocycleId"]!),
                 (int)item["weekNumber"]!, (int)item["sequenceIndex"]!, item["before"]?.ToJsonString(), item["after"]?.ToJsonString()));
         return result;
+    }
+
+    /// <summary>The scope recorded in a stored <c>ChangesJson</c>; null when there is none (older records, other operations) or it is not one of the known values.</summary>
+    public static string? ReadScope(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+        try
+        {
+            return JsonNode.Parse(json) is JsonObject root && root["scope"] is JsonValue value && value.TryGetValue<string>(out var scope)
+                && scope is SessionScope or BlockScope ? scope : null;
+        }
+        catch (JsonException) { return null; }
     }
 
     private static JsonObject Build(IEnumerable<SessionChange> changes)

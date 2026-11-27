@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
+using Trazo.Application.Planning;
 using Trazo.Infrastructure.Persistence;
 
 namespace Trazo.Infrastructure.Analytics;
@@ -104,7 +105,7 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
         var adaptationData = adaptations.Select(x => new
         {
             x.Id, x.PlanId, x.WorkoutLogId, x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt,
-            x.Source, x.EngineVersion, x.SchemaVersion, ChangesJson = SafeJson(x.ChangesJson)
+            x.Source, x.EngineVersion, x.SchemaVersion, Scope = PrescriptionChangeTrace.ReadScope(x.ChangesJson), ChangesJson = SafeJson(x.ChangesJson)
         }).ToArray();
         var workoutData = workouts.Select(x => new
         {
@@ -134,7 +135,7 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
                 x.WeekNumber, x.Date, x.SequenceIndex, x.EstimatedDurationMinutes, prescription = x.PrescriptionJson,
                 originalPrescription = x.OriginalPrescriptionJson, x.OriginalPrescriptionSchemaVersion, x.PrescriptionSource, x.Status, x.Version, x.UpdatedAt }).ToArray(),
             adaptations = adaptationData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), workout = x.WorkoutLogId is null ? null : Key(x.WorkoutLogId.Value),
-                x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, changes = x.ChangesJson }).ToArray(),
+                x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, x.Scope, changes = x.ChangesJson }).ToArray(),
             workouts = workoutData.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), session = Key(x.PlannedSessionId),
                 x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = x.ExerciseFeedbackJson }).ToArray(),
             sets = sets.Select(x => new { id = Key(x.Id), workout = Key(x.WorkoutLogId), x.ExerciseId, x.SetNumber, x.WeightKg,

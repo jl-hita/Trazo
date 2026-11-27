@@ -66,7 +66,8 @@ export const INTELLIGENCE_COPY = {
   },
   adaptationLabels: {
     reduction_sets: 'Reducción de series', raise_reserve: 'Aumento de RIR', restore_sets: 'Restauración de series',
-    deload: 'Descarga', hold_progression: 'Progresión retenida', load_update: 'Actualización de cargas'
+    deload: 'Descarga', hold_progression: 'Progresión retenida', load_update: 'Actualización de cargas',
+    user_swap_exercise: 'Sustitución de ejercicio'
   },
   sourceLabels: { engine: 'Automática', user: 'Usuario', admin: 'Administrador', unknown: 'Sin dato' },
   qualityLabels: { valid: 'Válida', partial: 'Parcial', excluded: 'Excluida' }
