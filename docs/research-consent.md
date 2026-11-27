@@ -10,7 +10,7 @@ agregados; **el texto legal lo aprueba el titular antes de publicarlo**.
 |---|---|
 | Exportación de Trazo Intelligence filtrada por consentimiento | Hecho |
 | Comparación por versión del motor (solo con consentimiento, mínimo 5 personas por grupo) en `GET /admin/intelligence/summary` | Hecho; sin pantalla en la consola |
-| Interruptor en la app | PR abierta **sin fusionar**: espera la aprobación del texto |
+| Interruptor en la app | **No hecho**: se escribirá con el texto aprobado, en los 29 idiomas |
 | Política de privacidad | Pendiente de actualizar con el texto aprobado |
 
 El consentimiento es `users.ResearchConsent` (`PUT /api/v1/account/research-consent`). Antes solo decidía si las filas

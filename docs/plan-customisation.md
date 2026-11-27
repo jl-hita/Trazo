@@ -1,6 +1,6 @@
 # Personalizar un plan generado (P2)
 
-Estado: servidor implementado; la app (P2-3) está pendiente. La precedencia es la recomendación R6 del roadmap, **adoptada sin
+Estado: servidor y edición de sesión en la app implementados (sin probar en un dispositivo). La precedencia es la recomendación R6 del roadmap, **adoptada sin
 aprobación expresa** (D6): conviene que el titular la confirme.
 
 **Precedencia:** seguridad (dolor, limitaciones, ejercicios excluidos) > decisión del usuario > adaptación automática >
@@ -44,6 +44,6 @@ vuelta tras una ausencia, que son protecciones.
 
 ## Pendiente
 
-- App Android (P2-3).
+- En la app falta cambiar el tiempo por sesión.
 - El aprendizaje longitudinal aún no distingue las dosis fijadas por el usuario de las del motor (solo puede bajar volumen).
 - No se puede editar una sesión ya registrada ni crear sesiones nuevas.
