@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Укажите действительный идентификатор IANA, например Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Должно быть от 1 до 100.",
  "Debe estar entre 1 y 10.": "Должно быть от 1 до 10.",
+ "El motivo de archivado no es válido.": "Недопустимая причина архивирования.",
  "El ejercicio de sustitución es obligatorio.": "Укажите упражнение для замены.",
  "No se pudo completar la operación.": "Не удалось выполнить операцию.",
  "No has pedido ninguna revisión.": "Вы не запрашивали проверку.",

@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Použi platný identifikátor IANA, napríklad Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Hodnota musí byť od 1 do 100.",
  "Debe estar entre 1 y 10.": "Hodnota musí byť od 1 do 10.",
+ "El motivo de archivado no es válido.": "Dôvod archivácie nie je platný.",
  "El ejercicio de sustitución es obligatorio.": "Náhradný cvik je povinný.",
  "No se pudo completar la operación.": "Operáciu sa nepodarilo dokončiť.",
  "No has pedido ninguna revisión.": "O žiadnu kontrolu si nepožiadal(a).",

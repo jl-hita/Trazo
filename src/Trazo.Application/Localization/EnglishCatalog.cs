@@ -484,6 +484,8 @@ internal static class EnglishCatalog
          "It must be between 1 and 100."),
         ("Debe estar entre 1 y 10.",
          "It must be between 1 and 10."),
+        ("El motivo de archivado no es válido.",
+         "The archive reason is not valid."),
         ("El ejercicio de sustitución es obligatorio.",
          "The replacement exercise is required."),
         ("No se pudo completar la operación.",

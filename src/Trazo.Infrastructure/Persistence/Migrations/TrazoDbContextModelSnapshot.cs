@@ -364,6 +364,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<Guid>("Id").HasColumnType("uuid");
             b.Property<Guid>("UserId").HasColumnType("uuid");
             b.Property<string>("Status").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
+            b.Property<string>("ArchiveReason").HasMaxLength(30).HasColumnType("character varying(30)");
             b.Property<string>("Origin").IsRequired().HasMaxLength(20).HasColumnType("character varying(20)");
             b.Property<string>("Goal").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");
             b.Property<string>("Experience").IsRequired().HasMaxLength(40).HasColumnType("character varying(40)");

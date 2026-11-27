@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
+using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
 
 namespace Trazo.Infrastructure.Accounts;
@@ -21,7 +22,11 @@ internal static class HealthDataEraser
     public static async Task EraseAsync(TrazoDbContext db, Guid userId, CancellationToken ct)
     {
         var plans = await db.TrainingPlans.Where(p => p.UserId == userId).ToListAsync(ct);
-        foreach (var plan in plans) plan.Limitations = [];
+        foreach (var plan in plans)
+        {
+            plan.Limitations = [];
+            if (plan.ArchiveReason == PlanArchiveReason.Discomfort) plan.ArchiveReason = PlanArchiveReason.Other;
+        }
         var planIds = plans.Select(p => p.Id).ToList();
 
         // The trace of each generated block copies the profile, injury areas and pain-based decisions included.

@@ -43,7 +43,8 @@ consent the first time one of them is about to be entered; `GET /api/v1/account`
 
 - `PUT /api/v1/account/health-consent` `{"consent": true}` records the date it was given.
 - `{"consent": false}` withdraws it and erases, in one transaction: the injury areas of every plan and of the generation traces; pain and
-  discomfort marks of sessions, sets and exercise feedback; "illness" and "pain" as reasons (they become "other"); adaptations and volume
+  discomfort marks of sessions, sets and exercise feedback; "illness" and "pain" as reasons (they become "other"), and so does
+  discomfort as the reason a plan was archived; adaptations and volume
   decisions explained by pain or injuries; and the pain counters of the learning history.
 - Training history (sessions, sets, loads) stays. Free-text notes and review messages are the user's own words and are not rewritten;
   deleting the account removes them.

@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Користи важечки IANA идентификатор, на пример Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Вредноста мора да биде од 1 до 100.",
  "Debe estar entre 1 y 10.": "Вредноста мора да биде од 1 до 10.",
+ "El motivo de archivado no es válido.": "Причината за архивирање не е важечка.",
  "El ejercicio de sustitución es obligatorio.": "Заменската вежба е задолжителна.",
  "No se pudo completar la operación.": "Дејството не можеше да се доврши.",
  "No has pedido ninguna revisión.": "Не си побарал преглед.",

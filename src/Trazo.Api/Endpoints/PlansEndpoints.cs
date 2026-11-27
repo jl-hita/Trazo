@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Trazo.Api.Security;
 using Trazo.Application.Planning;
+using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Planning;
 
 namespace Trazo.Api.Endpoints;
@@ -147,8 +148,9 @@ public static class PlansEndpoints
             .Produces<SkipResult>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status402PaymentRequired)
             .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
         group.MapPost("/current/archive", ArchiveAsync).WithName("ArchivePlan")
-            .WithSummary("Closes the active plan so a new one can be created. The history is kept.")
-            .Produces(StatusCodes.Status204NoContent).ProducesProblem(StatusCodes.Status404NotFound);
+            .WithSummary("Closes the active plan so a new one can be created. The history is kept. Optional body: planId (409 if another plan is active) and reason (PlanCompleted, WantNewPlan, NoTime, TooDemanding, TooEasy, Discomfort, GoalsChanged, NotConvinced, Other), stored only with the research consent.")
+            .Produces(StatusCodes.Status204NoContent).ProducesValidationProblem().ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict);
         group.MapPost("/current/sessions/{sessionId:guid}/log", LogAsync).WithName("LogPlanSession")
             .WithSummary("Records a session (sets, loads, repetitions, RIR, recovery, pain). With Premium it also adapts the upcoming sessions; generated plans need Premium.")
             .Produces<LogResult>().ProducesValidationProblem()
@@ -411,10 +413,20 @@ public static class PlansEndpoints
         return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
     }
 
-    private static async Task<IResult> ArchiveAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    private static async Task<IResult> ArchiveAsync(
+        ArchivePlanRequest? request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
-        return await plans.ArchiveAsync(userId, ct) ? Results.NoContent() : NoPlan();
+        PlanArchiveReason? reason = null;
+        if (request?.Reason is { } code)
+        {
+            // Only the exact names: Enum.TryParse would also take numbers, other casings and comma-separated lists.
+            if (!Enum.GetNames<PlanArchiveReason>().Contains(code, StringComparer.Ordinal))
+                return Results.ValidationProblem(new Dictionary<string, string[]> { ["reason"] = ["El motivo de archivado no es válido."] });
+            reason = Enum.Parse<PlanArchiveReason>(code);
+        }
+        var result = await plans.ArchiveAsync(userId, reason, request?.PlanId, ct);
+        return result.Succeeded ? Results.NoContent() : Failure(result);
     }
 
     private static async Task<IResult> LogAsync(

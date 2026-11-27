@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Käytä kelvollista IANA-tunnistetta, esimerkiksi Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Arvon on oltava 1–100.",
  "Debe estar entre 1 y 10.": "Arvon on oltava 1–10.",
+ "El motivo de archivado no es válido.": "Arkistoinnin syy ei kelpaa.",
  "El ejercicio de sustitución es obligatorio.": "Korvaava liike on pakollinen.",
  "No se pudo completar la operación.": "Toimintoa ei voitu suorittaa.",
  "No has pedido ninguna revisión.": "Et ole pyytänyt tarkistusta.",

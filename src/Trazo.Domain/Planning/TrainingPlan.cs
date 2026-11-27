@@ -9,6 +9,25 @@ public enum TrainingPlanStatus
     Archived
 }
 
+/// <summary>
+/// Why the user says they archived a plan. The names are stored and exported as they are: never rename one. It is only kept with the
+/// research consent (docs/research-consent.md) and is the user's opinion, not a measure of the plan. Having completed the plan is a
+/// reason of its own: archiving does not imply it.
+/// </summary>
+public enum PlanArchiveReason
+{
+    PlanCompleted,
+    WantNewPlan,
+    NoTime,
+    TooDemanding,
+    TooEasy,
+    /// <summary>Discomfort while training. Health data: it also needs the health data consent.</summary>
+    Discomfort,
+    GoalsChanged,
+    NotConvinced,
+    Other
+}
+
 /// <summary>How a plan advances: by calendar weeks, or by the order of its sessions (the user trains on whatever days suit them).</summary>
 public enum PlanSchedulingMode
 {
@@ -50,6 +69,8 @@ public sealed class TrainingPlan
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public TrainingPlanStatus Status { get; set; } = TrainingPlanStatus.Active;
+    /// <summary>Why it was archived. Null when it was not asked, not answered or the plan is not archived.</summary>
+    public PlanArchiveReason? ArchiveReason { get; set; }
     /// <summary>Immutable provenance: editing a generated plan never turns it into a manual plan.</summary>
     public TrainingPlanOrigin Origin { get; set; } = TrainingPlanOrigin.Generated;
     public required string Goal { get; set; }

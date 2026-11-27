@@ -49,5 +49,23 @@ motivo (de una sesión o de una serie) por «otro».
 El consentimiento de salud de la app dice que el dolor y las molestias se usan además para investigar si se activa este.
 El titular aprobó nombrar el dolor el 2026-11-27, porque la exportación lo incluye.
 
+## Motivo de archivado de un plan
+
+Al archivar un plan, la app pregunta el motivo **solo** a quien tiene este consentimiento; el servidor lo vuelve a comprobar y no
+guarda nada sin él. Es opcional, de lista cerrada y sin texto libre: `PlanCompleted`, `WantNewPlan`, `NoTime`, `TooDemanding`,
+`TooEasy`, `Discomfort`, `GoalsChanged`, `NotConvinced`, `Other`. Se guarda en `training_plans."ArchiveReason"` (nulo en los planes
+anteriores y cuando no se indica) y sale en la tabla de planes de la exportación (`research.json` y `plans.csv`), con los planes
+creados en el periodo y con los archivados en él con motivo. Es una opinión de la persona, no una evaluación del motor.
+
+- `Discomfort` es dato de salud: además exige el consentimiento de salud. La app no ofrece esa opción sin él, el servidor la guarda
+  como `Other` y al retirarlo se convierte en `Other`.
+- Al retirar el consentimiento de investigación, el motivo deja de exportarse, como el resto de datos, pero no se borra del plan. Se
+  borra al eliminar la cuenta y aparece en la exportación de datos de la propia persona. No pasa a las cifras anónimas.
+
+**Por revisar por el titular antes de publicar:** el texto aprobado no nombra el motivo de archivado. Se ha entendido incluido en los
+datos de entrenamiento («planes», y «dolor y molestias») y en la finalidad («estudiar cómo mejorar los planes»). No se han cambiado
+el texto ni la política de privacidad. Falta confirmarlo y decidir si el motivo, que solo se recoge para investigar, debe borrarse al
+retirar el consentimiento.
+
 Pendiente: el plazo de conservación de las exportaciones (la política no lo dice) y confirmar la base jurídica con quien revise
 la parte legal.

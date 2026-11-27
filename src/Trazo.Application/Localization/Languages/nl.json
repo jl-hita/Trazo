@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Gebruik een geldige IANA-identificatie, bijvoorbeeld Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Moet tussen 1 en 100 liggen.",
  "Debe estar entre 1 y 10.": "Moet tussen 1 en 10 liggen.",
+ "El motivo de archivado no es válido.": "De reden voor het archiveren is ongeldig.",
  "El ejercicio de sustitución es obligatorio.": "De vervangende oefening is verplicht.",
  "No se pudo completar la operación.": "De bewerking kon niet worden voltooid.",
  "No has pedido ninguna revisión.": "Je hebt geen beoordeling aangevraagd.",

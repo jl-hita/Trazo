@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "有効なIANA識別子を指定してください(例：Europe/Madrid)。",
  "Debe estar entre 1 y 100.": "1~100にしてください。",
  "Debe estar entre 1 y 10.": "1~10にしてください。",
+ "El motivo de archivado no es válido.": "アーカイブの理由が正しくありません。",
  "El ejercicio de sustitución es obligatorio.": "代わりの種目は必須です。",
  "No se pudo completar la operación.": "操作を完了できませんでした。",
  "No has pedido ninguna revisión.": "レビューは依頼していません。",

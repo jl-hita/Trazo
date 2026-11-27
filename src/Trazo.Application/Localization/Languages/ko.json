@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "올바른 IANA 식별자를 사용하세요. 예: Europe/Madrid.",
  "Debe estar entre 1 y 100.": "1에서 100 사이여야 합니다.",
  "Debe estar entre 1 y 10.": "1에서 10 사이여야 합니다.",
+ "El motivo de archivado no es válido.": "보관 사유가 올바르지 않습니다.",
  "El ejercicio de sustitución es obligatorio.": "대체 운동은 필수입니다.",
  "No se pudo completar la operación.": "작업을 완료하지 못했습니다.",
  "No has pedido ninguna revisión.": "요청한 검토가 없습니다.",

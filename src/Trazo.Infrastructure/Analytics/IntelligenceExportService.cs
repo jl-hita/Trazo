@@ -47,14 +47,16 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
                 x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, x.SignalsJson,
                 x.PolicyVersion, x.CreatedAt }).ToListAsync(ct);
 
-        var createdPlanIds = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end && consenting.Contains(x.UserId))
+        // A plan counts for the period it was created in and, when its user said why, for the one it was archived in.
+        var createdPlanIds = await db.TrainingPlans.AsNoTracking().Where(x => consenting.Contains(x.UserId)
+                && ((x.CreatedAt >= start && x.CreatedAt < end) || (x.ArchiveReason != null && x.UpdatedAt >= start && x.UpdatedAt < end)))
             .Select(x => x.Id).ToListAsync(ct);
         var planIds = createdPlanIds.Concat(workouts.Select(x => x.PlanId)).Concat(adaptations.Select(x => x.PlanId))
             .Concat(observations.Select(x => x.PlanId)).Concat(decisions.Select(x => x.PlanId)).Distinct().ToArray();
         var plans = await db.TrainingPlans.AsNoTracking().Where(x => planIds.Contains(x.Id))
             .Select(x => new { x.Id, x.UserId, x.Status, x.Origin, x.Goal, x.Experience, x.Split, x.StartDate,
                 x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
-                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.CreatedAt, x.UpdatedAt }).ToListAsync(ct);
+                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.CreatedAt, x.UpdatedAt, x.ArchiveReason }).ToListAsync(ct);
         var phases = await db.TrainingPlanPhases.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.SequenceNumber, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate }).ToListAsync(ct);
         var mesocycles = await db.TrainingMesocycles.AsNoTracking().Where(x => planIds.Contains(x.PlanId))
@@ -126,7 +128,8 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
                 warning = "Pseudonymised research data, not anonymous data. Keep the package private." },
             plans = plans.Select(x => new { id = Key(x.Id), user = Key(x.UserId), x.Status, x.Origin, x.Goal, x.Experience, x.Split,
                 x.StartDate, x.TotalWeeks, x.SchedulingMode, x.SessionsPerPeriod, x.MaxSessionMinutes, x.AvailableEquipment,
-                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.CreatedAt, x.UpdatedAt }).ToArray(),
+                x.IncludeDeloadPhases, x.DeloadEveryTrainingWeeks, x.Seed, x.EngineVersion, x.CreatedAt, x.UpdatedAt,
+                ArchiveReason = x.ArchiveReason?.ToString() }).ToArray(),
             phases = phases.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.SequenceNumber, x.PhaseType, x.StartPeriod, x.EndPeriod, x.StartDate, x.EndDate }).ToArray(),
             mesocycles = mesocycleData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), x.Sequence, x.PhaseSequenceNumber,
                 x.PhaseType, x.IsDeload, x.StartWeek, x.Weeks, generationSnapshot = x.GenerationSnapshotJson, x.SnapshotSchemaVersion,
