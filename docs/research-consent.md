@@ -26,8 +26,8 @@ legal lo confirme.
 **Español**
 
 > **Ayudar a mejorar TRAZO (opcional)**
-> Si lo activas, TRAZO usará tus datos de entrenamiento (planes, series, cargas, repeticiones, esfuerzo y molestias que
-> registres, sin tu nombre, correo ni notas) para comparar versiones del motor y estudiar cómo mejorar los planes. Los datos
+> Si lo activas, TRAZO usará tus datos de entrenamiento (planes, series, cargas, repeticiones, esfuerzo, dolor y molestias que registres, sin tu nombre, correo ni notas) para comparar
+> versiones del motor y estudiar cómo mejorar los planes. Los datos
 > se sustituyen por claves que no identifican a nadie fuera de cada análisis y los resultados se miran agrupados. No se
 > venden ni se ceden. Si borras tu cuenta, las cifras anónimas por músculo que se conservan podrán agruparse. Puedes
 > desactivarlo cuando quieras: dejarás de incluirte en los análisis posteriores. No cambia nada de lo que puedes usar.
@@ -35,7 +35,7 @@ legal lo confirme.
 **English**
 
 > **Help improve TRAZO (optional)**
-> If you turn this on, TRAZO will use your training data (plans, sets, loads, repetitions, effort and discomfort you log,
+> If you turn this on, TRAZO will use your training data (plans, sets, loads, repetitions, effort, pain and discomfort you log,
 > without your name, email or notes) to compare engine versions and study how to make plans better. The data is replaced with
 > keys that identify nobody outside each analysis, and results are read in groups. It is not sold or shared. If you delete
 > your account, the anonymous per-muscle figures that are kept may be grouped. You can turn it off at any time: you will be
@@ -43,10 +43,11 @@ legal lo confirme.
 
 Los textos de los otros 27 idiomas de la app son traducciones de estos, sin revisión nativa.
 
-El texto cubre las **molestias** registradas, no la enfermedad: la exportación sustituye ese motivo (de una sesión o de una
-serie) por «otro».
+El texto cubre el **dolor** y las **molestias** registrados, no la enfermedad: la exportación sustituye ese
+motivo (de una sesión o de una serie) por «otro».
 
-El consentimiento de salud de la app dice que las molestias se usan además para investigar si se activa este.
+El consentimiento de salud de la app dice que el dolor y las molestias se usan además para investigar si se activa este.
+El titular aprobó nombrar el dolor el 2026-11-27, porque la exportación lo incluye.
 
-Pendiente: el plazo de conservación de las exportaciones (la política no lo dice) y confirmar con quien revise la parte legal
-la base jurídica y que el **dolor** registrado, que la exportación incluye, queda cubierto por «molestias».
+Pendiente: el plazo de conservación de las exportaciones (la política no lo dice) y confirmar la base jurídica con quien revise
+la parte legal.

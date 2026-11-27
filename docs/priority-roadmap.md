@@ -274,7 +274,7 @@ Pendiente del titular:
 
 | Qué | Por qué | Documento |
 |---|---|---|
-| Plazo de conservación y revisión legal de la investigación | La política no dice cuánto se guardan las exportaciones; confirmar que «molestias» cubre el dolor | `research-consent.md` |
+| Plazo de conservación y revisión legal de la investigación | La política no dice cuánto se guardan las exportaciones; confirmar la base jurídica | `research-consent.md` |
 | Revisar errores frecuentes y seguridad (C-2) | Consejos de seguridad sin revisión profesional: no publicados | `exercise-safety-draft.md` |
 | Confirmar la precedencia manual (D6) | Se aplicó la recomendación R6 sin aprobación expresa | `plan-customisation.md` |
 | Revisión por un entrenador (D8) y vídeos (D9) | Solo puede hacerlo el titular | |
