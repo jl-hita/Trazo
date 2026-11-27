@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Κράτησε το βάρος και πρόσθεσε το πολύ μία επανάληψη ανά σετ στην επόμενη έκθεση, χωρίς να ξεπεράσεις το εύρος ή να χάσεις το RIR-στόχο.",
  "Has alcanzado el máximo del rango.": "Έφτασες στην κορυφή του εύρους.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Επανάλαβε το βάρος και επιβεβαίωσε το αποτέλεσμα σε άλλη προπόνηση πριν το αυξήσεις.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Χωρίς καταγεγραμμένο RIR χρειάζονται τρεις συνεχόμενες προπονήσεις· κατέγραψέ το για να προχωράς νωρίτερα.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Τρεις συνεχόμενες εκθέσεις καλύπτουν το εύρος.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Δύο συνεχόμενες εκθέσεις καλύπτουν το εύρος και το RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Αύξησε μόνο το μικρότερο διαθέσιμο βήμα του εξοπλισμού, χωρίς να ξεπεράσεις το {0} % του τωρινού βάρους· κατέγραψε το νέο βάρος για να ρυθμίζονται οι επόμενες συστάσεις.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Το διαθέσιμο βήμα ({0} kg) ξεπερνά το συντηρητικό όριο του {1} % ({2} kg).",

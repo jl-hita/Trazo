@@ -800,3 +800,17 @@ Before this version a load under 50 kg was never raised inside a block: the smal
 The repetition requirement is a product rule built on an approximate formula, not a validated threshold. Equipment steps are still
 assumed from the weight; they are not configurable yet. `LoadProgressionSimulationTests` runs real blocks with a lifter who always
 succeeds, from 6 to 120 kg.
+
+## Engine 0.14.2: workouts as they are really logged
+
+- **Main load.** The load of an exposure is that of most completed sets (the heaviest on a tie). One prescribed set may differ,
+  with another load or left out for an outside reason (`time`, `equipment`, `motivation`); the others are judged and the next
+  load starts from the main one, not from the heaviest. A set at another load that fell under the range still holds the load. With
+  two or more sets differing there is no progression, as before. A set left out for fatigue, load, pain, illness or without a
+  reason holds it too.
+- **Reserve not written down.** It used to be read as effort above the target. Now it is unknown: the load is raised after three
+  exposures at the top instead of two, and the advice says why. A reserve that was written down and fell short still holds.
+- **Partial sessions.** Whether an exercise was finished is read from its own sets, so leaving one exercise unfinished no longer
+  holds the others. The session rules of section 6 (under 80 % of the sets, fatigue or illness) still pause progression.
+
+All three are product rules; `RealWorkoutProgressionTests` shows them.

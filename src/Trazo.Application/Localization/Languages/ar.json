@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "أبقِ الوزن وأضف تكرارًا واحدًا على الأكثر لكل مجموعة في المرة القادمة، دون تجاوز النطاق ودون فقدان RIR المستهدف.",
  "Has alcanzado el máximo del rango.": "بلغت أعلى النطاق.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "كرّر الوزن وأكّد النتيجة في حصة أخرى قبل زيادته.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "دون تسجيل RIR تلزم ثلاث جلسات متتالية؛ سجّله لتتقدم أسرع.",
+ "Tres exposiciones consecutivas cumplen el rango.": "ثلاث مرات متتالية تحقق النطاق.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "مرتان متتاليتان تحققان النطاق وRIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "زد بأصغر خطوة متاحة في المعدّة فقط، دون تجاوز {0}% من الوزن الحالي؛ سجّل الوزن الجديد لمعايرة التوصيات القادمة.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "الخطوة المتاحة ({0} كغ) تتجاوز الحد الحذر المضبوط {1}% ({2} كغ).",

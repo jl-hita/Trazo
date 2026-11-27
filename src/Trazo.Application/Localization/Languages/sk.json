@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Ponechaj váhu a v ďalšej expozícii pridaj najviac jedno opakovanie na sériu, bez prekročenia rozsahu a straty cieľového RIR.",
  "Has alcanzado el máximo del rango.": "Dosiahol(a) si hornú hranicu rozsahu.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Zopakuj váhu a pred jej zvýšením potvrď výsledok v ďalšom tréningu.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Bez zapísaného RIR treba tri tréningy po sebe; zapisuj ho a postúpiš skôr.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Tri po sebe idúce expozície splnili rozsah.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Dve po sebe idúce expozície splnili rozsah aj RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Pridaj len najmenší dostupný krok vybavenia, bez prekročenia {0} % aktuálnej váhy; zapíš novú váhu, aby sa odporúčania spresnili.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Dostupný krok ({0} kg) prekračuje nastavenú opatrnú hranicu {1} % ({2} kg).",

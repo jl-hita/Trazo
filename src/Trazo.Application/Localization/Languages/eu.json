@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Mantendu karga eta gehitu gehienez errepikapen bat seria bakoitzeko hurrengo esposizioan, tartea gainditu gabe eta helburuko RIRa galdu gabe.",
  "Has alcanzado el máximo del rango.": "Tartearen goiko mugara iritsi zara.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Errepikatu karga eta baieztatu emaitza beste saio batean pisua igo aurretik.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "RIRa apuntatu gabe jarraian hiru saio behar dira; apuntatu lehenago igotzeko.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Jarraian egindako hiru esposiziok tartea betetzen dute.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Jarraian egindako bi esposiziok tartea eta RIRa betetzen dituzte.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Igo ekipamenduaren igoera erabilgarri txikiena soilik, uneko kargaren % {0} gainditu gabe; erregistratu pisu berria hurrengo gomendioak kalibratzeko.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Igoera erabilgarriak ({0} kg) konfiguratutako % {1}eko muga kontserbadorea gainditzen du ({2} kg).",

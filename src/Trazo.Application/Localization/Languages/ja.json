@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "重量を維持し、次回は範囲を超えず目標RIRを守りながら、各セット最大1レップ増やしてください。",
  "Has alcanzado el máximo del rango.": "範囲の上限に達しました。",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "同じ重量をもう一度行い、結果を確認してから重量を上げてください。",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "RIRの記録がない場合は3回連続のセッションが必要です。記録すれば早く増量できます。",
+ "Tres exposiciones consecutivas cumplen el rango.": "3回連続で範囲を達成しました。",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "2回連続で範囲とRIRを達成しました。",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "器具で可能な最小の幅だけ、現在の重量の{0}%を超えない範囲で増やしてください。今後の推奨の調整のため新しい重量を記録してください。",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "可能な増量幅({0} kg)は、設定された控えめな上限{1}%({2} kg)を超えます。",

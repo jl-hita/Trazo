@@ -197,13 +197,17 @@ public static class AdaptationPlanner
     private static bool HasPain(ExerciseExposureRecord e) =>
         e.Sets.Any(s => s.Pain || string.Equals(s.SkippedReason, "pain", StringComparison.OrdinalIgnoreCase));
 
-    /// <summary>The heaviest completed load of the exposure, the reference the engine progresses from.</summary>
+    /// <summary>The load of most completed sets of the exposure, the reference the engine progresses from.</summary>
     internal static decimal? WorkingLoad(ExerciseExposureRecord exposure) =>
-        exposure.Sets.Where(s => s.Completed && s.WeightKg is > 0).Select(s => s.WeightKg).DefaultIfEmpty(null).Max();
+        TrainingExerciseProgressionEngine.MainLoad(exposure.Sets.Select(ToExecuted));
+
+    private static TrainingExecutedSet ToExecuted(SetRecord s) =>
+        new("working", s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason);
 
     private static TrainingExerciseExposure ToExposure(ExerciseExposureRecord e) =>
-        new(e.Sets.Select(s => new TrainingExecutedSet("working", s.WeightKg, s.Repetitions, s.Rir, s.Completed)).ToArray(),
-            SessionCompleted: e.Outcome == WorkoutOutcome.Completed,
+        new(e.Sets.Select(ToExecuted).ToArray(),
+            // Whether THIS exercise was finished is read from its sets: a session left partial elsewhere says nothing about it.
+            SessionCompleted: e.Outcome != WorkoutOutcome.NotCompleted,
             RecoveryInsufficient: string.Equals(e.Recovery, "Insufficient", StringComparison.OrdinalIgnoreCase),
             PainReported: HasPain(e),
             ProgressionEligible: e.ProgressionEligible,

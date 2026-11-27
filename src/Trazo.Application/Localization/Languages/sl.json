@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Ohrani težo in pri naslednji izpostavljenosti dodaj največ eno ponovitev na serijo, brez preseganja razpona ali izgube ciljnega RIR.",
  "Has alcanzado el máximo del rango.": "Dosegel si zgornjo mejo razpona.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Ponovi težo in pred povečanjem potrdi rezultat še na enem treningu.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Brez vpisanega RIR so potrebni trije zaporedni treningi; vpiši ga za hitrejše napredovanje.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Tri zaporedne izpostavljenosti izpolnjujejo razpon.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Dve zaporedni izpostavljenosti izpolnjujeta razpon in RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Povečaj le za najmanjši razpoložljivi korak opreme, brez preseganja {0} % trenutne teže; zabeleži novo težo, da se prihodnja priporočila umerijo.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Razpoložljivi korak ({0} kg) presega nastavljeno previdno mejo {1} % ({2} kg).",

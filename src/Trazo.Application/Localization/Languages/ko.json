@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "중량을 유지하고 다음에는 범위를 넘지 않고 목표 RIR을 지키며 세트당 최대 1회만 늘리세요.",
  "Has alcanzado el máximo del rango.": "범위의 상한에 도달했습니다.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "중량을 올리기 전에 같은 중량을 한 번 더 해 결과를 확인하세요.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "RIR 기록이 없으면 세 번 연속 세션이 필요합니다. 기록하면 더 빨리 올릴 수 있습니다.",
+ "Tres exposiciones consecutivas cumplen el rango.": "연속 세 번 범위를 충족했습니다.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "연속 두 번 범위와 RIR을 충족했습니다.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "장비의 가장 작은 증량만, 현재 중량의 {0}%를 넘지 않게 올리세요. 다음 추천을 맞추도록 새 중량을 기록하세요.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "가능한 증량({0} kg)이 설정된 보수적 한도 {1}%({2} kg)를 넘습니다.",
