@@ -237,7 +237,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Hecho: registro, técnicas admitidas, prescripción y capacidad | #250, #251, #252 | `prescription-techniques.md` §5 |
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Hecho; sin probar en un dispositivo | #253, #254, Trazo.Android#108 | `prescription-techniques.md` §5 |
 | P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Hecho; sin probar en un dispositivo | #255, Trazo.Android#109 | `prescription-techniques.md` |
-| P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Pendiente | | |
+| P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Hecho; sin probar en un dispositivo | PR de esta rama | `prescription-techniques.md` §8 |
 | P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Pendiente | | |
 | P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Pendiente | | |
 | P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Pendiente | | |
@@ -263,6 +263,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | Cierre de P0: los 150 ejercicios revisados (asistido, sin entrenador) y con textos completos en los 29 idiomas del seed, con los mismos pasos y consejos que el original (lo exige una prueba). Pendiente: revisión nativa de las traducciones y comprobación en producción con `seed-report`. |
 | 2026-11-26 | D5: aprobadas las cinco decisiones de `prescription-techniques.md` §11 (valores por defecto, volumen y progresión, `allowedTechniques` en el seed, capacidad `techniques-1`, sin combinar superserie y técnica de fatiga). La matriz del generador se concreta en P1-5. |
 | 2026-11-27 | D7: los diez programas son Premium (ningún permiso ni condición de suscripción cambia; se descarta regalar uno, R8). Antes de pagar se ve la ficha (días, duración, material, series semanales por músculo) y una sesión de ejemplo, no las semanas completas. |
+| 2026-11-27 | P5-2: la comparación de políticas con datos reales y la exportación de investigación usan **solo a quien lo consienta**: interruptor opcional en la app, apagado por defecto y revocable; los resultados se muestran agregados. El texto legal lo aprueba el titular. |
 
 ## 7. Evidencia consultada
 

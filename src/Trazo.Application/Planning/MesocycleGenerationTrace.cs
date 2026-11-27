@@ -46,7 +46,7 @@ public static class MesocycleGenerationTrace
         PlanProfile profile, int seed, MesocycleSlot slot, IReadOnlyCollection<TrainingExerciseCandidate> catalog,
         MesocycleGeneration generation, int rotationPosition, bool continuesPreviousBlock,
         IReadOnlyList<string>? previousBlockExerciseIds, LoadReferenceSelection loadReferences,
-        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets, DateTimeOffset now)
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets, DateTimeOffset now, TechniqueAllowance? techniques = null)
     {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(slot);
@@ -102,7 +102,13 @@ public static class MesocycleGenerationTrace
                     : new Dictionary<string, decimal>()
             },
             catalog = new { exercises = catalog.Count },
-            engineVersion = generation.EngineVersion
+            engineVersion = generation.EngineVersion,
+            // Whether the generator could add techniques, and the exercises kept out of them for pain.
+            techniques = new
+            {
+                allowed = techniques is not null,
+                painfulExercises = techniques is null ? [] : techniques.PainfulExercises.Order(StringComparer.Ordinal).ToArray()
+            }
         };
         return new GenerationTrace(
             JsonSerializer.Serialize(snapshot, Json), SnapshotSchemaVersion, generation.EngineVersion, CatalogFingerprint.Compute(catalog), now);
@@ -170,9 +176,10 @@ public static class CatalogFingerprint
             secondaryMuscles = Sorted(c.SecondaryMuscleGroups.Select(m => m.ToString())),
             effectiveSecondaryMuscles = Sorted((c.EffectiveSecondaryMuscleGroups ?? []).Select(m => m.ToString())),
             emphasis = Sorted((c.Emphasis ?? []).Select(e => e.ToString())),
-            limitationAreas = Sorted(c.LimitationAreas ?? [])
+            limitationAreas = Sorted(c.LimitationAreas ?? []),
+            allowedTechniques = Sorted((c.AllowedTechniques ?? []).Select(t => t.ToString()))
         }).ToArray();
-        return JsonSerializer.Serialize(new { fingerprintVersion = 2, exercises }, Canonical);
+        return JsonSerializer.Serialize(new { fingerprintVersion = 3, exercises }, Canonical);
     }
 
     public static string Compute(IEnumerable<TrainingExerciseCandidate> catalog) =>

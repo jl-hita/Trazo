@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.12.0";
+    public const string EngineVersion = "0.13.0";
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
     // within this share of the time offered.
     private const decimal StrengthMainLiftTimeShare = 0.85m;
@@ -1304,7 +1304,7 @@ public sealed record TrainingExerciseCandidate(
     IReadOnlyList<TrainingExerciseEmphasis>? Emphasis = null,
     // Body areas for which the exercise is avoided. Read by whoever applies the user's limitations.
     IReadOnlyList<string>? LimitationAreas = null,
-    // The techniques the catalog admits on this exercise. The generator does not prescribe any yet.
+    // The techniques the catalog admits on this exercise.
     IReadOnlyList<TrainingTechniqueType>? AllowedTechniques = null);
 
 /// <summary>A part of a muscle group that an exercise trains and that the plan reserves direct work for.</summary>

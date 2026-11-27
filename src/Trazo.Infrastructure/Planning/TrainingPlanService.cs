@@ -244,14 +244,16 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         var firstSlot = SlotsOf(plan).First(slot => slot.Contains(1));
         var loads = await LoadReferencesAsync(userId, ct);
         // A new plan always starts from its own baseline: nothing decided in another plan reaches its first block.
-        var generation = MesocycleGenerator.Generate(profile, planSeed, firstSlot, candidates.Candidates, null, false, loads.References);
+        var techniques = TechniquesFor(loads);
+        var generation = MesocycleGenerator.Generate(
+            profile, planSeed, firstSlot, candidates.Candidates, null, false, loads.References, techniques: techniques);
         if (!generation.Succeeded)
             return PlanResult<PlanView>.Fail(PlanFailure.GenerationFailed,
                 "No se pudo generar un plan con ese perfil.", new Dictionary<string, string[]> { ["plan"] = generation.Errors.ToArray() });
         plan.EngineVersion = generation.EngineVersion;
         AddMesocycle(plan, firstSlot, generation, now, 1, MesocycleGenerationTrace.Capture(
             profile, planSeed, firstSlot, candidates.Candidates, generation, rotationPosition: 0, continuesPreviousBlock: false,
-            previousBlockExerciseIds: null, loadReferences: loads, learnedTargets: null, now));
+            previousBlockExerciseIds: null, loadReferences: loads, learnedTargets: null, now, techniques));
 
         db.TrainingPlans.Add(plan);
         try
@@ -2372,9 +2374,11 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // What this user's own history says about the weekly dose of each muscle (see LongitudinalLearning). It only moves the targets the
         // priority planner already chose, by one set at most, and only with enough evidence; without it the block is generated as before.
         var learning = await LongitudinalLearning.ProposeAsync(db, plan, slot, profile, clock.GetUtcNow(), ct);
+        var techniques = TechniquesFor(loadReferences);
         var generation = MesocycleGenerator.Generate(
             profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
-            loadReferences: loadReferences.References, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets);
+            loadReferences: loadReferences.References, rotationPosition: existingSessions, learnedTargets: learning.LearnedTargets,
+            techniques: techniques);
         var decisions = learning.Decisions;
         IReadOnlyDictionary<TrainingMuscleGroup, decimal>? usedTargets = learning.LearnedTargets;
         if (!generation.Succeeded && learning.LearnedTargets.Count > 0)
@@ -2382,7 +2386,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
             // A learned target must never make a block impossible: fall back to the plan's own targets and keep no decisions.
             generation = MesocycleGenerator.Generate(
                 profile, plan.Seed, slot, candidates, previousIds, continuesPreviousBlock: continues,
-                loadReferences: loadReferences.References, rotationPosition: existingSessions);
+                loadReferences: loadReferences.References, rotationPosition: existingSessions, techniques: techniques);
             decisions = [];
             usedTargets = null;
         }
@@ -2391,7 +2395,7 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         // The trace records the inputs this block was really generated from, read now: the plan may have changed since it was created.
         var now = clock.GetUtcNow();
         var mesocycle = AddMesocycle(plan, slot, generation, now, firstIndex, MesocycleGenerationTrace.Capture(
-            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now));
+            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now, techniques));
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
@@ -2408,6 +2412,12 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
         }
         return mesocycle;
     }
+
+    /// <summary>
+    /// The generator only adds techniques for an app that says it can show them, and not while recent pain holds the loads back.
+    /// </summary>
+    private TechniqueAllowance? TechniquesFor(LoadReferenceSelection loads) =>
+        client.Techniques && !loads.SuppressedByPain ? new TechniqueAllowance(loads.WithheldForPain) : null;
 
     /// <summary>Numbers the sessions of a block in program order (planned date, then title), continuing from <paramref name="firstIndex"/>.</summary>
     private static int NumberSessions(TrainingMesocycle mesocycle, int firstIndex)

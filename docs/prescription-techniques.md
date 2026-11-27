@@ -1,6 +1,6 @@
 # Técnicas avanzadas: modelo de prescripción y registro (P1-1)
 
-Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) se concreta en P1-5. Implementado: el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5) las técnicas admitidas por ejercicio en el catálogo (`exercise-review.md`) y la prescripción con su capacidad de cliente (P1-2b). Las cifras son **valores por defecto de
+Estado: **aprobado el 2026-11-26 (D5)**; la matriz del generador (sección 8) está implementada desde P1-5. Implementado: el registro por segmentos y sus reglas de conteo (P1-2a, secciones 4 y 5) las técnicas admitidas por ejercicio en el catálogo (`exercise-review.md`) y la prescripción con su capacidad de cliente (P1-2b). Las cifras son **valores por defecto de
 producto**, no recomendaciones demostradas; la sección 9 dice en qué se apoya cada una.
 
 ## 1. Punto de partida
@@ -164,25 +164,51 @@ Modelos y borrador con segmentos; pantalla de entreno con la técnica identifica
 repeticiones por segmento, temporizador de descansos breves y de ronda; editor de planes manuales; textos en todos los
 idiomas de la app.
 
-## 8. Generador (P1-5, después de que registro y app estén en producción)
+## 8. Generador (P1-5, implementado; motor 0.13.0)
 
-Matriz R4 del roadmap: solo para ahorrar tiempo o atender un músculo prioritario; superseries antagonistas y drop sets desde
-intermedio, myo-reps y rest-pause en avanzado; solo en ejercicios que lo admiten; nunca en sentadillas, bisagras ni básicos
-libres, en descargas ni con dolor; una técnica de fatiga por músculo y dos por sesión.
+`TechniquePlanner` actúa sobre las sesiones ya generadas. Son **reglas de producto**: la justificación es ahorrar tiempo,
+no que una técnica dé más músculo que las series normales.
+
+**A quién.** Planes de hipertrofia de nivel intermedio o avanzado, y solo si la app que pide el bloque declara
+`techniques-1` (al crear el plan y al generar cada bloque). Nunca en descargas, preparación o reentrada, ni en la semana de
+introducción de un bloque que no continúa otro. Con la señal de dolor que retira las cargas de referencia no se añade nada, y
+los ejercicios con dolor reciente quedan fuera. Los músculos cuyo objetivo ha bajado por el historial no reciben extra.
+
+**Superserie** (como mucho una por sesión). Se unen dos ejercicios de aislamiento sin músculos en común **solo** si el tiempo
+liberado permite una serie más a un músculo que está por debajo de su rango y no tenía hueco. 15 s entre ejercicios y, tras la
+ronda, 90 s o el descanso mayor de los dos.
+
+**Técnica de fatiga.** Última serie de un ejercicio de aislamiento (patrón accesorio) que la admita en el catálogo, con al
+menos dos series y fuera de superserie, por este orden:
+
+1. músculo que el usuario quiere enfatizar (`PriorityMuscle`);
+2. músculo por debajo de su rango sin tiempo para otra serie (`ShortOnTime`).
+
+Topes: dos por sesión y una por músculo y semana. Intermedio: solo drop set. Avanzado: drop set y, si el ejercicio no lo
+admite, myo-reps o rest-pause. El generador no prescribe myo-rep match. La sesión nunca supera el tiempo disponible por una
+técnica.
+
+**Explicación.** La técnica y la superserie guardan `reason`; la app lo muestra en el idioma del usuario. La traza del bloque
+registra si se permitían y qué ejercicios se excluyeron por dolor; la huella del catálogo incluye `allowedTechniques`.
+
+Sin la capacidad, los planes generados son los mismos de antes. En una muestra de 96 perfiles intermedios y avanzados con el
+catálogo real salen 189 técnicas (165 por prioridad, 24 por tiempo) y 24 superseries. Limitación conocida: quien no quiera
+técnicas todavía no puede quitarlas de un plan generado (P2).
 
 ## 9. En qué se apoya
 
-Búsqueda preliminar; antes de P1-5 hay que leer las fuentes completas.
+Metaanálisis leídos el 2026-11-27 (los límites de los artículos se leyeron solo en parte).
 
 | Afirmación | Respaldo |
 |---|---|
-| Drop sets: hipertrofia similar a series normales en menos tiempo | Metaanálisis 2023: <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10390395/> |
-| Superseries: adaptaciones similares con sesiones más cortas y más fatiga percibida | Metaanálisis 2025: <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12011898/> |
-| Descansos largos entre series pueden favorecer algo la hipertrofia | Metaanálisis 2024: <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11349676/> |
+| Drop sets: hipertrofia sin diferencia significativa frente a series normales (5 estudios, 142 personas) en menos tiempo (solo 2 estudios lo miden) | Preliminar: <https://pmc.ncbi.nlm.nih.gov/articles/PMC10390395/> |
+| Superseries: mismas repeticiones y volumen en menos tiempo, con más esfuerzo percibido; la hipertrofia similar se apoya en 2 estudios. Unir ejercicios del mismo músculo reduce el volumen, por eso no se hace | Moderado para el tiempo, limitado para hipertrofia: <https://pmc.ncbi.nlm.nih.gov/articles/PMC12011898/> |
+| Descansos de más de 60 s pueden favorecer algo la hipertrofia, sin ventaja clara pasados 90 s; los intervalos incluyen el cero | Limitado: <https://pmc.ncbi.nlm.nih.gov/articles/PMC11349676/> |
 | Rest-pause: como mucho una ventaja pequeña | Evidencia limitada |
 | Estructura de myo-reps y match, repeticiones y descansos por defecto | **Solo fuentes de entrenadores**, sin cifras coincidentes (<https://www.barbellmedicine.com/blog/myo-reps/>, <https://www.strengthlog.com/myo-reps/>). No se encontró metaanálisis |
 | Descanso de 20 s y reducción del 20 % | Práctica habitual, sin ensayo que lo fije |
 | Peso 0,5 de los segmentos en el volumen | **Heurística de TRAZO**: no existe equivalencia validada |
+| Cuándo y a quién las propone el generador (sección 8) | **Heurística de TRAZO** |
 
 ## 10. Plan de entrega
 
