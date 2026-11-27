@@ -20,6 +20,13 @@ public sealed class TrainingLoadPrescriptionTests
         Assert.Contains("Misma carga", suggestion.Basis);
     }
 
+    [Theory]
+    [InlineData(6)]
+    [InlineData(12)]
+    [InlineData(18)]
+    public void TheSameLoadIsNotRounded(int load) =>
+        Assert.Equal(load, TrainingLoadEstimator.Suggest(Sets(load, 10, 2m), 8, 12, 2m)!.LoadKg);
+
     [Fact]
     public void TooFewRepetitionsReduceTheLoadWithinTheCap()
     {

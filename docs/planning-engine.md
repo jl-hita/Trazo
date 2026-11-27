@@ -292,7 +292,7 @@ the engine's internal product values, not clinical figures.
 | Signal | Reading | What happens |
 |---|---|---|
 | Reps inside the range, effort as planned | `AddRepetitions` | Next load stays; suggestion of +1 rep per set |
-| Top of the range twice in a row at the same load | `IncreaseLoad` | One increment (1 kg below 20 kg, otherwise 2.5 kg), never above the 5 % cap; written into the next session that has the exercise as `targetLoadKg` |
+| Top of the range (or above) twice in a row at the same load | `IncreaseLoad` | One increment (1 kg below 20 kg, otherwise 2.5 kg), written into the next session that has the exercise as `targetLoadKg`. When the increment is more than 5 % of the load it is earned with repetitions first (see "Engine 0.14.1") |
 | Top of the range once | `ConfirmTopOfRange` | Same load again |
 | Same load failed twice (sets or minimum reps) | `ReduceLoad` | Load lowered with the estimator (capped), written into the next session |
 | Pain in a set or in the session | pause | Progression held, load not pushed, warning in `notes`. **Never automated** |
@@ -780,3 +780,23 @@ An emphasized muscle gets one extra accessory slot per session after the regular
 weekly target and the exercise fits the session time. A raised target no longer removes the absolute ceiling for lifts that train
 the muscle indirectly: the limit is 20 weekly sets, or the range of a higher professional target. Plans without priorities do not
 change. Measurements: `validation-scenarios.md`.
+
+## Engine 0.14.1: load progression at any weight
+
+Before this version a load under 50 kg was never raised inside a block: the smallest step (1 or 2.5 kg) was always more than the
+5 % ceiling. Three related rules also held it back.
+
+- **Step above the default ceiling.** The step is allowed once the last two exposures show enough repetitions for the new load to
+  stay inside the range, with the Epley relation at the target reserve: `r >= next x (30 + min + RIR) / load - 30 - RIR`, never
+  less than the top of the range. Until then the load stays and the advice asks for one more repetition per set, up to `r`. For an
+  8-12 range at RIR 2: 12 to 13 kg and 40 to 42.5 kg need 12 repetitions, 20 to 22.5 kg needs 13, 6 to 7 kg needs 15 and 4 to 5 kg
+  needs 18. A ceiling set on the exercise itself (`MaximumLoadIncreasePercent`) is still never exceeded.
+- **Repetitions above the range** count as reaching the top; they used to be rejected as invalid data.
+- **A block changes sets and reserve week by week.** An earlier exposure is compared against its own prescription; only another
+  repetition range makes it incomparable. A week with fewer sets is no longer read as an incomplete one.
+- **Starting load of a block.** A load that was already inside the range is kept as it is (it used to be rounded to 2.5 kg, so 6 kg
+  became 5 kg) and estimates under 20 kg round to 1 kg.
+
+The repetition requirement is a product rule built on an approximate formula, not a validated threshold. Equipment steps are still
+assumed from the weight; they are not configurable yet. `LoadProgressionSimulationTests` runs real blocks with a lifter who always
+succeeds, from 6 to 120 kg.

@@ -59,13 +59,73 @@ public sealed class TrainingExerciseProgressionEngineTests
     }
 
     [Fact]
-    public void EquipmentIncrementAboveFivePercent_IsRejected()
+    public void AnIncrementAboveAnExplicitCeiling_IsRejected()
     {
-        var result = TrainingExerciseProgressionEngine.Evaluate(Prescription(5m),
+        var result = TrainingExerciseProgressionEngine.Evaluate(Prescription(5m) with { MaximumLoadIncreasePercent = 5m },
             [Exposure(12, load: 60m), Exposure(12, load: 60m)]);
 
         Assert.Equal(TrainingExerciseProgressionAction.HoldAndReview, result.Action);
         Assert.Null(result.SuggestedLoadKg);
+    }
+
+    [Theory]
+    [InlineData(12, 1, 12)]   // 13 kg is expected to allow 8 repetitions: the top of the range is enough
+    [InlineData(40, 2.5, 12)]
+    [InlineData(6, 1, 15)]    // 7 kg is a big step from 6: three repetitions above the range are needed first
+    [InlineData(20, 2.5, 13)]
+    public void AStepAboveTheDefaultCeiling_IsEarnedWithRepetitions(double load, double increment, int required)
+    {
+        var prescription = Prescription((decimal)increment);
+        TrainingExerciseExposure At(int reps) => Exposure(reps, load: (decimal)load);
+
+        var ready = TrainingExerciseProgressionEngine.Evaluate(prescription, [At(required), At(required)]);
+        Assert.Equal(TrainingExerciseProgressionAction.IncreaseLoad, ready.Action);
+        Assert.Equal((decimal)(load + increment), ready.SuggestedLoadKg);
+
+        if (required == prescription.MaxRepetitions) return;
+        var notYet = TrainingExerciseProgressionEngine.Evaluate(prescription, [At(required - 1), At(required - 1)]);
+        Assert.Equal(TrainingExerciseProgressionAction.AddRepetitions, notYet.Action);
+        Assert.Equal((decimal)load, notYet.SuggestedLoadKg);
+        Assert.Equal(new[] { required, required, required }, notYet.SuggestedRepetitionsBySet);
+        Assert.Contains($"llega a {required} repeticiones", notYet.Explanation);
+    }
+
+    [Fact]
+    public void OnlyOneExposureWithTheRepetitionsOfTheStep_IsNotEnough()
+    {
+        var result = TrainingExerciseProgressionEngine.Evaluate(Prescription(1m),
+            [Exposure(12, load: 6m), Exposure(15, load: 6m)]);
+
+        Assert.Equal(TrainingExerciseProgressionAction.AddRepetitions, result.Action);
+        Assert.Equal(6m, result.SuggestedLoadKg);
+        Assert.Equal(new[] { 15, 15, 15 }, result.SuggestedRepetitionsBySet);
+    }
+
+    [Fact]
+    public void WeeklyChangesOfSetsAndReserveDoNotBreakTheStreak()
+    {
+        var introductory = new TrainingExerciseExposure(
+            [new("working", 60m, 12, 3m, true), new("working", 60m, 12, 3m, true)],
+            HistoricalPrescription: new(2, 8, 12, 3m));
+        var current = Exposure(12) with { HistoricalPrescription = new(3, 8, 12, 2m) };
+
+        var result = TrainingExerciseProgressionEngine.Evaluate(Prescription(), [introductory, current]);
+
+        Assert.Equal(TrainingExerciseProgressionAction.IncreaseLoad, result.Action);
+        Assert.Equal(62.5m, result.SuggestedLoadKg);
+    }
+
+    [Fact]
+    public void AShorterWeekIsNotCountedAsAFailedOne()
+    {
+        var shorter = new TrainingExerciseExposure(
+            [new("working", 60m, 10, 2m, true), new("working", 60m, 10, 2m, true)],
+            HistoricalPrescription: new(2, 8, 12, 2m));
+        var failed = Exposure(6) with { HistoricalPrescription = new(3, 8, 12, 2m) };
+
+        var result = TrainingExerciseProgressionEngine.Evaluate(Prescription(), [shorter, failed]);
+
+        Assert.NotEqual(TrainingExerciseProgressionAction.ReduceLoad, result.Action);
     }
 
     [Fact]
@@ -189,14 +249,13 @@ public sealed class TrainingExerciseProgressionEngineTests
     }
 
     [Fact]
-    public void RepetitionsAbovePrescribedMaximum_AreInvalidAndNeverTriggerLoadIncrease()
+    public void RepetitionsAboveTheMaximumCountAsReachingTheTop()
     {
         var result = TrainingExerciseProgressionEngine.Evaluate(Prescription(),
             [Exposure(13), Exposure(13)]);
 
-        Assert.Equal(TrainingExerciseProgressionAction.InvalidData, result.Action);
-        Assert.Null(result.SuggestedLoadKg);
-        Assert.Null(result.LoadIncreaseKg);
+        Assert.Equal(TrainingExerciseProgressionAction.IncreaseLoad, result.Action);
+        Assert.Equal(62.5m, result.SuggestedLoadKg);
     }
 
     [Fact]

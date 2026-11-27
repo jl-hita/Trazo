@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Povećaj samo za najmanji dostupni korak opreme, bez prelaska {0} % trenutačne težine; zabeleži novu težinu radi preciznijih preporuka.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Dostupni korak ({0} kg) premašuje postavljenu opreznu granicu od {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Zadrži težinu ili prilagodi opremu; ne forsiraj prevelik skok.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Sledeća dostupna težina znači povećanje od {0} kg odjednom.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Zadrži težinu i dođi do {0} ponavljanja po seriji uz isti RIR pre povećanja.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Povećaj za jedan najmanji korak težine i vrati se na donju granicu raspona ponavljanja.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "U poslednje dve izloženosti s {0} kg propisani rad nije dovršen (serije ili najmanji broj ponavljanja).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Težina je verovatno bila prevelika: na sledećem treningu smanji je na oko {0} kg i odande ponovo napreduj.",

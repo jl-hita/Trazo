@@ -19,6 +19,12 @@ public static class TrainingLoadEstimator
 {
     public const decimal DefaultMaximumChangePercent = 10m;
     public const decimal DefaultLoadIncrementKg = 2.5m;
+    public const decimal LightLoadThresholdKg = 20m;
+    public const decimal LightLoadIncrementKg = 1m;
+
+    /// <summary>The smallest step assumed for a load when the equipment does not say: 1 kg under 20 kg, otherwise 2.5 kg.</summary>
+    public static decimal IncrementFor(decimal loadKg) =>
+        loadKg < LightLoadThresholdKg ? LightLoadIncrementKg : DefaultLoadIncrementKg;
 
     public static TrainingLoadSuggestion? Suggest(
         IReadOnlyList<TrainingExecutedSet> lastWorkingSets,
@@ -46,7 +52,8 @@ public static class TrainingLoadEstimator
         var effortOk = targetRir is null || avgRir is null || avgRir.Value >= targetRir.Value - 0.5m;
 
         if (minReps >= minRepetitions && minReps <= maxRepetitions && effortOk)
-            return new(Round(load, increment), "Misma carga que la última vez: el rendimiento ya estaba dentro del rango y con el esfuerzo previsto.");
+            // The load the lifter used exists on their equipment: rounding it would change 6 kg into 5.
+            return new(load, "Misma carga que la última vez: el rendimiento ya estaba dentro del rango y con el esfuerzo previsto.");
 
         var e1rm = atLoad.Average(set => EstimateOneRepMax(set.WeightKg!.Value, set.Repetitions!.Value, set.Rir));
         var targetReps = minRepetitions;

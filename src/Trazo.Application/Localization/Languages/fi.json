@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Lisää vain välineen pienin mahdollinen askel ylittämättä {0} % nykyisestä painosta; kirjaa uusi paino, jotta tulevat suositukset kalibroituvat.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Saatavilla oleva askel ({0} kg) ylittää asetetun varovaisen rajan {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Pidä paino tai säädä välinettä; älä pakota liian suurta hyppyä.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Seuraava saatavilla oleva paino lisää kerralla {0} kg.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Pidä paino ja saavuta {0} toistoa sarjaa kohden samalla RIR-arvolla ennen painon lisäämistä.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Lisää yksi pienin painoaskel ja palaa toistoalueen alapäähän.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "Kahdella viime kerralla painolla {0} kg määrättyä työtä ei saatu valmiiksi (setit tai vähimmäistoistot).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Paino oli luultavasti liian suuri: laske se seuraavassa treenissä noin {0} kiloon ja etene sieltä uudelleen.",

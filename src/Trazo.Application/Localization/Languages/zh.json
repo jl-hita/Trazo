@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "只按器械可用的最小增量加重，且不超过当前重量的 {0}%；记录新重量以校准之后的建议。",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "可用增量（{0} kg）超过设定的保守上限 {1}%({2} kg）。",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "保持重量或调整器械；不要勉强大幅加重。",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "下一个可用重量意味着一次增加 {0} kg。",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "保持重量，在相同 RIR 下每组达到 {0} 次后再加重。",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "只增加一个最小增量，并回到次数范围下端。",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "最近两次用 {0} kg 时未完成规定内容（组数或最低次数）。",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "重量很可能过大：下次降到约 {0} kg，再从那里递进。",

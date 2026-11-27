@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Přidej jen nejmenší dostupný krok vybavení, bez překročení {0} % aktuální váhy; zapiš novou váhu, aby se doporučení zpřesnila.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Dostupný krok ({0} kg) překračuje nastavenou opatrnou mez {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Ponech váhu nebo uprav vybavení; nevynucuj příliš velký skok.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Další dostupná váha znamená přidat {0} kg najednou.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Ponech váhu a před zvýšením se dostaň na {0} opakování v sérii se stejným RIR.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Přidej jeden nejmenší krok váhy a vrať se na spodní hranici rozsahu opakování.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "Ve dvou posledních expozicích na {0} kg nebyla předepsaná práce dokončena (série nebo minimum opakování).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Váha byla nejspíš příliš vysoká: v dalším tréninku ji sniž asi na {0} kg a postupuj odtud znovu.",
