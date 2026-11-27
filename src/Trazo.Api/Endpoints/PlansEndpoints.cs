@@ -48,6 +48,21 @@ public static class PlansEndpoints
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .RequireActiveSubscription();
+        group.MapGet("/programs", ProgramsAsync).WithName("GetPrograms")
+            .WithSummary("The prebuilt programs.")
+            .Produces<IReadOnlyList<ProgramView>>();
+        group.MapPost("/programs/{programId}/sheet", ProgramSheetAsync).WithName("GetProgramSheet")
+            .WithSummary("A program for the equipment and limitations sent: equipment used, weekly sets per muscle and one sample session. Nothing is stored.")
+            .Produces<ProgramSheetView>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
+        group.MapPost("/programs/{programId}", CreateProgramAsync).WithName("CreateProgramPlan")
+            .WithSummary("Generates the plan of a prebuilt program. Level, days, time, equipment, limitations and start are the user's.")
+            .Produces<PlanView>(StatusCodes.Status201Created)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
+            .RequireActiveSubscription();
         group.MapPost("/manual", CreateManualAsync).WithName("CreateManualPlan")
             .WithSummary("Creates a plan written by the user (free): weekly routines repeated for every week. Premium adapts it as it is logged.")
             .Produces<PlanView>(StatusCodes.Status201Created)
@@ -154,8 +169,36 @@ public static class PlansEndpoints
     private static async Task<IResult> OptionsAsync(ITrainingPlanService plans, CancellationToken ct) =>
         Results.Ok(await plans.GetOptionsAsync(ct));
 
-    private static async Task<IResult> CreateAsync(
-        PlanProfileInput request, ClaimsPrincipal principal, ITrainingPlanService plans, IUserTimeZone zones, Trazo.Infrastructure.Accounts.IAccountService accounts, CancellationToken ct)
+    private static async Task<IResult> ProgramsAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct) =>
+        UserId(principal) is { } userId ? Results.Ok(await plans.GetProgramsAsync(userId, ct)) : Results.Unauthorized();
+
+    private static async Task<IResult> ProgramSheetAsync(
+        string programId, PlanProfileInput request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.GetProgramSheetAsync(userId, programId, request, ct);
+        if (result.Succeeded) return Results.Ok(result.Value);
+        return result.Message == ProgramLibrary.NotFound ? Problem(StatusCodes.Status404NotFound, result.Message, "program_not_found") : Failure(result);
+    }
+
+    private static async Task<IResult> CreateProgramAsync(
+        string programId, PlanProfileInput request, ClaimsPrincipal principal, ITrainingPlanService plans, IUserTimeZone zones,
+        Trazo.Infrastructure.Accounts.IAccountService accounts, CancellationToken ct)
+    {
+        if (ProgramLibrary.Find(programId) is not { } recipe) return Problem(StatusCodes.Status404NotFound, ProgramLibrary.NotFound, "program_not_found");
+        var (own, problem) = ProgramLibrary.Request(recipe, request);
+        if (problem is { } refused)
+            return Results.ValidationProblem(new Dictionary<string, string[]> { [refused.Field] = [refused.Message] });
+        return await CreateFromAsync(own, recipe.Name, principal, plans, zones, accounts, ct);
+    }
+
+    private static Task<IResult> CreateAsync(
+        PlanProfileInput request, ClaimsPrincipal principal, ITrainingPlanService plans, IUserTimeZone zones, Trazo.Infrastructure.Accounts.IAccountService accounts, CancellationToken ct) =>
+        CreateFromAsync(request, null, principal, plans, zones, accounts, ct);
+
+    private static async Task<IResult> CreateFromAsync(
+        PlanProfileInput request, string? name, ClaimsPrincipal principal, ITrainingPlanService plans, IUserTimeZone zones,
+        Trazo.Infrastructure.Accounts.IAccountService accounts, CancellationToken ct)
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         var sentZone = !string.IsNullOrWhiteSpace(request.TimeZone);
@@ -164,7 +207,7 @@ public static class PlansEndpoints
         if (sentZone) zones.RequestOverride = request.TimeZone;
         var parsed = PlanProfileParser.Parse(request, await plans.TodayAsync(userId, ct));
         if (!parsed.Succeeded) return Results.ValidationProblem(parsed.Errors.ToDictionary(p => p.Key, p => p.Value));
-        var result = await plans.CreateAsync(userId, parsed.Profile!, null, ct);
+        var result = await plans.CreateAsync(userId, parsed.Profile!, null, ct, name);
         if (result.Succeeded && sentZone) await accounts.SetTimeZoneAsync(userId, request.TimeZone!, ct);
         return result.Succeeded ? Results.Created("/api/v1/plans/current", result.Value) : Failure(result);
     }
