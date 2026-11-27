@@ -697,6 +697,7 @@ public sealed class AdminOverviewApiTests : IDisposable
 
         await using (var db = Db())
         {
+            (await db.Users.FindAsync(user.Id))!.ResearchConsent = true;
             db.TrainingPlans.Add(new TrainingPlan
             {
                 Id = planId, UserId = user.Id, Goal = "Hypertrophy", Experience = "Intermediate", Split = "Automatic",

@@ -41,4 +41,4 @@ El plan toma el nombre del programa.
 - Con poco material algunos programas pierden variedad o no se pueden generar: la respuesta explica por qué.
 - En 3 días, los isquiotibiales quedan en torno a 4 series semanales en cuerpo completo y PPL; es lo que reparte hoy el motor.
 - Sin revisión por un entrenador (D8) ni traducciones revisadas por hablantes nativos.
-- Pantalla en la app: pendiente.
+- La pantalla de la app no se ha probado en un dispositivo.

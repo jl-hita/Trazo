@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http.Json;
 using Xunit;
 
 namespace Trazo.UnitTests.Planning;
@@ -68,5 +69,36 @@ public sealed class AdminIntelligenceApiTests() : PlansApiBase(enforced: true)
         Assert.Contains(archive.Entries, x => x.FullName == "plans.csv");
         Assert.Contains(archive.Entries, x => x.FullName == "workouts.csv");
         Assert.Contains(archive.Entries, x => x.FullName == "decisions.csv");
+    }
+
+    [Fact]
+    public async Task OnlyPeopleWhoConsentAreInTheExport_AndSmallGroupsAreNotCompared()
+    {
+        async Task<HttpClient> PersonAsync(string name, bool consents)
+        {
+            var client = ClientFor(await AddUserAsync($"{name}@trazo.test"));
+            if (consents)
+                Assert.Equal(HttpStatusCode.NoContent,
+                    (await client.PutAsJsonAsync("/api/v1/account/research-consent", new { consent = true })).StatusCode);
+            var plan = new { name = "Mi plan", totalWeeks = 2, days = new[] { new { day = "Monday", title = "A", exercises = new[] { new { exerciseId = "squat", sets = 3 } } } } };
+            var created = await client.PostAsJsonAsync("/api/v1/plans/manual", plan);
+            Assert.True(created.StatusCode == HttpStatusCode.Created, await created.Content.ReadAsStringAsync());
+            return client;
+        }
+
+        await PersonAsync("yes", true);
+        await PersonAsync("no", false);
+        var admin = await SuperadminAsync();
+
+        var until = DateTimeOffset.UtcNow.AddYears(1).ToString("yyyy-MM-ddTHH:mm:ssZ");
+        var from = DateTimeOffset.UtcNow.AddMonths(-6).ToString("yyyy-MM-ddTHH:mm:ssZ");
+        var bytes = await (await admin.GetAsync($"/api/v1/admin/intelligence/export?from={from}&to={until}")).Content.ReadAsByteArrayAsync();
+        using var archive = new ZipArchive(new MemoryStream(bytes), ZipArchiveMode.Read);
+        using var reader = new StreamReader(archive.GetEntry("plans.csv")!.Open());
+        var lines = (await reader.ReadToEndAsync()).Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(2, lines.Length); // the header and the one consenting person's plan
+
+        var summary = await JsonAsync(await admin.GetAsync("/api/v1/admin/intelligence/summary"));
+        Assert.Equal(0, summary.GetProperty("engineComparison").GetArrayLength());
     }
 }
