@@ -232,7 +232,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P5-1 | Escenarios de decisión | Perfiles, fatiga, estancamiento, dolor, incumplimiento; en CI | — | Hecho | #247 | `DecisionScenarioTests`; carencias en `validation-scenarios.md` |
 | X-1 | Una sola definición de serie efectiva en Progreso | Misma cifra en carga y progreso | P0-3 | Hecho | PR de estadísticas | `progress-statistics.md` |
 | C-1 | Inglés en el seed | `translations/en.json` completo, mismos pasos y consejos que el original; revisión nativa pendiente | P0-4 | Hecho (sin revisión nativa) | #241 | cobertura de todos los idiomas y correspondencia de pasos |
-| C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Pendiente | | |
+| C-2 | Errores frecuentes y seguridad (es/en) | Campos, contenido y pantalla Android | C-1 | Bloqueado (decisión): borrador por familias pendiente de revisión | PR de métricas | `exercise-safety-draft.md` |
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Hecho (D5 aprobada) | #248 | `prescription-techniques.md` |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Hecho: registro, técnicas admitidas, prescripción y capacidad | #250, #251, #252 | `prescription-techniques.md` §5 |
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Hecho; sin probar en un dispositivo | #253, #254, Trazo.Android#108 | `prescription-techniques.md` §5 |
@@ -245,9 +245,15 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P7-1 | Torso/pierna 5 e híbrido de 5 días | Volumen, frecuencia y recuperación probados | P0, P5-1 | Hecho (torso/pierna 5 en rotación) | PR de programas | `FiveDaySplitTests` |
 | P3-1 | Recetas de programa y primeros tres | Motor común, permisos, personalizables | P1-1, P2-2, D7 | Hecho (los diez) | PR de programas | `programs.md` |
 | P3-2 | Diez programas y pantalla Android | Revisados y documentados | P3-1, P7-1 | Parcial: servidor hecho; falta la pantalla; sin revisión de entrenador | PR de programas | `programs.md` |
+<<<<<<< HEAD
 | P4-1 | Estadísticas por músculo (API + Android) | Prescrito, realizado, frecuencia, tendencia | X-1 | En curso: API hecha, pantalla pendiente | PR de estadísticas | `progress-statistics.md` |
 | P4-2 | Resumen por mesociclo | Comparación entre bloques honesta | P4-1 | En curso: API hecha, pantalla pendiente | PR de estadísticas | `progress-statistics.md` |
 | P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Pendiente | | |
+=======
+| P4-1 | Estadísticas por músculo (API + Android) | Prescrito, realizado, frecuencia, tendencia | X-1 | Pendiente | | |
+| P4-2 | Resumen por mesociclo | Comparación entre bloques honesta | P4-1 | Pendiente | | |
+| P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Parcial: servidor hecho; interruptor y texto legal pendientes de aprobación | PR de métricas | `research-consent.md` |
+>>>>>>> 711416e (Limit the research export and engine comparison to people who consent (P5-2))
 | P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Pendiente | | |
 | P7-2 | Calidad de 5 y 6 días | Variedad, rotación entre bloques, sin relleno | P7-1 | Pendiente | | |
 | L-REV | Revisar las exclusiones por lesión (titular, idealmente con un entrenador o fisioterapeuta) | Cada zona revisada, en especial lo decidido con evidencia débil en `exercise-review.md` | Después de este roadmap y de los bloqueantes de lanzamiento | Pendiente | | |

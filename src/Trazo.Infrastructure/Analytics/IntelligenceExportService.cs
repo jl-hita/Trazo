@@ -16,7 +16,10 @@ public interface IIntelligenceExportService
     Task<IntelligenceExport> CreateAsync(DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken);
 }
 
-/// <summary>Builds the pseudonymised research package and tabular exports outside the HTTP transport layer.</summary>
+/// <summary>
+/// Builds the pseudonymised research package and tabular exports outside the HTTP transport layer. It holds only people who
+/// gave the research consent and still have it (docs/research-consent.md).
+/// </summary>
 public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider clock) : IIntelligenceExportService
 {
     public async Task<IntelligenceExport> CreateAsync(DateTimeOffset? from, DateTimeOffset? to, CancellationToken ct)
@@ -24,23 +27,26 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
         var period = IntelligencePeriod.Resolve(from, to, clock);
         var (start, end) = (period.From, period.To);
 
-        var workouts = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end)
+        var consenting = db.Users.AsNoTracking().Where(u => u.ResearchConsent).Select(u => u.Id);
+        var consentingPlans = db.TrainingPlans.AsNoTracking().Where(p => consenting.Contains(p.UserId)).Select(p => p.Id);
+
+        var workouts = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end && consenting.Contains(x.UserId))
             .Select(x => new { x.Id, x.UserId, x.PlanId, x.PlannedSessionId, x.PerformedAt, x.PerformedOn, x.Outcome,
                 x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, x.ExerciseFeedbackJson }).ToListAsync(ct);
-        var adaptations = await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= start && x.AppliedAt < end)
+        var adaptations = await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= start && x.AppliedAt < end && consentingPlans.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.WorkoutLogId, x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt,
                 x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, x.ChangesJson }).ToListAsync(ct);
-        var observations = await db.MuscleWeekObservations.AsNoTracking().Where(x => x.UpdatedAt >= start && x.UpdatedAt < end)
+        var observations = await db.MuscleWeekObservations.AsNoTracking().Where(x => x.UpdatedAt >= start && x.UpdatedAt < end && consenting.Contains(x.UserId))
             .Select(x => new { x.Id, x.UserId, x.PlanId, x.Period, x.MesocycleSequence, x.IsDeload, x.Muscle, x.Quality,
                 x.Reason, x.PrescribedSets, x.PerformedSets, x.SessionsPlanned, x.SessionsDone, x.Exposures, x.CompletedSets,
                 x.BelowRangeSets, x.PerformanceChangePercent, x.PerformanceSamples, x.FatigueSignals, x.FeedbackAnswers,
                 x.LowStimulusAnswers, x.DiscomfortAnswers, x.PainSessions, x.ReturnFromAbsence, x.ProcessedThrough, x.UpdatedAt }).ToListAsync(ct);
-        var decisions = await db.LongitudinalDecisions.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
+        var decisions = await db.LongitudinalDecisions.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end && consenting.Contains(x.UserId))
             .Select(x => new { x.Id, x.UserId, x.PlanId, x.MesocycleSequence, x.Muscle, x.Action, x.BaselineSets,
                 x.PreviousSets, x.ProposedSets, x.AnalyzedFromPeriod, x.AnalyzedToPeriod, x.SignalsJson,
                 x.PolicyVersion, x.CreatedAt }).ToListAsync(ct);
 
-        var createdPlanIds = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end)
+        var createdPlanIds = await db.TrainingPlans.AsNoTracking().Where(x => x.CreatedAt >= start && x.CreatedAt < end && consenting.Contains(x.UserId))
             .Select(x => x.Id).ToListAsync(ct);
         var planIds = createdPlanIds.Concat(workouts.Select(x => x.PlanId)).Concat(adaptations.Select(x => x.PlanId))
             .Concat(observations.Select(x => x.PlanId)).Concat(decisions.Select(x => x.PlanId)).Distinct().ToArray();
