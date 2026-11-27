@@ -26,7 +26,9 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.13.0";
+    public const string EngineVersion = "0.14.0";
+    // From this many sessions a week the accessories are renewed from block to block.
+    private const int FrequentTrainingDays = 5;
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
     // within this share of the time offered.
     private const decimal StrengthMainLiftTimeShare = 0.85m;
@@ -928,6 +930,10 @@ public static class TrainingProgramGenerator
             .Select(preference => preference.MuscleGroup)
             .ToHashSet();
         var totalSlots = slots + (emphasized.Count > 0 ? 1 : 0);
+        // Strength keeps its lifts and a deload keeps the previous block's exercises.
+        var renewed = request.Goal != TrainingGoal.Strength && !request.IsDeload && daysPerWeek >= FrequentTrainingDays
+            ? (request.PreviousBlockExerciseIds ?? Array.Empty<string>()).ToHashSet(StringComparer.OrdinalIgnoreCase)
+            : new HashSet<string>();
 
         for (var slot = 0; slot < totalSlots; slot++)
         {
@@ -1092,7 +1098,10 @@ public static class TrainingProgramGenerator
                     prioritizeCalfAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Calves))
                 .ThenByDescending(item => item.Score)
-                .ThenByDescending(item => item.Candidate.SelectionPriority)
+                // With five or six sessions a week a new training block renews accessories: one the previous block used gives
+                // way to an equally useful one that is about as well curated (the same window as the other rotations).
+                .ThenByDescending(item => item.Candidate.SelectionPriority -
+                    (renewed.Contains(item.Candidate.ExerciseId) ? PoolPriorityWindow + 1 : 0))
                 // Between equally curated accessories, the one that can be loaded (a machine before a bodyweight drill).
                 .ThenByDescending(item => (int)TrainingExerciseSelection.LoadTier(item.Candidate))
                 .ThenBy(item => TrainingExerciseSelection.TieBreak(request.SelectionSeed, item.Candidate.ExerciseId))
