@@ -57,6 +57,8 @@ public interface ITrainingPlanService
     Task<PlanResult<FrequencyOverviewView>> RevertFrequencyAsync(Guid userId, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
+    /// <summary>Each block of the active plan already begun: prescribed against done, and the exercises it shares with the previous one.</summary>
+    Task<BlockSummariesView?> GetBlockSummariesAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
     /// <summary>Rewrites a pending session of a generated plan with the user's choice; <paramref name="fromNowOn"/> keeps it for later weeks and blocks (Premium).</summary>
     Task<PlanResult<SessionView>> EditSessionAsync(Guid userId, Guid sessionId, ManualDay wanted, bool fromNowOn, CancellationToken ct);
@@ -1622,23 +1624,6 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     /// What the user has lifted over time, across every plan they ever had: per exercise (load, estimated one-repetition
     /// maximum, records), weekly sets per muscle and the streak. Read-only, so it also works for a lapsed Premium.
     /// </summary>
-    public async Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct)
-    {
-        await UseUserClockAsync(userId, ct);
-        var zone = await zones.ResolveAsync(userId, ct);
-        var rows = await (from set in db.WorkoutSetLogs.AsNoTracking()
-                          join log in db.WorkoutLogs.AsNoTracking() on set.WorkoutLogId equals log.Id
-                          where log.UserId == userId && set.Completed
-                          select new { set.ExerciseId, LogId = log.Id, LoggedAt = log.PerformedAt, set.WeightKg, set.Repetitions, set.SetNumber, set.SegmentIndex }).ToListAsync(ct);
-        var ids = rows.Select(r => r.ExerciseId).Distinct().ToList();
-        var catalog = await db.ExerciseCatalog.AsNoTracking().Where(e => ids.Contains(e.Id))
-            .Select(e => new { e.Id, e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles }).ToListAsync(ct);
-        var info = catalog.ToDictionary(e => e.Id, e => new ProgressExerciseInfo(e.NameEs, e.PrimaryMuscles, e.SecondaryMuscles));
-        var goal = (await ActivePlanAsync(userId, ct))?.SessionsPerPeriod ?? 0;
-        return ProgressCalculator.Build(
-            rows.Select(r => new ProgressSetRow(r.ExerciseId, r.LogId, r.LoggedAt, r.WeightKg, r.Repetitions, r.SetNumber, r.SegmentIndex)).ToList(), info, zone, Today, goal);
-    }
-
     public async Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct)
     {
         await UseUserClockAsync(userId, ct);

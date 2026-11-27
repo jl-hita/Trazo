@@ -120,6 +120,22 @@ public sealed class PlanCustomisationApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task TheBlockSummaryAndTheProgressShowWhatThePlanAsks()
+    {
+        var client = await GeneratedAsync("summary@example.com");
+        var response = await client.GetAsync("/api/v1/plans/current/blocks/summary");
+        Assert.True(response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+        var block = (await JsonAsync(response)).GetProperty("blocks")[0];
+        Assert.True(block.GetProperty("sessionsPlanned").GetInt32() > 0);
+        Assert.Equal(0, block.GetProperty("sessionsDone").GetInt32());
+        Assert.True(block.GetProperty("muscles")[0].GetProperty("prescribedSets").GetDecimal() > 0);
+
+        var progress = await JsonAsync(await client.GetAsync("/api/v1/plans/progress"));
+        Assert.Contains(progress.GetProperty("muscles").EnumerateArray(),
+            m => m.GetProperty("prescribedPerSevenDays").ValueKind == JsonValueKind.Number);
+    }
+
+    [Fact]
     public async Task TheTimePerSessionCanBeChanged()
     {
         var client = await GeneratedAsync("minutes@example.com");
