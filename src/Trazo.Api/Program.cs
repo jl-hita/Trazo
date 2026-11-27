@@ -346,6 +346,7 @@ app.MapReferralEndpoints();
 app.MapAdminFiscalEndpoints();
 app.MapMarketingEndpoints();
 app.MapErrorTicketEndpoints();
+app.MapAppVersionEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,

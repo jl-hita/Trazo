@@ -14,6 +14,8 @@ public interface ISettingsWriter
     Task SetSubscriptionsEnforcedAsync(bool enforced, CancellationToken ct);
     /// <summary>Validates and persists the welcome-period and referral-reward settings. Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdatePromotionsAsync(PromotionsConfig input, CancellationToken ct);
+    /// <summary>Validates and persists the Android version policy. Returns validation errors, if any.</summary>
+    Task<Dictionary<string, string[]>> UpdateAppVersionAsync(AppVersionConfig input, CancellationToken ct);
     /// <summary>Validates and persists the Google Play Billing configuration. Returns validation errors, if any.</summary>
     Task<Dictionary<string, string[]>> UpdatePlayBillingAsync(PlayBillingInput input, CancellationToken ct);
     /// <summary>Validates and persists the push-notification (Firebase) configuration. Returns validation errors, if any.</summary>
@@ -126,6 +128,16 @@ public sealed class SettingsWriter(TrazoDbContext db, ISecretProtector protector
         }
         await db.SaveChangesAsync(ct);
         return new OperationsUpdateResult(errors, changes);
+    }
+
+    public async Task<Dictionary<string, string[]>> UpdateAppVersionAsync(AppVersionConfig input, CancellationToken ct)
+    {
+        var errors = AppVersionConfig.Validate(input);
+        if (errors.Count > 0) return errors;
+        await Upsert(SettingKeys.AndroidMinimumVersionCode, input.MinimumAndroidVersionCode.ToString(CultureInfo.InvariantCulture), false, ct);
+        await Upsert(SettingKeys.AndroidRecommendedVersionCode, input.RecommendedAndroidVersionCode.ToString(CultureInfo.InvariantCulture), false, ct);
+        await db.SaveChangesAsync(ct);
+        return errors;
     }
 
     public async Task<Dictionary<string, string[]>> UpdatePromotionsAsync(PromotionsConfig input, CancellationToken ct)

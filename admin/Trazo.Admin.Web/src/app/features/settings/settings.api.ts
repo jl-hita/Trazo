@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiHttpClient } from '../../core/api-http.client';
 import type {
-  OperationsInput, OperationsView, PlayBillingInput, PlayBillingView, PromotionsSettings, PromotionsView,
+  OperationsInput, OperationsView, PlayBillingInput, PlayBillingView, PromotionsSettings, PromotionsView, AppVersionSettings,
   PushInput, PushSendResult, PushView
 } from '../../core/admin.models';
 
@@ -10,6 +10,14 @@ const API = '/api/v1/admin/settings';
 @Injectable({ providedIn: 'root' })
 export class SettingsApi {
   private readonly http = inject(ApiHttpClient);
+
+  getAppVersion(): Promise<AppVersionSettings> {
+    return this.http.get<AppVersionSettings>(`${API}/app-version`);
+  }
+
+  saveAppVersion(settings: AppVersionSettings): Promise<AppVersionSettings> {
+    return this.http.put<AppVersionSettings>(`${API}/app-version`, settings);
+  }
 
   getPromotions(): Promise<PromotionsView> {
     return this.http.get<PromotionsView>(`${API}/promotions`);

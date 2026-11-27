@@ -6,12 +6,13 @@ import { PlayBillingFormComponent } from './play-billing-form.component';
 import { OperationsFormComponent } from './operations-form.component';
 import { PushFormComponent } from './push-form.component';
 import { PromotionsFormComponent } from './promotions-form.component';
+import { AppVersionFormComponent } from './app-version-form.component';
 import { SETTINGS_PAGE_COPY } from './settings.page.copy';
 
 @Component({
   selector: 'trazo-settings-page',
   standalone: true,
-  imports: [ConfigFormComponent, PlayBillingFormComponent, PromotionsFormComponent, PushFormComponent, OperationsFormComponent],
+  imports: [ConfigFormComponent, PlayBillingFormComponent, PromotionsFormComponent, PushFormComponent, OperationsFormComponent, AppVersionFormComponent],
   templateUrl: './settings.page.html'
 })
 export class SettingsPageComponent {

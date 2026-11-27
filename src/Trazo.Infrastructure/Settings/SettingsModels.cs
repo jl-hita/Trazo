@@ -39,6 +39,10 @@ public static class SettingKeys
     public const string PushSenderId = "Push:Fcm:SenderId";
     public const string PushServiceAccountJson = "Push:Fcm:ServiceAccountJson";
 
+    // Android app versions (superadmin): below the minimum the app asks to update; below the recommended one it suggests it.
+    public const string AndroidMinimumVersionCode = "App:Android:MinimumVersionCode";
+    public const string AndroidRecommendedVersionCode = "App:Android:RecommendedVersionCode";
+
     // Promotions (superadmin): the welcome Premium period of new accounts and the referral programme.
     public const string SignupTrialEnabled = "Promotions:SignupTrial:Enabled";
     public const string SignupTrialDays = "Promotions:SignupTrial:Days";
@@ -64,6 +68,22 @@ public sealed record PromotionsConfig(bool SignupTrialEnabled, int SignupTrialDa
         var errors = new Dictionary<string, string[]>();
         if (input.SignupTrialDays is < 1 or > MaxDays) errors["signupTrialDays"] = [$"Must be between 1 and {MaxDays} days."];
         if (input.ReferralRewardDays is < 1 or > MaxDays) errors["referralRewardDays"] = [$"Must be between 1 and {MaxDays} days."];
+        return errors;
+    }
+}
+
+/// <summary>Version codes of the Android app; 0 turns the corresponding notice off.</summary>
+public sealed record AppVersionConfig(int MinimumAndroidVersionCode, int RecommendedAndroidVersionCode)
+{
+    public static readonly AppVersionConfig Off = new(0, 0);
+
+    public static Dictionary<string, string[]> Validate(AppVersionConfig input)
+    {
+        var errors = new Dictionary<string, string[]>();
+        if (input.MinimumAndroidVersionCode < 0) errors["minimumAndroidVersionCode"] = ["Must be 0 (off) or a version code."];
+        if (input.RecommendedAndroidVersionCode < 0) errors["recommendedAndroidVersionCode"] = ["Must be 0 (off) or a version code."];
+        else if (input.RecommendedAndroidVersionCode > 0 && input.RecommendedAndroidVersionCode < input.MinimumAndroidVersionCode)
+            errors["recommendedAndroidVersionCode"] = ["Cannot be lower than the minimum version."];
         return errors;
     }
 }

@@ -1198,6 +1198,16 @@ export const UI_COPY = {
       testConnection: 'Probar conexión',
       saved: 'Configuración de Play Billing guardada.'
     },
+    appVersion: {
+      title: 'Versiones de la app Android',
+      minimum: 'Versión mínima (código de versión)',
+      recommended: 'Versión recomendada (código de versión)',
+      explanation: 'Por debajo de la mínima la app solo ofrece actualizar; por debajo de la recomendada lo sugiere una vez. 0 desactiva el aviso. El código aparece en el registro de cada publicación (x.y.z+código).',
+      warning: 'Pon como mínima solo una versión que ya esté disponible para todos en Google Play.',
+      confirm: 'Las versiones anteriores a la mínima no podrán usarse hasta actualizar. ¿Está ya publicada para todos?',
+      save: 'Guardar versiones',
+      saved: 'Versiones guardadas.'
+    },
     promotions: {
       title: 'Promociones: tiempo Premium gratuito',
       welcomeEnabled: 'Las cuentas nuevas reciben un periodo Premium gratuito',
