@@ -57,6 +57,8 @@ public interface ITrainingPlanService
     Task<PlanResult<FrequencyOverviewView>> RevertFrequencyAsync(Guid userId, CancellationToken ct);
     Task<PlanLoadView?> GetLoadAsync(Guid userId, CancellationToken ct);
     Task<ProgressView> GetProgressAsync(Guid userId, CancellationToken ct);
+    /// <summary>What is worth reviewing in the active plan, with its reason and confidence; nothing is applied (Premium).</summary>
+    Task<RecommendationsView?> GetRecommendationsAsync(Guid userId, CancellationToken ct);
     /// <summary>Each block of the active plan already begun: prescribed against done, and the exercises it shares with the previous one.</summary>
     Task<BlockSummariesView?> GetBlockSummariesAsync(Guid userId, CancellationToken ct);
     Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);

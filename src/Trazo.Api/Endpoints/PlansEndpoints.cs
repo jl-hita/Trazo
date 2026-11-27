@@ -124,6 +124,9 @@ public static class PlansEndpoints
         group.MapGet("/current/blocks/summary", GetBlockSummariesAsync).WithName("GetPlanBlockSummaries")
             .WithSummary("Each block already begun: effective sets per muscle asked and done, sessions, and the change on the exercises shared with the previous training block. Read-only.")
             .Produces<BlockSummariesView>().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapGet("/current/recommendations", GetRecommendationsAsync).WithName("GetPlanRecommendations")
+            .WithSummary("Things worth reviewing (recurring pain, a stalled exercise, doing less than planned): what, why, suggestion and confidence. Nothing is applied. Premium.")
+            .Produces<RecommendationsView>().ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/progress", GetProgressAsync).WithName("GetProgress")
             .WithSummary("Progress across all the user's plans: per exercise (load, estimated 1RM, records), weekly sets per muscle and streak. Read-only.")
             .Produces<ProgressView>();
@@ -273,6 +276,12 @@ public static class PlansEndpoints
     {
         if (UserId(principal) is not { } userId) return Results.Unauthorized();
         return await plans.GetBlockSummariesAsync(userId, ct) is { } summaries ? Results.Ok(summaries) : NoPlan();
+    }
+
+    private static async Task<IResult> GetRecommendationsAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        return await plans.GetRecommendationsAsync(userId, ct) is { } view ? Results.Ok(view) : NoPlan();
     }
 
     private static async Task<IResult> GetCurrentAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)

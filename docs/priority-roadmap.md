@@ -248,7 +248,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P4-1 | Estadísticas por músculo (API + Android) | Prescrito, realizado, frecuencia, tendencia | X-1 | Hecho; sin probar en un dispositivo | #259, Trazo.Android#113 | `progress-statistics.md` |
 | P4-2 | Resumen por mesociclo | Comparación entre bloques honesta | P4-1 | Hecho; sin probar en un dispositivo | #259, Trazo.Android#113 | `progress-statistics.md` |
 | P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Parcial: servidor hecho; interruptor y texto legal pendientes de aprobación | #260 | `research-consent.md` |
-| P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Pendiente | | |
+| P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Hecho: API y pantalla; umbrales sin validar; sin probar en un dispositivo | PR de recomendaciones, Trazo.Android#114 | `recommendations.md` |
 | P7-2 | Calidad de 5 y 6 días | Variedad, rotación entre bloques, sin relleno | P7-1 | Pendiente | | |
 | L-REV | Revisar las exclusiones por lesión (titular, idealmente con un entrenador o fisioterapeuta) | Cada zona revisada, en especial lo decidido con evidencia débil en `exercise-review.md` | Después de este roadmap y de los bloqueantes de lanzamiento | Pendiente | | |
 
