@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Verhoog alleen met de kleinste stap van het materiaal, zonder {0} % van het huidige gewicht te overschrijden; registreer het nieuwe gewicht om volgende adviezen te kalibreren.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "De beschikbare stap ({0} kg) overschrijdt de ingestelde voorzichtige grens van {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Houd het gewicht aan of pas het materiaal aan; forceer geen te grote sprong.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Het volgende beschikbare gewicht betekent in één keer {0} kg erbij.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Houd het gewicht en haal {0} herhalingen per set met dezelfde RIR voordat je verhoogt.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Verhoog met precies één kleinste stap en ga terug naar de onderkant van het herhalingsbereik.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "In de laatste twee uitvoeringen met {0} kg is het voorgeschreven werk niet voltooid (sets of minimale herhalingen).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Het gewicht was waarschijnlijk te hoog: verlaag in de volgende training naar ongeveer {0} kg en bouw van daaruit weer op.",

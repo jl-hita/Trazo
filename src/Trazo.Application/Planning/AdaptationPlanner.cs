@@ -68,9 +68,6 @@ public sealed record AdaptationOutcome(
 public static class AdaptationPlanner
 {
     public const int ProgressionHoldDays = 7;
-    public const decimal LightLoadThresholdKg = 20m;
-    public const decimal LightLoadIncrementKg = 1m;
-    public const decimal StandardLoadIncrementKg = 2.5m;
 
     public static AdaptationOutcome Evaluate(AdaptationInput input)
     {
@@ -175,7 +172,7 @@ public static class AdaptationPlanner
     {
         var latest = history[^1];
         var lastLoad = WorkingLoad(latest);
-        var increment = lastLoad is < LightLoadThresholdKg ? LightLoadIncrementKg : StandardLoadIncrementKg;
+        var increment = TrainingLoadEstimator.IncrementFor(lastLoad ?? TrainingLoadEstimator.LightLoadThresholdKg);
         var prescription = new TrainingExerciseProgressionPrescription(
             latest.ExerciseId, latest.PlannedSets, latest.MinRepetitions, latest.MaxRepetitions, latest.TargetRir,
             latest.Rule, lastLoad is null ? null : increment);

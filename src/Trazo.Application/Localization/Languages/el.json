@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Αύξησε μόνο το μικρότερο διαθέσιμο βήμα του εξοπλισμού, χωρίς να ξεπεράσεις το {0} % του τωρινού βάρους· κατέγραψε το νέο βάρος για να ρυθμίζονται οι επόμενες συστάσεις.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Το διαθέσιμο βήμα ({0} kg) ξεπερνά το συντηρητικό όριο του {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Κράτησε το βάρος ή προσάρμοσε τον εξοπλισμό· μην κάνεις υπερβολικό άλμα.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Το επόμενο διαθέσιμο βάρος σημαίνει αύξηση {0} kg με τη μία.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Κράτησε το φορτίο και φτάσε τις {0} επαναλήψεις ανά σετ με το ίδιο RIR πριν αυξήσεις.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Αύξησε ένα μόνο ελάχιστο βήμα βάρους και γύρισε στο κάτω όριο του εύρους επαναλήψεων.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "Στις δύο τελευταίες εκθέσεις με {0} kg δεν ολοκληρώθηκε η προβλεπόμενη δουλειά (σετ ή ελάχιστες επαναλήψεις).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Το βάρος μάλλον ήταν πολύ μεγάλο: μείωσέ το σε περίπου {0} kg στην επόμενη προπόνηση και προόδευσε ξανά από εκεί.",

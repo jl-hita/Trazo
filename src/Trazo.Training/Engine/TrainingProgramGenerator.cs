@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.14.0";
+    public const string EngineVersion = "0.14.1";
     // From this many sessions a week the accessories are renewed from block to block.
     private const int FrequentTrainingDays = 5;
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
@@ -595,7 +595,7 @@ public static class TrainingProgramGenerator
                 var sets = Enumerable.Repeat(
                     new TrainingExecutedSet("working", reference.WeightKg, reference.Repetitions, reference.Rir, true),
                     Math.Clamp(reference.Sets, 1, 10)).ToArray();
-                var increment = exercise.SmallestLoadIncrementKg ?? TrainingLoadEstimator.DefaultLoadIncrementKg;
+                var increment = exercise.SmallestLoadIncrementKg ?? TrainingLoadEstimator.IncrementFor(reference.WeightKg);
                 var suggestion = TrainingLoadEstimator.Suggest(
                     sets, exercise.MinRepetitions, exercise.MaxRepetitions,
                     exercise.TargetRepetitionsInReserve, increment);

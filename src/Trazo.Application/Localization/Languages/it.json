@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Aumenta solo del minimo incremento disponibile dell'attrezzo, senza superare il {0} % del carico attuale; registra il nuovo peso per calibrare le prossime raccomandazioni.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "L'incremento disponibile ({0} kg) supera il limite prudente impostato dell'{1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Mantieni il carico o regola l'attrezzo; non forzare un salto eccessivo.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Il peso disponibile successivo comporta {0} kg in più in un colpo solo.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Mantieni il carico e arriva a {0} ripetizioni per serie con lo stesso RIR prima di aumentare.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Aumenta di un solo incremento minimo e torna alla parte bassa dell'intervallo di ripetizioni.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "Nelle ultime due esposizioni con {0} kg il lavoro prescritto non è stato completato (serie o ripetizioni minime).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Il carico era probabilmente troppo alto: scendi a circa {0} kg nella prossima sessione e riprendi a progredire da lì.",

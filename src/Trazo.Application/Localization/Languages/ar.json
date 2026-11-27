@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "زد بأصغر خطوة متاحة في المعدّة فقط، دون تجاوز {0}% من الوزن الحالي؛ سجّل الوزن الجديد لمعايرة التوصيات القادمة.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "الخطوة المتاحة ({0} كغ) تتجاوز الحد الحذر المضبوط {1}% ({2} كغ).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "أبقِ الوزن أو اضبط المعدّة؛ لا تفرض قفزة كبيرة.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "الوزن التالي المتاح يعني زيادة {0} كغ دفعة واحدة.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "أبقِ الوزن وبلغ {0} تكرارًا في كل مجموعة بنفس RIR قبل الزيادة.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "زد خطوة دنيا واحدة وعد إلى أسفل نطاق التكرارات.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "في آخر مرتين بوزن {0} كغ لم يكتمل العمل المحدد (المجموعات أو الحد الأدنى للتكرارات).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "غالبًا كان الوزن أعلى من اللازم: خفّضه إلى نحو {0} كغ في الحصة القادمة وتدرّج من هناك.",

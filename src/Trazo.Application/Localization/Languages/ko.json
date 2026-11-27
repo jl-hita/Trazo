@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "장비의 가장 작은 증량만, 현재 중량의 {0}%를 넘지 않게 올리세요. 다음 추천을 맞추도록 새 중량을 기록하세요.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "가능한 증량({0} kg)이 설정된 보수적 한도 {1}%({2} kg)를 넘습니다.",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "중량을 유지하거나 장비를 조정하세요. 무리한 증량은 피하세요.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "다음으로 가능한 중량은 한 번에 {0} kg 증가합니다.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "중량을 유지하고 같은 RIR로 세트당 {0}회에 도달한 뒤 올리세요.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "최소 증량 한 단계만 올리고 반복 범위의 하단으로 돌아가세요.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "{0} kg 최근 두 번에서 처방한 작업(세트 또는 최소 반복)을 완료하지 못했습니다.",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "중량이 너무 무거웠을 가능성이 큽니다. 다음에는 약 {0} kg으로 낮추고 거기서 다시 진행하세요.",

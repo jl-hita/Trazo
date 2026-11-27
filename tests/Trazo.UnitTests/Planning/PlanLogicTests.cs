@@ -481,7 +481,8 @@ public sealed class AdaptationPlannerTests
 
     /// <summary>
     /// Property: over random but plausible training histories the advice stays sane. A load never jumps by more than
-    /// 10 %, never goes up after a failed or painful session, and is never zero or negative.
+    /// 10 % (these loads are heavy enough for the smallest step to stay under it), never goes up after a failed or painful
+    /// session, and is never zero or negative.
     /// </summary>
     [Theory]
     [InlineData(1)]

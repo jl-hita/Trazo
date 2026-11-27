@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Augmente seulement du plus petit palier disponible, sans dépasser {0} % de la charge actuelle ; enregistre le nouveau poids pour calibrer les prochaines recommandations.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Le palier disponible ({0} kg) dépasse la limite prudente configurée de {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Garde la charge ou ajuste l'équipement ; ne force pas un saut excessif.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Le poids disponible suivant représente {0} kg de plus d'un coup.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Garde la charge et atteins {0} répétitions par série avec le même RIR avant d'augmenter.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Augmente d'un seul palier minimal et reviens au bas de la fourchette de répétitions.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "Lors des deux dernières expositions à {0} kg, le travail prescrit n'a pas été terminé (séries ou minimum de répétitions).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "La charge était probablement trop élevée : réduis à environ {0} kg à la prochaine séance et reprends la progression à partir de là.",

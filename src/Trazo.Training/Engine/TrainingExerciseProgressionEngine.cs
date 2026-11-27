@@ -89,19 +89,22 @@ public static class TrainingExerciseProgressionEngine
 
         // A single good session is not enough to justify a load jump. Requiring two
         // consecutive top-of-range exposures reduces reactions to day-to-day noise.
-        var consecutiveTopRange = 1;
+        // A block changes sets and reserve from week to week by design, so an earlier exposure is judged against what IT
+        // prescribed. Only a different repetition range makes it incomparable.
+        var streak = new List<ExposureAnalysis> { latest };
         for (var index = exposures.Length - 2; index >= 0; index--)
         {
-            var previous = AnalyzeExposure(prescription, exposures[index]);
+            if (AsPrescribedThen(prescription, exposures[index]) is not { } then) break;
+            var previous = AnalyzeExposure(then, exposures[index]);
             if (!exposures[index].ProgressionEligible || !exposures[index].SessionCompleted ||
                 !previous.IsUsable || previous.BelowTargetRir || previous.BelowMinimumRepetitions ||
                 !previous.AtTopOfRange || previous.LoadKg != latest.LoadKg ||
                 exposures[index].RecoveryInsufficient || exposures[index].PainReported)
                 break;
-            consecutiveTopRange++;
+            streak.Add(previous);
         }
 
-        if (consecutiveTopRange < RequiredConsecutiveTopRangeExposures)
+        if (streak.Count < RequiredConsecutiveTopRangeExposures)
             return Recommendation(TrainingExerciseProgressionAction.ConfirmTopOfRange,
                 "Has alcanzado el máximo del rango. Repite la carga y confirma el resultado en otra sesión antes de subir peso.");
 
@@ -117,8 +120,24 @@ public static class TrainingExerciseProgressionEngine
 
         var increment = prescription.SmallestLoadIncrementKg.Value;
         if (increment > maximumIncrease)
-            return Recommendation(TrainingExerciseProgressionAction.HoldAndReview,
-                $"El incremento disponible ({increment:0.##} kg) supera el límite conservador configurado del {maximumIncreasePercent:0.##} % ({maximumIncrease:0.##} kg). Mantén la carga o ajusta el material; no fuerces un salto excesivo.");
+        {
+            // A ceiling written for this exercise is a limit set on purpose: it is never exceeded.
+            if (prescription.MaximumLoadIncreasePercent is not null)
+                return Recommendation(TrainingExerciseProgressionAction.HoldAndReview,
+                    $"El incremento disponible ({increment:0.##} kg) supera el límite conservador configurado del {maximumIncreasePercent:0.##} % ({maximumIncrease:0.##} kg). Mantén la carga o ajusta el material; no fuerces un salto excesivo.");
+
+            // With the default ceiling, a light load can never move by the smallest step the equipment has. The step is then
+            // earned with repetitions: enough of them that the new load is expected to stay inside the range.
+            var required = RepetitionsThatSupport(prescription, latest.LoadKg, latest.LoadKg + increment);
+            if (!streak.Take(RequiredConsecutiveTopRangeExposures).All(x => x.Sets.All(set => set.Repetitions!.Value >= required)))
+                return new(
+                    TrainingExerciseProgressionAction.AddRepetitions,
+                    $"Has alcanzado el máximo del rango. El siguiente peso disponible supone subir {increment:0.##} kg de golpe. Mantén la carga y llega a {required} repeticiones por serie con el mismo RIR antes de subir.",
+                    latest.LoadKg,
+                    null,
+                    latest.Sets.Select(set => Math.Max(set.Repetitions!.Value, Math.Min(required, set.Repetitions!.Value + 1))).ToArray(),
+                    null);
+        }
 
         var suggestedLoad = decimal.Round(latest.LoadKg + increment, 2, MidpointRounding.AwayFromZero);
         return new(
@@ -128,6 +147,29 @@ public static class TrainingExerciseProgressionEngine
             increment,
             Enumerable.Repeat(prescription.MinRepetitions, prescription.PlannedWorkingSets).ToArray(),
             maximumIncreasePercent);
+    }
+
+    /// <summary>
+    /// Repetitions at <paramref name="load"/> (with the target reserve) whose Epley estimate covers the minimum of the range
+    /// at <paramref name="nextLoad"/>. Never less than the top of the range.
+    /// </summary>
+    private static int RepetitionsThatSupport(
+        TrainingExerciseProgressionPrescription prescription, decimal load, decimal nextLoad)
+    {
+        var rir = prescription.TargetRir ?? 0m;
+        var needed = (int)Math.Ceiling(nextLoad * (30m + prescription.MinRepetitions + rir) / load - 30m - rir);
+        return Math.Clamp(needed, prescription.MaxRepetitions, 100);
+    }
+
+    /// <summary>The prescription an earlier exposure was done against; null when its repetition range was another one.</summary>
+    private static TrainingExerciseProgressionPrescription? AsPrescribedThen(
+        TrainingExerciseProgressionPrescription current, TrainingExerciseExposure exposure)
+    {
+        if (exposure.HistoricalPrescription is not { } then) return current;
+        if (then.MinRepetitions != current.MinRepetitions || then.MaxRepetitions != current.MaxRepetitions ||
+            then.PlannedWorkingSets is not { } sets)
+            return null;
+        return current with { PlannedWorkingSets = sets, TargetRir = then.TargetRir };
     }
 
     // Internal product thresholds (not guideline figures): two consecutive failed exposures at the
@@ -160,9 +202,11 @@ public static class TrainingExerciseProgressionEngine
             if (load is not null && load != weights[0]) return null;
             load = weights[0];
 
+            // Each exposure fails against its own prescription: a week with fewer sets is not an incomplete one.
+            if (AsPrescribedThen(prescription, exposure) is not { } then) return null;
             var completed = exposure.WorkingSets.Where(set => set.Completed).ToArray();
-            var belowMinimum = completed.Any(set => set.Repetitions is < 1 || set.Repetitions < prescription.MinRepetitions);
-            var incomplete = completed.Length < prescription.PlannedWorkingSets;
+            var belowMinimum = completed.Any(set => set.Repetitions is < 1 || set.Repetitions < then.MinRepetitions);
+            var incomplete = completed.Length < then.PlannedWorkingSets;
             var reason = exposure.SkippedSetReason;
             var reasonPointsToLoad = reason is null or "load_too_heavy" or "other";
             if (!(belowMinimum || (incomplete && reasonPointsToLoad))) return null;
@@ -193,10 +237,16 @@ public static class TrainingExerciseProgressionEngine
         if (recent.Any(x => !x.SessionCompleted || !x.ProgressionEligible || x.RecoveryInsufficient || x.PainReported))
             return false;
 
-        var analyses = recent.Select(x => AnalyzeExposure(prescription, x)).ToArray();
+        if (recent.Any(x => AsPrescribedThen(prescription, x) is null))
+            return false;
+        var analyses = recent.Select(x => AnalyzeExposure(AsPrescribedThen(prescription, x)!, x)).ToArray();
         if (analyses.Any(x => !x.IsUsable || x.BelowMinimumRepetitions || x.BelowTargetRir))
             return false;
         if (analyses.Select(x => x.LoadKg).Distinct().Count() != 1)
+            return false;
+
+        // Totals of different numbers of sets say nothing about progress.
+        if (analyses.Select(x => x.Sets.Count).Distinct().Count() != 1)
             return false;
 
         var totalRepetitions = analyses
@@ -242,11 +292,6 @@ public static class TrainingExerciseProgressionEngine
         // back-off/drop sets are not silently averaged; they need an explicit future model.
         if (sets.Any(x => x.WeightKg != load))
             return ExposureAnalysis.Failure("Las series usan cargas distintas. No se calcula una progresión única hasta que la prescripción modele esas cargas.", invalid: true);
-
-        if (sets.Any(x => x.Repetitions!.Value > prescription.MaxRepetitions))
-            return ExposureAnalysis.Failure(
-                "Se han registrado repeticiones por encima del máximo prescrito. Revisa el registro antes de calcular una progresión.",
-                invalid: true);
 
         var belowMinimum = sets.Any(x => x.Repetitions!.Value < prescription.MinRepetitions);
         var belowRir = prescription.TargetRir is not null &&

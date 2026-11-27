@@ -262,6 +262,8 @@
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Öka bara med utrustningens minsta möjliga steg, utan att överskrida {0} % av nuvarande vikt; logga den nya vikten för att kalibrera framtida rekommendationer.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Det tillgängliga steget ({0} kg) överskrider den inställda försiktiga gränsen på {1} % ({2} kg).",
  "Mantén la carga o ajusta el material; no fuerces un salto excesivo.": "Behåll vikten eller justera utrustningen; tvinga inte fram ett för stort hopp.",
+ "El siguiente peso disponible supone subir {0} kg de golpe.": "Nästa tillgängliga vikt innebär {0} kg mer på en gång.",
+ "Mantén la carga y llega a {0} repeticiones por serie con el mismo RIR antes de subir.": "Behåll vikten och nå {0} reps per set med samma RIR innan du ökar.",
  "Aumenta un único incremento mínimo del material y vuelve al extremo inferior del rango de repeticiones.": "Öka ett enda minsta viktsteg och gå tillbaka till den nedre änden av repsintervallet.",
  "En las dos últimas exposiciones con {0} kg no se completó el trabajo prescrito (series o mínimo de repeticiones).": "Vid de två senaste tillfällena med {0} kg slutfördes inte det föreskrivna arbetet (set eller minsta antal reps).",
  "Es probable que la carga fuera demasiado alta: reduce a unos {0} kg en la próxima sesión y vuelve a progresar desde ahí.": "Vikten var förmodligen för hög: sänk till omkring {0} kg i nästa pass och öka därifrån igen.",
