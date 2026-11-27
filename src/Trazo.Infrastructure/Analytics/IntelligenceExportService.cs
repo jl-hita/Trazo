@@ -109,7 +109,7 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
         var workoutData = workouts.Select(x => new
         {
             x.Id, x.UserId, x.PlanId, x.PlannedSessionId, x.PerformedAt, x.PerformedOn, x.Outcome,
-            x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, ExerciseFeedbackJson = SafeJson(x.ExerciseFeedbackJson)
+            NonCompletionReason = WithoutIllness(x.NonCompletionReason, "Other"), x.Recovery, x.SessionRpe, x.PainReported, ExerciseFeedbackJson = SafeJson(x.ExerciseFeedbackJson)
         }).ToArray();
         var decisionData = decisions.Select(x => new
         {
@@ -138,7 +138,7 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
             workouts = workoutData.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), session = Key(x.PlannedSessionId),
                 x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = x.ExerciseFeedbackJson }).ToArray(),
             sets = sets.Select(x => new { id = Key(x.Id), workout = Key(x.WorkoutLogId), x.ExerciseId, x.SetNumber, x.WeightKg,
-                x.Repetitions, x.Rir, x.Completed, x.SkippedReason, x.PainReported }).ToArray(),
+                x.Repetitions, x.Rir, x.Completed, SkippedReason = WithoutIllness(x.SkippedReason, "other"), x.PainReported }).ToArray(),
             observations = observations.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.Period,
                 x.MesocycleSequence, x.IsDeload, x.Muscle, x.Quality, x.Reason, x.PrescribedSets, x.PerformedSets,
                 x.SessionsPlanned, x.SessionsDone, x.Exposures, x.CompletedSets, x.BelowRangeSets, x.PerformanceChangePercent,
@@ -167,6 +167,12 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
         }
         return new IntelligenceExport(memory.ToArray(), $"trazo-intelligence-{start:yyyyMMdd}-{end:yyyyMMdd}.zip");
     }
+    private const string Illness = "Illness";
+
+    /// <summary>The research consent covers the discomfort a person logs, not illness: that reason leaves as any other.</summary>
+    private static string? WithoutIllness(string? reason, string other) =>
+        string.Equals(reason, Illness, StringComparison.OrdinalIgnoreCase) ? other : reason;
+
     private static void SanitizeNode(JsonNode? node, Func<Guid, string> pseudonymize)
     {
         switch (node)
@@ -186,8 +192,11 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
                 foreach (var item in array) SanitizeNode(item, pseudonymize);
                 break;
             case JsonValue value:
-                if (value.TryGetValue<string>(out var text) && Guid.TryParse(text, out var id))
+                if (!value.TryGetValue<string>(out var text)) break;
+                if (Guid.TryParse(text, out var id))
                     value.ReplaceWith(JsonValue.Create(pseudonymize(id)));
+                else if (string.Equals(text, Illness, StringComparison.OrdinalIgnoreCase))
+                    value.ReplaceWith(JsonValue.Create("Other"));
                 break;
         }
     }
