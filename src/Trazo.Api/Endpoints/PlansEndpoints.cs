@@ -56,6 +56,15 @@ public static class PlansEndpoints
         group.MapPut("/current/manual", UpdateManualAsync).WithName("UpdateManualPlan")
             .WithSummary("Rewrites the routines of the user's own plan from today on (name, notes, days, exercises, supersets). Logged sessions are kept.")
             .Produces<PlanView>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapPut("/current/sessions/{sessionId:guid}/exercises", EditSessionAsync).WithName("EditPlanSession")
+            .WithSummary("Rewrites a pending session of a generated plan (exercises, order, dose, techniques, supersets). Scope \"plan\" keeps it for later weeks and blocks. Premium.")
+            .Produces<SessionView>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
+        group.MapPut("/current/session-minutes", UpdateSessionMinutesAsync).WithName("UpdatePlanSessionMinutes")
+            .WithSummary("Changes the time per session of a generated plan, from the next block on. Premium.")
+            .Produces<PlanView>().ProducesValidationProblem().ProducesProblem(StatusCodes.Status404NotFound);
+        group.MapDelete("/current/adjustments", ClearAdjustmentsAsync).WithName("ClearPlanAdjustments")
+            .WithSummary("Forgets the user's lasting changes: blocks generated from now on are the engine's proposal.")
+            .Produces(StatusCodes.Status204NoContent).ProducesProblem(StatusCodes.Status404NotFound);
         group.MapGet("/current", GetCurrentAsync).WithName("GetCurrentPlan")
             .WithSummary("The active plan: profile and macrocycle phases, without any session detail.")
             .Produces<PlanView>().ProducesProblem(StatusCodes.Status404NotFound);
@@ -184,6 +193,34 @@ public static class PlansEndpoints
         if (!parsed.Succeeded) return Results.ValidationProblem(parsed.Errors.ToDictionary(p => p.Key, p => p.Value));
         var result = await plans.UpdateManualAsync(userId, parsed.Plan!, ct);
         return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> EditSessionAsync(
+        Guid sessionId, SessionEditRequest request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var scope = (request.Scope ?? "session").Trim().ToLowerInvariant();
+        if (scope is not ("session" or "plan"))
+            return Results.ValidationProblem(new Dictionary<string, string[]> { ["scope"] = ["El alcance debe ser «session» o «plan»."] });
+        var (day, errors) = ManualPlanParser.ParseSession(request.Exercises, request.Supersets, await plans.TodayAsync(userId, ct));
+        if (day is null) return Results.ValidationProblem(errors.ToDictionary(p => p.Key, p => p.Value));
+        var result = await plans.EditSessionAsync(userId, sessionId, day, scope == "plan", ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> UpdateSessionMinutesAsync(
+        SessionMinutesRequest request, ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.UpdateSessionMinutesAsync(userId, request.Minutes ?? 0, ct);
+        return result.Succeeded ? Results.Ok(result.Value) : Failure(result);
+    }
+
+    private static async Task<IResult> ClearAdjustmentsAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)
+    {
+        if (UserId(principal) is not { } userId) return Results.Unauthorized();
+        var result = await plans.ClearAdjustmentsAsync(userId, ct);
+        return result.Succeeded ? Results.NoContent() : Failure(result);
     }
 
     private static async Task<IResult> GetCurrentAsync(ClaimsPrincipal principal, ITrainingPlanService plans, CancellationToken ct)

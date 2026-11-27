@@ -93,7 +93,9 @@ public sealed record SessionView(
     Guid Id, int WeekNumber, DateOnly? Date, DayOfWeek? Day, string Title, int EstimatedDurationMinutes, string Status,
     IReadOnlyList<ExerciseView> Exercises, LogView? Log, int SequenceIndex = 0,
     // How each superset letter is alternated, for apps that declare the techniques capability.
-    IReadOnlyList<Trazo.Training.TrainingSupersetPrescription>? Supersets = null);
+    IReadOnlyList<Trazo.Training.TrainingSupersetPrescription>? Supersets = null,
+    // The user fixed something in this session of a generated plan.
+    bool Customised = false);
 
 public sealed record WeekView(
     Guid PlanId, int WeekNumber, DateOnly? WeekStart, DateOnly? WeekEnd, string Timeline, MesocycleView? Mesocycle,
@@ -288,6 +290,14 @@ public sealed record SwapRequest(string? ReplacementExerciseId, bool? ApplyToRem
 public sealed record ManualPlanInput(
     string? Name, string? Notes, DateOnly? StartDate, int? TotalWeeks, string? Goal, string? Experience,
     ManualDayInput[]? Days, string? TimeZone = null, string? SchedulingMode = null);
+
+/// <summary>
+/// A pending session of a generated plan as the user wants it. <c>Scope</c> is "session" (only this one) or "plan" (this one
+/// and its later repetitions, in this block and the next ones).
+/// </summary>
+public sealed record SessionEditRequest(string? Scope, ManualExerciseInput[]? Exercises, ManualSupersetInput[]? Supersets = null);
+
+public sealed record SessionMinutesRequest(int? Minutes);
 
 public sealed record ManualDayInput(string? Day, string? Title, ManualExerciseInput[]? Exercises, ManualSupersetInput[]? Supersets = null);
 

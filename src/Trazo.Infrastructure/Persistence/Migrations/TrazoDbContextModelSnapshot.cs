@@ -568,6 +568,24 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
                 .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
 
+        modelBuilder.Entity("Trazo.Domain.Planning.PlanSessionAdjustment", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("PlanId").HasColumnType("uuid");
+            b.Property<string>("SessionTitle").IsRequired().HasMaxLength(160).HasColumnType("character varying(160)");
+            b.Property<string>("AdjustmentJson").IsRequired().HasColumnType("text");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<DateTimeOffset>("UpdatedAt").HasColumnType("timestamp with time zone");
+            b.HasKey("Id");
+            b.HasIndex("PlanId", "SessionTitle").IsUnique();
+            b.ToTable("plan_session_adjustments");
+        });
+        modelBuilder.Entity("Trazo.Domain.Planning.PlanSessionAdjustment", b =>
+        {
+            b.HasOne("Trazo.Domain.Planning.TrainingPlan", null)
+                .WithMany().HasForeignKey("PlanId").OnDelete(DeleteBehavior.Cascade).IsRequired();
+        });
+
         modelBuilder.Entity("Trazo.Domain.Planning.MuscleWeekObservation", b =>
         {
             b.Property<Guid>("Id").HasColumnType("uuid");

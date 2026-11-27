@@ -275,3 +275,17 @@ public static class PrescriptionSources
     public const string User = "user";
     public const string Administrator = "admin";
 }
+
+/// <summary>
+/// The user's lasting changes to one session of the week of a generated plan, identified by the session's title: applied to
+/// every block generated afterwards (docs/plan-customisation.md).
+/// </summary>
+public sealed class PlanSessionAdjustment
+{
+    public Guid Id { get; set; }
+    public Guid PlanId { get; set; }
+    public required string SessionTitle { get; set; }
+    public required string AdjustmentJson { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
+}

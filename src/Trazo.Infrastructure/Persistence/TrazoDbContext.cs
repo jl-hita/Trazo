@@ -24,6 +24,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Planning.WorkoutLog> WorkoutLogs => Set<Trazo.Domain.Planning.WorkoutLog>();
     public DbSet<Trazo.Domain.Planning.WorkoutSetLog> WorkoutSetLogs => Set<Trazo.Domain.Planning.WorkoutSetLog>();
     public DbSet<Trazo.Domain.Planning.PlanAdaptation> PlanAdaptations => Set<Trazo.Domain.Planning.PlanAdaptation>();
+    public DbSet<Trazo.Domain.Planning.PlanSessionAdjustment> PlanSessionAdjustments => Set<Trazo.Domain.Planning.PlanSessionAdjustment>();
     public DbSet<Trazo.Domain.Planning.MuscleWeekObservation> MuscleWeekObservations => Set<Trazo.Domain.Planning.MuscleWeekObservation>();
     public DbSet<Trazo.Domain.Planning.LongitudinalDecision> LongitudinalDecisions => Set<Trazo.Domain.Planning.LongitudinalDecision>();
     public DbSet<Trazo.Domain.Planning.EngineResearchObservation> EngineResearchObservations => Set<Trazo.Domain.Planning.EngineResearchObservation>();
