@@ -136,6 +136,17 @@ public sealed class PlanCustomisationApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task ANewPlanHasNothingToRecommend()
+    {
+        var client = await GeneratedAsync("advice@example.com");
+        var response = await client.GetAsync("/api/v1/plans/current/recommendations");
+        Assert.True(response.IsSuccessStatusCode, await response.Content.ReadAsStringAsync());
+        var view = await JsonAsync(response);
+        Assert.False(view.GetProperty("locked").GetBoolean());
+        Assert.Equal(0, view.GetProperty("items").GetArrayLength());
+    }
+
+    [Fact]
     public async Task TheTimePerSessionCanBeChanged()
     {
         var client = await GeneratedAsync("minutes@example.com");
