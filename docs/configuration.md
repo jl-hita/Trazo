@@ -119,3 +119,17 @@ Nada de esto es obligatorio: las variables actuales siguen valiendo. Cuando haya
 | `GET /api/v1/admin/settings/operations` | Valores efectivos, orígenes CORS del entorno (solo lectura) y origen de la clave DietoExpress. Nunca devuelve la clave |
 | `PUT /api/v1/admin/settings/operations` | Valida todo y guarda atómicamente; `dietoExpressApiKey`: `null` conserva, `""` borra. 400 con los errores por campo si algo es inválido |
 | `POST /api/v1/admin/settings/operations/test/dietoexpress` | Comprueba que la dirección responde |
+
+## Android version policy
+
+Console: **Settings → App versions** (superadmin). Two Android version codes, both `0` (off) until set:
+
+| Setting | Effect in the app |
+|---|---|
+| Minimum | Older versions show a screen that only offers to update |
+| Recommended | Older versions suggest updating, once per recommended version |
+
+The app reads `GET /api/v1/app/version-policy` (public) when it opens and keeps the last answer, so the notice also shows without
+a connection. The API rejects no request because of the version, so nothing queued on a phone is lost. Set a minimum only after
+that version is available to everyone on Google Play: the version code of each release is printed by the *Android Release*
+workflow (`Building Trazo version x.y.z+code`). Versions published before this feature ignore the policy.

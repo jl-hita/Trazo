@@ -199,6 +199,9 @@ export interface PushInput {
 
 export interface PushSendResult { ok: boolean; message: string; }
 
+/** Android version codes; 0 turns the notice off. */
+export interface AppVersionSettings { minimumAndroidVersionCode: number; recommendedAndroidVersionCode: number; }
+
 export interface PromotionsSettings {
   signupTrialEnabled: boolean; signupTrialDays: number; referralsEnabled: boolean; referralRewardDays: number;
 }

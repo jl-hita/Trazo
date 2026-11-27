@@ -1,0 +1,16 @@
+    <form class="av" (ngSubmit)="save()" autocomplete="off">
+      <fieldset>
+        <legend>{{ labels.title }}</legend>
+        <trazo-form-field [label]="labels.minimum" controlId="minVersion"><input type="number" name="minVersion" min="0" step="1" [ngModel]="minimum()" (ngModelChange)="minimum.set(+$event)" [disabled]="busy() || !loaded()" id="minVersion">
+        </trazo-form-field>
+        <trazo-form-field [label]="labels.recommended" controlId="recVersion"><input type="number" name="recVersion" min="0" step="1" [ngModel]="recommended()" (ngModelChange)="recommended.set(+$event)" [disabled]="busy() || !loaded()" id="recVersion">
+        </trazo-form-field>
+        <p class="hint">{{ labels.explanation }}</p>
+        <p class="hint">{{ labels.warning }}</p>
+        <div class="actions">
+          <trazo-button variant="secondary" type="submit" [disabled]="busy() || !loaded()">{{ labels.save }}</trazo-button>
+          @if (message()) { <span class="ok" role="status">{{ message() }}</span> }
+          @if (error()) { <span class="err" role="alert">{{ error() }}</span> }
+        </div>
+      </fieldset>
+    </form>

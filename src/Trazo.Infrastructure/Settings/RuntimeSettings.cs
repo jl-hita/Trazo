@@ -20,6 +20,8 @@ public interface IRuntimeSettings
     Task<bool> GetSubscriptionsEnforcedAsync(CancellationToken ct = default);
     /// <summary>Welcome period and referral reward settings (defaults when never saved).</summary>
     Task<PromotionsConfig> GetPromotionsAsync(CancellationToken ct = default);
+    /// <summary>Android version policy; off when never saved or unreadable.</summary>
+    Task<AppVersionConfig> GetAppVersionAsync(CancellationToken ct = default);
     Task<PlayBillingConfig> GetPlayBillingAsync(CancellationToken ct = default);
     Task<PlayBillingView> GetPlayBillingViewAsync(CancellationToken ct = default);
     Task<PushConfig> GetPushAsync(CancellationToken ct = default);
@@ -94,6 +96,14 @@ public sealed class RuntimeSettings(
         var e = BuildEmail(rows);
         return new SettingsView(Get(rows, SettingKeys.GoogleClientId) ?? "", e.Host, e.Port, e.EnableSsl,
             e.Username, !string.IsNullOrEmpty(e.Password), e.From, e.ActionBaseUrl, e.Enabled);
+    }
+
+    public async Task<AppVersionConfig> GetAppVersionAsync(CancellationToken ct = default)
+    {
+        var rows = await LoadAsync(ct);
+        int Code(string key) =>
+            int.TryParse(Get(rows, key), NumberStyles.None, CultureInfo.InvariantCulture, out var v) ? v : 0;
+        return new AppVersionConfig(Code(SettingKeys.AndroidMinimumVersionCode), Code(SettingKeys.AndroidRecommendedVersionCode));
     }
 
     public async Task<PromotionsConfig> GetPromotionsAsync(CancellationToken ct = default)
