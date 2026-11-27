@@ -61,7 +61,11 @@ public interface ITrainingPlanService
     Task<RecommendationsView?> GetRecommendationsAsync(Guid userId, CancellationToken ct);
     /// <summary>Each block of the active plan already begun: prescribed against done, and the exercises it shares with the previous one.</summary>
     Task<BlockSummariesView?> GetBlockSummariesAsync(Guid userId, CancellationToken ct);
-    Task<bool> ArchiveAsync(Guid userId, CancellationToken ct);
+    /// <summary>
+    /// Closes the active plan. With <paramref name="planId"/> it closes only that one, and answers a conflict when another is active.
+    /// <paramref name="reason"/> is stored only if the user has the research consent in force.
+    /// </summary>
+    Task<PlanResult<Guid>> ArchiveAsync(Guid userId, PlanArchiveReason? reason, Guid? planId, CancellationToken ct);
     /// <summary>Rewrites a pending session of a generated plan with the user's choice; <paramref name="fromNowOn"/> keeps it for later weeks and blocks (Premium).</summary>
     Task<PlanResult<SessionView>> EditSessionAsync(Guid userId, Guid sessionId, ManualDay wanted, bool fromNowOn, CancellationToken ct);
     /// <summary>Changes the time per session of a generated plan, from the next block on (Premium).</summary>
@@ -1693,14 +1697,29 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             LoadMetrics.Dose(workouts), slot is null ? [] : LoadMetrics.PrescribedPerSevenDays(perSession, slot.Weeks));
     }
 
-    public async Task<bool> ArchiveAsync(Guid userId, CancellationToken ct)
+    public async Task<PlanResult<Guid>> ArchiveAsync(Guid userId, PlanArchiveReason? reason, Guid? planId, CancellationToken ct)
     {
         var plan = await db.TrainingPlans.FirstOrDefaultAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct);
-        if (plan is null) return false;
+        if (plan is null) return PlanResult<Guid>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
+        if (planId is { } expected && expected != plan.Id)
+            return PlanResult<Guid>.Fail(PlanFailure.ConcurrentModification, ConcurrentModificationMessage);
         plan.Status = TrainingPlanStatus.Archived;
+        plan.ArchiveReason = await AllowedArchiveReasonAsync(userId, reason, ct);
         plan.UpdatedAt = clock.GetUtcNow();
+        // One UPDATE writes both: the plan is never left archived without its reason, nor with a reason and still active.
         await db.SaveChangesAsync(ct);
-        return true;
+        return PlanResult<Guid>.Ok(plan.Id);
+    }
+
+    /// <summary>What may be kept of a reason: nothing without the research consent; discomfort needs the health data consent too.</summary>
+    private async Task<PlanArchiveReason?> AllowedArchiveReasonAsync(Guid userId, PlanArchiveReason? reason, CancellationToken ct)
+    {
+        if (reason is null) return null;
+        var consent = await db.Users.AsNoTracking().Where(u => u.Id == userId)
+            .Select(u => new { u.ResearchConsent, u.HealthConsentAt }).FirstOrDefaultAsync(ct);
+        if (consent is not { ResearchConsent: true }) return null;
+        // As the health data eraser does with pain as a reason: it stays as any other reason.
+        return reason == PlanArchiveReason.Discomfort && consent.HealthConsentAt is null ? PlanArchiveReason.Other : reason;
     }
 
     // ---------------------------------------------------------------- log + adapt

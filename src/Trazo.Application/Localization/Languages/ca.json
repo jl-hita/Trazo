@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Fes servir un identificador IANA vàlid, per exemple Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Ha d'estar entre 1 i 100.",
  "Debe estar entre 1 y 10.": "Ha d'estar entre 1 i 10.",
+ "El motivo de archivado no es válido.": "El motiu d'arxivament no és vàlid.",
  "El ejercicio de sustitución es obligatorio.": "L'exercici substitut és obligatori.",
  "No se pudo completar la operación.": "No s'ha pogut completar l'operació.",
  "No has pedido ninguna revisión.": "No has demanat cap revisió.",

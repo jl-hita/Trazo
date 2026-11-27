@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "请使用有效的 IANA 标识，例如 Europe/Madrid。",
  "Debe estar entre 1 y 100.": "必须在 1 到 100 之间。",
  "Debe estar entre 1 y 10.": "必须在 1 到 10 之间。",
+ "El motivo de archivado no es válido.": "归档原因无效。",
  "El ejercicio de sustitución es obligatorio.": "替换动作为必填项。",
  "No se pudo completar la operación.": "操作未能完成。",
  "No has pedido ninguna revisión.": "你没有申请任何审核。",

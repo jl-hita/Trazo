@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Erabili IANA identifikatzaile baliodun bat, adibidez Europe/Madrid.",
  "Debe estar entre 1 y 100.": "1 eta 100 artean egon behar du.",
  "Debe estar entre 1 y 10.": "1 eta 10 artean egon behar du.",
+ "El motivo de archivado no es válido.": "Artxibatzeko arrazoia ez da baliozkoa.",
  "El ejercicio de sustitución es obligatorio.": "Ordezko ariketa nahitaezkoa da.",
  "No se pudo completar la operación.": "Ezin izan da eragiketa osatu.",
  "No has pedido ninguna revisión.": "Ez duzu berrikuspenik eskatu.",

@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Verwende eine gültige IANA-Kennung, zum Beispiel Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Der Wert muss zwischen 1 und 100 liegen.",
  "Debe estar entre 1 y 10.": "Der Wert muss zwischen 1 und 10 liegen.",
+ "El motivo de archivado no es válido.": "Der Archivierungsgrund ist ungültig.",
  "El ejercicio de sustitución es obligatorio.": "Die Ersatzübung ist erforderlich.",
  "No se pudo completar la operación.": "Der Vorgang konnte nicht abgeschlossen werden.",
  "No has pedido ninguna revisión.": "Du hast keine Überprüfung angefragt.",

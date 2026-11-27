@@ -31,6 +31,7 @@ public sealed class TrainingPlanConfiguration : IEntityTypeConfiguration<Trainin
         builder.ToTable("training_plans");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+        builder.Property(x => x.ArchiveReason).HasConversion<string>().HasMaxLength(30);
         builder.Property(x => x.Origin).HasConversion<string>().HasMaxLength(20).IsRequired();
         builder.Property(x => x.SchedulingMode).HasConversion<string>().HasMaxLength(20).IsRequired();
         builder.Property(x => x.Goal).HasMaxLength(40).IsRequired();

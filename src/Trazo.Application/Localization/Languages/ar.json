@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "استخدم معرّف IANA صالحًا، مثل Europe/Madrid.",
  "Debe estar entre 1 y 100.": "يجب أن يكون بين 1 و100.",
  "Debe estar entre 1 y 10.": "يجب أن يكون بين 1 و10.",
+ "El motivo de archivado no es válido.": "سبب الأرشفة غير صالح.",
  "El ejercicio de sustitución es obligatorio.": "التمرين البديل مطلوب.",
  "No se pudo completar la operación.": "تعذّر إكمال العملية.",
  "No has pedido ninguna revisión.": "لم تطلب أي مراجعة.",

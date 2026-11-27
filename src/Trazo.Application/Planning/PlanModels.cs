@@ -223,6 +223,12 @@ public sealed record AdjustmentView(string Strategy, string Reason, string Messa
 /// <summary>Omits a pending session on purpose: <c>Reason</c> is Time, Fatigue, Equipment, Motivation, Illness or Other.</summary>
 public sealed record SkipSessionRequest(string? Reason, string? Notes);
 
+/// <summary>
+/// Optional body of the archive request; older clients send none. <c>Reason</c> is the name of a <c>PlanArchiveReason</c> and
+/// <c>PlanId</c> the plan the user was looking at when asked, so the answer is never attached to another one.
+/// </summary>
+public sealed record ArchivePlanRequest(string? Reason, Guid? PlanId);
+
 /// <summary>Muscle to priority (Emphasize, Grow, Maintain). A muscle that is not listed is Grow; an empty map clears every priority.</summary>
 public sealed record UpdateMusclePrioritiesRequest(IReadOnlyDictionary<string, string>? MusclePriorities);
 

@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Geçerli bir IANA kimliği kullan, örneğin Europe/Madrid.",
  "Debe estar entre 1 y 100.": "1 ile 100 arasında olmalı.",
  "Debe estar entre 1 y 10.": "1 ile 10 arasında olmalı.",
+ "El motivo de archivado no es válido.": "Arşivleme nedeni geçerli değil.",
  "El ejercicio de sustitución es obligatorio.": "Yerine geçecek egzersiz zorunludur.",
  "No se pudo completar la operación.": "İşlem tamamlanamadı.",
  "No has pedido ninguna revisión.": "Herhangi bir inceleme istemedin.",

@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Χρησιμοποίησε έγκυρο αναγνωριστικό IANA, για παράδειγμα Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Η τιμή πρέπει να είναι από 1 έως 100.",
  "Debe estar entre 1 y 10.": "Η τιμή πρέπει να είναι από 1 έως 10.",
+ "El motivo de archivado no es válido.": "Ο λόγος αρχειοθέτησης δεν είναι έγκυρος.",
  "El ejercicio de sustitución es obligatorio.": "Η αντικαταστάτρια άσκηση είναι υποχρεωτική.",
  "No se pudo completar la operación.": "Η ενέργεια δεν ολοκληρώθηκε.",
  "No has pedido ninguna revisión.": "Δεν έχεις ζητήσει έλεγχο.",

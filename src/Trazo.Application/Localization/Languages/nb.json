@@ -228,6 +228,7 @@
  "Usa un identificador IANA válido, por ejemplo Europe/Madrid.": "Bruk en gyldig IANA-id, for eksempel Europe/Madrid.",
  "Debe estar entre 1 y 100.": "Må være mellom 1 og 100.",
  "Debe estar entre 1 y 10.": "Må være mellom 1 og 10.",
+ "El motivo de archivado no es válido.": "Årsaken til arkivering er ikke gyldig.",
  "El ejercicio de sustitución es obligatorio.": "Erstatningsøvelsen må oppgis.",
  "No se pudo completar la operación.": "Handlingen kunne ikke fullføres.",
  "No has pedido ninguna revisión.": "Du har ikke bedt om noen gjennomgang.",
