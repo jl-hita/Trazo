@@ -10,13 +10,12 @@ agregados; **el texto legal lo aprueba el titular antes de publicarlo**.
 |---|---|
 | Exportación de Trazo Intelligence filtrada por consentimiento | Hecho |
 | Comparación por versión del motor (solo con consentimiento, mínimo 5 personas por grupo) en `GET /admin/intelligence/summary` | Hecho; sin pantalla en la consola |
-| Interruptor en la app | **No hecho**: se escribirá con el texto aprobado, en los 29 idiomas |
-| Política de privacidad | Pendiente de actualizar con el texto aprobado |
+| Interruptor en la app (Cuenta, apagado por defecto) | Hecho (Trazo.Android#117); sin probar en un dispositivo |
+| Política de privacidad y consentimiento de salud de la app | Actualizados con la redacción aprobada por el titular (2026-11-27) |
 
 El consentimiento es `users.ResearchConsent` (`PUT /api/v1/account/research-consent`). Antes solo decidía si las filas
 anónimas conservadas al borrar la cuenta podían agruparse ([account-deletion.md](account-deletion.md)); el texto debe cubrir
-ambas cosas. Hasta que exista el interruptor nadie lo tiene activado desde la app, así que la exportación y la comparación
-salen vacías.
+ambas cosas.
 
 El resto del resumen de Intelligence (recuentos de planes, entrenos y adaptaciones) sigue siendo de todos los usuarios,
 agregado, como antes: es seguimiento del servicio, no la comparación de la que trata esta decisión. Conviene que la revisión
@@ -47,6 +46,7 @@ Los textos de los otros 27 idiomas de la app son traducciones de estos, sin revi
 El texto cubre las **molestias** registradas, no la enfermedad: la exportación sustituye ese motivo (de una sesión o de una
 serie) por «otro».
 
-Puntos que sigue conviniendo confirmar con quien revise la parte legal: las molestias son datos de salud y el consentimiento
-de salud dice que se usan solo para adaptar el entrenamiento; la base jurídica y el plazo de conservación de las
-exportaciones.
+El consentimiento de salud de la app dice que las molestias se usan además para investigar si se activa este.
+
+Pendiente: el plazo de conservación de las exportaciones (la política no lo dice) y confirmar con quien revise la parte legal
+la base jurídica y que el **dolor** registrado, que la exportación incluye, queda cubierto por «molestias».

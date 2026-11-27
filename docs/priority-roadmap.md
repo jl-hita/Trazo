@@ -247,7 +247,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P3-2 | Diez programas y pantalla Android | Revisados y documentados | P3-1, P7-1 | Hecho; sin revisión de entrenador ni prueba en un dispositivo | #258, Trazo.Android#112 | `programs.md` |
 | P4-1 | Estadísticas por músculo (API + Android) | Prescrito, realizado, frecuencia, tendencia | X-1 | Hecho; sin probar en un dispositivo | #259, Trazo.Android#113 | `progress-statistics.md` |
 | P4-2 | Resumen por mesociclo | Comparación entre bloques honesta | P4-1 | Hecho; sin probar en un dispositivo | #259, Trazo.Android#113 | `progress-statistics.md` |
-| P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Parcial: servidor hecho; interruptor y texto legal pendientes de aprobación | #260 | `research-consent.md` |
+| P5-2 | Métricas y comparación de políticas | R9–R10; consentimiento en la app | P1-2, P2-1 | Hecho: servidor, interruptor, política y consentimiento de salud; sin probar en un dispositivo | #260, #263, #264, Trazo.Android#117 | `research-consent.md` |
 | P6-1 | Recomendaciones explicables | Formato común, confianza y confirmación | P4, P5-2 | Hecho: API y pantalla; umbrales sin validar; sin probar en un dispositivo | #261, Trazo.Android#114 | `recommendations.md` |
 | P7-2 | Calidad de 5 y 6 días | Variedad, rotación entre bloques, sin relleno | P7-1 | Hecho: accesorios renovados entre bloques (motor 0.14.0); las sesiones largas siguen sin llenar el tiempo | #262 | `validation-scenarios.md`, `ManyDaysQualityTests` |
 | L-REV | Revisar las exclusiones por lesión (titular, idealmente con un entrenador o fisioterapeuta) | Cada zona revisada, en especial lo decidido con evidencia débil en `exercise-review.md` | Después de este roadmap y de los bloqueantes de lanzamiento | Pendiente | | |
@@ -274,7 +274,7 @@ Pendiente del titular:
 
 | Qué | Por qué | Documento |
 |---|---|---|
-| Aprobar el texto de investigación | Sin él no hay interruptor en la app y la exportación sale vacía | `research-consent.md` |
+| Plazo de conservación y revisión legal de la investigación | La política no dice cuánto se guardan las exportaciones; confirmar que «molestias» cubre el dolor | `research-consent.md` |
 | Revisar errores frecuentes y seguridad (C-2) | Consejos de seguridad sin revisión profesional: no publicados | `exercise-safety-draft.md` |
 | Confirmar la precedencia manual (D6) | Se aplicó la recomendación R6 sin aprobación expresa | `plan-customisation.md` |
 | Revisión por un entrenador (D8) y vídeos (D9) | Solo puede hacerlo el titular | |
