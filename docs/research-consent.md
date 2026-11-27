@@ -22,7 +22,7 @@ El resto del resumen de Intelligence (recuentos de planes, entrenos y adaptacion
 agregado, como antes: es seguimiento del servicio, no la comparación de la que trata esta decisión. Conviene que la revisión
 legal lo confirme.
 
-## Texto propuesto (pendiente de aprobación)
+## Texto aprobado por el titular (2026-11-27)
 
 **Español**
 
@@ -31,7 +31,7 @@ legal lo confirme.
 > registres, sin tu nombre, correo ni notas) para comparar versiones del motor y estudiar cómo mejorar los planes. Los datos
 > se sustituyen por claves que no identifican a nadie fuera de cada análisis y los resultados se miran agrupados. No se
 > venden ni se ceden. Si borras tu cuenta, las cifras anónimas por músculo que se conservan podrán agruparse. Puedes
-> desactivarlo cuando quieras: dejarás de incluirse en los análisis posteriores. No cambia nada de lo que puedes usar.
+> desactivarlo cuando quieras: dejarás de incluirte en los análisis posteriores. No cambia nada de lo que puedes usar.
 
 **English**
 
@@ -42,5 +42,11 @@ legal lo confirme.
 > your account, the anonymous per-muscle figures that are kept may be grouped. You can turn it off at any time: you will be
 > left out of later analyses. It changes nothing you can use.
 
-Puntos a confirmar con quien revise la parte legal: que las molestias son datos de salud (el texto o el consentimiento de
-salud deben cubrir su uso para investigación), la base jurídica y el plazo de conservación de las exportaciones.
+Los textos de los otros 27 idiomas de la app son traducciones de estos, sin revisión nativa.
+
+El texto cubre las **molestias** registradas, no la enfermedad: la exportación sustituye ese motivo (de una sesión o de una
+serie) por «otro».
+
+Puntos que sigue conviniendo confirmar con quien revise la parte legal: las molestias son datos de salud y el consentimiento
+de salud dice que se usan solo para adaptar el entrenamiento; la base jurídica y el plazo de conservación de las
+exportaciones.

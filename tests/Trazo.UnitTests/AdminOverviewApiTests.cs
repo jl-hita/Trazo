@@ -718,13 +718,14 @@ public sealed class AdminOverviewApiTests : IDisposable
             {
                 Id = workoutId, UserId = user.Id, PlanId = planId, PlannedSessionId = sessionId,
                 LoggedAt = Start.AddDays(-1), PerformedAt = Start.AddDays(-1), PerformedOn = DateOnly.FromDateTime(Start.AddDays(-1).UtcDateTime),
-                Outcome = WorkoutOutcome.Completed
+                Outcome = WorkoutOutcome.Completed, NonCompletionReason = "Illness"
             });
+            db.WorkoutSetLogs.Add(new WorkoutSetLog { Id = Guid.NewGuid(), WorkoutLogId = workoutId, ExerciseId = "squat", SetNumber = 1, SkippedReason = "illness" });
             db.PlanAdaptations.Add(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = planId, WorkoutLogId = workoutId, Kind = "reduction_sets",
                 Explanation = "structured reason", AppliedAt = Start.AddDays(-1), SchemaVersion = 1,
-                ChangesJson = """{"sessions":[{"sessionId":"SESSION_GUID","mesocycleId":"MESOCYCLE_GUID","before":{},"after":{}}]}"""
+                ChangesJson = """{"sessions":[{"sessionId":"SESSION_GUID","mesocycleId":"MESOCYCLE_GUID","before":{},"after":{},"reason":"Illness"}]}"""
                     .Replace("SESSION_GUID", sessionId.ToString()).Replace("MESOCYCLE_GUID", mesocycleId.ToString())
             });
             await db.SaveChangesAsync();
@@ -772,6 +773,7 @@ public sealed class AdminOverviewApiTests : IDisposable
             Assert.DoesNotContain(planId.ToString(), content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain(user.Id.ToString(), content, StringComparison.OrdinalIgnoreCase);
             Assert.DoesNotContain("Shoulder", content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("illness", content, StringComparison.OrdinalIgnoreCase);
         }
     }
 
