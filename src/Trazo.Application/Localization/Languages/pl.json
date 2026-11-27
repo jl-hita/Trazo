@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Utrzymaj ciężar i dodaj najwyżej jedno powtórzenie w serii przy następnej ekspozycji, bez przekraczania zakresu i bez utraty docelowego RIR.",
  "Has alcanzado el máximo del rango.": "Osiągnięto górną granicę zakresu.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Powtórz ciężar i potwierdź wynik w kolejnej sesji, zanim go zwiększysz.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Bez zapisanego RIR potrzebne są trzy sesje z rzędu; zapisuj go, aby progresować szybciej.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Trzy kolejne ekspozycje spełniają zakres.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Dwie kolejne ekspozycje spełniają zakres i RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Zwiększ tylko o najmniejszy dostępny skok sprzętu, nie więcej niż {0} % obecnego ciężaru; zapisz nowy ciężar, aby skalibrować kolejne zalecenia.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Dostępny skok ({0} kg) przekracza ustawiony zachowawczy limit {1} % ({2} kg).",

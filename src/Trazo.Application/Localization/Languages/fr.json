@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Garde la charge et ajoute au plus une répétition par série à la prochaine exposition, sans dépasser la fourchette ni perdre le RIR visé.",
  "Has alcanzado el máximo del rango.": "Tu as atteint le haut de la fourchette.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Répète la charge et confirme le résultat lors d'une autre séance avant d'augmenter le poids.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Sans RIR noté, il faut trois séances d'affilée ; note-le pour progresser plus tôt.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Trois expositions consécutives respectent la fourchette.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Deux expositions consécutives respectent la fourchette et le RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Augmente seulement du plus petit palier disponible, sans dépasser {0} % de la charge actuelle ; enregistre le nouveau poids pour calibrer les prochaines recommandations.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Le palier disponible ({0} kg) dépasse la limite prudente configurée de {1} % ({2} kg).",

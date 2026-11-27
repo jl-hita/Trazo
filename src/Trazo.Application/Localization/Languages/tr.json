@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Yükü koru ve sonraki maruziyette aralığı aşmadan ve hedef RIR'ı kaybetmeden set başına en fazla bir tekrar ekle.",
  "Has alcanzado el máximo del rango.": "Aralığın üst sınırına ulaştın.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Ağırlığı artırmadan önce yükü tekrarla ve sonucu başka bir seansta doğrula.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "RIR yazılmadığında art arda üç antrenman gerekir; daha erken ilerlemek için yazın.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Art arda üç maruziyet aralığı karşılıyor.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Art arda iki maruziyet aralığı ve RIR'ı karşılıyor.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Mevcut yükün %{0} sınırını aşmadan yalnızca ekipmanın en küçük artışını uygula; sonraki önerileri ayarlamak için yeni ağırlığı kaydet.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Mevcut artış ({0} kg) ayarlanan %{1} temkinli sınırını ({2} kg) aşıyor.",

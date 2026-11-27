@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Behold vægten, og tilføj højst én gentagelse pr. sæt næste gang uden at overskride intervallet eller miste mål-RIR.",
  "Has alcanzado el máximo del rango.": "Du har nået toppen af intervallet.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Gentag vægten, og bekræft resultatet i et pas mere, før du øger.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Uden noteret RIR kræves tre træninger i træk; notér den for at øge tidligere.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Tre eksponeringer i træk opfylder intervallet.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "To eksponeringer i træk opfylder interval og RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Øg kun med udstyrets mindste mulige trin, højst {0} % af den nuværende vægt; registrér den nye vægt for at kalibrere kommende anbefalinger.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Det mulige trin ({0} kg) overskrider den indstillede forsigtige grænse på {1} % ({2} kg).",

@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Houd het gewicht aan en voeg bij de volgende uitvoering hooguit een herhaling per set toe, zonder het bereik te overschrijden of de doel-RIR te verliezen.",
  "Has alcanzado el máximo del rango.": "Je hebt de bovenkant van het bereik gehaald.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Herhaal het gewicht en bevestig het resultaat in een andere training voordat je verzwaart.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Zonder genoteerde RIR zijn drie trainingen op rij nodig; noteer hem om eerder te verhogen.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Drie opeenvolgende uitvoeringen halen het bereik.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Twee opeenvolgende uitvoeringen halen bereik en RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Verhoog alleen met de kleinste stap van het materiaal, zonder {0} % van het huidige gewicht te overschrijden; registreer het nieuwe gewicht om volgende adviezen te kalibreren.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "De beschikbare stap ({0} kg) overschrijdt de ingestelde voorzichtige grens van {1} % ({2} kg).",

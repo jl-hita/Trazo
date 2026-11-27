@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Задржи ја тежината и на следната изложеност додај најмногу едно повторување по серија, без да го надминеш опсегот или да го изгубиш целниот RIR.",
  "Has alcanzado el máximo del rango.": "Ја достигна горната граница на опсегот.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Повтори ја тежината и потврди го резултатот на уште еден тренинг пред да ја зголемиш.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Без запишан RIR се потребни три последователни тренинзи; запиши го за побрз напредок.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Три последователни изложености го исполнуваат опсегот.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Две последователни изложености го исполнуваат опсегот и RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Зголеми само за најмалиот достапен чекор на опремата, без да надминеш {0} % од сегашната тежина; запиши ја новата тежина за попрецизни препораки.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Достапниот чекор ({0} kg) ја надминува поставената внимателна граница од {1} % ({2} kg).",

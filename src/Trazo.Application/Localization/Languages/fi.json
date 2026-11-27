@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Pidä paino ja lisää enintään yksi toisto settiä kohti seuraavalla kerralla ylittämättä aluetta tai menettämättä tavoite-RIR:iä.",
  "Has alcanzado el máximo del rango.": "Olet saavuttanut toistoalueen ylärajan.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Toista paino ja vahvista tulos toisessa treenissä ennen painon lisäämistä.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Ilman kirjattua RIR-arvoa tarvitaan kolme harjoitusta peräkkäin; kirjaa se, niin etenet nopeammin.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Kolme peräkkäistä suoritusta täyttää toistoalueen.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Kaksi peräkkäistä suoritusta täyttää toistoalueen ja RIR:n.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Lisää vain välineen pienin mahdollinen askel ylittämättä {0} % nykyisestä painosta; kirjaa uusi paino, jotta tulevat suositukset kalibroituvat.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Saatavilla oleva askel ({0} kg) ylittää asetetun varovaisen rajan {1} % ({2} kg).",

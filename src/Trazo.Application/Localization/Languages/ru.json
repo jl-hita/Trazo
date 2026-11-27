@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Сохраните вес и добавьте не более одного повторения в подходе в следующий раз, не выходя за диапазон и не теряя целевой RIR.",
  "Has alcanzado el máximo del rango.": "Достигнута верхняя граница диапазона.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Повторите вес и подтвердите результат ещё на одной тренировке, прежде чем увеличивать вес.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Без записанного RIR нужны три тренировки подряд; записывайте его, чтобы прибавлять раньше.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Три экспозиции подряд выполняют диапазон.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Две экспозиции подряд выполняют диапазон и RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Увеличьте только на минимальный доступный шаг оборудования, не более чем на {0} % от текущего веса; запишите новый вес, чтобы откалибровать следующие рекомендации.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "Доступный шаг ({0} кг) превышает заданный осторожный лимит {1} % ({2} кг).",

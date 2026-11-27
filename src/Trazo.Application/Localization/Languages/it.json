@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "Mantieni il carico e aggiungi al massimo una ripetizione per serie nella prossima esposizione, senza superare l'intervallo né perdere il RIR obiettivo.",
  "Has alcanzado el máximo del rango.": "Hai raggiunto il limite alto dell'intervallo.",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "Ripeti il carico e conferma il risultato in un'altra sessione prima di aumentare il peso.",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "Senza il RIR annotato servono tre sedute di fila; annotalo per salire prima.",
+ "Tres exposiciones consecutivas cumplen el rango.": "Tre esposizioni consecutive rispettano l'intervallo.",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "Due esposizioni consecutive rispettano intervallo e RIR.",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "Aumenta solo del minimo incremento disponibile dell'attrezzo, senza superare il {0} % del carico attuale; registra il nuovo peso per calibrare le prossime raccomandazioni.",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "L'incremento disponibile ({0} kg) supera il limite prudente impostato dell'{1} % ({2} kg).",

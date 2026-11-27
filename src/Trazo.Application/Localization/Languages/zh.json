@@ -258,6 +258,8 @@
  "Mantén la carga y añade como máximo una repetición por serie en la próxima exposición, sin superar el rango prescrito ni perder el RIR objetivo.": "保持重量，下次每组最多增加一次，不超出范围且不丢失目标 RIR。",
  "Has alcanzado el máximo del rango.": "已达到范围上限。",
  "Repite la carga y confirma el resultado en otra sesión antes de subir peso.": "增重前请用同样重量再做一次确认结果。",
+ "Sin el RIR apuntado hacen falta tres sesiones seguidas; apúntalo para subir antes.": "未记录 RIR 时需要连续三次训练；记录它可以更早加重。",
+ "Tres exposiciones consecutivas cumplen el rango.": "连续三次达到范围。",
  "Dos exposiciones consecutivas cumplen el rango y el RIR.": "连续两次达到范围和 RIR。",
  "Sube solo el menor incremento disponible del material, sin superar el {0} % de la carga actual; registra el nuevo peso para calibrar futuras recomendaciones.": "只按器械可用的最小增量加重，且不超过当前重量的 {0}%；记录新重量以校准之后的建议。",
  "El incremento disponible ({0} kg) supera el límite conservador configurado del {1} % ({2} kg).": "可用增量（{0} kg）超过设定的保守上限 {1}%({2} kg）。",
