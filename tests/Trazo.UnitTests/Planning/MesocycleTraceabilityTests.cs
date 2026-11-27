@@ -462,7 +462,7 @@ public sealed class MesocycleTraceUnitTests
         Assert.Equal(["a", "z"], exercises[1].GetProperty("requiredEquipment").EnumerateArray().Select(e => e.GetString()!).ToArray());
         Assert.Equal(JsonValueKind.Number, exercises[0].GetProperty("selectionPriority").ValueKind);
         Assert.Equal(JsonValueKind.True, exercises[0].GetProperty("isReviewed").ValueKind);
-        Assert.Equal(2, json.RootElement.GetProperty("fingerprintVersion").GetInt32());
+        Assert.Equal(3, json.RootElement.GetProperty("fingerprintVersion").GetInt32());
     }
 
     [Fact]
@@ -480,7 +480,8 @@ public sealed class MesocycleTraceUnitTests
             ["requiredEquipment"] = baseline with { RequiredEquipment = ["barbell", "bench"] },
             ["suitableGoals"] = baseline with { SuitableGoals = [TrainingGoal.Hypertrophy, TrainingGoal.Strength] },
             ["primaryMuscles"] = baseline with { PrimaryMuscleGroups = [TrainingMuscleGroup.Glutes] },
-            ["secondaryMuscles"] = baseline with { SecondaryMuscleGroups = [TrainingMuscleGroup.Glutes] }
+            ["secondaryMuscles"] = baseline with { SecondaryMuscleGroups = [TrainingMuscleGroup.Glutes] },
+            ["allowedTechniques"] = baseline with { AllowedTechniques = [TrainingTechniqueType.DropSet] }
         };
         var reference = CatalogFingerprint.Compute([baseline]);
         foreach (var (field, changed) in variants)

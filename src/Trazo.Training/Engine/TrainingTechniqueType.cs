@@ -32,10 +32,16 @@ public sealed record TrainingTechniquePrescription(
     int? LoadDropPercent = null,
     int? SegmentMinRepetitions = null,
     int? SegmentMaxRepetitions = null,
-    decimal? TargetRir = null);
+    decimal? TargetRir = null,
+    // Why the generator prescribed it (the app words it); absent in a technique the user chose.
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    string? Reason = null);
 
 /// <summary>
 /// How the exercises that share a superset letter are alternated. It lives beside the exercises of a session; a letter without
 /// one is done as supersets always were.
 /// </summary>
-public sealed record TrainingSupersetPrescription(string Group, int Rounds, int RestBetweenSeconds, int RestAfterRoundSeconds);
+public sealed record TrainingSupersetPrescription(
+    string Group, int Rounds, int RestBetweenSeconds, int RestAfterRoundSeconds,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    string? Reason = null);

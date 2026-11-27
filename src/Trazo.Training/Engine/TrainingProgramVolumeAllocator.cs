@@ -387,7 +387,8 @@ public static class TrainingProgramVolumeAllocator
         BuildTargets(goal, experience, preferences, sessionsPerWeek, maximumSessionDurationMinutes)
             .ToDictionary(pair => pair.Key, pair => pair.Value + GetUpperHeadroom(goal, experience, preferences, pair.Key, pair.Value));
 
-    internal static decimal EstimateDurationSeconds(TrainingSessionPrescription session) =>
+    /// <summary>The duration model of the generator: work, rest between sets, a transition per exercise and the warm-up.</summary>
+    public static decimal EstimateDurationSeconds(TrainingSessionPrescription session) =>
         EstimateDuration(session);
 
     private static Dictionary<TrainingMuscleGroup, decimal> BuildTargets(

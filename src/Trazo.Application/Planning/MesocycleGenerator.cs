@@ -54,7 +54,8 @@ public static class MesocycleGenerator
         bool continuesPreviousBlock = false,
         IReadOnlyList<TrainingLoadReference>? loadReferences = null,
         int rotationPosition = 0,
-        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets = null)
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets = null,
+        TechniqueAllowance? techniques = null)
     {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(slot);
@@ -84,15 +85,35 @@ public static class MesocycleGenerator
 
         // The engine returns the sessions of every period in program order. A sequence plan keeps that order and has no dates;
         // a calendar plan places each session on its training day of the week.
-        var generated = result.Prescription!.Sessions.Select(session =>
+        var phased = result.Prescription!.Sessions.Select(session => session with
+        {
+            Exercises = slot.PhaseType == IntensificationPhase.PhaseType ? IntensificationPhase.Apply(session.Exercises)
+                : slot.IsPreparation ? PreparationPhase.Apply(session.Exercises, session.WeekNumber, slot.Weeks)
+                : session.Exercises
+        }).ToArray();
+        var planned = phased.Select(session => new TechniqueSession(
+            session.WeekNumber, session.Exercises, session.EstimatedDurationMinutes, new Dictionary<string, string>(), [])).ToArray();
+        // Techniques belong to training weeks: never a deload, a preparation, nor the introductory week of a new block.
+        if (techniques is not null && !slot.IsDeload && !slot.IsPreparation && TechniquePlanner.Applies(profile))
+        {
+            var introduction = slot.Weeks >= 3 && !continuesPreviousBlock ? 1 : 0;
+            var lowered = learnedTargets?.Keys.ToArray() ?? [];
+            foreach (var group in planned.Select((session, index) => (session, index))
+                         .Where(x => x.session.WeekNumber != introduction).GroupBy(x => x.session.WeekNumber).ToArray())
+            {
+                var week = TechniquePlanner.ApplyToWeek(
+                    profile, group.Select(x => x.session).ToArray(), catalog, techniques, lowered);
+                foreach (var (x, changed) in group.Zip(week)) planned[x.index] = changed;
+            }
+        }
+        var generated = phased.Select((session, index) =>
         {
             var week = slot.StartWeek + session.WeekNumber - 1;
-            var exercises = slot.PhaseType == IntensificationPhase.PhaseType ? IntensificationPhase.Apply(session.Exercises)
-                : slot.IsPreparation ? PreparationPhase.Apply(session.Exercises, session.WeekNumber, slot.Weeks)
-                : session.Exercises;
+            var final = planned[index];
             return new GeneratedSession(
                 week, sequence ? null : PlanSchedule.DateFor(profile.StartDate, week, session.Day), sequence ? null : session.Day,
-                session.Title, session.EstimatedDurationMinutes, PrescriptionJson.Serialize(exercises));
+                session.Title, final.EstimatedDurationMinutes,
+                PrescriptionJson.Serialize(final.Exercises, final.SupersetGroups, final.Supersets));
         });
         var sessions = (sequence
                 ? generated

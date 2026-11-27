@@ -237,7 +237,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Hecho: registro, técnicas admitidas, prescripción y capacidad | #250, #251, #252 | `prescription-techniques.md` §5 |
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Hecho; sin probar en un dispositivo | #253, #254, Trazo.Android#108 | `prescription-techniques.md` §5 |
 | P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Hecho; sin probar en un dispositivo | #255, Trazo.Android#109 | `prescription-techniques.md` |
-| P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Pendiente | | |
+| P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Hecho; sin probar en un dispositivo | PR de esta rama | `prescription-techniques.md` §8 |
 | P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Pendiente | | |
 | P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Pendiente | | |
 | P2-3 | Edición en Android | Pocas acciones; offline definido | P2-2 | Pendiente | | |
