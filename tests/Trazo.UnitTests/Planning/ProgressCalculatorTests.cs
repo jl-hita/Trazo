@@ -85,7 +85,7 @@ public sealed class ProgressCalculatorTests
     public void AMuscleThatReallyWorksCountsEverySet_AsInTheRestOfTheApp()
     {
         var log = Guid.NewGuid();
-        var view = Build(Set("bench", log, Today, 60m, 8), Set("bench", log, Today, 60m, 8), Set("squat", log, Today.AddDays(-7), 80m, 5));
+        var view = Build(Set("bench", log, Today, 60m, 8), Set("bench", log, Today, 60m, 8), Set("squat", Guid.NewGuid(), Today.AddDays(-7), 80m, 5));
 
         var chest = view.Muscles.Single(m => m.Muscle == "Chest");
         var triceps = view.Muscles.Single(m => m.Muscle == "Triceps");
