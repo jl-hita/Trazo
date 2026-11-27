@@ -173,6 +173,13 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         }).ToList()
     };
 
+    /// <summary>
+    /// The splits offered to choose from. The hybrid one comes with its prebuilt program: an app published before it would
+    /// show it as an unnamed option.
+    /// </summary>
+    private static readonly TrainingProgramSplit[] OfferedSplits =
+        Enum.GetValues<TrainingProgramSplit>().Where(s => s != TrainingProgramSplit.Hybrid).ToArray();
+
     public async Task<PlanOptions> GetOptionsAsync(CancellationToken ct)
     {
         // RequiredEquipment is the single source of truth for the generator selector.
@@ -182,12 +189,12 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             .Where(token => !string.Equals(token, "machine", StringComparison.OrdinalIgnoreCase))
             .Distinct().OrderBy(token => token, StringComparer.Ordinal).ToArray();
         return new PlanOptions(
-            Names<TrainingGoal>(), Names<TrainingExperience>(), Names<TrainingProgramSplit>(),
+            Names<TrainingGoal>(), Names<TrainingExperience>(), OfferedSplits.Select(s => s.ToString()).ToArray(),
             WeekDays.Select(d => d.Id).ToArray(), LimitationRules.Areas, equipment,
             2, 6, 35, 180, PlanProfileParser.MinimumTotalWeeks, PlanProfileParser.MaximumTotalWeeks, PlanProfileParser.DefaultTotalWeeks,
             WeekDaysIn(Lang), nameof(DayOfWeek.Monday), UserTimeZone.DefaultId, Names<PlanSchedulingMode>(),
             PlanProfileParser.MinimumSessionsPerPeriod, PlanProfileParser.MaximumSessionsPerPeriod,
-            Enum.GetValues<TrainingProgramSplit>().Select(split => new SplitSupportOption(
+            OfferedSplits.Select(split => new SplitSupportOption(
                 split.ToString(),
                 Enumerable.Range(2, 5).Where(days => TrainingSessionRotation.IsSupportedWeekly(split, days)).ToArray(),
                 Enumerable.Range(TrainingSessionRotation.MinimumSessionsPerPeriod, TrainingSessionRotation.MaximumSessionsPerPeriod)

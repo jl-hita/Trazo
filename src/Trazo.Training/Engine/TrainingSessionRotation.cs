@@ -75,6 +75,7 @@ public static class TrainingSessionRotation
         TrainingProgramSplit.FullBody => daysPerWeek is >= 2 and <= 4,
         TrainingProgramSplit.UpperLower => daysPerWeek is 2 or 4,
         TrainingProgramSplit.PushPullLegs => daysPerWeek is 3 or 5 or 6,
+        TrainingProgramSplit.Hybrid => daysPerWeek == 5,
         _ => false
     };
 
@@ -87,6 +88,7 @@ public static class TrainingSessionRotation
         {
             TrainingProgramSplit.Automatic or TrainingProgramSplit.FullBody or TrainingProgramSplit.UpperLower => true,
             TrainingProgramSplit.PushPullLegs => sessionsPerPeriod >= 3,
+            TrainingProgramSplit.Hybrid => sessionsPerPeriod >= 4,
             _ => false
         };
 
@@ -101,6 +103,7 @@ public static class TrainingSessionRotation
             TrainingProgramSplit.FullBody when daysPerWeek == 3 => [FullBodyA, FullBodyB, fullBodyC],
             TrainingProgramSplit.FullBody when daysPerWeek == 4 => [FullBodyA, FullBodyB, fullBodyC, fullBodyD],
             TrainingProgramSplit.PushPullLegs when daysPerWeek == 5 => [Push, Pull, Legs, PushB, PullB],
+            TrainingProgramSplit.Hybrid when daysPerWeek == 5 => [UpperA, LowerA, Push, Legs, Pull],
             TrainingProgramSplit.UpperLower when daysPerWeek == 2 => [UpperA, LowerA],
             TrainingProgramSplit.UpperLower when daysPerWeek == 4 => [UpperA, LowerA, UpperB, LowerB],
             TrainingProgramSplit.PushPullLegs when daysPerWeek == 3 => [Push, Pull, Legs],
@@ -137,6 +140,7 @@ public static class TrainingSessionRotation
             TrainingProgramSplit.FullBody => [FullBodyA, FullBodyB],
             TrainingProgramSplit.UpperLower => [UpperA, LowerA, UpperB, LowerB],
             TrainingProgramSplit.PushPullLegs => [Push, Pull, Legs, PushB, PullB, LegsB],
+            TrainingProgramSplit.Hybrid => [UpperA, LowerA, Push, Legs, Pull],
             _ => []
         };
     }

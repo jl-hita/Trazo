@@ -784,6 +784,7 @@ public static class TrainingProgramGenerator
                     TrainingProgramSplit.FullBody => "Cuerpo completo admite de 2 a 4 días; cambia la disponibilidad o elige otra distribución.",
                     TrainingProgramSplit.UpperLower => "Torso/Pierna admite 2 o 4 días; cambia la disponibilidad o elige otra distribución.",
                     TrainingProgramSplit.PushPullLegs => "Push/Pull/Legs admite 3, 5 o 6 días; cambia la disponibilidad o elige otra distribución.",
+                    TrainingProgramSplit.Hybrid => "La distribución híbrida necesita 5 días; cambia la disponibilidad o elige otra distribución.",
                     _ => "La distribución automática admite entre 2 y 4 días."
                 });
         }
@@ -1260,7 +1261,9 @@ public enum TrainingProgramSplit
     Automatic,
     FullBody,
     UpperLower,
-    PushPullLegs
+    PushPullLegs,
+    // Five different sessions: upper and lower, then push, legs and pull (the legs keep push and pull apart). Used by the prebuilt programs.
+    Hybrid
 }
 
 public sealed record TrainingProgramGenerationRequest(

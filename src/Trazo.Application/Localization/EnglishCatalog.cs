@@ -706,6 +706,8 @@ internal static class EnglishCatalog
          "Upper/Lower supports 2 or 4 days; change the availability or choose another split."),
         ("Push/Pull/Legs admite 3, 5 o 6 días; cambia la disponibilidad o elige otra distribución.",
          "Push/Pull/Legs supports 3, 5 or 6 days; change the availability or choose another split."),
+        ("La distribución híbrida necesita 5 días; cambia la disponibilidad o elige otra distribución.",
+         "The hybrid split needs 5 days; change the availability or choose another split."),
         ("La distribución automática admite entre 2 y 4 días.",
          "The automatic split supports between 2 and 4 days."),
         ("Debe indicarse el equipamiento disponible, aunque sea una lista vacía.",
