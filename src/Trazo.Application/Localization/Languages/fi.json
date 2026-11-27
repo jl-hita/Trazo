@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Tavoite-RIR:n on oltava 0–5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Levon on oltava 0–600 sekuntia.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Supersettiryhmän on oltava kirjain A–F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Superset {0} vaatii kaksi tai kolme peräkkäistä liikettä.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Superset {0} vaatii kahdesta neljään peräkkäistä liikettä.",
  "La técnica no es válida.": "Tekniikka ei kelpaa.",
  "El ejercicio no admite esa técnica.": "Liike ei salli tätä tekniikkaa.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Supersarjaa ei voi yhdistää toiseen tekniikkaan samassa liikkeessä.",

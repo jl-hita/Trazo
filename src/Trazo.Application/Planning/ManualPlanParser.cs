@@ -113,12 +113,12 @@ public static class ManualPlanParser
                 }
                 exercises.Add(new ManualExercise(id, sets, min, max, item.TargetRir, rest, group, technique));
             }
-            // A superset joins two or three consecutive exercises: they are done one after another with a shared rest.
+            // A superset joins two to four consecutive exercises: they are done one after another, alternating by rounds.
             foreach (var g in exercises.Where(e => e.SupersetGroup is not null).GroupBy(e => e.SupersetGroup))
             {
                 var positions = exercises.Select((e, i) => (e, i)).Where(p => p.e.SupersetGroup == g.Key).Select(p => p.i).ToList();
-                if (positions.Count is < 2 or > 3 || positions[^1] - positions[0] != positions.Count - 1)
-                    Fail($"{key}.exercises", $"La superserie {g.Key} necesita dos o tres ejercicios seguidos.");
+                if (positions.Count < 2 || positions.Count > TechniqueRules.MaximumSupersetExercises || positions[^1] - positions[0] != positions.Count - 1)
+                    Fail($"{key}.exercises", $"La superserie {g.Key} necesita entre dos y cuatro ejercicios seguidos.");
             }
             var supersets = new List<TrainingSupersetPrescription>();
             foreach (var wanted in day.Supersets ?? [])

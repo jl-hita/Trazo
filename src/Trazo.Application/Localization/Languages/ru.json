@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Целевой RIR должен быть от 0 до 5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Отдых должен быть от 0 до 600 секунд.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Группа суперсета — буква от A до F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Для суперсета {0} нужно два или три упражнения подряд.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Для суперсета {0} нужно от двух до четырёх упражнений подряд.",
  "La técnica no es válida.": "Техника указана неверно.",
  "El ejercicio no admite esa técnica.": "Это упражнение не допускает такую технику.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Суперсет нельзя сочетать с другой техникой в одном упражнении.",

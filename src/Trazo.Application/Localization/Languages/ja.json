@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "目標RIRは0~5にしてください。",
  "El descanso debe estar entre 0 y 600 segundos.": "休憩は0~600秒にしてください。",
  "El grupo de superserie debe ser una letra de la A a la F.": "スーパーセットのグループはAからFの文字にしてください。",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "スーパーセット{0}には連続する2~3種目が必要です。",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "スーパーセット{0}には、連続する2〜4種目が必要です。",
  "La técnica no es válida.": "テクニックが正しくありません。",
  "El ejercicio no admite esa técnica.": "この種目ではそのテクニックを使えません。",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "スーパーセットは同じ種目で他のテクニックと併用できません。",

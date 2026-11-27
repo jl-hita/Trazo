@@ -202,7 +202,6 @@ calcula cuando se fije la métrica principal. Solo datos anónimos o agregados, 
 |---|---|---|---|
 | D3 | DietoExpress mientras cambia el motor | Congelar el port hasta cerrar P0 | — |
 | D6 | Precedencia manual | R6 | P2 |
-| D7 | Lista de programas y reparto Free/Premium | R7–R8 | P3 |
 | D8 | Revisión de los 150 ejercicios por un entrenador | Recomendable: la revisión asistida no sustituye a un experto | cierre de P0 |
 | D9 | Origen y derechos de vídeos | Material propio o con licencia explícita | vídeos |
 
@@ -237,7 +236,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | P1-1 | Diseño y contrato de prescripción | Documento con definiciones y fuentes; esquema versionado; compatibilidad | P0, D5 | Hecho (D5 aprobada) | #248 | `prescription-techniques.md` |
 | P1-2 | Registro por segmentos, volumen y progresión | Migración; offline; sin regresiones falsas | P1-1 | Hecho: registro, técnicas admitidas, prescripción y capacidad | #250, #251, #252 | `prescription-techniques.md` §5 |
 | P1-3 | Técnicas en planes manuales (backend + Android) | Prescribir, ejecutar, recuperar borrador y sincronizar las cinco técnicas | P1-2 | Hecho; sin probar en un dispositivo | #253, #254, Trazo.Android#108 | `prescription-techniques.md` §5 |
-| P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Pendiente | | |
+| P1-4 | Superseries completas | Rondas y descansos, 2+ ejercicios, rotación intacta | P1-1 | Hecho; sin probar en un dispositivo | #255, Trazo.Android#109 | `prescription-techniques.md` |
 | P1-5 | Técnicas en el generador | Matriz R4, con explicación | P1-3, P1-4 | Pendiente | | |
 | P2-1 | Capa de ajustes del usuario | Sobreviven al bloque siguiente y a las adaptaciones | D6 | Pendiente | | |
 | P2-2 | Edición completa de planes generados (API) | Todas las operaciones del roadmap, con origen | P2-1, P1-1 | Pendiente | | |
@@ -263,6 +262,7 @@ batería de P5 empieza con P0 porque protege sus cambios.
 | 2026-11-26 | D4: aprobado el modelo de metadatos R1. Los valores iniciales reproducen las reglas anteriores; corregirlos es P0-5. |
 | 2026-11-26 | Cierre de P0: los 150 ejercicios revisados (asistido, sin entrenador) y con textos completos en los 29 idiomas del seed, con los mismos pasos y consejos que el original (lo exige una prueba). Pendiente: revisión nativa de las traducciones y comprobación en producción con `seed-report`. |
 | 2026-11-26 | D5: aprobadas las cinco decisiones de `prescription-techniques.md` §11 (valores por defecto, volumen y progresión, `allowedTechniques` en el seed, capacidad `techniques-1`, sin combinar superserie y técnica de fatiga). La matriz del generador se concreta en P1-5. |
+| 2026-11-27 | D7: los diez programas son Premium (ningún permiso ni condición de suscripción cambia; se descarta regalar uno, R8). Antes de pagar se ve la ficha (días, duración, material, series semanales por músculo) y una sesión de ejemplo, no las semanas completas. |
 
 ## 7. Evidencia consultada
 

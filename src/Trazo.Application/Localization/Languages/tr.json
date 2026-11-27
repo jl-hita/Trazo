@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Hedef RIR 0 ile 5 arasında olmalı.",
  "El descanso debe estar entre 0 y 600 segundos.": "Dinlenme 0 ile 600 saniye arasında olmalı.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Süperset grubu A ile F arasında bir harf olmalı.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "{0} süperseti art arda iki veya üç egzersiz gerektirir.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "{0} süperseti art arda iki ila dört egzersiz gerektirir.",
  "La técnica no es válida.": "Teknik geçerli değil.",
  "El ejercicio no admite esa técnica.": "Egzersiz bu tekniğe izin vermiyor.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Süperset aynı egzersizde başka bir teknikle birleştirilemez.",

@@ -45,6 +45,38 @@ public sealed class ManualTechniqueApiTests() : PlansApiBase(enforced: false)
         (await JsonAsync(await client.GetAsync("/api/v1/plans/current/week"))).GetProperty("sessions")[0];
 
     [Fact]
+    public async Task ASupersetTakesUpToFourExercises_AndItsRestsCountByRounds()
+    {
+        var client = await UserAsync("four@example.com");
+        object Day(params string[] ids) => new
+        {
+            name = "Mi plan", totalWeeks = 2, days = new[]
+            {
+                new
+                {
+                    day = "Monday", title = "Circuito",
+                    exercises = ids.Select(id => (object)new { exerciseId = id, sets = 3, restSeconds = 90, supersetGroup = "A" }).ToArray(),
+                    supersets = new[] { new { group = "A", rounds = 3, restBetweenSeconds = 20, restAfterRoundSeconds = 100 } }
+                }
+            }
+        };
+        var five = await client.PostAsJsonAsync(Url, Day("dumbbell-curl", "ohp", "squat", "bench-press", "lunge"));
+        Assert.Equal(HttpStatusCode.BadRequest, five.StatusCode);
+        var four = await client.PostAsJsonAsync(Url, Day("dumbbell-curl", "ohp", "squat", "bench-press"));
+        Assert.True(four.StatusCode == HttpStatusCode.Created, await four.Content.ReadAsStringAsync());
+        // 5 min of preparation, 12 sets of 45 s and 3 rounds of 3 x 20 s + 100 s.
+        Assert.Equal(22, (await FirstSessionAsync(client)).GetProperty("estimatedDurationMinutes").GetInt32());
+    }
+
+    [Fact]
+    public void RoundsNeverExceedTheSetsLeft_AndAGroupWithoutExercisesIsDropped()
+    {
+        TrainingSupersetPrescription[] stored = [new("A", 4, 15, 90), new("B", 3, 15, 90)];
+        var served = Assert.Single(TechniqueRules.WithinSets(stored, [("A", 2), ("A", 1), (null, 5)]));
+        Assert.Equal(("A", 2), (served.Group, served.Rounds));
+    }
+
+    [Fact]
     public async Task TheExerciseDetailSaysWhichTechniquesItAdmits()
     {
         var client = await UserAsync("detail@example.com");

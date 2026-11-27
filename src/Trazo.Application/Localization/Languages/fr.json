@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Le RIR cible doit être compris entre 0 et 5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Le repos doit être compris entre 0 et 600 secondes.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Le groupe de superset doit être une lettre de A à F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Le superset {0} nécessite deux ou trois exercices consécutifs.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Le superset {0} nécessite deux à quatre exercices consécutifs.",
  "La técnica no es válida.": "La technique n'est pas valide.",
  "El ejercicio no admite esa técnica.": "L'exercice n'autorise pas cette technique.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Un superset ne se combine pas avec une autre technique sur le même exercice.",

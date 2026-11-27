@@ -372,7 +372,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 candidate.PrimaryMuscleGroups, candidate.SecondaryMuscleGroups,
                     EffectiveSecondaryMuscleGroups: candidate.EffectiveSecondaryMuscleGroups ?? [], Technique: exercise.Technique);
         }).ToList();
-        var minutes = 5 + (int)Math.Ceiling(day.Exercises.Sum(e => e.Sets * (e.RestSeconds + 45) + TechniqueRules.ExtraSeconds(e.Technique, e.Sets)) / 60.0);
+        var minutes = 5 + (int)Math.Ceiling(TechniqueRules.SessionSeconds(
+            day.Exercises.Select(e => (e.SupersetGroup, e.Sets, e.RestSeconds, e.Technique)).ToList(), day.Supersets ?? []) / 60.0);
         return new PlannedSession
         {
             Id = Guid.NewGuid(), PlanId = plan.Id, MesocycleId = mesocycleId, WeekNumber = week,
@@ -2589,5 +2590,8 @@ public sealed class TrainingPlanService(TrazoDbContext db, TimeProvider clock, I
                 .Select(s => new LoggedSetView(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList(),
             log.PerformedAt, log.PerformedOn),
         session.SequenceIndex,
-        client.Techniques ? PrescriptionJson.Supersets(session.PrescriptionJson) : null);
+        client.Techniques
+            ? TechniqueRules.WithinSets(PrescriptionJson.Supersets(session.PrescriptionJson),
+                PrescriptionJson.Read(session.PrescriptionJson).Select(e => (PrescriptionJson.SupersetGroup(session.PrescriptionJson, e.ExerciseId), e.Sets)))
+            : null);
 }

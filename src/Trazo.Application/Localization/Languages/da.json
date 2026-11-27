@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "Mål-RIR skal være mellem 0 og 5.",
  "El descanso debe estar entre 0 y 600 segundos.": "Hvilen skal være mellem 0 og 600 sekunder.",
  "El grupo de superserie debe ser una letra de la A a la F.": "Supersætgruppen skal være et bogstav fra A til F.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "Supersæt {0} kræver to eller tre øvelser i træk.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "Supersæt {0} kræver to til fire øvelser i træk.",
  "La técnica no es válida.": "Teknikken er ikke gyldig.",
  "El ejercicio no admite esa técnica.": "Øvelsen tillader ikke den teknik.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "Et supersæt kan ikke kombineres med en anden teknik i samme øvelse.",

@@ -9,6 +9,7 @@ namespace Trazo.Application.Planning;
 public static class TechniqueRules
 {
     public const int MaximumRestSeconds = 60;
+    public const int MaximumSupersetExercises = 4;
     public const int MaximumSupersetRounds = 10;
     public const int MaximumSupersetRestSeconds = 600;
 
@@ -76,6 +77,41 @@ public static class TechniqueRules
     public const int DefaultRestAfterRoundSeconds = 90;
     /// <summary>The time a segment takes besides its rest, for the estimated duration of a session. A product estimate.</summary>
     public const int SecondsPerSegment = 20;
+
+    /// <summary>
+    /// The rounds a session can still do: never more than the most sets among the exercises of the group, so a session that lost
+    /// sets (a deload, an adjustment) does not announce rounds it no longer has. A group with no exercise left is dropped.
+    /// </summary>
+    public static IReadOnlyList<TrainingSupersetPrescription> WithinSets(
+        IReadOnlyList<TrainingSupersetPrescription> supersets, IEnumerable<(string? Group, int Sets)> exercises)
+    {
+        var most = exercises.Where(e => e.Group is not null).GroupBy(e => e.Group!).ToDictionary(g => g.Key, g => g.Max(e => e.Sets));
+        return supersets.Where(s => most.ContainsKey(s.Group)).Select(s => s with { Rounds = Math.Min(s.Rounds, most[s.Group]) }).ToList();
+    }
+
+    /// <summary>
+    /// The estimated seconds of a session of straight sets, techniques and supersets: 45 s of work per set and its rest. In a
+    /// superset with rounds the rests are the ones of the round, not those of each exercise.
+    /// </summary>
+    public static int SessionSeconds(
+        IReadOnlyList<(string? Group, int Sets, int RestSeconds, TrainingTechniquePrescription? Technique)> exercises,
+        IReadOnlyList<TrainingSupersetPrescription> supersets)
+    {
+        var alternated = supersets.ToDictionary(s => s.Group);
+        var seconds = exercises.Sum(e => e.Group is not null && alternated.ContainsKey(e.Group)
+            ? e.Sets * SecondsPerSet
+            : e.Sets * (e.RestSeconds + SecondsPerSet) + ExtraSeconds(e.Technique, e.Sets));
+        foreach (var superset in supersets)
+        {
+            var members = exercises.Where(e => e.Group == superset.Group).ToList();
+            if (members.Count == 0) continue;
+            var rounds = Math.Min(superset.Rounds, members.Max(m => m.Sets));
+            seconds += rounds * ((members.Count - 1) * superset.RestBetweenSeconds + superset.RestAfterRoundSeconds);
+        }
+        return seconds;
+    }
+
+    private const int SecondsPerSet = 45;
 
     /// <summary>What the segments of an exercise add to the session, at most: every segment of every set that carries the technique.</summary>
     public static int ExtraSeconds(TrainingTechniquePrescription? technique, int sets)

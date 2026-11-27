@@ -132,15 +132,21 @@ obligatorio; el resto toma los valores por defecto) y, por día, `supersets`:
   ejercicio, combinada con superserie o unas rondas sin ejercicios. Los mensajes están traducidos.
 - Sin la capacidad, crear un plan con técnicas, o editar uno que las tiene, responde 409 `app_update_required`.
 - La duración estimada suma, como máximo previsto, 20 s más el descanso por cada segmento (estimación de producto).
-- Los grupos siguen siendo de 2 o 3 ejercicios; ampliar a 4 es P1-4.
 - El detalle de un ejercicio (`GET /api/v1/exercises/{id}`) incluye `allowedTechniques`, para que la app ofrezca solo lo que
   se va a aceptar.
+
+### Superseries (P1-4)
+
+- De 2 a 4 ejercicios consecutivos.
+- Las rondas que se entregan nunca superan las series que quedan en la sesión (descarga o ajustes); lo guardado no cambia.
+- Con rondas definidas, la duración estimada cuenta los descansos de la ronda en lugar de los de cada ejercicio.
+- La rotación de un plan en secuencia no depende de las superseries.
 
 ### App Android (P1-3)
 
 Declara la capacidad; en el entreno ofrece cada segmento con su carga de partida y su descanso corto, lo guarda en el
 borrador y lo registra con su serie; las rondas fijan los descansos de la superserie; el editor manual permite elegir la
-técnica y conserva lo que el plan tenía. Las rondas aún no se editan en la app (P1-4). Sin probar en un dispositivo.
+técnica y conserva lo que el plan tenía. El editor une hasta cuatro ejercicios y fija rondas y descansos (P1-4). Sin probar en un dispositivo.
 
 ## 6. Compatibilidad
 

@@ -166,7 +166,8 @@ public sealed class TechniqueCapabilityApiTests() : PlansApiBase(enforced: false
             var stored = await db.PlannedSessions.SingleAsync(s => s.Id == sessionId);
             var root = JsonNode.Parse(stored.PrescriptionJson)!.AsObject();
             root["exercises"]![0]!["technique"] = JsonNode.Parse("""{"type":"DropSet","appliesTo":"LastSet","maxSegments":1,"restSeconds":10,"loadDropPercent":20}""");
-            root["supersets"] = JsonNode.Parse("""[{"group":"A","rounds":3,"restBetweenSeconds":15,"restAfterRoundSeconds":90}]""");
+            foreach (var item in root["exercises"]!.AsArray().Skip(1).Take(2)) item!["supersetGroup"] = "A";
+            root["supersets"] = JsonNode.Parse("""[{"group":"A","rounds":1,"restBetweenSeconds":15,"restAfterRoundSeconds":90}]""");
             stored.PrescriptionJson = root.ToJsonString();
             await db.SaveChangesAsync();
         }
@@ -192,7 +193,7 @@ public sealed class TechniqueCapabilityApiTests() : PlansApiBase(enforced: false
         old.DefaultRequestHeaders.Add(ClientCapabilities.Header, ClientCapabilities.TechniquesName);
         var capable = await ReadAsync(old);
         Assert.Equal("DropSet", capable.GetProperty("exercises")[0].GetProperty("technique").GetProperty("type").GetString());
-        Assert.Equal(3, capable.GetProperty("supersets")[0].GetProperty("rounds").GetInt32());
+        Assert.Equal(1, capable.GetProperty("supersets")[0].GetProperty("rounds").GetInt32());
         Assert.Equal(2, capable.GetProperty("log").GetProperty("sets").GetArrayLength());
     }
 }

@@ -20,7 +20,7 @@
  "El RIR objetivo debe estar entre 0 y 5.": "목표 RIR은 0에서 5 사이여야 합니다.",
  "El descanso debe estar entre 0 y 600 segundos.": "휴식은 0초에서 600초 사이여야 합니다.",
  "El grupo de superserie debe ser una letra de la A a la F.": "슈퍼세트 그룹은 A에서 F까지의 문자여야 합니다.",
- "La superserie {0} necesita dos o tres ejercicios seguidos.": "슈퍼세트 {0}에는 연속된 운동 2~3개가 필요합니다.",
+ "La superserie {0} necesita entre dos y cuatro ejercicios seguidos.": "슈퍼세트 {0}에는 연속된 운동 2~4개가 필요합니다.",
  "La técnica no es válida.": "테크닉이 올바르지 않습니다.",
  "El ejercicio no admite esa técnica.": "이 운동에서는 해당 테크닉을 사용할 수 없습니다.",
  "Una superserie no se combina con otra técnica en el mismo ejercicio.": "슈퍼세트는 같은 운동에서 다른 테크닉과 함께 사용할 수 없습니다.",
