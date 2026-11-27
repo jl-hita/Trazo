@@ -145,6 +145,25 @@ public sealed class PlanArchiveReasonApiTests() : PlansApiBase(enforced: false)
     }
 
     [Fact]
+    public async Task WithdrawingTheResearchConsentErasesTheReasonsOfThatUserOnly()
+    {
+        var (ana, client) = await PersonAsync("ana@example.com");
+        var (eve, other) = await PersonAsync("eve@example.com");
+        Assert.Equal(HttpStatusCode.NoContent, (await client.PostAsJsonAsync(Archive, new { reason = "NoTime" })).StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, (await other.PostAsJsonAsync(Archive, new { reason = "TooEasy" })).StatusCode);
+        var archivedAt = Assert.Single(await PlansOfAsync(ana)).UpdatedAt;
+
+        await ConsentAsync(client, "research", false);
+        await ConsentAsync(client, "research");
+
+        var plan = Assert.Single(await PlansOfAsync(ana));
+        Assert.Null(plan.ArchiveReason);
+        Assert.Equal(TrainingPlanStatus.Archived, plan.Status);
+        Assert.Equal(archivedAt, plan.UpdatedAt);
+        Assert.Equal(PlanArchiveReason.TooEasy, Assert.Single(await PlansOfAsync(eve)).ArchiveReason);
+    }
+
+    [Fact]
     public async Task TheExportCarriesTheCodesOfThoseWhoConsentAndLeavesOutThoseWhoRevoked()
     {
         var (yes, consenting) = await PersonAsync("yes@example.com");

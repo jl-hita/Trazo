@@ -155,9 +155,17 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
 
     public async Task<bool> SetResearchConsentAsync(Guid userId, bool consent, CancellationToken ct)
     {
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
         var changed = await db.Users.Where(u => u.Id == userId)
             .ExecuteUpdateAsync(s => s.SetProperty(u => u.ResearchConsent, consent).SetProperty(u => u.UpdatedAt, clock.GetUtcNow()), ct);
-        return changed == 1;
+        if (changed != 1) return false;
+        // The reasons for archiving plans are collected only for research, so they go with the consent. UpdatedAt of the plans stays:
+        // it is when they were archived.
+        if (!consent)
+            await db.TrainingPlans.Where(p => p.UserId == userId && p.ArchiveReason != null)
+                .ExecuteUpdateAsync(s => s.SetProperty(p => p.ArchiveReason, (PlanArchiveReason?)null), ct);
+        await transaction.CommitAsync(ct);
+        return true;
     }
 
     // ---------------------------------------------------------------- health data

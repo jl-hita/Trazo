@@ -21,25 +21,25 @@ El resto del resumen de Intelligence (recuentos de planes, entrenos y adaptacion
 agregado, como antes: es seguimiento del servicio, no la comparación de la que trata esta decisión. Conviene que la revisión
 legal lo confirme.
 
-## Texto aprobado por el titular (2026-11-27)
+## Texto aprobado por el titular (2026-11-27, con el motivo de archivado)
 
 **Español**
 
 > **Ayudar a mejorar TRAZO (opcional)**
-> Si lo activas, TRAZO usará tus datos de entrenamiento (planes, series, cargas, repeticiones, esfuerzo, dolor y molestias que registres, sin tu nombre, correo ni notas) para comparar
+> Si lo activas, TRAZO usará tus datos de entrenamiento (planes, series, cargas, repeticiones, esfuerzo, dolor y molestias que registres y, si lo indicas, el motivo por el que archivas un plan; sin tu nombre, correo ni notas) para comparar
 > versiones del motor y estudiar cómo mejorar los planes. Los datos
 > se sustituyen por claves que no identifican a nadie fuera de cada análisis y los resultados se miran agrupados. No se
 > venden ni se ceden. Si borras tu cuenta, las cifras anónimas por músculo que se conservan podrán agruparse. Puedes
-> desactivarlo cuando quieras: dejarás de incluirte en los análisis posteriores. No cambia nada de lo que puedes usar.
+> desactivarlo cuando quieras: dejarás de incluirte en los análisis posteriores. Los motivos de archivado que hubieras indicado se borran. No cambia nada de lo que puedes usar.
 
 **English**
 
 > **Help improve TRAZO (optional)**
-> If you turn this on, TRAZO will use your training data (plans, sets, loads, repetitions, effort, pain and discomfort you log,
+> If you turn this on, TRAZO will use your training data (plans, sets, loads, repetitions, effort, pain and discomfort you log and, if you say it, why you archive a plan;
 > without your name, email or notes) to compare engine versions and study how to make plans better. The data is replaced with
 > keys that identify nobody outside each analysis, and results are read in groups. It is not sold or shared. If you delete
 > your account, the anonymous per-muscle figures that are kept may be grouped. You can turn it off at any time: you will be
-> left out of later analyses. It changes nothing you can use.
+> left out of later analyses. Any reasons you gave for archiving plans are erased. It changes nothing you can use.
 
 Los textos de los otros 27 idiomas de la app son traducciones de estos, sin revisión nativa.
 
@@ -59,13 +59,10 @@ creados en el periodo y con los archivados en él con motivo. Es una opinión de
 
 - `Discomfort` es dato de salud: además exige el consentimiento de salud. La app no ofrece esa opción sin él, el servidor la guarda
   como `Other` y al retirarlo se convierte en `Other`.
-- Al retirar el consentimiento de investigación, el motivo deja de exportarse, como el resto de datos, pero no se borra del plan. Se
-  borra al eliminar la cuenta y aparece en la exportación de datos de la propia persona. No pasa a las cifras anónimas.
-
-**Por revisar por el titular antes de publicar:** el texto aprobado no nombra el motivo de archivado. Se ha entendido incluido en los
-datos de entrenamiento («planes», y «dolor y molestias») y en la finalidad («estudiar cómo mejorar los planes»). No se han cambiado
-el texto ni la política de privacidad. Falta confirmarlo y decidir si el motivo, que solo se recoge para investigar, debe borrarse al
-retirar el consentimiento.
+- Al retirar el consentimiento de investigación, los motivos se borran de sus planes: solo se recogen para investigar. También se
+  borran al eliminar la cuenta, aparecen en la exportación de datos de la propia persona y no pasan a las cifras anónimas.
+- El titular aprobó el 2026-11-27 nombrar el motivo en el texto del consentimiento y en la política, y borrarlo al retirarlo. Quien
+  aceptó el texto anterior no ha aceptado esa frase: queda por confirmar en la revisión legal si hace falta pedirlo de nuevo.
 
 Pendiente: el plazo de conservación de las exportaciones (la política no lo dice) y confirmar la base jurídica con quien revise
 la parte legal.
