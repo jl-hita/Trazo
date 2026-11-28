@@ -882,3 +882,15 @@ Hypertrophy and strength blocks, reserve over the base of the profile (2, beginn
 - General fitness only loses the half repetition of a continuing block.
 
 Blocks already generated do not change. The figures are internal product heuristics.
+
+## Engine 0.16.0: direct arm work in full body
+
+The reserved isolation slot existed only for sessions of one body half, so a three-day full-body plan could hold no direct
+biceps or triceps exercise at all: its presses and rows counted for the arms and the regular accessory slots went to
+hamstrings, quadriceps, lats, chest and calves.
+
+- A full-body hypertrophy session with more than 45 minutes has one more accessory slot, only for direct biceps or triceps,
+  filled last and only where the session has time. Up to two weekly exposures each; on equal need the biceps goes first.
+- The other slots choose as before. The extra exercise takes session time, so some compound lifts end with a set less
+  (in the measured profiles, up to three weekly sets of the lats and two of the shoulders).
+- Strength, general fitness, sessions of 45 minutes or less and the other splits are unchanged.
