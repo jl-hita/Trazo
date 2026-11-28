@@ -467,6 +467,15 @@ ceilings, pain precedence and duration of a change are those of the exercise ans
 asks for it only when there is some. `notRecovered` also counts as "loaded" for the recovery advice and as a fatigue signal for the
 longitudinal layer; `workload` counts as an answer there, and `low` as low stimulus. Older apps keep sending `exerciseFeedback`.
 
+### Session recovery without the question
+
+The app that asks about each muscle no longer asks about recovery when the session is finished, and sends no `recovery`.
+The adaptation (`SessionRecovery`) then reads it from `muscleFeedback`: an exercise counts as `Insufficient` when a muscle it
+trains as primary was `notRecovered`; the session counts as `Insufficient` when such muscles hold at least half of its planned
+sets, as `Partial` when they hold fewer, `Good` when none does and `Unknown` without a recovery answer. A `recovery` that an older
+app does send (anything but `Unknown`) is used as before. The log stores what was sent; nothing derived is written over it. The
+fatigue rule and the muscle answers never take two sets from one exercise for the same workout.
+
 ### Shadow carry between blocks (`carry-shadow-1`)
 
 Sets added from the answers end with their block: the next one starts from its own prescription. To judge later whether they should
