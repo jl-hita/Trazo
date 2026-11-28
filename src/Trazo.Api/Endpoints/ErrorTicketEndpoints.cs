@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Api.Support;
@@ -35,7 +36,7 @@ public static class ErrorTicketEndpoints
             .WithTags("Diagnostics")
             .AllowAnonymous()
             .WithMetadata(new Microsoft.AspNetCore.Cors.DisableCorsAttribute())
-            .WithMetadata(new RequestSizeLimitMetadata(R8MappingStore.MaxMappingBytes));
+            .WithMetadata(new RequestSizeLimitMetadata(R8MappingStore.MaxUploadBytes));
 
         var admin = endpoints.MapGroup("/api/v1/admin/error-tickets")
             .WithTags("Admin error tickets")
@@ -71,13 +72,19 @@ public static class ErrorTicketEndpoints
             return Results.BadRequest(new { error = "A valid appVersion is required (for example 0.2.2+30029)." });
         if (!string.Equals(context.Request.ContentType?.Split(';')[0], "text/plain", StringComparison.OrdinalIgnoreCase))
             return Results.BadRequest(new { error = "Content-Type must be text/plain." });
-        if (context.Request.ContentLength is > R8MappingStore.MaxMappingBytes)
+        var encoding = context.Request.Headers.ContentEncoding.ToString().Trim();
+        var gzip = encoding.Equals("gzip", StringComparison.OrdinalIgnoreCase);
+        if (!gzip && encoding.Length > 0 && !encoding.Equals("identity", StringComparison.OrdinalIgnoreCase))
+            return Results.StatusCode(StatusCodes.Status415UnsupportedMediaType);
+        if (context.Request.ContentLength is > R8MappingStore.MaxUploadBytes)
             return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
 
         try
         {
-            await using var bounded = new BoundedReadStream(context.Request.Body, R8MappingStore.MaxMappingBytes);
-            var sha256 = await mappings.StoreAsync(version, bounded, ct);
+            await using var bounded = new BoundedReadStream(context.Request.Body, R8MappingStore.MaxUploadBytes);
+            // The store limits what comes out of the decompression, so a small body cannot expand without end.
+            await using var content = gzip ? new GZipStream(bounded, CompressionMode.Decompress, leaveOpen: true) : (Stream)bounded;
+            var sha256 = await mappings.StoreAsync(version, content, ct);
             if (sha256 is null)
                 return Results.Problem("R8 mapping storage is not configured.", statusCode: StatusCodes.Status503ServiceUnavailable);
             return Results.Accepted(value: new { accepted = true, appVersion = version, sha256 });
@@ -103,7 +110,7 @@ public static class ErrorTicketEndpoints
         private int Count(int count)
         {
             _read += count;
-            if (_read > limit) throw new InvalidDataException("The R8 mapping file exceeds the 64 MiB limit.");
+            if (_read > limit) throw new InvalidDataException("The R8 mapping upload exceeds the 64 MiB limit.");
             return count;
         }
         public override void Flush() => throw new NotSupportedException();

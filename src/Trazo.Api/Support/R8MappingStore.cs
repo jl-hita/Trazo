@@ -11,7 +11,11 @@ namespace Trazo.Api.Support;
 /// </summary>
 public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8MappingStore> logger)
 {
-    public const long MaxMappingBytes = 64L * 1024 * 1024;
+    /// <summary>Largest request body accepted, compressed or not. The proxy has the same limit.</summary>
+    public const long MaxUploadBytes = 64L * 1024 * 1024;
+
+    /// <summary>Largest mapping kept once decompressed.</summary>
+    public const long MaxMappingBytes = 256L * 1024 * 1024;
     private string? MappingDirectory => configuration["Diagnostics:MappingsPath"] is { Length: > 0 } path ? path : null;
     private string RetraceExecutable => configuration["Diagnostics:RetraceExecutable"] ?? "retrace";
 
@@ -36,7 +40,7 @@ public sealed class R8MappingStore(IConfiguration configuration, ILogger<R8Mappi
                 {
                     total += read;
                     if (total > MaxMappingBytes)
-                        throw new InvalidDataException("The R8 mapping file exceeds the 64 MiB limit.");
+                        throw new InvalidDataException("The R8 mapping file exceeds the 256 MiB limit.");
                     await output.WriteAsync(buffer.AsMemory(0, read), ct);
                 }
                 await output.FlushAsync(ct);
