@@ -628,5 +628,8 @@
  "@short:Thursday": "J",
  "@short:Friday": "V",
  "@short:Saturday": "S",
- "@short:Sunday": "D"
+ "@short:Sunday": "D",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Toutes les séries ont atteint le haut de la fourchette avec au moins deux répétitions de réserve de plus que prévu : la charge est bien en dessous de la tienne.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Elle augmente plus que d’habitude, de 10 % au maximum.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Avec la dernière augmentation, le bas de la fourchette n’a pas été atteint : reviens à la charge précédente et progresse à partir de là."
 }

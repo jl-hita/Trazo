@@ -26,9 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.17.0";
-    // From this many sessions a week the accessories are renewed from block to block.
-    private const int FrequentTrainingDays = 5;
+    public const string EngineVersion = "0.19.0";
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
     // within this share of the time offered.
     private const decimal StrengthMainLiftTimeShare = 0.85m;
@@ -63,14 +61,21 @@ public static class TrainingProgramGenerator
         TrainingExerciseCandidate[] Compatible(TrainingMovementPattern pattern)
         {
             if (compatibleByPattern.TryGetValue(pattern, out var cached)) return cached;
-            var fitting = catalog
+            var usable = catalog
                 .Where(x => (x.IsReviewed || x.IsOwnedByCurrentProfessional)
                     && x.MovementPattern == pattern
-                    && x.SuitableGoals.Contains(request.Goal)
                     && (int)x.MinimumExperience <= (int)request.Experience
                     && (equipment.Count == 0 || HasRequiredEquipment(x.RequiredEquipment, equipment))
                     && !excluded.Contains(x.ExerciseId))
                 .ToArray();
+            var fitting = usable.Where(x => x.SuitableGoals.Contains(request.Goal)).ToArray();
+            // With little material nothing of a pattern may be marked for the goal (a bodyweight squat in a strength plan).
+            // The pattern is then trained with what there is, and the plan says so, instead of not being generated at all.
+            if (fitting.Length == 0 && usable.Length > 0)
+            {
+                fitting = usable;
+                selectionWarnings.Add($"Ningún ejercicio de patrón {pattern} pensado para este objetivo es compatible con el material y las limitaciones indicadas; se usa el mejor disponible, que puede no admitir mucha carga.");
+            }
             // The hinge is the only compound slot that trains the hamstrings. Whenever the profile has a hinge
             // with the hamstrings as a primary muscle (a deadlift or a Romanian deadlift), the glute-only and
             // upper-back variants (bridge, hip thrust, rack pull) are left out of the slot.
@@ -246,7 +251,8 @@ public static class TrainingProgramGenerator
 
             AddOptionalAccessoryExercises(
                 request, catalog, equipment, excluded, sessions,
-                prescriptions, week, unit.Days[dayIndex], sessionTemplate.Title, unit.SessionsPerPeriod, unit.WeeksPerUnit);
+                prescriptions, week, unit.Days[dayIndex], sessionTemplate.Title, unit.SessionsPerPeriod, unit.WeeksPerUnit,
+                isLastSessionOfUnit: dayIndex > 0 && dayIndex == unit.Templates.Count - 1);
 
             // Final duration is calculated after weekly sets have been allocated.
             sessions.Add(new TrainingSessionPrescription(
@@ -267,7 +273,12 @@ public static class TrainingProgramGenerator
             request.MaximumSessionDurationMinutes, accessoryIds, unit.WeeksPerUnit, unit.SessionsPerPeriod);
         if (!allocation.Succeeded)
             return new(null, allocation.Errors);
-        var allocatedSessions = unit.LayOut(allocation.Sessions, request.DurationWeeks);
+        var balanced = TrainingProgramBalancer.Balance(
+            allocation.Sessions, catalog, request.Goal, request.MaximumSessionDurationMinutes,
+            TrainingProgramVolumeAllocator.GetWeeklyCeilings(request.Goal, request.Experience, request.MuscleVolumeTargets,
+                unit.SessionsPerPeriod, request.MaximumSessionDurationMinutes),
+            unit.WeeksPerUnit);
+        var allocatedSessions = unit.LayOut(balanced, request.DurationWeeks);
 
         // Allocate volume before reordering. The allocator resolves exact ties by the current
         // exercise order; sorting earlier would silently move sets between exercises even though
@@ -381,7 +392,7 @@ public static class TrainingProgramGenerator
             }).ToArray();
 
             if (rampVolume && weeks >= 3 && week == weeks)
-                AddPeakWeekSets(weekSessions, ceilings, maxSets, request.MaximumSessionDurationMinutes);
+                AddPeakWeekSets(weekSessions, ceilings, maxSets, request.MaximumSessionDurationMinutes, patternById);
 
             result.AddRange(weekSessions.Select(session => session with
             {
@@ -419,7 +430,8 @@ public static class TrainingProgramGenerator
         TrainingSessionPrescription[] weekSessions,
         IReadOnlyDictionary<TrainingMuscleGroup, decimal> ceilings,
         int maxSets,
-        int maximumSessionDurationMinutes)
+        int maximumSessionDurationMinutes,
+        IReadOnlyDictionary<string, TrainingMovementPattern> patternById)
     {
         var volume = TrainingProgramVolumeAllocator.CalculateEffectiveVolume(weekSessions)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -434,6 +446,7 @@ public static class TrainingProgramGenerator
                     .ToArray();
                 if (tracked.Length == 0 || tracked.Any(boosted.Contains)) continue;
                 if (tracked.Any(muscle => volume.GetValueOrDefault(muscle) + 1m > ceilings[muscle])) continue;
+                if (TrainingProgramVolumeAllocator.ExceedsSessionDose(weekSessions[sessionIndex], exercise)) continue;
 
                 var session = weekSessions[sessionIndex];
                 var candidateExercises = session.Exercises
@@ -444,6 +457,7 @@ public static class TrainingProgramGenerator
                     continue;
 
                 var updated = session with { Exercises = candidateExercises };
+                if (TrainingProgramBalancer.Worsens(weekSessions, sessionIndex, updated, patternById)) continue;
                 weekSessions[sessionIndex] = updated with
                 {
                     EstimatedDurationMinutes = (int)Math.Ceiling(
@@ -494,6 +508,19 @@ public static class TrainingProgramGenerator
         }).ToArray();
     }
 
+    private static readonly TrainingMuscleGroup[] MajorMuscles =
+    [
+        TrainingMuscleGroup.Chest, TrainingMuscleGroup.Lats, TrainingMuscleGroup.UpperBack, TrainingMuscleGroup.Deltoids,
+        TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Hamstrings, TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Biceps,
+        TrainingMuscleGroup.Triceps
+    ];
+
+    private static readonly HashSet<TrainingMuscleGroup> SmallIsolationMuscles =
+    [
+        TrainingMuscleGroup.Calves, TrainingMuscleGroup.Deltoids, TrainingMuscleGroup.Forearms, TrainingMuscleGroup.Abdominals,
+        TrainingMuscleGroup.Obliques
+    ];
+
     // A pattern keeps at most this many "best fit" exercises in its rotation pool, and only those
     // whose curated SelectionPriority is within PoolPriorityWindow points of the best one.
     // Internal product criteria (not literature thresholds): rotation must never reach a clearly
@@ -533,8 +560,12 @@ public static class TrainingProgramGenerator
             // (a one-week deload would otherwise shift the rotation). A training block moves to an equally
             // suitable exercise it did not use; a deload keeps the previous block's exercises.
             var used = previousBlockExerciseIds.ToHashSet(StringComparer.OrdinalIgnoreCase);
-            var ordered = pool.OrderBy(candidate => used.Contains(candidate.ExerciseId) == isDeload ? 0 : 1).ToList();
-            return ordered.Concat(rest).ToArray();
+            // The compound lifts of the previous block stay, so their loads go on progressing; variety comes from the
+            // accessories (see AddOptionalAccessoryExercises).
+            var ordered = pool.OrderBy(candidate => used.Contains(candidate.ExerciseId) ? 0 : 1).ToList();
+            var keptOutside = rest.Where(candidate => used.Contains(candidate.ExerciseId) && best - score(candidate) <= PoolPriorityWindow).ToArray();
+            return ordered.Where(c => used.Contains(c.ExerciseId)).Concat(keptOutside)
+                .Concat(ordered.Where(c => !used.Contains(c.ExerciseId))).Concat(rest.Except(keptOutside)).ToArray();
         }
         var offset = Math.Max(0, rotationIndex) % pool.Count;
         return pool.Skip(offset).Concat(pool.Take(offset)).Concat(rest).ToArray();
@@ -888,7 +919,8 @@ public static class TrainingProgramGenerator
         DayOfWeek day,
         string title,
         int daysPerWeek,
-        decimal weeksPerUnit)
+        decimal weeksPerUnit,
+        bool isLastSessionOfUnit = false)
     {
         // The deficit of a unit is judged against its share of the weekly targets (the whole week for a calendar plan).
         var targets = TrainingProgramVolumeAllocator.GetWeeklyTargets(
@@ -941,8 +973,8 @@ public static class TrainingProgramGenerator
         var slotKinds = Enumerable.Repeat(AccessorySlot.Regular, slots).ToList();
         if (emphasized.Count > 0) slotKinds.Add(AccessorySlot.Emphasis);
         if (armSlot) slotKinds.Add(AccessorySlot.Arms);
-        // Strength keeps its lifts and a deload keeps the previous block's exercises.
-        var renewed = request.Goal != TrainingGoal.Strength && !request.IsDeload && daysPerWeek >= FrequentTrainingDays
+        // A new training block renews accessories; a deload keeps the previous block's exercises.
+        var renewed = !request.IsDeload
             ? (request.PreviousBlockExerciseIds ?? Array.Empty<string>()).ToHashSet(StringComparer.OrdinalIgnoreCase)
             : new HashSet<string>();
 
@@ -1059,6 +1091,17 @@ public static class TrainingProgramGenerator
             int DirectNeed(TrainingExerciseCandidate candidate) =>
                 directNeeds.GetValueOrDefault(GetDirectIsolationGap(candidate));
 
+            // In the last session of the unit, a major muscle that so far gets only one session of the week comes first: twice
+            // a week spreads its sets better than once.
+            var onlyOnce = new HashSet<TrainingMuscleGroup>();
+            if (isLastSessionOfUnit && request.Goal == TrainingGoal.Hypertrophy)
+                foreach (var muscle in MajorMuscles)
+                    if (currentEffectiveVolume.GetValueOrDefault(muscle) < targets.GetValueOrDefault(muscle) &&
+                        previousSessions.Count(session => session.Exercises.Any(e => e.StimulatedMuscles().Contains(muscle))) == 1 &&
+                        !currentExercises.Any(e => e.StimulatedMuscles().Contains(muscle)))
+                        onlyOnce.Add(muscle);
+            bool GivesSecondExposure(TrainingExerciseCandidate candidate) => candidate.PrimaryMuscleGroups.Any(onlyOnce.Contains);
+
             var candidates = catalogCandidates
                 .Where(candidate => candidate.MovementPattern == TrainingMovementPattern.Accessory
                     && (HasExplicitCorePriority(request.MuscleVolumeTargets) || !IsDirectCoreExercise(candidate))
@@ -1092,11 +1135,12 @@ public static class TrainingProgramGenerator
                     Candidate = candidate,
                     Score = AccessoryDeficitScore(candidate, currentEffectiveVolume, targets, allowedMuscles, request.MuscleVolumeTargets)
                 })
-                .Where(item => item.Score > 0m || DirectNeed(item.Candidate) > 0)
+                .Where(item => item.Score > 0m || DirectNeed(item.Candidate) > 0 || GivesSecondExposure(item.Candidate))
                 // Quadriceps receive first call on an accessory slot when glutes are already
                 // at target and quads remain under target. Hamstring accessories compete by
                 // their lower default target/score instead of reserving a slot unconditionally.
-                .OrderByDescending(item =>
+                .OrderByDescending(item => GivesSecondExposure(item.Candidate))
+                .ThenByDescending(item =>
                     prioritizeHamstringAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Hamstrings))
                 .ThenByDescending(item =>
@@ -1116,7 +1160,7 @@ public static class TrainingProgramGenerator
                     prioritizeCalfAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Calves))
                 .ThenByDescending(item => item.Score)
-                // With five or six sessions a week a new training block renews accessories: one the previous block used gives
+                // A new training block renews accessories: one the previous block used gives
                 // way to an equally useful one that is about as well curated (the same window as the other rotations).
                 .ThenByDescending(item => item.Candidate.SelectionPriority -
                     (renewed.Contains(item.Candidate.ExerciseId) ? PoolPriorityWindow + 1 : 0))
@@ -1131,7 +1175,8 @@ public static class TrainingProgramGenerator
             {
                 var candidate = item.Candidate;
                 var (sets, minReps, maxReps, rir, rest, progression) = PrescriptionFor(
-                    request.Goal, request.Experience, week, daysPerWeek, TrainingMovementPattern.Accessory);
+                    request.Goal, request.Experience, week, daysPerWeek, TrainingMovementPattern.Accessory,
+                    isSmallIsolation: candidate.PrimaryMuscleGroups.All(SmallIsolationMuscles.Contains));
                 // The allocator only adds sets where a muscle is below target, and compounds already
                 // cover arms/deltoids on paper, so a direct isolation exercise needs its own
                 // starting dose instead of a single set.
@@ -1252,23 +1297,33 @@ public static class TrainingProgramGenerator
     /// </summary>
     private static (int Sets, int MinReps, int MaxReps, decimal Rir, int RestSeconds, TrainingProgressionRule Progression)
         PrescriptionFor(TrainingGoal goal, TrainingExperience experience, int week, int daysPerWeek, TrainingMovementPattern pattern,
-            bool isPrimaryLift = false, bool isHeavyLift = false)
+            bool isPrimaryLift = false, bool isHeavyLift = false, bool isSmallIsolation = false)
     {
         var beginner = experience == TrainingExperience.Beginner;
         // Single-leg work, accessories and core start at two sets: a lone set of lunges or leg extensions is not a
         // training dose. The allocator still adds sets to single-leg lifts as it does to the other compounds.
         if (pattern is TrainingMovementPattern.Accessory or TrainingMovementPattern.Core or TrainingMovementPattern.SingleLeg)
-            return (2, goal == TrainingGoal.Strength ? 8 : 10, 15,
+        {
+            // Small muscles worked on their own take higher repetitions well, with loads that are easy to handle.
+            var high = isSmallIsolation && goal == TrainingGoal.Hypertrophy && !beginner;
+            return (2, high ? 12 : goal == TrainingGoal.Strength ? 8 : 10, high ? 20 : 15,
                 beginner ? 3m : 2m, pattern == TrainingMovementPattern.Core ? 60 : 90,
                 TrainingProgressionRule.DoubleProgression);
+        }
         // Internal product heuristic (not an ACSM-prescribed figure): in strength plans the first compound of each
-        // session is the session's main lift. It starts at three sets (the allocator may raise it to five) and, for
-        // non-beginners on a lift that accepts high loads, uses lower repetitions and longer rest. Beginners, and
-        // profiles whose equipment has no heavy lift for that slot, keep the 5-8 range.
+        // session is the session's main lift. It starts at three sets (the allocator may raise it to five) and, on a lift
+        // that accepts high loads, uses low repetitions and long rest (beginners stop a little higher, further from
+        // failure). Profiles whose equipment has no heavy lift for that slot keep the 5-8 range.
         if (goal == TrainingGoal.Strength && isPrimaryLift)
-            return isHeavyLift && !beginner
-                ? (3, 3, 6, 2m, 240, TrainingProgressionRule.DoubleProgression)
-                : (3, 5, 8, beginner ? 3m : 2m, 180, TrainingProgressionRule.DoubleProgression);
+        {
+            if (!isHeavyLift) return (3, 5, 8, beginner ? 3m : 2m, 180, TrainingProgressionRule.DoubleProgression);
+            return beginner
+                ? (3, 4, 6, 3m, 180, TrainingProgressionRule.DoubleProgression)
+                : (3, 3, 6, 2m, 240, TrainingProgressionRule.DoubleProgression);
+        }
+        // The first heavy lift of an experienced hypertrophy session is done heavier than the rest.
+        if (goal == TrainingGoal.Hypertrophy && isPrimaryLift && isHeavyLift && !beginner)
+            return (2, 6, 10, 2m, 150, TrainingProgressionRule.DoubleProgression);
         // Give the main bilateral compound patterns a two-set starting dose. The allocator
         // preserves this baseline and adds volume only where the weekly targets and time allow.
         var baseline = goal switch

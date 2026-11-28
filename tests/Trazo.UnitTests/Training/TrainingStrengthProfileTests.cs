@@ -29,11 +29,12 @@ public sealed class TrainingStrengthProfileTests
     }
 
     [Fact]
-    public void BeginnersKeepTheFiveToEightRangeToConsolidateTechnique()
+    public void BeginnersTrainTheirHeavyMainLiftAtFourToSix_FurtherFromFailure()
     {
         var plan = TrainingBlockProgressionTests.Generate(2, TrainingGoal.Strength, 3, 120, TrainingExperience.Beginner);
         var primary = plan.Sessions[0].Exercises[0];
-        Assert.Equal((5, 8, 180), (primary.MinRepetitions, primary.MaxRepetitions, primary.RestSeconds));
+        Assert.Equal((4, 6, 180), (primary.MinRepetitions, primary.MaxRepetitions, primary.RestSeconds));
+        Assert.True(primary.TargetRepetitionsInReserve >= 2m);
     }
 
     [Theory]

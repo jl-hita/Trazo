@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -42,7 +42,12 @@ public sealed class EngineSimulationTests : PlansApiBase
         int PainEvery = 0,
         double BadDay = 0,
         bool Answers = false,
-        bool FollowsTheLoad = true);
+        bool FollowsTheLoad = true,
+        /// <summary>Answers about each muscle: "fresh" (recovered, little work), "tired" (not recovered, too much) or
+        /// "honest" (not recovered on a bad day, fine otherwise). Null answers nothing.</summary>
+        string? Muscles = null,
+        /// <summary>False for the app that no longer asks about recovery in the finish dialog.</summary>
+        bool SendsRecovery = true);
 
     private static readonly Athlete[] Athletes =
     [
@@ -81,7 +86,7 @@ public sealed class EngineSimulationTests : PlansApiBase
 
     private sealed class Tally
     {
-        public int Sessions, Increases, Reductions, Exercises, Underloaded, Overloaded;
+        public int Sessions, Increases, Reductions, Exercises, Underloaded, Overloaded, CompletedSets, ShortSets;
         public readonly Dictionary<string, int> Applied = new(StringComparer.Ordinal);
         public double Gap;
     }
@@ -124,6 +129,7 @@ public sealed class EngineSimulationTests : PlansApiBase
             var badDay = random.NextDouble() < athlete.BadDay;
             var skipped = false;
             var first = true;
+            var muscles = new Dictionary<string, object>();
             foreach (var prescribed in session.GetProperty("exercises").EnumerateArray())
             {
                 var id = prescribed.GetProperty("exerciseId").GetString()!;
@@ -178,9 +184,19 @@ public sealed class EngineSimulationTests : PlansApiBase
                         continue;
                     }
                     int? written = athlete.WritesRir ? Math.Clamp(capacity - reps + athlete.RirBias, 0, 6) : null;
+                    tally.CompletedSets++;
+                    if (reps < min) tally.ShortSets++;
                     sets.Add(new { exerciseId = id, setNumber = set, weightKg = (double?)load, repetitions = (int?)reps, rir = written, completed = true, skippedReason = (string?)null, painReported = hurts && first && set == 1 });
                 }
                 if (athlete.Answers) feedback[id] = new { stimulus = random.NextDouble() < 0.4 ? "low" : "adequate", discomfort = "none", preFatigue = random.NextDouble() < 0.2 ? "loaded" : "recovered" };
+                if (athlete.Muscles is { } mood)
+                    foreach (var muscle in prescribed.GetProperty("primaryMuscles").EnumerateArray())
+                        muscles[muscle.GetString()!] = mood switch
+                        {
+                            "fresh" => new { recovery = "recovered", workload = "low" },
+                            "tired" => new { recovery = "notRecovered", workload = "high" },
+                            _ => new { recovery = badDay ? "notRecovered" : "recovered", workload = "adequate" }
+                        };
                 state.Load = load;
                 state.LastTarget = target ?? load;
                 state.Min = min;
@@ -194,8 +210,9 @@ public sealed class EngineSimulationTests : PlansApiBase
             var logged = await client.PostAsJsonAsync($"/api/v1/plans/current/sessions/{sessionId}/log", new
             {
                 outcome = skipped ? "Partial" : "Completed", nonCompletionReason = skipped ? "Time" : "None",
-                recovery = badDay ? "Insufficient" : "Good", sessionRpe = badDay ? 9.5 : 7.5, painReported = hurts, sets,
-                exerciseFeedback = feedback.Count > 0 ? feedback : null
+                recovery = athlete.SendsRecovery ? badDay ? "Insufficient" : "Good" : null, sessionRpe = badDay ? 9.5 : 7.5,
+                painReported = hurts, sets, exerciseFeedback = feedback.Count > 0 ? feedback : null,
+                muscleFeedback = muscles.Count > 0 ? muscles : null
             });
             if (logged.StatusCode != HttpStatusCode.OK) { Report("http", $"log {n}: {(int)logged.StatusCode} {await logged.Content.ReadAsStringAsync()}"); break; }
             tally.Sessions++;
@@ -266,5 +283,89 @@ public sealed class EngineSimulationTests : PlansApiBase
         if (Environment.GetEnvironmentVariable("TRAZO_SIM_REPORT") is { Length: > 0 } path) File.WriteAllText(path, report);
 
         Assert.True(findings.Count == 0, $"{findings.Count} findings:\n" + string.Join("\n", findings.Take(40)));
+    }
+
+    /// <summary>The adaptation half of docs/engine-scorecard.md. Measures only when <c>TRAZO_SCORECARD</c> names a report file.</summary>
+    [Fact]
+    public async Task AdaptationScorecard()
+    {
+        if (Environment.GetEnvironmentVariable("TRAZO_SCORECARD") is not { Length: > 0 } path) return;
+        Athlete[] extra =
+        [
+            new("exaggerator", RirBias: 3),
+            new("fresh", Muscles: "fresh", SendsRecovery: false),
+            new("tired", Muscles: "tired", SendsRecovery: false),
+            new("rough-dialog", BadDay: 0.5),
+            new("rough-muscle", BadDay: 0.5, Muscles: "honest", SendsRecovery: false)
+        ];
+        var athletes = Athletes.Where(a => a.Name != "answers").Concat(extra).ToArray();
+        (string Goal, string Experience, int Days)[] kinds = [("Hypertrophy", "Beginner", 3), ("Hypertrophy", "Intermediate", 4), ("Strength", "Intermediate", 3), ("Hypertrophy", "Advanced", 4)];
+        var findings = new List<Finding>();
+        var lives = new List<(string Athlete, int Kind, Tally Tally)>();
+        foreach (var athlete in athletes)
+        for (var kind = 0; kind < kinds.Length; kind++)
+        foreach (var seed in new[] { kind + 1, kind + 101 })
+            lives.Add((athlete.Name, kind, await LiveAsync(athlete, kinds[kind].Goal, kinds[kind].Experience, kinds[kind].Days, seed, findings)));
+
+        IEnumerable<Tally> Of(params string[] names) => lives.Where(l => names.Contains(l.Athlete)).Select(l => l.Tally);
+        double Share(Func<Tally, double> part, Func<Tally, double> whole, string[] names) => Of(names).Sum(part) / Math.Max(1, Of(names).Sum(whole));
+        double Gap(params string[] names) => Share(t => t.Gap, t => t.Exercises, names);
+        double Under(params string[] names) => Share(t => t.Underloaded, t => t.Exercises, names);
+        double Over(params string[] names) => Share(t => t.Overloaded, t => t.Exercises, names);
+        double Short(params string[] names) => Share(t => t.ShortSets, t => t.CompletedSets, names);
+        static int Cuts(Tally t) => t.Applied.GetValueOrDefault("reduction_sets") + t.Applied.GetValueOrDefault("muscle_reduce_set");
+        int Count(string athlete, Func<Tally, bool> test) => Of(athlete).Count(test);
+
+        string[] safetyRules = ["pain", "jump", "invalid", "http", "load", "overload"];
+        var safety = findings.Count(f => safetyRules.Contains(f.Rule));
+        string[] irregular = ["busy", "tires", "bad-weeks", "sore", "stubborn"];
+        var irregularFindings = findings.Count(f => irregular.Contains(f.Athlete));
+        var all = Of("wearing-down").Count();
+        // The plan kinds in which a person sees a protection: progression paused, and a deload.
+        List<int> Kinds(string athlete, string change) =>
+            lives.Where(l => l.Athlete == athlete && l.Tally.Applied.GetValueOrDefault(change) > 0).Select(l => l.Kind).Distinct().Order().ToList();
+        string[] protections = ["hold_progression", "deload"];
+        string[] regular = ["constant", "noisy", "stalled"];
+        string[] wrong = ["optimist", "exaggerator", "pessimist"];
+        var wornCut = Count("wearing-down", t => Cuts(t) > 0);
+        var calm = Count("pessimist", t => Cuts(t) <= 2);
+        var added = Count("fresh", t => t.Applied.GetValueOrDefault("muscle_add_set") > 0);
+        var tiredCut = Count("tired", t => t.Applied.GetValueOrDefault("muscle_reduce_set") > 0);
+
+        (string Id, bool Mandatory, string Title, bool Ok, string Result)[] checks =
+        [
+            ("A1", true, "Safety", safety == 0, $"{safety} findings"),
+            ("A2", true, "Regular people", Gap(regular) <= 0.10 && Under(regular) + Over(regular) <= 0.05, $"gap {Gap(regular):P1}, under {Under(regular):P1}, over {Over(regular):P1}"),
+            ("A3", false, "Starting too light", Gap("too-light") <= 0.12 && Under("too-light") <= 0.10, $"gap {Gap("too-light"):P1}, under {Under("too-light"):P1}"),
+            ("A4", false, "Starting too heavy", Gap("too-heavy") <= 0.10 && Over("too-heavy") <= 0.05, $"gap {Gap("too-heavy"):P1}, over {Over("too-heavy"):P1}"),
+            ("A5", false, "No reserve written", Gap("no-rir") <= 0.12 && Of("no-rir").All(t => t.Increases > 0), $"gap {Gap("no-rir"):P1}, plans without increases {Count("no-rir", t => t.Increases == 0)}"),
+            ("A6", false, "Wrong reserve", wrong.All(n => Over(n) <= 0.05 && Short(n) <= 0.08 && Gap(n) <= 0.15),
+                string.Join("; ", wrong.Select(n => $"{n}: gap {Gap(n):P1}, over {Over(n):P1}, short sets {Short(n):P1}"))),
+            ("A7", false, "Novice", Gap("novice") <= 0.12, $"gap {Gap("novice"):P1}"),
+            ("A8", false, "Volume follows the person", wornCut == all && calm == all && added == all && tiredCut == all,
+                $"of {all} plans: wearing-down cut {wornCut}, pessimist at most 2 cuts {calm}, fresh added {added}, tired cut {tiredCut}"),
+            ("A9", false, "Irregular people", irregularFindings == 0 && irregular.All(n => Gap(n) <= 0.15), $"{irregularFindings} findings; " + string.Join(", ", irregular.Select(n => $"{n} {Gap(n):P1}"))),
+            ("A10", true, "Muscle questions keep the protections",
+                protections.All(p => Kinds("rough-dialog", p).Count > 0 && !Kinds("rough-dialog", p).Except(Kinds("rough-muscle", p)).Any()),
+                string.Join("; ", protections.Select(p => $"{p}: dialog in {Kinds("rough-dialog", p).Count} plan kinds, muscle questions in {Kinds("rough-muscle", p).Count}")))
+        ];
+
+        var report = new StringBuilder($"# Adaptation, engine {Trazo.Training.TrainingProgramGenerator.EngineVersion}\n\n");
+        report.AppendLine($"Score: {10.0 * checks.Count(c => c.Ok) / checks.Length:0.0} ({checks.Count(c => c.Ok)}/{checks.Length}); mandatory: {(checks.Where(c => c.Mandatory).All(c => c.Ok) ? "all pass" : "FAIL")}; {lives.Count} plans lived\n");
+        report.AppendLine("| | Criterion | Result | Pass |\n|---|---|---|---|");
+        foreach (var c in checks) report.AppendLine($"| {c.Id}{(c.Mandatory ? " M" : "")} | {c.Title} | {c.Result} | {(c.Ok ? "yes" : "NO")} |");
+        report.AppendLine("\nathlete | gap | under | over | short sets | up | down | adjustments");
+        foreach (var athlete in athletes)
+        {
+            var n = athlete.Name;
+            report.AppendLine($"{n} | {Gap(n):P1} | {Under(n):P1} | {Over(n):P1} | {Short(n):P1} | {Of(n).Sum(t => t.Increases)} | {Of(n).Sum(t => t.Reductions)} | {string.Join(" ", Of(n).SelectMany(t => t.Applied).GroupBy(a => a.Key).OrderBy(g => g.Key).Select(g => $"{g.Key}={g.Sum(a => a.Value)}"))}");
+        }
+        foreach (var group in findings.GroupBy(f => f.Rule))
+        {
+            report.AppendLine($"\n## {group.Key}: {group.Count()}");
+            foreach (var f in group.Take(10)) report.AppendLine($"- {f.Athlete} {f.Plan}: {f.Detail}");
+        }
+        _output.WriteLine(report.ToString());
+        File.WriteAllText(path + ".adaptation.md", report.ToString());
     }
 }

@@ -628,5 +628,8 @@
  "@short:Thursday": "D",
  "@short:Friday": "V",
  "@short:Saturday": "Z",
- "@short:Sunday": "Z"
+ "@short:Sunday": "Z",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Alle sets haalden de bovenkant van het bereik met minstens twee herhalingen meer in reserve dan gepland: het gewicht ligt ver onder dat van jou.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Het gaat meer omhoog dan gewoonlijk, hoogstens 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Met de laatste verhoging is de onderkant van het bereik niet gehaald: ga terug naar het vorige gewicht en bouw van daaruit op."
 }

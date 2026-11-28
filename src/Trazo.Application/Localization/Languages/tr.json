@@ -628,5 +628,8 @@
  "@short:Thursday": "Pe",
  "@short:Friday": "Cu",
  "@short:Saturday": "Ct",
- "@short:Sunday": "Pz"
+ "@short:Sunday": "Pz",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Tüm setler, planlanandan en az iki tekrar daha fazla yedekle aralığın üst sınırına ulaştı: yük senin seviyenin çok altında.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Yük her zamankinden fazla, en çok % 10 artırılır.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Son artışta aralığın alt sınırına ulaşılamadı: önceki yüke dön ve oradan ilerle."
 }

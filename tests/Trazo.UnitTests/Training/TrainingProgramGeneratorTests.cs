@@ -901,7 +901,7 @@ public sealed class TrainingProgramGeneratorTests
     }
 
     [Fact]
-    public void StrengthPlansDoNotBorrowHypertrophyOnlyPrimaryPatternExercises()
+    public void APatternWithNothingMarkedForTheGoalUsesWhatThereIs_AndSaysSo()
     {
         var catalog = Catalog().Select(exercise =>
             exercise.MovementPattern == TrainingMovementPattern.Squat
@@ -912,7 +912,8 @@ public sealed class TrainingProgramGeneratorTests
             Request() with { Goal = TrainingGoal.Strength },
             catalog);
 
-        Assert.False(generated.Succeeded);
+        Assert.True(generated.Succeeded, string.Join("; ", generated.Errors));
+        Assert.Contains(generated.Prescription!.QualityReport!.Warnings, w => w.Contains("Squat", StringComparison.Ordinal));
     }
 
     [Fact]

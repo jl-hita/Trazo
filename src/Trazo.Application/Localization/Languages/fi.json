@@ -628,5 +628,8 @@
  "@short:Thursday": "To",
  "@short:Friday": "Pe",
  "@short:Saturday": "La",
- "@short:Sunday": "Su"
+ "@short:Sunday": "Su",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Kaikki sarjat ylsivät toistoalueen ylärajalle, ja varaa jäi vähintään kaksi toistoa suunniteltua enemmän: kuorma on selvästi alle tasosi.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Kuormaa nostetaan tavallista enemmän, enintään 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Viimeisimmän noston jälkeen toistoalueen alarajaa ei saavutettu: palaa edelliseen kuormaan ja etene siitä."
 }

@@ -628,5 +628,8 @@
  "@short:Thursday": "목",
  "@short:Friday": "금",
  "@short:Saturday": "토",
- "@short:Sunday": "일"
+ "@short:Sunday": "일",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "모든 세트가 범위의 최대치에 도달했고 여유 반복도 계획보다 2회 이상 많았습니다. 중량이 실력보다 훨씬 낮습니다.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "평소보다 크게, 최대 10 %까지 올립니다.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "마지막 증량에서는 범위의 최소치에 도달하지 못했습니다. 이전 중량으로 돌아가 거기서부터 진행하세요."
 }

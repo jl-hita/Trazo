@@ -123,7 +123,8 @@ public static class TrainingProgramVolumeAllocator
                         if (exercise.Sets >= MaximumSetsFor(exercise, goal, accessoryExerciseIds is not null))
                             continue;
                         var addedDuration = AdditionalSetSeconds(exercise);
-                        if (duration + addedDuration > maximumSessionDurationMinutes * 60m)
+                        if (duration + addedDuration > maximumSessionDurationMinutes * 60m ||
+                            ExceedsSessionDose(session, exercise))
                             continue;
 
                         var score = DeficitScore(exercise, primaryVolume, applicableTargets, goal, experience, preferences, step);
@@ -184,7 +185,8 @@ public static class TrainingProgramVolumeAllocator
                             var exercise = session.Exercises[exerciseIndex];
                             if (accessoryExerciseIds.Contains(exercise.ExerciseId) ||
                                 exercise.Sets >= MaximumSetsFor(exercise, goal, true) ||
-                                duration + AdditionalSetSeconds(exercise) > limit)
+                                duration + AdditionalSetSeconds(exercise) > limit ||
+                                ExceedsSessionDose(session, exercise))
                                 continue;
                             var tracked = exercise.StimulatedMuscles()
                                 .Where(applicableTargets.ContainsKey)
@@ -252,6 +254,15 @@ public static class TrainingProgramVolumeAllocator
         return new(output.Values.OrderBy(x => x.WeekNumber).ThenBy(x => x.Day).ToArray(),
             warnings.Distinct(StringComparer.Ordinal).ToArray(), Array.Empty<string>());
     }
+
+    /// <summary>Effective sets one muscle gets in one session at most; more than that is better spread over the week.</summary>
+    public const int MaximumSessionSetsPerMuscle = 12;
+
+    /// <summary>Whether one more set of the exercise would take a muscle past what one session should give it.</summary>
+    internal static bool ExceedsSessionDose(TrainingSessionPrescription session, TrainingExercisePrescription exercise) =>
+        exercise.StimulatedMuscles().Any(muscle =>
+            session.Exercises.Where(item => item.StimulatedMuscles().Contains(muscle)).Sum(item => item.Sets) + 1 >
+            MaximumSessionSetsPerMuscle);
 
     /// <summary>
     /// Shared per-exercise working-set ceiling for generation and feedback-based volume increases.

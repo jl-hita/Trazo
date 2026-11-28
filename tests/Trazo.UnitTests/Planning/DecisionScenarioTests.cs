@@ -82,19 +82,14 @@ public sealed class DecisionScenarioTests
         // Equipment, goal and the movement pattern with nothing to offer. A change here is a change of what users can get.
         string[] known =
         [
-            "band only|Strength|HorizontalPush", "band only|Strength|Squat",
-            "barbell, rack and pull-up bar|Strength|HorizontalPull", "barbell, rack and pull-up bar|Strength|Squat",
             "bodyweight only|GeneralFitness|HorizontalPull", "bodyweight only|Hypertrophy|HorizontalPull",
-            "bodyweight only|Strength|HorizontalPush", "bodyweight only|Strength|Squat"
+            "bodyweight only|Strength|HorizontalPull"
         ];
 
         var failed = All.Value.Where(s => !s.Result.Succeeded)
             .Select(s => $"{s.Equipment}|{s.Goal}|{s.Result.Errors[0].Split('\'')[1]}").Distinct().Order(StringComparer.Ordinal).ToArray();
 
         Assert.Equal(known.Order(StringComparer.Ordinal).ToArray(), failed);
-        // A barbell is only missing something for beginners: the barbell squat and row open at intermediate.
-        Assert.All(All.Value.Where(s => !s.Result.Succeeded && s.Equipment.StartsWith("barbell", StringComparison.Ordinal)),
-            s => Assert.Equal(TrainingExperience.Beginner, s.Level));
     }
 
     [Fact]
@@ -102,13 +97,21 @@ public sealed class DecisionScenarioTests
         None(Planned.Where(s => s.Result.Sessions.Any(x => x.EstimatedDurationMinutes > s.Minutes)).Select(s => s.Name));
 
     [Fact]
-    public void NoMuscleGoesOverTwentyWeeklySets_ExceptTheGlutesOfOneStrengthProfile() =>
-        // Known gap (priority P7): in the peak weeks of an advanced strength plan with only dumbbells the glutes reach 21.
-        Assert.Equal(
-            ["Strength Advanced Automatic 3d, dumbbells and bench, 45': Glutes 21",
-                "Strength Advanced Automatic 3d, dumbbells and bench, 75': Glutes 21"],
-            Planned.SelectMany(s => PriorityDelivery.WeeklySets(s.Week).Where(m => m.Value > 20m)
-                .Select(m => $"{s.Name}: {m.Key} {m.Value:0}")).ToArray());
+    public void NoMuscleGoesOverTwentyWeeklySets_ExceptTheGlutesOfStrengthWithNoHeavyLegLift()
+    {
+        // Known gap (priority P7): in the peak weeks of an advanced strength plan with only dumbbells, or only bands (a plan
+        // that could not be built before engine 0.18.0), the glutes go just past twenty.
+        var offences = Planned.SelectMany(s => PriorityDelivery.WeeklySets(s.Week).Where(m => m.Value > 20m)
+            .Select(m => $"{s.Name}: {m.Key} {m.Value:0}")).ToArray();
+
+        Assert.True(offences.SequenceEqual(
+        [
+            "Strength Advanced Automatic 3d, dumbbells and bench, 45': Glutes 21",
+            "Strength Advanced Automatic 3d, dumbbells and bench, 75': Glutes 21",
+            "Strength Advanced Automatic 3d, band only, 45': Glutes 21",
+            "Strength Advanced Automatic 3d, band only, 75': Glutes 23"
+        ]), string.Join(Environment.NewLine, offences));
+    }
 
     [Fact]
     public void InAGym_EveryMajorMuscleGetsAUsefulWeeklyDose() =>
