@@ -546,6 +546,7 @@ public sealed class AccountApiTests : IDisposable
         Assert.Equal(HttpStatusCode.NoContent, (await client.PutAsJsonAsync("/api/v1/account/health-consent", new { consent = true })).StatusCode);
         Assert.True((await JsonAsync(await client.GetAsync("/api/v1/account"))).GetProperty("healthConsent").GetBoolean());
         await StartPlanAndLogAsync(client);
+        (await ClientFor(eve).PutAsJsonAsync("/api/v1/account/health-consent", new { consent = true })).EnsureSuccessStatusCode();
         await StartPlanAndLogAsync(ClientFor(eve));
         Assert.Equal(HttpStatusCode.OK, (await client.PutAsJsonAsync("/api/v1/plans/current/limitations", new { limitations = new[] { "Knee" } })).StatusCode);
         await SeedLearningAsync(ana.Id);

@@ -18,7 +18,9 @@ public enum PlanFailure
     /// <summary>A session was changed by another request after this one read it; nothing of this request was stored.</summary>
     ConcurrentModification,
     /// <summary>The app that asks cannot show something the plan has, and saving from it would lose it.</summary>
-    AppUpdateRequired
+    AppUpdateRequired,
+    /// <summary>The request notes down health data and the account has not consented to it.</summary>
+    HealthConsentRequired
 }
 
 public sealed record PlanResult<T>(

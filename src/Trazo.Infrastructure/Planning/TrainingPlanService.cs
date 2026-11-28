@@ -221,9 +221,17 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
 
     // ---------------------------------------------------------------- create
 
+    private const string HealthConsentMessage = "Para anotar lesiones o enfermedades necesitas dar tu consentimiento para datos de salud. Actualiza la app si no te lo pide.";
+    private const string HealthWithheldMessage = "El entrenamiento se ha guardado sin el dolor ni la enfermedad porque falta tu consentimiento para datos de salud, y no se ha ajustado nada con él.";
+
+    private Task<bool> HasHealthConsentAsync(Guid userId, CancellationToken ct) =>
+        db.Users.AsNoTracking().AnyAsync(u => u.Id == userId && u.HealthConsentAt != null, ct);
+
     public async Task<PlanResult<PlanView>> CreateAsync(Guid userId, PlanProfile profile, int? seed, CancellationToken ct, string? name = null)
     {
         await UseUserClockAsync(userId, ct);
+        if (profile.Limitations.Count > 0 && !await HasHealthConsentAsync(userId, ct))
+            return PlanResult<PlanView>.Fail(PlanFailure.HealthConsentRequired, HealthConsentMessage);
         if (await db.TrainingPlans.AnyAsync(p => p.UserId == userId && p.Status == TrainingPlanStatus.Active, ct))
             return PlanResult<PlanView>.Fail(PlanFailure.ActivePlanExists,
                 "Ya tienes un plan activo. Archívalo antes de crear otro.");
@@ -1033,6 +1041,10 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             return PlanResult<PlanView>.Fail(PlanFailure.InvalidRequest, "Las zonas indicadas no son válidas.",
                 new Dictionary<string, string[]> { ["limitations"] = [$"Zonas admitidas: {string.Join(", ", LimitationRules.Areas)}."] });
 
+        // Taking an area away needs no consent; noting a new one does.
+        if (areas.Except(plan.Limitations, StringComparer.Ordinal).Any() && !await HasHealthConsentAsync(userId, ct))
+            return PlanResult<PlanView>.Fail(PlanFailure.HealthConsentRequired, HealthConsentMessage);
+
         var now = clock.GetUtcNow();
         var before = plan.Limitations;
         plan.Limitations = areas.ToArray();
@@ -1408,6 +1420,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         if (canonical is null)
             return PlanResult<SkipResult>.Fail(PlanFailure.InvalidRequest, "El motivo no es válido.",
                 new Dictionary<string, string[]> { ["reason"] = ["Usa Time, Fatigue, Equipment, Motivation, Illness u Other."] });
+        if (canonical == "Illness" && !await HasHealthConsentAsync(userId, ct))
+            return PlanResult<SkipResult>.Fail(PlanFailure.HealthConsentRequired, HealthConsentMessage);
         var note = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
         if (note is { Length: > MaximumSkipNotes })
             return PlanResult<SkipResult>.Fail(PlanFailure.InvalidRequest, "Las notas son demasiado largas.",
@@ -1736,6 +1750,13 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         if (plan is null) return PlanResult<LogResult>.Fail(PlanFailure.NoActivePlan, "No tienes un plan activo.");
         var session = await db.PlannedSessions.FirstOrDefaultAsync(s => s.Id == sessionId && s.PlanId == plan.Id, ct);
         if (session is null) return PlanResult<LogResult>.Fail(PlanFailure.SessionNotFound, "La sesión no existe.");
+        // Without the consent the workout is kept and what it says about health is not. Done first, so a retry compares equal.
+        var healthWithheld = false;
+        if (!await HasHealthConsentAsync(userId, ct))
+        {
+            healthWithheld = HealthData.IsCarriedBy(log);
+            log = HealthData.Withhold(log);
+        }
         // A retry of a request that already succeeded (the client lost the answer) must not fail: when the stored log is
         // the same as the one sent, the saved result is returned again. A different log for the session stays a conflict.
         var existing = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets).FirstOrDefaultAsync(l => l.PlannedSessionId == session.Id, ct);
@@ -1806,9 +1827,12 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         session.UpdatedAt = now;
 
         // Automatic adaptation is a Premium feature: without access the session is still recorded, but nothing is adapted.
-        var report = await subscriptions.HasPremiumAsync(userId, ct)
-            ? await AdaptAsync(plan, session, workout, prescribed, now, ct)
-            : new AdaptationReport([], "none", AdaptationLockedMessage, [], [], Locked: true);
+        // Nothing is adapted from a log whose pain or illness was left out: the engine would read it as a clean one.
+        var report = !await subscriptions.HasPremiumAsync(userId, ct)
+            ? new AdaptationReport([], "none", AdaptationLockedMessage, [], healthWithheld ? [HealthWithheldMessage] : [], Locked: true)
+            : healthWithheld
+                ? new AdaptationReport([], "none", HealthWithheldMessage, [], [HealthWithheldMessage])
+                : await AdaptAsync(plan, session, workout, prescribed, now, ct);
         report = Localized(report);
         try
         {
