@@ -166,9 +166,24 @@ A Play notification (RTDN) for a purchase that is no longer linked is ignored.
 
 ## Export (access and portability)
 
-`GET /api/v1/account/export` (signed in) returns a JSON file (`Content-Disposition: attachment`) with the account, plans (phases and sessions with their
-prescription), logged workouts and sets (including pain and notes), adaptations, subscriptions (product, state, dates) and devices.
-It never contains password or token hashes, the 2FA key, recovery codes, or purchase tokens.
+`GET /api/v1/account/export` (signed in) returns a JSON file (`Content-Disposition: attachment`), version `2`:
+
+| Part | Content |
+|---|---|
+| `account` | identity, sign-in methods, language, time zone and both consents |
+| `plans`, `blocks` | plans with phases, sessions and prescriptions; each block with the context it was generated from |
+| `workoutLogs` | sets, pain, notes, when it was done and the post-exercise answers |
+| `adaptations`, `sessionAdjustments`, `longitudinalDecisions`, `muscleObservations`, `frequencyProposals` | what the plan changed and why |
+| `reviews` | manual review requests and their messages (the team's internal lines and identities are left out) |
+| `feedback` | comments sent from the app |
+| `subscriptions`, `premiumGrants` | product, state, dates and Premium time |
+| `referrals`, `campaign` | the account's code and invitations (other people are not identified) and the campaign it came from |
+| `devices`, `notificationDevices` | sessions and phones registered for notifications, without tokens |
+| `productEvents`, `waitlist` | usage milestones and the waitlist entry of the same email |
+
+It never contains password or token hashes, the 2FA key, recovery codes, or purchase or notification tokens. Application logs
+and anonymous error tickets are not included. `AccountData.Exported` maps every personal table to its part, and a test fails
+when a table is missing.
 
 ## Operations
 

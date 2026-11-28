@@ -19,6 +19,37 @@ namespace Trazo.Infrastructure.Accounts;
 /// </summary>
 public static class AccountData
 {
+    /// <summary>
+    /// Where each table of <see cref="UserOwned"/> appears in the data export (a property of <see cref="AccountExport"/>), or null
+    /// when it is left out on purpose because it only holds secrets. A test keeps both lists equal, so a new table cannot be
+    /// forgotten by the export.
+    /// </summary>
+    public static readonly IReadOnlyDictionary<Type, string?> Exported = new Dictionary<Type, string?>
+    {
+        [typeof(TrazoUser)] = nameof(AccountExport.Account),
+        [typeof(RefreshToken)] = nameof(AccountExport.Devices),
+        [typeof(AuthChallenge)] = null, [typeof(AuthRecoveryCode)] = null, [typeof(EmailActionToken)] = null,
+        [typeof(Subscription)] = nameof(AccountExport.Subscriptions),
+        [typeof(TrainingPlan)] = nameof(AccountExport.Plans), [typeof(TrainingPlanPhase)] = nameof(AccountExport.Plans),
+        [typeof(PlannedSession)] = nameof(AccountExport.Plans),
+        [typeof(TrainingMesocycle)] = nameof(AccountExport.Blocks),
+        [typeof(WorkoutLog)] = nameof(AccountExport.WorkoutLogs), [typeof(WorkoutSetLog)] = nameof(AccountExport.WorkoutLogs),
+        [typeof(PlanAdaptation)] = nameof(AccountExport.Adaptations),
+        [typeof(PlanReviewRequest)] = nameof(AccountExport.Reviews), [typeof(PlanReviewMessage)] = nameof(AccountExport.Reviews),
+        [typeof(MuscleWeekObservation)] = nameof(AccountExport.MuscleObservations),
+        [typeof(LongitudinalDecision)] = nameof(AccountExport.LongitudinalDecisions),
+        [typeof(FrequencyProposal)] = nameof(AccountExport.FrequencyProposals),
+        [typeof(PlanSessionAdjustment)] = nameof(AccountExport.SessionAdjustments),
+        [typeof(Trazo.Domain.Push.DeviceToken)] = nameof(AccountExport.NotificationDevices),
+        [typeof(Trazo.Domain.Support.FeedbackEntry)] = nameof(AccountExport.Feedback),
+        [typeof(Trazo.Domain.Growth.PremiumGrant)] = nameof(AccountExport.PremiumGrants),
+        [typeof(Trazo.Domain.Growth.GrowthEvent)] = nameof(AccountExport.ProductEvents),
+        [typeof(Trazo.Domain.Growth.ReferralCode)] = nameof(AccountExport.Referrals),
+        [typeof(Trazo.Domain.Growth.ReferralRelationship)] = nameof(AccountExport.Referrals),
+        [typeof(Trazo.Domain.Marketing.CampaignAttribution)] = nameof(AccountExport.Campaign),
+        [typeof(Trazo.Domain.Waitlist.WaitlistEntry)] = nameof(AccountExport.Waitlist),
+    };
+
     /// <summary>Tables with data about a user, directly (a <c>UserId</c> column) or through their plan. All are deleted with the account.</summary>
     public static readonly IReadOnlySet<Type> UserOwned = new HashSet<Type>
     {
@@ -333,11 +364,31 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
         var premiumGrants = await db.PremiumGrants.AsNoTracking().Where(g => g.UserId == userId).OrderBy(g => g.GrantedAt).ToListAsync(ct);
         var feedback = (await db.FeedbackEntries.AsNoTracking().Where(f => f.UserId == userId).ToListAsync(ct)).OrderBy(f => f.CreatedAt).ToList();
 
+        var blocks = await db.TrainingMesocycles.AsNoTracking().Where(m => planIds.Contains(m.PlanId)).ToListAsync(ct);
+        var reviewRequests = await db.PlanReviewRequests.AsNoTracking().Where(r => r.UserId == userId).ToListAsync(ct);
+        var reviewIds = reviewRequests.Select(r => r.Id).ToList();
+        // The internal audit lines of the team are not part of the conversation, and the person never learns who answered.
+        var messages = await db.PlanReviewMessages.AsNoTracking()
+            .Where(m => reviewIds.Contains(m.RequestId) && m.Author != PlanReviewAuthors.System).ToListAsync(ct);
+        var notificationDevices = await db.DeviceTokens.AsNoTracking().Where(d => d.UserId == userId).ToListAsync(ct);
+        var events = await db.GrowthEvents.AsNoTracking().Where(e => e.UserId == userId).ToListAsync(ct);
+        var code = await db.ReferralCodes.AsNoTracking().Where(c => c.UserId == userId).Select(c => c.Code).FirstOrDefaultAsync(ct);
+        // Other people stay anonymous: only the dates and outcome of the invitations this account is part of.
+        var invitations = await db.ReferralRelationships.AsNoTracking()
+            .Where(r => r.ReferrerUserId == userId || r.ReferredUserId == userId).ToListAsync(ct);
+        var attribution = await db.CampaignAttributions.AsNoTracking().Where(a => a.UserId == userId).ToListAsync(ct);
+        var campaignIds = attribution.Select(a => a.CampaignId).ToList();
+        var campaigns = await db.MarketingCampaigns.AsNoTracking().Where(c => campaignIds.Contains(c.Id))
+            .Select(c => new { c.Id, c.Slug }).ToDictionaryAsync(c => c.Id, c => c.Slug, ct);
+        var waitlistEmail = Trazo.Infrastructure.Waitlist.WaitlistService.Normalize(user.Email);
+        var waitlist = await db.WaitlistEntries.AsNoTracking().Where(w => w.Email == waitlistEmail).ToListAsync(ct);
+        var invited = invitations.FirstOrDefault(r => r.ReferredUserId == userId);
+
         return new AccountExport(
-            clock.GetUtcNow(), "1",
+            clock.GetUtcNow(), "2",
             new ExportAccount(user.Id, user.Email, user.DisplayName, user.Role, user.EmailVerifiedAt, user.PasswordHash is not null,
                 user.GoogleSubject is not null, user.TwoFactorEnabled, user.TimeZoneId, user.CreatedAt, user.LastLoginAt,
-                user.HealthConsentAt, user.HealthConsentWithdrawnAt),
+                user.HealthConsentAt, user.HealthConsentWithdrawnAt, user.Language, user.ResearchConsent),
             plans.Select(p => new ExportPlan(
                 p.Id, p.Status.ToString(), p.Goal, p.Experience, p.Split, p.StartDate, p.TotalWeeks, p.TrainingDays, p.MaxSessionMinutes,
                 p.AvailableEquipment, p.ExcludedExerciseIds, p.Limitations, p.IncludeDeloadPhases, p.DeloadEveryTrainingWeeks,
@@ -345,13 +396,14 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
                 p.Phases.OrderBy(x => x.SequenceNumber).Select(x => new ExportPhase(x.SequenceNumber, x.Name, x.PhaseType, x.StartDate, x.EndDate, x.Objective)).ToList(),
                 sessions.Where(s => s.PlanId == p.Id).Select(s => new ExportSession(
                     s.Id, s.WeekNumber, s.Date, s.Title, s.Status.ToString(), s.EstimatedDurationMinutes, ParseJson(s.PrescriptionJson))).ToList(),
-                p.MusclePriorities, p.ArchiveReason?.ToString()))
+                p.MusclePriorities, p.ArchiveReason?.ToString(), p.Origin.ToString(), p.SchedulingMode.ToString()))
                 .ToList(),
             logs.Select(l => new ExportWorkoutLog(
                 l.Id, l.PlanId, l.PlannedSessionId, l.LoggedAt, l.Outcome.ToString(), l.NonCompletionReason, l.Recovery, l.SessionRpe,
                 l.PainReported, l.Notes,
                 l.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber).ThenBy(s => s.SegmentIndex)
-                    .Select(s => new ExportSet(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList()))
+                    .Select(s => new ExportSet(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList(),
+                l.PerformedAt, l.PerformedOn, l.ExerciseFeedbackJson is { } answers ? ParseJson(answers) : null))
                 .ToList(),
             adaptations.Select(a => new ExportAdaptation(a.PlanId, a.WorkoutLogId, a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation, a.AppliedAt)).ToList(),
             subscriptions.Select(s => new ExportSubscription(
@@ -367,7 +419,25 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
             proposals.Select(p => new ExportFrequencyProposal(
                 p.PlanId, p.Kind, p.Status, p.FromDays, p.ToDays, p.WeeksAnalysed, p.LowWeeks, p.Reason, p.PolicyVersion, p.CreatedAt, p.DecidedAt)).ToList(),
             SessionAdjustments: adjustments.Select(a => new ExportSessionAdjustment(a.PlanId, a.SessionTitle, a.AdjustmentJson, a.UpdatedAt)).ToList(),
-            Feedback: feedback.Select(f => new ExportFeedback(f.CreatedAt, f.Category, f.Message, f.Screen, f.AppVersion, f.Device)).ToList());
+            Feedback: feedback.Select(f => new ExportFeedback(f.CreatedAt, f.Category, f.Message, f.Screen, f.AppVersion, f.Device)).ToList(),
+            Blocks: blocks.OrderBy(b => b.PlanId).ThenBy(b => b.Sequence).Select(b => new ExportBlock(
+                b.PlanId, b.Sequence, b.PhaseType, b.IsDeload, b.StartWeek, b.Weeks, b.CreatedAt, b.EngineVersion,
+                b.GenerationSnapshotJson is { } snapshot ? ParseJson(snapshot) : null)).ToList(),
+            Reviews: reviewRequests.OrderBy(r => r.CreatedAt).Select(r => new ExportReview(
+                r.PlanId, r.Status.ToString(), r.CreatedAt, r.ReviewedAt,
+                messages.Where(m => m.RequestId == r.Id).OrderBy(m => m.CreatedAt)
+                    .Select(m => new ExportReviewMessage(m.Author, m.Body, m.CreatedAt)).ToList())).ToList(),
+            NotificationDevices: notificationDevices.OrderBy(d => d.CreatedAt)
+                .Select(d => new ExportNotificationDevice(d.Platform, d.CreatedAt, d.LastSeenAt)).ToList(),
+            ProductEvents: events.OrderBy(e => e.OccurredAt)
+                .Select(e => new ExportProductEvent(e.Name, e.OccurredAt, e.Channel, e.Plan, e.AppVersion)).ToList(),
+            Referrals: new ExportReferrals(
+                code,
+                invited is null ? null : new ExportInvitation(invited.AttributedAt, invited.Status, invited.Code, invited.Source, invited.RewardDays),
+                invitations.Where(r => r.ReferrerUserId == userId).OrderBy(r => r.AttributedAt)
+                    .Select(r => new ExportInvitation(r.AttributedAt, r.Status, null, null, r.RewardDays)).ToList()),
+            Campaign: attribution.Select(a => new ExportCampaign(campaigns.GetValueOrDefault(a.CampaignId), a.Source, a.AttributedAt)).ToList(),
+            Waitlist: waitlist.Select(w => new ExportWaitlist(w.Language, w.CreatedAt, w.ConsentAt, w.ConfirmedAt, w.InvitedAt)).ToList());
     }
 
     private static JsonElement ParseJson(string json)
@@ -388,7 +458,27 @@ public sealed record AccountExport(
     IReadOnlyList<ExportMuscleObservation>? MuscleObservations = null,
     IReadOnlyList<ExportFrequencyProposal>? FrequencyProposals = null,
     IReadOnlyList<ExportSessionAdjustment>? SessionAdjustments = null,
-    IReadOnlyList<ExportFeedback>? Feedback = null);
+    IReadOnlyList<ExportFeedback>? Feedback = null,
+    IReadOnlyList<ExportBlock>? Blocks = null,
+    IReadOnlyList<ExportReview>? Reviews = null,
+    IReadOnlyList<ExportNotificationDevice>? NotificationDevices = null,
+    IReadOnlyList<ExportProductEvent>? ProductEvents = null,
+    ExportReferrals? Referrals = null,
+    IReadOnlyList<ExportCampaign>? Campaign = null,
+    IReadOnlyList<ExportWaitlist>? Waitlist = null);
+
+public sealed record ExportBlock(
+    Guid PlanId, int Sequence, string Type, bool IsDeload, int StartWeek, int Weeks, DateTimeOffset CreatedAt, string? EngineVersion,
+    JsonElement? GeneratedFrom);
+public sealed record ExportReview(Guid PlanId, string Status, DateTimeOffset RequestedAt, DateTimeOffset? ReviewedAt, IReadOnlyList<ExportReviewMessage> Messages);
+/// <summary>Author is "user" or "staff".</summary>
+public sealed record ExportReviewMessage(string Author, string Text, DateTimeOffset SentAt);
+public sealed record ExportNotificationDevice(string Platform, DateTimeOffset RegisteredAt, DateTimeOffset LastSeenAt);
+public sealed record ExportProductEvent(string Name, DateTimeOffset OccurredAt, string? Channel, string? Plan, string? AppVersion);
+public sealed record ExportReferrals(string? MyCode, ExportInvitation? InvitedBy, IReadOnlyList<ExportInvitation> MyInvitations);
+public sealed record ExportInvitation(DateTimeOffset At, string Status, string? Code, string? Source, int? RewardDays);
+public sealed record ExportCampaign(string? Campaign, string Source, DateTimeOffset At);
+public sealed record ExportWaitlist(string Language, DateTimeOffset JoinedAt, DateTimeOffset ConsentAt, DateTimeOffset? ConfirmedAt, DateTimeOffset? InvitedAt);
 
 public sealed record ExportFeedback(DateTimeOffset CreatedAt, string Category, string Message, string? Screen, string? AppVersion, string? Device);
 
@@ -411,21 +501,23 @@ public sealed record ExportPremiumGrant(string Kind, int Days, string Status, Da
 public sealed record ExportAccount(
     Guid Id, string Email, string DisplayName, string Role, DateTimeOffset? EmailVerifiedAt, bool HasPassword, bool GoogleLinked,
     bool TwoFactorEnabled, string? TimeZone, DateTimeOffset CreatedAt, DateTimeOffset? LastLoginAt,
-    DateTimeOffset? HealthConsentAt = null, DateTimeOffset? HealthConsentWithdrawnAt = null);
+    DateTimeOffset? HealthConsentAt = null, DateTimeOffset? HealthConsentWithdrawnAt = null,
+    string? Language = null, bool ResearchConsent = false);
 
 public sealed record ExportPlan(
     Guid Id, string Status, string Goal, string Experience, string Split, DateOnly StartDate, int TotalWeeks, string[] TrainingDays,
     int MaxSessionMinutes, string[] AvailableEquipment, string[] ExcludedExerciseIds, string[] Limitations, bool IncludeDeloadPhases,
     int DeloadEveryTrainingWeeks, string MacrocycleName, string MacrocycleNotes, DateTimeOffset CreatedAt,
     IReadOnlyList<ExportPhase> Phases, IReadOnlyList<ExportSession> Sessions, string[]? MusclePriorities = null,
-    string? ArchiveReason = null);
+    string? ArchiveReason = null, string? Origin = null, string? Scheduling = null);
 
 public sealed record ExportPhase(int Sequence, string Name, string Type, DateOnly? StartDate, DateOnly? EndDate, string Objective);
 public sealed record ExportSession(Guid Id, int Week, DateOnly? Date, string Title, string Status, int EstimatedDurationMinutes, JsonElement Prescription);
 
 public sealed record ExportWorkoutLog(
     Guid Id, Guid PlanId, Guid SessionId, DateTimeOffset LoggedAt, string Outcome, string NonCompletionReason, string Recovery,
-    decimal? SessionRpe, bool PainReported, string? Notes, IReadOnlyList<ExportSet> Sets);
+    decimal? SessionRpe, bool PainReported, string? Notes, IReadOnlyList<ExportSet> Sets,
+    DateTimeOffset? PerformedAt = null, DateOnly? PerformedOn = null, JsonElement? ExerciseAnswers = null);
 
 public sealed record ExportSet(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool PainReported, int Segment = 0);
 public sealed record ExportAdaptation(Guid PlanId, Guid? WorkoutLogId, string Kind, string[] ExerciseIds, int SessionsChanged, string Explanation, DateTimeOffset AppliedAt);
