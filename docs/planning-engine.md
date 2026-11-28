@@ -933,7 +933,26 @@ hamstrings, quadriceps, lats, chest and calves.
   (in the measured profiles, up to three weekly sets of the lats and two of the shoulders).
 - Strength, general fitness, sessions of 45 minutes or less and the other splits are unchanged.
 
-## Engine 0.19.0: calibration of a load that is far too light (pending product approval)
+## Engine 0.18.0: what the generation scorecard asked for
+
+Measured with `docs/engine-scorecard.md`. Blocks already generated do not change. All figures are internal product heuristics.
+
+- **Little material.** A pattern with nothing marked for the goal (a bodyweight squat in a strength plan) uses what there is
+  and says so in the warnings, instead of leaving the profile without a plan.
+- **Repetition ranges** of experienced hypertrophy plans: the first lift of a session, when heavy, at 6-10; isolations of
+  calves, shoulders, forearms and abdomen alone at 12-20; the rest stay at 8-12 and 10-15.
+- **Strength, beginners.** A heavy main lift is 4-6 repetitions at 3 in reserve (it was 5-8).
+- **Continuity.** A new block keeps the compound lifts of the previous one; accessories are renewed with equally curated
+  ones, whatever the number of days and the goal.
+- **Balance** (`TrainingProgramBalancer`): pulling sets at least 0.8 times pushing sets and hamstring sets at least half the
+  quadriceps sets, adding where it fits under the ceilings and taking back where it does not. The strength main lift is left
+  alone, so two-day strength plans can still miss it.
+- **Session dose.** No muscle gets more than 12 effective sets in a session from the sets the engine adds.
+- **Twice a week.** In the last session of a hypertrophy week, a major muscle under its target with a single session gets an
+  accessory first.
+- **Five days.** The app asks for the hybrid week (upper, lower, push, legs, pull) instead of push, pull and legs.
+
+## Engine 0.19.0: calibration of a load that is far too light
 
 One step per two sessions leaves someone who starts far too light behind for the whole plan. When every set of one exposure is
 at the top of the range with the reserve written down and at least two repetitions above the target, the load goes straight

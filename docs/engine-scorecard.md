@@ -56,9 +56,28 @@ lifts and the load at which they would reach the middle of the range with the re
 Not covered by any criterion, and so by no score: custom exercises, load steps per piece of equipment, carrying volume from
 one block to the next (calculated in shadow only), and everything that needs real people.
 
-## Results
+## Results (2026-11-28)
 
-See the end of this file; it is filled in from `TRAZO_SCORECARD` runs (below).
+| | Engine 0.17.0 (before) | Engine 0.19.0 |
+|---|---|---|
+| Generation | **3.3** (4/12), mandatory G2 fails | **8.3** (10/12), all mandatory pass |
+| Adaptation | **7.0** (7/10), mandatory A10 fails | **9.0** (9/10), all mandatory pass |
+
+How to read them:
+
+- The adaptation criteria proved lenient: the engine before already passed 7 of them. A first version of the A10 check was also
+  looser than its text (it did not ask for the deloads) and scored the baseline 8.0; the figures here use the check as written.
+- With five days the baseline was measured asking for push, pull and legs and the result asking for the hybrid week, which is
+  what the app sends in each case: part of G6 comes from that change in the app.
+- Baseline of generation measured first without asking for any split with five or six days gave 5.0; that was a mistake of the
+  measurement (the app never does that) and is not used.
+- Still failing: **G10** (89 %, needs 95: two-day strength plans keep the main lift's dose over the quadriceps/hamstrings
+  balance), **G11** (68 % of sessions use 65 % of the time, needs 85: short beginner sessions reach their volume early) and
+  **A5** (without the reserve written, four of eight twelve-week plans see no load increase, as the gap stays at 8 %; before the
+  generator change it was none).
+- Worse than before: with calibration, someone having bad weeks falls under the range in more sets (about 13 % to 16 %).
+
+## Running it
 
 ```
 TRAZO_SCORECARD=<file> dotnet test Trazo.sln -c Release --filter "FullyQualifiedName~Scorecard"
