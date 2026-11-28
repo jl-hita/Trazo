@@ -1917,16 +1917,22 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             var original = PrescriptionJson.OriginalSets(session.PrescriptionJson);
             var eligible = !(mesocycles.TryGetValue(session.MesocycleId, out var meso) && meso.IsDeload)
                            && !PrescriptionJson.IsAdaptationDeload(session.PrescriptionJson);
+            var answers = MuscleAnswers.Read(log.MuscleFeedbackJson);
+            var work = new List<(IReadOnlyCollection<string> PrimaryMuscles, int Sets)>();
             foreach (var exercise in exercises)
             {
                 var sets = LoggedSets.ProgressionRecords(log.Sets.Where(s => s.ExerciseId == exercise.ExerciseId));
+                var primaryMuscles = exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList();
+                work.Add((primaryMuscles, exercise.Sets));
                 exposures.Add(new ExerciseExposureRecord(
                     log.PerformedAt, exercise.ExerciseId, exercise.Sets, exercise.MinRepetitions, exercise.MaxRepetitions,
-                    exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome, log.Recovery,
+                    exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome,
+                    SessionRecovery.ForExercise(log.Recovery, answers, primaryMuscles),
                     original.TryGetValue(exercise.ExerciseId, out var dose) ? dose : null, session.MesocycleId));
             }
             var plannedSets = exercises.Sum(e => e.Sets);
-            sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason, log.Recovery, log.PainReported,
+            sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason,
+                SessionRecovery.ForSession(log.Recovery, answers, work), log.PainReported,
                 log.SessionRpe, plannedSets > 0 ? Math.Min(1m, (decimal)log.Sets.Main().Count(s => s.Completed) / plannedSets) : null));
         }
 
@@ -2061,7 +2067,11 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             }
         }
 
-        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, mesocycles, exposures, now, evidenceNow, outcome, ct) : ([], []);
+        var alreadyCut = applied.Where(a => a.Kind == TrainingAutoAdaptationPolicy.DescribeKind(TrainingAutoAdaptationKind.ReduceSets))
+            .SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
+        var feedback = isHead
+            ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, mesocycles, exposures, now, evidenceNow, outcome, alreadyCut, ct)
+            : ([], []);
         applied.AddRange(feedback.Applied);
 
         // A session that was read and needed nothing is also a decision: the user sees that the engine looked at it and why it kept the plan.
@@ -2102,7 +2112,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming,
         IReadOnlyDictionary<Guid, TrainingMesocycle> mesocycles, IReadOnlyList<ExerciseExposureRecord> exposures,
-        DateTimeOffset now, DateTimeOffset evidenceNow, AdaptationOutcome pain, CancellationToken ct)
+        DateTimeOffset now, DateTimeOffset evidenceNow, AdaptationOutcome pain, IReadOnlySet<string> alreadyCut, CancellationToken ct)
     {
         var applied = new List<AppliedAdaptationView>();
         var notes = new List<string>();
@@ -2174,6 +2184,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             }
             if (changedNow.Contains(decision.ExerciseId) || (cooling.Contains(decision.ExerciseId) && !decision.Urgent)) continue;
             var delta = decision.Action == TrainingMuscleFeedbackAction.AddSet ? 1 : -1;
+            // The fatigue rule already took a set from this exercise for this workout: the same evidence does not take two.
+            if (delta < 0 && alreadyCut.Contains(decision.ExerciseId)) continue;
             // Same precedence as the load and volume engines: a pending pain report (general, or on this exercise) blocks every
             // automatic increase. Reductions stay allowed because they only lower the dose.
             if (delta > 0 && pain.BlocksIncreaseFor(decision.ExerciseId))
