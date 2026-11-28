@@ -839,6 +839,68 @@ public sealed class AccountApiTests : IDisposable
     // ------------------------------------------------------------------ export
 
     [Fact]
+    public void EveryPersonalTableHasItsPlaceInTheExport()
+    {
+        Assert.Equal(
+            AccountData.UserOwned.Select(t => t.Name).Order(), AccountData.Exported.Keys.Select(t => t.Name).Order());
+        var parts = typeof(AccountExport).GetProperties().Select(p => p.Name).ToHashSet();
+        Assert.All(AccountData.Exported.Values.OfType<string>(), part => Assert.Contains(part, parts));
+        // Only secrets are left out.
+        Assert.Equal(["AuthChallenge", "AuthRecoveryCode", "EmailActionToken"],
+            AccountData.Exported.Where(x => x.Value is null).Select(x => x.Key.Name).Order().ToArray());
+    }
+
+    [Fact]
+    public async Task TheExportHoldsReviewsAnswersReferralsAndConsents_WithoutOtherPeopleOrTokens()
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        var bob = await AddUserAsync("bob@example.com", role: "admin");
+        var friend = await AddUserAsync("friend@example.com");
+        await StartPlanAndLogAsync(ClientFor(ana));
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+            var plan = await db.TrainingPlans.Where(p => p.UserId == ana.Id).Select(p => p.Id).SingleAsync();
+            var log = await db.WorkoutLogs.SingleAsync(l => l.UserId == ana.Id);
+            log.ExerciseFeedbackJson = """[{"exerciseId":"squat","stimulus":"adequate"}]""";
+            var request = Guid.NewGuid();
+            db.PlanReviewRequests.Add(new PlanReviewRequest { Id = request, UserId = ana.Id, PlanId = plan, AssignedToUserId = bob.Id, CreatedAt = Now, UpdatedAt = Now });
+            foreach (var (author, who, body) in new[] { (PlanReviewAuthors.User, (Guid?)null, "can you look?"), (PlanReviewAuthors.Staff, bob.Id, "looks fine"), (PlanReviewAuthors.System, bob.Id, "taken by bob") })
+                db.PlanReviewMessages.Add(new PlanReviewMessage { Id = Guid.NewGuid(), RequestId = request, Author = author, AuthorUserId = who, Body = body, CreatedAt = Now });
+            db.ReferralCodes.Add(new Trazo.Domain.Growth.ReferralCode { Id = Guid.NewGuid(), UserId = ana.Id, Code = "ANACODE2", CreatedAt = Now });
+            db.ReferralRelationships.Add(new Trazo.Domain.Growth.ReferralRelationship
+            {
+                Id = Guid.NewGuid(), ReferrerUserId = ana.Id, ReferredUserId = friend.Id, Code = "ANACODE2", Source = "link", Status = "registered",
+                AttributedAt = Now, UpdatedAt = Now
+            });
+            db.DeviceTokens.Add(new Trazo.Domain.Push.DeviceToken { Id = Guid.NewGuid(), UserId = ana.Id, Token = "secret-push-token", CreatedAt = Now, LastSeenAt = Now });
+            var user = await db.Users.SingleAsync(u => u.Id == ana.Id);
+            user.Language = "es";
+            user.ResearchConsent = true;
+            await db.SaveChangesAsync();
+        }
+
+        var text = await ClientFor(ana).GetStringAsync("/api/v1/account/export");
+        var export = JsonDocument.Parse(text).RootElement;
+
+        Assert.Equal("2", export.GetProperty("version").GetString());
+        Assert.Equal("es", export.GetProperty("account").GetProperty("language").GetString());
+        Assert.True(export.GetProperty("account").GetProperty("researchConsent").GetBoolean());
+        var messages = Assert.Single(export.GetProperty("reviews").EnumerateArray()).GetProperty("messages").EnumerateArray()
+            .Select(m => m.GetProperty("text").GetString()).ToList();
+        Assert.Equal(2, messages.Count);
+        Assert.Contains("looks fine", messages);
+        Assert.Equal("squat", export.GetProperty("workoutLogs")[0].GetProperty("exerciseAnswers")[0].GetProperty("exerciseId").GetString());
+        Assert.True(export.GetProperty("blocks").GetArrayLength() > 0);
+        var referrals = export.GetProperty("referrals");
+        Assert.Equal("ANACODE2", referrals.GetProperty("myCode").GetString());
+        Assert.Equal(1, referrals.GetProperty("myInvitations").GetArrayLength());
+        Assert.Equal(1, export.GetProperty("notificationDevices").GetArrayLength());
+        foreach (var secret in new[] { "secret-push-token", "friend@example.com", friend.Id.ToString(), bob.Id.ToString(), "bob@example.com", "taken by bob" })
+            Assert.DoesNotContain(secret, text);
+    }
+
+    [Fact]
     public async Task CommentsAreExportedWithTheirAuthor_AndDeletedWithTheAccount()
     {
         var ana = await AddUserAsync("ana@example.com");
