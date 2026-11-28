@@ -403,7 +403,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
                 l.PainReported, l.Notes,
                 l.Sets.OrderBy(s => s.ExerciseId, StringComparer.Ordinal).ThenBy(s => s.SetNumber).ThenBy(s => s.SegmentIndex)
                     .Select(s => new ExportSet(s.ExerciseId, s.SetNumber, s.WeightKg, s.Repetitions, s.Rir, s.Completed, s.SkippedReason, s.PainReported, s.SegmentIndex)).ToList(),
-                l.PerformedAt, l.PerformedOn, l.ExerciseFeedbackJson is { } answers ? ParseJson(answers) : null))
+                l.PerformedAt, l.PerformedOn, l.ExerciseFeedbackJson is { } answers ? ParseJson(answers) : null,
+                l.MuscleFeedbackJson is { } muscleAnswers ? ParseJson(muscleAnswers) : null))
                 .ToList(),
             adaptations.Select(a => new ExportAdaptation(a.PlanId, a.WorkoutLogId, a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation, a.AppliedAt)).ToList(),
             subscriptions.Select(s => new ExportSubscription(
@@ -517,7 +518,7 @@ public sealed record ExportSession(Guid Id, int Week, DateOnly? Date, string Tit
 public sealed record ExportWorkoutLog(
     Guid Id, Guid PlanId, Guid SessionId, DateTimeOffset LoggedAt, string Outcome, string NonCompletionReason, string Recovery,
     decimal? SessionRpe, bool PainReported, string? Notes, IReadOnlyList<ExportSet> Sets,
-    DateTimeOffset? PerformedAt = null, DateOnly? PerformedOn = null, JsonElement? ExerciseAnswers = null);
+    DateTimeOffset? PerformedAt = null, DateOnly? PerformedOn = null, JsonElement? ExerciseAnswers = null, JsonElement? MuscleAnswers = null);
 
 public sealed record ExportSet(string ExerciseId, int SetNumber, decimal? WeightKg, int? Repetitions, decimal? Rir, bool Completed, string? SkippedReason, bool PainReported, int Segment = 0);
 public sealed record ExportAdaptation(Guid PlanId, Guid? WorkoutLogId, string Kind, string[] ExerciseIds, int SessionsChanged, string Explanation, DateTimeOffset AppliedAt);

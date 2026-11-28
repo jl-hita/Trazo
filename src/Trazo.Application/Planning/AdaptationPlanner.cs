@@ -257,6 +257,14 @@ public static class AdaptationPlanner
             });
     }
 
+    /// <summary>The same reading for the exposure of one exercise at one instant, against everything done before it.</summary>
+    public static bool PerformanceFellAt(IEnumerable<ExerciseExposureRecord> history, string exerciseId, DateTimeOffset at)
+    {
+        var own = history.Where(e => string.Equals(e.ExerciseId, exerciseId, StringComparison.Ordinal)).OrderBy(e => e.At).ToArray();
+        var current = own.LastOrDefault(e => e.At == at);
+        return current is not null && PerformanceFell(current, own.Where(e => e.At < at).ToArray());
+    }
+
     /// <summary>Repetitions plus reserve of each set done with <paramref name="load"/>, in order.</summary>
     private static decimal[] RepetitionsPossible(ExerciseExposureRecord e, decimal load) =>
         e.Sets.Where(s => s.Completed && s.WeightKg == load && s.Repetitions is not null && s.Rir is not null)

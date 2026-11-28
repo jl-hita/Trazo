@@ -7,7 +7,8 @@ public sealed record ParsedSet(string ExerciseId, int SetNumber, decimal? Weight
 public sealed record ParsedLog(
     WorkoutOutcome Outcome, string NonCompletionReason, string Recovery, decimal? SessionRpe, bool Pain, string? Notes,
     IReadOnlyList<ParsedSet> Sets, IReadOnlyDictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null,
-    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null);
+    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null,
+    IReadOnlyDictionary<string, MuscleFeedbackInput>? MuscleFeedback = null);
 
 public sealed record ParsedLogResult(ParsedLog? Log, IReadOnlyDictionary<string, string[]> Errors)
 {
@@ -90,16 +91,39 @@ public static class LogSessionValidator
             feedback[id] = new ExerciseFeedbackInput(stimulus, discomfort, preFatigue);
         }
 
+        var muscles = new SortedDictionary<string, MuscleFeedbackInput>(StringComparer.Ordinal);
+        foreach (var (rawName, answer) in (request.MuscleFeedback ?? []).Take(MaximumFeedbackMuscles + 1))
+        {
+            var name = rawName?.Trim() ?? string.Empty;
+            if (answer is null || !Enum.TryParse<Trazo.Training.TrainingMuscleGroup>(name, true, out var muscle)
+                || !Enum.IsDefined(muscle) || int.TryParse(name, out _))
+            {
+                Fail("muscleFeedback", "Cada respuesta necesita un músculo válido.");
+                continue;
+            }
+            var field = $"muscleFeedback.{muscle}";
+            var muscleRecovery = Answer(answer.Recovery, MuscleRecoveryAnswers);
+            var workload = Answer(answer.Workload, WorkloadAnswers);
+            if (muscleRecovery == Invalid) Fail(field, $"La recuperación del músculo debe ser: {string.Join(", ", MuscleRecoveryAnswers)}.");
+            if (workload == Invalid) Fail(field, $"La carga de trabajo debe ser: {string.Join(", ", WorkloadAnswers)}.");
+            if (muscleRecovery is null && workload is null) continue;
+            muscles[muscle.ToString()] = new MuscleFeedbackInput(muscleRecovery, workload);
+        }
+        if ((request.MuscleFeedback?.Count ?? 0) > MaximumFeedbackMuscles) Fail("muscleFeedback", $"Se admiten respuestas de como máximo {MaximumFeedbackMuscles} músculos.");
+
         if (request.PerformedAt is { } performed && performed.Year < 2000) Fail("performedAt", "La fecha del entrenamiento no es válida.");
         if (request.ClientRequestId == Guid.Empty) Fail("clientRequestId", "El identificador de la petición no es válido.");
 
         if (errors.Count > 0) return new(null, errors.ToDictionary(p => p.Key, p => p.Value.ToArray()));
         return new(new ParsedLog(outcome, reason!, recovery!, request.SessionRpe, request.PainReported ?? false, notes, sets, feedback,
-                request.PerformedAt, request.ClientRequestId),
+                request.PerformedAt, request.ClientRequestId, muscles),
             new Dictionary<string, string[]>());
     }
 
     private const int MaximumFeedbackExercises = 30;
+    private const int MaximumFeedbackMuscles = 24;
+    private static readonly string[] MuscleRecoveryAnswers = ["recovered", "justRecovered", "notRecovered"];
+    private static readonly string[] WorkloadAnswers = ["low", "adequate", "high"];
     private const string Invalid = "\u0000";
     private static readonly string[] StimulusAnswers = ["low", "adequate", "high"];
     private static readonly string[] DiscomfortAnswers = ["none", "mild", "strong"];

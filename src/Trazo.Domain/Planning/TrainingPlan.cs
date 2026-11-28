@@ -238,6 +238,11 @@ public sealed class WorkoutLog
     /// Collected for every account; only Premium adapts the plan from them.
     /// </summary>
     public string? ExerciseFeedbackJson { get; set; }
+    /// <summary>
+    /// Answers about each muscle trained: <c>[{"muscle":"Chest","recovery":"recovered","workload":"low"}]</c>. Collected for every
+    /// account; only Premium adapts the plan from them.
+    /// </summary>
+    public string? MuscleFeedbackJson { get; set; }
 
     public List<WorkoutSetLog> Sets { get; set; } = [];
 }

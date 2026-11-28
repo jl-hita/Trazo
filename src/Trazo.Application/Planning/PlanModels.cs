@@ -282,7 +282,13 @@ public sealed record LogSetRequest(
 public sealed record LogSessionRequest(
     string? Outcome, string? NonCompletionReason, string? Recovery, decimal? SessionRpe, bool? PainReported,
     string? Notes, LogSetRequest[]? Sets, Dictionary<string, ExerciseFeedbackInput>? ExerciseFeedback = null,
-    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null);
+    DateTimeOffset? PerformedAt = null, Guid? ClientRequestId = null, Dictionary<string, MuscleFeedbackInput>? MuscleFeedback = null);
+
+/// <summary>
+/// The two questions about a muscle: how recovered it was before its first exercise (recovered|justRecovered|notRecovered) and how
+/// much work it was after its last one (low|adequate|high). The key is the muscle name used in the prescriptions.
+/// </summary>
+public sealed record MuscleFeedbackInput(string? Recovery, string? Workload);
 
 /// <summary>The three post-exercise questions: stimulus low|adequate|high, discomfort none|mild|strong, pre-fatigue recovered|loaded.</summary>
 public sealed record ExerciseFeedbackInput(string? Stimulus, string? Discomfort, string? PreFatigue);

@@ -520,6 +520,7 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.Property<bool>("PainReported").HasColumnType("boolean");
             b.Property<string>("Notes").HasMaxLength(1000).HasColumnType("character varying(1000)");
             b.Property<string>("ExerciseFeedbackJson").HasMaxLength(4000).HasColumnType("character varying(4000)");
+            b.Property<string>("MuscleFeedbackJson").HasMaxLength(2000).HasColumnType("character varying(2000)");
             b.HasKey("Id");
             b.HasIndex("PlannedSessionId").IsUnique();
             b.HasIndex("PlanId", "LoggedAt");

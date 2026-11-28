@@ -446,6 +446,27 @@ evidence either), has a 14-day cooldown per exercise (an added set, also per mus
 A set the answers took away is not given back by the fatigue rule in that block. The next block starts from its own prescription.
 Discomfort is never automated: mild repeated or strong discomfort only adds a note (swap or review suggestion) to the adaptation report.
 
+### Questions about each muscle (engine 0.17.0)
+
+`POST .../log` also accepts `muscleFeedback`: an object by muscle name (the names used in the prescriptions) with `recovery`
+(`recovered|justRecovered|notRecovered`, asked before the first exercise of the muscle) and `workload` (`low|adequate|high`, asked
+after its last one). Both are optional; an unknown muscle or value is `400`. Stored in `workout_logs.MuscleFeedbackJson`
+(migration `WorkoutMuscleFeedback`), exported with the account and with the engine data. `TrainingMuscleAnswerAdapter` reads the
+last two sessions of a muscle (completed, never deload), only those trained after the last change of that muscle:
+
+| Both sessions | Change |
+|---|---|
+| `recovered`, workload `low`, no exercise of the muscle lost performance, no discomfort reported | One set more |
+| `notRecovered` or workload `high` | One set less, never below two |
+| The same, and performance fell in the latest | One set less without waiting for the 14-day pause |
+| Anything else | None |
+
+Performance is read from the logged sets (repetitions plus reserve at the same load and range, as the fatigue rule does). Only the
+exercises that train the muscle as primary are changed, and one that also trains a muscle with too much never takes a set. The
+ceilings, pain precedence and duration of a change are those of the exercise answers above. Discomfort needs no answer here: the app
+asks for it only when there is some. `notRecovered` also counts as "loaded" for the recovery advice and as a fatigue signal for the
+longitudinal layer; `workload` counts as an answer there, and `low` as low stimulus. Older apps keep sending `exerciseFeedback`.
+
 ## Intensification blocks
 
 For a block whose phase is `intensification` (only strength plans of non-beginners get one, in the second half), `IntensificationPhase` (Application layer, not the
