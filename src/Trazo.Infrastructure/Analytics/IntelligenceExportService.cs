@@ -33,7 +33,8 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
 
         var workouts = await db.WorkoutLogs.AsNoTracking().Where(x => x.PerformedAt >= start && x.PerformedAt < end && consenting.Contains(x.UserId))
             .Select(x => new { x.Id, x.UserId, x.PlanId, x.PlannedSessionId, x.PerformedAt, x.PerformedOn, x.Outcome,
-                x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, x.ExerciseFeedbackJson }).ToListAsync(ct);
+                x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, x.ExerciseFeedbackJson,
+                x.MuscleFeedbackJson }).ToListAsync(ct);
         var adaptations = await db.PlanAdaptations.AsNoTracking().Where(x => x.AppliedAt >= start && x.AppliedAt < end && consentingPlans.Contains(x.PlanId))
             .Select(x => new { x.Id, x.PlanId, x.WorkoutLogId, x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt,
                 x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, x.ChangesJson }).ToListAsync(ct);
@@ -112,7 +113,8 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
         var workoutData = workouts.Select(x => new
         {
             x.Id, x.UserId, x.PlanId, x.PlannedSessionId, x.PerformedAt, x.PerformedOn, x.Outcome,
-            NonCompletionReason = WithoutIllness(x.NonCompletionReason, "Other"), x.Recovery, x.SessionRpe, x.PainReported, ExerciseFeedbackJson = SafeJson(x.ExerciseFeedbackJson)
+            NonCompletionReason = WithoutIllness(x.NonCompletionReason, "Other"), x.Recovery, x.SessionRpe, x.PainReported, ExerciseFeedbackJson = SafeJson(x.ExerciseFeedbackJson),
+            MuscleFeedbackJson = SafeJson(x.MuscleFeedbackJson)
         }).ToArray();
         var decisionData = decisions.Select(x => new
         {
@@ -140,7 +142,8 @@ public sealed class IntelligenceExportService(TrazoDbContext db, TimeProvider cl
             adaptations = adaptationData.Select(x => new { id = Key(x.Id), plan = Key(x.PlanId), workout = x.WorkoutLogId is null ? null : Key(x.WorkoutLogId.Value),
                 x.Kind, x.ExerciseIds, x.SessionsChanged, x.AppliedAt, x.EvidenceAt, x.Source, x.EngineVersion, x.SchemaVersion, x.Scope, changes = x.ChangesJson }).ToArray(),
             workouts = workoutData.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), session = Key(x.PlannedSessionId),
-                x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = x.ExerciseFeedbackJson }).ToArray(),
+                x.PerformedAt, x.PerformedOn, x.Outcome, x.NonCompletionReason, x.Recovery, x.SessionRpe, x.PainReported, exerciseFeedback = x.ExerciseFeedbackJson,
+                muscleFeedback = x.MuscleFeedbackJson }).ToArray(),
             sets = sets.Select(x => new { id = Key(x.Id), workout = Key(x.WorkoutLogId), x.ExerciseId, x.SetNumber, x.WeightKg,
                 x.Repetitions, x.Rir, x.Completed, SkippedReason = WithoutIllness(x.SkippedReason, "other"), x.PainReported }).ToArray(),
             observations = observations.Select(x => new { id = Key(x.Id), user = Key(x.UserId), plan = Key(x.PlanId), x.Period,

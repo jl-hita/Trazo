@@ -36,7 +36,7 @@ public sealed record GenerationTrace(
 public static class MesocycleGenerationTrace
 {
     /// <summary>Layout version of the snapshot JSON. Bump it when a field is added, removed or changes meaning.</summary>
-    public const int SnapshotSchemaVersion = 1;
+    public const int SnapshotSchemaVersion = 2;
 
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = false };
 
@@ -46,7 +46,8 @@ public static class MesocycleGenerationTrace
         PlanProfile profile, int seed, MesocycleSlot slot, IReadOnlyCollection<TrainingExerciseCandidate> catalog,
         MesocycleGeneration generation, int rotationPosition, bool continuesPreviousBlock,
         IReadOnlyList<string>? previousBlockExerciseIds, LoadReferenceSelection loadReferences,
-        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets, DateTimeOffset now, TechniqueAllowance? techniques = null)
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal>? learnedTargets, DateTimeOffset now, TechniqueAllowance? techniques = null,
+        ShadowCarry? shadowCarry = null)
     {
         ArgumentNullException.ThrowIfNull(profile);
         ArgumentNullException.ThrowIfNull(slot);
@@ -100,6 +101,16 @@ public static class MesocycleGenerationTrace
                 learnedTargets = learned
                     ? learnedTargets!.OrderBy(t => t.Key).ToDictionary(t => t.Key.ToString(), t => t.Value)
                     : new Dictionary<string, decimal>()
+            },
+            // Worked out and kept, never applied: it did not condition this block (see VolumeCarryShadow). Null when not worked out.
+            shadowCarry = shadowCarry is null ? null : new
+            {
+                policyVersion = shadowCarry.PolicyVersion, fromSequence = shadowCarry.FromSequence,
+                muscles = shadowCarry.Muscles.Select(m => new
+                {
+                    muscle = m.Muscle, netSets = m.NetSets, proposedSets = m.ProposedSets, decliningPeriods = m.DecliningPeriods,
+                    painSessions = m.PainSessions
+                }).ToArray()
             },
             catalog = new { exercises = catalog.Count },
             engineVersion = generation.EngineVersion,

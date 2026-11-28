@@ -127,5 +127,6 @@ public sealed record TrainingMuscleFeedbackExposure(
     public bool Trains(string muscle) => (PrimaryMuscles ?? EffectiveMuscles).Contains(muscle, StringComparer.Ordinal);
 }
 
+/// <param name="Urgent">The change does not wait for the pause between changes of the same exercise.</param>
 public sealed record TrainingMuscleFeedbackDecision(
-    TrainingMuscleFeedbackAction Action, string? Muscle, string ExerciseId, string Explanation);
+    TrainingMuscleFeedbackAction Action, string? Muscle, string ExerciseId, string Explanation, bool Urgent = false);

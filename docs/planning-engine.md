@@ -446,6 +446,44 @@ evidence either), has a 14-day cooldown per exercise (an added set, also per mus
 A set the answers took away is not given back by the fatigue rule in that block. The next block starts from its own prescription.
 Discomfort is never automated: mild repeated or strong discomfort only adds a note (swap or review suggestion) to the adaptation report.
 
+### Questions about each muscle (engine 0.17.0)
+
+`POST .../log` also accepts `muscleFeedback`: an object by muscle name (the names used in the prescriptions) with `recovery`
+(`recovered|justRecovered|notRecovered`, asked before the first exercise of the muscle) and `workload` (`low|adequate|high`, asked
+after its last one). Both are optional; an unknown muscle or value is `400`. Stored in `workout_logs.MuscleFeedbackJson`
+(migration `WorkoutMuscleFeedback`), exported with the account and with the engine data. `TrainingMuscleAnswerAdapter` reads the
+last two sessions of a muscle (completed, never deload), only those trained after the last change of that muscle:
+
+| Both sessions | Change |
+|---|---|
+| `recovered`, workload `low`, no exercise of the muscle lost performance, no discomfort reported | One set more |
+| `notRecovered` or workload `high` | One set less, never below two |
+| The same, and performance fell in the latest | One set less without waiting for the 14-day pause |
+| Anything else | None |
+
+Performance is read from the logged sets (repetitions plus reserve at the same load and range, as the fatigue rule does). Only the
+exercises that train the muscle as primary are changed, and one that also trains a muscle with too much never takes a set. The
+ceilings, pain precedence and duration of a change are those of the exercise answers above. Discomfort needs no answer here: the app
+asks for it only when there is some. `notRecovered` also counts as "loaded" for the recovery advice and as a fatigue signal for the
+longitudinal layer; `workload` counts as an answer there, and `low` as low stimulus. Older apps keep sending `exerciseFeedback`.
+
+### Session recovery without the question
+
+The app that asks about each muscle no longer asks about recovery when the session is finished, and sends no `recovery`.
+The adaptation (`SessionRecovery`) then reads it from `muscleFeedback`: an exercise counts as `Insufficient` when a muscle it
+trains as primary was `notRecovered`; the session counts as `Insufficient` when such muscles hold at least half of its planned
+sets, as `Partial` when they hold fewer, `Good` when none does and `Unknown` without a recovery answer. A `recovery` that an older
+app does send (anything but `Unknown`) is used as before. The log stores what was sent; nothing derived is written over it. The
+fatigue rule and the muscle answers never take two sets from one exercise for the same workout.
+
+### Shadow carry between blocks (`carry-shadow-1`)
+
+Sets added from the answers end with their block: the next one starts from its own prescription. To judge later whether they should
+be carried over, each new training block of a generated hypertrophy plan stores in its generation snapshot (`shadowCarry`, snapshot
+schema 2) what the last training block would hand on: per muscle, the net sets the answers added or removed, and a proposal of at
+most two, zero when performance fell in two or more weeks or pain was recorded. **Nothing reads it to build a plan.** It travels with
+the engine data export.
+
 ## Intensification blocks
 
 For a block whose phase is `intensification` (only strength plans of non-beginners get one, in the second half), `IntensificationPhase` (Application layer, not the
@@ -608,7 +646,7 @@ The plan is recalculated **after every logged session**, not at the end of the b
 
 - `entries` (newest first): `kind`, `summary` (one line with the numbers: "Una serie menos en Press banca en las próximas 3 sesiones."), `explanation` (the engine's reason), `exercises` (id and name), `sessionsChanged`, `changed`, and the session that caused it (`sourceSession`, `sourceDate`). Kinds: `reduction_sets`, `muscle_reduce_set`, `muscle_add_set`, `restore_sets`, `raise_reserve`, `deload`, `hold_progression`, `load_update`, `reentry`, `reschedule`, `skip`, `review`.
 - `review` is a session the engine read and **left as it was** (`changed: false`): the user sees that it looked and why it kept the plan. It is written only for the newest evidence (a late log never decides anything).
-- `load_update` records every new target load (`Carga objetivo de la próxima sesión: 62.5 kg. ...`), which used to be written silently into the session.
+- `load_update` records a target load that changed (`Carga objetivo de la próxima sesión: 62.5 kg. ...`): the engine raised or lowered it, or it differs from what the logged session asked for. Writing the load just used into the next session is kept in the audit as `load_carry` and is not listed, nor returned as applied.
 - Totals: `reviews`, `changes` (decisions that changed sessions), `sessionsAdjusted`; `automatic` is false when the account has no automatic adaptation (then only omissions and moves appear).
 - Texts follow `Accept-Language`; every new sentence has its entry in `EnglishCatalog`.
 - **How long they last.** The adjustments belong to the plan: archiving it or creating another leaves them out of the screen (they stay stored for the history and to tune the engine). Inside a plan, `scope=block` (default) shows the block in progress (the one of the first pending session) and `scope=plan` every block; `planChanges` and `hasEarlier` tell the client there is more. An adjustment is in a block when the workout that caused it is; the ones with no workout (absences, moves) belong to the block when they happened after the last workout of an earlier block.

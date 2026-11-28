@@ -103,6 +103,7 @@ public static class MuscleWeekObserver
                 if (f.Returning) { foreach (var m in meaningful) Get(acc, m).Returning = true; continue; }
 
                 var feedback = Feedback(log.ExerciseFeedbackJson);
+                var muscleAnswers = MuscleAnswers.Read(log.MuscleFeedbackJson);
                 var perMuscle = new Dictionary<string, SessionAcc>(StringComparer.Ordinal);
                 foreach (var exercise in prescription)
                 {
@@ -133,6 +134,15 @@ public static class MuscleWeekObserver
                             if (change is { } c && primary.Contains(muscle) && main.Count > 0) { s.PerformanceSum += c * main.Count; s.PerformanceWeight += main.Count; s.Samples++; }
                         }
                     }
+                }
+
+                // The answers about the muscle itself count once per session, whatever the number of exercises that train it.
+                foreach (var (muscle, s) in perMuscle)
+                {
+                    if (s.Sets <= 0 || !muscleAnswers.TryGetValue(muscle, out var answer)) continue;
+                    if (string.Equals(answer.Recovery, "notRecovered", StringComparison.OrdinalIgnoreCase)) s.Fatigue++;
+                    if (answer.Workload is not null) s.Answers++;
+                    if (string.Equals(answer.Workload, "low", StringComparison.OrdinalIgnoreCase)) s.LowStimulus++;
                 }
 
                 foreach (var muscle in meaningful)

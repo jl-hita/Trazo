@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Application.Localization;
 using Trazo.Application.Planning;
+using Trazo.Application.Planning.Longitudinal;
 using Trazo.Application.Planning.Frequency;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
@@ -823,6 +824,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     public const string SkipKind = "skip";
     public const string LoadUpdateKind = "load_update";
     public const string ReviewKind = "review";
+    /// <summary>The load just used, written into the next session as its target: kept in the audit, not told as a change.</summary>
+    public const string LoadCarryKind = "load_carry";
     public const string SwapKind = "user_swap_exercise";
     public const string AddKind = "user_add_exercise";
     public const string LimitationsKind = "user_limitations";
@@ -1486,6 +1489,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         {
             if (!sessions.TryGetValue(log.PlannedSessionId, out var session)) continue;
             var loaded = LoadedExercises(log.ExerciseFeedbackJson);
+            var tired = MuscleAnswers.NotRecovered(log.MuscleFeedbackJson);
             var prescribed = PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(session.PrescriptionJson, stimulus));
             var exercises = new List<RecoveryExercise>();
             foreach (var group in log.Sets.Where(s => s.Completed).GroupBy(s => s.ExerciseId, StringComparer.OrdinalIgnoreCase))
@@ -1494,7 +1498,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 if (exercise is null) continue;
                 exercises.Add(new RecoveryExercise(
                     exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), EffectiveSecondary(exercise),
-                    LoggedSets.EffectiveCount(group), LoggedSets.RecoveryRir(group), loaded.Contains(group.Key), exercise.ExerciseId));
+                    LoggedSets.EffectiveCount(group), LoggedSets.RecoveryRir(group),
+                    loaded.Contains(group.Key) || exercise.PrimaryMuscleGroups.Any(m => tired.Contains(m.ToString())), exercise.ExerciseId));
             }
             exposures.Add(new RecoveryExposure(log.PerformedAt, exercises, log.Recovery, log.SessionRpe, log.PainReported));
         }
@@ -1537,7 +1542,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
-        var planRows = EngineVisible(db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id));
+        var planRows = EngineVisible(db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id && a.Kind != LoadCarryKind));
         var planChanges = await planRows.CountAsync(a => a.Kind != ReviewKind && a.Kind != SkipKind && a.SessionsChanged > 0, ct);
         var planCount = await planRows.CountAsync(ct);
 
@@ -1808,7 +1813,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             SessionRpe = log.SessionRpe, PainReported = log.Pain, Notes = log.Notes,
             ExerciseFeedbackJson = log.ExerciseFeedback is { Count: > 0 }
                 ? System.Text.Json.JsonSerializer.Serialize(log.ExerciseFeedback.Select(p => new { exerciseId = p.Key, p.Value.Stimulus, p.Value.Discomfort, p.Value.PreFatigue }), new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web) { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull })
-                : null
+                : null,
+            MuscleFeedbackJson = MuscleAnswers.Serialize(log.MuscleFeedback)
         };
         foreach (var set in log.Sets)
             workout.Sets.Add(new WorkoutSetLog
@@ -1860,7 +1866,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         var sameRequest = sent.ClientRequestId is { } key && existing.ClientRequestId == key;
         if (!sameRequest && !SameLog(existing, sent))
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
-        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id && a.Kind != ReviewKind).OrderBy(a => a.AppliedAt).ToListAsync(ct))
+        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id && a.Kind != ReviewKind && a.Kind != LoadCarryKind).OrderBy(a => a.AppliedAt).ToListAsync(ct))
             .Select(a => new AppliedAdaptationView(a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation)).ToList();
         var report = Localized(new AdaptationReport([], "none", "Este registro ya estaba guardado.", applied, []));
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, existing), report, Replayed: true));
@@ -1913,16 +1919,22 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             var original = PrescriptionJson.OriginalSets(session.PrescriptionJson);
             var eligible = !(mesocycles.TryGetValue(session.MesocycleId, out var meso) && meso.IsDeload)
                            && !PrescriptionJson.IsAdaptationDeload(session.PrescriptionJson);
+            var answers = MuscleAnswers.Read(log.MuscleFeedbackJson);
+            var work = new List<(IReadOnlyCollection<string> PrimaryMuscles, int Sets)>();
             foreach (var exercise in exercises)
             {
                 var sets = LoggedSets.ProgressionRecords(log.Sets.Where(s => s.ExerciseId == exercise.ExerciseId));
+                var primaryMuscles = exercise.PrimaryMuscleGroups.Select(m => m.ToString()).ToList();
+                work.Add((primaryMuscles, exercise.Sets));
                 exposures.Add(new ExerciseExposureRecord(
                     log.PerformedAt, exercise.ExerciseId, exercise.Sets, exercise.MinRepetitions, exercise.MaxRepetitions,
-                    exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome, log.Recovery,
+                    exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome,
+                    SessionRecovery.ForExercise(log.Recovery, answers, primaryMuscles),
                     original.TryGetValue(exercise.ExerciseId, out var dose) ? dose : null, session.MesocycleId));
             }
             var plannedSets = exercises.Sum(e => e.Sets);
-            sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason, log.Recovery, log.PainReported,
+            sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason,
+                SessionRecovery.ForSession(log.Recovery, answers, work), log.PainReported,
                 log.SessionRpe, plannedSets > 0 ? Math.Min(1m, (decimal)log.Sets.Main().Count(s => s.Completed) / plannedSets) : null));
         }
 
@@ -2048,16 +2060,24 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 next.PrescriptionJson = updated;
                 next.UpdatedAt = now;
                 var explanation = $"Carga objetivo de la próxima sesión: {advice.NextLoadKg.Value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} kg. {advice.Explanation}";
+                // A change is a load the engine moved, or one that differs from what this session asked for. Repeating the
+                // load just used is not: told as a change, it would bury the real ones.
+                var moved = advice.Action is nameof(TrainingExerciseProgressionAction.IncreaseLoad) or nameof(TrainingExerciseProgressionAction.ReduceLoad)
+                    || (done.TargetLoadKg is { } asked && asked != advice.NextLoadKg.Value);
                 db.PlanAdaptations.Add(Traced(new PlanAdaptation
                 {
-                    Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = LoadUpdateKind, ExerciseIds = [advice.ExerciseId],
-                    SessionsChanged = 1, Explanation = explanation, AppliedAt = now, EvidenceAt = evidenceNow
+                    Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = moved ? LoadUpdateKind : LoadCarryKind,
+                    ExerciseIds = [advice.ExerciseId], SessionsChanged = 1, Explanation = explanation, AppliedAt = now, EvidenceAt = evidenceNow
                 }, PrescriptionSources.Engine, [loadChange]));
-                applied.Add(new AppliedAdaptationView(LoadUpdateKind, [advice.ExerciseId], 1, explanation));
+                if (moved) applied.Add(new AppliedAdaptationView(LoadUpdateKind, [advice.ExerciseId], 1, explanation));
             }
         }
 
-        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, mesocycles, now, evidenceNow, outcome, ct) : ([], []);
+        var alreadyCut = applied.Where(a => a.Kind == TrainingAutoAdaptationPolicy.DescribeKind(TrainingAutoAdaptationKind.ReduceSets))
+            .SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
+        var feedback = isHead
+            ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, mesocycles, exposures, now, evidenceNow, outcome, alreadyCut, ct)
+            : ([], []);
         applied.AddRange(feedback.Applied);
 
         // A session that was read and needed nothing is also a decision: the user sees that the engine looked at it and why it kept the plan.
@@ -2097,19 +2117,20 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     /// </summary>
     private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
         TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming,
-        IReadOnlyDictionary<Guid, TrainingMesocycle> mesocycles, DateTimeOffset now, DateTimeOffset evidenceNow,
-        AdaptationOutcome pain, CancellationToken ct)
+        IReadOnlyDictionary<Guid, TrainingMesocycle> mesocycles, IReadOnlyList<ExerciseExposureRecord> exposures,
+        DateTimeOffset now, DateTimeOffset evidenceNow, AdaptationOutcome pain, IReadOnlySet<string> alreadyCut, CancellationToken ct)
     {
         var applied = new List<AppliedAdaptationView>();
         var notes = new List<string>();
-        var past = await db.WorkoutLogs.AsNoTracking()
+        var past = await db.WorkoutLogs.AsNoTracking().Include(l => l.Sets)
             .Where(l => l.PlanId == plan.Id && l.Id != workout.Id)
             .OrderByDescending(l => l.PerformedAt).ThenByDescending(l => l.LoggedAt).Take(12).ToListAsync(ct);
         var stimulus = await StoredStimulusAsync(ct);
         // Sessions the user did NOT answer are kept on purpose: the mapper turns them into neutral exposures, so two low answers
         // separated by unanswered sessions are not read as consecutive. Only when nothing was ever answered is there nothing to read.
         var logs = new[] { workout }.Concat(past).ToList();
-        if (logs.All(l => string.IsNullOrWhiteSpace(l.ExerciseFeedbackJson))) return (applied, notes);
+        if (logs.All(l => string.IsNullOrWhiteSpace(l.ExerciseFeedbackJson) && string.IsNullOrWhiteSpace(l.MuscleFeedbackJson)))
+            return (applied, notes);
 
         var ids = logs.Select(l => l.PlannedSessionId).ToList();
         var sessions = await db.PlannedSessions.AsNoTracking().Where(s => ids.Contains(s.Id)).ToDictionaryAsync(s => s.Id, ct);
@@ -2133,11 +2154,11 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                     changedSession is not null && s.Id == changedSession.Id ? changedJson! : s.PrescriptionJson, stimulus)));
         var planned = WeekVolume(logged.WeekNumber);
         var ceilings = planned.Keys.ToDictionary(m => m, _ => (int)MuscleWeeklyCeiling, StringComparer.Ordinal);
+        var maximumSets = TrainingProgramVolumeAllocator.GetMaximumSetsPerExercise(
+            Enum.TryParse<TrainingGoal>(plan.Goal, out var goal) ? goal : TrainingGoal.Hypertrophy);
         // Without the health consent discomfort is never stored, so its absence cannot be what stops an added set.
-        var decisions = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings,
-            maximumSetsPerExercise: TrainingProgramVolumeAllocator.GetMaximumSetsPerExercise(
-                Enum.TryParse<TrainingGoal>(plan.Goal, out var goal) ? goal : TrainingGoal.Hypertrophy),
-            discomfortNotCollected: !await HasHealthConsentAsync(plan.UserId, ct));
+        var fromExercises = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings,
+            maximumSetsPerExercise: maximumSets, discomfortNotCollected: !await HasHealthConsentAsync(plan.UserId, ct));
 
         var recentChanges = await RecentMuscleChangesAsync(plan.Id, evidenceNow, ct);
         var cooling = recentChanges.SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
@@ -2146,15 +2167,31 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             .ToDictionary(g => g.Key, g => g.First().PrimaryMuscleGroups.ToHashSet(), StringComparer.Ordinal);
         var raisedMuscles = recentChanges.Where(a => a.Kind == MuscleAddKind).SelectMany(a => a.ExerciseIds)
             .SelectMany(id => primary.TryGetValue(id, out var of) ? of : []).ToHashSet();
-        foreach (var decision in decisions)
+
+        // The answers about each muscle. A change uses them up: only what was trained after the last one counts for the next.
+        var lastChange = new Dictionary<string, DateTimeOffset>(StringComparer.Ordinal);
+        foreach (var change in await db.PlanAdaptations.AsNoTracking()
+                     .Where(a => a.PlanId == plan.Id && (a.Kind == MuscleAddKind || a.Kind == MuscleReduceKind)).ToListAsync(ct))
+            foreach (var muscle in change.ExerciseIds.SelectMany(id => primary.TryGetValue(id, out var of) ? of : []).Select(m => m.ToString()))
+                if (!lastChange.TryGetValue(muscle, out var at) || (change.EvidenceAt ?? change.AppliedAt) > at)
+                    lastChange[muscle] = change.EvidenceAt ?? change.AppliedAt;
+        var fromMuscles = TrainingMuscleAnswerAdapter.Evaluate(
+            MuscleSessions(ordered, sessions, stimulus, exposures, IsLight)
+                .Where(s => !lastChange.TryGetValue(s.Session.Muscle, out var at) || s.At > at).Select(s => s.Session).ToList(),
+            maximumSets);
+
+        var changedNow = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var decision in fromMuscles.Concat(fromExercises))
         {
             if (decision.Action is TrainingMuscleFeedbackAction.PauseExercise or TrainingMuscleFeedbackAction.SuggestSwap)
             {
                 notes.Add(decision.Explanation);
                 continue;
             }
-            if (cooling.Contains(decision.ExerciseId)) continue;
+            if (changedNow.Contains(decision.ExerciseId) || (cooling.Contains(decision.ExerciseId) && !decision.Urgent)) continue;
             var delta = decision.Action == TrainingMuscleFeedbackAction.AddSet ? 1 : -1;
+            // The fatigue rule already took a set from this exercise for this workout: the same evidence does not take two.
+            if (delta < 0 && alreadyCut.Contains(decision.ExerciseId)) continue;
             // Same precedence as the load and volume engines: a pending pain report (general, or on this exercise) blocks every
             // automatic increase. Reductions stay allowed because they only lower the dose.
             if (delta > 0 && pain.BlocksIncreaseFor(decision.ExerciseId))
@@ -2202,9 +2239,55 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             }, PrescriptionSources.Engine, changes));
             applied.Add(new AppliedAdaptationView(kind, [decision.ExerciseId], changed, decision.Explanation));
             // One exercise can be proposed for several of its muscles at once: change it only once.
-            cooling.Add(decision.ExerciseId);
+            changedNow.Add(decision.ExerciseId);
         }
         return (applied, notes);
+    }
+
+    /// <summary>Each workout as the muscles it trained directly: what was answered about them and how their lifts went.</summary>
+    private static IEnumerable<(DateTimeOffset At, TrainingMuscleSession Session)> MuscleSessions(
+        IReadOnlyList<WorkoutLog> chronological, IReadOnlyDictionary<Guid, PlannedSession> sessions,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> stimulus, IReadOnlyList<ExerciseExposureRecord> exposures,
+        Func<PlannedSession, bool> isLight)
+    {
+        for (var order = 0; order < chronological.Count; order++)
+        {
+            var log = chronological[order];
+            var session = sessions[log.PlannedSessionId];
+            var prescribed = PrescriptionJson.Read(PrescriptionJson.CompleteStimulus(session.PrescriptionJson, stimulus));
+            var answers = MuscleAnswers.Read(log.MuscleFeedbackJson);
+            var uncomfortable = UncomfortableExercises(log.ExerciseFeedbackJson);
+            var done = log.Sets.Where(s => s.Completed).Select(s => s.ExerciseId).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var trained = prescribed.Where(e => done.Contains(e.ExerciseId)).ToList();
+            foreach (var muscle in trained.SelectMany(e => e.PrimaryMuscleGroups).Distinct())
+            {
+                var direct = trained.Where(e => e.PrimaryMuscleGroups.Contains(muscle)).ToList();
+                answers.TryGetValue(muscle.ToString(), out var answer);
+                yield return (log.PerformedAt, new TrainingMuscleSession(
+                    order, muscle.ToString(), answer?.Recovery, answer?.Workload,
+                    log.Outcome == WorkoutOutcome.Completed && !isLight(session),
+                    direct.Any(e => AdaptationPlanner.PerformanceFellAt(exposures, e.ExerciseId, log.PerformedAt)),
+                    trained.Any(e => uncomfortable.Contains(e.ExerciseId)
+                        && (e.PrimaryMuscleGroups.Contains(muscle) || (e.EffectiveSecondaryMuscleGroups ?? []).Contains(muscle))),
+                    direct.Select(e => new TrainingMuscleExercise(
+                        e.ExerciseId, e.Sets, e.PrimaryMuscleGroups.Select(m => m.ToString()).ToList())).ToList()));
+            }
+        }
+    }
+
+    private static HashSet<string> UncomfortableExercises(string? json)
+    {
+        var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(json)) return result;
+        try
+        {
+            foreach (var item in System.Text.Json.JsonDocument.Parse(json).RootElement.EnumerateArray())
+                if (item.TryGetProperty("exerciseId", out var id) && item.TryGetProperty("discomfort", out var discomfort)
+                    && discomfort.GetString() is "mild" or "strong" && id.GetString() is { } name)
+                    result.Add(name);
+        }
+        catch (System.Text.Json.JsonException) { }
+        return result;
     }
 
     private static TrainingAutoAdaptationKind KindOf(string name) =>
@@ -2538,7 +2621,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         // The trace records the inputs this block was really generated from, read now: the plan may have changed since it was created.
         var now = clock.GetUtcNow();
         var mesocycle = AddMesocycle(plan, slot, generation, now, firstIndex, MesocycleGenerationTrace.Capture(
-            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now, techniques));
+            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now, techniques,
+            await ShadowCarryAsync(plan, slot, profile, ct)));
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
@@ -2555,6 +2639,41 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             return await db.TrainingMesocycles.AsNoTracking().FirstOrDefaultAsync(m => m.PlanId == plan.Id && m.Sequence == slot.Sequence, ct);
         }
         return mesocycle;
+    }
+
+    /// <summary>
+    /// What would be carried from the last training block into this one, worked out only to be stored with it (see
+    /// <see cref="VolumeCarryShadow"/>). Null for blocks that learn nothing: manual or non-hypertrophy plans, deloads, preparations and
+    /// the first block.
+    /// </summary>
+    private async Task<ShadowCarry?> ShadowCarryAsync(TrainingPlan plan, MesocycleSlot slot, PlanProfile profile, CancellationToken ct)
+    {
+        if (plan.Origin != TrainingPlanOrigin.Generated || profile.Goal != TrainingGoal.Hypertrophy || slot.IsDeload || slot.IsPreparation)
+            return null;
+        var from = plan.Mesocycles.Where(m => m.Sequence < slot.Sequence && !m.IsDeload && m.PhaseType != PreparationPhase.PhaseType)
+            .OrderByDescending(m => m.Sequence).FirstOrDefault();
+        if (from is null) return null;
+
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == from.Id)
+            .Select(s => new { s.Id, s.PrescriptionJson }).ToListAsync(ct);
+        var sessionIds = sessions.Select(s => s.Id).ToList();
+        var logIds = await db.WorkoutLogs.AsNoTracking().Where(l => sessionIds.Contains(l.PlannedSessionId))
+            .Select(l => (Guid?)l.Id).ToListAsync(ct);
+        var rows = await db.PlanAdaptations.AsNoTracking()
+            .Where(a => a.PlanId == plan.Id && (a.Kind == MuscleAddKind || a.Kind == MuscleReduceKind) && logIds.Contains(a.WorkoutLogId))
+            .ToListAsync(ct);
+        var primary = sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson))
+            .GroupBy(e => e.ExerciseId, StringComparer.Ordinal)
+            .ToDictionary(g => g.Key, g => g.First().PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), StringComparer.Ordinal);
+        var changes = rows.SelectMany(a => a.ExerciseIds.Where(primary.ContainsKey)
+            .Select(id => new BlockSetChange(primary[id], a.Kind == MuscleAddKind ? 1 : -1))).ToList();
+
+        // The longitudinal layer has just refreshed these rows for this block: the ones it built are tracked and not saved yet.
+        await db.MuscleWeekObservations.Where(o => o.PlanId == plan.Id && o.MesocycleSequence == from.Sequence).LoadAsync(ct);
+        var results = db.MuscleWeekObservations.Local.Where(o => o.PlanId == plan.Id && o.MesocycleSequence == from.Sequence)
+            .Select(o => new BlockMuscleResult(o.Muscle,
+                o.PerformanceChangePercent < LongitudinalPolicy.DecliningPercent ? 1 : 0, o.PainSessions)).ToList();
+        return VolumeCarryShadow.Compute(from.Sequence, changes, results);
     }
 
     /// <summary>

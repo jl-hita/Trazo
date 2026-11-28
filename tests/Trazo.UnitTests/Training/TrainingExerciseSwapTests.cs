@@ -86,7 +86,7 @@ public sealed class TrainingExerciseSwapTests
         Assert.Equal(120, (int)ex["restSeconds"]!);
         Assert.Null(ex["targetLoadKg"]);
         Assert.Equal(2, (int)ex["warmupSets"]!); // the replacement keeps its warm-up sets
-        Assert.Contains("Chest", (string)ex["warmupNote"]!);
+        Assert.Contains("Pecho", (string)ex["warmupNote"]!);
         Assert.Contains("Intercambio solicitado por el paciente", (string)ex["selectionRationale"]!);
         Assert.Contains("dumbbell-press", legacy);
 
@@ -114,8 +114,8 @@ public sealed class TrainingExerciseSwapTests
         Assert.True(TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(Session, "bench", legs, out var updated, out _));
         var ex = JsonNode.Parse(updated)!["exercises"]![0]!;
         Assert.Equal(2, (int)ex["warmupSets"]!);
-        Assert.Contains("Quadriceps", (string)ex["warmupNote"]!);
-        Assert.DoesNotContain("Chest", (string)ex["warmupNote"]!);
+        Assert.Contains("Cuádriceps", (string)ex["warmupNote"]!);
+        Assert.DoesNotContain("Pecho", (string)ex["warmupNote"]!);
 
         var core = C("crunch", TrainingMovementPattern.Core, 70, [TrainingMuscleGroup.Abdominals]);
         Assert.True(TrainingAdaptationPrescriptionAdjuster.TrySwapExercise(Session, "bench", core, out var coreOnly, out _));

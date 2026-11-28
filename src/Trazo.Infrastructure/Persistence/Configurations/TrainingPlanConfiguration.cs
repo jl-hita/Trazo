@@ -134,6 +134,7 @@ public sealed class WorkoutLogConfiguration : IEntityTypeConfiguration<WorkoutLo
         builder.Property(x => x.SessionRpe).HasPrecision(3, 1);
         builder.Property(x => x.Notes).HasMaxLength(1000);
         builder.Property(x => x.ExerciseFeedbackJson).HasMaxLength(4000);
+        builder.Property(x => x.MuscleFeedbackJson).HasMaxLength(2000);
         builder.HasIndex(x => x.PlannedSessionId).IsUnique();
         builder.HasIndex(x => new { x.PlanId, x.LoggedAt });
         builder.Property(x => x.TimeZoneId).HasMaxLength(64).IsRequired();

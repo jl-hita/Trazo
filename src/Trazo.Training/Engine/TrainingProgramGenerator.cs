@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.16.0";
+    public const string EngineVersion = "0.17.0";
     // From this many sessions a week the accessories are renewed from block to block.
     private const int FrequentTrainingDays = 5;
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
@@ -570,7 +570,7 @@ public static class TrainingProgramGenerator
                 return exercise with
                 {
                     WarmupSets = sets,
-                    WarmupNote = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold)}. No cuentan como series de trabajo."
+                    WarmupNote = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold.Select(TrainingMuscleNames.InText))}. No cuentan como series de trabajo."
                 };
             }).ToArray();
             return session with { Exercises = exercises };

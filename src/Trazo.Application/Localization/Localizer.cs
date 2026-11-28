@@ -44,6 +44,14 @@ public static partial class Localizer
 
         private string Compute(string text)
         {
+            // When every sentence is a text of its own, that reading wins: a template ending in a value would otherwise
+            // take the following sentences into the value and leave them untranslated.
+            var each = SentenceBreak().Split(text.Trim());
+            if (each.Length > 1 && !_exact.ContainsKey(text.Trim()))
+            {
+                var all = each.Select(Whole).ToArray();
+                if (all.All(t => t is not null)) return string.Join(' ', all);
+            }
             var whole = Whole(text);
             if (whole is not null) return whole;
 
@@ -64,6 +72,14 @@ public static partial class Localizer
             return translated.All(t => t is null) ? null : string.Join(' ', parts.Select((s, i) => translated[i] ?? s));
         }
 
+        /// <summary>A value of a template: a text of the catalog, or a list of them ("Glúteos, Cuádriceps").</summary>
+        private string Value(string value)
+        {
+            if (!value.Contains(", ", StringComparison.Ordinal) || _exact.ContainsKey(value)) return Translate(value);
+            var parts = value.Split(", ");
+            return parts.All(_exact.ContainsKey) ? string.Join(", ", parts.Select(p => _exact[p])) : Translate(value);
+        }
+
         private string? Whole(string text)
         {
             text = text.Trim();
@@ -72,7 +88,7 @@ public static partial class Localizer
             {
                 var match = template.Pattern.Match(text);
                 if (!match.Success) continue;
-                return Placeholder().Replace(template.Target, m => Translate(match.Groups["g" + m.Groups[1].Value].Value));
+                return Placeholder().Replace(template.Target, m => Value(match.Groups["g" + m.Groups[1].Value].Value));
             }
             return null;
         }
