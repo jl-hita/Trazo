@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -238,6 +239,65 @@ public sealed class ErrorTicketsApiTests : IDisposable
         Assert.Contains("o7.a.h", ticket.OriginalStackTrace);
         Assert.DoesNotContain("r8-map-id-", ticket.StackTrace);
         Assert.Equal("java.lang.ClassCastException", ticket.ErrorType);
+    }
+
+    [Fact]
+    public async Task MappingUpload_Compressed_IsStoredDecompressed()
+    {
+        var client = _factory.CreateClient();
+        var mapping = System.Text.Encoding.UTF8.GetBytes(string.Concat(Enumerable.Repeat("com.trazo.Example -> a.a:\n", 5000)));
+
+        var upload = await UploadMapping(client, Gzip(mapping), "gzip");
+
+        Assert.Equal(HttpStatusCode.Accepted, upload.StatusCode);
+        var body = await upload.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(mapping)).ToLowerInvariant(),
+            body.GetProperty("sha256").GetString());
+        Assert.Equal(mapping, await File.ReadAllBytesAsync(Path.Combine(_mappingDirectory, "1.0.3.mapping.txt")));
+    }
+
+    [Fact]
+    public async Task MappingUpload_RejectsBrokenOrUnknownCompression()
+    {
+        var client = _factory.CreateClient();
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await UploadMapping(client, "not compressed"u8.ToArray(), "gzip")).StatusCode);
+        Assert.Equal(HttpStatusCode.UnsupportedMediaType, (await UploadMapping(client, [1, 2, 3], "br")).StatusCode);
+        Assert.False(File.Exists(Path.Combine(_mappingDirectory, "1.0.3.mapping.txt")));
+    }
+
+    [Fact]
+    public async Task MappingUpload_LimitsWhatComesOutOfTheDecompression()
+    {
+        var client = _factory.CreateClient();
+        using var compressed = new MemoryStream();
+        using (var gzip = new GZipStream(compressed, CompressionLevel.Fastest, leaveOpen: true))
+        {
+            var block = new byte[1024 * 1024];
+            for (var written = 0L; written <= R8MappingStore.MaxMappingBytes; written += block.Length) gzip.Write(block);
+        }
+
+        var upload = await UploadMapping(client, compressed.ToArray(), "gzip");
+
+        Assert.Equal(HttpStatusCode.BadRequest, upload.StatusCode);
+        Assert.False(File.Exists(Path.Combine(_mappingDirectory, "1.0.3.mapping.txt")));
+    }
+
+    private static Task<HttpResponseMessage> UploadMapping(HttpClient client, byte[] body, string encoding)
+    {
+        var content = new ByteArrayContent(body);
+        content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+        content.Headers.ContentEncoding.Add(encoding);
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/internal/diagnostics/mappings?appVersion=1.0.3") { Content = content };
+        request.Headers.Add("X-Trazo-Diagnostics-Key", "mapping-test-secret");
+        return client.SendAsync(request);
+    }
+
+    private static byte[] Gzip(byte[] data)
+    {
+        using var output = new MemoryStream();
+        using (var gzip = new GZipStream(output, CompressionLevel.Optimal, leaveOpen: true)) gzip.Write(data);
+        return output.ToArray();
     }
 
     [Fact]

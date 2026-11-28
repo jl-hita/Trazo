@@ -76,7 +76,8 @@ selection. Older tickets with a missing or unmatched version remain obfuscated.
 
 The Android release workflow uploads `mapping.txt` after every minified build to
 `POST /api/internal/diagnostics/mappings?appVersion=0.2.2%2B30029`, using the
-`X-Trazo-Diagnostics-Key` header. The API returns the SHA-256 checksum of the stored mapping in the accepted response. Configure these server settings:
+`X-Trazo-Diagnostics-Key` header. The body may be sent gzip-compressed (`Content-Encoding: gzip`), which the workflow does:
+the request is limited to 64 MiB (also in nginx) and the stored mapping to 256 MiB. The API returns the SHA-256 checksum of the stored mapping in the accepted response. Configure these server settings:
 
 - `Diagnostics:MappingUploadKey`: long random secret; set the matching GitHub Actions secret
   `TRAZO_DIAGNOSTICS_UPLOAD_KEY`. It is optional for publishing, but without it mappings are not uploaded.

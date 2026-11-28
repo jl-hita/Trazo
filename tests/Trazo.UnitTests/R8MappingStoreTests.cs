@@ -76,13 +76,13 @@ public sealed class R8MappingStoreTests
     }
 
     [Fact]
-    public async Task StoreAsync_AcceptsMappingAt64MiBLimit()
+    public async Task StoreAsync_AcceptsMappingAtTheSizeLimit()
     {
         var directory = Path.Combine(Path.GetTempPath(), "trazo-r8-" + Guid.NewGuid().ToString("N"));
         try
         {
             var store = CreateStore(directory);
-            await using var input = new MemoryStream(new byte[checked((int)R8MappingStore.MaxMappingBytes)]);
+            await using var input = new ZeroStream(R8MappingStore.MaxMappingBytes);
 
             var hash = await store.StoreAsync("0.2.2+30029", input, CancellationToken.None);
 
@@ -97,24 +97,46 @@ public sealed class R8MappingStoreTests
     }
 
     [Fact]
-    public async Task StoreAsync_RejectsMappingAbove64MiBLimit()
+    public async Task StoreAsync_RejectsMappingAboveTheSizeLimit()
     {
         var directory = Path.Combine(Path.GetTempPath(), "trazo-r8-" + Guid.NewGuid().ToString("N"));
         try
         {
             var store = CreateStore(directory);
-            await using var input = new MemoryStream(new byte[checked((int)R8MappingStore.MaxMappingBytes + 1)]);
+            await using var input = new ZeroStream(R8MappingStore.MaxMappingBytes + 1);
 
             var exception = await Assert.ThrowsAsync<InvalidDataException>(
                 () => store.StoreAsync("0.2.2+30029", input, CancellationToken.None));
 
-            Assert.Contains("64 MiB", exception.Message);
+            Assert.Contains("256 MiB", exception.Message);
             Assert.False(File.Exists(Path.Combine(directory, "0.2.2+30029.mapping.txt")));
         }
         finally
         {
             if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
         }
+    }
+
+    /// <summary>A mapping of any size without holding it in memory.</summary>
+    private sealed class ZeroStream(long length) : Stream
+    {
+        private long _remaining = length;
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            var read = (int)Math.Min(count, _remaining);
+            Array.Clear(buffer, offset, read);
+            _remaining -= read;
+            return read;
+        }
+        public override void Flush() { }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 
     private static R8MappingStore CreateStore(string directory, string executable = "retrace")
