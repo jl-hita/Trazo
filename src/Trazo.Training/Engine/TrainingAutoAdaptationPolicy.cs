@@ -6,12 +6,12 @@ namespace Trazo.Training;
 ///
 /// What is applied automatically (all reversible, small and bounded; every application is stored as an
 /// approved proposal with no reviewer, so it is auditable and visible to the professional):
-///  - reduce one set in the exercises with repeated fatigue signals (next 3 sessions each);
+///  - reduce one set in the exercises with repeated fatigue signals (next 3 sessions that hold each of them);
 ///  - +1 RIR in the next 3 sessions when low recovery repeats and no exercise can be blamed;
 ///  - give back one previously removed set after clean exposures (never above the original dose);
 ///  - a conservative deload of the next 7 days when stress signals converge (once per 28 days);
 ///  - pause load progression text for the next sessions;
-///  - +1 / -1 set for a muscle from the post-exercise answers (stimulus, fatigue), one session per change.
+///  - +1 / -1 set for a muscle from the post-exercise answers (stimulus, fatigue), for the rest of the block.
 /// What is NEVER applied automatically: pain / safety reviews (they pause progression of that exercise
 /// and wait for a human) and session reorganisation.
 /// Cooldowns stop the system from stacking changes: if the same kind of change was applied recently

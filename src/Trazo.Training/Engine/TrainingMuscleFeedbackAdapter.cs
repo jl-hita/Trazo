@@ -12,7 +12,8 @@ public static class TrainingMuscleFeedbackAdapter
         IReadOnlyList<TrainingMuscleFeedbackExposure> chronological,
         IReadOnlyDictionary<string, int> plannedWeeklySetsByMuscle,
         IReadOnlyDictionary<string, int> weeklyCeilingByMuscle,
-        int maximumSetsPerExercise = MaximumSetsPerExercise)
+        int maximumSetsPerExercise = MaximumSetsPerExercise,
+        bool discomfortNotCollected = false)
     {
         ArgumentNullException.ThrowIfNull(chronological);
         ArgumentNullException.ThrowIfNull(plannedWeeklySetsByMuscle);
@@ -55,16 +56,24 @@ public static class TrainingMuscleFeedbackAdapter
             var planned = plannedWeeklySetsByMuscle.GetValueOrDefault(muscleGroup.Key);
             var ceiling = weeklyCeilingByMuscle.GetValueOrDefault(muscleGroup.Key);
 
-            bool LowAndRecoveredWithoutDiscomfort(TrainingMuscleFeedbackExposure[] session) =>
-                session.Length > 0 && session.All(item => item.SessionCompleted &&
+            // A set is added on the word of the exercises that train the muscle directly: asking the same answers of every lift
+            // that also touches it would mean answering the whole workout. Discomfort is read on all of them.
+            var direct = sessions
+                .Select(session => (All: session, Primary: session.Where(item => item.Trains(muscleGroup.Key)).ToArray()))
+                .Where(session => session.Primary.Length > 0)
+                .ToArray();
+
+            bool LowAndRecoveredWithoutDiscomfort((TrainingMuscleFeedbackExposure[] All, TrainingMuscleFeedbackExposure[] Primary) session) =>
+                session.Primary.All(item => item.SessionCompleted &&
                     EqualsValue(item.Stimulus, "low") &&
                     EqualsValue(item.PreFatigue, "recovered") &&
-                    EqualsValue(item.Discomfort, "none"));
+                    (EqualsValue(item.Discomfort, "none") || (discomfortNotCollected && item.Discomfort is null))) &&
+                !session.All.Any(item => EqualsValue(item.Discomfort, "mild") || EqualsValue(item.Discomfort, "strong"));
 
-            var last2 = sessions.TakeLast(2).ToArray();
+            var last2 = direct.TakeLast(2).ToArray();
             if (last2.Length == 2 && last2.All(LowAndRecoveredWithoutDiscomfort) && planned < ceiling)
             {
-                var pick = last2[^1]
+                var pick = last2[^1].Primary
                     .Where(item => !blockedExercises.Contains(item.ExerciseId) &&
                         EqualsValue(item.Stimulus, "low") && item.Sets < maximumSetsPerExercise)
                     .OrderBy(item => item.Sets).ThenBy(item => item.ExerciseId, StringComparer.Ordinal)
@@ -109,9 +118,14 @@ public enum TrainingMuscleFeedbackAction { AddSet, ReduceSet, SuggestSwap, Pause
 /// <param name="Discomfort">none | mild | strong.</param>
 /// <param name="PreFatigue">recovered | loaded.</param>
 /// <param name="SessionCompleted">False for partial or not-completed sessions; these never count as volume evidence.</param>
+/// <param name="PrimaryMuscles">The muscles the exercise trains directly; null means all the effective ones.</param>
 public sealed record TrainingMuscleFeedbackExposure(
     DateOnly Date, string ExerciseId, IReadOnlyList<string> EffectiveMuscles, int Sets,
-    string? Stimulus, string? Discomfort, string? PreFatigue, bool SessionCompleted = true);
+    string? Stimulus, string? Discomfort, string? PreFatigue, bool SessionCompleted = true,
+    IReadOnlyList<string>? PrimaryMuscles = null)
+{
+    public bool Trains(string muscle) => (PrimaryMuscles ?? EffectiveMuscles).Contains(muscle, StringComparer.Ordinal);
+}
 
 public sealed record TrainingMuscleFeedbackDecision(
     TrainingMuscleFeedbackAction Action, string? Muscle, string ExerciseId, string Explanation);

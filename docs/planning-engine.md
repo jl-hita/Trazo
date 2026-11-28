@@ -296,14 +296,16 @@ the engine's internal product values, not clinical figures.
 | Top of the range once | `ConfirmTopOfRange` | Same load again |
 | Same load failed twice (sets or minimum reps) | `ReduceLoad` | Load lowered with the estimator (capped), written into the next session |
 | Pain in a set or in the session | pause | Progression held, load not pushed, warning in `notes`. **Never automated** |
-| Fatigue repeated in an exercise (RIR well under target or sets skipped for fatigue, 2 of 3 sessions) | reduce one set | One set less in that exercise for the next 3 sessions (cooldown 14 days) |
+| Fatigue repeated in an exercise (RIR well under target or sets skipped for fatigue, 2 of 3 sessions) | reduce one set | One set less in that exercise for the next 3 sessions that hold it, deloads aside (cooldown 14 days) |
 | Three clean sessions at a reduced dose | restore | One set given back, never above the original |
 | Low recovery in 2 of the last 3 sessions | +1 RIR | Next 3 sessions ask for one more repetition in reserve (cooldown 14 days) |
 | Under 80 % of planned sets completed, or fatigue/illness stop | hold | Load progression paused for 7 days |
 | Three consecutive stressed sessions with two kinds of signal | deload | Next 7 days: half the sets, +2 RIR, no load progression (cooldown 28 days) |
 | Session in a deload block or after an automatic deload | not progressable | Never raises the load |
 
-Every change is stored in `plan_adaptations` (kind, exercises, sessions changed, explanation, time) and returned to the user.
+Every change is stored in `plan_adaptations` (kind, exercises, sessions changed, explanation, time) and returned to the user. A change that
+reaches no pending session is neither stored nor returned, and starts no cooldown (the progression pause is the exception: it is
+read from its record).
 
 ## 7. Tests
 
@@ -436,9 +438,13 @@ in program order. A calendar plan whose request lacks a weekday for a day answer
 `preFatigue` (`recovered|loaded`); every field is optional and invalid values give `400`. It is saved with the log for every account
 (`workout_logs.ExerciseFeedbackJson`, migration `WorkoutExerciseFeedback`). Only Premium adapts from it, with the engine's
 `TrainingMuscleFeedbackAdapter`: one set more for an exercise after two sessions with low stimulus, recovered and no discomfort (below the 20-set
-weekly ceiling and 5 sets per exercise); one set less after repeated high stimulus with fatigue. Each change applies to the next sessions, has a
-14-day cooldown per exercise and is audited as `muscle_add_set` / `muscle_reduce_set`. Discomfort is never automated: mild repeated or strong discomfort
-only adds a note (swap or review suggestion) to the adaptation report.
+weekly ceiling in every week it reaches, 5 sets per exercise and 3 for strength accessories); one set less, never below two, after repeated high
+stimulus with fatigue. Only the exercises that train the muscle as primary have to be answered; mild or strong discomfort reported in any exercise
+of that muscle on those days stops the increase. A person with the health consent has to answer "no discomfort"; without it discomfort is never
+stored, so its absence does not stop the increase. Each change stays for the rest of the block (never in a deload, whose answers are not volume
+evidence either), has a 14-day cooldown per exercise (an added set, also per muscle) and is audited as `muscle_add_set` / `muscle_reduce_set`.
+A set the answers took away is not given back by the fatigue rule in that block. The next block starts from its own prescription.
+Discomfort is never automated: mild repeated or strong discomfort only adds a note (swap or review suggestion) to the adaptation report.
 
 ## Intensification blocks
 
@@ -843,3 +849,14 @@ Someone who writes one repetition less in reserve than asked, every time, lost a
 In the simulation, the person who writes the reserve low went from 6 set reductions per plan to none; the person who is really
 losing performance still gets 5 or 6. The thresholds are internal product values.
 
+## Engine 0.14.5: adjustments reach the sessions they are about
+
+Found by logging simulated plans with the same answers every time, in splits of two to six days.
+
+- The changes were applied to the next three sessions of the plan, not to the next three with the exercise. In a split that
+  often reached none: 17 of 38 fatigue cuts changed nothing, yet they were announced and started their cooldown.
+- A set added from the answers lasted one or two sessions. It now stays for the rest of the block.
+- Without the health consent no set was ever added: discomfort is not stored, and the rule asked for "none".
+- Every exercise touching a muscle, even as a helper, had to be answered.
+
+The next block still starts from its own prescription. The thresholds are internal product values.

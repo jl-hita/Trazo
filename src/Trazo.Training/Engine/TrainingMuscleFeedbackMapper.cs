@@ -52,7 +52,8 @@ public static class TrainingMuscleFeedbackMapper
                     feedback.ValueKind == JsonValueKind.Object ? ReadString(feedback, "stimulus") : null,
                     feedback.ValueKind == JsonValueKind.Object ? ReadString(feedback, "discomfort") : null,
                     feedback.ValueKind == JsonValueKind.Object ? ReadString(feedback, "preFatigue") : null,
-                    completed));
+                    completed,
+                    exercise.PrimaryMuscles));
             }
         }
 
@@ -116,7 +117,7 @@ public static class TrainingMuscleFeedbackMapper
                     .Select(muscle => muscle.ToString())
                     .OrderBy(muscle => muscle, StringComparer.Ordinal)
                     .ToArray();
-                result.Add(new PrescribedExercise(id, sets, effective));
+                result.Add(new PrescribedExercise(id, sets, effective, primary.Select(muscle => muscle.ToString()).ToArray()));
             }
 
             return result.Count == 0 ? null : result;
@@ -194,7 +195,8 @@ public static class TrainingMuscleFeedbackMapper
     private sealed record PrescribedExercise(
         string ExerciseId,
         int Sets,
-        IReadOnlyList<string> EffectiveMuscles);
+        IReadOnlyList<string> EffectiveMuscles,
+        IReadOnlyList<string> PrimaryMuscles);
 }
 
 public sealed record TrainingMuscleFeedbackRecord(
