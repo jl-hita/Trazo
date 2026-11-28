@@ -140,6 +140,11 @@ builder.Services.AddAuthorization(options =>
 // change applies without a restart. The limit is part of the partition key: a new limit starts a fresh window.
 // The login limiter ("auth") is deliberately fixed: it protects the sign-in itself and is not editable.
 static string LimiterKey(string baseKey, int permitLimit) => $"{baseKey}|{permitLimit}";
+// Who a signed-in limit counts: the account. The token's "sub" is read under either name (the JWT handler renames it), because
+// falling back to the address would make everyone behind the same one share a limit.
+static string Caller(HttpContext http) =>
+    http.User.FindFirstValue("sub") ?? http.User.FindFirstValue(ClaimTypes.NameIdentifier)
+    ?? http.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -161,16 +166,16 @@ builder.Services.AddRateLimiter(options =>
     {
         var limit = httpContext.RequestServices.GetRequiredService<IRuntimeOptions>().Current.SubscriptionPerMinute;
         return RateLimitPartition.GetFixedWindowLimiter(
-            LimiterKey(httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown", limit),
+            LimiterKey(Caller(httpContext), limit),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = limit, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 });
     });
     options.AddPolicy(PlansEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            Caller(httpContext),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 120, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy(AccountEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            Caller(httpContext),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     // Public deletion-request form: per IP. (The per-email limit lives in DeletionRequestThrottle.)
     options.AddPolicy(AccountEndpoints.DeletionRequestPolicy, httpContext =>
@@ -179,11 +184,11 @@ builder.Services.AddRateLimiter(options =>
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
     options.AddPolicy(AnalyticsEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            "ana|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            "ana|" + (Caller(httpContext)),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     options.AddPolicy(PushEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            Caller(httpContext),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     // Public landing form: a few attempts per minute per IP. Fixed on purpose, like the sign-in limiter.
     options.AddPolicy(WaitlistEndpoints.RateLimitPolicy, httpContext =>
@@ -198,11 +203,11 @@ builder.Services.AddRateLimiter(options =>
     // Comments from the app: a few per hour and account.
     options.AddPolicy(FeedbackEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            "fb|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            "fb|" + (Caller(httpContext)),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = FeedbackEndpoints.PerHour, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
     options.AddPolicy(ReferralEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
-            "ref|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            "ref|" + (Caller(httpContext)),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 60, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
     // Public invitation page and install-referrer counter: anonymous, so per IP and fixed.
     options.AddPolicy(ReferralEndpoints.PublicRateLimitPolicy, httpContext =>

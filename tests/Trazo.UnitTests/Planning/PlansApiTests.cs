@@ -103,7 +103,7 @@ public abstract class PlansApiBase : IDisposable
     protected bool OnPostgres => _postgresDatabase is not null;
 
     /// <param name="postgres">A PostgreSQL connection string: the host then runs on a fresh database with the real migrations instead of SQLite.</param>
-    protected PlansApiBase(bool enforced, string? postgres = null)
+    protected PlansApiBase(bool enforced, string? postgres = null, TimeProvider? clock = null)
     {
         string? databaseConnection = null;
         if (postgres is null)
@@ -153,7 +153,7 @@ public abstract class PlansApiBase : IDisposable
                 else
                     services.AddDbContext<TrazoDbContext>(o => o.UseNpgsql(databaseConnection).AddInterceptors(Race));
                 services.RemoveAll<TimeProvider>();
-                services.AddSingleton<TimeProvider>(new FixedClock(Now));
+                services.AddSingleton<TimeProvider>(clock ?? new FixedClock(Now));
             });
         });
     }

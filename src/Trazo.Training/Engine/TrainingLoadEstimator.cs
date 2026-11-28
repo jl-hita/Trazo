@@ -61,7 +61,10 @@ public static class TrainingLoadEstimator
         var lower = load * (1 - maximumChangePercent / 100m);
         var upper = load * (1 + maximumChangePercent / 100m);
         var bounded = Math.Clamp(estimated, lower, upper);
-        var rounded = Round(bounded, increment);
+        // An increase is rounded down: rounding to the nearest step could pass the cap and ask for more than the estimate.
+        var rounded = bounded > load
+            ? Math.Max(load, decimal.Floor(bounded / increment) * increment)
+            : Round(bounded, increment);
         var direction = rounded < load ? "reducida" : rounded > load ? "aumentada" : "mantenida";
         return new(rounded,
             $"Carga {direction} respecto a la última ({load:0.##} kg): estimación a partir de {avgReps:0.#} repeticiones " +
