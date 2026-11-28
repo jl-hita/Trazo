@@ -92,9 +92,9 @@ public sealed class GenerationScorecardTests(ITestOutputHelper output)
             var limitations = seed == 123 && minutes == 60 ? limitationSets[days % 3] : [];
             var excluded = limitations.Length > 0 ? new[] { "bench-press" } : [];
             var name = $"{goal}/{experience}/{days}d/{minutes}m/{equipment}/s{seed}";
-            // As the app asks for it: "Automatic" covers 2-4 days, so with more it sends push, pull and legs.
+            // As the app asks for it: "Automatic" covers 2-4 days; with five it sends the hybrid split and with six push, pull and legs.
             var profile = PlanTestCatalog.Profile(goal, experience, days, items, excluded, limitations, minutes: minutes,
-                split: days > 4 ? TrainingProgramSplit.PushPullLegs : TrainingProgramSplit.Automatic);
+                split: days == 5 ? TrainingProgramSplit.Hybrid : days == 6 ? TrainingProgramSplit.PushPullLegs : TrainingProgramSplit.Automatic);
 
             var first = MesocycleGenerator.Generate(profile, seed, new MesocycleSlot(1, 1, "accumulation", 1, 4), catalog);
             var minimal = equipment is "db" or "bands";

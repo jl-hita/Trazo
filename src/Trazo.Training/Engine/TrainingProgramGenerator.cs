@@ -251,7 +251,8 @@ public static class TrainingProgramGenerator
 
             AddOptionalAccessoryExercises(
                 request, catalog, equipment, excluded, sessions,
-                prescriptions, week, unit.Days[dayIndex], sessionTemplate.Title, unit.SessionsPerPeriod, unit.WeeksPerUnit);
+                prescriptions, week, unit.Days[dayIndex], sessionTemplate.Title, unit.SessionsPerPeriod, unit.WeeksPerUnit,
+                isLastSessionOfUnit: dayIndex > 0 && dayIndex == unit.Templates.Count - 1);
 
             // Final duration is calculated after weekly sets have been allocated.
             sessions.Add(new TrainingSessionPrescription(
@@ -506,6 +507,13 @@ public static class TrainingProgramGenerator
             };
         }).ToArray();
     }
+
+    private static readonly TrainingMuscleGroup[] MajorMuscles =
+    [
+        TrainingMuscleGroup.Chest, TrainingMuscleGroup.Lats, TrainingMuscleGroup.UpperBack, TrainingMuscleGroup.Deltoids,
+        TrainingMuscleGroup.Quadriceps, TrainingMuscleGroup.Hamstrings, TrainingMuscleGroup.Glutes, TrainingMuscleGroup.Biceps,
+        TrainingMuscleGroup.Triceps
+    ];
 
     private static readonly HashSet<TrainingMuscleGroup> SmallIsolationMuscles =
     [
@@ -911,7 +919,8 @@ public static class TrainingProgramGenerator
         DayOfWeek day,
         string title,
         int daysPerWeek,
-        decimal weeksPerUnit)
+        decimal weeksPerUnit,
+        bool isLastSessionOfUnit = false)
     {
         // The deficit of a unit is judged against its share of the weekly targets (the whole week for a calendar plan).
         var targets = TrainingProgramVolumeAllocator.GetWeeklyTargets(
@@ -1082,6 +1091,17 @@ public static class TrainingProgramGenerator
             int DirectNeed(TrainingExerciseCandidate candidate) =>
                 directNeeds.GetValueOrDefault(GetDirectIsolationGap(candidate));
 
+            // In the last session of the unit, a major muscle that so far gets only one session of the week comes first: twice
+            // a week spreads its sets better than once.
+            var onlyOnce = new HashSet<TrainingMuscleGroup>();
+            if (isLastSessionOfUnit && request.Goal == TrainingGoal.Hypertrophy)
+                foreach (var muscle in MajorMuscles)
+                    if (currentEffectiveVolume.GetValueOrDefault(muscle) < targets.GetValueOrDefault(muscle) &&
+                        previousSessions.Count(session => session.Exercises.Any(e => e.StimulatedMuscles().Contains(muscle))) == 1 &&
+                        !currentExercises.Any(e => e.StimulatedMuscles().Contains(muscle)))
+                        onlyOnce.Add(muscle);
+            bool GivesSecondExposure(TrainingExerciseCandidate candidate) => candidate.PrimaryMuscleGroups.Any(onlyOnce.Contains);
+
             var candidates = catalogCandidates
                 .Where(candidate => candidate.MovementPattern == TrainingMovementPattern.Accessory
                     && (HasExplicitCorePriority(request.MuscleVolumeTargets) || !IsDirectCoreExercise(candidate))
@@ -1115,11 +1135,12 @@ public static class TrainingProgramGenerator
                     Candidate = candidate,
                     Score = AccessoryDeficitScore(candidate, currentEffectiveVolume, targets, allowedMuscles, request.MuscleVolumeTargets)
                 })
-                .Where(item => item.Score > 0m || DirectNeed(item.Candidate) > 0)
+                .Where(item => item.Score > 0m || DirectNeed(item.Candidate) > 0 || GivesSecondExposure(item.Candidate))
                 // Quadriceps receive first call on an accessory slot when glutes are already
                 // at target and quads remain under target. Hamstring accessories compete by
                 // their lower default target/score instead of reserving a slot unconditionally.
-                .OrderByDescending(item =>
+                .OrderByDescending(item => GivesSecondExposure(item.Candidate))
+                .ThenByDescending(item =>
                     prioritizeHamstringAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Hamstrings))
                 .ThenByDescending(item =>
