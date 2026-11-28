@@ -628,5 +628,8 @@
  "@short:Thursday": "خ",
  "@short:Friday": "ج",
  "@short:Saturday": "س",
- "@short:Sunday": "ح"
+ "@short:Sunday": "ح",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "بلغت كل المجموعات الحد الأعلى للنطاق مع تكرارين على الأقل في الاحتياط أكثر من المخطط: الحمل أقل بكثير من قدرتك.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "تتم الزيادة أكثر من المعتاد، بنسبة 10 % كحد أقصى.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "مع الزيادة الأخيرة لم يتحقق الحد الأدنى للنطاق: عد إلى الحمل السابق وتقدّم منه."
 }

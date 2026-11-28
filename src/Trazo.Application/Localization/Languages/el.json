@@ -628,5 +628,8 @@
  "@short:Thursday": "Πεμ",
  "@short:Friday": "Παρ",
  "@short:Saturday": "Σαβ",
- "@short:Sunday": "Κυρ"
+ "@short:Sunday": "Κυρ",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Όλα τα σετ έφτασαν στο πάνω όριο του εύρους με τουλάχιστον δύο επιπλέον επαναλήψεις σε εφεδρεία από το προβλεπόμενο: το φορτίο είναι πολύ κάτω από το δικό σου.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Αυξάνεται περισσότερο από το συνηθισμένο, το πολύ κατά 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Με την τελευταία αύξηση δεν επιτεύχθηκε το κάτω όριο του εύρους: γύρισε στο προηγούμενο φορτίο και προχώρα από εκεί."
 }

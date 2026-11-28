@@ -628,5 +628,8 @@
  "@short:Thursday": "Чет",
  "@short:Friday": "Пет",
  "@short:Saturday": "Саб",
- "@short:Sunday": "Нед"
+ "@short:Sunday": "Нед",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Сите серии го достигнаа врвот на опсегот со најмалку две повторувања повеќе во резерва од планираното: оптоварувањето е далеку под вашето.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Се зголемува повеќе од вообичаено, најмногу 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Со последното зголемување не се достигна долната граница на опсегот: вратете се на претходното оптоварување и напредувајте оттаму."
 }
