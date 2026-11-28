@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.15.0";
+    public const string EngineVersion = "0.16.0";
     // From this many sessions a week the accessories are renewed from block to block.
     private const int FrequentTrainingDays = 5;
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
@@ -933,15 +933,23 @@ public static class TrainingProgramGenerator
             .Where(preference => preference.Priority > 0 && !preference.Maintenance && !preference.Learned)
             .Select(preference => preference.MuscleGroup)
             .ToHashSet();
-        var totalSlots = slots + (emphasized.Count > 0 ? 1 : 0);
+        // A full-body session has no upper-body slot, and its first calls (hamstrings, quadriceps, lats, chest) usually take
+        // the regular ones, so the arms were left to presses and rows. One more slot, only for direct biceps or triceps work,
+        // comes last and only where the session has time. Short sessions keep their time for the compound lifts.
+        var armSlot = request.Goal == TrainingGoal.Hypertrophy && allowedMuscles is null && isFullBody &&
+            request.MaximumSessionDurationMinutes > ShortSessionMinutes;
+        var slotKinds = Enumerable.Repeat(AccessorySlot.Regular, slots).ToList();
+        if (emphasized.Count > 0) slotKinds.Add(AccessorySlot.Emphasis);
+        if (armSlot) slotKinds.Add(AccessorySlot.Arms);
         // Strength keeps its lifts and a deload keeps the previous block's exercises.
         var renewed = request.Goal != TrainingGoal.Strength && !request.IsDeload && daysPerWeek >= FrequentTrainingDays
             ? (request.PreviousBlockExerciseIds ?? Array.Empty<string>()).ToHashSet(StringComparer.OrdinalIgnoreCase)
             : new HashSet<string>();
 
-        for (var slot = 0; slot < totalSlots; slot++)
+        var regularExhausted = false;
+        foreach (var slotKind in slotKinds)
         {
-            var emphasisSlot = slot >= slots;
+            if (slotKind == AccessorySlot.Regular && regularExhausted) continue;
             var currentEffectiveVolume = new Dictionary<TrainingMuscleGroup, decimal>();
             foreach (var exercise in previousSessions.Where(session => session.WeekNumber == week)
                          .SelectMany(session => session.Exercises).Concat(currentExercises))
@@ -1035,7 +1043,8 @@ public static class TrainingProgramGenerator
 
             // Remaining direct-isolation exposures needed this week (hypertrophy only).
             var directNeeds = new Dictionary<DirectIsolationGap, int>();
-            if (isolationSlotsApply)
+            // Outside its own slot a full body keeps choosing by deficit: the arms never displace a first call there.
+            if (isolationSlotsApply || slotKind == AccessorySlot.Arms)
             {
                 var directCounts = catalogCandidates
                     .Where(candidate => selectedThisWeek.Contains(candidate.ExerciseId))
@@ -1074,8 +1083,10 @@ public static class TrainingProgramGenerator
                         targets.ContainsKey(muscle) &&
                         (allowedMuscles is null || allowedMuscles.Contains(muscle)) &&
                         !selectedAccessoryPrimaryMuscles.Contains(muscle)))
-                .Where(candidate => !emphasisSlot || candidate.PrimaryMuscleGroups.Any(muscle => emphasized.Contains(muscle) &&
+                .Where(candidate => slotKind != AccessorySlot.Emphasis || candidate.PrimaryMuscleGroups.Any(muscle => emphasized.Contains(muscle) &&
                     currentEffectiveVolume.GetValueOrDefault(muscle) < targets.GetValueOrDefault(muscle)))
+                .Where(candidate => slotKind != AccessorySlot.Arms ||
+                    (GetDirectIsolationGap(candidate) is DirectIsolationGap.Biceps or DirectIsolationGap.Triceps && DirectNeed(candidate) > 0))
                 .Select(candidate => new
                 {
                     Candidate = candidate,
@@ -1098,6 +1109,9 @@ public static class TrainingProgramGenerator
                     prioritizeChestAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Chest))
                 .ThenByDescending(item => DirectNeed(item.Candidate))
+                // On equal need the arm slot goes to the biceps: presses leave the triceps ahead once the sets are allocated.
+                .ThenByDescending(item => slotKind == AccessorySlot.Arms &&
+                    item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Biceps))
                 .ThenByDescending(item =>
                     prioritizeCalfAccessory &&
                     item.Candidate.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Calves))
@@ -1158,13 +1172,12 @@ public static class TrainingProgramGenerator
                 break;
             }
 
-            // When the regular slots run out of candidates the emphasis slot still has its turn.
-            if (!selected && (emphasisSlot || totalSlots == slots))
-                break;
-            if (!selected)
-                slot = slots - 1;
+            // When the regular slots run out of candidates the emphasis and arm slots still have their turn.
+            if (!selected && slotKind == AccessorySlot.Regular) regularExhausted = true;
         }
     }
+
+    private enum AccessorySlot { Regular, Emphasis, Arms }
 
     private enum DirectIsolationGap { None, LateralDeltoid, Biceps, Triceps }
 
@@ -1174,6 +1187,7 @@ public static class TrainingProgramGenerator
     private const int DirectLateralDeltoidSets = 3;
     private const int DirectArmSets = 2;
     private const int MaximumWeeklyHamstringAccessories = 2;
+    private const int ShortSessionMinutes = 45;
 
     private static DirectIsolationGap GetDirectIsolationGap(TrainingExerciseCandidate candidate)
     {
