@@ -192,3 +192,15 @@ when a table is missing.
   in nginx for that path.
 - **Email:** SMTP must be configured (Settings); otherwise the web flow answers normally but no link is sent.
 - **Migrations:** `20261114140000_UserTimeZone` adds `users."TimeZoneId"`; `20261203100000_EngineResearchSamples` adds `users."ResearchConsent"` and the two research tables.
+
+## Health data needs consent
+
+The API enforces the consent given in the app (`PUT /api/v1/account/health-consent`):
+
+| Request without consent | Answer |
+|---|---|
+| Creating a plan with injury areas, adding one to a plan, or omitting a session for illness | `403 health_consent_required` |
+| Registering a workout with pain, discomfort or illness | The workout is saved **without** them (reasons become "other"), nothing is adapted from it and the answer says so |
+
+A workout is never refused, so nothing queued on a phone is lost. Removing injury areas needs no consent. Data stored before
+this rule is not touched; withdrawing the consent erases it.

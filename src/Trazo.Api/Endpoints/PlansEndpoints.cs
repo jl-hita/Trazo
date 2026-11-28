@@ -490,6 +490,7 @@ public static class PlansEndpoints
             PlanFailure.SessionOutOfWindow => Problem(StatusCodes.Status409Conflict, result.Message!, "session_out_of_window"),
             PlanFailure.ConcurrentModification => Problem(StatusCodes.Status409Conflict, result.Message!, ConcurrentModificationCode),
             PlanFailure.AppUpdateRequired => Problem(StatusCodes.Status409Conflict, result.Message!, "app_update_required"),
+            PlanFailure.HealthConsentRequired => Problem(StatusCodes.Status403Forbidden, result.Message!, "health_consent_required"),
             PlanFailure.GenerationFailed => Problem(StatusCodes.Status422UnprocessableEntity, result.Message!, "plan_generation_failed", errors),
             PlanFailure.ExerciseNotInSession when errors is not null => Problem(StatusCodes.Status400BadRequest, result.Message!, "invalid_log", errors),
             PlanFailure.ExerciseNotInSession => Problem(StatusCodes.Status404NotFound, result.Message!, "exercise_not_in_session"),

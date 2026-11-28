@@ -174,14 +174,16 @@ public abstract class PlansApiBase : IDisposable
         try { Directory.Delete(_keys, true); } catch (IOException) { } catch (UnauthorizedAccessException) { }
     }
 
-    protected async Task<TrazoUser> AddUserAsync(string email, string role = "user", bool subscribed = false)
+    protected async Task<TrazoUser> AddUserAsync(string email, string role = "user", bool subscribed = false, bool healthConsent = true)
     {
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
         var user = new TrazoUser
         {
             Id = Guid.NewGuid(), Email = email, NormalizedEmail = email.ToUpperInvariant(), DisplayName = email.Split('@')[0],
-            Role = role, EmailVerifiedAt = Now, CreatedAt = Now, UpdatedAt = Now
+            Role = role, EmailVerifiedAt = Now, CreatedAt = Now, UpdatedAt = Now,
+            // Most tests note pain or injuries as a person who agreed to; HealthConsentEnforcementTests covers the rest.
+            HealthConsentAt = healthConsent ? Now : null
         };
         user.PasswordHash = new PasswordHasher<TrazoUser>().HashPassword(user, "CorrectHorse1Battery");
         db.Users.Add(user);

@@ -28,7 +28,9 @@ public sealed class PlanArchiveReasonApiTests() : PlansApiBase(enforced: false)
 
     private async Task<(Guid UserId, HttpClient Client)> PersonAsync(string email, bool research = true, bool health = false)
     {
-        var (user, client, _) = await StartPlanAsync(email);
+        var user = await AddUserAsync(email, healthConsent: false);
+        var client = ClientFor(user);
+        (await client.PostAsJsonAsync("/api/v1/plans", Profile())).EnsureSuccessStatusCode();
         if (research) await ConsentAsync(client, "research");
         if (health) await ConsentAsync(client, "health");
         return (user.Id, client);
