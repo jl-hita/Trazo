@@ -195,6 +195,11 @@ builder.Services.AddRateLimiter(options =>
         RateLimitPartition.GetFixedWindowLimiter(
             "diag|" + (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
             _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+    // Comments from the app: a few per hour and account.
+    options.AddPolicy(FeedbackEndpoints.RateLimitPolicy, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            "fb|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = FeedbackEndpoints.PerHour, Window = TimeSpan.FromHours(1), QueueLimit = 0 }));
     options.AddPolicy(ReferralEndpoints.RateLimitPolicy, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             "ref|" + (httpContext.User.FindFirstValue("sub") ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"),
@@ -347,6 +352,7 @@ app.MapAdminFiscalEndpoints();
 app.MapMarketingEndpoints();
 app.MapErrorTicketEndpoints();
 app.MapAppVersionEndpoints();
+app.MapFeedbackEndpoints();
 
 app.MapPost("/api/internal/exercise-catalog/import", async (
     HttpContext context,

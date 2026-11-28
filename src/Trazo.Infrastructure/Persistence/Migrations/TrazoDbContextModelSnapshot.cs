@@ -202,6 +202,25 @@ public sealed class TrazoDbContextModelSnapshot : ModelSnapshot
             b.ToTable("error_report_outbox");
         });
 
+        modelBuilder.Entity("Trazo.Domain.Support.FeedbackEntry", b =>
+        {
+            b.Property<Guid>("Id").HasColumnType("uuid");
+            b.Property<Guid>("UserId").HasColumnType("uuid");
+            b.Property<DateTimeOffset>("CreatedAt").HasColumnType("timestamp with time zone");
+            b.Property<string>("Category").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("Message").IsRequired().HasMaxLength(2000).HasColumnType("character varying(2000)");
+            b.Property<string>("Screen").HasMaxLength(60).HasColumnType("character varying(60)");
+            b.Property<string>("AppVersion").HasMaxLength(40).HasColumnType("character varying(40)");
+            b.Property<string>("Device").HasMaxLength(120).HasColumnType("character varying(120)");
+            b.Property<string>("Language").HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<string>("Status").IsRequired().HasMaxLength(12).HasColumnType("character varying(12)");
+            b.Property<Guid>("ClientRequestId").HasColumnType("uuid");
+            b.HasKey("Id");
+            b.HasIndex("UserId", "ClientRequestId").IsUnique();
+            b.HasIndex("Status", "CreatedAt");
+            b.ToTable("feedback_entries");
+        });
+
         modelBuilder.Entity("Trazo.Domain.Settings.AppSetting", b =>
         {
             b.Property<string>("Key").HasMaxLength(100).HasColumnType("character varying(100)");

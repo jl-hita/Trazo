@@ -50,6 +50,10 @@ public sealed class SetupFixture : IDisposable
               "Id" TEXT PRIMARY KEY, "Fingerprint" TEXT NOT NULL UNIQUE, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL,
               "ErrorType" TEXT NOT NULL, "StackTrace" TEXT NOT NULL, "OriginalStackTrace" TEXT NULL, "Occurrences" INTEGER NOT NULL,
               "FirstSeenAt" TEXT NOT NULL, "LastSeenAt" TEXT NOT NULL, "Status" TEXT NOT NULL);
+            CREATE TABLE feedback_entries (
+              "Id" TEXT PRIMARY KEY, "UserId" TEXT NOT NULL, "CreatedAt" TEXT NOT NULL, "Category" TEXT NOT NULL, "Message" TEXT NOT NULL,
+              "Screen" TEXT NULL, "AppVersion" TEXT NULL, "Device" TEXT NULL, "Language" TEXT NULL, "Status" TEXT NOT NULL,
+              "ClientRequestId" TEXT NOT NULL, UNIQUE ("UserId", "ClientRequestId"));
             CREATE TABLE error_report_outbox (
               "Id" TEXT PRIMARY KEY, "Source" TEXT NOT NULL, "AppVersion" TEXT NULL, "StackTrace" TEXT NOT NULL, "TraceId" TEXT NULL,
               "ReportedAt" TEXT NOT NULL, "Attempts" INTEGER NOT NULL, "NextAttemptAt" TEXT NOT NULL);
