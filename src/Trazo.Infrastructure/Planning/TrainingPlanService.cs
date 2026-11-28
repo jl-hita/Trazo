@@ -1950,9 +1950,26 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         if (!isHead)
             lateNotes.Add("Este entrenamiento es anterior a otros ya registrados: se guarda en el historial sin cambiar el plan.");
 
+        bool IsLightSession(PlannedSession s) =>
+            (mesocycles.TryGetValue(s.MesocycleId, out var block) && block.IsDeload) || PrescriptionJson.IsAdaptationDeload(s.PrescriptionJson);
+
         foreach (var action in isHead ? outcome.Actions : [])
         {
             var targets = action.ExerciseIds.ToHashSet(StringComparer.Ordinal);
+            // A change to some exercises counts the sessions that hold each of them, not the next sessions of the plan: in a split an
+            // exercise comes back several sessions later. A deload is already lighter and does not use up the change.
+            var byExercise = action.Kind is TrainingAutoAdaptationKind.ReduceSets or TrainingAutoAdaptationKind.RestoreSets;
+            if (action.Kind == TrainingAutoAdaptationKind.RestoreSets)
+            {
+                // A set the user's own answers took away stays out for the rest of that block: the fatigue rule does not give it back.
+                var blockLogs = logs.Where(l => sessions.TryGetValue(l.PlannedSessionId, out var s) && s.MesocycleId == logged.MesocycleId)
+                    .Select(l => (Guid?)l.Id).ToList();
+                targets.ExceptWith((await db.PlanAdaptations.AsNoTracking()
+                    .Where(a => a.PlanId == plan.Id && a.Kind == MuscleReduceKind && blockLogs.Contains(a.WorkoutLogId))
+                    .ToListAsync(ct)).SelectMany(a => a.ExerciseIds));
+            }
+            var left = targets.ToDictionary(id => id, _ => MaximumFutureSessionsToAdapt, StringComparer.Ordinal);
+            var changedIds = new HashSet<string>(StringComparer.Ordinal);
             var changed = 0;
             var changes = new List<SessionChange>();
             IEnumerable<PlannedSession> window = upcoming;
@@ -1960,17 +1977,29 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 window = IsSequence(plan)
                     ? upcoming.Take(Math.Max(1, plan.SessionsPerPeriod)) // no calendar: the next rotation of sessions
                     : upcoming.Where(s => s.Date <= Today.AddDays(TrainingAutoAdaptationPolicy.DeloadWindowDays));
-            else if (action.Kind != TrainingAutoAdaptationKind.HoldProgression)
+            else if (action.Kind == TrainingAutoAdaptationKind.RaiseReserve)
                 window = upcoming.Take(MaximumFutureSessionsToAdapt);
+            else if (action.Kind == TrainingAutoAdaptationKind.HoldProgression)
+                window = []; // nothing to rewrite: the pause is read from its record
             foreach (var future in window)
             {
                 var json = future.PrescriptionJson;
+                var here = targets;
+                IReadOnlySet<string> touched = new HashSet<string>(StringComparer.Ordinal);
+                if (byExercise)
+                {
+                    if (IsLightSession(future)) continue;
+                    here = PrescriptionJson.Read(json).Select(e => e.ExerciseId)
+                        .Where(id => left.GetValueOrDefault(id) > 0).ToHashSet(StringComparer.Ordinal);
+                    if (here.Count == 0) continue;
+                    foreach (var id in here) left[id]--;
+                }
                 var ok = action.Kind switch
                 {
                     // The automatic cut stops at two sets, also in a lighter session that already asks for few.
-                    TrainingAutoAdaptationKind.ReduceSets => TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, targets, out var updated, out _, out _, minimumSets: 2) && Set(out json, updated),
+                    TrainingAutoAdaptationKind.ReduceSets => TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, here, out var updated, out _, out touched, minimumSets: 2) && Set(out json, updated),
                     TrainingAutoAdaptationKind.RaiseReserve => TrainingAdaptationPrescriptionAdjuster.TryRaiseReserve(json, out var updated, out _) && Set(out json, updated),
-                    TrainingAutoAdaptationKind.RestoreSets => TrainingAdaptationPrescriptionAdjuster.TryRestoreSets(json, targets, out var updated, out _, out _) && Set(out json, updated),
+                    TrainingAutoAdaptationKind.RestoreSets => TrainingAdaptationPrescriptionAdjuster.TryRestoreSets(json, here, out var updated, out _, out touched) && Set(out json, updated),
                     TrainingAutoAdaptationKind.Deload => TrainingAdaptationPrescriptionAdjuster.TryApplyDeload(json, out var updated, out _) && Set(out json, updated),
                     _ => false
                 };
@@ -1978,6 +2007,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 if (action.Kind != TrainingAutoAdaptationKind.Deload)
                 {
                     json = UserAdjustments.KeepFixed(future.PrescriptionJson, json, outcome.BlocksIncreaseFor, out var held);
+                    changedIds.UnionWith(touched.Except(held, StringComparer.OrdinalIgnoreCase));
                     if (held.Count > 0 && !lateNotes.Contains(FixedKeptNote)) lateNotes.Add(FixedKeptNote);
                     if (held.Count > 0 && System.Text.Json.Nodes.JsonNode.DeepEquals(
                             System.Text.Json.Nodes.JsonNode.Parse(json), System.Text.Json.Nodes.JsonNode.Parse(future.PrescriptionJson))) continue;
@@ -1988,13 +2018,16 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 changed++;
             }
 
+            // A change that reached no session is neither announced nor recorded, so it does not start a cooldown either.
+            if (changed == 0 && action.Kind != TrainingAutoAdaptationKind.HoldProgression) continue;
+            var exerciseIds = byExercise ? changedIds.Order(StringComparer.Ordinal).ToArray() : action.ExerciseIds.ToArray();
             db.PlanAdaptations.Add(Traced(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id,
-                Kind = TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), ExerciseIds = action.ExerciseIds.ToArray(),
+                Kind = TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), ExerciseIds = exerciseIds,
                 SessionsChanged = changed, Explanation = action.Explanation, AppliedAt = now, EvidenceAt = evidenceNow
             }, PrescriptionSources.Engine, changes));
-            applied.Add(new AppliedAdaptationView(TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), action.ExerciseIds, changed, action.Explanation));
+            applied.Add(new AppliedAdaptationView(TrainingAutoAdaptationPolicy.DescribeKind(action.Kind), exerciseIds, changed, action.Explanation));
         }
 
         // Carry the load of the next exposure into the next upcoming session of each exercise (never into a deload block).
@@ -2024,7 +2057,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             }
         }
 
-        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, now, evidenceNow, outcome, ct) : ([], []);
+        var feedback = isHead ? await MuscleFeedbackAsync(plan, logged, workout, upcoming, mesocycles, now, evidenceNow, outcome, ct) : ([], []);
         applied.AddRange(feedback.Applied);
 
         // A session that was read and needed nothing is also a decision: the user sees that the engine looked at it and why it kept the plan.
@@ -2045,15 +2078,27 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     private const string MuscleKindPrefix = "muscle_";
     private const decimal MuscleWeeklyCeiling = 20m;
     private const int MuscleCooldownDays = 14;
+    private const int MinimumSetsAfterMuscleCut = 2;
+    private const string MuscleReduceKind = MuscleKindPrefix + "reduce_set";
+    private const string MuscleAddKind = MuscleKindPrefix + "add_set";
+
+    /// <summary>The set changes made from the post-exercise answers that are still within their cooldown.</summary>
+    private async Task<List<PlanAdaptation>> RecentMuscleChangesAsync(Guid planId, DateTimeOffset evidenceNow, CancellationToken ct) =>
+        (await db.PlanAdaptations.AsNoTracking()
+            .Where(a => a.PlanId == planId && (a.Kind == MuscleAddKind || a.Kind == MuscleReduceKind)).ToListAsync(ct))
+        .Where(a => (a.EvidenceAt ?? a.AppliedAt) > evidenceNow.AddDays(-MuscleCooldownDays))
+        .ToList();
 
     /// <summary>
     /// Reads the post-exercise answers (stimulus, discomfort, pre-fatigue) with the engine's muscle-feedback adapter: one set more
     /// after two sessions with low stimulus and good recovery, one set less after repeated high stimulus with fatigue. Discomfort is
-    /// never automated: it only produces a note. Every change has a 14-day cooldown per exercise and is stored in the audit.
+    /// never automated: it only produces a note. A change stays for the rest of the block (the sessions with the exercise, never a
+    /// deload), has a 14-day cooldown per exercise (an added set, also per muscle) and is stored in the audit.
     /// </summary>
     private async Task<(List<AppliedAdaptationView> Applied, List<string> Notes)> MuscleFeedbackAsync(
-        TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming, DateTimeOffset now,
-        DateTimeOffset evidenceNow, AdaptationOutcome pain, CancellationToken ct)
+        TrainingPlan plan, PlannedSession logged, WorkoutLog workout, List<PlannedSession> upcoming,
+        IReadOnlyDictionary<Guid, TrainingMesocycle> mesocycles, DateTimeOffset now, DateTimeOffset evidenceNow,
+        AdaptationOutcome pain, CancellationToken ct)
     {
         var applied = new List<AppliedAdaptationView>();
         var notes = new List<string>();
@@ -2072,19 +2117,35 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         // The engine treats records with the same date as ONE session and orders them by date. Two workouts can happen on the same
         // day, so each log gets its own ordinal "day" in chronological order (what matters to the engine is the order and that they differ).
         var ordered = logs.Where(l => sessions.ContainsKey(l.PlannedSessionId)).OrderBy(l => l.PerformedAt).ThenBy(l => l.LoggedAt).ToList();
+        bool IsLight(PlannedSession s) =>
+            (mesocycles.TryGetValue(s.MesocycleId, out var meso) && meso.IsDeload) || PrescriptionJson.IsAdaptationDeload(s.PrescriptionJson);
+        // A deload is light on purpose, so it is never evidence for more or less volume; its discomfort answers still count.
         var records = ordered.Select((l, index) => new TrainingMuscleFeedbackRecord(
-            DateOnly.FromDayNumber(index), l.Outcome.ToString(), l.ExerciseFeedbackJson,
+            DateOnly.FromDayNumber(index), IsLight(sessions[l.PlannedSessionId]) ? "deload" : l.Outcome.ToString(), l.ExerciseFeedbackJson,
             PrescriptionJson.CompleteStimulus(sessions[l.PlannedSessionId].PrescriptionJson, stimulus))).ToList();
-        var week = await db.PlannedSessions.AsNoTracking().Where(s => s.PlanId == plan.Id && s.WeekNumber == logged.WeekNumber)
-            .Select(s => s.PrescriptionJson).ToListAsync(ct);
-        var planned = TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets(week.Select(json => PrescriptionJson.CompleteStimulus(json, stimulus)));
-        var ceilings = planned.Keys.ToDictionary(m => m, _ => (int)MuscleWeeklyCeiling, StringComparer.Ordinal);
-        var decisions = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings);
 
-        var cooling = (await db.PlanAdaptations.AsNoTracking()
-            .Where(a => a.PlanId == plan.Id && a.Kind.StartsWith(MuscleKindPrefix)).ToListAsync(ct))
-            .Where(a => (a.EvidenceAt ?? a.AppliedAt) > evidenceNow.AddDays(-MuscleCooldownDays))
-            .SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
+        // Every session of the block in progress, tracked: the pending ones carry the changes already made in this request.
+        var blockSessions = await db.PlannedSessions
+            .Where(s => s.PlanId == plan.Id && s.MesocycleId == logged.MesocycleId).ToListAsync(ct);
+        IReadOnlyDictionary<string, int> WeekVolume(int week, PlannedSession? changedSession = null, string? changedJson = null) =>
+            TrainingMuscleFeedbackMapper.CountPlannedEffectiveSets(blockSessions.Where(s => s.WeekNumber == week)
+                .Select(s => PrescriptionJson.CompleteStimulus(
+                    changedSession is not null && s.Id == changedSession.Id ? changedJson! : s.PrescriptionJson, stimulus)));
+        var planned = WeekVolume(logged.WeekNumber);
+        var ceilings = planned.Keys.ToDictionary(m => m, _ => (int)MuscleWeeklyCeiling, StringComparer.Ordinal);
+        // Without the health consent discomfort is never stored, so its absence cannot be what stops an added set.
+        var decisions = TrainingMuscleFeedbackAdapter.Evaluate(TrainingMuscleFeedbackMapper.Map(records), planned, ceilings,
+            maximumSetsPerExercise: TrainingProgramVolumeAllocator.GetMaximumSetsPerExercise(
+                Enum.TryParse<TrainingGoal>(plan.Goal, out var goal) ? goal : TrainingGoal.Hypertrophy),
+            discomfortNotCollected: !await HasHealthConsentAsync(plan.UserId, ct));
+
+        var recentChanges = await RecentMuscleChangesAsync(plan.Id, evidenceNow, ct);
+        var cooling = recentChanges.SelectMany(a => a.ExerciseIds).ToHashSet(StringComparer.Ordinal);
+        var primary = blockSessions.Concat(sessions.Values).SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson))
+            .GroupBy(e => e.ExerciseId, StringComparer.Ordinal)
+            .ToDictionary(g => g.Key, g => g.First().PrimaryMuscleGroups.ToHashSet(), StringComparer.Ordinal);
+        var raisedMuscles = recentChanges.Where(a => a.Kind == MuscleAddKind).SelectMany(a => a.ExerciseIds)
+            .SelectMany(id => primary.TryGetValue(id, out var of) ? of : []).ToHashSet();
         foreach (var decision in decisions)
         {
             if (decision.Action is TrainingMuscleFeedbackAction.PauseExercise or TrainingMuscleFeedbackAction.SuggestSwap)
@@ -2101,11 +2162,24 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 notes.Add("No se añade ninguna serie por feedback muscular porque hay dolor pendiente de revisión.");
                 continue;
             }
+            // Sets that stay for weeks are added to a muscle once per cooldown, whichever of its exercises takes them.
+            var muscles = primary.TryGetValue(decision.ExerciseId, out var found) ? found : [];
+            if (delta > 0 && muscles.Overlaps(raisedMuscles)) continue;
             var changed = 0;
             var changes = new List<SessionChange>();
-            foreach (var future in upcoming.Take(MaximumFutureSessionsToAdapt))
+            foreach (var future in upcoming.Where(s => s.MesocycleId == logged.MesocycleId && !IsLight(s)))
+            {
+                var current = PrescriptionJson.Read(future.PrescriptionJson).FirstOrDefault(e => e.ExerciseId == decision.ExerciseId);
+                if (current is null || (delta < 0 && current.Sets <= MinimumSetsAfterMuscleCut)) continue;
                 if (TrainingAdaptationPrescriptionAdjuster.TryAdjustSets(future.PrescriptionJson, decision.ExerciseId, delta, out var updated, out _))
                 {
+                    if (delta > 0)
+                    {
+                        // The weekly ceiling holds in every week the set reaches, not only in the one just trained.
+                        var before = WeekVolume(future.WeekNumber);
+                        if (WeekVolume(future.WeekNumber, future, updated).Any(m => m.Value > MuscleWeeklyCeiling && m.Value > before.GetValueOrDefault(m.Key)))
+                            continue;
+                    }
                     updated = UserAdjustments.KeepFixed(future.PrescriptionJson, updated, pain.BlocksIncreaseFor, out var held);
                     if (held.Count > 0)
                     {
@@ -2117,8 +2191,10 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                     future.UpdatedAt = now;
                     changed++;
                 }
+            }
             if (changed == 0) continue;
-            var kind = MuscleKindPrefix + (delta > 0 ? "add_set" : "reduce_set");
+            var kind = delta > 0 ? MuscleAddKind : MuscleReduceKind;
+            if (delta > 0) raisedMuscles.UnionWith(muscles);
             db.PlanAdaptations.Add(Traced(new PlanAdaptation
             {
                 Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = kind, ExerciseIds = [decision.ExerciseId],
