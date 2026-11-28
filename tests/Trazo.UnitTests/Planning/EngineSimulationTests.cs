@@ -52,6 +52,8 @@ public sealed class EngineSimulationTests : PlansApiBase
         new("noisy", Noise: 0.04),
         new("optimist", RirBias: 2),
         new("pessimist", RirBias: -1),
+        // Really losing performance, and feeling it: the case where taking a set away is right.
+        new("wearing-down", WeeklyGain: -0.02, RirBias: -1),
         new("no-rir", WritesRir: false),
         new("busy", SkipsLastSet: 0.4),
         new("tires", SetFatigue: 0.7),
@@ -237,7 +239,7 @@ public sealed class EngineSimulationTests : PlansApiBase
     public async Task PlansLivedThroughTheApiStaySensibleForEveryKindOfPerson()
     {
         var full = Environment.GetEnvironmentVariable("TRAZO_SIM_FULL") == "1";
-        var athletes = full ? Athletes : Athletes.Where(a => a.Name is "constant" or "noisy" or "too-heavy" or "sore").ToArray();
+        var athletes = full ? Athletes : Athletes.Where(a => a.Name is "constant" or "noisy" or "pessimist" or "wearing-down" or "too-heavy" or "sore").ToArray();
         (string, string, int, int)[] plans = [("Hypertrophy", "Beginner", 3, 1), ("Hypertrophy", "Intermediate", 4, 2), ("Strength", "Intermediate", 3, 3), ("Hypertrophy", "Advanced", 4, 4)];
         if (!full) plans = [plans[2]];
         var findings = new List<Finding>();
@@ -251,6 +253,12 @@ public sealed class EngineSimulationTests : PlansApiBase
                 findings.Add(new Finding(athlete.Name, $"{goal}/{experience}", "far-from-capacity", $"under {t.Underloaded}, over {t.Overloaded}, gap {t.Gap / Math.Max(1, t.Exercises):P0}"));
             if (athlete.Name is "constant" or "novice" && t.Increases == 0)
                 findings.Add(new Finding(athlete.Name, $"{goal}/{experience}", "never-progresses", "no load increase in the whole plan"));
+            // Writing the reserve low every time is a habit, not fatigue; losing performance as well is.
+            var cuts = t.Applied.GetValueOrDefault("reduction_sets");
+            if (athlete.Name is "pessimist" && cuts > 2)
+                findings.Add(new Finding(athlete.Name, $"{goal}/{experience}", "cuts-without-fatigue", $"{cuts} set reductions"));
+            if (athlete.Name is "wearing-down" && cuts == 0)
+                findings.Add(new Finding(athlete.Name, $"{goal}/{experience}", "fatigue-ignored", "no set reduction while performance fell"));
             table.AppendLine($"{athlete.Name} | {goal[..3]}-{experience[..3]}-{days} | {t.Sessions} | {t.Increases} | {t.Reductions} | {t.Exercises} | {t.Underloaded} | {t.Overloaded} | {(t.Exercises == 0 ? 0 : t.Gap / t.Exercises):P0} | {string.Join(" ", t.Applied.OrderBy(a => a.Key).Select(a => $"{a.Key}={a.Value}"))}");
         }
         var report = table + "\n" + string.Join("\n", findings.GroupBy(f => f.Rule).Select(g => $"## {g.Key}: {g.Count()}\n" + string.Join("\n", g.Take(25).Select(f => $"- {f.Athlete} {f.Plan}: {f.Detail}"))));

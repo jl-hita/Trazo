@@ -1919,7 +1919,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 exposures.Add(new ExerciseExposureRecord(
                     log.PerformedAt, exercise.ExerciseId, exercise.Sets, exercise.MinRepetitions, exercise.MaxRepetitions,
                     exercise.TargetRepetitionsInReserve, exercise.ProgressionRule, eligible, sets, log.Outcome, log.Recovery,
-                    original.TryGetValue(exercise.ExerciseId, out var dose) ? dose : null));
+                    original.TryGetValue(exercise.ExerciseId, out var dose) ? dose : null, session.MesocycleId));
             }
             var plannedSets = exercises.Sum(e => e.Sets);
             sessionRecords.Add(new SessionRecord(log.PerformedAt, log.Outcome, log.NonCompletionReason, log.Recovery, log.PainReported,
@@ -1967,7 +1967,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 var json = future.PrescriptionJson;
                 var ok = action.Kind switch
                 {
-                    TrainingAutoAdaptationKind.ReduceSets => TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, targets, out var updated, out _) && Set(out json, updated),
+                    // The automatic cut stops at two sets, also in a lighter session that already asks for few.
+                    TrainingAutoAdaptationKind.ReduceSets => TrainingAdaptationPrescriptionAdjuster.TryReduceSets(json, targets, out var updated, out _, out _, minimumSets: 2) && Set(out json, updated),
                     TrainingAutoAdaptationKind.RaiseReserve => TrainingAdaptationPrescriptionAdjuster.TryRaiseReserve(json, out var updated, out _) && Set(out json, updated),
                     TrainingAutoAdaptationKind.RestoreSets => TrainingAdaptationPrescriptionAdjuster.TryRestoreSets(json, targets, out var updated, out _, out _) && Set(out json, updated),
                     TrainingAutoAdaptationKind.Deload => TrainingAdaptationPrescriptionAdjuster.TryApplyDeload(json, out var updated, out _) && Set(out json, updated),

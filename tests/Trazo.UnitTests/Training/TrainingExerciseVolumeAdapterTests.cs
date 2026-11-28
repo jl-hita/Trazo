@@ -116,10 +116,53 @@ public sealed class TrainingExerciseVolumeAdapterTests
 
         var repeated = Assert.Single(TrainingExerciseVolumeAdapter.Evaluate([
             Exposure("bench"),
-            Exposure("bench", actualRir: 0m),
-            Exposure("bench", actualRir: 0m)
+            Exposure("bench", actualRir: 0m) with { PerformanceFell = true },
+            Exposure("bench", actualRir: 0m) with { PerformanceFell = true }
         ]));
         Assert.Equal(TrainingExerciseVolumeAction.ProposeReduceOneSet, repeated.Action);
+    }
+
+    [Fact]
+    public void ALowReserveOnItsOwnNeverTakesASetAway()
+    {
+        var recommendation = Assert.Single(TrainingExerciseVolumeAdapter.Evaluate([
+            Exposure("bench", actualRir: 1m), Exposure("bench", actualRir: 0m), Exposure("bench", actualRir: 0m)
+        ]));
+
+        Assert.Equal(TrainingExerciseVolumeAction.NoChange, recommendation.Action);
+    }
+
+    [Theory]
+    [InlineData(true, false, 3)]
+    [InlineData(false, true, 3)]
+    [InlineData(false, false, 2)]
+    public void ALowReserveCountsWhenSomethingElseAgrees(bool fell, bool unrecovered, int completed)
+    {
+        var low = Exposure("bench", actualRir: 1m) with { PerformanceFell = fell, RecoveryInsufficient = unrecovered, CompletedWorkingSets = completed };
+
+        var recommendation = Assert.Single(TrainingExerciseVolumeAdapter.Evaluate([Exposure("bench"), low, low]));
+
+        Assert.Equal(TrainingExerciseVolumeAction.ProposeReduceOneSet, recommendation.Action);
+    }
+
+    [Fact]
+    public void TwoSetsAreTheFloor()
+    {
+        var tired = Exposure("bench", planned: 2, skippedReason: "fatigue");
+
+        var recommendation = Assert.Single(TrainingExerciseVolumeAdapter.Evaluate([tired, tired, tired]));
+
+        Assert.Equal(TrainingExerciseVolumeAction.ReviewWithoutReduction, recommendation.Action);
+    }
+
+    [Fact]
+    public void AnExerciseAlreadyCutInTheBlockIsNotCutAgain()
+    {
+        var tired = Exposure("bench", skippedReason: "fatigue");
+
+        var recommendation = Assert.Single(TrainingExerciseVolumeAdapter.Evaluate([tired, tired, tired with { ReducedThisBlock = true }]));
+
+        Assert.Equal(TrainingExerciseVolumeAction.NoChange, recommendation.Action);
     }
 
     [Fact]

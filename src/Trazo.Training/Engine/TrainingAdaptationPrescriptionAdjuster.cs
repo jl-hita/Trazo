@@ -21,7 +21,8 @@ public static class TrainingAdaptationPrescriptionAdjuster
         IReadOnlySet<string> targetExerciseIds,
         out string updatedJson,
         out string legacyPrescription,
-        out IReadOnlySet<string> reducedExerciseIds)
+        out IReadOnlySet<string> reducedExerciseIds,
+        int minimumSets = 1)
     {
         updatedJson = json;
         legacyPrescription = string.Empty;
@@ -39,7 +40,7 @@ public static class TrainingAdaptationPrescriptionAdjuster
             foreach (var item in exercises)
             {
                 if (item is not JsonObject exercise || exercise["sets"] is not JsonValue setsNode ||
-                    !setsNode.TryGetValue<int>(out var sets) || sets <= 1)
+                    !setsNode.TryGetValue<int>(out var sets) || sets <= Math.Max(1, minimumSets))
                     continue;
 
                 // The adapter proposes changes for stable exercise IDs only. Do not infer a

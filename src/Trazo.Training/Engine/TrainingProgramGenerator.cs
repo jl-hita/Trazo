@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.14.3";
+    public const string EngineVersion = "0.14.4";
     // From this many sessions a week the accessories are renewed from block to block.
     private const int FrequentTrainingDays = 5;
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
