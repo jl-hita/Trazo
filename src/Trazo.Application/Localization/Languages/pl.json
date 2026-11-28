@@ -628,5 +628,8 @@
  "@short:Thursday": "Cz",
  "@short:Friday": "Pt",
  "@short:Saturday": "So",
- "@short:Sunday": "Nd"
+ "@short:Sunday": "Nd",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Wszystkie serie osiągnęły górę zakresu z zapasem co najmniej dwóch powtórzeń większym niż planowano: obciążenie jest znacznie poniżej Twoich możliwości.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Rośnie bardziej niż zwykle, najwyżej o 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Po ostatnim zwiększeniu nie osiągnięto dołu zakresu: wróć do poprzedniego obciążenia i postępuj od niego."
 }

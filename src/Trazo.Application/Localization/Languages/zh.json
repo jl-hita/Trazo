@@ -628,5 +628,8 @@
  "@short:Thursday": "四",
  "@short:Friday": "五",
  "@short:Saturday": "六",
- "@short:Sunday": "日"
+ "@short:Sunday": "日",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "所有组都达到了范围上限，而且余力比计划至少多两次：当前重量远低于你的水平。",
+ "Se sube más de lo habitual, como máximo un 10 %.": "本次增幅大于平常，最多增加 10 %。",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "上次加重后未达到范围下限：回到之前的重量，从那里继续进步。"
 }

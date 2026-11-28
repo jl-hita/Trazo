@@ -932,3 +932,12 @@ hamstrings, quadriceps, lats, chest and calves.
 - The other slots choose as before. The extra exercise takes session time, so some compound lifts end with a set less
   (in the measured profiles, up to three weekly sets of the lats and two of the shoulders).
 - Strength, general fitness, sessions of 45 minutes or less and the other splits are unchanged.
+
+## Engine 0.19.0: calibration of a load that is far too light (pending product approval)
+
+One step per two sessions leaves someone who starts far too light behind for the whole plan. When every set of one exposure is
+at the top of the range with the reserve written down and at least two repetitions above the target, the load goes straight
+to the one estimated (Epley) for the bottom of the range, never more than 10 % up (or the ceiling written for the exercise).
+If the next exposure falls under the range, one failure takes the load back. Without the reserve written nothing changes.
+Pain, recovery and progression pauses stop it like any other increase. The figures are internal product values.
+

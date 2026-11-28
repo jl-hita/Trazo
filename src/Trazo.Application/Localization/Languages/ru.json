@@ -628,5 +628,8 @@
  "@short:Thursday": "Чт",
  "@short:Friday": "Пт",
  "@short:Saturday": "Сб",
- "@short:Sunday": "Вс"
+ "@short:Sunday": "Вс",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Все подходы достигли верхней границы диапазона с запасом минимум на два повторения больше запланированного: вес намного ниже ваших возможностей.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Вес повышается больше обычного, максимум на 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "После последнего повышения нижняя граница диапазона не достигнута: вернитесь к прежнему весу и прогрессируйте от него."
 }

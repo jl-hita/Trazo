@@ -628,5 +628,8 @@
  "@short:Thursday": "To",
  "@short:Friday": "Fr",
  "@short:Saturday": "Lø",
- "@short:Sunday": "Sø"
+ "@short:Sunday": "Sø",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Alle settene nådde toppen av intervallet med minst to repetisjoner mer i reserve enn planlagt: belastningen er langt under din.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Den økes mer enn vanlig, høyst 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Med den siste økningen ble ikke bunnen av intervallet nådd: gå tilbake til forrige belastning og gå videre derfra."
 }

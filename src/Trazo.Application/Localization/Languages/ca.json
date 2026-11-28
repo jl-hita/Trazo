@@ -628,5 +628,8 @@
  "@short:Thursday": "Dj",
  "@short:Friday": "Dv",
  "@short:Saturday": "Ds",
- "@short:Sunday": "Dg"
+ "@short:Sunday": "Dg",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Totes les sèries han arribat al màxim de l’interval amb almenys dues repeticions més en reserva del previst: la càrrega és molt per sota de la teva.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "S’apuja més del que és habitual, com a màxim un 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Amb l’última pujada no s’ha arribat al mínim de l’interval: torna a la càrrega anterior i progressa des d’aquí."
 }

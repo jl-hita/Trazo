@@ -628,5 +628,8 @@
  "@short:Thursday": "Q",
  "@short:Friday": "S",
  "@short:Saturday": "S",
- "@short:Sunday": "D"
+ "@short:Sunday": "D",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Todas as séries chegaram ao máximo do intervalo com pelo menos duas repetições a mais em reserva do que o previsto: a carga está muito abaixo da tua.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Sobe mais do que o habitual, no máximo 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Com a última subida não se chegou ao mínimo do intervalo: volta à carga anterior e progride a partir daí."
 }

@@ -10,6 +10,10 @@ public static class TrainingExerciseProgressionEngine
     private const decimal DefaultMaximumLoadIncreasePercent = 5m;
     // Without the reserve written down, effort is unknown: one more session at the top is asked for instead.
     private const int RequiredTopRangeExposuresWithoutReserve = 3;
+    // Calibration: a load far below what the person can do moves faster than one step per two sessions. The surplus asked of
+    // every set, and the largest single jump, are internal product values.
+    private const decimal CalibrationReserveSurplus = 2m;
+    private const decimal CalibrationMaximumIncreasePercent = 10m;
     /// <summary>Reasons for leaving a set out that say nothing about the load.</summary>
     private static readonly string[] OutsideSkipReasons = ["time", "equipment", "motivation"];
 
@@ -51,6 +55,10 @@ public static class TrainingExerciseProgressionEngine
         if (exposures.Length == 0)
             return Recommendation(TrainingExerciseProgressionAction.InsufficientData,
                 "Todavía no hay una sesión con series registradas para este ejercicio.");
+
+        // One failure right after a calibration jump is enough to take it back.
+        var back = TryUndoCalibration(prescription, exposures);
+        if (back is not null) return back;
 
         // Repeated failure at the same load is the signal that the prescribed weight was too high.
         // It is checked before the generic "hold" rules because those exposures are usually incomplete.
@@ -101,6 +109,8 @@ public static class TrainingExerciseProgressionEngine
                 nextRepetitions,
                 null);
         }
+
+        if (TryCalibrate(prescription, latest) is { } calibrated) return calibrated;
 
         // A single good session is not enough to justify a load jump. Requiring two
         // consecutive top-of-range exposures reduces reactions to day-to-day noise.
@@ -169,6 +179,64 @@ public static class TrainingExerciseProgressionEngine
             increment,
             Enumerable.Repeat(prescription.MinRepetitions, prescription.PlannedWorkingSets).ToArray(),
             maximumIncreasePercent);
+    }
+
+    /// <summary>
+    /// Every set at the top of the range with at least two repetitions more in reserve than asked, all of them written down:
+    /// the load is far below the person's. One session is enough, and the new load is the one estimated for the bottom of
+    /// the range, never more than ten percent up nor past a ceiling written for the exercise. Null when that is not the case,
+    /// or when the equipment's step does not fit under the ceiling.
+    /// </summary>
+    private static TrainingExerciseProgressionRecommendation? TryCalibrate(
+        TrainingExerciseProgressionPrescription prescription, ExposureAnalysis latest)
+    {
+        if (prescription.TargetRir is not { } target || prescription.SmallestLoadIncrementKg is not > 0 ||
+            !latest.AtTopOfRange || !HasSurplus(latest.Sets, target))
+            return null;
+        var increment = prescription.SmallestLoadIncrementKg.Value;
+        var percent = prescription.MaximumLoadIncreasePercent ?? CalibrationMaximumIncreasePercent;
+        var oneRepMax = latest.Sets.Average(set => TrainingLoadEstimator.EstimateOneRepMax(set.WeightKg!.Value, set.Repetitions!.Value, set.Rir));
+        var estimated = TrainingLoadEstimator.LoadForRepetitions(oneRepMax, prescription.MinRepetitions, target);
+        var bounded = Math.Min(estimated, latest.LoadKg * (1 + percent / 100m));
+        var load = latest.LoadKg + decimal.Floor((bounded - latest.LoadKg) / increment) * increment;
+        if (load <= latest.LoadKg) return null;
+        return new(
+            TrainingExerciseProgressionAction.IncreaseLoad,
+            "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya. Se sube más de lo habitual, como máximo un 10 %.",
+            load, load - latest.LoadKg,
+            Enumerable.Repeat(prescription.MinRepetitions, prescription.PlannedWorkingSets).ToArray(),
+            percent);
+    }
+
+    private static bool HasSurplus(IReadOnlyList<TrainingExecutedSet> sets, decimal target) =>
+        sets.Count > 0 && sets.All(set => set.Rir is { } rir && rir >= target + CalibrationReserveSurplus);
+
+    /// <summary>
+    /// The latest exposure fell under the range with a load that came from a calibration jump (the one before was at the top
+    /// with the surplus, and lighter by more than the usual step): back to the load before.
+    /// </summary>
+    private static TrainingExerciseProgressionRecommendation? TryUndoCalibration(
+        TrainingExerciseProgressionPrescription prescription, IReadOnlyList<TrainingExerciseExposure> exposures)
+    {
+        if (exposures.Count < 2) return null;
+        var latest = exposures[^1];
+        var before = exposures[^2];
+        if (!latest.ProgressionEligible || latest.RecoveryInsufficient || latest.WorkingSets is null || before.WorkingSets is null)
+            return null;
+        if (AsPrescribedThen(prescription, before) is not { TargetRir: { } target } then) return null;
+        if (MainLoad(latest.WorkingSets) is not { } now || MainLoad(before.WorkingSets) is not { } was) return null;
+        var usual = Math.Max(
+            prescription.SmallestLoadIncrementKg ?? TrainingLoadEstimator.IncrementFor(was), was * DefaultMaximumLoadIncreasePercent / 100m);
+        if (now - was <= usual) return null;
+        var light = before.WorkingSets.Where(set => set.Completed && set.WeightKg == was && set.Repetitions is not null).ToArray();
+        if (!HasSurplus(light, target) || light.Any(set => set.Repetitions < then.MaxRepetitions)) return null;
+        var failed = latest.WorkingSets.Any(set => set.Completed && set.WeightKg == now && set.Repetitions < prescription.MinRepetitions)
+            || latest.WorkingSets.Any(set => !set.Completed && string.Equals(set.SkippedReason, "load_too_heavy", StringComparison.OrdinalIgnoreCase));
+        if (!failed) return null;
+        return new(
+            TrainingExerciseProgressionAction.ReduceLoad,
+            "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.",
+            was, now - was, Enumerable.Repeat(prescription.MinRepetitions, prescription.PlannedWorkingSets).ToArray(), null);
     }
 
     /// <summary>

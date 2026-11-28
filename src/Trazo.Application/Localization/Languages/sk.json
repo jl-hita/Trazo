@@ -628,5 +628,8 @@
  "@short:Thursday": "Št",
  "@short:Friday": "Pi",
  "@short:Saturday": "So",
- "@short:Sunday": "Ne"
+ "@short:Sunday": "Ne",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Všetky série dosiahli hornú hranicu rozsahu s najmenej dvoma opakovaniami v rezerve navyše oproti plánu: záťaž je hlboko pod vašimi možnosťami.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Zvyšuje sa viac než zvyčajne, najviac o 10 %.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Po poslednom zvýšení sa nedosiahla dolná hranica rozsahu: vráťte sa k predchádzajúcej záťaži a postupujte od nej."
 }

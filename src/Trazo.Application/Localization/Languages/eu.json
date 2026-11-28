@@ -628,5 +628,8 @@
  "@short:Thursday": "Og",
  "@short:Friday": "Ol",
  "@short:Saturday": "Lr",
- "@short:Sunday": "Ig"
+ "@short:Sunday": "Ig",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "Serie guztiak tartearen goiko mugara iritsi dira, aurreikusitakoa baino gutxienez bi errepikapen gehiago erreserban: karga zurea baino askoz txikiagoa da.",
+ "Se sube más de lo habitual, como máximo un 10 %.": "Ohi baino gehiago igotzen da, gehienez % 10.",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "Azken igoerarekin ez da tartearen beheko mugara iritsi: itzuli aurreko kargara eta egin aurrera handik."
 }

@@ -628,5 +628,8 @@
  "@short:Thursday": "木",
  "@short:Friday": "金",
  "@short:Saturday": "土",
- "@short:Sunday": "日"
+ "@short:Sunday": "日",
+ "Todas las series llegaron al máximo del rango con al menos dos repeticiones más en reserva de lo previsto: la carga está muy por debajo de la tuya.": "すべてのセットが範囲の上限に達し、余力も予定より2回以上多く残りました。重量はあなたの力を大きく下回っています。",
+ "Se sube más de lo habitual, como máximo un 10 %.": "通常より大きく、最大10％まで増やします。",
+ "Con la última subida no se llegó al mínimo del rango: vuelve a la carga anterior y progresa desde ahí.": "直近の増量では範囲の下限に届きませんでした。前の重量に戻して、そこから進めましょう。"
 }
