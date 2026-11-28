@@ -61,6 +61,14 @@ public sealed class TrainingAdaptationExtensionsTests
     }
 
     [Fact]
+    public void AReserveOneShortDoesNotKeepTheSetAway()
+    {
+        var result = TrainingExerciseVolumeAdapter.Evaluate([Reduced(rir: 1m), Reduced(rir: 1m), Reduced(rir: 1m)]).Single();
+
+        Assert.Equal(TrainingExerciseVolumeAction.ProposeRestoreOneSet, result.Action);
+    }
+
+    [Fact]
     public void ReductionRemembersTheOriginalDoseAndRestoreNeverExceedsIt()
     {
         var json = """{"exercises":[{"exerciseId":"squat","exerciseNameSnapshot":"Sentadilla","order":1,"sets":3,"minRepetitions":8,"maxRepetitions":12,"targetRepetitionsInReserve":2,"restSeconds":120,"progressionRule":1,"catalogVersion":"v"}]}""";

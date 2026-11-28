@@ -19,7 +19,9 @@ public sealed record ExerciseExposureRecord(
     IReadOnlyList<SetRecord> Sets,
     WorkoutOutcome Outcome,
     string Recovery,
-    int? OriginalPlannedSets = null);
+    int? OriginalPlannedSets = null,
+    /// <summary>The block (mesocycle) the session belongs to; null when unknown.</summary>
+    Guid? Block = null);
 
 public sealed record SessionRecord(
     DateTimeOffset At, WorkoutOutcome Outcome, string Reason, string Recovery, bool Pain, decimal? Rpe, decimal? CompletionRatio);
@@ -82,9 +84,9 @@ public static class AdaptationPlanner
         var volume = TrainingExerciseVolumeAdapter.Evaluate(
                 input.ExerciseHistory.Where(e => input.ExercisesInLoggedSession.Contains(e.ExerciseId, StringComparer.Ordinal))
                     .GroupBy(e => e.ExerciseId, StringComparer.Ordinal)
-                    .SelectMany(group => group.OrderBy(e => e.At).TakeLast(3))
-                    .OrderBy(e => e.ExerciseId, StringComparer.Ordinal).ThenBy(e => e.At)
-                    .Select(ToVolumeExposure).ToArray())
+                    .SelectMany(group => VolumeExposures(group.OrderBy(e => e.At).ToArray()))
+                    .OrderBy(e => e.ExerciseId, StringComparer.Ordinal)
+                    .ToArray())
             .ToDictionary(r => r.ExerciseId, StringComparer.Ordinal);
 
         foreach (var recommendation in volume.Values.Where(r =>
@@ -217,6 +219,48 @@ public static class AdaptationPlanner
             ProgressionEligible: e.ProgressionEligible,
             HistoricalPrescription: new TrainingExerciseProgressionPrescriptionSnapshot(e.PlannedSets, e.MinRepetitions, e.MaxRepetitions, e.TargetRir),
             SkippedSetReason: e.Sets.Select(s => s.SkippedReason).FirstOrDefault(r => !string.IsNullOrEmpty(r)));
+
+    /// <summary>The three latest exposures of one exercise (oldest first), each read against what came before it.</summary>
+    private static IEnumerable<TrainingExerciseVolumeExposure> VolumeExposures(IReadOnlyList<ExerciseExposureRecord> history)
+    {
+        for (var i = Math.Max(0, history.Count - 3); i < history.Count; i++)
+        {
+            var current = history[i];
+            var earlier = history.Take(i).ToArray();
+            yield return ToVolumeExposure(current) with
+            {
+                PerformanceFell = PerformanceFell(current, earlier),
+                RecoveryInsufficient = string.Equals(current.Recovery, "Insufficient", StringComparison.OrdinalIgnoreCase),
+                ReducedThisBlock = current.Block is not null &&
+                    history.Take(i + 1).Any(e => e.Block == current.Block && e.OriginalPlannedSets > e.PlannedSets)
+            };
+        }
+    }
+
+    /// <summary>
+    /// True when, with the same load and repetition range as one of the three latest comparable times, a set gave at least one
+    /// repetition less, counting the reserve written. Adding the reserve takes out the planned changes of effort from week to week
+    /// and the habit of writing it too low or too high. Only as many first sets as both times have are compared: a block adds sets,
+    /// and the later ones give less on their own.
+    /// </summary>
+    private static bool PerformanceFell(ExerciseExposureRecord current, IReadOnlyList<ExerciseExposureRecord> earlier)
+    {
+        if (WorkingLoad(current) is not { } load) return false;
+        var now = RepetitionsPossible(current, load);
+        return earlier.Where(e => e.MinRepetitions == current.MinRepetitions && e.MaxRepetitions == current.MaxRepetitions
+                                  && WorkingLoad(e) == load)
+            .TakeLast(3).Any(e =>
+            {
+                var then = RepetitionsPossible(e, load);
+                var count = Math.Min(then.Length, now.Length);
+                return count > 0 && then.Take(count).Average() - now.Take(count).Average() >= 1m;
+            });
+    }
+
+    /// <summary>Repetitions plus reserve of each set done with <paramref name="load"/>, in order.</summary>
+    private static decimal[] RepetitionsPossible(ExerciseExposureRecord e, decimal load) =>
+        e.Sets.Where(s => s.Completed && s.WeightKg == load && s.Repetitions is not null && s.Rir is not null)
+            .Select(s => s.Repetitions!.Value + s.Rir!.Value).ToArray();
 
     private static TrainingExerciseVolumeExposure ToVolumeExposure(ExerciseExposureRecord e)
     {

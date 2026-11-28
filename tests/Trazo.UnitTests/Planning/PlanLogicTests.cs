@@ -326,13 +326,41 @@ public sealed class AdaptationPlannerTests
     [Fact]
     public void RepeatedFatigueInOneExerciseRemovesOneSetThere()
     {
-        var fatigue = new[] { Set(60, 8, rir: 0), Set(60, 8, rir: 0), Set(60, 8, rir: 0) }; // RIR far below the target of 2
-        var exposures = new[] { 0, 2, 4 }.Select(d => Exposure(d, fatigue)).ToArray();
+        // The same load gives fewer repetitions each time, with the reserve far below the target of 2.
+        var exposures = new[] { (Day: 0, Reps: 10), (Day: 2, Reps: 9), (Day: 4, Reps: 8) }
+            .Select(x => Exposure(x.Day, [Set(60, x.Reps, rir: 0), Set(60, x.Reps, rir: 0), Set(60, x.Reps, rir: 0)])).ToArray();
 
         var outcome = Run(exposures, [Session(0), Session(2), Session(4)]);
 
         var reduce = Assert.Single(outcome.Actions, a => a.Kind == TrainingAutoAdaptationKind.ReduceSets);
         Assert.Equal(["bench-press"], reduce.ExerciseIds);
+    }
+
+    [Fact]
+    public void TheSameWorkWithALowReserveEveryTimeKeepsItsSets()
+    {
+        var steady = new[] { Set(60, 8, rir: 0), Set(60, 8, rir: 0), Set(60, 8, rir: 0) };
+        var exposures = new[] { 0, 2, 4 }.Select(d => Exposure(d, steady)).ToArray();
+
+        var outcome = Run(exposures, [Session(0), Session(2), Session(4)]);
+
+        Assert.DoesNotContain(outcome.Actions, a => a.Kind == TrainingAutoAdaptationKind.ReduceSets);
+    }
+
+    [Fact]
+    public void ASetAddedByTheBlockIsNotReadAsLostPerformance()
+    {
+        // The later sets give less on their own; the first ones match.
+        var exposures = new[]
+        {
+            Exposure(0, [Set(60, 10, rir: 1), Set(60, 10, rir: 1)]),
+            Exposure(2, [Set(60, 10, rir: 1), Set(60, 10, rir: 1), Set(60, 7, rir: 0)]),
+            Exposure(4, [Set(60, 10, rir: 1), Set(60, 10, rir: 1), Set(60, 7, rir: 0)])
+        };
+
+        var outcome = Run(exposures, [Session(0), Session(2), Session(4)]);
+
+        Assert.DoesNotContain(outcome.Actions, a => a.Kind == TrainingAutoAdaptationKind.ReduceSets);
     }
 
     // ---- P0: a pending pain report outranks every positive adaptation in its scope.

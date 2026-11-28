@@ -829,3 +829,17 @@ missing reserve, skipping sets, tiring, starting too heavy or too light, bad wee
 Known limits it measured, unchanged: someone who starts far too light is still 23 to 29 % under after twelve weeks, because one step
 per confirmation is the most the engine takes; without the reserve written, increases are rare; and someone who always writes one
 repetition less in reserve than asked loses sets repeatedly.
+
+## Engine 0.14.4: a low reserve is not fatigue by itself
+
+Someone who writes one repetition less in reserve than asked, every time, lost a set again and again and never got it back.
+
+- A reserve one or more below the target counts as a fatigue signal only when something else agrees: with the same load and
+  repetition range, a set gave at least one repetition less (counting the reserve written); recovery was insufficient; or sets were
+  left undone for no outside reason. A set skipped for fatigue still counts on its own.
+- No exercise is cut below two sets, and none is cut twice in a block.
+- A removed set comes back after three clean exposures with the reserve at most one short.
+
+In the simulation, the person who writes the reserve low went from 6 set reductions per plan to none; the person who is really
+losing performance still gets 5 or 6. The thresholds are internal product values.
+

@@ -31,7 +31,7 @@ public sealed class TrainingExerciseVolumeAdapterMatrixTests
             };
             yield return new object[]
             {
-                new[] { Exposure(), Exposure(actualRir: 1m), Exposure(actualRir: 1m) },
+                new[] { Exposure(), Exposure(actualRir: 1m) with { PerformanceFell = true }, Exposure(actualRir: 1m) with { PerformanceFell = true } },
                 TrainingExerciseVolumeAction.ProposeReduceOneSet, 3
             };
             yield return new object[]
@@ -42,11 +42,11 @@ public sealed class TrainingExerciseVolumeAdapterMatrixTests
             yield return new object[]
             {
                 new[] { Exposure(), Exposure(actualRir: 1m), Exposure(actualRir: 1m) },
-                TrainingExerciseVolumeAction.ProposeReduceOneSet, 3
+                TrainingExerciseVolumeAction.NoChange, 3
             };
             yield return new object[]
             {
-                new[] { Exposure(), Exposure(actualRir: 1.01m), Exposure(actualRir: 1.01m) },
+                new[] { Exposure(), Exposure(actualRir: 1.01m) with { PerformanceFell = true }, Exposure(actualRir: 1.01m) with { PerformanceFell = true } },
                 TrainingExerciseVolumeAction.NoChange, 3
             };
             yield return new object[]

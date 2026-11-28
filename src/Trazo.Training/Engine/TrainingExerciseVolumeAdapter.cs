@@ -10,6 +10,10 @@ public static class TrainingExerciseVolumeAdapter
     private const int AnalysisWindow = 3;
     private const int RequiredFatigueSignals = 2;
     private const decimal MeaningfulRirShortfall = 1m;
+    // Internal product limits: no exercise is cut below two sets, and none loses more than one set in a block.
+    private const int MinimumSets = 2;
+    /// <summary>Reasons for leaving a set out that say nothing about fatigue.</summary>
+    private static readonly string[] OutsideSkipReasons = ["time", "equipment", "motivation", "illness"];
 
     public static IReadOnlyList<TrainingExerciseVolumeRecommendation> Evaluate(
         IReadOnlyList<TrainingExerciseVolumeExposure> history)
@@ -47,12 +51,18 @@ public static class TrainingExerciseVolumeAdapter
             // the exercise itself needs less volume. Only repeated fatigue-coded signals count.
             // Count at most one signal per exposure even when both skipped sets and RIR
             // indicate fatigue; otherwise one difficult session could masquerade as repetition.
+            // A reserve below the target is not fatigue on its own: many people write it that way every time. It counts when
+            // something else agrees: less done with the same load, insufficient recovery, or sets left undone.
             bool HasFatigueSignal(TrainingExerciseVolumeExposure item) =>
                 item.SessionCompleted &&
                 ((string.Equals(item.SkippedSetReason, "fatigue", StringComparison.OrdinalIgnoreCase) &&
                   item.CompletedWorkingSets < item.PlannedWorkingSets) ||
                  (item.TargetRir.HasValue && item.ActualAverageRir.HasValue &&
-                  item.ActualAverageRir.Value <= item.TargetRir.Value - MeaningfulRirShortfall));
+                  item.ActualAverageRir.Value <= item.TargetRir.Value - MeaningfulRirShortfall &&
+                  (item.PerformanceFell || item.RecoveryInsufficient || LeftSetsUndone(item))));
+            static bool LeftSetsUndone(TrainingExerciseVolumeExposure item) =>
+                item.CompletedWorkingSets < item.PlannedWorkingSets &&
+                !OutsideSkipReasons.Contains(item.SkippedSetReason, StringComparer.OrdinalIgnoreCase);
 
             var repeatedFatigueSignals = recent.Count(HasFatigueSignal);
             // Require the latest exposure to still show the problem; old fatigue that has
@@ -60,28 +70,35 @@ public static class TrainingExerciseVolumeAdapter
             if (repeatedFatigueSignals >= RequiredFatigueSignals && HasFatigueSignal(recent[^1]))
             {
                 var latest = recent[^1];
-                if (latest.PlannedWorkingSets <= 1)
+                if (latest.PlannedWorkingSets <= MinimumSets)
                 {
                     recommendations.Add(new(group.Key, TrainingExerciseVolumeAction.ReviewWithoutReduction,
-                        "Hay señales repetidas de fatiga, pero el ejercicio ya tiene una serie prescrita. Revisa técnica, recuperación y distribución semanal; no reduzcas más volumen automáticamente.",
+                        "Hay señales repetidas de fatiga, pero el ejercicio ya está en dos series o menos. Revisa técnica, recuperación y distribución semanal; no reduzcas más volumen automáticamente.",
                         null, recent.Length));
                     continue;
                 }
 
+                if (latest.ReducedThisBlock || latest.OriginalPlannedSets > latest.PlannedWorkingSets)
+                {
+                    recommendations.Add(new(group.Key, TrainingExerciseVolumeAction.NoChange,
+                        "Mantén la prescripción.", null, recent.Length));
+                    continue;
+                }
+
                 recommendations.Add(new(group.Key, TrainingExerciseVolumeAction.ProposeReduceOneSet,
-                    "En al menos dos de las tres exposiciones recientes se repite una señal específica de fatiga o el RIR real queda al menos una repetición por debajo del objetivo. Se propone revisar una reducción de una serie solo en este ejercicio; requiere aprobación profesional.",
+                    "En al menos dos de las tres exposiciones recientes se repite una señal específica de fatiga. Se propone revisar una reducción de una serie solo en este ejercicio; requiere aprobación profesional.",
                     latest.PlannedWorkingSets - 1, recent.Length));
                 continue;
             }
 
             // Reversal: a previously approved reduction is not permanent. When the three latest
             // exposures were all completed at the reduced dose with no fatigue signal and the effort
-            // reserve was met, propose giving back ONE set (never above the original dose).
+            // reserve was met or short by no more than the shortfall that counts, propose giving back ONE set (never above the original dose).
             // Internal product rule; requires professional approval like any volume change.
             var latestExposure = recent[^1];
             bool HasMetTargetEffortReserve(TrainingExerciseVolumeExposure item) =>
                 item.TargetRir.HasValue && item.ActualAverageRir.HasValue &&
-                item.ActualAverageRir.Value >= item.TargetRir.Value;
+                item.ActualAverageRir.Value >= item.TargetRir.Value - MeaningfulRirShortfall;
 
             if (recent.All(item => item.OriginalPlannedSets is { } original && original > item.PlannedWorkingSets &&
                                    item.SessionCompleted && !HasFatigueSignal(item) &&
@@ -113,7 +130,12 @@ public sealed record TrainingExerciseVolumeExposure(
     bool PainReported = false,
     decimal? TargetRir = null,
     decimal? ActualAverageRir = null,
-    int? OriginalPlannedSets = null);
+    int? OriginalPlannedSets = null,
+    /// <summary>Less was done (repetitions plus reserve) than an earlier time with the same load and repetition range.</summary>
+    bool PerformanceFell = false,
+    bool RecoveryInsufficient = false,
+    /// <summary>This exercise was already done with a set taken away in the same block.</summary>
+    bool ReducedThisBlock = false);
 
 public sealed record TrainingExerciseVolumeRecommendation(
     string ExerciseId,
