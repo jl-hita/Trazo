@@ -273,7 +273,10 @@ public static class TrainingProgramGenerator
         if (!allocation.Succeeded)
             return new(null, allocation.Errors);
         var balanced = TrainingProgramBalancer.Balance(
-            allocation.Sessions, catalog, request.Goal, request.MaximumSessionDurationMinutes);
+            allocation.Sessions, catalog, request.Goal, request.MaximumSessionDurationMinutes,
+            TrainingProgramVolumeAllocator.GetWeeklyCeilings(request.Goal, request.Experience, request.MuscleVolumeTargets,
+                unit.SessionsPerPeriod, request.MaximumSessionDurationMinutes),
+            unit.WeeksPerUnit);
         var allocatedSessions = unit.LayOut(balanced, request.DurationWeeks);
 
         // Allocate volume before reordering. The allocator resolves exact ties by the current

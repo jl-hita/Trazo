@@ -12,10 +12,12 @@ public static class TrainingProgramBalancer
     public const decimal MinimumHamstringsPerQuadriceps = 0.5m;
     private const int MinimumSetsLeft = 2;
     private const int MaximumMoves = 60;
+    private const decimal AbsoluteWeeklySetCeiling = 20m;
 
     public static IReadOnlyList<TrainingSessionPrescription> Balance(
         IReadOnlyList<TrainingSessionPrescription> sessions, IReadOnlyCollection<TrainingExerciseCandidate> catalog,
-        TrainingGoal goal, int maximumSessionDurationMinutes)
+        TrainingGoal goal, int maximumSessionDurationMinutes,
+        IReadOnlyDictionary<TrainingMuscleGroup, decimal> ceilings, decimal weeksPerGroup = 1m)
     {
         ArgumentNullException.ThrowIfNull(sessions);
         ArgumentNullException.ThrowIfNull(catalog);
@@ -25,16 +27,28 @@ public static class TrainingProgramBalancer
         foreach (var week in sessions.GroupBy(s => s.WeekNumber))
         {
             var group = week.ToArray();
+            // A set added for balance never takes a muscle it trains past its own weekly ceiling, nor any muscle past twenty.
+            bool Fits(TrainingExercisePrescription exercise)
+            {
+                var volume = TrainingProgramVolumeAllocator.CalculateEffectiveVolume(group);
+                return exercise.StimulatedMuscles().All(muscle =>
+                {
+                    var after = (volume.GetValueOrDefault(muscle) + 1m) / weeksPerGroup;
+                    return after <= AbsoluteWeeklySetCeiling &&
+                           (!exercise.PrimaryMuscleGroups.Contains(muscle) || !ceilings.TryGetValue(muscle, out var ceiling) || after <= ceiling);
+                });
+            }
+
             for (var move = 0; move < MaximumMoves; move++)
             {
                 if (PullDeficit(group, patterns) > 0m)
                 {
-                    if (Add(group, e => IsPull(patterns, e), goal, maximumSessionDurationMinutes)) continue;
+                    if (Add(group, e => IsPull(patterns, e) && Fits(e), goal, maximumSessionDurationMinutes)) continue;
                     if (Remove(group, e => IsPush(patterns, e) && !IsMainLift(e, goal))) continue;
                 }
                 if (HamstringDeficit(group) > 0m)
                 {
-                    if (Add(group, e => Trains(e, TrainingMuscleGroup.Hamstrings) && !e.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Quadriceps),
+                    if (Add(group, e => Trains(e, TrainingMuscleGroup.Hamstrings) && !e.PrimaryMuscleGroups.Contains(TrainingMuscleGroup.Quadriceps) && Fits(e),
                             goal, maximumSessionDurationMinutes)) continue;
                     if (Remove(group, e => Trains(e, TrainingMuscleGroup.Quadriceps) && !Trains(e, TrainingMuscleGroup.Hamstrings) && !IsMainLift(e, goal))) continue;
                 }
@@ -102,9 +116,9 @@ public static class TrainingProgramBalancer
         return true;
     }
 
-    // The lift a strength session is built around never goes under three sets, whatever the proportions say.
+    // The dose of the lift a strength session is built around is decided by the lift, never by these proportions.
     private static bool IsMainLift(TrainingExercisePrescription exercise, TrainingGoal goal) =>
-        goal == TrainingGoal.Strength && exercise.Order == 1 && exercise.Sets <= 3;
+        goal == TrainingGoal.Strength && exercise.Order == 1;
 
     private static TrainingSessionPrescription With(
         TrainingSessionPrescription session, TrainingExercisePrescription exercise, int sets)
