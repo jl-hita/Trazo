@@ -570,7 +570,7 @@ public static class TrainingProgramGenerator
                 return exercise with
                 {
                     WarmupSets = sets,
-                    WarmupNote = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold)}. No cuentan como series de trabajo."
+                    WarmupNote = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold.Select(TrainingMuscleNames.InText))}. No cuentan como series de trabajo."
                 };
             }).ToArray();
             return session with { Exercises = exercises };

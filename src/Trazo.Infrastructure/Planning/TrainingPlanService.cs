@@ -824,6 +824,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
     public const string SkipKind = "skip";
     public const string LoadUpdateKind = "load_update";
     public const string ReviewKind = "review";
+    /// <summary>The load just used, written into the next session as its target: kept in the audit, not told as a change.</summary>
+    public const string LoadCarryKind = "load_carry";
     public const string SwapKind = "user_swap_exercise";
     public const string AddKind = "user_add_exercise";
     public const string LimitationsKind = "user_limitations";
@@ -1540,7 +1542,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         await UseUserClockAsync(userId, ct);
         var plan = await ActivePlanAsync(userId, ct);
         if (plan is null) return null;
-        var planRows = EngineVisible(db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id));
+        var planRows = EngineVisible(db.PlanAdaptations.AsNoTracking().Where(a => a.PlanId == plan.Id && a.Kind != LoadCarryKind));
         var planChanges = await planRows.CountAsync(a => a.Kind != ReviewKind && a.Kind != SkipKind && a.SessionsChanged > 0, ct);
         var planCount = await planRows.CountAsync(ct);
 
@@ -1864,7 +1866,7 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         var sameRequest = sent.ClientRequestId is { } key && existing.ClientRequestId == key;
         if (!sameRequest && !SameLog(existing, sent))
             return PlanResult<LogResult>.Fail(PlanFailure.AlreadyLogged, "Esta sesión ya está registrada.");
-        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id && a.Kind != ReviewKind).OrderBy(a => a.AppliedAt).ToListAsync(ct))
+        var applied = (await db.PlanAdaptations.AsNoTracking().Where(a => a.WorkoutLogId == existing.Id && a.Kind != ReviewKind && a.Kind != LoadCarryKind).OrderBy(a => a.AppliedAt).ToListAsync(ct))
             .Select(a => new AppliedAdaptationView(a.Kind, a.ExerciseIds, a.SessionsChanged, a.Explanation)).ToList();
         var report = Localized(new AdaptationReport([], "none", "Este registro ya estaba guardado.", applied, []));
         return PlanResult<LogResult>.Ok(new LogResult(ToSessionView(session, existing), report, Replayed: true));
@@ -2058,12 +2060,16 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 next.PrescriptionJson = updated;
                 next.UpdatedAt = now;
                 var explanation = $"Carga objetivo de la próxima sesión: {advice.NextLoadKg.Value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)} kg. {advice.Explanation}";
+                // A change is a load the engine moved, or one that differs from what this session asked for. Repeating the
+                // load just used is not: told as a change, it would bury the real ones.
+                var moved = advice.Action is nameof(TrainingExerciseProgressionAction.IncreaseLoad) or nameof(TrainingExerciseProgressionAction.ReduceLoad)
+                    || (done.TargetLoadKg is { } asked && asked != advice.NextLoadKg.Value);
                 db.PlanAdaptations.Add(Traced(new PlanAdaptation
                 {
-                    Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = LoadUpdateKind, ExerciseIds = [advice.ExerciseId],
-                    SessionsChanged = 1, Explanation = explanation, AppliedAt = now, EvidenceAt = evidenceNow
+                    Id = Guid.NewGuid(), PlanId = plan.Id, WorkoutLogId = workout.Id, Kind = moved ? LoadUpdateKind : LoadCarryKind,
+                    ExerciseIds = [advice.ExerciseId], SessionsChanged = 1, Explanation = explanation, AppliedAt = now, EvidenceAt = evidenceNow
                 }, PrescriptionSources.Engine, [loadChange]));
-                applied.Add(new AppliedAdaptationView(LoadUpdateKind, [advice.ExerciseId], 1, explanation));
+                if (moved) applied.Add(new AppliedAdaptationView(LoadUpdateKind, [advice.ExerciseId], 1, explanation));
             }
         }
 
