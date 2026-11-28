@@ -467,6 +467,14 @@ ceilings, pain precedence and duration of a change are those of the exercise ans
 asks for it only when there is some. `notRecovered` also counts as "loaded" for the recovery advice and as a fatigue signal for the
 longitudinal layer; `workload` counts as an answer there, and `low` as low stimulus. Older apps keep sending `exerciseFeedback`.
 
+### Shadow carry between blocks (`carry-shadow-1`)
+
+Sets added from the answers end with their block: the next one starts from its own prescription. To judge later whether they should
+be carried over, each new training block of a generated hypertrophy plan stores in its generation snapshot (`shadowCarry`, snapshot
+schema 2) what the last training block would hand on: per muscle, the net sets the answers added or removed, and a proposal of at
+most two, zero when performance fell in two or more weeks or pain was recorded. **Nothing reads it to build a plan.** It travels with
+the engine data export.
+
 ## Intensification blocks
 
 For a block whose phase is `intensification` (only strength plans of non-beginners get one, in the second half), `IntensificationPhase` (Application layer, not the

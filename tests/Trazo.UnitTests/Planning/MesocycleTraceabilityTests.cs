@@ -55,7 +55,9 @@ public abstract class MesocycleTraceabilityScenarios(string? postgres) : PlansAp
         Assert.Equal(CatalogFingerprint.Compute(PlanTestCatalog.Candidates()), block.CatalogFingerprint);
 
         var snapshot = Snapshot(block);
-        Assert.Equal(1, snapshot.GetProperty("schemaVersion").GetInt32());
+        Assert.Equal(2, snapshot.GetProperty("schemaVersion").GetInt32());
+        // The first block has nothing to carry from.
+        Assert.Equal(JsonValueKind.Null, snapshot.GetProperty("shadowCarry").ValueKind);
         var profile = snapshot.GetProperty("profile");
         Assert.Equal("Hypertrophy", profile.GetProperty("goal").GetString());
         Assert.Equal("Intermediate", profile.GetProperty("experience").GetString());

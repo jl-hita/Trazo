@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Trazo.Application.Localization;
 using Trazo.Application.Planning;
+using Trazo.Application.Planning.Longitudinal;
 using Trazo.Application.Planning.Frequency;
 using Trazo.Domain.Planning;
 using Trazo.Infrastructure.Persistence;
@@ -2602,7 +2603,8 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         // The trace records the inputs this block was really generated from, read now: the plan may have changed since it was created.
         var now = clock.GetUtcNow();
         var mesocycle = AddMesocycle(plan, slot, generation, now, firstIndex, MesocycleGenerationTrace.Capture(
-            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now, techniques));
+            profile, plan.Seed, slot, candidates, generation, existingSessions, continues, previousIds, loadReferences, usedTargets, now, techniques,
+            await ShadowCarryAsync(plan, slot, profile, ct)));
         // The plan is already tracked and the new block has a client-generated key: reached only through the plan's collection
         // EF would see it as an existing row (an UPDATE that affects nothing), so it is added explicitly.
         db.TrainingMesocycles.Add(mesocycle);
@@ -2619,6 +2621,41 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
             return await db.TrainingMesocycles.AsNoTracking().FirstOrDefaultAsync(m => m.PlanId == plan.Id && m.Sequence == slot.Sequence, ct);
         }
         return mesocycle;
+    }
+
+    /// <summary>
+    /// What would be carried from the last training block into this one, worked out only to be stored with it (see
+    /// <see cref="VolumeCarryShadow"/>). Null for blocks that learn nothing: manual or non-hypertrophy plans, deloads, preparations and
+    /// the first block.
+    /// </summary>
+    private async Task<ShadowCarry?> ShadowCarryAsync(TrainingPlan plan, MesocycleSlot slot, PlanProfile profile, CancellationToken ct)
+    {
+        if (plan.Origin != TrainingPlanOrigin.Generated || profile.Goal != TrainingGoal.Hypertrophy || slot.IsDeload || slot.IsPreparation)
+            return null;
+        var from = plan.Mesocycles.Where(m => m.Sequence < slot.Sequence && !m.IsDeload && m.PhaseType != PreparationPhase.PhaseType)
+            .OrderByDescending(m => m.Sequence).FirstOrDefault();
+        if (from is null) return null;
+
+        var sessions = await db.PlannedSessions.AsNoTracking().Where(s => s.MesocycleId == from.Id)
+            .Select(s => new { s.Id, s.PrescriptionJson }).ToListAsync(ct);
+        var sessionIds = sessions.Select(s => s.Id).ToList();
+        var logIds = await db.WorkoutLogs.AsNoTracking().Where(l => sessionIds.Contains(l.PlannedSessionId))
+            .Select(l => (Guid?)l.Id).ToListAsync(ct);
+        var rows = await db.PlanAdaptations.AsNoTracking()
+            .Where(a => a.PlanId == plan.Id && (a.Kind == MuscleAddKind || a.Kind == MuscleReduceKind) && logIds.Contains(a.WorkoutLogId))
+            .ToListAsync(ct);
+        var primary = sessions.SelectMany(s => PrescriptionJson.Read(s.PrescriptionJson))
+            .GroupBy(e => e.ExerciseId, StringComparer.Ordinal)
+            .ToDictionary(g => g.Key, g => g.First().PrimaryMuscleGroups.Select(m => m.ToString()).ToList(), StringComparer.Ordinal);
+        var changes = rows.SelectMany(a => a.ExerciseIds.Where(primary.ContainsKey)
+            .Select(id => new BlockSetChange(primary[id], a.Kind == MuscleAddKind ? 1 : -1))).ToList();
+
+        // The longitudinal layer has just refreshed these rows for this block: the ones it built are tracked and not saved yet.
+        await db.MuscleWeekObservations.Where(o => o.PlanId == plan.Id && o.MesocycleSequence == from.Sequence).LoadAsync(ct);
+        var results = db.MuscleWeekObservations.Local.Where(o => o.PlanId == plan.Id && o.MesocycleSequence == from.Sequence)
+            .Select(o => new BlockMuscleResult(o.Muscle,
+                o.PerformanceChangePercent < LongitudinalPolicy.DecliningPercent ? 1 : 0, o.PainSessions)).ToList();
+        return VolumeCarryShadow.Compute(from.Sequence, changes, results);
     }
 
     /// <summary>
