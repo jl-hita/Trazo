@@ -33,7 +33,7 @@ public static class TrainingMuscleAnswerAdapter
                 .OrderByDescending(e => e.Sets).ThenBy(e => e.ExerciseId, StringComparer.Ordinal).FirstOrDefault();
             if (pick is not null)
                 decisions.Add(new(TrainingMuscleFeedbackAction.ReduceSet, muscle, pick.ExerciseId,
-                    $"Dos sesiones seguidas con {muscle} sin recuperar o con demasiado trabajo. Se quita una serie.",
+                    $"Dos sesiones seguidas con {TrainingMuscleNames.InText(muscle)} sin recuperar o con demasiado trabajo. Se quita una serie.",
                     // Losing performance as well does not wait for the usual pause between changes.
                     Urgent: sessions[^1].PerformanceFell));
         }
@@ -45,7 +45,7 @@ public static class TrainingMuscleAnswerAdapter
                 .OrderBy(e => e.Sets).ThenBy(e => e.ExerciseId, StringComparer.Ordinal).FirstOrDefault();
             if (pick is not null)
                 decisions.Add(new(TrainingMuscleFeedbackAction.AddSet, muscle, pick.ExerciseId,
-                    $"Dos sesiones seguidas con {muscle} recuperado de sobra y poco trabajo, sin perder rendimiento. Se añade una serie."));
+                    $"Dos sesiones seguidas con {TrainingMuscleNames.InText(muscle)} recuperado de sobra y poco trabajo, sin perder rendimiento. Se añade una serie."));
         }
 
         return decisions;

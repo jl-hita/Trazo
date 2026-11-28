@@ -231,7 +231,7 @@ public static class TrainingAdaptationPrescriptionAdjuster
             var sets = isFirst ? 2 : 1;
             isFirst = false;
             item["warmupSets"] = sets;
-            item["warmupNote"] = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold)}. No cuentan como series de trabajo.";
+            item["warmupNote"] = $"Haz {sets} serie(s) de aproximación muy fáciles y lejos del fallo antes de las series de trabajo, para preparar {string.Join(", ", cold.Select(TrainingMuscleNames.InText))}. No cuentan como series de trabajo.";
         }
     }
 

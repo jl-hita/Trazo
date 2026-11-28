@@ -99,7 +99,7 @@ public sealed class IntelligenceSummaryService(TrazoDbContext db, TimeProvider c
             .ToListAsync(cancellationToken);
 
         var adaptations = await db.PlanAdaptations.AsNoTracking()
-            .Where(x => x.AppliedAt >= start && x.AppliedAt < end)
+            .Where(x => x.AppliedAt >= start && x.AppliedAt < end && x.Kind != Planning.TrainingPlanService.LoadCarryKind)
             .GroupBy(x => new { x.Kind, x.Source })
             .Select(g => new IntelligenceAdaptationSummary(g.Key.Kind, g.Key.Source, g.Count()))
             .ToListAsync(cancellationToken);

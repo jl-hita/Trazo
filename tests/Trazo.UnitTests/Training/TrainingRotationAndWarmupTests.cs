@@ -68,7 +68,7 @@ public sealed class TrainingRotationAndWarmupTests
         Assert.Equal(2, exercises[0].WarmupSets);
         Assert.Null(exercises[1].WarmupSets);
         Assert.Equal(1, exercises[2].WarmupSets);
-        Assert.Contains("Deltoids", exercises[2].WarmupNote);
+        Assert.Contains("Hombros", exercises[2].WarmupNote);
         Assert.Equal(new[] { 3, 3, 3 }, exercises.Select(e => e.Sets));
     }
 
