@@ -37,6 +37,7 @@ public sealed class TrazoDbContext(DbContextOptions<TrazoDbContext> options) : D
     public DbSet<Trazo.Domain.Waitlist.WaitlistEntry> WaitlistEntries => Set<Trazo.Domain.Waitlist.WaitlistEntry>();
     public DbSet<Trazo.Domain.Support.ErrorTicket> ErrorTickets => Set<Trazo.Domain.Support.ErrorTicket>();
     public DbSet<Trazo.Domain.Support.ErrorReportOutboxItem> ErrorReportOutbox => Set<Trazo.Domain.Support.ErrorReportOutboxItem>();
+    public DbSet<Trazo.Domain.Support.FeedbackEntry> FeedbackEntries => Set<Trazo.Domain.Support.FeedbackEntry>();
     public DbSet<Trazo.Domain.Analytics.PaywallView> PaywallViews => Set<Trazo.Domain.Analytics.PaywallView>();
 
     public DbSet<Trazo.Domain.Growth.PremiumGrant> PremiumGrants => Set<Trazo.Domain.Growth.PremiumGrant>();

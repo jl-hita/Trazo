@@ -93,6 +93,7 @@ export const routes: Routes = [
           { path: 'planning', loadComponent: () => import('./features/planning/planning.page').then(m => m.PlanningPageComponent) },
           { path: 'logs', loadComponent: () => import('./features/logs/logs.page').then(m => m.LogsPageComponent) },
           { path: 'error-tickets', loadComponent: () => import('./features/error-tickets/error-tickets.page').then(m => m.ErrorTicketsPageComponent) },
+          { path: 'feedback', loadComponent: () => import('./features/feedback/feedback.page').then(m => m.FeedbackPageComponent) },
           { path: 'backups', loadComponent: () => import('./features/backups/backups.page').then(m => m.BackupsPageComponent) },
           { path: 'waitlist', loadComponent: () => import('./features/waitlist/waitlist.page').then(m => m.WaitlistPageComponent) },
           { path: 'settings', loadComponent: () => import('./features/settings/settings.page').then(m => m.SettingsPageComponent) }

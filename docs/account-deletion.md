@@ -68,6 +68,7 @@ whole transaction is rolled back). All sessions end with it: refresh tokens are 
 | `longitudinal_decisions` | audit log of every volume decision of longitudinal learning (deleted before the plans; an anonymous copy of the structured fields is kept) |
 | `frequency_proposals` | proposals and decisions to reorganise the training days (deleted before the plans) |
 | `waitlist_entries` | the landing waitlist row with the same email as the account (not linked by id; matched by the normalised email) |
+| `feedback_entries` | comments sent from the app ([feedback.md](feedback.md)): deleted |
 | `plan_review_requests`, `plan_review_messages` | manual plan reviews: the user's conversations (may contain health data) are deleted; when an administrator is deleted, their reviews go back to the queue and only the reference to them is cleared |
 
 A test (`EveryTableOfTheModelIsEitherDeletedWithTheAccountOrKnownNotToBePersonal`) walks the EF model and fails if a table exists that is

@@ -839,6 +839,25 @@ public sealed class AccountApiTests : IDisposable
     // ------------------------------------------------------------------ export
 
     [Fact]
+    public async Task CommentsAreExportedWithTheirAuthor_AndDeletedWithTheAccount()
+    {
+        var ana = await AddUserAsync("ana@example.com");
+        var eve = await AddUserAsync("eve@example.com");
+        foreach (var (user, text) in new[] { (ana, "from ana"), (eve, "from eve") })
+            (await ClientFor(user).PostAsJsonAsync("/api/v1/feedback", new { category = "idea", message = text, clientRequestId = Guid.NewGuid() }))
+                .EnsureSuccessStatusCode();
+
+        var export = JsonDocument.Parse(await ClientFor(ana).GetStringAsync("/api/v1/account/export")).RootElement;
+        Assert.Equal("from ana", Assert.Single(export.GetProperty("feedback").EnumerateArray()).GetProperty("message").GetString());
+
+        (await DeleteAsync(ClientFor(ana), new { password = Password })).EnsureSuccessStatusCode();
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<TrazoDbContext>();
+        Assert.Equal("from eve", (await db.FeedbackEntries.AsNoTracking().SingleAsync()).Message);
+    }
+
+    [Fact]
     public async Task TheExportHoldsTheUsersDataWithoutAnySecret()
     {
         var ana = await AddUserAsync("ana@example.com", twoFactor: true);

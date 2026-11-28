@@ -202,6 +202,17 @@ export interface PushSendResult { ok: boolean; message: string; }
 /** Android version codes; 0 turns the notice off. */
 export interface AppVersionSettings { minimumAndroidVersionCode: number; recommendedAndroidVersionCode: number; }
 
+export type FeedbackStatus = 'new' | 'seen' | 'resolved';
+export type FeedbackCategory = 'bug' | 'idea' | 'other';
+export interface FeedbackItem {
+  id: string; createdAt: string; category: FeedbackCategory; message: string; screen: string | null; appVersion: string | null;
+  device: string | null; language: string | null; status: FeedbackStatus; email: string | null; displayName: string | null;
+}
+export interface FeedbackPage {
+  items: FeedbackItem[]; page: number; pageSize: number; totalCount: number; totalPages: number;
+  overall: { total: number; new: number; seen: number; resolved: number };
+}
+
 export interface PromotionsSettings {
   signupTrialEnabled: boolean; signupTrialDays: number; referralsEnabled: boolean; referralRewardDays: number;
 }

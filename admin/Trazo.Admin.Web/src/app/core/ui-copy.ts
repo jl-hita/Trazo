@@ -18,6 +18,7 @@ export const UI_COPY = {
     planning: 'Planificación',
     logs: 'Registros',
     errorTickets: 'Incidencias',
+    feedback: 'Comentarios',
     waitlist: 'Lista de espera',
     backups: 'Copias de seguridad',
     settings: 'Ajustes'
@@ -423,6 +424,19 @@ export const UI_COPY = {
     all: 'Todas',
     releasePrompt: '¿Por qué devuelves la solicitud? (opcional; la verá la siguiente persona que la revise)',
     statuses: { pending: 'Pendiente', mine: 'Mías', in_progress: 'En curso', reviewed: 'Revisadas', '': 'Todas' }
+  },
+  feedback: {
+    eyebrow: 'Soporte',
+    title: 'Comentarios',
+    subtitle: 'Lo que envían las personas desde la app.',
+    new: 'Nuevos', seen: 'Vistos', resolved: 'Resueltos',
+    allStatuses: 'Todos los estados', allCategories: 'Todos los tipos', statusFilter: 'Filtrar por estado', categoryFilter: 'Filtrar por tipo',
+    categories: { bug: 'Fallo', idea: 'Idea', other: 'Otro' },
+    statuses: { new: 'Nuevo', seen: 'Visto', resolved: 'Resuelto' },
+    screen: 'Pantalla', version: 'Versión', device: 'Teléfono', language: 'Idioma',
+    markSeen: 'Marcar como visto', markResolved: 'Marcar como resuelto', reopen: 'Reabrir',
+    delete: 'Eliminar', deletePermanently: '¿Eliminar definitivamente?', cancel: 'Cancelar', refresh: 'Actualizar',
+    empty: 'No hay comentarios.', loading: 'Cargando…', previous: 'Anterior', next: 'Siguiente', page: 'Página', of: 'de'
   },
   errorTickets: {
     eyebrow: 'ADMINISTRACIÓN',

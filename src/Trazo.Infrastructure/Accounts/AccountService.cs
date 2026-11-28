@@ -26,7 +26,7 @@ public static class AccountData
         typeof(Subscription), typeof(TrainingPlan), typeof(TrainingPlanPhase), typeof(TrainingMesocycle), typeof(PlannedSession),
         typeof(WorkoutLog), typeof(WorkoutSetLog), typeof(PlanAdaptation), typeof(PlanReviewRequest), typeof(PlanReviewMessage),
         typeof(MuscleWeekObservation), typeof(LongitudinalDecision), typeof(FrequencyProposal), typeof(PlanSessionAdjustment),
-        typeof(Trazo.Domain.Push.DeviceToken),
+        typeof(Trazo.Domain.Push.DeviceToken), typeof(Trazo.Domain.Support.FeedbackEntry),
         // The Premium-time ledger is deleted; funnel events are anonymised (their user id is cleared, the rest holds no personal data).
         typeof(Trazo.Domain.Growth.PremiumGrant), typeof(Trazo.Domain.Growth.GrowthEvent),
         typeof(Trazo.Domain.Growth.ReferralCode), typeof(Trazo.Domain.Growth.ReferralRelationship),
@@ -247,6 +247,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
         // Which campaign the person came from is theirs; the campaign itself and its anonymous counters stay.
         rows += await StepAsync(db.CampaignAttributions.Where(a => a.UserId == userId), ct);
         rows += await StepAsync(db.RefreshTokens.Where(t => t.UserId == userId), ct);
+        rows += await StepAsync(db.FeedbackEntries.Where(f => f.UserId == userId), ct);
         rows += await StepAsync(db.DeviceTokens.Where(t => t.UserId == userId), ct);
         rows += await StepAsync(db.AuthChallenges.Where(c => c.UserId == userId), ct);
         rows += await StepAsync(db.AuthRecoveryCodes.Where(c => c.UserId == userId), ct);
@@ -330,6 +331,7 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
             .OrderBy(a => a.UpdatedAt).ToList();
         var devices = await db.RefreshTokens.AsNoTracking().Where(t => t.UserId == userId).OrderBy(t => t.CreatedAt).ToListAsync(ct);
         var premiumGrants = await db.PremiumGrants.AsNoTracking().Where(g => g.UserId == userId).OrderBy(g => g.GrantedAt).ToListAsync(ct);
+        var feedback = (await db.FeedbackEntries.AsNoTracking().Where(f => f.UserId == userId).ToListAsync(ct)).OrderBy(f => f.CreatedAt).ToList();
 
         return new AccountExport(
             clock.GetUtcNow(), "1",
@@ -364,7 +366,8 @@ public sealed class AccountService(TrazoDbContext db, TimeProvider clock, Micros
                 o.FatigueSignals, o.PainSessions)).ToList(),
             proposals.Select(p => new ExportFrequencyProposal(
                 p.PlanId, p.Kind, p.Status, p.FromDays, p.ToDays, p.WeeksAnalysed, p.LowWeeks, p.Reason, p.PolicyVersion, p.CreatedAt, p.DecidedAt)).ToList(),
-            SessionAdjustments: adjustments.Select(a => new ExportSessionAdjustment(a.PlanId, a.SessionTitle, a.AdjustmentJson, a.UpdatedAt)).ToList());
+            SessionAdjustments: adjustments.Select(a => new ExportSessionAdjustment(a.PlanId, a.SessionTitle, a.AdjustmentJson, a.UpdatedAt)).ToList(),
+            Feedback: feedback.Select(f => new ExportFeedback(f.CreatedAt, f.Category, f.Message, f.Screen, f.AppVersion, f.Device)).ToList());
     }
 
     private static JsonElement ParseJson(string json)
@@ -384,7 +387,10 @@ public sealed record AccountExport(
     IReadOnlyList<ExportLongitudinalDecision>? LongitudinalDecisions = null,
     IReadOnlyList<ExportMuscleObservation>? MuscleObservations = null,
     IReadOnlyList<ExportFrequencyProposal>? FrequencyProposals = null,
-    IReadOnlyList<ExportSessionAdjustment>? SessionAdjustments = null);
+    IReadOnlyList<ExportSessionAdjustment>? SessionAdjustments = null,
+    IReadOnlyList<ExportFeedback>? Feedback = null);
+
+public sealed record ExportFeedback(DateTimeOffset CreatedAt, string Category, string Message, string? Screen, string? AppVersion, string? Device);
 
 public sealed record ExportSessionAdjustment(Guid PlanId, string SessionTitle, string AdjustmentJson, DateTimeOffset UpdatedAt);
 

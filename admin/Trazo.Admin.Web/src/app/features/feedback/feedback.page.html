@@ -1,0 +1,58 @@
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">{{ labels.eyebrow }}</p>
+        <h1>{{ labels.title }}</h1>
+        <p class="subtitle">{{ labels.subtitle }}</p>
+      </div>
+    </div>
+
+    <div class="fb-stats">
+      <div class="fb-stat"><b>{{ data()?.overall?.new ?? '—' }}</b><span>{{ labels.new }}</span></div>
+      <div class="fb-stat"><b>{{ data()?.overall?.seen ?? '—' }}</b><span>{{ labels.seen }}</span></div>
+      <div class="fb-stat"><b>{{ data()?.overall?.resolved ?? '—' }}</b><span>{{ labels.resolved }}</span></div>
+    </div>
+
+    <div class="fb-toolbar">
+      <select [attr.aria-label]="labels.statusFilter" [ngModel]="status()" (ngModelChange)="setFilter('status', $event)">
+        <option value="">{{ labels.allStatuses }}</option><option value="new">{{ labels.new }}</option><option value="seen">{{ labels.seen }}</option><option value="resolved">{{ labels.resolved }}</option>
+      </select>
+      <select [attr.aria-label]="labels.categoryFilter" [ngModel]="category()" (ngModelChange)="setFilter('category', $event)">
+        <option value="">{{ labels.allCategories }}</option><option value="bug">{{ labels.categories.bug }}</option><option value="idea">{{ labels.categories.idea }}</option><option value="other">{{ labels.categories.other }}</option>
+      </select>
+      <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="load()" [disabled]="loading()">{{ labels.refresh }}</trazo-button>
+    </div>
+
+    @if (error()) { <p class="fb-error" role="alert">{{ error() }}</p> }
+
+    @for (item of items(); track item.id) {
+      <article class="fb-item">
+        <header>
+          <span class="fb-badge">{{ labels.categories[item.category] }}</span>
+          <span class="fb-badge" [class]="'fb-badge ' + item.status">{{ labels.statuses[item.status] }}</span>
+          <span>{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+          <span>{{ item.displayName ?? '—' }} @if (item.email) { · <a [href]="'mailto:' + item.email">{{ item.email }}</a> }</span>
+        </header>
+        <p class="fb-message">{{ item.message }}</p>
+        <p class="fb-meta">{{ labels.screen }}: {{ item.screen ?? '—' }} · {{ labels.version }}: {{ item.appVersion ?? '—' }} · {{ labels.device }}: {{ item.device ?? '—' }} · {{ labels.language }}: {{ item.language ?? '—' }}</p>
+        <div class="fb-actions">
+          @if (item.status === 'new') { <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="setStatus(item, 'seen')">{{ labels.markSeen }}</trazo-button> }
+          @if (item.status !== 'resolved') { <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="setStatus(item, 'resolved')">{{ labels.markResolved }}</trazo-button> }
+          @if (item.status === 'resolved') { <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="setStatus(item, 'new')">{{ labels.reopen }}</trazo-button> }
+          @if (confirmId() === item.id) {
+            <span>{{ labels.deletePermanently }}</span>
+            <trazo-button variant="danger" buttonClass="fb-btn" type="button" (pressed)="remove(item)">{{ labels.delete }}</trazo-button>
+            <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="confirmId.set(null)">{{ labels.cancel }}</trazo-button>
+          } @else {
+            <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="confirmId.set(item.id)">{{ labels.delete }}</trazo-button>
+          }
+        </div>
+      </article>
+    } @empty {
+      <p class="fb-meta">{{ loading() ? labels.loading : labels.empty }}</p>
+    }
+
+    <div class="fb-toolbar">
+      <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="go(page() - 1)" [disabled]="page() <= 1 || loading()">{{ labels.previous }}</trazo-button>
+      <span>{{ labels.page }} {{ page() }} {{ labels.of }} {{ totalPages() }}</span>
+      <trazo-button variant="secondary" buttonClass="fb-btn" type="button" (pressed)="go(page() + 1)" [disabled]="page() >= totalPages() || loading()">{{ labels.next }}</trazo-button>
+    </div>

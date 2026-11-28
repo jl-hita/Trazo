@@ -50,6 +50,7 @@ export class ShellComponent {
     { label: UI_COPY.navigation.planning, icon: '⌘', link: '/planning' },
     { label: UI_COPY.navigation.logs, icon: '≋', link: '/logs' },
     { label: UI_COPY.navigation.errorTickets, icon: '⚠', link: '/error-tickets' },
+    { label: UI_COPY.navigation.feedback, icon: '✉', link: '/feedback' },
     { label: UI_COPY.navigation.waitlist, icon: '✉', link: '/waitlist' },
     { label: UI_COPY.navigation.backups, icon: '▣', link: '/backups' },
     { label: UI_COPY.navigation.settings, icon: '⚙', link: '/settings' }
