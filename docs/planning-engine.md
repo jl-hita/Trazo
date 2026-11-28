@@ -860,3 +860,25 @@ Found by logging simulated plans with the same answers every time, in splits of 
 - Every exercise touching a muscle, even as a helper, had to be answered.
 
 The next block still starts from its own prescription. The thresholds are internal product values.
+
+## Engine 0.15.0: every block ramps up
+
+Measured on generated plans: only blocks of four weeks added volume, so the second and third blocks of a twelve-week plan
+(three weeks each) were flat; compound lifts never went under two repetitions in reserve; a beginner started at four again
+after every deload; and some weeks asked for half repetitions.
+
+Hypertrophy and strength blocks, reserve over the base of the profile (2, beginners 3):
+
+| Block | First | Middle | Last |
+|---|---|---|---|
+| New or after a lighter block, 3 or 4 weeks | +1 | 0 | -1 |
+| Continuing a training block | 0 | 0 | -1 |
+
+- The last week reaches RIR 1 in hypertrophy. Beginners stop at 2, and so do the compound lifts of strength.
+- A beginner coming back from a deload or a preparation does not get the +1.
+- Hypertrophy volume: a three-week block now trims a set in its first week and adds at most one per muscle in its last, as a
+  four-week block already did (which trims its first two). Ceilings, session time and per-exercise limits are unchanged.
+- The block after a preparation is no longer treated as a continuation: it eases in.
+- General fitness only loses the half repetition of a continuing block.
+
+Blocks already generated do not change. The figures are internal product heuristics.

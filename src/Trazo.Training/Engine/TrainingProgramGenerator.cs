@@ -26,7 +26,7 @@ public static class TrainingProgramGenerator
     private const int TransitionSecondsPerExercise = 45;
     private const int WarmupAndTransitionsMinutes = 5;
     private const decimal QuadAccessoryGluteTargetBufferSets = 6m;
-    public const string EngineVersion = "0.14.5";
+    public const string EngineVersion = "0.15.0";
     // From this many sessions a week the accessories are renewed from block to block.
     private const int FrequentTrainingDays = 5;
     // The main lift of a strength session is raised above three sets only while the session's compound lifts stay
@@ -322,13 +322,13 @@ public static class TrainingProgramGenerator
 
     /// <summary>
     /// Automatic intra-block ramp for hypertrophy and strength blocks (internal product heuristic, not a
-    /// guideline figure; general fitness keeps the legacy scheme). Effort rises across the block (RIR offset +1 in week 1 down to -1 in the
-    /// last week, floored at RIR 1 for isolation work and RIR 2 for compounds) and, in blocks of
-    /// four or more weeks, volume rises too: weeks 1-2 trim one set from exercises with three or
-    /// more sets, the middle weeks keep the allocated dose and the last week adds at most one set
-    /// per muscle, never above the muscle's weekly ceiling, the per-exercise limit or the session
-    /// duration. It is never a deload. A block that continues a previous one starts with a smaller
-    /// reserve bump and no set trimming.
+    /// guideline figure; general fitness keeps the legacy scheme). Effort rises across the block (RIR offset +1 in week 1, 0 in the middle
+    /// weeks and -1 in the last one; blocks of five weeks or more step down in halves). The last week reaches RIR 1 in hypertrophy;
+    /// beginners stop at RIR 2, and so do the compound lifts of strength. In hypertrophy blocks of three or more weeks volume rises too:
+    /// the first week (the first two in blocks of four or more) trims one set from exercises with three or more sets, the middle weeks
+    /// keep the allocated dose and the last week adds at most one set per muscle, never above the muscle's weekly ceiling, the
+    /// per-exercise limit or the session duration. It is never a deload. A block that continues a previous one has no easier start:
+    /// no extra reserve and no set trimming. A beginner coming back from a deload or a preparation starts at the usual reserve.
     /// </summary>
     private static IReadOnlyList<TrainingSessionPrescription> ApplyHypertrophyRamp(
         IReadOnlyList<TrainingSessionPrescription> sessions,
@@ -346,7 +346,7 @@ public static class TrainingProgramGenerator
             request.Goal, request.Experience, request.MuscleVolumeTargets,
             sessionsPerWeek, request.MaximumSessionDurationMinutes);
         var maxSets = TrainingProgramVolumeAllocator.GetMaximumSetsPerExercise(request.Goal);
-        // Volume ramp (trim in weeks 1-2, extra set in the last week) is hypertrophy-only; strength
+        // Volume ramp (trimmed first weeks, extra set in the last one) is hypertrophy-only; strength
         // progresses through load, so it only gets the effort ramp and the legacy week-1 trim.
         var rampVolume = request.Goal == TrainingGoal.Hypertrophy;
         var continues = request.ContinuesPreviousBlock;
@@ -356,14 +356,19 @@ public static class TrainingProgramGenerator
         {
             var week = weekGroup.Key;
             var offset = HypertrophyRirOffset(week, weeks, continues);
-            var trimSet = !continues && weeks >= 4 && (rampVolume ? week <= 2 : week == 1);
+            // Only a first block starts further from failure for a beginner: nobody goes back to that after a lighter block.
+            if (request.ReturnsFromLighterBlock && request.Experience == TrainingExperience.Beginner) offset = Math.Min(offset, 0m);
+            var trimSet = !continues && (rampVolume
+                ? (weeks >= 4 && week <= 2) || (weeks == 3 && week == 1)
+                : weeks >= 4 && week == 1);
             var weekSessions = weekGroup.OrderBy(x => x.Day).Select(session => session with
             {
                 Exercises = session.Exercises.Select(exercise =>
                 {
                     var isIsolation = patternById.TryGetValue(exercise.ExerciseId, out var pattern) &&
                         (pattern == TrainingMovementPattern.Accessory || pattern == TrainingMovementPattern.Core);
-                    var floor = isIsolation && request.Experience != TrainingExperience.Beginner ? 1m : 2m;
+                    var floor = request.Experience != TrainingExperience.Beginner &&
+                        (isIsolation || request.Goal == TrainingGoal.Hypertrophy) ? 1m : 2m;
                     return exercise with
                     {
                         // Strength keeps at least three sets: the introductory week only trims lifts with four or more.
@@ -375,7 +380,7 @@ public static class TrainingProgramGenerator
                 }).ToArray()
             }).ToArray();
 
-            if (rampVolume && weeks >= 4 && week == weeks)
+            if (rampVolume && weeks >= 3 && week == weeks)
                 AddPeakWeekSets(weekSessions, ceilings, maxSets, request.MaximumSessionDurationMinutes);
 
             result.AddRange(weekSessions.Select(session => session with
@@ -394,14 +399,13 @@ public static class TrainingProgramGenerator
     {
         decimal offset;
         if (week == weeks && weeks >= 3) offset = -1m;
-        else if (weeks == 2) offset = week == 1 ? 0.5m : 0m;
         else if (week == 1) offset = 1m;
-        else if (weeks == 3) offset = 0m;
+        // Whole repetitions in the blocks of up to four weeks: nobody can judge half a repetition in reserve.
+        else if (weeks <= 4) offset = 0m;
         else offset = Math.Round(0.5m * (1m - (week - 2m) / (weeks - 3m)) * 2m, MidpointRounding.ToEven) / 2m;
 
-        if (!continues) return offset;
-        // A continuing block is already adapted: smaller introductory reserve, same final push.
-        return offset > 0m ? Math.Min(offset, week == 1 ? 0.5m : 0m) : offset;
+        // A continuing block is already adapted: no introductory reserve, same final push.
+        return continues ? Math.Min(offset, 0m) : offset;
     }
 
     private static decimal ApplyRirOffset(decimal rir, decimal offset, decimal floor)
@@ -470,7 +474,7 @@ public static class TrainingProgramGenerator
             // A block that directly continues a training block is already adapted: no set trimming and
             // a smaller reserve bump, instead of repeating the full "introduction" week (sawtooth volume).
             var rirOffset = continuesPreviousBlock
-                ? (session.WeekNumber == 1 ? 0.5m : 0m)
+                ? 0m
                 : session.WeekNumber == 1 ? 1m
                 : session.WeekNumber == 2 && durationWeeks >= 5 ? 0.5m : 0m;
             var trimSet = !continuesPreviousBlock && session.WeekNumber == 1 && durationWeeks >= 4;
@@ -1293,6 +1297,8 @@ public sealed record TrainingProgramGenerationRequest(
     // exercises it used, and whether this block directly continues a non-deload block.
     IReadOnlyList<string>? PreviousBlockExerciseIds = null,
     bool ContinuesPreviousBlock = false,
+    // This block comes after a deload or a preparation: it eases in again, but it is not the first one.
+    bool ReturnsFromLighterBlock = false,
     // Seed of the plan, the same for every block. It only orders candidates that are equally good.
     int SelectionSeed = 0,
     // A sequence (asynchronous) plan: the sessions follow one continuous rotation instead of the training days of a week, and

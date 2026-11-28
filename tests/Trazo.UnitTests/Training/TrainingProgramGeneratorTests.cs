@@ -941,7 +941,9 @@ public sealed class TrainingProgramGeneratorTests
                 .Select(exercise => (exercise.ExerciseId, exercise.Sets))
                 .ToArray());
 
-        Assert.Equal(signatures[1], signatures[3]);
+        // Volume only rises inside the block (the introductory week is lighter on purpose): no week is a deload.
+        Assert.All(new[] { 2, 3 }, week => Assert.All(
+            signatures[week].Zip(signatures[week - 1]), pair => Assert.True(pair.First.Sets >= pair.Second.Sets)));
     }
 
     [Fact]
