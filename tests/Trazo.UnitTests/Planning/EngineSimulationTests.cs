@@ -314,7 +314,6 @@ public sealed class EngineSimulationTests : PlansApiBase
         double Over(params string[] names) => Share(t => t.Overloaded, t => t.Exercises, names);
         double Short(params string[] names) => Share(t => t.ShortSets, t => t.CompletedSets, names);
         static int Cuts(Tally t) => t.Applied.GetValueOrDefault("reduction_sets") + t.Applied.GetValueOrDefault("muscle_reduce_set");
-        static int Pauses(Tally t) => t.Applied.GetValueOrDefault("hold_progression") + t.Applied.GetValueOrDefault("deload");
         int Count(string athlete, Func<Tally, bool> test) => Of(athlete).Count(test);
 
         string[] safetyRules = ["pain", "jump", "invalid", "http", "load", "overload"];
@@ -322,8 +321,10 @@ public sealed class EngineSimulationTests : PlansApiBase
         string[] irregular = ["busy", "tires", "bad-weeks", "sore", "stubborn"];
         var irregularFindings = findings.Count(f => irregular.Contains(f.Athlete));
         var all = Of("wearing-down").Count();
-        var dialogKinds = lives.Where(l => l.Athlete == "rough-dialog" && Pauses(l.Tally) > 0).Select(l => l.Kind).Distinct().ToList();
-        var muscleKinds = lives.Where(l => l.Athlete == "rough-muscle" && Pauses(l.Tally) > 0).Select(l => l.Kind).Distinct().ToList();
+        // The plan kinds in which a person sees a protection: progression paused, and a deload.
+        List<int> Kinds(string athlete, string change) =>
+            lives.Where(l => l.Athlete == athlete && l.Tally.Applied.GetValueOrDefault(change) > 0).Select(l => l.Kind).Distinct().Order().ToList();
+        string[] protections = ["hold_progression", "deload"];
         string[] regular = ["constant", "noisy", "stalled"];
         string[] wrong = ["optimist", "exaggerator", "pessimist"];
         var wornCut = Count("wearing-down", t => Cuts(t) > 0);
@@ -344,8 +345,9 @@ public sealed class EngineSimulationTests : PlansApiBase
             ("A8", false, "Volume follows the person", wornCut == all && calm == all && added == all && tiredCut == all,
                 $"of {all} plans: wearing-down cut {wornCut}, pessimist at most 2 cuts {calm}, fresh added {added}, tired cut {tiredCut}"),
             ("A9", false, "Irregular people", irregularFindings == 0 && irregular.All(n => Gap(n) <= 0.15), $"{irregularFindings} findings; " + string.Join(", ", irregular.Select(n => $"{n} {Gap(n):P1}"))),
-            ("A10", true, "Muscle questions keep the protections", dialogKinds.Count > 0 && !dialogKinds.Except(muscleKinds).Any(),
-                $"plan kinds with pause or deload: dialog {dialogKinds.Count}, muscle questions {muscleKinds.Count}; changes {Of("rough-dialog").Sum(Pauses)} vs {Of("rough-muscle").Sum(Pauses)}")
+            ("A10", true, "Muscle questions keep the protections",
+                protections.All(p => Kinds("rough-dialog", p).Count > 0 && !Kinds("rough-dialog", p).Except(Kinds("rough-muscle", p)).Any()),
+                string.Join("; ", protections.Select(p => $"{p}: dialog in {Kinds("rough-dialog", p).Count} plan kinds, muscle questions in {Kinds("rough-muscle", p).Count}")))
         ];
 
         var report = new StringBuilder($"# Adaptation, engine {Trazo.Training.TrainingProgramGenerator.EngineVersion}\n\n");
