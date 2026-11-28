@@ -176,7 +176,11 @@ public static class AdaptationPlanner
         var prescription = new TrainingExerciseProgressionPrescription(
             latest.ExerciseId, latest.PlannedSets, latest.MinRepetitions, latest.MaxRepetitions, latest.TargetRir,
             latest.Rule, lastLoad is null ? null : increment);
-        var exposures = history.TakeLast(3).Select(ToExposure).ToArray();
+        // An exercise can come twice a week with different repetition ranges (a heavy day and a volume day): each range
+        // progresses on its own exposures. Pain is read on all of them, whatever the range.
+        var exposures = history.Where(e => e.MinRepetitions == latest.MinRepetitions && e.MaxRepetitions == latest.MaxRepetitions)
+            .TakeLast(3).Select(ToExposure).ToArray();
+        if (history.TakeLast(3).Any(HasPain)) exposures[^1] = exposures[^1] with { PainReported = true };
 
         var raw = TrainingExerciseProgressionEngine.Evaluate(prescription, exposures);
         var result = TrainingProgressionHold.Apply(raw, holdActive);

@@ -814,3 +814,18 @@ succeeds, from 6 to 120 kg.
   holds the others. The session rules of section 6 (under 80 % of the sets, fatigue or illness) still pause progression.
 
 All three are product rules; `RealWorkoutProgressionTests` shows them.
+
+## Engine 0.14.3: found by living whole plans
+
+`EngineSimulationTests` drives plans of twelve weeks through the API with simulated people (steady, novice, stalled, noisy, wrong or
+missing reserve, skipping sets, tiring, starting too heavy or too light, bad weeks, pain, ignoring the loads). It found:
+
+- **Two repetition ranges of one exercise.** With a heavy day and a volume day, the exposures alternated, so a load was never
+  confirmed inside a block, and the load of one day was written into the other. Each range now progresses on its own exposures and
+  its load goes to the next session with the same range. Pain is still read on all of them.
+- **Rounding up an estimate** could pass the 10 % cap at the start of a block. Increases are rounded down.
+- **Block start references** took the heaviest set; they now take the load of most sets, as the progression does.
+
+Known limits it measured, unchanged: someone who starts far too light is still 23 to 29 % under after twelve weeks, because one step
+per confirmation is the most the engine takes; without the reserve written, increases are rare; and someone who always writes one
+repetition less in reserve than asked loses sets repeatedly.

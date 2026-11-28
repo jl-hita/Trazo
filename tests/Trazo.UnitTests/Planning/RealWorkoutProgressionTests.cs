@@ -32,6 +32,38 @@ public sealed class RealWorkoutProgressionTests
     }
 
     [Fact]
+    public void AHeavyDayAndAVolumeDayProgressEachOnItsOwn()
+    {
+        // The same exercise twice a week: 3-6 repetitions one day, 6-10 the other, alternating.
+        var history = Enumerable.Range(0, 4).Select(i =>
+        {
+            var heavy = i % 2 == 1;
+            var sets = heavy ? new[] { Done(70, 6), Done(70, 6), Done(70, 6) } : [Done(), Done(), Done()];
+            return new ExerciseExposureRecord(T0.AddDays(2 * i), "bench-press", 3, heavy ? 3 : 6, heavy ? 6 : 10, 2m,
+                TrainingProgressionRule.DoubleProgression, true, sets, WorkoutOutcome.Completed, "Good");
+        }).ToArray();
+        var sessions = history.Select(e => new SessionRecord(e.At, WorkoutOutcome.Completed, "None", "Good", false, 7, 1m)).ToArray();
+
+        var advice = AdaptationPlanner.Evaluate(new AdaptationInput(history, sessions, ["bench-press"], [], history[^1].At)).Exercises.Single();
+
+        Raises(advice, 72.5m);
+    }
+
+    [Fact]
+    public void PainOnTheOtherRange_StillHoldsTheLoad()
+    {
+        var painful = new ExerciseExposureRecord(T0.AddDays(2), "bench-press", 3, 3, 6, 2m, TrainingProgressionRule.DoubleProgression, true,
+            [Done(70, 5) with { Pain = true }], WorkoutOutcome.Completed, "Good");
+        ExerciseExposureRecord Volume(int day) => new(T0.AddDays(day), "bench-press", 3, 6, 10, 2m, TrainingProgressionRule.DoubleProgression, true,
+            [Done(), Done(), Done()], WorkoutOutcome.Completed, "Good");
+        ExerciseExposureRecord[] history = [Volume(0), painful, Volume(4)];
+
+        var advice = AdaptationPlanner.Evaluate(new AdaptationInput(history, [], ["bench-press"], [], T0.AddDays(4))).Exercises.Single();
+
+        Assert.Equal(nameof(TrainingExerciseProgressionAction.HoldAndReview), advice.Action);
+    }
+
+    [Fact]
     public void OneSetAtAnotherLoad_IsLeftAside()
     {
         Raises(Advise([Done(), Done(), Done(55)]));

@@ -27,6 +27,16 @@ public sealed class TrainingLoadPrescriptionTests
     public void TheSameLoadIsNotRounded(int load) =>
         Assert.Equal(load, TrainingLoadEstimator.Suggest(Sets(load, 10, 2m), 8, 12, 2m)!.LoadKg);
 
+    [Theory]
+    [InlineData(37.5, 20)]
+    [InlineData(92.5, 22)]
+    [InlineData(22.5, 12)]
+    public void AnIncreaseNeverPassesTheCapBecauseOfRounding(double load, int reps)
+    {
+        var suggestion = TrainingLoadEstimator.Suggest(Sets((decimal)load, reps, 2m), 5, 8, 2m, 2.5m)!;
+        Assert.InRange(suggestion.LoadKg, (decimal)load, (decimal)load * 1.10m);
+    }
+
     [Fact]
     public void TooFewRepetitionsReduceTheLoadWithinTheCap()
     {

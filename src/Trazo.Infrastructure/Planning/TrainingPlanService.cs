@@ -2001,7 +2001,10 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         {
             // A pending pain report freezes the prescribed load: only an explicit load reduction may be written.
             if (outcome.BlocksIncreaseFor(advice.ExerciseId) && advice.Action != nameof(TrainingExerciseProgressionAction.ReduceLoad)) continue;
-            var next = upcoming.FirstOrDefault(s => PrescriptionJson.Read(s.PrescriptionJson).Any(e => e.ExerciseId == advice.ExerciseId));
+            // The load belongs to the range it was earned in: it goes to the next session that asks the same of the exercise.
+            var done = prescribed.First(e => e.ExerciseId == advice.ExerciseId);
+            var next = upcoming.FirstOrDefault(s => PrescriptionJson.Read(s.PrescriptionJson).Any(e =>
+                e.ExerciseId == advice.ExerciseId && e.MinRepetitions == done.MinRepetitions && e.MaxRepetitions == done.MaxRepetitions));
             if (next is null) continue;
             if ((mesocycles.TryGetValue(next.MesocycleId, out var meso) && meso.IsDeload) || PrescriptionJson.IsAdaptationDeload(next.PrescriptionJson)) continue;
             if (TrainingAdaptationPrescriptionAdjuster.TrySetLoad(next.PrescriptionJson, advice.ExerciseId, advice.NextLoadKg!.Value,
@@ -2589,7 +2592,9 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
                 if (late || deloadSessions.Contains(exposure.Log.PlannedSessionId)) continue;
                 var done = exposure.Sets.Main().Where(s => s.Completed && s.WeightKg is > 0 && s.Repetitions is > 0).ToList();
                 if (done.Count == 0) continue;
-                var top = done.OrderByDescending(s => s.WeightKg).ThenBy(s => s.SetNumber).First();
+                // The load most sets were done with, as the progression reads it: one heavy attempt does not start the next block.
+                var main = TrainingExerciseProgressionEngine.MainLoad(done.Select(s => new TrainingExecutedSet("working", s.WeightKg, s.Repetitions, s.Rir, true)));
+                var top = done.Where(s => s.WeightKg == main).OrderBy(s => s.SetNumber).First();
                 references.Add(new TrainingLoadReference(exercise.Key, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
                 sources.Add(new LoadReferenceSource(
                     exercise.Key, exposure.Log.Id, top.SetNumber, exposure.Log.PerformedOn, top.WeightKg!.Value, top.Repetitions!.Value, top.Rir, done.Count));
