@@ -12,7 +12,7 @@ public sealed class TrainingBlockProgressionTests
         var week1 = Rir(plan, 1);
         var week3 = Rir(plan, 3);
         Assert.True(week1.Zip(week3, (a, b) => a == b + 1m).All(x => x), "RIR de la semana 1 = RIR base + 1");
-        Assert.True(Rir(plan, 2).Zip(week3, (a, b) => a == b + 0.5m).All(x => x), "RIR de la semana 2 = RIR base + 0,5");
+        Assert.Equal(week3, Rir(plan, 2));
         // Last week pushes closer to failure, but never below the floor of each exercise type.
         Assert.True(Rir(plan, 4).Zip(week3, (a, b) => a <= b).All(x => x));
         Assert.Contains(Rir(plan, 4).Zip(week3), pair => pair.First < pair.Second);
@@ -55,10 +55,48 @@ public sealed class TrainingBlockProgressionTests
     public void TwoWeekBlockOnlyEasesEffortInWeekOne()
     {
         var plan = Generate(weeks: 2);
-        Assert.True(Rir(plan, 1).Zip(Rir(plan, 2), (a, b) => a == b + 0.5m).All(x => x));
+        Assert.True(Rir(plan, 1).Zip(Rir(plan, 2), (a, b) => a == b + 1m).All(x => x));
         Assert.Equal(
             plan.Sessions.Where(s => s.WeekNumber == 1).SelectMany(s => s.Exercises).Select(e => e.Sets),
             plan.Sessions.Where(s => s.WeekNumber == 2).SelectMany(s => s.Exercises).Select(e => e.Sets));
+    }
+
+    [Fact]
+    public void ThreeWeekBlockAlsoRampsVolumeAndEffort()
+    {
+        var plan = Generate(weeks: 3, goal: TrainingGoal.Hypertrophy, days: 2, minutes: 120, experience: TrainingExperience.Advanced);
+        var weeks = Enumerable.Range(1, 3)
+            .Select(week => plan.Sessions.Where(s => s.WeekNumber == week).SelectMany(s => s.Exercises).ToArray()).ToArray();
+        Assert.All(weeks[0].Zip(weeks[1]), pair => Assert.Equal(
+            pair.Second.Sets >= 3 ? pair.Second.Sets - 1 : pair.Second.Sets, pair.First.Sets));
+        Assert.True(weeks[0].Sum(e => e.Sets) < weeks[1].Sum(e => e.Sets));
+        Assert.All(weeks[2].Zip(weeks[1]), pair => Assert.InRange(pair.First.Sets - pair.Second.Sets, 0, 1));
+        Assert.Equal(new[] { 3m }, Rir(plan, 1).Distinct());
+        Assert.Equal(new[] { 2m }, Rir(plan, 2).Distinct());
+        Assert.Equal(new[] { 1m }, Rir(plan, 3).Distinct());
+    }
+
+    [Theory]
+    [InlineData(TrainingGoal.Hypertrophy, TrainingExperience.Intermediate, 1)]
+    [InlineData(TrainingGoal.Hypertrophy, TrainingExperience.Advanced, 1)]
+    [InlineData(TrainingGoal.Hypertrophy, TrainingExperience.Beginner, 2)]
+    public void TheLastWeekReachesTheReserveFloorOfTheProfile(TrainingGoal goal, TrainingExperience experience, int floor)
+    {
+        var plan = Generate(weeks: 4, goal: goal, experience: experience);
+        Assert.Equal(new[] { (decimal)floor }, Rir(plan, 4).Distinct());
+        Assert.All(plan.Sessions.SelectMany(s => s.Exercises), e => Assert.Equal(0m, e.TargetRepetitionsInReserve!.Value % 1m));
+    }
+
+    [Fact]
+    public void ABeginnerComingBackFromALighterBlockDoesNotStartFurtherFromFailureAgain()
+    {
+        var first = Generate(weeks: 3, experience: TrainingExperience.Beginner);
+        var back = Generate(weeks: 3, experience: TrainingExperience.Beginner, returns: true);
+        Assert.Equal(new[] { 4m }, Rir(first, 1).Distinct());
+        Assert.Equal(new[] { 3m }, Rir(back, 1).Distinct());
+        Assert.Equal(Rir(first, 3), Rir(back, 3));
+        // Volume still eases in.
+        Assert.Equal(first.Sessions.SelectMany(s => s.Exercises).Select(e => e.Sets), back.Sessions.SelectMany(s => s.Exercises).Select(e => e.Sets));
     }
 
     [Fact]
@@ -79,11 +117,13 @@ public sealed class TrainingBlockProgressionTests
 
     internal static TrainingProgramPrescription Generate(
         int weeks, TrainingGoal goal = TrainingGoal.Hypertrophy, int days = 2, int minutes = 90,
-        TrainingExperience experience = TrainingExperience.Intermediate, TrainingProgramSplit split = TrainingProgramSplit.Automatic)
+        TrainingExperience experience = TrainingExperience.Intermediate, TrainingProgramSplit split = TrainingProgramSplit.Automatic,
+        bool returns = false)
     {
         var all = new[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday };
         var result = TrainingProgramGenerator.Generate(
-            new(goal, experience, new DateOnly(2026, 11, 9), weeks, all.Take(days).ToArray(), minutes, [], [], null, false, split),
+            new(goal, experience, new DateOnly(2026, 11, 9), weeks, all.Take(days).ToArray(), minutes, [], [], null, false, split,
+                ReturnsFromLighterBlock: returns),
             Catalog());
         Assert.True(result.Succeeded, string.Join("; ", result.Errors));
         return result.Prescription!;

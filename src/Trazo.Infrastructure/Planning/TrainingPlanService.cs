@@ -2511,7 +2511,9 @@ public sealed partial class TrainingPlanService(TrazoDbContext db, TimeProvider 
         var firstIndex = existingSessions + 1;
         var profile = ProfileOf(plan);
         var loadReferences = await LoadReferencesAsync(plan.UserId, ct);
-        var continues = previous is { IsDeload: false } && previous.Sequence == slot.Sequence - 1;
+        // A preparation is as light as a deload: the block after it eases in too, instead of starting at full effort.
+        var continues = previous is { IsDeload: false } && previous.PhaseType != PreparationPhase.PhaseType
+            && previous.Sequence == slot.Sequence - 1;
         // What this user's own history says about the weekly dose of each muscle (see LongitudinalLearning). It only moves the targets the
         // priority planner already chose, by one set at most, and only with enough evidence; without it the block is generated as before.
         var learning = await LongitudinalLearning.ProposeAsync(db, plan, slot, profile, clock.GetUtcNow(), ct);

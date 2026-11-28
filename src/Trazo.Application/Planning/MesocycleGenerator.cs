@@ -79,6 +79,7 @@ public static class MesocycleGenerator
             LoadReferences: loadReferences,
             PreviousBlockExerciseIds: previousBlockExerciseIds,
             ContinuesPreviousBlock: continuesPreviousBlock,
+            ReturnsFromLighterBlock: !continuesPreviousBlock && slot.Sequence > 1,
             SelectionSeed: seed,
             Sequence: sequence ? new TrainingSessionSequence(profile.SessionsPerPeriod, rotationPosition) : null), catalog);
         if (!result.Succeeded) return new([], result.Errors, null);
